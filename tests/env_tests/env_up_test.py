@@ -52,9 +52,6 @@ class TestEnvUp:
             testutil.run_command(['docker', 'kill', docker_id])
             testutil.run_command(['docker', 'rm', docker_id])
 
-    def test_my(self):
-        assert True
-
     # Test if the env_up.py script works as expected.
     def test_env_up(self):
         # For shorter code
