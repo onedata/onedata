@@ -1,6 +1,10 @@
 all: build test
 
-build:
+submodules:
+	git submodule init
+	git submodule update
+
+build: submodules
 	cd appmock && ./make.py -r .. && cd ..
 	cd globalregistry && ./make.py -r .. && cd ..
 	cd oneclient && ./make.py -r .. && cd ..
