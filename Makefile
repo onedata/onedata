@@ -1,16 +1,16 @@
 all: build test
 
 build:
-	cd appmock && ./make.py && cd ..
-	cd globalregistry && ./make.py && cd ..
-	cd oneclient && ./make.py && cd ..
-	cd oneprovider && ./make.py && cd ..
+	cd appmock && ./make.py -r .. && cd ..
+	cd globalregistry && ./make.py -r .. && cd ..
+	cd oneclient && ./make.py -r .. && cd ..
+	cd oneprovider && ./make.py -r .. && cd ..
 
 test:
 	py.test tests
 
 clean_all:
-	cd appmock && ./make.py clean && cd ..
-	cd globalregistry && ./make.py clean && cd ..
-	cd oneclient && ./make.py clean && cd ..
-	cd oneprovider && ./make.py clean && cd ..
+	cd appmock && ./make.py -r .. clean && cd ..
+	cd globalregistry && ./make.py -r .. clean && cd ..
+	cd oneclient && ./make.py -r .. clean && cd ..
+	cd oneprovider && ./make.py -r .. clean && cd ..
