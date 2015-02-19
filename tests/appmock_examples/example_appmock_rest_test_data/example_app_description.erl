@@ -83,9 +83,4 @@ rest_mocks() -> [
 % This function should return a list of #tcp_server_mock{} records. A TCP server will be
 % started for each such record. Later on in remote control, the port number is used to uniquely
 % identify a server.
-tcp_server_mocks() -> [
-    #tcp_server_mock{
-        port = 5555,
-        ssl = true
-    }
-].
+tcp_server_mocks() -> [].
