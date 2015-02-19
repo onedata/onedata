@@ -49,18 +49,18 @@ class TestAppmockRestExample:
 
 
 # An example code which could be verified using appmock
-def some_rest_using_function(docker_ip):
+def some_rest_using_function(appmock_ip):
     # Lets assume we are testing a code that needs to call
     # mocked component several times
-    testutil.http_get(docker_ip, 8080, "/test1/abc", True)
-    testutil.http_get(docker_ip, 8080, "/test1/abc", True)
-    testutil.http_get(docker_ip, 8080, "/test2", True)
-    testutil.http_get(docker_ip, 8080, "/test2", True)
-    testutil.http_get(docker_ip, 8080, "/test2", True)
-    testutil.http_get(docker_ip, 9090, "/test_with_state", True)
-    testutil.http_get(docker_ip, 9090, "/test_with_state", True)
-    testutil.http_get(docker_ip, 9090, "/test_with_state", True)
-    testutil.http_get(docker_ip, 9090, "/test_with_state", True)
-    testutil.http_get(docker_ip, 9090, "/test_with_state", True)
-    testutil.http_get(docker_ip, 8080, "/test3", True)
-    testutil.http_get(docker_ip, 443, "/some/path", True)
+    testutil.http_get(appmock_ip, 8080, "/test1/abc", True)
+    testutil.http_get(appmock_ip, 8080, "/test1/abc", True)
+    testutil.http_get(appmock_ip, 8080, "/test2", True)
+    testutil.http_get(appmock_ip, 8080, "/test2", True)
+    testutil.http_get(appmock_ip, 8080, "/test2", True)
+    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
+    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
+    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
+    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
+    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
+    testutil.http_get(appmock_ip, 8080, "/test3", True)
+    testutil.http_get(appmock_ip, 443, "/some/path", True)

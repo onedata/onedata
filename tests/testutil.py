@@ -53,7 +53,7 @@ def http_get(ip, port, path, use_ssl):
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
-    response = requests.get('{0}://{1}:{2}{3}'.format(protocol, ip, port, path), verify=False, timeout=0.3)
+    response = requests.get('{0}://{1}:{2}{3}'.format(protocol, ip, port, path), verify=False, timeout=10)
     return response.status_code, response.headers, response.text
 
 
@@ -63,5 +63,5 @@ def http_post(ip, port, path, use_ssl, data):
     """
     protocol = 'https' if use_ssl else 'http'
     response = requests.post('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
-                             data, verify=False, timeout=0.3)
+                             data, verify=False, timeout=10)
     return response.status_code, response.headers, response.text
