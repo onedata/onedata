@@ -11,7 +11,7 @@ build: submodules
 	cd oneprovider && ./make.py -r .. && cd ..
 
 test:
-	py.test tests
+	py.test tests -s
 
 clean_all:
 	cd appmock && ./make.py -r .. clean && cd ..
