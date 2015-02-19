@@ -1,6 +1,22 @@
 from tests import testutil
 import json
 import socket
+import time
+
+
+# Helper function to check https connectivity
+# Retries once a second, up to given number of times.
+def check_http_connectivity(ip, port, path, expected_code, use_ssl=True, number_of_retries=20):
+    if number_of_retries == 0:
+        protocol = 'https' if use_ssl else 'http'
+        raise Exception('{0}://{1}:{2}{3} is unreachable.'.format(protocol, ip, port, path))
+    else:
+        try:
+            status_code, _, _ = testutil.http_get(ip, port, path, use_ssl)
+            return expected_code == status_code
+        except:
+            time.sleep(1)
+            return check_http_connectivity(ip, port, path, expected_code, use_ssl, number_of_retries - 1)
 
 
 class TestEnvUp:
@@ -41,49 +57,48 @@ class TestEnvUp:
         # gr_node is in form name@name.timestamp.dev.docker
         for gr_node in res['gr_nodes']:
             (gr_name, sep, gr_hostname) = gr_node.partition('@')
-            gr_ip = testutil.dns_lookup(dns, gr_hostname)
+            gr_ip = testutil.dns_lookup(gr_hostname, dns)
             assert testutil.ping(gr_ip)
-            assert testutil.http_get_retry(gr_ip, 443, '/', 200, number_of_retries=50)
+            assert check_http_connectivity(gr_ip, 443, '/', 200, number_of_retries=50)
 
         # Check GR DB nodes - they are not visible in dns, so we must check
         # their ips through docker.
         # gr_db_node is in form name@name.timestamp.dev.docker
         for gr_db_node in res['gr_db_nodes']:
             (gr_db_name, sep, gr_db_hostname) = gr_db_node.partition('@')
-            dockername = gr_db_hostname.rstrip('.dev.docker').replace('.', '_')
-            gr_db_ip = testutil.run_command(['docker inspect -f "{{ .NetworkSettings.IPAddress }}"', dockername])
+            docker_name = gr_db_hostname.rstrip('.dev.docker').replace('.', '_')
+            gr_db_ip = testutil.run_command(['docker inspect -f "{{ .NetworkSettings.IPAddress }}"', docker_name])
             assert testutil.ping(gr_db_ip)
-            assert testutil.http_get_retry(gr_db_ip, 5984, '/_utils/', 200, use_ssl=False, number_of_retries=50)
+            assert check_http_connectivity(gr_db_ip, 5984, '/_utils/', 200, use_ssl=False, number_of_retries=50)
 
         # Check OP CCM nodes
         # ccm_node is in form name@name.timestamp.dev.docker
         for ccm_node in res['op_ccm_nodes']:
             (ccm_name, sep, ccm_hostname) = ccm_node.partition('@')
-            ccm_ip = testutil.dns_lookup(dns, ccm_hostname)
+            ccm_ip = testutil.dns_lookup(ccm_hostname, dns)
             assert testutil.ping(ccm_ip)
 
         # Check OP worker nodes
         # w_node is in form name@name.timestamp.dev.docker
         for w_node in res['op_worker_nodes']:
             (w_name, sep, w_hostname) = w_node.partition('@')
-            w_ip = testutil.dns_lookup(dns, w_hostname)
+            w_ip = testutil.dns_lookup(w_hostname, dns)
             assert testutil.ping(w_ip)
-            assert testutil.http_get_retry(w_ip, 443, '/', 200, number_of_retries=50)
+            assert check_http_connectivity(w_ip, 443, '/', 200, number_of_retries=50)
 
         # Check appmock nodes
         # am_node is in form name@name.timestamp.dev.docker
         for am_node in res['appmock_nodes']:
             (am_name, sep, am_hostname) = am_node.partition('@')
-            am_ip = testutil.dns_lookup(dns, am_hostname)
+            am_ip = testutil.dns_lookup(am_hostname, dns)
             assert testutil.ping(am_ip)
-            assert testutil.http_get_retry(am_ip, 443, '/test2', 200, number_of_retries=50)
+            assert check_http_connectivity(am_ip, 443, '/test2', 200, number_of_retries=50)
 
         # Check client nodes - they are not visible in dns, so we must check
         # their ips through docker.
         # oc_node is in form name.timestamp.dev.docker
         for oc_node in res['client_nodes']:
-            dockername = oc_node.rstrip('.dev.docker').replace('.', '_')
-            oc_ip = testutil.run_command(['docker inspect -f "{{ .NetworkSettings.IPAddress }}"', dockername])
+            docker_name = oc_node.rstrip('.dev.docker').replace('.', '_')
+            oc_ip = testutil.run_command(['docker inspect -f "{{ .NetworkSettings.IPAddress }}"', docker_name])
             assert testutil.ping(oc_ip)
-
 

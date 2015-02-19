@@ -54,7 +54,7 @@ if {shed_privileges}:
     os.setregid({gid}, {gid})
     os.setreuid({uid}, {uid})
 
-command = ['py.test', 'tests']
+command = ['py.test', 'tests/env_tests']
 ret = subprocess.call(command)
 sys.exit(0)
 '''
