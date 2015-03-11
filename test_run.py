@@ -22,10 +22,6 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     description='Run Common Tests.')
 
-parser = argparse.ArgumentParser(
-    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    description='Run Common Tests.')
-
 parser.add_argument(
     '--image', '-i',
     action='store',
@@ -33,21 +29,9 @@ parser.add_argument(
     help='docker image to use as a test master',
     dest='image')
 
-parser.add_argument(
-    '--suite', '-s',
-    action='append',
-    help='name of the test suite',
-    dest='suites')
-
-parser.add_argument(
-    '--case', '-c',
-    action='append',
-    help='name of the test case',
-    dest='cases')
-
-args = parser.parse_args()
+[args, pass_args] = parser.parse_known_args()
 script_dir = os.path.dirname(os.path.realpath(__file__))
-uid = str(int(time.time()))
+test_dir = os.path.join(script_dir, 'tests')
 
 command = '''
 import os, subprocess, sys, stat
@@ -60,24 +44,23 @@ if {shed_privileges}:
     os.setregid({gid}, {gid})
     os.setreuid({uid}, {uid})
 
-command = ['py.test', 'tests']
+command = ['py.test'] + {args} + ['{test_dir}']
 ret = subprocess.call(command)
-sys.exit(0)
+sys.exit(ret)
 '''
 command = command.format(
+    args=pass_args,
     uid=os.geteuid(),
     gid=os.getegid(),
+    test_dir=test_dir,
     shed_privileges=(platform.system() == 'Linux'))
 
 ret = docker.run(tty=True,
                  rm=True,
                  interactive=True,
-                 detach=False,
                  workdir=script_dir,
                  reflect=[(script_dir, 'rw'),
                           ('/var/run/docker.sock', 'rw')],
-                 name='testmaster_{0}'.format(uid),
-                 hostname='testmaster.{0}.dev.docker'.format(uid),
                  image=args.image,
                  command=['python', '-c', command])
 sys.exit(ret)
