@@ -13,8 +13,14 @@ import platform
 import sys
 import time
 
-sys.path.insert(0, 'bamboos/docker')
-import docker
+script_dir = os.path.dirname(os.path.realpath(__file__))
+docker_dir = os.path.join(script_dir, 'bamboos', 'docker')
+sys.path.insert(0, docker_dir)
+from environment import docker
+
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    description='Run Common Tests.')
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
