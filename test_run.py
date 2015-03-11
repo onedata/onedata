@@ -11,7 +11,6 @@ import argparse
 import os
 import platform
 import sys
-import time
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 docker_dir = os.path.join(script_dir, 'bamboos', 'docker')

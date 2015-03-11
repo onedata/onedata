@@ -41,13 +41,14 @@ class TestEnvUp:
         # The number should be:
         # 2 for skydns and skydock
         # 3 OP nodes
+        # 1 Riak node for OP
         # 2 GR nodes
         # 2 DBs for GR nodes
         # 2 appmock nodes
         # 2 client nodes
         # ------------
-        # 13 nodes
-        assert 13 == len(res['docker_ids'])
+        # 14 nodes
+        assert 14 == len(res['docker_ids'])
         # Get the DNS ip
         dns = res['dns']
         # Will throw if the dns address is not legal
