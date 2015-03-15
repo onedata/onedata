@@ -1,7 +1,12 @@
 from tests import testutil
-from tests import appmock_client
 import json
 import time
+import sys
+import os
+
+appmock_dir = os.path.join(os.getcwd(), 'appmock')
+sys.path.insert(0, appmock_dir)
+from appmock import appmock_client
 
 
 class TestAppmockRestExample:

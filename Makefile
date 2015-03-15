@@ -5,16 +5,16 @@ submodules:
 	git submodule update
 
 build: submodules
-	cd appmock && ./make.py -r .. && cd ..
-	cd globalregistry && ./make.py -r .. && cd ..
-	cd oneclient && ./make.py -r .. && cd ..
-	cd oneprovider && ./make.py -r .. && cd ..
+	appmock/make.py -s appmock -r .
+	globalregistry/make.py -s globalregistry -r .
+	oneclient/make.py -s oneclient -r .
+	oneprovider/make.py -s oneprovider -r .
 
 test:
 	./test_run.py
 
 clean_all:
-	cd appmock && ./make.py -r .. clean && cd ..
-	cd globalregistry && ./make.py -r .. clean && cd ..
-	cd oneclient && ./make.py -r .. clean && cd ..
-	cd oneprovider && ./make.py -r .. clean && cd ..
+	appmock/make.py -s appmock -r . clean
+	globalregistry/make.py -s globalregistry -r . clean
+	oneclient/make.py -s oneclient -r . clean
+	oneprovider/make.py -s oneprovider -r . clean
