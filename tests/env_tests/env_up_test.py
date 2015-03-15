@@ -2,6 +2,15 @@ from tests import testutil
 import json
 import socket
 import time
+import os
+import sys
+
+appmock_dir = os.path.join(os.getcwd(), 'appmock')
+sys.path.insert(0, appmock_dir)
+bamboos_dir = os.path.join(os.getcwd(), 'bamboos', 'docker')
+sys.path.insert(0, bamboos_dir)
+from appmock import appmock_client
+from environment import docker
 
 
 # Helper function to check https connectivity
@@ -29,9 +38,7 @@ class TestEnvUp:
     @classmethod
     # Clean up removing all dockers created in the test
     def teardown_class(cls):
-        for docker_id in cls.result['docker_ids']:
-            testutil.run_command(['docker', 'kill', docker_id])
-            testutil.run_command(['docker', 'rm', docker_id])
+        docker.remove(cls.result['docker_ids'], force=True, volumes=True)
 
     # Test if the env_up.py script works as expected.
     def test_env_up(self):
@@ -62,13 +69,11 @@ class TestEnvUp:
             assert testutil.ping(gr_ip)
             assert check_http_connectivity(gr_ip, 443, '/', 200, number_of_retries=50)
 
-        # Check GR DB nodes - they are not visible in dns, so we must check
-        # their ips through docker.
+        # Check GR DB nodes
         # gr_db_node is in form name@name.timestamp.dev.docker
         for gr_db_node in res['gr_db_nodes']:
             (gr_db_name, sep, gr_db_hostname) = gr_db_node.partition('@')
-            docker_name = gr_db_hostname.rstrip('.dev.docker').replace('.', '_')
-            gr_db_ip = testutil.run_command(['docker inspect -f "{{ .NetworkSettings.IPAddress }}"', docker_name])
+            gr_db_ip = testutil.dns_lookup(gr_db_hostname, dns)
             assert testutil.ping(gr_db_ip)
             assert check_http_connectivity(gr_db_ip, 5984, '/_utils/', 200, use_ssl=False, number_of_retries=50)
 
@@ -95,11 +100,9 @@ class TestEnvUp:
             assert testutil.ping(am_ip)
             assert check_http_connectivity(am_ip, 443, '/test2', 200, number_of_retries=50)
 
-        # Check client nodes - they are not visible in dns, so we must check
-        # their ips through docker.
+        # Check client nodes
         # oc_node is in form name.timestamp.dev.docker
         for oc_node in res['client_nodes']:
-            docker_name = oc_node.rstrip('.dev.docker').replace('.', '_')
-            oc_ip = testutil.run_command(['docker inspect -f "{{ .NetworkSettings.IPAddress }}"', docker_name])
+            oc_ip = testutil.dns_lookup(oc_node, dns)
             assert testutil.ping(oc_ip)
 

@@ -30,7 +30,7 @@ rest_mocks() -> [
         headers = [{<<"a">>, <<"b">>}, {<<"c">>, <<"d">>}], body = <<"this is test1 endpoint">>}},
 
     % Second type of response can be a list of static responses. They are returned in order of the list.
-    % If the end of the list is reached, it starts from the beggining again.
+    % If the end of the list is reached, it starts from the beginning again.
     #rest_mock{port = 8080, path = <<"/test2">>, response = [
         #rest_response{body = <<"lorem ipsum">>},
         #rest_response{body = <<"dolor sit amet,">>},

@@ -6,7 +6,10 @@ import os
 
 appmock_dir = os.path.join(os.getcwd(), 'appmock')
 sys.path.insert(0, appmock_dir)
+bamboos_dir = os.path.join(os.getcwd(), 'bamboos', 'docker')
+sys.path.insert(0, bamboos_dir)
 from appmock import appmock_client
+from environment import docker
 
 
 class TestAppmockRestExample:
@@ -19,9 +22,7 @@ class TestAppmockRestExample:
     @classmethod
     # Clean up removing all dockers created in the test
     def teardown_class(cls):
-        for docker_id in cls.result['docker_ids']:
-            testutil.run_command(['docker', 'kill', docker_id])
-            testutil.run_command(['docker', 'rm', docker_id])
+        docker.remove(cls.result['docker_ids'], force=True, volumes=True)
 
     # An example test showing usage of appmock in tests
     def test_rest_example(self):
