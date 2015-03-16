@@ -33,7 +33,7 @@ class TestAppmockRestExample:
         appmock_ip = docker.inspect(container)['NetworkSettings']['IPAddress'].encode(
             'ascii')
         # TODO remove this sleep when appmock start is verified with nagios
-        time.sleep(3)
+        time.sleep(10)
         # Run the tested code
         some_rest_using_function(appmock_ip)
         # Now, we can verify if expected requests were made by the tested code
