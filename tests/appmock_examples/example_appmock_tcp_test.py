@@ -12,14 +12,17 @@ bamboos_dir = os.path.join(os.getcwd(), 'bamboos', 'docker')
 sys.path.insert(0, bamboos_dir)
 from appmock import appmock_client
 from environment import docker
+from environment import appmock
+from environment import common
 
 
 class TestAppmockTCPExample:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
-        cmd_result = testutil.run_command(['bamboos/docker/env_up.py', testutil.test_file('env.json')])
-        cls.result = json.loads(cmd_result)
+        cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
+                                dns='none', uid=common.generate_uid(),
+                                config_path=os.path.join(testutil.test_file('env.json')))
 
     @classmethod
     # Clean up removing all dockers created in the test
@@ -28,11 +31,9 @@ class TestAppmockTCPExample:
 
     # An example test showing usage of appmock in tests
     def test_tcp_example(self):
-        res = self.result
-        dns_addr = res['dns']
-        docker_name = res['appmock_nodes'][0]
-        (_, _, docker_hostname) = docker_name.partition('@')
-        appmock_ip = testutil.dns_lookup(docker_hostname, dns_addr)
+        [container] = self.result['docker_ids']
+        appmock_ip = docker.inspect(container)['NetworkSettings']['IPAddress'].encode(
+            'ascii')
         # TODO remove this sleep when appmock start is verified with nagios
         time.sleep(3)
         # Run the tested code

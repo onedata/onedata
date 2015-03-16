@@ -43,7 +43,7 @@ if {shed_privileges}:
     os.setregid({gid}, {gid})
     os.setreuid({uid}, {uid})
 
-command = ['py.test'] + {args} + ['{test_dir}']
+command = ['py.test'] + {args} + ['{test_dir}'] + ['--junitxml=test-reports/results.xml']
 ret = subprocess.call(command)
 sys.exit(ret)
 '''
