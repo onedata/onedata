@@ -1,0 +1,15 @@
+[submodule "appmock"]
+	path = appmock
+	url = ssh://git@git.plgrid.pl:7999/vfs/appmock.git
+[submodule "globalregistry"]
+	path = globalregistry
+	url = ssh://git@git.plgrid.pl:7999/vfs/globalregistry.git
+[submodule "oneclient"]
+	path = oneclient
+	url = ssh://git@git.plgrid.pl:7999/vfs/oneclient.git
+[submodule "bamboos"]
+	path = bamboos
+	url = ssh://git@git.plgrid.pl:7999/vfs/bamboos.git
+[submodule "oneprovider"]
+	path = oneprovider
+	url = ssh://git@git.plgrid.pl:7999/vfs/oneprovider.git
