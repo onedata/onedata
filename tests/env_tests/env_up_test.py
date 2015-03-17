@@ -13,21 +13,6 @@ from appmock import appmock_client
 from environment import docker
 
 
-# Helper function to check https connectivity
-# Retries once a second, up to given number of times.
-def check_http_connectivity(ip, port, path, expected_code, use_ssl=True, number_of_retries=20):
-    if number_of_retries == 0:
-        protocol = 'https' if use_ssl else 'http'
-        raise Exception('{0}://{1}:{2}{3} is unreachable.'.format(protocol, ip, port, path))
-    else:
-        try:
-            status_code, _, _ = testutil.http_get(ip, port, path, use_ssl)
-            return expected_code == status_code
-        except:
-            time.sleep(1)
-            return check_http_connectivity(ip, port, path, expected_code, use_ssl, number_of_retries - 1)
-
-
 class TestEnvUp:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
@@ -105,4 +90,19 @@ class TestEnvUp:
         for oc_node in res['client_nodes']:
             oc_ip = testutil.dns_lookup(oc_node, dns)
             assert testutil.ping(oc_ip)
+
+
+# Helper function to check https connectivity
+# Retries once a second, up to given number of times.
+def check_http_connectivity(ip, port, path, expected_code, use_ssl=True, number_of_retries=20):
+    if number_of_retries == 0:
+        protocol = 'https' if use_ssl else 'http'
+        raise Exception('{0}://{1}:{2}{3} is unreachable.'.format(protocol, ip, port, path))
+    else:
+        try:
+            status_code, _, _ = testutil.http_get(ip, port, path, use_ssl)
+            return expected_code == status_code
+        except:
+            time.sleep(1)
+            return check_http_connectivity(ip, port, path, expected_code, use_ssl, number_of_retries - 1)
 
