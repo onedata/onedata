@@ -7,7 +7,7 @@ submodules:
 build: submodules
 	appmock/make.py -s appmock -r .
 	globalregistry/make.py -s globalregistry -r .
-	oneclient/make.py -s oneclient -r .
+	oneclient/make.py -s oneclient -r . release
 	oneprovider/make.py -s oneprovider -r .
 
 test:
