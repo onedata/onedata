@@ -10,15 +10,14 @@ sys.path.insert(0, appmock_dir)
 bamboos_dir = os.path.join(os.getcwd(), 'bamboos', 'docker')
 sys.path.insert(0, bamboos_dir)
 from appmock import appmock_client
-from environment import docker
+from environment import docker, env
 
 
 class TestEnvUp:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
-        cmd_result = testutil.run_command(['bamboos/docker/env_up.py', testutil.test_file('env.json')])
-        cls.result = json.loads(cmd_result)
+        cls.result = env.up(testutil.test_file('env.json'))
 
     @classmethod
     # Clean up removing all dockers created in the test

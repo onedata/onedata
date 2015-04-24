@@ -34,8 +34,6 @@ class TestAppmockTCPExample:
         [container] = self.result['docker_ids']
         appmock_ip = docker.inspect(container)['NetworkSettings']['IPAddress'].encode(
             'ascii')
-        # TODO remove this sleep when appmock start is verified with nagios
-        time.sleep(10)
         # Run the tested code
         received = some_tcp_using_function(appmock_ip)
         # Now, we can verify if expected messages were sent by the tested code
