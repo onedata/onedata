@@ -13,3 +13,6 @@
 [submodule "oneprovider"]
 	path = oneprovider
 	url = ssh://git@git.plgrid.pl:7999/vfs/oneprovider.git
+[submodule "op_ccm"]
+	path = op_ccm
+	url = ssh://git@git.plgrid.pl:7999/vfs/op-ccm.git
