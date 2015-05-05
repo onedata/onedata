@@ -16,3 +16,6 @@
 [submodule "op_ccm"]
 	path = op_ccm
 	url = ssh://git@git.plgrid.pl:7999/vfs/op-ccm.git
+[submodule "onepanel"]
+	path = onepanel
+	url = ssh://git@git.plgrid.pl:7999/vfs/onepanel.git
