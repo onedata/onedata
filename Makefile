@@ -9,6 +9,7 @@ build: submodules
 	globalregistry/make.py -s globalregistry -r .
 	oneclient/make.py -s oneclient -r . release
 	oneprovider/make.py -s oneprovider -r .
+	op_ccm/make.py -s op_ccm -r .
 
 test:
 	./test_run.py
@@ -26,7 +27,10 @@ package_oneprovider: # package_op_onepanel package_op_worker package_op_ccm
 package_op_onepanel:
 	onepanel/make.py -s onepanel -r . clean
 	onepanel/make.py -s onepanel -r . package
-	bamboos/docker/package.py -i onedata/builder:v9 -s onepanel -r . -c 'cd package ; sbuild -d sid --add-depends=git --add-depends=erlang --add-depends=erlang-src --add-depends=libbotan1.10-dev --add-depends=pkg-config --add-depends=ssh op-onepanel_*.dsc'
+	bamboos/docker/package.py -i onedata/builder:v9 -s onepanel -r . -c \
+	'cd package ; sbuild -d sid --add-depends=git --add-depends=erlang \
+	--add-depends=erlang-src --add-depends=libbotan1.10-dev \
+	--add-depends=pkg-config --add-depends=ssh op-onepanel_*.dsc'
 	cp onepanel/package/*.deb package/
 
 package_op_worker:
