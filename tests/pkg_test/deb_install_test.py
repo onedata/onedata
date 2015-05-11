@@ -17,11 +17,11 @@ import os, shutil, subprocess, sys
 
 subprocess.call(['apt-key', 'adv', '--keyserver', 'keyserver.ubuntu.com', '--recv-keys', 'D73BB29D', '3A6CFFB3'])
 subprocess.call(['echo', '"deb http://ppa.launchpad.net/kzemek/boost/ubuntu utopic main" > /etc/apt/sources.list.d/boost.list'])
-# subprocess.call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https'])
-# subprocess.call(['curl', 'https://packagecloud.io/gpg.key | apt-key add -'])
-# subprocess.call(['curl', '"https://packagecloud.io/install/repositories/basho/riak/config_file.list?os=ubuntu&dist=trusty" > /etc/apt/sources.list.d/basho.list'])
+subprocess.call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https'])
+subprocess.call(['sh' '-c', 'apt-get -y install curl apt-transport-https'])
+subprocess.call(['curl', 'https://packagecloud.io/gpg.key | apt-key add -'])
+subprocess.call(['curl', '"https://packagecloud.io/install/repositories/basho/riak/config_file.list?os=ubuntu&dist=trusty" > /etc/apt/sources.list.d/basho.list'])
 subprocess.call(['apt-get', 'update'])
-
 
 subprocess.call(['cd', '/root/pkg'])
 subprocess.call(['dpkg', '-i', 'op-onepanel*.deb'])

@@ -21,7 +21,7 @@ clean_all:
 	oneprovider/make.py -s oneprovider -r . clean
 	onepanel/make.py -s onepanel -r . clean
 
-package_oneprovider: # package_op_onepanel package_op_worker package_op_ccm
+package_oneprovider: package_op_onepanel package_op_worker package_op_ccm
 	bamboos/docker/make.py -s oneprovider_meta -r . -c 'dpkg-deb -b oneprovider'
 
 package_op_onepanel:
