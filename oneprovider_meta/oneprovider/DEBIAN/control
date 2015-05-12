@@ -1,0 +1,10 @@
+Package: oneprovider
+Version: 1.0.0
+Section: net
+Priority: extra
+Architecture: all
+Depends: op-ccm, oneprovider-node, op-onepanel, riak
+Maintainer: Onedata Package Maintainer <support@onedata.org>
+Homepage: https://onedata.org
+Description: Oneprovider cluster
+    Part of onedata project, containing components: op-ccm, op-worker, op-onepanel, riak
