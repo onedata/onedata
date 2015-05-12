@@ -1,4 +1,4 @@
-all: build test
+all: build test package_oneprovider
 
 submodules:
 	git submodule init
