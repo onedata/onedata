@@ -48,6 +48,18 @@ clean_op_ccm:
 	$(call clean, op_ccm)
 
 rpm_oneprovider: rpm_op_onepanel rpm_op_worker rpm_op_ccm
+	rm -Rf oneprovider_meta/package/packages
+
+	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
+	        mock --buildsrpm --spec oneprovider_meta/oneprovider.spec \
+	        --sources oneprovider_meta \
+	        --resultdir oneprovider_meta/package/packages
+
+	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
+	        mock --rebuild oneprovider_meta/package/packages/*.src.rpm \
+	        --resultdir oneprovider_meta/package/packages
+
+	$(call mv_rpm, oneprovider_meta)
 
 rpm_op_onepanel: clean_onepanel rpmdirs
 	$(call make_rpm, onepanel) -e REL_TYPE=oneprovider
