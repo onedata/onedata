@@ -10,7 +10,7 @@ MAKE_OP_CCM := op_ccm/make.py -s op_ccm -r .
 make = $(1)/make.py -s $(1) -r .
 clean = $(call make, $(1)) clean
 make_rpm = $(call make, $(1)) --privileged --group mock -i onedata/rpm_builder package
-mv_rpm = ln -s $(1)/package/packages/*.src.rpm* rpm/SRCS && ln -s $(1)/package/packages/*.x86_64.rpm* rpm/x86_64
+mv_rpm = mv $(1)/package/packages/*.src.rpm* rpm/SRCS && mv $(1)/package/packages/*.x86_64.rpm* rpm/x86_64
 
 submodules:
 	git submodule init
