@@ -3,8 +3,8 @@ all: build test package_oneprovider
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
 MAKE_GLOBALREGISTRY := globalregistry/make.py -s onepanel -r .
-MAKE_ONEPROVIDER := oneprovider/make.py -s oneprovider -r .
 MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
+MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
 MAKE_OP_CCM := op_ccm/make.py -s op_ccm -r .
 
 make = $(1)/make.py -s $(1) -r .
@@ -28,7 +28,7 @@ build_oneclient: submodules
 	$(call make, oneclient) release
 
 build_op_worker: submodules
-	$(call make, oneprovider)
+	$(call make, op_worker)
 
 build_op_ccm: submodules
 	$(call make, op_ccm)
@@ -37,7 +37,7 @@ test:
 	./test_run.py
 
 clean_all: clean_appmock clean_globalregistry clean_oneclient \
-           clean_oneprovider clean_onepanel clean_op_ccm
+           clean_op_worker clean_onepanel clean_op_ccm
 
 clean_appmock:
 	$(call clean, appmock)
@@ -48,8 +48,8 @@ clean_onepanel:
 clean_globalregistry:
 	$(call clean, globalregistry)
 
-clean_oneprovider:
-	$(call clean, oneprovider)
+clean_op_worker:
+	$(call clean, op_worker)
 
 clean_oneclient:
 	$(call clean, oneclient)
@@ -97,9 +97,9 @@ package_op_onepanel: clean_onepanel
 	--add-depends=pkg-config --add-depends=ssh op-onepanel_*.dsc'
 	cp onepanel/package/*.deb package/
 
-package_op_worker: clean_oneprovider
-	$(call make, oneprovider) package
-	bamboos/docker/package.py -i onedata/builder:v9 -s oneprovider -r . -c \
+package_op_worker: clean_op_worker
+	$(call make, op_worker) package
+	bamboos/docker/package.py -i onedata/builder:v9 -s op_worker -r . -c \
 	'cd package ; sbuild -d sid --add-depends=git --add-depends=erlang \
 	--add-depends=erlang-src --add-depends=libbotan1.10-dev \
 	--add-depends=pkg-config --add-depends=ssh  --add-depends=libprotobuf-dev \
@@ -110,8 +110,8 @@ package_op_worker: clean_oneprovider
 	--add-depends=libboost-program-options1.58-dev \
     --add-depends=libboost-python1.58-dev --add-depends=libboost-random1.58-dev \
     --add-depends=libboost-system1.58-dev --add-depends=libboost-thread1.58-dev \
-	oneprovider-node_*.dsc'
-	cp oneprovider/package/*.deb package/
+	op-worker_*.dsc'
+	cp op_worker/package/*.deb package/
 
 package_op_ccm: clean_op_ccm
 	$(call make, op_ccm) package
