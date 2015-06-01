@@ -16,11 +16,21 @@ submodules:
 	git submodule init
 	git submodule update
 
-build: submodules
+build: build_appmock build_globalregistry build_oneclient build_op_worker build_op_ccm
+
+build_appmock: submodules
 	$(call make, appmock)
+
+build_globalregistry: submodules
 	$(call make, globalregistry)
+
+build_oneclient: submodules
 	$(call make, oneclient) release
+
+build_op_worker: submodules
 	$(call make, oneprovider)
+
+build_op_ccm: submodules
 	$(call make, op_ccm)
 
 test:
