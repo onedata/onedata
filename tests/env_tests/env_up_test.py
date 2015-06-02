@@ -74,8 +74,7 @@ class TestEnvUp:
             (w_name, sep, w_hostname) = w_node.partition('@')
             w_ip = testutil.dns_lookup(w_hostname, dns)
             assert testutil.ping(w_ip)
-            # todo repair missing lb_advice in request_dispatcher
-            # assert check_http_connectivity(w_ip, 443, '/', 200, number_of_retries=50)
+            assert check_http_connectivity(w_ip, 443, '/', 200, number_of_retries=50)
 
         # Check appmock nodes
         # am_node is in form name@name.timestamp.dev.docker
