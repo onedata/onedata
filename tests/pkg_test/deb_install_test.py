@@ -13,13 +13,6 @@ import subprocess
 class TestDebInstall:
     @classmethod
     def setup_class(cls):
-        # get packages
-        packages = subprocess.check_output(['ls', package_dir]).split()
-        packages = sorted(packages, reverse=True)
-        op_worker_package = [path for path in packages if path.startswith('op-worker')][0]
-        op_ccm_package = [path for path in packages if path.startswith('op-ccm')][0]
-        op_onepanel_package = [path for path in packages if path.startswith('op-onepanel')][0]
-
         #todo uncomment all
         command = '''
 import os, shutil, subprocess, sys
@@ -65,11 +58,17 @@ import os, shutil, subprocess, sys
 
 sys.exit(0)
 '''
-        command = command.format(
-            op_onepanel_package=op_onepanel_package,
-            op_ccm_package=op_ccm_package,
-            op_worker_package=op_worker_package
-        )
+        # get packages
+        # packages = subprocess.check_output(['ls', package_dir]).split()
+        # packages = sorted(packages, reverse=True)
+        # op_worker_package = [path for path in packages if path.startswith('op-worker')][0]
+        # op_ccm_package = [path for path in packages if path.startswith('op-ccm')][0]
+        # op_onepanel_package = [path for path in packages if path.startswith('op-onepanel')][0]
+        # command = command.format(
+        #     op_onepanel_package=op_onepanel_package,
+        #     op_ccm_package=op_ccm_package,
+        #     op_worker_package=op_worker_package
+        # )
         cls.res = docker.run(tty=True,
                  interactive=True,
                  image='debian:sid',
