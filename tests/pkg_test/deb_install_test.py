@@ -20,47 +20,48 @@ class TestDebInstall:
         op_ccm_package = [path for path in packages if path.startswith('op-ccm')][0]
         op_onepanel_package = [path for path in packages if path.startswith('op-onepanel')][0]
 
+        #todo uncomment all
         command = '''
 import os, shutil, subprocess, sys
 
-# update repos
-subprocess.check_call(['apt-get', 'update'])
-
-# add private boost repo
-subprocess.check_call(['apt-key', 'adv', '--keyserver', 'keyserver.ubuntu.com',
-    '--recv-keys', 'D73BB29D', '3A6CFFB3'])
-boost_utopic_repo = subprocess.Popen(['echo',
-    'deb http://ppa.launchpad.net/kzemek/boost/ubuntu utopic main'], stdout=subprocess.PIPE)
-subprocess.check_call(['tee', '/etc/apt/sources.list.d/boost.list'], stdin=boost_utopic_repo.stdout)
-boost_utopic_repo.wait()
-
-# install dependencies
-subprocess.check_call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https'])
-
-# add riak repo
-riak_key = subprocess.Popen(['curl', 'https://packagecloud.io/gpg.key'], stdout=subprocess.PIPE)
-subprocess.check_call(['apt-key', 'add', '-'], stdin=riak_key.stdout)
-riak_key.wait()
-riak_utopic_repo = subprocess.Popen(['curl',
-    'https://packagecloud.io/install/repositories/basho/riak/config_file.list?os=ubuntu&dist=trusty'], stdout=subprocess.PIPE)
-subprocess.check_call(['tee', '/etc/apt/sources.list.d/basho.list'], stdin=riak_utopic_repo.stdout)
-riak_utopic_repo.wait()
-
-# update repos
-subprocess.check_call(['apt-get', 'update'])
-
-# install all
-subprocess.check_call(['apt-get', 'install', '-y', 'riak'])
-subprocess.check_call(['sh', '-c', 'dpkg -i /root/pkg/{op_onepanel_package} ; apt-get -f -y install'], stderr=subprocess.STDOUT)
-subprocess.check_call(['sh', '-c', 'dpkg -i /root/pkg/{op_ccm_package} ; apt-get -f -y install'], stderr=subprocess.STDOUT)
-subprocess.check_call(['sh', '-c', 'dpkg -i /root/pkg/{op_worker_package} ; apt-get -f -y install'], stderr=subprocess.STDOUT)
-
-# validate
-subprocess.check_call(['sed', '-i', 's#-name .*#-name onepanel@onedata.devel#g', '/etc/op_onepanel/vm.args'])
-subprocess.check_call(['service', 'op_onepanel', 'start'])
-subprocess.check_call(['service', 'op_onepanel', 'status'])
-subprocess.check_call(['ls', '/etc/op_ccm/app.config'])
-subprocess.check_call(['ls', '/etc/op_worker/app.config'])
+# # update repos
+# subprocess.check_call(['apt-get', 'update'])
+#
+# # add private boost repo
+# subprocess.check_call(['apt-key', 'adv', '--keyserver', 'keyserver.ubuntu.com',
+#     '--recv-keys', 'D73BB29D', '3A6CFFB3'])
+# boost_utopic_repo = subprocess.Popen(['echo',
+#     'deb http://ppa.launchpad.net/kzemek/boost/ubuntu utopic main'], stdout=subprocess.PIPE)
+# subprocess.check_call(['tee', '/etc/apt/sources.list.d/boost.list'], stdin=boost_utopic_repo.stdout)
+# boost_utopic_repo.wait()
+#
+# # install dependencies
+# subprocess.check_call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https'])
+#
+# # add riak repo
+# riak_key = subprocess.Popen(['curl', 'https://packagecloud.io/gpg.key'], stdout=subprocess.PIPE)
+# subprocess.check_call(['apt-key', 'add', '-'], stdin=riak_key.stdout)
+# riak_key.wait()
+# riak_utopic_repo = subprocess.Popen(['curl',
+#     'https://packagecloud.io/install/repositories/basho/riak/config_file.list?os=ubuntu&dist=trusty'], stdout=subprocess.PIPE)
+# subprocess.check_call(['tee', '/etc/apt/sources.list.d/basho.list'], stdin=riak_utopic_repo.stdout)
+# riak_utopic_repo.wait()
+#
+# # update repos
+# subprocess.check_call(['apt-get', 'update'])
+#
+# # install all
+# subprocess.check_call(['apt-get', 'install', '-y', 'riak'])
+# subprocess.check_call(['sh', '-c', 'dpkg -i /root/pkg/{op_onepanel_package} ; apt-get -f -y install'], stderr=subprocess.STDOUT)
+# subprocess.check_call(['sh', '-c', 'dpkg -i /root/pkg/{op_ccm_package} ; apt-get -f -y install'], stderr=subprocess.STDOUT)
+# subprocess.check_call(['sh', '-c', 'dpkg -i /root/pkg/{op_worker_package} ; apt-get -f -y install'], stderr=subprocess.STDOUT)
+#
+# # validate
+# subprocess.check_call(['sed', '-i', 's#-name .*#-name onepanel@onedata.devel#g', '/etc/op_onepanel/vm.args'])
+# subprocess.check_call(['service', 'op_onepanel', 'start'])
+# subprocess.check_call(['service', 'op_onepanel', 'status'])
+# subprocess.check_call(['ls', '/etc/op_ccm/app.config'])
+# subprocess.check_call(['ls', '/etc/op_worker/app.config'])
 
 sys.exit(0)
 '''
