@@ -1,4 +1,4 @@
-all: build test package_oneprovider
+all: build package_oneprovider test
 
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
