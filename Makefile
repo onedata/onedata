@@ -76,8 +76,8 @@ rpm_op_onepanel: clean_onepanel rpmdirs
 	$(call mv_rpm, onepanel)
 
 rpm_op_worker: clean_op_worker rpmdirs
-	$(call make_rpm, oneprovider)
-	$(call mv_rpm, oneprovider)
+	$(call make_rpm, op_worker)
+	$(call mv_rpm, op_worker)
 
 rpm_op_ccm: clean_op_ccm rpmdirs
 	$(call make_rpm, op_ccm)
