@@ -75,7 +75,7 @@ rpm_op_onepanel: clean_onepanel rpmdirs
 	$(call make_rpm, onepanel) -e REL_TYPE=oneprovider
 	$(call mv_rpm, onepanel)
 
-rpm_op_worker: clean_oneprovider rpmdirs
+rpm_op_worker: clean_op_worker rpmdirs
 	$(call make_rpm, oneprovider)
 	$(call mv_rpm, oneprovider)
 
