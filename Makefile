@@ -1,3 +1,5 @@
+PKG_VERSION	    ?= $(shell git describe --tags --always | tr - .)
+
 all: build deb_oneprovider rpm_oneprovider test
 
 ##
@@ -89,6 +91,7 @@ clean_op_ccm:
 
 rpm_oneprovider: rpm_op_onepanel rpm_op_worker rpm_op_ccm
 	rm -Rf oneprovider_meta/package/packages
+	sed -i 's/Version:.*/Version:\t$(PKG_VERSION)/g' oneprovider_meta/oneprovider.spec
 
 	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
 	        mock --buildsrpm --spec oneprovider_meta/oneprovider.spec \
@@ -121,6 +124,7 @@ rpmdirs:
 ##
 
 deb_oneprovider: deb_op_onepanel deb_op_worker deb_op_ccm
+	sed -i 's/Version:.*/Version: $(PKG_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	bamboos/docker/make.py -s oneprovider_meta -r . -c 'dpkg-deb -b oneprovider'
 	mv oneprovider_meta/*.deb package/deb/binary-amd64
 
