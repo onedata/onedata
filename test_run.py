@@ -25,12 +25,19 @@ parser.add_argument(
     '--image', '-i',
     action='store',
     default='onedata/worker',
-    help='docker image to use as a test master',
+    help='Docker image to use as a test master.',
     dest='image')
+
+parser.add_argument(
+    '--test-dir', '-t',
+    action='store',
+    default='tests/acceptance',
+    help='Test dir to run.',
+    dest='test_dir')
+
 
 [args, pass_args] = parser.parse_known_args()
 script_dir = os.path.dirname(os.path.realpath(__file__))
-test_dir = os.path.join(script_dir, 'tests')
 
 command = '''
 import os, subprocess, sys, stat
@@ -51,7 +58,7 @@ command = command.format(
     args=pass_args,
     uid=os.geteuid(),
     gid=os.getegid(),
-    test_dir=test_dir,
+    test_dir=args.test_dir,
     shed_privileges=(platform.system() == 'Linux'))
 
 ret = docker.run(tty=True,
