@@ -51,6 +51,14 @@ class TestAppmockRestExample:
         assert appmock_client.verify_rest_history(appmock_ip, expected_history)
         # Get number of requests on certain endpoint and check if it matches the expected value.
         assert 5 == appmock_client.rest_endpoint_request_count(appmock_ip, 9090, '/test_with_state')
+        # Reset counters
+        appmock_client.reset_rest_history(appmock_ip)
+        assert appmock_client.verify_rest_history(appmock_ip, [])
+        assert 0 == appmock_client.rest_endpoint_request_count(appmock_ip, 9090, '/test_with_state')
+        # And check again if they work
+        some_rest_using_function(appmock_ip)
+        assert appmock_client.verify_rest_history(appmock_ip, expected_history)
+        assert 5 == appmock_client.rest_endpoint_request_count(appmock_ip, 9090, '/test_with_state')
 
 
 # An example code which could be verified using appmock
