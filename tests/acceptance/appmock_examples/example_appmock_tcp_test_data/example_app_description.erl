@@ -29,6 +29,14 @@ rest_mocks() -> [].
 tcp_server_mocks() -> [
     #tcp_server_mock{
         port = 5555,
-        ssl = true
+        ssl = true,
+        packet = raw,
+        type = history
+    },
+    #tcp_server_mock{
+        port = 6666,
+        ssl = true,
+        packet = raw,
+        type = counter
     }
 ].
