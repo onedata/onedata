@@ -1,19 +1,12 @@
-from tests import testutil
-import json
+from tests.test_common import *
+from tests import test_utils
 import time
 import ssl
 import socket
-import sys
 import os
 
-appmock_dir = os.path.join(os.getcwd(), 'appmock')
-sys.path.insert(0, appmock_dir)
-bamboos_dir = os.path.join(os.getcwd(), 'bamboos', 'docker')
-sys.path.insert(0, bamboos_dir)
 from appmock import appmock_client
-from environment import docker
-from environment import appmock
-from environment import common
+from environment import docker, appmock, common
 
 
 class TestAppmockTCPExample:
@@ -22,7 +15,7 @@ class TestAppmockTCPExample:
     def setup_class(cls):
         cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
                                 dns='none', uid=common.generate_uid(),
-                                config_path=os.path.join(testutil.test_file('env.json')))
+                                config_path=os.path.join(test_utils.test_file('env.json')))
 
     @classmethod
     # Clean up removing all dockers created in the test

@@ -60,7 +60,7 @@ build_op_ccm: submodules
 test:
 	./test_run.py --test-dir tests/acceptance
 
-test_packaging:
+test_packaging: build_globalregistry
 	./test_run.py --test-dir tests/packaging
 
 ##
