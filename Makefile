@@ -92,7 +92,7 @@ clean_op_ccm:
 ## RPM packaging
 ##
 
-rpm_oneprovider: rpm_op_onepanel rpm_op_worker rpm_op_ccm
+rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_op_ccm
 	rm -Rf oneprovider_meta/package/packages
 	sed -i 's/Version:.*/Version:\t$(PKG_VERSION)/g' oneprovider_meta/oneprovider.spec
 
@@ -107,7 +107,7 @@ rpm_oneprovider: rpm_op_onepanel rpm_op_worker rpm_op_ccm
 
 	$(call mv_rpm, oneprovider_meta)
 
-rpm_op_onepanel: clean_onepanel rpmdirs
+rpm_op_panel: clean_onepanel rpmdirs
 	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider
 	$(call mv_rpm, onepanel)
 
@@ -130,12 +130,12 @@ rpmdirs:
 ## DEB packaging
 ##
 
-deb_oneprovider: deb_op_onepanel deb_op_worker deb_op_ccm
+deb_oneprovider: deb_op_panel deb_op_worker deb_op_ccm
 	sed -i 's/Version:.*/Version: $(PKG_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	bamboos/docker/make.py -s oneprovider_meta -r . -c 'dpkg-deb -b oneprovider'
 	mv oneprovider_meta/*.deb package/deb/binary-amd64
 
-deb_op_onepanel: clean_onepanel debdirs
+deb_op_panel: clean_onepanel debdirs
 	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider
 	$(call mv_deb, onepanel)
 

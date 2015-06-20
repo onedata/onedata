@@ -8,8 +8,8 @@ op_worker_package = \
     [path for path in packages if path.startswith('op-worker')][0]
 op_ccm_package = \
     [path for path in packages if path.startswith('op-ccm')][0]
-op_onepanel_package = \
-    [path for path in packages if path.startswith('op-onepanel')][0]
+op_panel_package = \
+    [path for path in packages if path.startswith('op-panel')][0]
 
 # update repositories
 check_call(['apt-get', 'update'])
@@ -43,7 +43,7 @@ check_call(['apt-get', 'update'])
 # install all
 check_call(['apt-get', 'install', '-y', 'riak'])
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=op_onepanel_package)
+                        'install'.format(package=op_panel_package)
             ], stderr=STDOUT)
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_ccm_package)
@@ -53,12 +53,12 @@ check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
             ], stderr=STDOUT)
 
 # validate
-check_call(['service', 'op_onepanel', 'status'])
+check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/op_ccm/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
-check_call(['op_onepanel_admin', '--install', 'data/install.cfg'])
+check_call(['op_panel_admin', '--install', 'data/install.cfg'])
 check_call(['service', 'op_ccm', 'status'])
 check_call(['service', 'op_worker', 'status'])
-check_call(['op_onepanel_admin', '--uninstall'])
+check_call(['op_panel_admin', '--uninstall'])
 
 sys.exit(0)
