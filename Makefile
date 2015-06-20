@@ -120,7 +120,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_op_ccm
 
 	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
 	        mock --rebuild oneprovider_meta/package/packages/*.src.rpm \
-	        --root $(DISTRIBUTION --resultdir oneprovider_meta/package/packages
+	        --root $(DISTRIBUTION) --resultdir oneprovider_meta/package/packages
 
 	$(call mv_rpm, oneprovider_meta)
 
