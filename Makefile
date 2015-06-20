@@ -1,3 +1,7 @@
+# distro for package building (oneof: sid, fedora-21-x86_64)
+DISTRIBUTION            ?= none
+export DISTRIBUTION
+
 ONEPROVIDER_VERSION	    ?= $(shell git describe --tags --always | tr - .)
 ONEPROVIDER_BUILD	    ?= 1
 OP_CCM_VERSION			?= $(shell git -C op_ccm describe --tags --always | tr - .)
@@ -19,9 +23,9 @@ MAKE_OP_CCM := op_ccm/make.py -s op_ccm -r .
 
 make = $(1)/make.py -s $(1) -r .
 clean = $(call make, $(1)) clean
-make_rpm = $(call make, $(1)) --privileged --group mock -i onedata/rpm_builder $(2)
+make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i onedata/rpm_builder $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm* package/rpm/SRPMS && mv $(1)/package/packages/*.x86_64.rpm* package/rpm/x86_64
-make_deb = $(call make, $(1)) --privileged --group sbuild -i onedata/deb_builder $(2)
+make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder $(2)
 mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/deb/source && \
 	mv $(1)/package/packages/*.dsc package/deb/source && \
 	mv $(1)/package/packages/*.diff.gz package/deb/source || mv $(1)/package/packages/*.debian.tar.gz package/deb/source && \
@@ -111,12 +115,12 @@ rpm_oneprovider:
 
 	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
 	        mock --buildsrpm --spec oneprovider_meta/oneprovider.spec \
-	        --sources oneprovider_meta \
+	        --sources oneprovider_meta --root $(DISTRIBUTION) \
 	        --resultdir oneprovider_meta/package/packages
 
 	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
 	        mock --rebuild oneprovider_meta/package/packages/*.src.rpm \
-	        --resultdir oneprovider_meta/package/packages
+	        --root $(DISTRIBUTION --resultdir oneprovider_meta/package/packages
 
 	$(call mv_rpm, oneprovider_meta)
 
