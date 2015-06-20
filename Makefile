@@ -15,12 +15,12 @@ MAKE_OP_CCM := op_ccm/make.py -s op_ccm -r .
 
 make = $(1)/make.py -s $(1) -r .
 clean = $(call make, $(1)) clean
-make_rpm = $(call make, $(1)) --privileged --group mock -i onedata/rpm_builder package
+make_rpm = $(call make, $(1)) --privileged --group mock -i onedata/rpm_builder $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm* package/rpm/SRPMS && mv $(1)/package/packages/*.x86_64.rpm* package/rpm/x86_64
-make_deb = $(call make, $(1)) --privileged --group sbuild -i onedata/deb_builder package
+make_deb = $(call make, $(1)) --privileged --group sbuild -i onedata/deb_builder $(2)
 mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/deb/source && \
 	mv $(1)/package/packages/*.dsc package/deb/source && \
-	mv $(1)/package/packages/*.diff.gz package/deb/source && \
+	mv $(1)/package/packages/*.diff.gz package/deb/source || mv $(1)/package/packages/*.debian.tar.gz package/deb/source && \
 	mv $(1)/package/packages/*_amd64.changes package/deb/source && \
 	mv $(1)/package/packages/*_amd64.deb package/deb/binary-amd64
 
@@ -108,16 +108,20 @@ rpm_oneprovider: rpm_op_onepanel rpm_op_worker rpm_op_ccm
 	$(call mv_rpm, oneprovider_meta)
 
 rpm_op_onepanel: clean_onepanel rpmdirs
-	$(call make_rpm, onepanel) -e REL_TYPE=oneprovider
+	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider
 	$(call mv_rpm, onepanel)
 
 rpm_op_worker: clean_op_worker rpmdirs
-	$(call make_rpm, op_worker)
+	$(call make_rpm, op_worker, package)
 	$(call mv_rpm, op_worker)
 
 rpm_op_ccm: clean_op_ccm rpmdirs
-	$(call make_rpm, op_ccm)
+	$(call make_rpm, op_ccm, package)
 	$(call mv_rpm, op_ccm)
+
+rpm_oneclient: clean_oneclient rpmdirs
+	$(call make_rpm, oneclient, rpm)
+	$(call mv_rpm, oneclient)
 
 rpmdirs:
 	mkdir -p package/rpm/SRPMS package/rpm/x86_64
@@ -132,16 +136,20 @@ deb_oneprovider: deb_op_onepanel deb_op_worker deb_op_ccm
 	mv oneprovider_meta/*.deb package/deb/binary-amd64
 
 deb_op_onepanel: clean_onepanel debdirs
-	$(call make_deb, onepanel) -e REL_TYPE=oneprovider
+	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider
 	$(call mv_deb, onepanel)
 
 deb_op_worker: clean_op_worker debdirs
-	$(call make_deb, op_worker)
+	$(call make_deb, op_worker, package)
 	$(call mv_deb, op_worker)
 
 deb_op_ccm: clean_op_ccm debdirs
-	$(call make_deb, op_ccm)
+	$(call make_deb, op_ccm, package)
 	$(call mv_deb, op_ccm)
+
+deb_oneclient: clean_oneclient debdirs
+	$(call make_deb, oneclient, deb)
+	$(call mv_deb, oneclient)
 
 debdirs:
 	mkdir -p package/deb/source package/deb/binary-amd64
