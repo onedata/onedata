@@ -37,7 +37,6 @@ parser.add_argument(
 
 
 [args, pass_args] = parser.parse_known_args()
-script_dir = os.path.dirname(os.path.realpath(__file__))
 
 command = '''
 import os, subprocess, sys, stat

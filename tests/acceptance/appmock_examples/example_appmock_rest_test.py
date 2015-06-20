@@ -1,17 +1,9 @@
-from tests import testutil
-import json
-import time
-import sys
+from tests.test_common import *
+from tests import test_utils
 import os
 
-appmock_dir = os.path.join(os.getcwd(), 'appmock')
-sys.path.insert(0, appmock_dir)
-bamboos_dir = os.path.join(os.getcwd(), 'bamboos', 'docker')
-sys.path.insert(0, bamboos_dir)
 from appmock import appmock_client
-from environment import docker
-from environment import appmock
-from environment import common
+from environment import docker, appmock, common
 
 
 class TestAppmockRestExample:
@@ -20,7 +12,7 @@ class TestAppmockRestExample:
     def setup_class(cls):
         cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
                                 dns='none', uid=common.generate_uid(),
-                                config_path=os.path.join(testutil.test_file('env.json')))
+                                config_path=os.path.join(test_utils.test_file('env.json')))
 
     @classmethod
     # Clean up removing all dockers created in the test
@@ -51,21 +43,29 @@ class TestAppmockRestExample:
         assert appmock_client.verify_rest_history(appmock_ip, expected_history)
         # Get number of requests on certain endpoint and check if it matches the expected value.
         assert 5 == appmock_client.rest_endpoint_request_count(appmock_ip, 9090, '/test_with_state')
+        # Reset counters
+        appmock_client.reset_rest_history(appmock_ip)
+        assert appmock_client.verify_rest_history(appmock_ip, [])
+        assert 0 == appmock_client.rest_endpoint_request_count(appmock_ip, 9090, '/test_with_state')
+        # And check again if they work
+        some_rest_using_function(appmock_ip)
+        assert appmock_client.verify_rest_history(appmock_ip, expected_history)
+        assert 5 == appmock_client.rest_endpoint_request_count(appmock_ip, 9090, '/test_with_state')
 
 
 # An example code which could be verified using appmock
 def some_rest_using_function(appmock_ip):
     # Lets assume we are testing a code that needs to call
     # mocked component several times
-    testutil.http_get(appmock_ip, 8080, "/test1/abc", True)
-    testutil.http_get(appmock_ip, 8080, "/test1/abc", True)
-    testutil.http_get(appmock_ip, 8080, "/test2", True)
-    testutil.http_get(appmock_ip, 8080, "/test2", True)
-    testutil.http_get(appmock_ip, 8080, "/test2", True)
-    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
-    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
-    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
-    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
-    testutil.http_get(appmock_ip, 9090, "/test_with_state", True)
-    testutil.http_get(appmock_ip, 8080, "/test3", True)
-    testutil.http_get(appmock_ip, 443, "/some/path", True)
+    test_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
+    test_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
+    test_utils.http_get(appmock_ip, 8080, "/test2", True)
+    test_utils.http_get(appmock_ip, 8080, "/test2", True)
+    test_utils.http_get(appmock_ip, 8080, "/test2", True)
+    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    test_utils.http_get(appmock_ip, 8080, "/test3", True)
+    test_utils.http_get(appmock_ip, 443, "/some/path", True)
