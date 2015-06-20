@@ -24,13 +24,15 @@ MAKE_OP_CCM := op_ccm/make.py -s op_ccm -r .
 make = $(1)/make.py -s $(1) -r .
 clean = $(call make, $(1)) clean
 make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i onedata/rpm_builder $(2)
-mv_rpm = mv $(1)/package/packages/*.src.rpm* package/rpm/SRPMS && mv $(1)/package/packages/*.x86_64.rpm* package/rpm/x86_64
+mv_rpm = mv $(1)/package/packages/*.src.rpm* package/$(DISTRIBUTION)/SRPMS && \
+	mv $(1)/package/packages/*.x86_64.rpm* package/$(DISTRIBUTION)/x86_64
 make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder $(2)
-mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/deb/source && \
-	mv $(1)/package/packages/*.dsc package/deb/source && \
-	mv $(1)/package/packages/*.diff.gz package/deb/source || mv $(1)/package/packages/*.debian.tar.gz package/deb/source && \
-	mv $(1)/package/packages/*_amd64.changes package/deb/source && \
-	mv $(1)/package/packages/*_amd64.deb package/deb/binary-amd64
+mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source && \
+	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source && \
+	mv $(1)/package/packages/*.diff.gz package/$(DISTRIBUTION)/source || \
+	mv $(1)/package/packages/*.debian.tar.gz package/$(DISTRIBUTION)/source && \
+	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source && \
+	mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64
 
 ##
 ## Submodules
@@ -141,7 +143,7 @@ rpm_oneclient: clean_oneclient rpmdirs
 	$(call mv_rpm, oneclient)
 
 rpmdirs:
-	mkdir -p package/rpm/SRPMS package/rpm/x86_64
+	mkdir -p package/$(DISTRIBUTION)/SRPMS package/$(DISTRIBUTION)/x86_64
 
 ##
 ## DEB packaging
@@ -156,7 +158,7 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_op_ccm
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 
 	bamboos/docker/make.py -s oneprovider_meta -r . -c 'dpkg-deb -b oneprovider'
-	mv oneprovider_meta/oneprovider.deb package/deb/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
+	mv oneprovider_meta/oneprovider.deb package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
 
 deb_op_panel: clean_onepanel debdirs
 	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider
@@ -175,4 +177,4 @@ deb_oneclient: clean_oneclient debdirs
 	$(call mv_deb, oneclient)
 
 debdirs:
-	mkdir -p package/deb/source package/deb/binary-amd64
+	mkdir -p package/$(DISTRIBUTION)/source package/$(DISTRIBUTION)/binary-amd64
