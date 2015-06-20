@@ -105,7 +105,7 @@ clean_packages:
 ## RPM packaging
 ##
 
-rpm_oneprovider:
+rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_op_ccm
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
@@ -147,7 +147,7 @@ rpmdirs:
 ## DEB packaging
 ##
 
-deb_oneprovider:
+deb_oneprovider: deb_op_panel deb_op_worker deb_op_ccm
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider/DEBIAN/control
