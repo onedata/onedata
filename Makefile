@@ -127,7 +127,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_op_ccm
 	$(call mv_rpm, oneprovider_meta)
 
 rpm_op_panel: clean_onepanel rpmdirs
-	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider
+	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider,DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_rpm, onepanel)
 
 rpm_op_worker: clean_op_worker rpmdirs
@@ -161,7 +161,7 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_op_ccm
 	mv oneprovider_meta/oneprovider.deb package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
 
 deb_op_panel: clean_onepanel debdirs
-	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider
+	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider,DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_deb, onepanel)
 
 deb_op_worker: clean_op_worker debdirs
