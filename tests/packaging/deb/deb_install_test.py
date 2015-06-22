@@ -1,7 +1,7 @@
 from tests.test_common import *
 from tests import test_utils
 
-package_dir = os.path.join(os.getcwd(), 'package/deb/binary-amd64')
+package_dir = os.path.join(os.getcwd(), 'package/sid/binary-amd64')
 scripts_dir = os.path.dirname(test_utils.test_file('deb_install_script.py'))
 
 from environment import docker, env
