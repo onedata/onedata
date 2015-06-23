@@ -30,7 +30,7 @@ make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --gro
 mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*.diff.gz package/$(DISTRIBUTION)/source || \
-	mv $(1)/package/packages/*.debian.tar.gz package/$(DISTRIBUTION)/source && \
+	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64
 
