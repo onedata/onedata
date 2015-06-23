@@ -3,3 +3,8 @@
 *.pyc
 
 test-reports/*
+
+package
+oneprovider_meta/package
+oneprovider_meta/oneprovider.spec
+oneprovider_meta/oneprovider/DEBIAN/control

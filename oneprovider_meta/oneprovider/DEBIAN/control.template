@@ -1,0 +1,13 @@
+Package: oneprovider
+Version: {{oneprovider_version}}-{{oneprovider_build}}
+Section: net
+Priority: extra
+Architecture: all
+Depends: op-ccm (= {{op_ccm_version}}),
+    op-worker (= {{op_worker_version}}),
+    op-panel (= {{op_panel_version}}),
+    riak
+Maintainer: Onedata Package Maintainer <support@onedata.org>
+Homepage: https://onedata.org
+Description: Oneprovider cluster
+    Part of onedata project, containing components: op-ccm, op-worker, op-panel, riak
