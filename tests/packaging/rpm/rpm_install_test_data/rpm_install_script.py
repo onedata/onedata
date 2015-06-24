@@ -32,11 +32,11 @@ check_call(['cp', 'data/basho_riak.repo', '/etc/yum.repos.d/'])
 check_call(['mkdir', '-p', '/run/lock/subsys']) #todo repair non mounting /run/lock
 
 # install all
-check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + oneclient_package], stderr=STDOUT)
 check_call(['yum', '-y', 'install', 'riak'], stderr=STDOUT)
 check_call(['yum', '-y', 'install', '/root/pkg/' + op_panel_package], stderr=STDOUT)
 check_call(['yum', '-y', 'install', '/root/pkg/' + op_ccm_package], stderr=STDOUT)
 check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + op_worker_package], stderr=STDOUT)
+check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + oneclient_package], stderr=STDOUT)
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
