@@ -138,8 +138,9 @@ try:
 
         # update createrepo
         repo_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution]
+        #todo enable + set gpg_check to 1 in onedata_devel.repo file
+        # call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
         call(['createrepo', repo_dir])
-        call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
     elif args.action == 'push':
         # extract package targz
         execute(['rm', '-rf', '/tmp/package'])
@@ -159,13 +160,14 @@ try:
                         push_package_command = command + ['includedeb', distro, distro_binary_prefix + package]
                         execute(push_package_command)
 
-                # # add dsc sources to reprepro
-                # distro_source_prefix = '/tmp/package/' + distro + '/source/'
-                # for source in call(['ls', distro_source_prefix]).split():
-                #     if source.endswith('.dsc'):
-                #         push_source_command = \
-                #             command + ['includedsc',distro, distro_source_prefix + source]
-                #         execute(push_source_command)
+                        #todo enable
+                        # add dsc sources to reprepro
+                        # distro_source_prefix = '/tmp/package/' + distro + '/source/'
+                        # for source in call(['ls', distro_source_prefix]).split():
+                        #     if source.endswith('.dsc'):
+                        #         push_source_command = \
+                        #             command + ['includedsc',distro, distro_source_prefix + source]
+                        #         execute(push_source_command)
             elif REPO_TYPE[distro] == 'rpm':
                 # copy packages
                 repo_dir = APACHE_PREFIX + REPO_LOCATION[distro]
@@ -173,7 +175,8 @@ try:
                 call(['cp', '-R', distro_contents, repo_dir])
 
                 # update createrepo
+                #todo enable + set gpg_check to 1 in onedata_devel.repo file
+                # call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
                 call(['createrepo', repo_dir])
-                call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
 except CalledProcessError as err:
     exit(err.returncode)
