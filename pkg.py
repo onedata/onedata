@@ -102,7 +102,7 @@ def ssh_or_sh(full_hostname, identity_opt, command, return_output = False):
     if return_output:
         return check_output(ssh_command + command)
     else:
-        return check_call(ssh_command + command)
+        return check_call(ssh_command + command, stdout=sys.stdout, stderr=sys.stderr)
 
 def untar_remote_or_local(full_hostname, identity_opt, targz, dest_dir):
     ssh_command = ['ssh'] + identity_opt + [full_hostname] if args.host != 'localhost' else []
@@ -139,6 +139,7 @@ try:
         # update createrepo
         repo_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution]
         call(['createrepo', repo_dir])
+        call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
     elif args.action == 'push':
         # extract package targz
         execute(['rm', '-rf', '/tmp/package'])
@@ -173,5 +174,6 @@ try:
 
                 # update createrepo
                 call(['createrepo', repo_dir])
+                call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
 except CalledProcessError as err:
     exit(err.returncode)

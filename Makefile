@@ -8,6 +8,8 @@ OP_CCM_VERSION			?= $(shell git -C op_ccm describe --tags --always | tr - .)
 OP_WORKER_VERSION		?= $(shell git -C op_worker describe --tags --always | tr - .)
 OP_PANEL_VERSION		?= $(shell git -C onepanel describe --tags --always | tr - .)
 
+.PHONY: package.tar.gz
+
 all: build deb_oneprovider rpm_oneprovider test
 
 ##
@@ -178,3 +180,10 @@ deb_oneclient: clean_oneclient debdirs
 
 debdirs:
 	mkdir -p package/$(DISTRIBUTION)/source package/$(DISTRIBUTION)/binary-amd64
+
+##
+## Package artifact
+##
+
+package.tar.gz:
+	tar -chzf package.tar.gz package
