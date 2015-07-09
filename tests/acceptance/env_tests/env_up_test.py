@@ -3,7 +3,6 @@ from tests import test_utils
 import socket
 import time
 
-from appmock import appmock_client
 from environment import docker, env
 
 
