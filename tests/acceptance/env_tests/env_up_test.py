@@ -15,8 +15,7 @@ class TestEnvUp:
     @classmethod
     # Clean up removing all dockers created in the test
     def teardown_class(cls):
-        pass
-        # docker.remove(cls.result['docker_ids'], force=True, volumes=True)
+        docker.remove(cls.result['docker_ids'], force=True, volumes=True)
 
     # Test if the env_up.py script works as expected.
     def test_env_up(self):
