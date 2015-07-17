@@ -130,14 +130,18 @@ def wait_until_appmock_receives(appmock_ip):
     appmock_client.reset_tcp_server_history(appmock_ip)
     for i in range(5):
         ssl_sock.send('a\n')
-    correct_history = ['a\n', 'a\n', 'a\n', 'a\n', 'a\n']
+    for i in range(5):
+        ssl_sock.send('b\n')
+    correct_history = ['a\n', 'a\n', 'a\n', 'a\n', 'a\n', 'b\n', 'b\n', 'b\n', 'b\n', 'b\n']
     # Test the correctness of tcp_server_history endpoint
     result = appmock_client.tcp_server_history(appmock_ip, 5555)
     assert result == correct_history
     # Test if wait functions correctly returns msg history if requested.
-    result = appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 5555, 5, return_history=True)
+    result = appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 5555, 10, return_history=True)
     assert result == correct_history
     result = appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 5555, 'a\n', 5, return_history=True)
+    assert result == correct_history
+    result = appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 5555, 'b\n', 5, return_history=True)
     assert result == correct_history
 
 
