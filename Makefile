@@ -41,8 +41,8 @@ mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source &
 ##
 
 submodules:
-	#git submodule init
-	#git submodule update
+	git submodule init
+	git submodule update
 
 ##
 ## Build
@@ -109,7 +109,7 @@ clean_packages:
 ## RPM packaging
 ##
 
-rpm_oneprovider: rpm_op_worker
+rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_op_ccm
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
@@ -132,11 +132,11 @@ rpm_op_panel: clean_onepanel rpmdirs
 	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider,DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_rpm, onepanel)
 
-rpm_op_worker: rpmdirs
+rpm_op_worker: clean_op_worker rpmdirs
 	$(call make_rpm, op_worker, package)
 	$(call mv_rpm, op_worker)
 
-rpm_op_ccm: rpmdirs
+rpm_op_ccm: clean_op_ccm rpmdirs
 	$(call make_rpm, op_ccm, package)
 	$(call mv_rpm, op_ccm)
 
