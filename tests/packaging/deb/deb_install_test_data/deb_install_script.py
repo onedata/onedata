@@ -29,6 +29,11 @@ tbb_utopic_repo = Popen(['echo', 'deb http://ppa.launchpad.net/kzemek/intel-tbb/
 check_call(['tee', '/etc/apt/sources.list.d/intel-tbb.list'],
            stdin=tbb_utopic_repo.stdout)
 tbb_utopic_repo.wait()
+onedata_testing_repo = Popen(['echo', 'deb http://packages.onedata.org/'
+                                   'debian testing main'], stdout=PIPE)
+check_call(['tee', '/etc/apt/sources.list.d/onedata.list'],
+           stdin=onedata_testing_repo.stdout)
+onedata_testing_repo.wait()
 
 # install dependencies
 check_call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https'])
@@ -48,7 +53,7 @@ riak_utopic_repo.wait()
 check_call(['apt-get', 'update'])
 
 # install all
-check_call(['apt-get', 'install', '-y', 'riak'])
+check_call(['apt-get', 'install', '-y', 'couchbase-server'])
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_panel_package)
             ], stderr=STDOUT)
