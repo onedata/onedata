@@ -46,8 +46,8 @@ check_call(['ls', '/etc/op_worker/app.config'])
 check_call(['op_panel_admin', '--install', '/root/data/install.cfg'])
 
 # validate oneprovider is running
-check_call(['service', 'op_ccm', 'status'], stderr=STDOUT)
-check_call(['service', 'op_worker', 'status'], stderr=STDOUT)
+check_call(['service', 'op_ccm', 'status'])
+check_call(['service', 'op_worker', 'status'])
 
 # uninstall
 check_call(['op_panel_admin', '--uninstall'])
