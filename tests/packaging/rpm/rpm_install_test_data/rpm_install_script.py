@@ -2,12 +2,6 @@ from subprocess import STDOUT, check_call, check_output, call
 import subprocess
 import sys
 
-def execute(command):    
-    popen = subprocess.Popen(command, stdout=subprocess.PIPE)
-    lines_iterator = iter(popen.stdout.readline, b"")
-    for line in lines_iterator:
-        print(line) # yield line
-
 # get packages
 packages = check_output(['ls', '/root/pkg']).split()
 packages = sorted(packages, reverse=True)
