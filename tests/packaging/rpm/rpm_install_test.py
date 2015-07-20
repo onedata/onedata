@@ -34,7 +34,7 @@ class TestRpmInstallation:
                                run_params=['--privileged=true'],
                                link={gr_dockername: 'onedata.org'},
                                volumes=[
-                                   (package_dir, '/root/pkg', 'r'),
-                                   (scripts_dir, '/root/data', 'r')
+                                   (package_dir, '/root/pkg', 'rw'),
+                                   (scripts_dir, '/root/data', 'rw')
                                ],
                                command=command)

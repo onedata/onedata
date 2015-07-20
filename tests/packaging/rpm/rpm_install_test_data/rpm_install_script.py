@@ -1,5 +1,12 @@
 from subprocess import STDOUT, check_call, check_output, call
+import subprocess
 import sys
+
+def execute(command):    
+    popen = subprocess.Popen(command, stdout=subprocess.PIPE)
+    lines_iterator = iter(popen.stdout.readline, b"")
+    for line in lines_iterator:
+        print(line) # yield line
 
 # get packages
 packages = check_output(['ls', '/root/pkg']).split()
@@ -13,10 +20,9 @@ op_ccm_package = [path for path in packages
 op_panel_package = [path for path in packages
                     if path.startswith('op-panel')
                     and path.endswith('.rpm')][0]
-oneclient_package = [path for path in packages
-                     if path.startswith('oneclient')
-                     and not path.startswith('oneclient-debuginfo')
-                     and path.endswith('.rpm')][0]
+
+# Reinstall glibc-common to fix locales
+check_call(['yum', '-y', 'reinstall', 'glibc-common'])
 
 # install dependencies
 check_call(['yum', '-y', 'install', 'wget', 'curl'], stderr=STDOUT)
@@ -36,20 +42,18 @@ check_call(['yum', '-y', '--enablerepo=onedata', 'install', 'couchbase-server'],
 check_call(['yum', '-y', 'install', '/root/pkg/' + op_panel_package], stderr=STDOUT)
 check_call(['yum', '-y', 'install', '/root/pkg/' + op_ccm_package], stderr=STDOUT)
 check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + op_worker_package], stderr=STDOUT)
-check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + oneclient_package], stderr=STDOUT)
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/op_ccm/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
-check_call(['/usr/bin/oneclient', '--help'])
 
 # oneprovider configure&install
-call(['op_panel_admin', '--install', '/root/data/install.cfg'])
+execute(['op_panel_admin', '--install', '/root/data/install.cfg'])
 
 # validate oneprovider is running
-check_call(['service', 'op_ccm', 'status'])
-check_call(['service', 'op_worker', 'status'])
+check_call(['service', 'op_ccm', 'status'], stderr=STDOUT)
+check_call(['service', 'op_worker', 'status'], stderr=STDOUT)
 
 # uninstall
 check_call(['op_panel_admin', '--uninstall'])
