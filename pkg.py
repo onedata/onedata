@@ -73,10 +73,10 @@ parser_push_rpm.add_argument(
     'rpm',
     help='Package to deploy.'
 )
-#parser_push_rpm.add_argument(
-#    'src_rpm',
-#    help='Source package to deploy.'
-#)
+parser_push_rpm.add_argument(
+    'src_rpm',
+    help='Source package to deploy.'
+)
 
 # create the parser for the "push" command
 parser_push = subparsers.add_parser(
@@ -134,7 +134,7 @@ try:
         rpm_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution] + '/x86_64/'
         srpm_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution] + '/SRPMS/'
         copy(args.rpm, rpm_dir)
- #       copy(args.src_rpm, srpm_dir)
+        copy(args.src_rpm, srpm_dir)
 
         # update createrepo
         repo_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution]
