@@ -130,14 +130,18 @@ def wait_until_appmock_receives(appmock_ip):
     appmock_client.reset_tcp_server_history(appmock_ip)
     for i in range(5):
         ssl_sock.send('a\n')
-    correct_history = ['a\n', 'a\n', 'a\n', 'a\n', 'a\n']
+    for i in range(5):
+        ssl_sock.send('b\n')
+    correct_history = ['a\n', 'a\n', 'a\n', 'a\n', 'a\n', 'b\n', 'b\n', 'b\n', 'b\n', 'b\n']
     # Test the correctness of tcp_server_history endpoint
     result = appmock_client.tcp_server_history(appmock_ip, 5555)
     assert result == correct_history
     # Test if wait functions correctly returns msg history if requested.
-    result = appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 5555, 5, return_history=True)
+    result = appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 5555, 10, return_history=True)
     assert result == correct_history
     result = appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 5555, 'a\n', 5, return_history=True)
+    assert result == correct_history
+    result = appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 5555, 'b\n', 5, return_history=True)
     assert result == correct_history
 
 
@@ -154,3 +158,35 @@ def use_counter_endpoint(appmock_ip):
         ssl_sock.send('367sth\n')
         ssl_sock.send('qatert547\n')
     appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 6666, 100000)
+    assert 100000 == appmock_client.tcp_server_all_messages_count(appmock_ip, 6666)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, 'sdfg\n', 20000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, 'adfgsdf\n', 20000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, '345rthas\n', 20000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, '367sth\n', 20000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, 'qatert547\n', 20000)
+    assert 20000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, 'sdfg\n')
+    assert 20000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, 'adfgsdf\n')
+    assert 20000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, '345rthas\n')
+    assert 20000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, '367sth\n')
+    assert 20000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, 'qatert547\n')
+    appmock_client.reset_tcp_server_history(appmock_ip)
+    for i in range(2000):
+        ssl_sock.send('sdfg\n')
+        ssl_sock.send('adfgsdf\n')
+        ssl_sock.send('345rthas\n')
+        ssl_sock.send('367sth\n')
+        ssl_sock.send('qatert547\n')
+    appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 6666, 10000)
+    assert 10000 == appmock_client.tcp_server_all_messages_count(appmock_ip, 6666)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, 'sdfg\n', 2000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, 'adfgsdf\n', 2000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, '345rthas\n', 2000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, '367sth\n', 2000)
+    appmock_client.tcp_server_wait_for_specific_messages(appmock_ip, 6666, 'qatert547\n', 2000)
+    assert 2000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, 'sdfg\n')
+    assert 2000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, 'adfgsdf\n')
+    assert 2000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, '345rthas\n')
+    assert 2000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, '367sth\n')
+    assert 2000 == appmock_client.tcp_server_specific_message_count(appmock_ip, 6666, 'qatert547\n')
+    appmock_client.reset_tcp_server_history(appmock_ip)
+    appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 6666, 0)
