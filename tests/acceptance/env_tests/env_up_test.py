@@ -23,7 +23,7 @@ class TestEnvUp:
         res = self.result
         # Check if number of started dockers is correct
         # The number should be:
-        # 2 for skydns and skydock
+        # 1 dns node
         # 3 OP nodes
         # 1 Riak node for OP
         # 2 GR nodes
@@ -32,7 +32,7 @@ class TestEnvUp:
         # 2 client nodes
         # ------------
         # 14 nodes
-        assert 14 == len(res['docker_ids'])
+        assert 13 == len(res['docker_ids'])
         # Get the DNS ip
         dns = res['dns']
         # Will throw if the dns address is not legal
