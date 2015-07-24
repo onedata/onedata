@@ -14,7 +14,7 @@ class TestAppmockTCPExample:
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
         cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
-                                dns='none', uid=common.generate_uid(),
+                                dns_server='none', uid=common.generate_uid(),
                                 config_path=os.path.join(test_utils.test_file('env.json')))
 
     @classmethod
