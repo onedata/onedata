@@ -48,7 +48,10 @@ submodules:
 ## Build
 ##
 
-build: build_appmock build_globalregistry build_oneclient build_op_worker build_op_ccm
+build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker build_op_ccm
+
+build_bamboos:
+	$(call make, bamboos)
 
 build_appmock: submodules
 	$(call make, appmock)
