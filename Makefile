@@ -16,6 +16,7 @@ all: build deb_oneprovider rpm_oneprovider test
 ## Macros
 ##
 
+MAKE_BAMBOOS := bamboos/make.py -s bamboos -r .
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
 MAKE_GLOBALREGISTRY := globalregistry/make.py -s onepanel -r .
