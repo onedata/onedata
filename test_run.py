@@ -61,7 +61,7 @@ command = command.format(
     shed_privileges=(platform.system() == 'Linux'))
 
 ret = docker.run(tty=True,
-                 rm=True,
+                 # rm=True,
                  interactive=True,
                  workdir=script_dir,
                  reflect=[(script_dir, 'rw'),

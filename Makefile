@@ -78,6 +78,9 @@ test:
 test_packaging: build_globalregistry
 	./test_run.py --test-dir tests/packaging
 
+test_cucumber:
+	./test_run.py --test-dir tests/cucumber
+
 ##
 ## Clean
 ##
