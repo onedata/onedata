@@ -30,7 +30,6 @@ def mount(user, token, environment, context):
             ['./tests/cucumber/scenarios/utils/get_token.escript', gr_node, "u1"],
             stderr=subprocess.STDOUT)
 
-    print "TOKEN: " + token
     client = environment['client_nodes'][0]
     gr = environment['gr_nodes'][0]
     gr = gr.split('@')[1]
