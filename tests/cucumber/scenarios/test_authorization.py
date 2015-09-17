@@ -13,7 +13,7 @@ from steps.common import *
 @scenario(
     '../features/authorization.feature',
     'Successful authorization',
-    example_converters=dict(token=str, spaces=str)
+    # example_converters=dict(token=str, spaces=str)
 )
 def test_successful_authorization():
     pass
