@@ -6,10 +6,10 @@ Feature: Authorization
     Given environment is up
 
   Scenario: Successful authorization
-    Given u1 mounts onedata spaces using token
+    Given u1 mounts onedata spaces in /root/onedata using token
     Then last operation succeeds
-    And s1 are mounted
+    And [s1, s2] are mounted
 
   Scenario: Bad authorization
-    Given user mounts onedata spaces using bad token
+    Given user mounts onedata spaces in /root/onedata using bad token
     Then last operation fails

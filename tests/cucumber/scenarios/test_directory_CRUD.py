@@ -48,16 +48,17 @@ def test_children2():
 
 @scenario(
     '../features/directory_CRUD.feature',
-    'Double creation'
+    'Duplication'
 )
-def test_double():
+def test_duplication():
     pass
+
 
 @scenario(
     '../features/directory_CRUD.feature',
-    'Create directory and parents'
+    'Duplication in spaces'
 )
-def test_create_parents():
+def test_duplication_spaces():
     pass
 
 
@@ -89,5 +90,35 @@ def test_delete_non_empty():
     '../features/directory_CRUD.feature',
     'Move directory'
 )
-def test_delete_non_empty():
+def test_move():
+    pass
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Move directory to itself'
+)
+def test_move_to_itself():
+    pass
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Move directory to itself in spaces'
+)
+def test_move_to_itself_spaces():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Move directory to its subtree'
+)
+def test_move_to_subtree():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Move directory to its subtree in spaces'
+)
+def test_move_to_subtree_spaces():
     pass

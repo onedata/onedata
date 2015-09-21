@@ -1,80 +1,84 @@
 import pytest
 from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers
+import time
 
 from environment import docker, env
-
+from common import *
 
 @given(parsers.parse('we are in space {space}'))
-def goto_space(space, client_id):
-    path = docker.exec_(container=client_id, command="pwd", output=True)
-    if not path.endswith("spaces/" + space):
-        docker.exec_(container=client_id, command="cd ~/onedata/spaces/" + space)
+def goto_space(space, context):
+    #nie ma sensu robic cd bo docker.exec i tak startuje z domyslnego katalogu
+    context.space_path = context.mount_path + "/spaces/" + space
 
 
 @when(parsers.parse('user creates directories {dirs}'))
-def create(dirs, client_id):
+def create(dirs, client_id, context):
     dirs = list_parser(dirs)
     for dir in dirs:
-        docker.exec_(container=client_id, command=["mkdir", dir])
-    print("Create")
+        docker.exec_(container=client_id,
+                     command=["mkdir", context.space_path +"/"+ dir])
 
 
 @when(parsers.parse('user creates directory and parents {paths}'))
-def create_parents(paths, client_id):
+def create_parents(paths, client_id, context):
     paths = list_parser(paths)
     for path in paths:
-        docker.exec_(container=client_id, command=["mkdir", "-p", path])
-    print("Create parents")
+        docker.exec_(container=client_id,
+                     command=["mkdir", "-p", '/'.join([context.mount_path, path])])
 
 
 @when(parsers.parse('user renames {dir1} to {dir2}'))
-def rename(dir1, dir2, client_id):
-    docker.exec_(container=client_id, command=["mv", dir1, dir2])
-    print("Rename")
+def rename(dir1, dir2, client_id, context):
+    docker.exec_(container=client_id,
+                 command=["mv", '/'.join([context.mount_path, dir1]), '/'.join([context.mount_path, dir2])])
 
 
-@when(parsers.parse('user deletes empty directory {dir}'))
-def delete_empty(dir, client_id):
-    docker.exec_(container=client_id, command=["rmdir", dir])
-    print("Delete")
+@when(parsers.parse('user deletes empty directories {dirs}'))
+def delete_empty(dirs, client_id,context):
+    dirs = list_parser(dirs)
+    for dir in dirs:
+        docker.exec_(container=client_id,
+                     command=["rmdir", '/'.join([context.mount_path,dir])])
 
 
-@when(parsers.parse('user deletes non-empty directory {dir}'))
-def delete_non_empty(dir, client_id):
-    docker.exec_(container=client_id, command=["rm -r", dir])
-    print("Delete non-empty")
+@when(parsers.parse('user deletes non-empty directories {dirs}'))
+def delete_non_empty(dirs, client_id, context):
+    dirs = list_parser(dirs)
+    for dir in dirs:
+        docker.exec_(container=client_id, command=["rm", "-rf", '/'.join([context.mount_path, dir])])
 
 
-@when(parsers.parse('user deletes empty directory and parents {path}'))
-def delete_parents(path, client_id):
-    docker.exec_(container=client_id, command=["rmdir -p", path])
-    print("Delete parents")
+@when(parsers.parse('user deletes empty directory and parents {paths}'))
+def delete_parents(paths, client_id, context):
+    paths = list_parser(paths)
+    for path in paths:
+        docker.exec_(container=client_id,
+                     command=["rmdir -p", '/'.join([context.mount_path, path])])
 
 
 @then(parsers.parse('{dirs} are in ls {path}'))
-def ls_present(dirs, path, client_id):
-    print "PATH: " + path
-    ls_dirs = docker.exec_(container=client_id, command=["ls", path], output=True).split()
-    print ls_dirs
+def ls_present(dirs, path, client_id, context):
+    cmd = ["ls", context.mount_path + "/" + path]
+    ls_dirs = docker.exec_(container=client_id, command=cmd, output=True).split()
     dirs = list_parser(dirs)
     for dir in dirs:
-        if not dir in ls_dirs:
-            return False
-    return True
+        assert dir in ls_dirs
 
 
 @then(parsers.parse('{dirs} are not in ls {path}'))
-def ls_absent(dirs, path, client_id):
-    ls_dirs = docker.exec_(container=client_id, command=["ls", path], output=True).split()
+def ls_absent(dirs, path, client_id, context):
+    cmd = ["ls", context.mount_path + "/" + path]
+    ls_dirs = docker.exec_(container=client_id, command=cmd, output=True).split()
     dirs = list_parser(dirs)
     for dir in dirs:
-        if dir in ls_dirs:
-            return False
-    return True
+        assert dir not in ls_dirs
 
-#####################################################################
 
-def list_parser(list):
-    # return list.strip("[]").split(", ")
-    return [el.strip() for el in list.strip("[]").split(',')]
+@then("clean succeeds")
+def clean(client_id, context):
+    # time.sleep(600)
+    docker.exec_(container=client_id, command="rm -rf " + context.mount_path + "/*")
+    docker.exec_(container=client_id, command="ls " + context.mount_path)
+    success(client_id)
+
