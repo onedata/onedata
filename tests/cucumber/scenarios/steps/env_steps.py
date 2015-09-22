@@ -45,7 +45,6 @@ def environment(request, context):
         docker.remove(request.environment['docker_ids'], force=True, volumes=True)
     request.addfinalizer(fin)
     request.environment = env_desc
-    print env_desc
     return env_desc
 
 

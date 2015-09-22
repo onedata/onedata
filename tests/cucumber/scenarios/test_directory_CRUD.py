@@ -100,19 +100,20 @@ def test_move():
 def test_move_to_itself():
     pass
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to itself in spaces'
-)
-def test_move_to_itself_spaces():
-    pass
-
 
 @scenario(
     '../features/directory_CRUD.feature',
     'Move directory to its subtree'
 )
 def test_move_to_subtree():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Move directory to itself in spaces'
+)
+def test_move_to_itself_spaces():
     pass
 
 

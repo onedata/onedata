@@ -11,5 +11,5 @@ Feature: Authorization
     And [s1, s2] are mounted
 
   Scenario: Bad authorization
-    Given user mounts onedata spaces in /root/onedata using bad token
+    Given u1 mounts onedata spaces in /root/onedata using bad token
     Then last operation fails

@@ -15,7 +15,7 @@ import sys
 import time
 
 from environment import docker, env
-from common import list_parser
+from common import *
 
 
 @given(parsers.parse('{user} mounts onedata spaces in {mount_path} using {token}'))
@@ -42,12 +42,26 @@ def mount(user, mount_path, token, environment, context, client_id):
             './oneclient --authentication token --no_check_certificate ' + mount_path + \
             ' < token && rm token'
 
-    docker.exec_(container=client_id, command=cmd, stdout=sys.stdout, stderr=sys.stdout)
+    ret = docker.exec_(container=client_id, command=cmd, stdout=sys.stdout, stderr=sys.stdout)
+    save_op_code(context, ret)
+    #
+    # print "AFTER MOUNTING: " + docker.exec_(container=client_id,
+    #                    command="ls " + mount_path,
+    #                    output=True)
+    #
+    # print "SPACES AFTER MOUNTING: " + docker.exec_(container=client_id,
+    #                    command="ls " + mount_path + "/spaces",
+    #                    output=True)
+
 
     context.mount_path = mount_path
 
 
-@then(parsers.parse('{spaces} are mounted'))
+@then(parsers.parse("spaces are mounted", scope="module"))
+def check_spaces(spaces, client_id, context):
+
+
+@then(parsers.parse('mounting of {spaces} succeeds'))
 def check_spaces(spaces, client_id, context):
     time.sleep(3)
     spaces_list = list_parser(spaces)
@@ -55,8 +69,6 @@ def check_spaces(spaces, client_id, context):
     spaces_in_client = docker.exec_(container=client_id,
                                     command=['ls', context.mount_path + '/spaces'],
                                     output=True)
-    print spaces_in_client
     spaces_in_client = spaces_in_client.split("\n")
-    print spaces_in_client
     for space in spaces_list:
         assert space in spaces_in_client
