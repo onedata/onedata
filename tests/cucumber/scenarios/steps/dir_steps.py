@@ -12,8 +12,10 @@ def goto_space(space, context):
     context.space_path = context.mount_path + "/spaces/" + space
 
 
-@when(parsers.parse('{user} creates directories {dirs}'))
-def create(user, dirs, client_id, context):
+@when(parsers.parse('{user} creates directories {dirs} and {foo}'))
+def create(user, dirs, client_id, context, foo):
+    # if foo == 'true':
+    #     time.sleep(600)
     dirs = list_parser(dirs)
     print "START: "
     print docker.exec_(container=client_id,
@@ -32,6 +34,7 @@ def create(user, dirs, client_id, context):
 
 @when(parsers.parse('{user} creates directory and parents {paths}'))
 def create_parents(user, paths, client_id, context):
+
     print "START: "
     print docker.exec_(container=client_id,
                      command=["ls", context.mount_path])
@@ -53,6 +56,8 @@ def rename(user, dir1, dir2, client_id, context):
     print "TEST2: "
     print docker.exec_(container=client_id, command="ls " + context.mount_path + "/spaces/s1",
                        output=True)
+
+    # time.sleep(600)
     ret = docker.exec_(container=client_id,
                  command=["mv", '/'.join([context.mount_path, dir1]),
                           '/'.join([context.mount_path, dir2])])
@@ -117,7 +122,7 @@ def clean(client_id, context):
     print "CLEAN_START: "
     print docker.exec_(container=client_id, command="ls " + context.mount_path, output=True)
     print "CLEAN_START2: "
-    print docker.exec_(container=client_id, command="ls " + context.mount_path + "/spaces/s1",
+    print docker.exec_(container=client_id, command="ls -a " + context.mount_path + "/spaces/s1",
                        output=True)
 
     spaces = docker.exec_(container=client_id,
@@ -154,9 +159,9 @@ def clean(client_id, context):
 
 
     print "CLEAN: "
-    print docker.exec_(container=client_id, command="ls /root", output=True)
-    # print "CLEAN2: "
-    # print docker.exec_(container=client_id, command="ls " + context.mount_path + "/spaces/s1",
-    #                    output=True)
+    print docker.exec_(container=client_id, command="ls -l /root", output=True)
+    print "CLEAN2: "
+    print docker.exec_(container=client_id, command="ls -l " + context.mount_path + "/spaces",
+                       output=True)
     success(client_id, context)
 

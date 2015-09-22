@@ -21,7 +21,19 @@ from common import *
 @given(parsers.parse('{user} mounts onedata spaces in {mount_path} using {token}'))
 def mount(user, mount_path, token, environment, context, client_id):
 
-    mount_path = str(mount_path)
+    mount_data = {}
+    mount_data['user'] = user
+    mount_data['mount_path'] = str(mount_path)
+    mount_data['token'] = token
+    context.mount_data = mount_data
+
+
+@given("spaces are mounted", scope="module")
+def mount_spaces(request, context, environment, client_id):
+
+    user = context.mount_data['user']
+    mount_path = str(context.mount_data['mount_path'])
+    token = context.mount_data['token']
 
     with open("/etc/resolv.conf", "w") as conf:
         dns = environment['dns']
@@ -52,14 +64,14 @@ def mount(user, mount_path, token, environment, context, client_id):
     # print "SPACES AFTER MOUNTING: " + docker.exec_(container=client_id,
     #                    command="ls " + mount_path + "/spaces",
     #                    output=True)
-
-
+    # def fin():
+    #     docker.remove(request.environment['docker_ids'], force=True, volumes=True)
+    # request.addfinalizer(fin)
+    # request.environment = env_desc
+    #
+    #
+    #
     context.mount_path = mount_path
-
-
-@then(parsers.parse("spaces are mounted", scope="module"))
-def check_spaces(spaces, client_id, context):
-
 
 @then(parsers.parse('mounting of {spaces} succeeds'))
 def check_spaces(spaces, client_id, context):
