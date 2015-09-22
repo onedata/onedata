@@ -4,18 +4,17 @@ Feature: Directory_CRUD
     Given environment is defined in env.json
     Given environment is up
     Given u1 mounts onedata spaces in /root/onedata using token
-    Given spaces are mounted
     Given we are in space s1
 
   Scenario: Create directory
-    When u1 creates directories [dir1, dir2, dir3] and false
+    When u1 creates directories [dir1, dir2, dir3]
     Then last operation succeeds
     Then [dir1, dir2, dir3] are in ls .
     Then [dir1, dir2, dir3] are in ls spaces/s1
     Then clean succeeds
 
   Scenario: Rename directory
-    When u1 creates directories [dir1] and true
+    When u1 creates directories [dir1]
     When u1 renames dir1 to dir2
     Then last operation succeeds
     Then [dir2] are in ls .

@@ -12,10 +12,8 @@ def goto_space(space, context):
     context.space_path = context.mount_path + "/spaces/" + space
 
 
-@when(parsers.parse('{user} creates directories {dirs} and {foo}'))
-def create(user, dirs, client_id, context, foo):
-    # if foo == 'true':
-    #     time.sleep(600)
+@when(parsers.parse('{user} creates directories {dirs}'))
+def create(user, dirs, client_id, context):
     dirs = list_parser(dirs)
     print "START: "
     print docker.exec_(container=client_id,
@@ -34,7 +32,6 @@ def create(user, dirs, client_id, context, foo):
 
 @when(parsers.parse('{user} creates directory and parents {paths}'))
 def create_parents(user, paths, client_id, context):
-
     print "START: "
     print docker.exec_(container=client_id,
                      command=["ls", context.mount_path])
@@ -56,8 +53,6 @@ def rename(user, dir1, dir2, client_id, context):
     print "TEST2: "
     print docker.exec_(container=client_id, command="ls " + context.mount_path + "/spaces/s1",
                        output=True)
-
-    # time.sleep(600)
     ret = docker.exec_(container=client_id,
                  command=["mv", '/'.join([context.mount_path, dir1]),
                           '/'.join([context.mount_path, dir2])])
@@ -122,7 +117,7 @@ def clean(client_id, context):
     print "CLEAN_START: "
     print docker.exec_(container=client_id, command="ls " + context.mount_path, output=True)
     print "CLEAN_START2: "
-    print docker.exec_(container=client_id, command="ls -a " + context.mount_path + "/spaces/s1",
+    print docker.exec_(container=client_id, command="ls " + context.mount_path + "/spaces/s1",
                        output=True)
 
     spaces = docker.exec_(container=client_id,
@@ -133,35 +128,34 @@ def clean(client_id, context):
 
     #clean spaces
     for space in spaces:
-        ret = docker.exec_(container=client_id,
+        docker.exec_(container=client_id,
                      command="rm -rf " + '/'.join([context.mount_path, 'spaces', str(space), '*']))
-        save_op_code(context, ret)
 
-    # ####################################################################
-    # # print "CHECK: " + docker.exec_(container=client_id,
-    # #                    command="ps aux | grep './oneclient --authentication token' | " +
-    # #                    "grep -v 'grep'", output=True)
-    # pid = docker.exec_(container=client_id,
+    ####################################################################
+    # print "CHECK: " + docker.exec_(container=client_id,
     #                    command="ps aux | grep './oneclient --authentication token' | " +
-    #                    "grep -v 'grep' | awk '{print $2}'", output=True)
-    # # print "PID: " + pid
-    # # print type(pid)
-    # cmd = "kill -KILL " + str(pid)
-    # print "CMD: " + cmd
-    # # time.sleep(600)
-    # print "KILL: " + docker.exec_(container=client_id, command=cmd, output=True)
-    # docker.exec_(container=client_id, command="/bin/fusermount -u " + context.mount_path)
-    # # remove onedata dir
-    # ret = docker.exec_(container=client_id, command="rm -rf " + context.mount_path)
-    # save_op_code(context, ret)
-    # ##################################################################################
+    #                    "grep -v 'grep'", output=True)
+    pid = docker.exec_(container=client_id,
+                       command="ps aux | grep './oneclient --authentication token' | " +
+                       "grep -v 'grep' | awk '{print $2}'", output=True)
+    # print "PID: " + pid
+    # print type(pid)
+    cmd = "kill -KILL " + str(pid)
+    print "CMD: " + cmd
+    # time.sleep(600)
+    print "KILL: " + docker.exec_(container=client_id, command=cmd, output=True)
+    docker.exec_(container=client_id, command="umount " + context.mount_path)
+    # remove onedata dir
+    ret = docker.exec_(container=client_id, command="rm -rf " + context.mount_path)
+    save_op_code(context, ret)
+    ##################################################################################
 
 
 
     print "CLEAN: "
-    print docker.exec_(container=client_id, command="ls -l /root", output=True)
-    print "CLEAN2: "
-    print docker.exec_(container=client_id, command="ls -l " + context.mount_path + "/spaces",
-                       output=True)
+    print docker.exec_(container=client_id, command="ls /root", output=True)
+    # print "CLEAN2: "
+    # print docker.exec_(container=client_id, command="ls " + context.mount_path + "/spaces/s1",
+    #                    output=True)
     success(client_id, context)
 
