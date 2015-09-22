@@ -24,6 +24,3 @@ Feature: Directory_stat
     Then dir1 mode is 111
     Then clean succeeds
 
-
-
-

@@ -30,7 +30,6 @@ def client_id(environment):
     client = environment['client_nodes'][0]
     return docker.inspect(client)['Id']
 
-
 ######################## STEPS ########################
 
 @then("last operation succeeds")
@@ -42,11 +41,9 @@ def success(client_id, context):
 
 @then("last operation fails")
 def failure(client_id, context):
-    # time.sleep(600)
-    # retCode = docker.exec_(container=client_id, command="echo $?", output=True)
-    # print "RET: " + retCode
-    # assert retCode != '0'
     assert context.last_op_ret_code != 0
+
+
 
 ###################### FUNCTIONS ######################
 

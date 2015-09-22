@@ -40,19 +40,11 @@ def mount(user, mount_path, token, environment, context, client_id):
     cmd = "mkdir -p " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
             ' && echo ' + token + ' > token && ' + \
             './oneclient --authentication token --no_check_certificate ' + mount_path + \
-            ' < token && rm token'
+            ' < token'
+    #TODO delete token file
 
     ret = docker.exec_(container=client_id, command=cmd, stdout=sys.stdout, stderr=sys.stdout)
     save_op_code(context, ret)
-    #
-    # print "AFTER MOUNTING: " + docker.exec_(container=client_id,
-    #                    command="ls " + mount_path,
-    #                    output=True)
-    #
-    # print "SPACES AFTER MOUNTING: " + docker.exec_(container=client_id,
-    #                    command="ls " + mount_path + "/spaces",
-    #                    output=True)
-
 
     context.mount_path = mount_path
 
