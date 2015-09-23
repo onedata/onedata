@@ -85,6 +85,17 @@ Feature: Directory_CRUD
     Then [dir5] are in ls dir1/dir2/dir3
     Then clean succeeds
 
+  Scenario: Copy directory
+    When u1 creates directory and parents [dir1/dir2/dir3, dir4/dir5]
+    When u1 copies directory dir4/dir5 to dir1/dir2/dir3
+    Then last operation succeeds
+    Then [dir1, dir4] are in ls .
+    Then [dir3] are in ls dir1/dir2
+    Then [dir4] are in ls dir1/dir2/dir3
+    Then [dir5] are in ls dir1/dir2/dir3/dir4
+    Then [dir5] are in ls dir4
+    Then clean succeeds
+
   Scenario: Move directory to itself
     When u1 creates directories [dir1]
     When u1 renames dir1 to dir1

@@ -27,3 +27,26 @@ Feature: File_CRUD
     Then last operation succeeds
     Then [file1] are not in ls .
     Then clean succeeds
+
+  Scenario: Read and write to regular file
+    When u1 creates regular files [file1]
+    When u1 writes "Ala ma kota" to file1
+    Then u1 reads "Ala ma kota" from file1
+
+    Scenario: Move regular file
+    When u1 creates directory and parents [dir1/dir2, dir4]
+    When u1 creates files [dir1/dir2/file1]
+    When u1 renames dir1/dir2/file1 to dir4/file1
+    Then last operation succeeds
+    Then [file1] are not in ls dir1/dir2
+    Then [file1] are in ls dir4
+    Then clean succeeds
+
+  Scenario: Copy regular file
+    When u1 creates directory and parents [dir1/dir2, dir4]
+    When u1 creates files [dir1/dir2/file1]
+    When u1 copies regular file dir1/dir2/file1 to dir4/file1
+    Then last operation succeeds
+    Then [file1] are in ls dir1/dir2
+    Then [file1] are in ls dir4
+    Then clean succeeds

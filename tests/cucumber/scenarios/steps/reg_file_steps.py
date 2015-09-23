@@ -17,3 +17,22 @@ def create_reg_file(user, files, client_id, context):
         ret = docker.exec_(container=client_id,
                      command=["touch", context.mount_path +"/"+ file])
         save_op_code(context, ret)
+
+@when(parsers.parse('{user} writes "{text}" to {file}'))
+def write(user, text, file, context, client_id):
+    # UWAGA, moze byc problem z kodowaniem argumentu text, unicode lub string type
+    ret = docker.exec_(container=client_id, command=[text, " > ", file])
+    save_op_code(context, ret)
+
+@then(parsers.parse('{user} reads "{text}" from {file}'))
+def read(user, text, file, context, client_id):
+
+    readText = docker.exec_(container=client_id, command=["cat", file], output=True)
+    assert readText == text
+
+@when(parsers.parse('{user} copies regular file {file1} to {file2}'))
+def copy_reg_file(user, file1, file2, context):
+    ret = docker.exec_(container=client_id,
+                       command=["cp", '/'.join([context.mount_path, file1]),
+                                '/'.join([context.mount_path, file2])])
+    save_op_code(context, ret)

@@ -30,3 +30,27 @@ def test_rename():
 )
 def test_delete():
     pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Read and write to regular file'
+)
+def test_read_write():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Move regular file'
+)
+def test_move():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Copy regular file'
+)
+def test_copy():
+    pass

@@ -30,15 +30,6 @@ def create_parents(user, paths, client_id, context):
         save_op_code(context, ret)
 
 
-# @when(parsers.parse('{user} renames {dir1} to {dir2}'))
-# def rename(user, dir1, dir2, client_id, context):
-#
-#     ret = docker.exec_(container=client_id,
-#                        command=["mv", '/'.join([context.mount_path, dir1]),
-#                                 '/'.join([context.mount_path, dir2])])
-#     save_op_code(context, ret)
-
-
 @when(parsers.parse('{user} deletes empty directories {dirs}'))
 def delete_empty(user, dirs, client_id,context):
     dirs = list_parser(dirs)
@@ -65,20 +56,9 @@ def delete_parents(user, paths, client_id, context):
                            command="cd " + context.mount_path + " && rmdir -p " + str(path))
         save_op_code(context, ret)
 
-
-# @then(parsers.parse('{dirs} are in ls {path}'))
-# def ls_present(dirs, path, client_id, context):
-#     cmd = ["ls", context.mount_path + "/" + path]
-#     ls_dirs = docker.exec_(container=client_id, command=cmd, output=True).split()
-#     dirs = list_parser(dirs)
-#     for dir in dirs:
-#         assert dir in ls_dirs
-#
-#
-# @then(parsers.parse('{dirs} are not in ls {path}'))
-# def ls_absent(dirs, path, client_id, context):
-#     cmd = ["ls", context.mount_path + "/" + path]
-#     ls_dirs = docker.exec_(container=client_id, command=cmd, output=True).split()
-#     dirs = list_parser(dirs)
-#     for dir in dirs:
-#         assert dir not in ls_dirs
+@when(parsers.parse('{user} copies directory {dir1} to {dir2'))
+def copy_dir(user, dir1, dir2, client_id, context):
+    ret = docker.exec_(container=client_id,
+                       command=["cp", "-r", '/'.join([context.mount_path, dir1]),
+                                '/'.join([context.mount_path, dir2])])
+    save_op_code(context, ret)
