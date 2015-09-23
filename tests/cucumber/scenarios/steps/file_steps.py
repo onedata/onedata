@@ -78,19 +78,72 @@ def clean(client_id, context):
                           output=True)
     spaces = spaces.split("\n")
 
-    # clean spaces
-    for space in spaces:
-        docker.exec_(container=client_id,
-                     command="rm -rf " + '/'.join([context.mount_path, 'spaces', str(space), '*']))
+    # TEST
+    # TODO odkomentowac ponizsze linie testowe
+    # # clean spaces
+    # for space in spaces:
+    #     docker.exec_(container=client_id,
+    #                  command="rm -rf " + '/'.join([context.mount_path, 'spaces', str(space), '*']))
+    #
+    # pid = docker.exec_(container=client_id,
+    #                    command="ps aux | grep './oneclient --authentication token' | " +
+    #                    "grep -v 'grep' | awk '{print $2}'", output=True)
+    # # kill oneclient process
+    # docker.exec_(container=client_id, command="kill -KILL " + str(pid), output=True)
+    # # unmount onedata
+    # docker.exec_(container=client_id, command="umount " + context.mount_path)
+    # # remove onedata dir
+    # END TEST
 
-    pid = docker.exec_(container=client_id,
-                       command="ps aux | grep './oneclient --authentication token' | " +
-                       "grep -v 'grep' | awk '{print $2}'", output=True)
-    # kill oneclient process
-    docker.exec_(container=client_id, command="kill -KILL " + str(pid), output=True)
-    # unmount onedata
-    docker.exec_(container=client_id, command="umount " + context.mount_path)
-    # remove onedata dir
     ret = docker.exec_(container=client_id, command="rm -rf " + context.mount_path)
     save_op_code(context, ret)
     success(client_id, context)
+
+
+@then(parsers.parse('{file} size is {size} bytes'))
+def check_size(file, size, context):
+    curr_size = docker.exec_(container=client_id,
+                             command=["stat", "--format=%s", '/'.join([context.mount_path, file])],
+                             output=True)
+    assert size == curr_size
+    
+@then(parsers.parse('{time1} of {file} is {comparator} than {time2}'))
+def check_time(time1, time2, comparator, file, context):
+    opt1 = get_time_opt(time1)
+    opt2 = get_time_opt(time2)
+    time1 = docker.exec_(container=client_id,
+                         command=["stat", "--format="+opt1, '/'.join([context.mount_path, file])],
+                         output=True)
+    time2 = docker.exec_(container=client_id,
+                         command=["stat", "--format="+opt2, '/'.join([context.mount_path, file])],
+                         output=True)
+    assert compare(int(time1), int(time2), comparator)
+
+
+####################################################################################################
+
+
+def get_time_opt(time):
+    if time == "access time":
+        return 'X'
+    elif time == "modification time":
+        return 'Y'
+    elif time == "status change time":
+        return 'Z'
+    else:
+        raise ValueError("Wrong argument to function get_time_opt")
+
+
+def compare(val1, val2, comparator):
+    if comparator == 'equals':
+        return val1 == val2
+    elif comparator == 'greater':
+        return val1 > val2
+    elif comparator == 'less':
+        return val1 < val2
+    elif comparator == 'not greater':
+        return val1 <= val2
+    elif comparator == 'not less':
+        return val1 >= val2
+    else:
+        raise ValueError("Wrong argument comparator to function compare")

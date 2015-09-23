@@ -94,6 +94,15 @@ def test_delete_non_empty():
 def test_move():
     pass
 
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Copy directory'
+)
+def test_copy():
+    pass
+
+
 @scenario(
     '../features/directory_CRUD.feature',
     'Move directory to itself'

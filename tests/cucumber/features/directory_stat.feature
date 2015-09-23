@@ -19,8 +19,10 @@ Feature: Directory_stat
 
   Scenario: Change access permissions
     When u1 creates directories [dir1]
-    When u1 changes dir1 mode to 111
+    When u1 changes dir1 mode to 211
     Then last operation succeeds
-    Then dir1 mode is 111
+    Then dir1 mode is 211
     Then clean succeeds
 
+
+#TODO time, size

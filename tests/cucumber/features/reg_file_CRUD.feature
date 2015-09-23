@@ -30,8 +30,11 @@ Feature: File_CRUD
 
   Scenario: Read and write to regular file
     When u1 creates regular files [file1]
-    When u1 writes "Ala ma kota" to file1
-    Then u1 reads "Ala ma kota" from file1
+    When u1 writes "TEST TEXT ONEDATA" to file1
+    Then last operation succeeds
+    Then u1 reads "TEST TEXT ONEDATA" from file1
+    Then last operation succeeds
+    Then clean succeeds
 
     Scenario: Move regular file
     When u1 creates directory and parents [dir1/dir2, dir4]
@@ -39,7 +42,9 @@ Feature: File_CRUD
     When u1 renames dir1/dir2/file1 to dir4/file1
     Then last operation succeeds
     Then [file1] are not in ls dir1/dir2
+    Then [file1] are not in ls spaces/s1/dir1/dir2
     Then [file1] are in ls dir4
+    Then [file1] are in ls spaces/s1/dir4
     Then clean succeeds
 
   Scenario: Copy regular file

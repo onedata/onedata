@@ -42,13 +42,6 @@ Feature: Directory_CRUD
     Then [child1] are in ls dir1/dir2/dir3
     Then clean succeeds
 
-  Scenario: Delete empty directory and parents
-    #rmdir -p dir1/dir2/dir3
-    When u1 creates directory and parents [dir1/dir2/dir3]
-    When u1 deletes empty directory and parents [dir1/dir2/dir3]
-    Then last operation succeeds
-    Then clean succeeds
-
   Scenario: Duplication
     When u1 creates directories [dir1]
     When u1 creates directories [dir1]
@@ -58,6 +51,13 @@ Feature: Directory_CRUD
   Scenario: Duplication in spaces
     When u1 creates directories [dir1, spaces/s1/dir1]
     Then last operation fails
+    Then clean succeeds
+
+  Scenario: Delete empty directory and parents
+    #rmdir -p dir1/dir2/dir3
+    When u1 creates directory and parents [dir1/dir2/dir3]
+    When u1 deletes empty directory and parents [dir1/dir2/dir3]
+    Then last operation succeeds
     Then clean succeeds
 
   Scenario: Delete non-empty directory in wrong way
@@ -80,9 +80,14 @@ Feature: Directory_CRUD
     When u1 creates directory and parents [dir1/dir2/dir3, dir4/dir5]
     When u1 renames dir4/dir5 to dir1/dir2/dir3
     Then last operation succeeds
+    Then [dir5] are not in ls dir4
+    Then [dir5] are not in ls spaces/s1/dir4
     Then [dir1, dir4] are in ls .
+    Then [dir1, dir4] are in ls spaces/s1
     Then [dir3] are in ls dir1/dir2
+    Then [dir3] are in ls spaces/s1/dir1/dir2
     Then [dir5] are in ls dir1/dir2/dir3
+    Then [dir5] are in ls spaces/s1/dir1/dir2/dir3
     Then clean succeeds
 
   Scenario: Copy directory
@@ -104,17 +109,17 @@ Feature: Directory_CRUD
     Then [dir1] are in ls spaces/s1
     Then clean succeeds
 
-  Scenario: Move directory to itself in spaces
-    When u1 creates directories [dir1]
-    When u1 renames dir1 to spaces/s1/dir1
+    Scenario: Move directory to its subtree
+    When u1 creates directory and parents [dir1/dir2/dir3]
+    When u1 renames dir1 to dir1/dir2/dir3
     Then last operation fails
     Then [dir1] are in ls .
     Then [dir1] are in ls spaces/s1
     Then clean succeeds
 
-  Scenario: Move directory to its subtree
-    When u1 creates directory and parents [dir1/dir2/dir3]
-    When u1 renames dir1 to dir1/dir2/dir3
+  Scenario: Move directory to itself in spaces
+    When u1 creates directories [dir1]
+    When u1 renames dir1 to spaces/s1/dir1
     Then last operation fails
     Then [dir1] are in ls .
     Then [dir1] are in ls spaces/s1
