@@ -17,6 +17,22 @@ def test_type():
 
 @scenario(
     '../features/reg_file_stat.feature',
+    'Check file type when empty'
+)
+def test_type_empty():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
+    'Check file type when non-empty'
+)
+def test_type():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
     'Check default access permissions'
 )
 def test_default_access():
@@ -49,6 +65,14 @@ def test_decrease_size():
 
 @scenario(
     '../features/reg_file_stat.feature',
+    'Timestamps at creation'
+)
+def test_timestamp():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
     'Access time'
 )
 def test_access_time():
@@ -65,7 +89,15 @@ def test_modification_time():
 
 @scenario(
     '../features/reg_file_stat.feature',
-    'Status change time'
+    'Status-change time when changing mode'
 )
-def test_stat_change_time():
+def test_stat_change_time_chmod():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
+    'Status-change time when renaming'
+)
+def test_stat_change_time_mv():
     pass

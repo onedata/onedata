@@ -29,11 +29,10 @@ def ls_absent(files, path, client_id, context):
     files = list_parser(files)
     for file in files:
         assert file not in ls_files
-        
+
 
 @when(parsers.parse('{user} renames {file1} to {file2}'))
 def rename(user, file1, file2, client_id, context):
-
     ret = docker.exec_(container=client_id,
                        command=["mv", '/'.join([context.mount_path, file1]),
                                 '/'.join([context.mount_path, file2])])
@@ -41,7 +40,7 @@ def rename(user, file1, file2, client_id, context):
 
 
 @when(parsers.parse('{user} deletes files {files}'))
-def delete_file(user, files, client_id,context):
+def delete_file(user, files, client_id, context):
     files = list_parser(files)
     for file in files:
         ret = docker.exec_(container=client_id,
@@ -52,16 +51,17 @@ def delete_file(user, files, client_id,context):
 @then(parsers.parse('{file} file type is {fileType}'))
 def check_type(file, fileType, client_id, context):
     currFileType = docker.exec_(container=client_id,
-                        command=["stat", '/'.join([context.mount_path, file]), "--format=%F"],
-                        output=True)
+                                command=["stat", '/'.join([context.mount_path, file]),
+                                         "--format=%F"],
+                                output=True)
     assert fileType == currFileType
 
 
 @then(parsers.parse('{file} mode is {mode}'))
 def check_mode(file, mode, client_id, context):
     curr_mode = docker.exec_(container=client_id,
-                     command=["stat", "--format=%a", '/'.join([context.mount_path, file])],
-                     output=True)
+                             command=["stat", "--format=%a", '/'.join([context.mount_path, file])],
+                             output=True)
     assert mode == curr_mode
 
 
@@ -73,27 +73,24 @@ def change_mode(user, file, mode, client_id, context):
 
 @then("clean succeeds")
 def clean(client_id, context):
-
     spaces = docker.exec_(container=client_id, command=['ls', context.mount_path + '/spaces'],
                           output=True)
     spaces = spaces.split("\n")
 
-    # TEST
-    # TODO odkomentowac ponizsze linie testowe
-    # # clean spaces
-    # for space in spaces:
-    #     docker.exec_(container=client_id,
-    #                  command="rm -rf " + '/'.join([context.mount_path, 'spaces', str(space), '*']))
-    #
-    # pid = docker.exec_(container=client_id,
-    #                    command="ps aux | grep './oneclient --authentication token' | " +
-    #                    "grep -v 'grep' | awk '{print $2}'", output=True)
-    # # kill oneclient process
-    # docker.exec_(container=client_id, command="kill -KILL " + str(pid), output=True)
-    # # unmount onedata
-    # docker.exec_(container=client_id, command="umount " + context.mount_path)
-    # # remove onedata dir
-    # END TEST
+    # TODO zakomentowac ponizsze linie i sprawdzic test bez montowania
+    # clean spaces
+    for space in spaces:
+        docker.exec_(container=client_id,
+                     command="rm -rf " + '/'.join([context.mount_path, 'spaces', str(space), '*']))
+
+    pid = docker.exec_(container=client_id,
+                       command="ps aux | grep './oneclient --authentication token' | " +
+                       "grep -v 'grep' | awk '{print $2}'", output=True)
+    # kill oneclient process
+    docker.exec_(container=client_id, command="kill -KILL " + str(pid), output=True)
+    # unmount onedata
+    docker.exec_(container=client_id, command="umount " + context.mount_path)
+    # remove onedata dir
 
     ret = docker.exec_(container=client_id, command="rm -rf " + context.mount_path)
     save_op_code(context, ret)
@@ -106,16 +103,18 @@ def check_size(file, size, context):
                              command=["stat", "--format=%s", '/'.join([context.mount_path, file])],
                              output=True)
     assert size == curr_size
-    
+
+
+@then(parsers.parse('{time1} of {file} is {comparator} to {time2}'))
 @then(parsers.parse('{time1} of {file} is {comparator} than {time2}'))
 def check_time(time1, time2, comparator, file, context):
     opt1 = get_time_opt(time1)
     opt2 = get_time_opt(time2)
     time1 = docker.exec_(container=client_id,
-                         command=["stat", "--format="+opt1, '/'.join([context.mount_path, file])],
+                         command=["stat", "--format=" + opt1, '/'.join([context.mount_path, file])],
                          output=True)
     time2 = docker.exec_(container=client_id,
-                         command=["stat", "--format="+opt2, '/'.join([context.mount_path, file])],
+                         command=["stat", "--format=" + opt2, '/'.join([context.mount_path, file])],
                          output=True)
     assert compare(int(time1), int(time2), comparator)
 
@@ -128,14 +127,14 @@ def get_time_opt(time):
         return 'X'
     elif time == "modification time":
         return 'Y'
-    elif time == "status change time":
+    elif time == "status-change time":
         return 'Z'
     else:
         raise ValueError("Wrong argument to function get_time_opt")
 
 
 def compare(val1, val2, comparator):
-    if comparator == 'equals':
+    if comparator == 'equal':
         return val1 == val2
     elif comparator == 'greater':
         return val1 > val2

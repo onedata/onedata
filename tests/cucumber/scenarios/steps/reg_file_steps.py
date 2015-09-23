@@ -10,9 +10,6 @@ from common import *
 @when(parsers.parse('{user} creates regular files {files}'))
 def create_reg_file(user, files, client_id, context):
     files = list_parser(files)
-
-    time.sleep(600)
-
     for file in files:
         ret = docker.exec_(container=client_id,
                      command=["touch", context.mount_path +"/"+ file])
