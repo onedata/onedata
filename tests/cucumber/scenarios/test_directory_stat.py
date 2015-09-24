@@ -55,34 +55,35 @@ def test_timestamp():
 def test_update_timestamp():
     pass
 
-
-@scenario(
-    '../features/directory_stat.feature',
-    'Access time'
-)
-def test_access_time():
-    pass
-
-
-@scenario(
-    '../features/directory_stat.feature',
-    'Modification time'
-)
-def test_modification_time():
-    pass
-
-
-@scenario(
-    '../features/directory_stat.feature',
-    'Status-change time when changing mode'
-)
-def test_stat_change_time_chmod():
-    pass
-
-
-@scenario(
-    '../features/directory_stat.feature',
-    'Status-change time when renaming'
-)
-def test_stat_change_time_mv():
-    pass
+# TODO below tests should be uncommented after resolving VFS-1218 in op_worker
+#  and VFS-1235 in oneclient
+# @scenario(
+#     '../features/directory_stat.feature',
+#     'Access time'
+# )
+# def test_access_time():
+#     pass
+#
+#
+# @scenario(
+#     '../features/directory_stat.feature',
+#     'Modification time'
+# )
+# def test_modification_time():
+#     pass
+#
+#
+# @scenario(
+#     '../features/directory_stat.feature',
+#     'Status-change time when changing mode'
+# )
+# def test_stat_change_time_chmod():
+#     pass
+#
+#
+# @scenario(
+#     '../features/directory_stat.feature',
+#     'Status-change time when renaming'
+# )
+# def test_stat_change_time_mv():
+#     pass

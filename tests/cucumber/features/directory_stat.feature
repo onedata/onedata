@@ -67,7 +67,7 @@ Feature: Directory_stat
     Then status-change time of dir2 is greater than modification time
     Then status-change time of dir2 is greater than access time
     Then clean succeeds
-    
+
   Scenario: Status-change time when changing mode
     When u1 creates directories [dir1]
     When sleep 1 seconds

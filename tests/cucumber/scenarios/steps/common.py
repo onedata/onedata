@@ -1,4 +1,6 @@
-"""Author: Piotr Ociepka
+"""
+Author: Piotr Ociepka
+Author: Jakub Kudzia
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
@@ -6,7 +8,7 @@ Module implements some common basic functions and functionality.
 """
 
 import pytest
-from pytest_bdd import then, when
+from pytest_bdd import given, when, then
 from pytest_bdd import parsers
 
 from environment import docker
@@ -38,6 +40,7 @@ def client_id(environment):
 def sleep(time, client_id):
     docker.exec_(container=client_id,
                  command="sleep " + str(time))
+
 
 @when("last operation succeeds")
 @then("last operation succeeds")
