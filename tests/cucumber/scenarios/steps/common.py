@@ -11,6 +11,7 @@ import pytest
 from pytest_bdd import given, when, then
 from pytest_bdd import parsers
 
+import os
 from environment import docker
 
 ####################### CLASSES #######################
@@ -63,3 +64,5 @@ def list_parser(list):
 def save_op_code(context, op_code):
     context.last_op_ret_code = op_code
 
+def make_path(context, path):
+    return os.path.join(context.mount_path, str(path))

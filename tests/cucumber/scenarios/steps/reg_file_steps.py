@@ -18,14 +18,14 @@ from common import *
 @when(parsers.parse('{user} writes "{text}" to {file}'))
 def write(user, text, file, context, client_id):
     ret = docker.exec_(container=client_id,
-                       command='echo "' + str(text) + '" > ' + str('/'.join([context.mount_path, file])))
+                       command='echo "' + str(text) + '" > ' + make_path(context, file))
     save_op_code(context, ret)
 
 
 @then(parsers.parse('{user} reads "{text}" from {file}'))
 def read(user, text, file, context, client_id):
     read_text = docker.exec_(container=client_id,
-                             command=["cat", str('/'.join([context.mount_path, file]))],
+                             command=["cat", make_path(context, file)],
                              output=True)
     assert read_text == text
 
@@ -34,8 +34,7 @@ def read(user, text, file, context, client_id):
 def copy_reg_file(user, file, path, context, client_id):
 
     ret = docker.exec_(container=client_id,
-                       command="cp " + str('/'.join([context.mount_path, file])) + \
-                        " " + str('/'.join([context.mount_path, path])))
+                       command="cp " + make_path(context, file) +" " + make_path(context, path))
     save_op_code(context, ret)
 
 
@@ -43,5 +42,5 @@ def copy_reg_file(user, file, path, context, client_id):
 def truncate(user, file, new_size, context, client_id):
     ret = docker.exec_(container=client_id,
                        command=["truncate", "--size="+str(new_size),
-                                '/'.join([context.mount_path, file])])
+                                make_path(context, file)])
     save_op_code(context, ret)

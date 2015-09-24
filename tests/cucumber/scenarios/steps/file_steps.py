@@ -20,13 +20,13 @@ def create_reg_file(user, files, client_id, context):
     files = list_parser(files)
     for file in files:
         ret = docker.exec_(container=client_id,
-                     command=["touch", context.mount_path +"/"+ file])
+                     command=["touch", make_path(context, file)])
         save_op_code(context, ret)
 
 
 @then(parsers.parse('{files} are in ls {path}'))
 def ls_present(files, path, client_id, context):
-    cmd = ["ls", context.mount_path + "/" + path]
+    cmd = ["ls", make_path(context, path)]
     ls_files = docker.exec_(container=client_id, command=cmd, output=True).split()
     files = list_parser(files)
     for file in files:
@@ -35,7 +35,7 @@ def ls_present(files, path, client_id, context):
 
 @then(parsers.parse('{files} are not in ls {path}'))
 def ls_absent(files, path, client_id, context):
-    cmd = ["ls", context.mount_path + "/" + path]
+    cmd = ["ls", make_path(context, path)]
     ls_files = docker.exec_(container=client_id, command=cmd, output=True).split()
     files = list_parser(files)
     for file in files:
@@ -45,8 +45,7 @@ def ls_absent(files, path, client_id, context):
 @when(parsers.parse('{user} renames {file1} to {file2}'))
 def rename(user, file1, file2, client_id, context):
     ret = docker.exec_(container=client_id,
-                       command=["mv", '/'.join([context.mount_path, file1]),
-                                '/'.join([context.mount_path, file2])])
+                       command=["mv", make_path(context, file1), make_path(context, file2)])
     save_op_code(context, ret)
 
 
@@ -55,15 +54,14 @@ def delete_file(user, files, client_id, context):
     files = list_parser(files)
     for file in files:
         ret = docker.exec_(container=client_id,
-                           command=["rm", '/'.join([context.mount_path, file])])
+                           command=["rm", make_path(context, file)])
         save_op_code(context, ret)
 
 
 @then(parsers.parse('{file} file type is {fileType}'))
 def check_type(file, fileType, client_id, context):
     currFileType = docker.exec_(container=client_id,
-                                command=["stat", str('/'.join([context.mount_path, file])),
-                                         "--format=%F"],
+                                command=["stat", make_path(context, file), "--format=%F"],
                                 output=True)
     assert fileType == currFileType
 
@@ -71,7 +69,7 @@ def check_type(file, fileType, client_id, context):
 @then(parsers.parse('{file} mode is {mode}'))
 def check_mode(file, mode, client_id, context):
     curr_mode = docker.exec_(container=client_id,
-                             command=["stat", "--format=%a", str('/'.join([context.mount_path, file]))],
+                             command=["stat", "--format=%a", make_path(context, file)],
                              output=True)
     assert mode == curr_mode
 
@@ -79,19 +77,19 @@ def check_mode(file, mode, client_id, context):
 @when(parsers.parse('{user} changes {file} mode to {mode}'))
 def change_mode(user, file, mode, client_id, context):
     docker.exec_(container=client_id,
-                 command=["chmod", mode, '/'.join([context.mount_path, file])])
+                 command=["chmod", mode, make_path(context, file)])
 
 
 @then("clean succeeds")
 def clean(client_id, context):
-    spaces = docker.exec_(container=client_id, command=['ls', context.mount_path + '/spaces'],
+    spaces = docker.exec_(container=client_id, command=['ls', make_path(context, 'spaces')],
                           output=True)
     spaces = spaces.split("\n")
 
     # clean spaces
     for space in spaces:
         docker.exec_(container=client_id,
-                     command="rm -rf " + '/'.join([context.mount_path, 'spaces', str(space), '*']))
+                     command="rm -rf " + make_path(context, 'spaces/' + space + '/*'))
 
     pid = docker.exec_(container=client_id,
                        command="ps aux | grep './oneclient --authentication token' | " +
@@ -113,7 +111,7 @@ def clean(client_id, context):
 @then(parsers.parse('{file} size is {size} bytes'))
 def check_size(file, size, context, client_id):
     curr_size = docker.exec_(container=client_id,
-                             command=["stat", "--format=%s", str('/'.join([context.mount_path, file]))],
+                             command=["stat", "--format=%s", make_path(context, file)],
                              output=True)
     assert size == curr_size
 
@@ -127,10 +125,10 @@ def check_time(time1, time2, comparator, file, context, client_id):
     file = str(file)
 
     time1 = docker.exec_(container=client_id,
-                         command="stat --format=%" + opt1 + ' ' + '/'.join([context.mount_path, file]),
+                         command="stat --format=%" + opt1 + ' ' + make_path(context, file),
                          output=True)
     time2 = docker.exec_(container=client_id,
-                         command="stat --format=%" + opt2 + ' ' + '/'.join([context.mount_path, file]),
+                         command="stat --format=%" + opt2 + ' ' + make_path(context, file),
                          output=True)
 
     assert compare(int(time1), int(time2), comparator)

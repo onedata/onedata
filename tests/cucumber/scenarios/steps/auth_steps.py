@@ -56,7 +56,7 @@ def check_spaces(spaces, client_id, context):
     spaces_list = list_parser(spaces)
 
     spaces_in_client = docker.exec_(container=client_id,
-                                    command=['ls', context.mount_path + '/spaces'],
+                                    command=['ls', make_path(context, "spaces")],
                                     output=True)
     spaces_in_client = spaces_in_client.split("\n")
     for space in spaces_list:
