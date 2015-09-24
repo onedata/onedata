@@ -2,7 +2,8 @@
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
-Module implements steps for operation on all types of UNIX files.
+Module implements common steps for operation on files (both regular files
+and directories).
 """
 
 import pytest

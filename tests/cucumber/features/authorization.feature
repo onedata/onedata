@@ -1,4 +1,3 @@
-@other_env
 Feature: Authorization
 
   Background:
@@ -8,7 +7,7 @@ Feature: Authorization
   Scenario: Successful authorization
     Given u1 mounts onedata spaces in /root/onedata using token
     Then last operation succeeds
-    And [s1, s2] are mounted
+    Then [s1, s2] are mounted
 
   Scenario: Bad authorization
     Given u1 mounts onedata spaces in /root/onedata using bad token

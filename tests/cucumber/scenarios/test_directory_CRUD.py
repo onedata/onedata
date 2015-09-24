@@ -1,3 +1,12 @@
+"""
+Author: Piotr Ociepka
+Author: Jakub Kudzia
+Copyright (C) 2015 ACK CYFRONET AGH
+This software is released under the MIT license cited in 'LICENSE.txt'
+
+Test suite for CRUD operations on directories in onedata.
+"""
+
 from pytest_bdd import scenario
 
 from steps.env_steps import *
@@ -27,7 +36,23 @@ def test_create_default_spaces():
     '../features/directory_CRUD.feature',
     'Create directory in non-default space'
 )
-def test_create_spaces():
+def test_create_in_spaces():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Create directory spaces'
+)
+def test_create_spaces_dir():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Create space'
+)
+def test_create_space():
     pass
 
 
@@ -44,6 +69,22 @@ def test_rename():
     'Delete empty directory'
 )
 def test_delete():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Delete directory spaces'
+)
+def test_delete_spaces_dir():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Delete space'
+)
+def test_delete_space():
     pass
 
 
@@ -145,7 +186,22 @@ def test_move_to_itself_spaces():
 
 @scenario(
     '../features/directory_CRUD.feature',
+    'Move directory to itself in default space'
+)
+def test_move_to_itself_default_space():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
     'Move directory to its subtree in spaces'
 )
 def test_move_to_subtree_spaces():
+    pass
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Move directory to its subtree in default space'
+)
+def test_move_to_subtree_default_space():
     pass

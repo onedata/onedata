@@ -39,11 +39,13 @@ def sleep(time, client_id):
     docker.exec_(container=client_id,
                  command="sleep " + str(time))
 
+@when("last operation succeeds")
 @then("last operation succeeds")
 def success(context):
     assert context.last_op_ret_code == 0
 
 
+@when("last operation fails")
 @then("last operation fails")
 def failure(context):
     assert context.last_op_ret_code != 0

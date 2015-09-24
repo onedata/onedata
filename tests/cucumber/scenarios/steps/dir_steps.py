@@ -1,3 +1,12 @@
+"""
+Author: Piotr Ociepka
+Author: Jakub Kudzia
+Copyright (C) 2015 ACK CYFRONET AGH
+This software is released under the MIT license cited in 'LICENSE.txt'
+
+Module implements pytest-bdd steps for operations on directories.
+"""
+
 import pytest
 from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers

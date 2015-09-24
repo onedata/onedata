@@ -4,8 +4,9 @@ Author: Jakub Kudzia
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
-Module implements common functions authorization and mounting oneclient.
+Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
+
 import pytest
 from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers
@@ -51,6 +52,7 @@ def mount(user, mount_path, token, environment, context, client_id):
 @then(parsers.parse('{spaces} are mounted'))
 def check_spaces(spaces, client_id, context):
     time.sleep(3)
+    # sleep to be sure that environment is up
     spaces_list = list_parser(spaces)
 
     spaces_in_client = docker.exec_(container=client_id,
