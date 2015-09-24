@@ -17,6 +17,22 @@ def test_create():
 
 @scenario(
     '../features/directory_CRUD.feature',
+    'Create directory in default space'
+)
+def test_create_default_spaces():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
+    'Create directory in non-default space'
+)
+def test_create_spaces():
+    pass
+
+
+@scenario(
+    '../features/directory_CRUD.feature',
     'Rename directory'
 )
 def test_rename():

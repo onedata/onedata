@@ -13,6 +13,19 @@ Feature: Directory_CRUD
     Then [dir1, dir2, dir3] are in ls spaces/s1
     Then clean succeeds
 
+  Scenario: Create directory in default space
+    When u1 creates directories [spaces/s1/dir1, spaces/s1/dir2, spaces/s1/dir3]
+    Then last operation succeeds
+    Then [dir1, dir2, dir3] are in ls spaces/s1
+    Then [dir1, dir2, dir3] are in ls .
+    Then clean succeeds
+
+  Scenario: Create directory in non-default space
+    When u1 creates directories [spaces/s2/dir1, spaces/s2/dir2, spaces/s2/dir3]
+    Then last operation succeeds
+    Then [dir1, dir2, dir3] are in ls spaces/s2
+    Then clean succeeds
+
   Scenario: Rename directory
     When u1 creates directories [dir1]
     When u1 renames dir1 to dir2
@@ -92,9 +105,10 @@ Feature: Directory_CRUD
 
   Scenario: Copy directory
     When u1 creates directory and parents [dir1/dir2/dir3, dir4/dir5]
-    When u1 copies directory dir4/dir5 to dir1/dir2/dir3
+    When u1 copies directory dir4 to dir1/dir2/dir3
     Then last operation succeeds
     Then [dir1, dir4] are in ls .
+    Then [dir2] are in ls dir1
     Then [dir3] are in ls dir1/dir2
     Then [dir4] are in ls dir1/dir2/dir3
     Then [dir5] are in ls dir1/dir2/dir3/dir4

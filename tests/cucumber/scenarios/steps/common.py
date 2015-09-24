@@ -6,7 +6,8 @@ Module implements some common basic functions and functionality.
 """
 
 import pytest
-from pytest_bdd import then
+from pytest_bdd import then, when
+from pytest_bdd import parsers
 
 from environment import docker
 
@@ -32,15 +33,19 @@ def client_id(environment):
 
 ######################## STEPS ########################
 
+
+@when(parsers.parse('sleep {time} seconds'))
+def sleep(time, client_id):
+    docker.exec_(container=client_id,
+                 command="sleep " + str(time))
+
 @then("last operation succeeds")
-def success(client_id, context):
-    # nie dziala, bo exec sa w innych terminalach
-    # assert docker.exec_(container=client_id, command="echo $?", output=True) == '0'
+def success(context):
     assert context.last_op_ret_code == 0
 
 
 @then("last operation fails")
-def failure(client_id, context):
+def failure(context):
     assert context.last_op_ret_code != 0
 
 

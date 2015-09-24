@@ -33,12 +33,11 @@ Feature: File_CRUD
     When u1 writes "TEST TEXT ONEDATA" to file1
     Then last operation succeeds
     Then u1 reads "TEST TEXT ONEDATA" from file1
-    Then last operation succeeds
     Then clean succeeds
 
     Scenario: Move regular file
     When u1 creates directory and parents [dir1/dir2, dir4]
-    When u1 creates files [dir1/dir2/file1]
+    When u1 creates regular files [dir1/dir2/file1]
     When u1 renames dir1/dir2/file1 to dir4/file1
     Then last operation succeeds
     Then [file1] are not in ls dir1/dir2
@@ -48,10 +47,10 @@ Feature: File_CRUD
     Then clean succeeds
 
   Scenario: Copy regular file
-    When u1 creates directory and parents [dir1/dir2, dir4]
-    When u1 creates files [dir1/dir2/file1]
-    When u1 copies regular file dir1/dir2/file1 to dir4/file1
+    When u1 creates directory and parents [dir1/dir2, dir3]
+    When u1 creates regular files [dir1/dir2/file1]
+    When u1 copies regular file dir1/dir2/file1 to dir3
     Then last operation succeeds
     Then [file1] are in ls dir1/dir2
-    Then [file1] are in ls dir4
+    Then [file1] are in ls dir3
     Then clean succeeds

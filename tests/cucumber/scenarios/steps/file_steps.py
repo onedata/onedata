@@ -2,7 +2,7 @@
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
-Module implements common steps for operation on all files.
+Module implements steps for operation on all types of UNIX files.
 """
 
 import pytest
@@ -11,6 +11,16 @@ from pytest_bdd import parsers
 
 from environment import docker, env
 from common import *
+
+
+@when(parsers.parse('{user} updates {files} timestamps'))
+@when(parsers.parse('{user} creates regular files {files}'))
+def create_reg_file(user, files, client_id, context):
+    files = list_parser(files)
+    for file in files:
+        ret = docker.exec_(container=client_id,
+                     command=["touch", context.mount_path +"/"+ file])
+        save_op_code(context, ret)
 
 
 @then(parsers.parse('{files} are in ls {path}'))
@@ -51,7 +61,7 @@ def delete_file(user, files, client_id, context):
 @then(parsers.parse('{file} file type is {fileType}'))
 def check_type(file, fileType, client_id, context):
     currFileType = docker.exec_(container=client_id,
-                                command=["stat", '/'.join([context.mount_path, file]),
+                                command=["stat", str('/'.join([context.mount_path, file])),
                                          "--format=%F"],
                                 output=True)
     assert fileType == currFileType
@@ -60,7 +70,7 @@ def check_type(file, fileType, client_id, context):
 @then(parsers.parse('{file} mode is {mode}'))
 def check_mode(file, mode, client_id, context):
     curr_mode = docker.exec_(container=client_id,
-                             command=["stat", "--format=%a", '/'.join([context.mount_path, file])],
+                             command=["stat", "--format=%a", str('/'.join([context.mount_path, file]))],
                              output=True)
     assert mode == curr_mode
 
@@ -77,7 +87,6 @@ def clean(client_id, context):
                           output=True)
     spaces = spaces.split("\n")
 
-    # TODO zakomentowac ponizsze linie i sprawdzic test bez montowania
     # clean spaces
     for space in spaces:
         docker.exec_(container=client_id,
@@ -86,36 +95,43 @@ def clean(client_id, context):
     pid = docker.exec_(container=client_id,
                        command="ps aux | grep './oneclient --authentication token' | " +
                        "grep -v 'grep' | awk '{print $2}'", output=True)
+
     # kill oneclient process
     docker.exec_(container=client_id, command="kill -KILL " + str(pid), output=True)
+
     # unmount onedata
     docker.exec_(container=client_id, command="umount " + context.mount_path)
-    # remove onedata dir
 
+    # remove onedata dir
     ret = docker.exec_(container=client_id, command="rm -rf " + context.mount_path)
+
     save_op_code(context, ret)
-    success(client_id, context)
+    success(context)
 
 
 @then(parsers.parse('{file} size is {size} bytes'))
-def check_size(file, size, context):
+def check_size(file, size, context, client_id):
     curr_size = docker.exec_(container=client_id,
-                             command=["stat", "--format=%s", '/'.join([context.mount_path, file])],
+                             command=["stat", "--format=%s", str('/'.join([context.mount_path, file]))],
                              output=True)
     assert size == curr_size
 
 
 @then(parsers.parse('{time1} of {file} is {comparator} to {time2}'))
 @then(parsers.parse('{time1} of {file} is {comparator} than {time2}'))
-def check_time(time1, time2, comparator, file, context):
+def check_time(time1, time2, comparator, file, context, client_id):
+
     opt1 = get_time_opt(time1)
     opt2 = get_time_opt(time2)
+    file = str(file)
+
     time1 = docker.exec_(container=client_id,
-                         command=["stat", "--format=" + opt1, '/'.join([context.mount_path, file])],
+                         command="stat --format=%" + opt1 + ' ' + '/'.join([context.mount_path, file]),
                          output=True)
     time2 = docker.exec_(container=client_id,
-                         command=["stat", "--format=" + opt2, '/'.join([context.mount_path, file])],
+                         command="stat --format=%" + opt2 + ' ' + '/'.join([context.mount_path, file]),
                          output=True)
+
     assert compare(int(time1), int(time2), comparator)
 
 
@@ -136,6 +152,8 @@ def get_time_opt(time):
 def compare(val1, val2, comparator):
     if comparator == 'equal':
         return val1 == val2
+    elif comparator == 'not equal':
+        return val1 != val2
     elif comparator == 'greater':
         return val1 > val2
     elif comparator == 'less':

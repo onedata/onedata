@@ -32,49 +32,55 @@ Feature: Regular_file_stat
     Then clean succeeds
 
   Scenario: Increase regular file size
-    When u1 creates files [file1]
+    When u1 creates regular files [file1]
     When u1 changes file1 size to 1000000 bytes
     Then last operation succeeds
-    Then [file1] size is 1000000 bytes
+    Then file1 size is 1000000 bytes
     Then clean succeeds
 
   Scenario: Decrease regular file size
-    When u1 creates files [file1]
+    When u1 creates regular files [file1]
     When u1 changes file1 size to 1000000 bytes
     When u1 changes file1 size to 0 bytes
     Then last operation succeeds
-    Then [file1] size is 0 bytes
+    Then file1 size is 0 bytes
     Then clean succeeds
 
   Scenario: Timestamps at creation
-    When u1 creates files [file1]
+    When u1 creates regular files [file1]
     Then modification time of file1 is equal to access time
     Then status-change time of file1 is equal to access time
     Then clean succeeds
 
   Scenario: Access time
-    When u1 creates files [file1]
-    Then u1 reads "" from file1
+    When u1 writes "TEST TEXT ONEDATA" to file1
+    When sleep 1 seconds
+    Then u1 reads "TEST TEXT ONEDATA" from file1
     Then access time of file1 is greater than modification time
     Then access time of file1 is greater than status-change time
     Then clean succeeds
 
   Scenario: Modification time
-    When u1 creates files [file1]
+    When u1 creates regular files [file1]
+    When sleep 1 seconds
     When u1 writes "TEST TEXT ONEDATA" to file1
+    Then last operation succeeds
     Then modification time of file1 is greater than access time
     Then modification time of file1 is equal to status-change time
     Then clean succeeds
 
   Scenario: Status-change time when changing mode
-    When u1 creates files [file1]
+    When u1 creates regular files [file1]
+    When sleep 1 seconds
     When u1 changes file1 mode to 211
+    Then last operation succeeds
     Then status-change time of file1 is greater than modification time
     Then status-change time of file1 is greater than access time
     Then clean succeeds
 
   Scenario: Status-change time when renaming
-    When u1 creates files [file1]
+    When u1 creates regular files [file1]
+    When sleep 1 seconds
     When u1 renames file1 to file2
     Then status-change time of file2 is greater than modification time
     Then status-change time of file2 is greater than access time

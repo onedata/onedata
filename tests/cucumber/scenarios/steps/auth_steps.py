@@ -16,7 +16,7 @@ import time
 
 from environment import docker, env
 from common import *
-
+from file_steps import clean
 
 @given(parsers.parse('{user} mounts onedata spaces in {mount_path} using {token}'))
 def mount(user, mount_path, token, environment, context, client_id):
@@ -37,15 +37,10 @@ def mount(user, mount_path, token, environment, context, client_id):
     gr = environment['gr_nodes'][0]
     gr = gr.split('@')[1]
 
-    # TODO zakomentowac ponizsze linie do testu bez montowania
-    cmd = "mkdir -p " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
+    cmd = "mkdir " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
             ' && echo ' + token + ' > token && ' + \
             './oneclient --authentication token --no_check_certificate ' + mount_path + \
-            ' < token'
-    #TODO delete token file
-
-    # TODO odkomentowac do testu ^
-    # cmd ="mkdir -p " + mount_path + "/spaces/s1 " + mount_path + "/spaces/s2"
+            ' < token && rm token'
 
     ret = docker.exec_(container=client_id, command=cmd, stdout=sys.stdout, stderr=sys.stdout)
     save_op_code(context, ret)

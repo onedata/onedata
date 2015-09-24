@@ -56,7 +56,7 @@ def delete_parents(user, paths, client_id, context):
                            command="cd " + context.mount_path + " && rmdir -p " + str(path))
         save_op_code(context, ret)
 
-@when(parsers.parse('{user} copies directory {dir1} to {dir2'))
+@when(parsers.parse('{user} copies directory {dir1} to {dir2}'))
 def copy_dir(user, dir1, dir2, client_id, context):
     ret = docker.exec_(container=client_id,
                        command=["cp", "-r", '/'.join([context.mount_path, dir1]),

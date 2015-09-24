@@ -5,6 +5,8 @@ from steps.auth_steps import *
 from steps.dir_steps import *
 from steps.common import *
 from steps.file_steps import *
+from steps.reg_file_steps import *
+
 
 @scenario(
     '../features/directory_stat.feature',
@@ -35,6 +37,14 @@ def test_change_access():
     'Timestamps at creation'
 )
 def test_timestamp():
+    pass
+
+
+@scenario(
+    '../features/directory_stat.feature',
+    'Update timestamps'
+)
+def test_update_timestamp():
     pass
 
 
