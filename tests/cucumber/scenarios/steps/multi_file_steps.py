@@ -3,7 +3,7 @@ Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements common steps for operation on files (both regular files
-and directories).
+and directories)in multiclient environment.
 """
 
 import pytest
@@ -12,7 +12,6 @@ from pytest_bdd import parsers
 
 from environment import docker, env
 from common import *
-import multi_file_steps
 
 
 @when(parsers.parse('{user} updates {files} timestamps'))
@@ -25,21 +24,33 @@ def create_reg_file(user, files, client_id, context):
         save_op_code(context, ret)
 
 
-@when(parsers.parse('{user} sees {files} in {path}'))
-@then(parsers.parse('{user} sees {files} in {path}'))
-def ls_present(user, files, path, context):
-    multi_file_steps.ls_present(user, files, path, "client1", context)
+@when(parsers.parse('{user} sees {files} in {path} on oneclient node {client_node}'))
+@then(parsers.parse('{user} sees {files} in {path} on oneclient node {client_node}'))
+def ls_present(user, files, path, client_node, context):
+    client = get_client(client_node, user, context)
+    cmd = ["ls", make_path(path, client)]
+    ls_files = run_cmd(client, cmd, output=True).split()
+    files = list_parser(files)
+    for file in files:
+        assert file in ls_files
 
 
-@when(parsers.parse('{user} doesn\'t see {files} in {path}'))
-@then(parsers.parse('{user} doesn\'t see {files} in {path}'))
-def ls_absent(user, files, path, context):
-    multi_file_steps.ls_absent(user, files, path, "client1", context)
+@when(parsers.parse('{user} doesn\'t see {files} in {path} on oneclient node {client_node}'))
+@then(parsers.parse('{user} doesn\'t see {files} in {path} on oneclient node {client_node}'))
+def ls_absent(user, files, path, client_node, context):
+    client = get_client(client_node, user, context)
+    cmd = ["ls", make_path(path, client)]
+    ls_files = run_cmd(client, cmd, output=True).split()
+    files = list_parser(files)
+    for file in files:
+        assert file not in ls_files
 
 
-@when(parsers.parse('{user} renames {file1} to {file2}'))
-def rename(user, file1, file2, context):
-    multi_file_steps.rename(user, file1, file2, "client1", context)
+@when(parsers.parse('{user} renames {file1} to {file2} on oneclient node {client_node}'))
+def rename(user, file1, file2, client_node, context):
+    client = get_client(client_node, user, context)
+    ret = run_cmd(client, ["mv", make_path(file1, client), make_path(file2, client)])
+    save_op_code(context, user, ret)
 
 
 @when(parsers.parse('{user} deletes files {files}'))

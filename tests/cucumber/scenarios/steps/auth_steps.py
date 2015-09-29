@@ -43,10 +43,11 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
         client_node = str(client_nodes[i])
         mount_path = str(mount_paths[i])
         id = int(ids[i])
-        token = str(tokens[i])
 
-        # set token for user
-        token = set_token(token, user, gr_node)
+        token_arg = str(tokens[i])
+
+        # get token for user
+        token = get_token(token_arg, user, gr_node)
 
         # create client object
         client = Client(client_ids[id - 1], mount_path)
@@ -61,6 +62,10 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
               ' < token && rm token'
 
         ret = run_cmd(client, cmd)
+
+        if token_arg != "bad token":
+            # if token was different than "bad token", check if logging succeeded
+            assert ret == 0
 
         if user in context.users:
             context.users[user].clients[client_node] = client
@@ -95,6 +100,17 @@ def check_spaces(spaces, user, context):
 
 
 def clean_mount_path(client):
+
+    # TODO moze zrobic rm -rf na poczatku, a potem kill i unmount ???
+
+    # if directory spaces exists
+    if run_cmd(client, ['ls', make_path('spaces', client)]) == 0:
+        spaces = run_cmd(client, ['ls', make_path('spaces', client)], output=True)
+        spaces = spaces.split("\n")
+        # clean spaces
+        for space in spaces:
+            run_cmd(client, "rm -rf " + make_path('spaces/' + space + '/*', client))
+
     # get pid of running oneclient node
     pid = run_cmd(client,
                   " | ".join(
@@ -121,7 +137,7 @@ def set_dns(environment):
         conf.write("nameserver " + dns)
 
 
-def set_token(token, user, gr_node):
+def get_token(token, user, gr_node):
     if token == "bad token":
         token = "bad_token"
     elif token == "token":

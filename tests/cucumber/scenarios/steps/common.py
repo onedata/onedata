@@ -15,6 +15,7 @@ Module implements some common basic functions and functionality.
 # - operation fails ???, moze w konkretnych krokach i konkretny kod bledu
 # - operation succeeds do usuniecia
 #   *np. user {creates | fails to create} directories..
+# zapis duzych danych do pliku np. 1MB, sprawdzic czy to samo + md5
 
 
 import pytest
@@ -100,3 +101,8 @@ def make_path(path, client):
 
 def run_cmd(client, cmd, output=False):
     return docker.exec_(container=client.docker_id, command=cmd, output=output)
+
+
+def get_client(client_node, user, context):
+    return context.users[user].clients[client_node]
+
