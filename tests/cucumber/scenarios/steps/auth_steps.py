@@ -32,6 +32,12 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
     ids = list_parser(ids)
     tokens = list_parser(tokens)
 
+    # current version is for environment with one GR
+    gr_node = environment['gr_nodes'][0]
+    gr = gr_node.split('@')[1]
+
+    set_dns(environment)
+
     for i in range(len(users)):
         user = str(users[i])
         client_node = str(client_nodes[i])
@@ -39,21 +45,10 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
         id = int(ids[i])
         token = str(tokens[i])
 
-        with open("/etc/resolv.conf", "w") as conf:
-            dns = environment['dns']
-            conf.write("nameserver " + dns)
-        if token == "bad token":
-            token = "bad_token"
-        elif token == "token":
-            gr_node = environment['gr_nodes'][0]
-            token = subprocess.check_output(
-                ['./tests/cucumber/scenarios/utils/get_token.escript', gr_node, user],
-                stderr=subprocess.STDOUT)
+        # set token for user
+        token = set_token(token, user, gr_node)
 
-        # current version is for environment with one GR
-        gr = environment['gr_nodes'][0]
-        gr = gr.split('@')[1]
-
+        # create client object
         client = Client(client_ids[id - 1], mount_path)
 
         # clean if there is directory in the mount_path
@@ -63,8 +58,7 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
         cmd = "mkdir -p " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
               ' && echo ' + token + ' > token && ' + \
               './oneclient --authentication token --no_check_certificate ' + mount_path + \
-              ' < token '
-              # '&& rm token'
+              ' < token && rm token'
 
         ret = run_cmd(client, cmd)
 
@@ -82,7 +76,7 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
 def default_mount(user, mount_path, token, environment, context, client_ids):
     multi_mount(make_arg_list(user), make_arg_list("client1"), make_arg_list(mount_path),
-                make_arg_list('1'),make_arg_list(token), environment, context, client_ids)
+                make_arg_list('1'), make_arg_list(token), environment, context, client_ids)
 
 
 @then(parsers.parse('{spaces} are mounted for {user}'))
@@ -97,16 +91,18 @@ def check_spaces(spaces, user, context):
             assert space in spaces_in_client
 
 
-def clean_mount_path(client):
+####################################################################################################
 
+
+def clean_mount_path(client):
     # get pid of running oneclient node
     pid = run_cmd(client,
-        " | ".join(
-            ["ps aux",
-            "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
-            "grep -v 'grep'",
-            "awk '{print $2}'"]),
-        output=True)
+                  " | ".join(
+                      ["ps aux",
+                       "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
+                       "grep -v 'grep'",
+                       "awk '{print $2}'"]),
+                  output=True)
 
     if pid != "":
         # kill oneclient process
@@ -117,3 +113,19 @@ def clean_mount_path(client):
 
     # remove onedata dir
     run_cmd(client, "rm -rf " + client.mount_path)
+
+
+def set_dns(environment):
+    with open("/etc/resolv.conf", "w") as conf:
+        dns = environment['dns']
+        conf.write("nameserver " + dns)
+
+
+def set_token(token, user, gr_node):
+    if token == "bad token":
+        token = "bad_token"
+    elif token == "token":
+        token = subprocess.check_output(
+            ['./tests/cucumber/scenarios/utils/get_token.escript', gr_node, user],
+            stderr=subprocess.STDOUT)
+    return token

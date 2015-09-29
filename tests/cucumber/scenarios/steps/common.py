@@ -58,6 +58,7 @@ def client_ids(environment):
         ids.append(docker.inspect(client)['Id'])
     return ids
 
+
 ######################## STEPS ########################
 
 
