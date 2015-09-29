@@ -55,9 +55,10 @@ def test_timestamp():
 def test_update_timestamp():
     pass
 
-# TODO below tests should be uncommented after resolving VFS-1218 in op_worker
+# TODO below tests should be uncommented after integrating with VFS-1218 in op_worker
 #  and VFS-1235 in oneclient
-# @scenario(
+
+#  @scenario(
 #     '../features/directory_stat.feature',
 #     'Access time'
 # )

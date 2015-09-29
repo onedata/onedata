@@ -15,7 +15,7 @@ from steps.common import *
 from steps.file_steps import *
 from steps.reg_file_steps import *
 
-# TODO below tests should be uncommented after resolving VFS-1218 in op_worker
+# TODO below tests should be uncommented after integrating with VFS-1218 in op_worker
 #  and VFS-1235 in oneclient
 # @scenario(
 #     '../features/reg_file_stat.feature',

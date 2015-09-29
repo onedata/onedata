@@ -1,4 +1,4 @@
-"""Author: Piotr Ociepka
+"""Author: Jakub Kudzia
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
@@ -10,18 +10,23 @@ from steps.env_steps import *
 from steps.auth_steps import *
 from steps.common import *
 
-
 @scenario(
-    '../features/authorization.feature',
+    '../features/multi_authorization.feature',
     'Successful authorization',
 )
 def test_successful_authorization():
     pass
 
+@scenario(
+    '../features/multi_authorization.feature',
+    'Bad and good authorization',
+)
+def test_good_and_bad_authorization():
+    pass
 
 @scenario(
-    '../features/authorization.feature',
-    'Bad authorization'
+    '../features/multi_authorization.feature',
+    'Bad authorization',
 )
 def test_bad_authorization():
     pass
