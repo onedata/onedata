@@ -62,26 +62,24 @@ def delete_file(user, files, client_node, context):
         save_op_code(context, user, ret)
 
 
-@then(parsers.parse('{file} file type is {fileType}'))
-def check_type(file, fileType, client_id, context):
-    currFileType = docker.exec_(container=client_id,
-                                command=["stat", make_path(context, file), "--format=%F"],
-                                output=True)
+@then(parsers.parse('{user} checks if {file} file type is {fileType} on {client_node}'))
+def check_type(user, file, fileType, client_node, context):
+    client = get_client(client_node, user, context)
+    currFileType = run_cmd(client, ["stat", make_path(file, client), "--format=%F"], output=True)
     assert fileType == currFileType
 
 
-@then(parsers.parse('{file} mode is {mode}'))
-def check_mode(file, mode, client_id, context):
-    curr_mode = docker.exec_(container=client_id,
-                             command=["stat", "--format=%a", make_path(context, file)],
-                             output=True)
+@then(parsers.parse('{user} checks if {file} mode is {mode} on {client_node}'))
+def check_mode(user, file, mode, client_node, context):
+    client = get_client(client_node, user, context)
+    curr_mode = run_cmd(client, ["stat", "--format=%a", make_path(file, client)], output=True)
     assert mode == curr_mode
 
 
-@when(parsers.parse('{user} changes {file} mode to {mode}'))
-def change_mode(user, file, mode, client_id, context):
-    docker.exec_(container=client_id,
-                 command=["chmod", mode, make_path(context, file)])
+@when(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
+def change_mode(user, file, mode, client_node, context):
+    client = get_client(client_node, user, context)
+    run_cmd(client, ["chmod", mode, make_path(file, client)])
 
 
 @then(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
@@ -93,21 +91,15 @@ def check_size(user, file, size, client_node, context):
     assert size == curr_size
 
 
-@then(parsers.parse('{time1} of {file} is {comparator} to {time2}'))
-@then(parsers.parse('{time1} of {file} is {comparator} than {time2}'))
-def check_time(time1, time2, comparator, file, context, client_id):
-
+@then(parsers.parse(('{user} checks if {time1} of {file} is {comparator} to {time2} on {client_node}')))
+@then(parsers.parse('{user} checks if {time1} of {file} is {comparator} than {time2} on {client_node'))
+def check_time(user, time1, time2, comparator, file, client_node, context):
+    client = get_client(client_node, user, context)
     opt1 = get_time_opt(time1)
     opt2 = get_time_opt(time2)
     file = str(file)
-
-    time1 = docker.exec_(container=client_id,
-                         command="stat --format=%" + opt1 + ' ' + make_path(context, file),
-                         output=True)
-    time2 = docker.exec_(container=client_id,
-                         command="stat --format=%" + opt2 + ' ' + make_path(context, file),
-                         output=True)
-
+    time1 = run_cmd(client, "stat --format=%" + opt1 + ' ' + make_path(file, client), output=True)
+    time2 = run_cmd(client, "stat --format=%" + opt2 + ' ' + make_path(file, client), output=True)
     assert compare(int(time1), int(time2), comparator)
 
 
