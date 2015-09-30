@@ -46,18 +46,34 @@ def test_delete():
 def test_read_write():
     pass
 
-#
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Move regular file'
-# )
-# def test_move():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Copy regular file'
-# )
-# def test_copy():
-#     pass
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Move regular file and read'
+)
+def test_move():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Move big regular file and check MD5'
+)
+def test_move_big():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Copy regular file and read'
+)
+def test_copy():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Copy big regular file and check MD5'
+)
+def test_copy_big():
+    pass

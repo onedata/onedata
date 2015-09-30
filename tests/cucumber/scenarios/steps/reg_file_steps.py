@@ -42,8 +42,5 @@ def copy_reg_file(user, file, path, context):
 
 
 @when(parsers.parse('{user} changes {file} size to {new_size} bytes'))
-def truncate(user, file, new_size, context, client_id):
-    ret = docker.exec_(container=client_id,
-                       command=["truncate", "--size="+str(new_size),
-                                make_path(context, file)])
-    save_op_code(context, ret)
+def truncate(user, file, new_size, context):
+    multi_reg_file_steps.truncate(user, file, new_size, "client1", context)

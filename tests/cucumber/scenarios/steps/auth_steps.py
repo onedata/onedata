@@ -55,14 +55,12 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
         # clean if there is directory in the mount_path
         if run_cmd(client, "ls " + mount_path) == 0:
             clean_mount_path(client)
-        # TODO uncomment after tests
-        # cmd = "mkdir -p " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
-        #       ' && echo ' + token + ' > token && ' + \
-        #       './oneclient --authentication token --no_check_certificate ' + mount_path + \
-        #       ' < token && ' + \
-        #       'rm token'
-        # TODO remove below line after tests
-        cmd = "mkdir -p " + mount_path + "/spaces/s1 " + mount_path + "/spaces/s2"
+
+        cmd = "mkdir -p " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
+              ' && echo ' + token + ' > token && ' + \
+              './oneclient --authentication token --no_check_certificate ' + mount_path + \
+              ' < token && ' + \
+              'rm token'
 
         ret = run_cmd(client, cmd)
 
@@ -113,24 +111,23 @@ def clean_mount_path(client):
         # clean spaces
         for space in spaces:
             run_cmd(client, "rm -rf " + make_path('spaces/' + space + '/*', client))
-############################################################################################3
-    # TODO uncomment
+
     # get pid of running oneclient node
-#     pid = run_cmd(client,
-#                   " | ".join(
-#                       ["ps aux",
-#                        "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
-#                        "grep -v 'grep'",
-#                        "awk '{print $2}'"]),
-#                   output=True)
-#
-#     if pid != "":
-#         # kill oneclient process
-#         run_cmd(client, "kill -KILL " + str(pid))
-#
-#     # unmount onedata
-#     run_cmd(client, "umount " + client.mount_path)
-# #######################################################################################
+    pid = run_cmd(client,
+                  " | ".join(
+                      ["ps aux",
+                       "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
+                       "grep -v 'grep'",
+                       "awk '{print $2}'"]),
+                  output=True)
+
+    if pid != "":
+        # kill oneclient process
+        run_cmd(client, "kill -KILL " + str(pid))
+
+    # unmount onedata
+    run_cmd(client, "umount " + client.mount_path)
+
     # remove onedata dir
     run_cmd(client, "rm -rf " + client.mount_path)
 

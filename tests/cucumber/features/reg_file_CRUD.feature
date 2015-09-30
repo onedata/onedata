@@ -80,7 +80,7 @@ Feature: Regular_file_CRUD
     When u1 creates directory and parents [dir1/dir2, dir3]
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
-    And u1 writes 1 MB of random characters to dir1/dir2/file1 and saves MD5
+    And u1 writes 1024 MB of random characters to dir1/dir2/file1 and saves MD5
     And u1 copies regular file dir1/dir2/file1 to dir3/file1
     Then u1 sees [file1] in dir1/dir2
     And u1 sees [file1] in dir3
