@@ -14,7 +14,7 @@ Module implements some common basic functions and functionality.
 # - zamiast docker.exec_ zrobic funkcje np run(command)
 # - operation fails ???, moze w konkretnych krokach i konkretny kod bledu
 # - operation succeeds do usuniecia
-#   *np. user {creates | fails to create} directories..
+#   *np. user {creates | fails to 1create} directories..
 # zapis duzych danych do pliku np. 1MB, sprawdzic czy to samo + md5
 
 

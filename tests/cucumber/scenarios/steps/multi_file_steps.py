@@ -24,8 +24,8 @@ def create_reg_file(user, files, client_id, context):
         save_op_code(context, ret)
 
 
-@when(parsers.parse('{user} sees {files} in {path} on oneclient node {client_node}'))
-@then(parsers.parse('{user} sees {files} in {path} on oneclient node {client_node}'))
+@when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
+@then(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 def ls_present(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
     cmd = ["ls", make_path(path, client)]
@@ -35,8 +35,8 @@ def ls_present(user, files, path, client_node, context):
         assert file in ls_files
 
 
-@when(parsers.parse('{user} doesn\'t see {files} in {path} on oneclient node {client_node}'))
-@then(parsers.parse('{user} doesn\'t see {files} in {path} on oneclient node {client_node}'))
+@when(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
+@then(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
 def ls_absent(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
     cmd = ["ls", make_path(path, client)]
@@ -46,7 +46,7 @@ def ls_absent(user, files, path, client_node, context):
         assert file not in ls_files
 
 
-@when(parsers.parse('{user} renames {file1} to {file2} on oneclient node {client_node}'))
+@when(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
 def rename(user, file1, file2, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(client, ["mv", make_path(file1, client), make_path(file2, client)])

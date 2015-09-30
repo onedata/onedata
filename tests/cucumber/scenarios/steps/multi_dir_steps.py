@@ -24,8 +24,8 @@ from common import *
 #         context.space_path = make_path(context, "spaces/"+space)
 
 
-@when(parsers.parse('{user} creates directories {dirs} on oneclient node {client_node}'))
-@when(parsers.parse('{user} creates directories {dirs}\non oneclient node {client_node}'))
+@when(parsers.parse('{user} creates directories {dirs} on {client_node}'))
+@when(parsers.parse('{user} creates directories {dirs}\non {client_node}'))
 def create(user, dirs, client_node, context):
     dirs = list_parser(dirs)
     client = context.users[user].clients[client_node]
@@ -34,8 +34,8 @@ def create(user, dirs, client_node, context):
     save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} creates directory and parents {paths} on oneclient node {client_node}'))
-@when(parsers.parse('{user} creates directory and parents {paths}\non oneclient node {client_node}'))
+@when(parsers.parse('{user} creates directory and parents {paths} on {client_node}'))
+@when(parsers.parse('{user} creates directory and parents {paths}\non {client_node}'))
 def create_parents(user, paths, client_node, context):
     client = get_client(client_node, user, context)
     paths = list_parser(paths)
@@ -44,7 +44,7 @@ def create_parents(user, paths, client_node, context):
         save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} deletes empty directories {dirs} on oneclient node {client_node}'))
+@when(parsers.parse('{user} deletes empty directories {dirs} on {client_node}'))
 def delete_empty(user, dirs, client_node, context):
     client = get_client(client_node, user, context)
     dirs = list_parser(dirs)
@@ -53,7 +53,7 @@ def delete_empty(user, dirs, client_node, context):
         save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} deletes non-empty directories {dirs} on oneclient node {client_node}'))
+@when(parsers.parse('{user} deletes non-empty directories {dirs} on {client_node}'))
 def delete_non_empty(user, dirs, client_node, context):
     client = get_client(client_node, user, context)
     dirs = list_parser(dirs)
@@ -63,7 +63,7 @@ def delete_non_empty(user, dirs, client_node, context):
 
 
 @when(parsers.parse('{user} deletes empty directory and parents {paths} on ' +
-                    'oneclient node {client_node}'))
+                    '{client_node}'))
 def delete_parents(user, paths, client_node, context):
     client = get_client(client_node, user, context)
     paths = list_parser(paths)
@@ -72,7 +72,7 @@ def delete_parents(user, paths, client_node, context):
         save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} copies directory {dir1} to {dir2} on oneclient node {client_node}'))
+@when(parsers.parse('{user} copies directory {dir1} to {dir2} on {client_node}'))
 def copy_dir(user, dir1, dir2, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(client, ["cp", "-r", make_path(dir1, client), make_path(dir2, client)])

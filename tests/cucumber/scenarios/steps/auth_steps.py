@@ -19,8 +19,8 @@ from environment import docker, env
 from common import *
 
 
-@given(parsers.parse('{users} start oneclient nodes {client_nodes} in\n' +
-                     '{mount_paths} on computers {ids} respectively,\n' +
+@given(parsers.parse('{users} start oneclients {client_nodes} in\n' +
+                     '{mount_paths} on nodes {ids} respectively,\n' +
                      'using {tokens}'))
 def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, context, client_ids):
     # TODO many clients for one user, parsing list of lists
@@ -59,7 +59,8 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
         cmd = "mkdir -p " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
               ' && echo ' + token + ' > token && ' + \
               './oneclient --authentication token --no_check_certificate ' + mount_path + \
-              ' < token && rm token'
+              ' < token && ' + \
+              'rm token'
 
         ret = run_cmd(client, cmd)
 
