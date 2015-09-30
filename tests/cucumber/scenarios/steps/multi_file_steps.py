@@ -14,14 +14,14 @@ from environment import docker, env
 from common import *
 
 
-@when(parsers.parse('{user} updates {files} timestamps'))
-@when(parsers.parse('{user} creates regular files {files}'))
-def create_reg_file(user, files, client_id, context):
+@when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
+@when(parsers.parse('{user} creates regular files {files} on {client_node}'))
+def create_reg_file(user, files, client_node, context):
+    client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        ret = docker.exec_(container=client_id,
-                     command=["touch", make_path(context, file)])
-        save_op_code(context, ret)
+        ret = run_cmd(client, "touch " + make_path(file, client))
+        save_op_code(context, user, ret)
 
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
@@ -53,13 +53,13 @@ def rename(user, file1, file2, client_node, context):
     save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} deletes files {files}'))
-def delete_file(user, files, client_id, context):
+@when(parsers.parse('{user} deletes files {files} on {client_node}'))
+def delete_file(user, files, client_node, context):
+    client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        ret = docker.exec_(container=client_id,
-                           command=["rm", make_path(context, file)])
-        save_op_code(context, ret)
+        ret = run_cmd(client, ["rm", make_path(file, client)])
+        save_op_code(context, user, ret)
 
 
 @then(parsers.parse('{file} file type is {fileType}'))
@@ -84,11 +84,12 @@ def change_mode(user, file, mode, client_id, context):
                  command=["chmod", mode, make_path(context, file)])
 
 
-@then(parsers.parse('{file} size is {size} bytes'))
-def check_size(file, size, context, client_id):
-    curr_size = docker.exec_(container=client_id,
-                             command=["stat", "--format=%s", make_path(context, file)],
-                             output=True)
+@then(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
+def check_size(user, file, size, client_node, context):
+    client = get_client(client_node, user, context)
+    curr_size = run_cmd(client,
+                        "stat --format=%s " + make_path(file, client),
+                        output=True)
     assert size == curr_size
 
 

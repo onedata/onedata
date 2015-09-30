@@ -11,12 +11,12 @@ from pytest_bdd import scenario
 from steps.env_steps import *
 from steps.auth_steps import *
 from steps.dir_steps import *
-from steps.file_steps import *
-from steps.reg_file_steps import *
+from steps.multi_file_steps import *
+from steps.multi_reg_file_steps import *
 from steps.common import *
 
 @scenario(
-    '../features/reg_file_CRUD.feature',
+    '../features/multi_reg_file_CRUD.feature',
     'Create regular file'
 )
 def test_create():
@@ -24,7 +24,7 @@ def test_create():
 
 
 @scenario(
-    '../features/reg_file_CRUD.feature',
+    '../features/multi_reg_file_CRUD.feature',
     'Rename regular file'
 )
 def test_rename():
@@ -32,7 +32,7 @@ def test_rename():
 
 
 @scenario(
-    '../features/reg_file_CRUD.feature',
+    '../features/multi_reg_file_CRUD.feature',
     'Delete regular file'
 )
 def test_delete():
@@ -40,24 +40,24 @@ def test_delete():
 
 
 @scenario(
-    '../features/reg_file_CRUD.feature',
+    '../features/multi_reg_file_CRUD.feature',
     'Read and write to regular file'
 )
 def test_read_write():
     pass
 
-
-@scenario(
-    '../features/reg_file_CRUD.feature',
-    'Move regular file'
-)
-def test_move():
-    pass
-
-
-@scenario(
-    '../features/reg_file_CRUD.feature',
-    'Copy regular file'
-)
-def test_copy():
-    pass
+#
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Move regular file'
+# )
+# def test_move():
+#     pass
+#
+#
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Copy regular file'
+# )
+# def test_copy():
+#     pass

@@ -15,6 +15,7 @@ from steps.file_steps import *
 from steps.reg_file_steps import *
 from steps.common import *
 
+
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Create regular file'
@@ -49,7 +50,7 @@ def test_read_write():
 
 @scenario(
     '../features/reg_file_CRUD.feature',
-    'Move regular file'
+    'Move regular file and read'
 )
 def test_move():
     pass
@@ -57,7 +58,23 @@ def test_move():
 
 @scenario(
     '../features/reg_file_CRUD.feature',
-    'Copy regular file'
+    'Move big regular file and check MD5'
+)
+def test_move_big():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Copy regular file and read'
 )
 def test_copy():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Copy big regular file and check MD5'
+)
+def test_copy_big():
     pass

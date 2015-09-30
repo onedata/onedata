@@ -17,12 +17,8 @@ import multi_file_steps
 
 @when(parsers.parse('{user} updates {files} timestamps'))
 @when(parsers.parse('{user} creates regular files {files}'))
-def create_reg_file(user, files, client_id, context):
-    files = list_parser(files)
-    for file in files:
-        ret = docker.exec_(container=client_id,
-                     command=["touch", make_path(context, file)])
-        save_op_code(context, ret)
+def create_reg_file(user, files, context):
+    multi_file_steps.create_reg_file(user, files, "client1", context)
 
 
 @when(parsers.parse('{user} sees {files} in {path}'))
@@ -43,12 +39,8 @@ def rename(user, file1, file2, context):
 
 
 @when(parsers.parse('{user} deletes files {files}'))
-def delete_file(user, files, client_id, context):
-    files = list_parser(files)
-    for file in files:
-        ret = docker.exec_(container=client_id,
-                           command=["rm", make_path(context, file)])
-        save_op_code(context, ret)
+def delete_file(user, files, context):
+    multi_file_steps.delete_file(user, files, "client1", context)
 
 
 @then(parsers.parse('{file} file type is {fileType}'))
@@ -73,12 +65,9 @@ def change_mode(user, file, mode, client_id, context):
                  command=["chmod", mode, make_path(context, file)])
 
 
-@then(parsers.parse('{file} size is {size} bytes'))
-def check_size(file, size, context, client_id):
-    curr_size = docker.exec_(container=client_id,
-                             command=["stat", "--format=%s", make_path(context, file)],
-                             output=True)
-    assert size == curr_size
+@then(parsers.parse('{user} checks if {file} size is {size} bytes'))
+def check_size(user, file, size, context):
+    multi_file_steps.check_size(user, file, size, "client1", context)
 
 
 @then(parsers.parse('{time1} of {file} is {comparator} to {time2}'))
