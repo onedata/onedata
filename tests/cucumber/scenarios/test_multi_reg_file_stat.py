@@ -10,13 +10,13 @@ from pytest_bdd import scenario
 
 from steps.env_steps import *
 from steps.auth_steps import *
-from steps.dir_steps import *
+from steps.multi_dir_steps import *
 from steps.common import *
-from steps.file_steps import *
-from steps.reg_file_steps import *
+from steps.multi_file_steps import *
+from steps.multi_reg_file_steps import *
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Check file type when empty'
 )
 def test_type_empty():
@@ -24,7 +24,7 @@ def test_type_empty():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Check file type when non-empty'
 )
 def test_type():
@@ -32,7 +32,7 @@ def test_type():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Check default access permissions'
 )
 def test_default_access():
@@ -40,7 +40,7 @@ def test_default_access():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Change access permissions'
 )
 def test_change_access():
@@ -48,7 +48,7 @@ def test_change_access():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Increase regular file size'
 )
 def test_increase_size():
@@ -56,7 +56,7 @@ def test_increase_size():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Decrease regular file size'
 )
 def test_decrease_size():
@@ -64,7 +64,7 @@ def test_decrease_size():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Timestamps at creation'
 )
 def test_timestamp():
@@ -72,7 +72,7 @@ def test_timestamp():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Access time'
 )
 def test_access_time():
@@ -80,7 +80,7 @@ def test_access_time():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Modification time'
 )
 def test_modification_time():
@@ -88,7 +88,7 @@ def test_modification_time():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Status-change time when changing mode'
 )
 def test_stat_change_time_chmod():
@@ -96,7 +96,7 @@ def test_stat_change_time_chmod():
 
 
 @scenario(
-    '../features/reg_file_stat.feature',
+    '../features/multi_reg_file_stat.feature',
     'Status-change time when renaming'
 )
 def test_stat_change_time_mv():

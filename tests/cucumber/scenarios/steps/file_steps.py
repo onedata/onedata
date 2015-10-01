@@ -58,6 +58,7 @@ def change_mode(user, file, mode, context):
     multi_file_steps.change_mode(user, file, mode, "client1", context)
 
 
+@when(parsers.parse('{user} checks if {file} size is {size} bytes'))
 @then(parsers.parse('{user} checks if {file} size is {size} bytes'))
 def check_size(user, file, size, context):
     multi_file_steps.check_size(user, file, size, "client1", context)

@@ -84,6 +84,7 @@ def change_mode(user, file, mode, client_node, context):
     run_cmd(client, ["chmod", mode, make_path(file, client)])
 
 
+@when(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
 @then(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
 def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)

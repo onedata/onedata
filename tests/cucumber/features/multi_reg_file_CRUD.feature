@@ -106,13 +106,13 @@ Feature: Regular_file_CRUD
     And u1 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client1
     And u2 reads "TEST TEXT ONEDATA" from file1 on client2
     And u2 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client2
-    
   Scenario: Copy big regular file and check MD5
     When u1 creates directory and parents [dir1/dir2, dir3] on client1
     And u1 creates regular files [dir1/dir2/file1] on client1
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 writes 1024 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
+#    TODO check size ????
     And u1 copies dir1/dir2/file1 to dir3/file1
     Then u1 sees [file1] in dir1/dir2 on client1
     And u1 sees [file1] in spaces/s1/dir1/dir2 on client1
