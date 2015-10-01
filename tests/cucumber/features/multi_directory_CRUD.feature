@@ -6,8 +6,6 @@ Feature: Directory_CRUD
     And [u1, u2] start oneclients [client1, client2] in
       [/root/onedata1, /root/onedata2] on nodes [1, 2] respectively,
       using [token, token]
-# TODO this  step is not used
-#    And we are in space s1
 
   Scenario: Create directory
     When u1 creates directories [dir1, dir2, dir3]

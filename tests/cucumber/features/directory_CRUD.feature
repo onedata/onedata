@@ -4,8 +4,6 @@ Feature: Directory_CRUD
     Given environment is defined in env.json
     And environment is up
     And u1 starts oneclient in /root/onedata using token
-# TODO this  step is not used
-#    And we are in space s1
 
   Scenario: Create directory
     When u1 creates directories [dir1, dir2, dir3]

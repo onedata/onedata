@@ -65,12 +65,14 @@ def delete_file(user, files, client_node, context):
 @then(parsers.parse('{user} checks if {file} file type is {fileType} on {client_node}'))
 def check_type(user, file, fileType, client_node, context):
     client = get_client(client_node, user, context)
+    print run_cmd(client, "ls " + client.mount_path, output=True)
     currFileType = run_cmd(client, ["stat", make_path(file, client), "--format=%F"], output=True)
     assert fileType == currFileType
 
 
 @then(parsers.parse('{user} checks if {file} mode is {mode} on {client_node}'))
 def check_mode(user, file, mode, client_node, context):
+    # time.sleep(600)
     client = get_client(client_node, user, context)
     curr_mode = run_cmd(client, ["stat", "--format=%a", make_path(file, client)], output=True)
     assert mode == curr_mode
@@ -92,7 +94,7 @@ def check_size(user, file, size, client_node, context):
 
 
 @then(parsers.parse(('{user} checks if {time1} of {file} is {comparator} to {time2} on {client_node}')))
-@then(parsers.parse('{user} checks if {time1} of {file} is {comparator} than {time2} on {client_node'))
+@then(parsers.parse('{user} checks if {time1} of {file} is {comparator} than {time2} on {client_node}'))
 def check_time(user, time1, time2, comparator, file, client_node, context):
     client = get_client(client_node, user, context)
     opt1 = get_time_opt(time1)

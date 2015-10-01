@@ -11,11 +11,11 @@ Module implements some common basic functions and functionality.
 # - zmiana stepu sleep na user waits - DONE
 # - clean do background - DONE
 # - and zamiast when, when... itd.
-# - zamiast docker.exec_ zrobic funkcje np run(command)
+# - zamiast docker.exec_ zrobic funkcje np run(command) - DONE
 # - operation fails ???, moze w konkretnych krokach i konkretny kod bledu
 # - operation succeeds do usuniecia
 #   *np. user {creates | fails to 1create} directories..
-# zapis duzych danych do pliku np. 1MB, sprawdzic czy to samo + md5
+# zapis duzych danych do pliku np. 1MB, sprawdzic czy to samo + md5 - DONE
 
 
 import pytest

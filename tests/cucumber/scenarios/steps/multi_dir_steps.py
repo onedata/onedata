@@ -14,15 +14,6 @@ import time
 from environment import docker, env
 from common import *
 
-# TODO this  step is not used
-# @given(parsers.parse('{clients} are in spaces {spaces}'))
-# def goto_space(users, spaces, context):
-#     clients = list_parser(users)
-#     spaces = list_parser(spaces)
-#     dict = zip(clients, spaces)
-#     for user in dict:
-#         context.space_path = make_path(context, "spaces/"+space)
-
 
 @when(parsers.parse('{user} creates directories {dirs} on {client_node}'))
 @when(parsers.parse('{user} creates directories {dirs}\non {client_node}'))

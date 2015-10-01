@@ -16,11 +16,6 @@ import multi_dir_steps
 from environment import docker, env
 from common import *
 
-# TODO this  step is not used
-# @given(parsers.parse('we are in space {space}'))
-# def goto_space(space, context):
-#     context.space_path = make_path(context, "spaces/"+space)
-
 
 @when(parsers.parse('{user} creates directories {dirs}'))
 def create(user, dirs, context):
