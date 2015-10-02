@@ -4,7 +4,7 @@ Feature: Regular_file_stat
     Given environment is defined in env.json
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
-      [/root/onedata1, /root/onedata2] on nodes [1, 2] respectively,
+      [/home/u1/onedata, /home/u2/onedata] on nodes [1, 2] respectively,
       using [token, token]
 
   Scenario: Check file type when empty

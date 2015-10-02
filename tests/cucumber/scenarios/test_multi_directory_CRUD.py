@@ -105,6 +105,14 @@ def test_delete_space():
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
+    'Recreate directory deleted by other user'
+)
+def test_recreate():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
     'Child directories'
 )
 def test_children():

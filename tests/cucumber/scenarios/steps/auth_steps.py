@@ -53,16 +53,22 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
         client = Client(client_ids[id - 1], mount_path)
 
         # clean if there is directory in the mount_path
-        if run_cmd(client, "ls " + mount_path) == 0:
-            clean_mount_path(client)
+        if run_cmd(user, client, "ls " + mount_path) == 0:
+            clean_mount_path(user, client)
 
-        cmd = "mkdir -p " + mount_path + " && export GLOBAL_REGISTRY_URL=" + gr + \
-              ' && echo ' + token + ' > token && ' + \
-              './oneclient --authentication token --no_check_certificate ' + mount_path + \
-              ' < token && ' + \
-              'rm token'
+        token_path = "/tmp/token"
 
-        ret = run_cmd(client, cmd)
+        run_cmd("root", client, 'gpasswd -a ' + user + ' fuse')
+
+        cmd = 'mkdir -p ' + mount_path + \
+              ' && export GLOBAL_REGISTRY_URL=' + gr + \
+              ' && echo ' + token + ' > ' + token_path + \
+              ' && ./oneclient --authentication token --no_check_certificate ' + mount_path + \
+              ' < ' + token_path + \
+              ' && rm ' + token_path
+
+        ret = run_cmd(user, client, cmd)
+        # time.sleep(600)
 
         if token_arg != "bad token":
             # if token was different than "bad token", check if logging succeeded
@@ -74,7 +80,8 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
             context.users[user] = User(client_node, client)
 
         # remove accessToken to mount many clients on one docker
-        run_cmd(client, "rm -rf ~/.local")
+        run_cmd(user, client,
+                "rm -rf " + os.path.join(os.path.dirname(mount_path), ".local"))
 
         save_op_code(context, user, ret)
 
@@ -91,7 +98,7 @@ def check_spaces(spaces, user, context):
     # sleep to be sure that environment is up
     for client_node, client in context.users[user].clients.items():
         spaces = list_parser(spaces)
-        spaces_in_client = run_cmd(client, ['ls', make_path("spaces", client)], output=True)
+        spaces_in_client = run_cmd(user, client, 'ls ' + make_path("spaces", client), output=True)
         spaces_in_client = spaces_in_client.split("\n")
         for space in spaces:
             assert space in spaces_in_client
@@ -100,20 +107,18 @@ def check_spaces(spaces, user, context):
 ####################################################################################################
 
 
-def clean_mount_path(client):
-
-    # TODO moze zrobic rm -rf na poczatku, a potem kill i unmount ???
+def clean_mount_path(user, client):
 
     # if directory spaces exists
-    if run_cmd(client, ['ls', make_path('spaces', client)]) == 0:
-        spaces = run_cmd(client, ['ls', make_path('spaces', client)], output=True)
+    if run_cmd(user, client, 'ls ' + make_path('spaces', client)) == 0:
+        spaces = run_cmd(user, client, 'ls ' + make_path('spaces', client), output=True)
         spaces = spaces.split("\n")
         # clean spaces
         for space in spaces:
-            run_cmd(client, "rm -rf " + make_path('spaces/' + space + '/*', client))
+            run_cmd(user, client, "rm -rf " + make_path('spaces/' + space + '/*', client))
 
     # get pid of running oneclient node
-    pid = run_cmd(client,
+    pid = run_cmd('root', client,
                   " | ".join(
                       ["ps aux",
                        "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
@@ -123,13 +128,13 @@ def clean_mount_path(client):
 
     if pid != "":
         # kill oneclient process
-        run_cmd(client, "kill -KILL " + str(pid))
+        run_cmd("root", client, "kill -KILL " + str(pid))
 
     # unmount onedata
-    run_cmd(client, "umount " + client.mount_path)
+    run_cmd("root", client, "umount " + client.mount_path)
 
     # remove onedata dir
-    run_cmd(client, "rm -rf " + client.mount_path)
+    run_cmd("root", client, "rm -rf " + client.mount_path)
 
 
 def set_dns(environment):

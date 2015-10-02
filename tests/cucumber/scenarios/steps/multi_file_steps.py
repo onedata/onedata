@@ -20,7 +20,7 @@ def create_reg_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        ret = run_cmd(client, "touch " + make_path(file, client))
+        ret = run_cmd(user, client, 'touch ' + make_path(file, client))
         save_op_code(context, user, ret)
 
 
@@ -28,8 +28,8 @@ def create_reg_file(user, files, client_node, context):
 @then(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 def ls_present(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
-    cmd = ["ls", make_path(path, client)]
-    ls_files = run_cmd(client, cmd, output=True).split()
+    cmd = 'ls ' + make_path(path, client)
+    ls_files = run_cmd(user, client, cmd, output=True).split()
     files = list_parser(files)
     for file in files:
         assert file in ls_files
@@ -39,8 +39,8 @@ def ls_present(user, files, path, client_node, context):
 @then(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
 def ls_absent(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
-    cmd = ["ls", make_path(path, client)]
-    ls_files = run_cmd(client, cmd, output=True).split()
+    cmd = 'ls ' + make_path(path, client)
+    ls_files = run_cmd(user, client, cmd, output=True).split()
     files = list_parser(files)
     for file in files:
         assert file not in ls_files
@@ -49,7 +49,7 @@ def ls_absent(user, files, path, client_node, context):
 @when(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
 def rename(user, file1, file2, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(client, ["mv", make_path(file1, client), make_path(file2, client)])
+    ret = run_cmd(user, client, "mv " + make_path(file1, client) + ' ' + make_path(file2, client))
     save_op_code(context, user, ret)
 
 
@@ -58,15 +58,15 @@ def delete_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        ret = run_cmd(client, ["rm", make_path(file, client)])
+        ret = run_cmd(user, client, "rm " + make_path(file, client))
         save_op_code(context, user, ret)
 
 
 @then(parsers.parse('{user} checks if {file} file type is {fileType} on {client_node}'))
 def check_type(user, file, fileType, client_node, context):
     client = get_client(client_node, user, context)
-    print run_cmd(client, "ls " + client.mount_path, output=True)
-    currFileType = run_cmd(client, ["stat", make_path(file, client), "--format=%F"], output=True)
+    print run_cmd(user, client, "ls " + client.mount_path, output=True)
+    currFileType = run_cmd(user, client, 'stat ' + make_path(file, client) + ' --format=%F', output=True)
     assert fileType == currFileType
 
 
@@ -74,21 +74,21 @@ def check_type(user, file, fileType, client_node, context):
 def check_mode(user, file, mode, client_node, context):
     # time.sleep(600)
     client = get_client(client_node, user, context)
-    curr_mode = run_cmd(client, ["stat", "--format=%a", make_path(file, client)], output=True)
+    curr_mode = run_cmd(user, client, 'stat --format=%a ' + make_path(file, client), output=True)
     assert mode == curr_mode
 
 
 @when(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
 def change_mode(user, file, mode, client_node, context):
     client = get_client(client_node, user, context)
-    run_cmd(client, ["chmod", mode, make_path(file, client)])
+    run_cmd(user, client, 'chmod ' + mode + ' ' + make_path(file, client))
 
 
 @when(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
 @then(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
 def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)
-    curr_size = run_cmd(client,
+    curr_size = run_cmd(user, client,
                         "stat --format=%s " + make_path(file, client),
                         output=True)
     assert size == curr_size
@@ -101,8 +101,8 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
     opt1 = get_time_opt(time1)
     opt2 = get_time_opt(time2)
     file = str(file)
-    time1 = run_cmd(client, "stat --format=%" + opt1 + ' ' + make_path(file, client), output=True)
-    time2 = run_cmd(client, "stat --format=%" + opt2 + ' ' + make_path(file, client), output=True)
+    time1 = run_cmd(user, client, "stat --format=%" + opt1 + ' ' + make_path(file, client), output=True)
+    time2 = run_cmd(user, client, "stat --format=%" + opt2 + ' ' + make_path(file, client), output=True)
     assert compare(int(time1), int(time2), comparator)
 
 

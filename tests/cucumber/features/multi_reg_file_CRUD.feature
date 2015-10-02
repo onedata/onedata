@@ -4,7 +4,7 @@ Feature: Regular_file_CRUD
     Given environment is defined in env.json
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
-      [/root/onedata1, /root/onedata2] on nodes [1, 2] respectively,
+      [/home/u1/onedata, /home/u2/onedata] on nodes [1, 2] respectively,
       using [token, token]
 
   Scenario: Create regular file
@@ -112,7 +112,6 @@ Feature: Regular_file_CRUD
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 writes 1024 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
-#    TODO check size ????
     And u1 copies dir1/dir2/file1 to dir3/file1
     Then u1 sees [file1] in dir1/dir2 on client1
     And u1 sees [file1] in spaces/s1/dir1/dir2 on client1

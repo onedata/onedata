@@ -3,7 +3,7 @@ Feature: Directory_CRUD
   Background:
     Given environment is defined in env.json
     And environment is up
-    And u1 starts oneclient in /root/onedata using token
+    And u1 starts oneclient in /home/u1/onedata using token
 
   Scenario: Create directory
     When u1 creates directories [dir1, dir2, dir3]

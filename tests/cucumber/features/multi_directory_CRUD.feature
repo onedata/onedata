@@ -4,7 +4,7 @@ Feature: Directory_CRUD
     Given environment is defined in env.json
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
-      [/root/onedata1, /root/onedata2] on nodes [1, 2] respectively,
+      [/home/u1/onedata, /home/u2/onedata] on nodes [1, 2] respectively,
       using [token, token]
 
   Scenario: Create directory
@@ -87,6 +87,15 @@ Feature: Directory_CRUD
     Then last operation by u2 fails
     And u1 sees [s1] in spaces on client1
 
+  Scenario: Recreate directory deleted by other user
+    When u1 creates directories [dir1] on client1
+    And u2 sees [dir1] in . on client2
+    And u1 deletes directories [dir1] on client1
+    And u2 doesn't see [dir1] in . on client2
+    And u2 creates directories [dir1] on client2
+    Then u2 sees [dir1] in . on client2
+    And u1 sees [dir1] in . on client1
+
   Scenario: Child directories
     When u1 creates directory and parents [dir1/child1, dir1/child2, dir1/child3]
       on client1
@@ -124,9 +133,10 @@ Feature: Directory_CRUD
     And u2 sees [dir3] in dir1/dir2 on client2
     And u2 deletes empty directory and parents [dir1/dir2/dir3] on client2
     Then last operation by u2 fails
+    # u2 can't delete dir1 because sticky bit is set for onedata dir
     And u1 sees [dir1] in . on client1 
-    And u1 sees [dir2] in dir1 on client1 
-    And u1 sees [dir3] in dir1/dir2 on client1
+    And u1 doesn't see [dir2] in dir1 on client1
+    And u1 doesn't see [dir3] in dir1/dir2 on client1
 
   Scenario: Delete non-empty directory in wrong way
     #wrong way means using rmdir instead of rm -rf

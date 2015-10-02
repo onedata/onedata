@@ -10,12 +10,10 @@ Module implements some common basic functions and functionality.
 ## TODO
 # - zmiana stepu sleep na user waits - DONE
 # - clean do background - DONE
-# - and zamiast when, when... itd.
+# - and zamiast when, when... itd. - DONE
 # - zamiast docker.exec_ zrobic funkcje np run(command) - DONE
-# - operation fails ???, moze w konkretnych krokach i konkretny kod bledu
-# - operation succeeds do usuniecia
-#   *np. user {creates | fails to 1create} directories..
-# zapis duzych danych do pliku np. 1MB, sprawdzic czy to samo + md5 - DONE
+# - operation succeeds do usuniecia - DONE
+# zapis duzych danych do pliku np. 1MB, sprawdzic md5 - DONE
 
 
 import pytest
@@ -69,7 +67,7 @@ def user_wait_default(user, time, context):
 
 @when(parsers.parse('{user} waits {time} seconds on {client_node}'))
 def user_wait(user, time, client_node, context):
-    client=get_client(client_node, user, context)
+    client = get_client(client_node, user, context)
     run_cmd(client, "sleep " + str(time))
 
 
@@ -104,7 +102,14 @@ def make_path(path, client):
     return os.path.join(client.mount_path, str(path))
 
 
-def run_cmd(client, cmd, output=False):
+def run_cmd(user, client, cmd, output=False):
+
+    if user != 'root' and isinstance(cmd, str):
+        cmd = 'su -c "' + cmd + '" ' + str(user)
+    elif user != 'root' and isinstance(cmd, list):
+        cmd = ["su", "-c"] + cmd + [str(user)]
+
+    # print "CMD: ", cmd
     return docker.exec_(container=client.docker_id, command=cmd, output=output)
 
 

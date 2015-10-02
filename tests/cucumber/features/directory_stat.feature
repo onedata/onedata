@@ -3,7 +3,7 @@ Feature: Directory_stat
   Background:
     Given environment is defined in env.json
     And environment is up
-    And u1 starts oneclient in /root/onedata using token
+    And u1 starts oneclient in /home/u1/onedata using token
 
   Scenario: Check file type
     When u1 creates directories [dir1]
