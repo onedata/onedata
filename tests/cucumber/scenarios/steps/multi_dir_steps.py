@@ -18,7 +18,6 @@ from common import *
 @when(parsers.parse('{user} creates directories {dirs} on {client_node}'))
 @when(parsers.parse('{user} creates directories {dirs}\non {client_node}'))
 def create(user, dirs, client_node, context):
-    print
     dirs = list_parser(dirs)
     client = context.users[user].clients[client_node]
     for dir in dirs:
@@ -69,3 +68,12 @@ def copy_dir(user, dir1, dir2, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, 'cp -r ' + make_path(dir1, client) + ' ' + make_path(dir2, client))
     save_op_code(context, user, ret)
+
+
+@when(parsers.parse('{user} can\'t list {dir} on {client_node}'))
+@then(parsers.parse('{user} can\'t list {dir} on {client_node}'))
+def list_dir(user, dir, client_node, context):
+    client = get_client(client_node, user, context)
+    cmd = 'ls ' + make_path(dir, client)
+    ret = run_cmd(user, client, cmd)
+    assert ret != 0

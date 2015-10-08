@@ -1,4 +1,4 @@
-Feature: Authorization
+Feature: Multi_authorization
 
   Background:
     Given environment is defined in env.json

@@ -1,4 +1,4 @@
-Feature: Directory_CRUD
+Feature: Multi_directory_CRUD
 
   Background:
     Given environment is defined in env.json
@@ -31,27 +31,14 @@ Feature: Directory_CRUD
     Then u1 doesn't see [dir1, dir2, dir3] in . on client1
     Then u2 doesn't see [dir1, dir2, dir3] in . on client2
 
-  Scenario: Create directory spaces
-    When u1 creates directories [spaces]
-      on client1
-    Then last operation by u1 fails
-    Then u2 sees [spaces] in . on client2
-
-  Scenario: Create space
-    When u2 creates directories [spaces/s1]
-      on client2
-    Then last operation by u2 fails
-    Then u1 sees [spaces] in . on client1
-
   Scenario: Rename someone's directory
     When u1 creates directories [dir1] on client1
     And last operation by u1 succeeds
     And u2 renames dir1 to dir2 on client2
-    Then last operation by u2 fails
-    Then u1 sees [dir1] in . on client1
-    And u2 sees [dir1] in . on client2
-    And u1 doesn't see [dir2] in . on client1
-    And u2 doesn't see [dir2] in . on client2
+    Then u1 sees [dir2] in . on client1
+    And u2 sees [dir2] in . on client2
+    And u1 doesn't see [dir1] in . on client1
+    And u2 doesn't see [dir1] in . on client2
 
   Scenario: Rename own directory
     When u1 creates directories [dir1] on client1
@@ -77,20 +64,50 @@ Feature: Directory_CRUD
     Then u1 doesn't see [dir1] in . on client1
     And u2 doesn't see [dir1] in . on client2
 
-  Scenario: Delete directory spaces
-    When u1 deletes non-empty directories [spaces] on client1
-    Then last operation by u1 fails
-    And u2 sees [spaces] in . on client2
+  Scenario: List directory without read permission
+    When u2 creates directory and parents [dir1/dir2] on client2
+    And u2 changes dir1/dir2 mode to 735 on client2
+    Then last operation by u2 succeeds
+    And u1 can't list dir1/dir2 on client1
 
-  Scenario: Delete space
-    When u2 deletes non-empty directories [spaces/s1] on client2
-    Then last operation by u2 fails
-    And u1 sees [s1] in spaces on client1
+  Scenario: Create file in directory without write permission
+    When u2 creates directories [dir1] on client2
+    And u2 changes dir1 mode to 755 on client2
+    And u1 creates directories [dir1/dir2] on client1
+    Then last operation by u1 fails
+
+  Scenario: Create file in directory with write permission
+    When u2 creates directories [dir1] on client2
+    And u1 creates directories [dir1/dir2] on client1
+    Then u2 sees [dir2] in dir1 on client2
+
+  Scenario: Delete file in directory without write permission
+    When u2 creates directory and parents [dir1/dir2] on client2
+    And u2 changes dir1 mode to 755 on client2
+    And u1 deletes empty directories [dir1/dir2] on client1
+    Then last operation by u1 fails
+
+  Scenario: Delete file in directory with write permission
+    When u2 creates directory and parents [dir1/dir2] on client2
+    And u1 deletes empty directories [dir1/dir2] on client1
+    Then u2 doesn't see [dir2] in dir1 on client2
+
+  Scenario: Rename file in directory without write permission
+    When u2 creates directory and parents [dir1/dir2] on client2
+    And u2 changes dir1 mode to 755 on client2
+    And u1 renames file dir1/dir2 to dir1/dir3 on client1
+    Then last operation by u1 fails
+
+  Scenario: Rename file in directory with write permission
+    When u2 creates directory and parents [dir1/dir2] on client2
+    And u1 renames file dir1/dir2 to dir1/dir3 on client1
+    Then u2 sees [dir3] in dir1 on client2
+    And u2 doesn't see [dir2] in dir1 on client2
 
   Scenario: Recreate directory deleted by other user
     When u1 creates directories [dir1] on client1
     And u2 sees [dir1] in . on client2
-    And u1 deletes directories [dir1] on client1
+    And u1 deletes empty directories [dir1] on client1
     And u2 doesn't see [dir1] in . on client2
     And u2 creates directories [dir1] on client2
     Then u2 sees [dir1] in . on client2
@@ -230,22 +247,24 @@ Feature: Directory_CRUD
     And u2 sees [dir3] in dir1/dir2 on client2
 
   Scenario: Move directory to itself in spaces
-    When u2 creates directories [dir1] on client2
+    When u2 creates directory and parents [dir1/dir2] on client2
+    And u2 changes dir1 mode to 775 on client2
     And u1 sees [dir1] in . on client1
     And u2 sees [dir1] in . on client2
-    And u2 renames dir1 to spaces/s1/dir1 on client2
-    Then last operation by u2 fails
-    And u1 sees [dir1] in . on client1
-    And u2 sees [dir1] in . on client2
+    And u1 renames dir1/dir2 to spaces/s1/dir1/dir2 on client1
+    Then last operation by u1 fails
+    And u1 sees [dir2] in dir1 on client1
+    And u2 sees [dir2] in dir1 on client2
 
   Scenario: Move directory to itself in default space
-    When u2 creates directories [spaces/s1/dir1] on client2
-    And u1 sees [dir1] in spaces/s1 on client1
-    And u2 sees [dir1] in spaces/s1 on client2
-    And u2 renames spaces/s1/dir1 to dir1 on client2
+    When u2 creates directory and parents [spaces/s1/dir1/dir2] on client2
+    And u2 changes spaces/s1/dir1 mode to 775 on client2
+    And u1 sees [dir2] in spaces/s1/dir1 on client1
+    And u2 sees [dir2] in spaces/s1/dir1 on client2
+    And u1 renames spaces/s1/dir1/dir2 to dir1/dir2 on client1
     Then last operation by u1 fails
-    And u1 sees [dir1] in . on client1
-    And u1 sees [dir2] in . on client2
+    And u1 sees [dir1/dir2] in dir1 on client1
+    And u1 sees [dir1/dir2] in dir1 on client2
 
   Scenario: Move directory to its subtree in spaces
     When u1 creates directory and parents [dir1/dir2/dir3] on client1
@@ -255,8 +274,11 @@ Feature: Directory_CRUD
     And u2 sees [dir2] in dir1 on client2
     And u1 sees [dir3] in dir1/dir2 on client1
     And u2 sees [dir3] in dir1/dir2 on client2
-    And u1 renames dir1 to spaces/s1/dir1/dir2/dir3 on client1
-    Then last operation by u1 fails
+    And u1 changes dir1 mode to 775 on client1
+    And u1 changes dir1/dir2 mode to 775 on client1
+    And u1 changes dir1/dir2/dir3 mode to 775 on client1
+    And u2 renames dir1/dir2 to spaces/s1/dir1/dir2/dir3 on client2
+    Then last operation by u2 fails
     And u1 sees [dir1] in . on client1
     And u2 sees [dir1] in . on client2
     And u1 sees [dir2] in dir1 on client1
@@ -272,8 +294,11 @@ Feature: Directory_CRUD
     And u2 sees [dir2] in spaces/s1/dir1 on client2
     And u1 sees [dir3] in spaces/s1/dir1/dir2 on client1
     And u2 sees [dir3] in spaces/s1/dir1/dir2 on client2
-    And u1 renames spaces/s1/dir1 to dir1/dir2/dir3 on client1
-    Then last operation by u1 fails
+    And u1 changes spaces/s1/dir1 mode to 775 on client1
+    And u1 changes spaces/s1/dir1/dir2 mode to 775 on client1
+    And u1 changes spaces/s1/dir1/dir2/dir3 mode to 775 on client1
+    And u2 renames spaces/s1/dir1/dir2 to dir1/dir2/dir3 on client2
+    Then last operation by u2 fails
     And u1 sees [dir1] in spaces/s1 on client1
     And u2 sees [dir1] in spaces/s1 on client2
     And u1 sees [dir2] in spaces/s1/dir1 on client1

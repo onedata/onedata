@@ -62,17 +62,15 @@ def delete_file(user, files, client_node, context):
         save_op_code(context, user, ret)
 
 
-@then(parsers.parse('{user} checks if {file} file type is {fileType} on {client_node}'))
+@then(parsers.parse('file type of {user}\'s {file} is {fileType} on {client_node}'))
 def check_type(user, file, fileType, client_node, context):
     client = get_client(client_node, user, context)
-    print run_cmd(user, client, "ls " + client.mount_path, output=True)
     currFileType = run_cmd(user, client, 'stat ' + make_path(file, client) + ' --format=%F', output=True)
     assert fileType == currFileType
 
 
-@then(parsers.parse('{user} checks if {file} mode is {mode} on {client_node}'))
+@then(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
 def check_mode(user, file, mode, client_node, context):
-    # time.sleep(600)
     client = get_client(client_node, user, context)
     curr_mode = run_cmd(user, client, 'stat --format=%a ' + make_path(file, client), output=True)
     assert mode == curr_mode
@@ -81,11 +79,13 @@ def check_mode(user, file, mode, client_node, context):
 @when(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
 def change_mode(user, file, mode, client_node, context):
     client = get_client(client_node, user, context)
-    run_cmd(user, client, 'chmod ' + mode + ' ' + make_path(file, client))
+    mode = str(mode)
+    ret = run_cmd(user, client, 'chmod ' + mode + ' ' + make_path(file, client))
+    save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
-@then(parsers.parse('{user} checks if {file} size is {size} bytes on {client_node}'))
+@when(parsers.parse('size of {user}\'s {file} is {size} on {client_node}'))
+@then(parsers.parse('size of {user}\'s {file} is {size} on {client_node}'))
 def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)
     curr_size = run_cmd(user, client,
@@ -94,8 +94,8 @@ def check_size(user, file, size, client_node, context):
     assert size == curr_size
 
 
-@then(parsers.parse(('{user} checks if {time1} of {file} is {comparator} to {time2} on {client_node}')))
-@then(parsers.parse('{user} checks if {time1} of {file} is {comparator} than {time2} on {client_node}'))
+@then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} to {time2} time on {client_node}'))
+@then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} than {time2} time on {client_node}'))
 def check_time(user, time1, time2, comparator, file, client_node, context):
     client = get_client(client_node, user, context)
     opt1 = get_time_opt(time1)
@@ -110,11 +110,11 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
 
 
 def get_time_opt(time):
-    if time == "access time":
+    if time == "access":
         return 'X'
-    elif time == "modification time":
+    elif time == "modification":
         return 'Y'
-    elif time == "status-change time":
+    elif time == "status-change":
         return 'Z'
     else:
         raise ValueError("Wrong argument to function get_time_opt")

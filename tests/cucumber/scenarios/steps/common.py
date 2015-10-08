@@ -7,14 +7,6 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements some common basic functions and functionality.
 """
 
-## TODO
-# - zmiana stepu sleep na user waits - DONE
-# - clean do background - DONE
-# - and zamiast when, when... itd. - DONE
-# - zamiast docker.exec_ zrobic funkcje np run(command) - DONE
-# - operation succeeds do usuniecia - DONE
-# zapis duzych danych do pliku np. 1MB, sprawdzic md5 - DONE
-
 
 import pytest
 from pytest_bdd import given, when, then
@@ -68,7 +60,7 @@ def user_wait_default(user, time, context):
 @when(parsers.parse('{user} waits {time} seconds on {client_node}'))
 def user_wait(user, time, client_node, context):
     client = get_client(client_node, user, context)
-    run_cmd(client, "sleep " + str(time))
+    run_cmd(user, client, "sleep " + str(time))
 
 
 @when(parsers.parse('last operation by {user} succeeds'))
@@ -109,7 +101,6 @@ def run_cmd(user, client, cmd, output=False):
     elif user != 'root' and isinstance(cmd, list):
         cmd = ["su", "-c"] + cmd + [str(user)]
 
-    # print "CMD: ", cmd
     return docker.exec_(container=client.docker_id, command=cmd, output=output)
 
 

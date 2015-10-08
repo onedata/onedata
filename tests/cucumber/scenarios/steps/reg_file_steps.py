@@ -31,6 +31,11 @@ def read(user, text, file, context):
     multi_reg_file_steps.read(user, text, file, "client1", context)
 
 
+@when(parsers.parse('{user} executes {file}'))
+@then(parsers.parse('{user} executes {file}'))
+def execute_script(user, file, context):
+    multi_reg_file_steps.execute_script(user, file, "client1", context)
+
 @then(parsers.parse('{user} checks MD5 of {file}'))
 def check_md5(user, file, context):
     multi_reg_file_steps.check_md5(user, file, "client1", context)

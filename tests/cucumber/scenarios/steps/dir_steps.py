@@ -45,3 +45,8 @@ def delete_parents(user, paths, context):
 @when(parsers.parse('{user} copies directory {dir1} to {dir2}'))
 def copy_dir(user, dir1, dir2, context):
     multi_dir_steps.copy_dir(user, dir1, dir2, "client1", context)
+
+@when(parsers.parse('{user} can\'t list {dir}'))
+@then(parsers.parse('{user} can\'t list {dir}'))
+def list_dir(user, dir, context):
+    list_dir(user, dir, "client1", context)

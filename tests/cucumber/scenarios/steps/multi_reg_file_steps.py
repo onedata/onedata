@@ -32,7 +32,7 @@ def write_rand_text(user, megabytes, file, client_node, context):
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 def write_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(user, client, 'echo "' + str(text) + '" > ' + make_path(file, client))
+    ret = run_cmd(user, client, 'echo \'' + str(text) + '\' > ' + make_path(file, client))
     save_op_code(context, user, ret)
 
 
@@ -41,6 +41,14 @@ def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
     assert read_text == text
+
+
+@when(parsers.parse('{user} executes {file} on {client_node}'))
+@then(parsers.parse('{user} executes {file} on {client_node}'))
+def execute_script(user, file, client_node, context):
+    client = get_client(client_node, user, context)
+    ret = run_cmd(user, client, make_path(file, client))
+    save_op_code(context, user, ret)
 
 
 @then(parsers.parse('{user} checks MD5 of {file} on {client_node}'))

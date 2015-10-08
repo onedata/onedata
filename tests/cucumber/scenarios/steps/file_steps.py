@@ -43,12 +43,12 @@ def delete_file(user, files, context):
     multi_file_steps.delete_file(user, files, "client1", context)
 
 
-@then(parsers.parse('{user} checks if {file} file type is {fileType}'))
+@then(parsers.parse('file type of {user}\'s {file} is {fileType}'))
 def check_type(user, file, fileType, context):
     multi_file_steps.check_type(user, file, fileType, "client1", context)
 
 
-@then(parsers.parse('{user} checks if {file} mode is {mode}'))
+@then(parsers.parse('mode of {user}\'s {file} is {mode}'))
 def check_mode(user, file, mode, context):
     multi_file_steps.change_mode(user, file, mode, "client1", context)
 
@@ -58,44 +58,13 @@ def change_mode(user, file, mode, context):
     multi_file_steps.change_mode(user, file, mode, "client1", context)
 
 
-@when(parsers.parse('{user} checks if {file} size is {size} bytes'))
-@then(parsers.parse('{user} checks if {file} size is {size} bytes'))
+@when(parsers.parse('size of {user}\'s {file} is {size} bytes'))
+@then(parsers.parse('size of {user}\'s {file} is {size} bytes'))
 def check_size(user, file, size, context):
     multi_file_steps.check_size(user, file, size, "client1", context)
 
 
-@then(parsers.parse('{user} checks if {time1} of {file} is {comparator} to {time2}'))
-@then(parsers.parse('{user} checks if {time1} of {file} is {comparator} than {time2}'))
+@then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} than {time2} time'))
+@then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} to {time2} time'))
 def check_time(user, time1, time2, comparator, file, context):
     multi_file_steps.check_time(user, time1, time2, comparator, file, "client1", context)
-
-
-####################################################################################################
-
-
-def get_time_opt(time):
-    if time == "access time":
-        return 'X'
-    elif time == "modification time":
-        return 'Y'
-    elif time == "status-change time":
-        return 'Z'
-    else:
-        raise ValueError("Wrong argument to function get_time_opt")
-
-
-def compare(val1, val2, comparator):
-    if comparator == 'equal':
-        return val1 == val2
-    elif comparator == 'not equal':
-        return val1 != val2
-    elif comparator == 'greater':
-        return val1 > val2
-    elif comparator == 'less':
-        return val1 < val2
-    elif comparator == 'not greater':
-        return val1 <= val2
-    elif comparator == 'not less':
-        return val1 >= val2
-    else:
-        raise ValueError("Wrong argument comparator to function compare")

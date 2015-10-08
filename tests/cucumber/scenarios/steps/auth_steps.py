@@ -68,7 +68,6 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
               ' && rm ' + token_path
 
         ret = run_cmd(user, client, cmd)
-        # time.sleep(600)
 
         if token_arg != "bad token":
             # if token was different than "bad token", check if logging succeeded
@@ -131,7 +130,7 @@ def clean_mount_path(user, client):
         run_cmd("root", client, "kill -KILL " + str(pid))
 
     # unmount onedata
-    run_cmd("root", client, "umount " + client.mount_path)
+    run_cmd(user, client, "fusermount -u " + client.mount_path)
 
     # remove onedata dir
     run_cmd("root", client, "rm -rf " + client.mount_path)

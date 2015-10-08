@@ -42,22 +42,6 @@ def test_create_in_spaces():
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
-    'Create directory spaces'
-)
-def test_create_spaces_dir():
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Create space'
-)
-def test_create_space():
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
     'Rename someone\'s directory'
 )
 def test_rename_someone():
@@ -79,6 +63,7 @@ def test_rename_one():
 def test_delete_someone():
     pass
 
+
 @scenario(
     '../features/multi_directory_CRUD.feature',
     'Delete own empty directory'
@@ -89,18 +74,60 @@ def test_delete_own():
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
-    'Delete directory spaces'
+    'List directory without read permission'
 )
-def test_delete_spaces_dir():
+def test_list_dir_without_permission():
     pass
 
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
-    'Delete space'
+    'Create file in directory without write permission'
 )
-def test_delete_space():
+def test_create_subfile_without_permission():
     pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Create file in directory with write permission'
+)
+def test_create_subfile_with_permission():
+    pass
+
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Delete file in directory without write permission'
+)
+def test_delete_subfile_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Delete file in directory with write permission'
+)
+def test_delete_subfile_with_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Rename file in directory without write permission'
+)
+def test_rename_subfile_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Rename file in directory without write permission'
+)
+def test_rename_subfile_with_permission():
+    pass
+
 
 
 @scenario(
