@@ -13,7 +13,7 @@ from steps.common import *
 
 @scenario(
     '../features/authorization.feature',
-    'Successful authorization',
+    'Successful authorization'
 )
 def test_successful_authorization():
     pass
