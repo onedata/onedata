@@ -58,6 +58,8 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
 
         run_cmd("root", client, 'gpasswd -a ' + user + ' fuse')
 
+        # time.sleep(600)
+
         cmd = 'mkdir -p ' + mount_path + \
               ' && export GLOBAL_REGISTRY_URL=' + gr + \
               ' && echo ' + token + ' > ' + token_path + \
