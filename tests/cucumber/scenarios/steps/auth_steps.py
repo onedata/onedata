@@ -23,8 +23,6 @@ from common import *
                      '{mount_paths} on nodes {ids} respectively,\n' +
                      'using {tokens}'))
 def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, context, client_ids):
-    # TODO many clients for one user, parsing list of lists
-    # cleaning to common
 
     users = list_parser(users)
     client_nodes = list_parser(client_nodes)

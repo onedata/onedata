@@ -30,11 +30,26 @@ Feature: Multi_directory_stat
     Then modification time of u2's dir1 is equal to access time on client2
     And status-change time of u2's dir1 is equal to access time on client2
 
-  Scenario: Update timestamps
+  Scenario: Update timestamps without write permission
+    # touch dir1
     When u1 creates directories [dir1] on client1
     And u1 waits 1 seconds on client1
+    And u1 changes dir1 mode to 755 on client1
     And u1 creates directories [dir1/dir2] on client1
-    And u1 updates [dir1] timestamps on client1
+    And u2 updates [dir1] timestamps on client2
+    # aim of above step is to call touch on dir1
+    # after creation of subdir access time and
+    # modification time were different
+    # after touch both will be updated to current time
+    Then last operation by u2 fails
+
+  Scenario: Update timestamps with write permission
+    # touch dir1
+    When u1 creates directories [dir1] on client1
+    And u1 waits 1 seconds on client1
+    And u1 changes dir1 mode to 725 on client1
+    And u1 creates directories [dir1/dir2] on client1
+    And u2 updates [dir1] timestamps on client2
     # aim of above step is to call touch on dir1
     # after creation of subdir access time and
     # modification time were different

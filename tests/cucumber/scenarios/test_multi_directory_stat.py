@@ -42,6 +42,14 @@ def test_change_access():
 
 @scenario(
     '../features/multi_directory_stat.feature',
+    'Change someone\'s file access permissions'
+)
+def test_change_access_someone():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_stat.feature',
     'Timestamps at creation'
 )
 def test_timestamp():
@@ -50,9 +58,17 @@ def test_timestamp():
 
 @scenario(
     '../features/multi_directory_stat.feature',
-    'Update timestamps'
+    'Update timestamps without write permission'
 )
-def test_update_timestamp():
+def test_update_timestamp_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_stat.feature',
+    'Update timestamps with write permission'
+)
+def test_update_timestamp_with_permission():
     pass
 
 

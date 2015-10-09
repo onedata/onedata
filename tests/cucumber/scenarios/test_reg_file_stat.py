@@ -73,6 +73,14 @@ def test_timestamp():
 
 @scenario(
     '../features/reg_file_stat.feature',
+    'Update timestamps'
+)
+def test_update_timestamp():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
     'Access time'
 )
 def test_access_time():

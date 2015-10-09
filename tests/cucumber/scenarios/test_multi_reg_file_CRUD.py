@@ -15,28 +15,29 @@ from steps.multi_file_steps import *
 from steps.multi_reg_file_steps import *
 from steps.common import *
 
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Create regular file'
-# )
-# def test_create():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Rename regular file'
-# )
-# def test_rename():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Delete regular file'
-# )
-# def test_delete():
-#     pass
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Create regular file'
+)
+def test_create():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Rename regular file'
+)
+def test_rename():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Delete regular file'
+)
+def test_delete():
+    pass
 
 
 @scenario(
@@ -87,33 +88,33 @@ def test_execute_without_permission():
     pass
 
 
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Move regular file and read'
-# )
-# def test_move():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Move big regular file and check MD5'
-# )
-# def test_move_big():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Copy regular file and read'
-# )
-# def test_copy():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Copy big regular file and check MD5'
-# )
-# def test_copy_big():
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Move regular file and read'
+)
+def test_move():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Move big regular file and check MD5'
+)
+def test_move_big():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Copy regular file and read'
+)
+def test_copy():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Copy big regular file and check MD5'
+)
+def test_copy_big():
+    pass

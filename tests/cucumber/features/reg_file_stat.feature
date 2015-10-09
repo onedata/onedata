@@ -47,6 +47,12 @@ Feature: Regular_file_stat
     Then modification time of u1's file1 is equal to access time
     And status-change time of u1's file1 is equal to access time
 
+  Scenario: Update timestamps
+    When u1 creates regular files [file1]
+    And u1 sees file1 in .
+    And u1 updates [file1] timestamps
+    Then modification time of u1's file1 is equal to access time
+
   Scenario: Access time
     When u1 writes "TEST TEXT ONEDATA" to file1
     And u1 sees file1 in .

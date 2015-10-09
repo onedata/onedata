@@ -65,9 +65,33 @@ def test_decrease_size():
 
 @scenario(
     '../features/multi_reg_file_stat.feature',
+    'Truncate regular file without write permission'
+)
+def test_truncate_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_stat.feature',
     'Timestamps at creation'
 )
 def test_timestamp():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Update timestamps without write permission',
+)
+def test_update_timestamp_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Update timestamps with write permission'
+)
+def test_timestamp_timestamp_with_permission():
     pass
 
 

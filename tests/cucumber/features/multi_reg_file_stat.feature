@@ -24,7 +24,7 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [file1] on client1
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
-    Then mode of u2's file1 is 644 on client2
+    Then mode of u2's file1 is 664 on client2
 
   Scenario: Change access permissions
     When u1 creates regular files [file1] on client1
@@ -34,6 +34,7 @@ Feature: Multi_regular_file_stat
     Then mode of u2's file1 is 211 on client2
 
   Scenario: Increase regular file size
+    # truncate
     When u1 creates regular files [file1] on client1
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
@@ -41,6 +42,7 @@ Feature: Multi_regular_file_stat
     Then size of u2's file1 is 1000000 bytes on client2
 
   Scenario: Decrease regular file size
+    # truncate
     When u1 creates regular files [file1] on client1
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
@@ -49,12 +51,41 @@ Feature: Multi_regular_file_stat
     And u1 changes file1 size to 0 bytes on client1
     Then size of u2's file1 is 0 bytes on client2
 
+  Scenario: Truncate regular file without write permission
+    When u1 creates directories [dir1] on client1
+    And u1 creates regular files [dir1/file1] on client1
+    And u1 sees [file1] in dir1 on client1
+    And u2 sees [file1] in dir1 on client2
+    And u1 changes dir1/file1 mode to 644 on client1
+    And u2 changes dir1/file1 size to 1000000 bytes on client2
+    Then last operation by u2 fails
+
   Scenario: Timestamps at creation
     When u1 creates regular files [file1] on client1
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
     Then modification time of u2's file1 is equal to access time on client2
     And status-change time of u2's file1 is equal to access time on client2
+
+  Scenario: Update timestamps without write permission
+    # touch dir1/file1
+    When u1 creates directories [dir1] on client1
+    And u1 creates regular files [dir1/file1] on client1
+    And u1 sees [file1] in dir1 on client1
+    And u2 sees [file1] in dir1 on client2
+    And u1 changes dir1/file1 mode to 644 on client1
+    And u2 updates [dir1/file1] timestamps on client2
+    Then last operation by u2 fails
+
+  Scenario: Update timestamps with write permission
+    # touch dir1/file1
+    When u1 creates directories [dir1] on client1
+    And u1 creates regular files [dir1/file1] on client1
+    And u1 sees [file1] in dir1 on client1
+    And u2 sees [file1] in dir1 on client2
+    And u1 changes dir1/file1 mode to 624 on client1
+    And u2 updates [dir1/file1] timestamps on client2
+    Then modofication time u2's file1 is equal to access time on client2
 
   Scenario: Access time
     When u1 writes "TEST TEXT ONEDATA" to file1 on client1

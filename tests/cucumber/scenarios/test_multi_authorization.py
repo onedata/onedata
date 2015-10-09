@@ -10,6 +10,7 @@ from steps.env_steps import *
 from steps.auth_steps import *
 from steps.common import *
 
+
 @scenario(
     '../features/multi_authorization.feature',
     'Successful authorization',
@@ -17,12 +18,14 @@ from steps.common import *
 def test_successful_authorization():
     pass
 
+
 @scenario(
     '../features/multi_authorization.feature',
     'Bad and good authorization',
 )
 def test_good_and_bad_authorization():
     pass
+
 
 @scenario(
     '../features/multi_authorization.feature',

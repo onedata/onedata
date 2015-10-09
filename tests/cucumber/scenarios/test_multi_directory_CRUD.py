@@ -129,7 +129,6 @@ def test_rename_subfile_with_permission():
     pass
 
 
-
 @scenario(
     '../features/multi_directory_CRUD.feature',
     'Recreate directory deleted by other user'
