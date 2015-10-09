@@ -2,7 +2,8 @@
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
-Test suite for authorization and mounting onedata client.
+Test suite for authorization and mounting onedata client,
+ in multi-client environment.
 """
 from pytest_bdd import scenario
 
