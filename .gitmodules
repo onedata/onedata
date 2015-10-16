@@ -1,21 +1,28 @@
 [submodule "appmock"]
 	path = appmock
 	url = ssh://git@git.plgrid.pl:7999/vfs/appmock.git
+	branch = develop
 [submodule "globalregistry"]
 	path = globalregistry
 	url = ssh://git@git.plgrid.pl:7999/vfs/globalregistry.git
+	branch = develop
 [submodule "oneclient"]
 	path = oneclient
 	url = ssh://git@git.plgrid.pl:7999/vfs/oneclient.git
+	branch = develop
 [submodule "bamboos"]
 	path = bamboos
 	url = ssh://git@git.plgrid.pl:7999/vfs/bamboos.git
+	branch = develop
 [submodule "op_ccm"]
 	path = op_ccm
 	url = ssh://git@git.plgrid.pl:7999/vfs/op-ccm.git
+	branch = develop
 [submodule "onepanel"]
 	path = onepanel
 	url = ssh://git@git.plgrid.pl:7999/vfs/onepanel.git
+	branch = develop
 [submodule "op_worker"]
 	path = op_worker
 	url = ssh://git@git.plgrid.pl:7999/vfs/op-worker.git
+	branch = develop
