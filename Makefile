@@ -42,7 +42,7 @@ mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source &
 
 submodules:
 	git submodule init
-	git submodule update
+	git submodule update --recursive --remote
 
 ##
 ## Build
