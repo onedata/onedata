@@ -19,22 +19,30 @@ class TestRpmInstallation:
     # Test if installation has finished successfully
     def test_installation(self):
         gr_node = self.result['gr_nodes'][0]
-        (_, _, gr_hostname) = gr_node.partition('@')
-        gr_dockername = '_'.join(gr_hostname.split('.')[:2])
+        (_, _, gr_dockername) = gr_node.partition('@')
 
         command = 'yum install -y python && ' \
                   'python /root/data/rpm_install_script.py'
+
         command = command.format(package_dir=package_dir)
-        assert 0 == docker.run(tty=True,
+        container = docker.run(tty=True,
                                interactive=True,
-                               image='fedora:21',
-                               hostname='onedata.devel',
-                               rm=True,
+                               detach=True,
+                               image='onedata/fedora-systemd:21',
+                               hostname='devel.localhost.local',
                                workdir="/root",
                                run_params=['--privileged=true'],
                                link={gr_dockername: 'onedata.org'},
                                volumes=[
-                                   (package_dir, '/root/pkg', 'r'),
-                                   (scripts_dir, '/root/data', 'r')
+                                   (package_dir, '/root/pkg', 'ro'),
+                                   (scripts_dir, '/root/data', 'ro')
                                ],
-                               command=command)
+                               reflect=[('/sys/fs/cgroup', 'rw')])
+
+        try:
+          assert 0 == docker.exec_(container,
+                                  command=command,
+                                  interactive=True,
+                                  tty=True)
+        finally:
+          docker.remove([container], force=True, volumes=True)

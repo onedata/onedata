@@ -1,4 +1,5 @@
 from subprocess import STDOUT, check_call, check_output, call
+import subprocess
 import sys
 
 # get packages
@@ -13,10 +14,9 @@ op_ccm_package = [path for path in packages
 op_panel_package = [path for path in packages
                     if path.startswith('op-panel')
                     and path.endswith('.rpm')][0]
-oneclient_package = [path for path in packages
-                     if path.startswith('oneclient')
-                     and not path.startswith('oneclient-debuginfo')
-                     and path.endswith('.rpm')][0]
+
+# Reinstall glibc-common to fix locales
+check_call(['yum', '-y', 'reinstall', 'glibc-common'])
 
 # install dependencies
 check_call(['yum', '-y', 'install', 'wget', 'curl'], stderr=STDOUT)
@@ -32,20 +32,18 @@ check_call(['cp', 'data/basho_riak.repo', '/etc/yum.repos.d/'])
 check_call(['mkdir', '-p', '/run/lock/subsys']) #todo repair non mounting /run/lock
 
 # install all
-check_call(['yum', '-y', 'install', 'riak'], stderr=STDOUT)
+check_call(['yum', '-y', '--enablerepo=onedata', 'install', 'couchbase-server'], stderr=STDOUT)
 check_call(['yum', '-y', 'install', '/root/pkg/' + op_panel_package], stderr=STDOUT)
 check_call(['yum', '-y', 'install', '/root/pkg/' + op_ccm_package], stderr=STDOUT)
 check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + op_worker_package], stderr=STDOUT)
-check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + oneclient_package], stderr=STDOUT)
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/op_ccm/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
-check_call(['/usr/bin/oneclient', '--help'])
 
 # oneprovider configure&install
-call(['op_panel_admin', '--install', '/root/data/install.cfg'])
+check_call(['op_panel_admin', '--install', '/root/data/install.cfg'])
 
 # validate oneprovider is running
 check_call(['service', 'op_ccm', 'status'])

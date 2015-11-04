@@ -1,4 +1,4 @@
-# distro for package building (oneof: sid, fedora-21-x86_64)
+# distro for package building (oneof: vivid, fedora-21-x86_64)
 DISTRIBUTION            ?= none
 export DISTRIBUTION
 
@@ -42,7 +42,7 @@ mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source &
 
 submodules:
 	git submodule init
-	git submodule update
+	git submodule update --recursive --remote
 
 ##
 ## Build
@@ -76,7 +76,7 @@ test:
 	./test_run.py --test-dir tests/acceptance
 
 test_packaging: build_globalregistry
-	./test_run.py --test-dir tests/packaging
+	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
 	./test_run.py --test-dir tests/cucumber

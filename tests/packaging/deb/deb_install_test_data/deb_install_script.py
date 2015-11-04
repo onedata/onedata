@@ -1,3 +1,4 @@
+from __future__ import print_function
 from subprocess import Popen, PIPE, STDOUT, check_call, check_output
 import sys
 
@@ -16,19 +17,17 @@ oneclient_package = [path for path in packages
 # update repositories
 check_call(['apt-get', 'update'])
 
-# add private boost&tbb repository
+# add locale
+check_call(['locale-gen', 'en_US.UTF-8'])
+
+# add private boost repository
 check_call(['apt-key', 'adv', '--keyserver', 'keyserver.ubuntu.com',
-            '--recv-keys', 'D73BB29D', '3A6CFFB3'])
+            '--recv-keys', '3A6CFFB3'])
 boost_utopic_repo = Popen(['echo', 'deb http://ppa.launchpad.net/kzemek/boost/'
-                                   'ubuntu utopic main'], stdout=PIPE)
+                                   'ubuntu vivid main'], stdout=PIPE)
 check_call(['tee', '/etc/apt/sources.list.d/boost.list'],
            stdin=boost_utopic_repo.stdout)
 boost_utopic_repo.wait()
-tbb_utopic_repo = Popen(['echo', 'deb http://ppa.launchpad.net/kzemek/intel-tbb/'
-                                   'ubuntu utopic main'], stdout=PIPE)
-check_call(['tee', '/etc/apt/sources.list.d/intel-tbb.list'],
-           stdin=tbb_utopic_repo.stdout)
-tbb_utopic_repo.wait()
 
 # install dependencies
 check_call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https'])
@@ -44,11 +43,17 @@ check_call(['tee', '/etc/apt/sources.list.d/basho.list'],
            stdin=riak_utopic_repo.stdout)
 riak_utopic_repo.wait()
 
+# add our own repo
+onedata_key = Popen(['curl', 'http://packages.onedata.org/GPG-KEY-onedata'], stdout=PIPE)
+check_call(['apt-key', 'add', '-'], stdin=onedata_key.stdout)
+onedata_key.wait()
+with open('/etc/apt/sources.list.d/onedata.list', 'w') as f:
+  print("deb http://packages.onedata.org/debian/ testing main", file=f)
+
 # update repositories
 check_call(['apt-get', 'update'])
 
-# install all
-check_call(['apt-get', 'install', '-y', 'riak'])
+check_call(['apt-get', 'install', 'couchbase-server'])
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_panel_package)
             ], stderr=STDOUT)
