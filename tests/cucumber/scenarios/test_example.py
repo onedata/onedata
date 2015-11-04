@@ -15,7 +15,6 @@ from steps.common import *
 @scenario(
     '../features/example.feature',
     'Hello world'
-    # example_converters=dict(env_json=str, number=int)
 )
 def test_hello():
     """This tag defines which scenario we want to perform.

@@ -93,8 +93,9 @@ def default_mount(user, mount_path, token, environment, context, client_ids):
 def check_spaces(spaces, user, context):
     time.sleep(3)
     # sleep to be sure that environment is up
+    spaces = list_parser(spaces)
+    user = str(user)
     for client_node, client in context.users[user].clients.items():
-        spaces = list_parser(spaces)
         spaces_in_client = run_cmd(user, client, 'ls ' + make_path("spaces", client), output=True)
         spaces_in_client = spaces_in_client.split("\n")
         for space in spaces:
