@@ -10,12 +10,14 @@ from steps.env_steps import *
 from steps.auth_steps import *
 from steps.common import *
 
+
 @scenario(
     '../features/authorization.feature',
-    'Successful authorization',
+    'Successful authorization'
 )
 def test_successful_authorization():
     pass
+
 
 @scenario(
     '../features/authorization.feature',
