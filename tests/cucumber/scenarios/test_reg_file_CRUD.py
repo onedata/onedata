@@ -50,6 +50,30 @@ def test_read_write():
 
 @scenario(
     '../features/reg_file_CRUD.feature',
+    'Append regular file'
+)
+def test_append():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Replace word in file'
+)
+def test_replace():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Write to beginning of regular file'
+)
+def test_write_beginning():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
     'Move regular file and read'
 )
 def test_move():

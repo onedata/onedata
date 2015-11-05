@@ -22,6 +22,22 @@ def test_successful_authorization():
 
 @scenario(
     '../features/multi_authorization.feature',
+    'Successful authorization - 1 client per user',
+)
+def test_successful_authorization2():
+    pass
+
+
+@scenario(
+    '../features/multi_authorization.feature',
+    'Successful authorization - 2 clients of one user',
+)
+def test_successful_authorization3():
+    pass
+
+
+@scenario(
+    '../features/multi_authorization.feature',
     'Bad and good authorization',
 )
 def test_good_and_bad_authorization():

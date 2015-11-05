@@ -29,10 +29,18 @@ def write_rand_text(user, megabytes, file, client_node, context):
     context.md5 = md5.split()[0]
 
 
+@when(parsers.parse('{user} writes "{text}" to beginning of {file} on {client_node}'))
+def write_beginning(user, text, file, client_node, context):
+    client = get_client(client_node, user, context)
+    ret = run_cmd(user, client,
+                  'echo -n \'' + str(text) + '\'$(cat ' + file + ') > ' + make_path(file, client))
+    save_op_code(context, user, ret)
+
+
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 def write_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(user, client, 'echo \'' + str(text) + '\' > ' + make_path(file, client))
+    ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' > ' + make_path(file, client))
     save_op_code(context, user, ret)
 
 
@@ -41,6 +49,21 @@ def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
     assert read_text == text
+
+
+@when(parsers.parse('{user} appends "{text}" to {file} on {client_node}'))
+def append(user, text, file, client_node, context):
+    client = get_client(client_node, user, context)
+    ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' >> ' + make_path(file, client))
+    save_op_code(context, user, ret)
+
+
+@when(parsers.parse('{user} replaces "{text1}" with "{text2}" in {file} on {client_node}'))
+def replace(user, text1, text2, file, client_node, context):
+    client = get_client(client_node, user, context)
+    ret = run_cmd(user, client,
+                  'sed -i \'s/' + text1 + '/' + text2 + '/g\' ' + make_path(file, client))
+    save_op_code(context, user, ret)
 
 
 @when(parsers.parse('{user} executes {file} on {client_node}'))
