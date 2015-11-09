@@ -15,51 +15,90 @@ from steps.file_steps import *
 from steps.reg_file_steps import *
 from steps.common import *
 
-# TODO below tests should be uncommented after resolving VFS-1218 in op_worker
-#  and VFS-1235 in oneclient
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Create regular file'
-# )
-# def test_create():
-#     pass
-#
-#
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Rename regular file'
-# )
-# def test_rename():
-#     pass
-#
-#
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Delete regular file'
-# )
-# def test_delete():
-#     pass
-#
-#
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Read and write to regular file'
-# )
-# def test_read_write():
-#     pass
-#
-#
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Move regular file'
-# )
-# def test_move():
-#     pass
-#
-#
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Copy regular file'
-# )
-# def test_copy():
-#     pass
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Create regular file'
+)
+def test_create():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Rename regular file'
+)
+def test_rename():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Delete regular file'
+)
+def test_delete():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Read and write to regular file'
+)
+def test_read_write():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Append regular file'
+)
+def test_append():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Replace word in file'
+)
+def test_replace():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Write to beginning of regular file'
+)
+def test_write_beginning():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Move regular file and read'
+)
+def test_move():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Move big regular file and check MD5'
+)
+def test_move_big():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Copy regular file and read'
+)
+def test_copy():
+    pass
+
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Copy big regular file and check MD5'
+)
+def test_copy_big():
+    pass
