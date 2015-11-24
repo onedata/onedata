@@ -13,7 +13,7 @@
 [submodule "bamboos"]
 	path = bamboos
 	url = ssh://git@git.plgrid.pl:7999/vfs/bamboos.git
-	branch = develop
+	branch = VFS-1269-docker-environment-refactor
 [submodule "op_ccm"]
 	path = op_ccm
 	url = ssh://git@git.plgrid.pl:7999/vfs/op-ccm.git

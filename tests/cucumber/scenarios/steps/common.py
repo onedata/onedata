@@ -13,6 +13,7 @@ from pytest_bdd import given, when, then
 from pytest_bdd import parsers
 
 import os
+import sys
 from environment import docker
 
 ####################### CLASSES #######################
@@ -96,12 +97,18 @@ def make_path(path, client):
 
 def run_cmd(user, client, cmd, output=False):
 
+    # convert command into ascii string or list of ascii strings
+    if isinstance(cmd, basestring):
+        cmd = str(cmd)
+    elif isinstance(cmd, list):
+        cmd = [str(x) for x in cmd]
+
     if user != 'root' and isinstance(cmd, str):
         cmd = 'su -c "' + cmd + '" ' + str(user)
     elif user != 'root' and isinstance(cmd, list):
         cmd = ["su", "-c"] + cmd + [str(user)]
 
-    return docker.exec_(container=client.docker_id, command=cmd, output=output)
+    return docker.exec_(container=client.docker_id, command=cmd, output=output, tty=True)
 
 
 def get_client(client_node, user, context):

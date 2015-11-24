@@ -19,13 +19,13 @@ from environment import docker, env
 from common import *
 
 
-@given(parsers.parse('{users} start oneclients {client_nodes} in\n' +
+@given(parsers.parse('{users} start oneclients {client_instances} in\n' +
                      '{mount_paths} on nodes {ids} respectively,\n' +
                      'using {tokens}'))
-def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, context, client_ids):
+def multi_mount(users, client_instances, mount_paths, ids, tokens, environment, context, client_ids):
 
     users = list_parser(users)
-    client_nodes = list_parser(client_nodes)
+    client_instances = list_parser(client_instances)
     mount_paths = list_parser(mount_paths)
     ids = list_parser(ids)
     tokens = list_parser(tokens)
@@ -36,11 +36,15 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
 
     set_dns(environment)
 
+    client_data = environment['client_data']
+
     for i in range(len(users)):
         user = str(users[i])
-        client_node = str(client_nodes[i])
+        client_instance = str(client_instances[i])
         mount_path = str(mount_paths[i])
-        id = int(ids[i])
+        id = ids[i]
+        data = client_data[id][client_instance]
+        id = int(id)
 
         token_arg = str(tokens[i])
 
@@ -56,10 +60,11 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
 
         token_path = "/tmp/token"
 
-        run_cmd("root", client, 'gpasswd -a ' + user + ' fuse')
-
         cmd = 'mkdir -p ' + mount_path + \
-              ' && export GLOBAL_REGISTRY_URL=' + gr + \
+              ' && export GLOBAL_REGISTRY_URL=' + data['gr_domain'] + \
+              ' && export PROVIDER_HOSTNAME=' + data['op_domain'] + \
+              ' && export X509_USER_CERT=' + data['user_cert'] + \
+              ' && export X509_USER_KEY=' + data['user_key'] + \
               ' && echo ' + token + ' > ' + token_path + \
               ' && ./oneclient --authentication token --no_check_certificate ' + mount_path + \
               ' < ' + token_path + \
@@ -72,9 +77,9 @@ def multi_mount(users, client_nodes, mount_paths, ids, tokens, environment, cont
             assert ret == 0
 
         if user in context.users:
-            context.users[user].clients[client_node] = client
+            context.users[user].clients[client_instance] = client
         else:
-            context.users[user] = User(client_node, client)
+            context.users[user] = User(client_instance, client)
 
         # remove accessToken to mount many clients on one docker
         run_cmd(user, client,
@@ -95,7 +100,7 @@ def check_spaces(spaces, user, context):
     # sleep to be sure that environment is up
     spaces = list_parser(spaces)
     user = str(user)
-    for client_node, client in context.users[user].clients.items():
+    for client_instance, client in context.users[user].clients.items():
         spaces_in_client = run_cmd(user, client, 'ls ' + make_path("spaces", client), output=True)
         spaces_in_client = spaces_in_client.split("\n")
         for space in spaces:
