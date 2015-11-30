@@ -22,6 +22,7 @@ def create(user, dirs, client_node, context):
     client = context.users[user].clients[client_node]
     for dir in dirs:
         ret = run_cmd(user, client, 'mkdir ' + make_path(dir, client))
+        context.update_timestamps(user, client, dir)
     save_op_code(context, user, ret)
 
 
@@ -33,6 +34,7 @@ def create_parents(user, paths, client_node, context):
     for path in paths:
         ret = run_cmd(user, client, 'mkdir -p '+ make_path(path, client))
         save_op_code(context, user, ret)
+        context.update_timestamps(user, client, path)
 
 
 @when(parsers.parse('{user} deletes empty directories {dirs} on {client_node}'))
@@ -76,4 +78,5 @@ def list_dir(user, dir, client_node, context):
     client = get_client(client_node, user, context)
     cmd = 'ls ' + make_path(dir, client)
     ret = run_cmd(user, client, cmd)
+    context.update_timestamps(user, client, dir)
     assert ret != 0
