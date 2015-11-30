@@ -19,28 +19,21 @@ from environment import docker, env
 from common import *
 
 
-@when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} on {client_node}\n'+
-                    'and saves MD5'))
+@when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))
 def write_rand_text(user, megabytes, file, client_node, context):
     client = get_client(client_node, user, context)
     path = make_path(file, client)
-    run_cmd(user, client, 'dd if=/dev/urandom of=' + path + ' bs=' + megabytes+'M + count=1')
+    run_cmd(user, client, 'dd if=/dev/urandom of=' + path + ' bs=' + megabytes +'M count=1')
     md5 = run_cmd(user, client, 'md5sum ' + path, output=True)
     context.md5 = md5.split()[0]
-
-
-@when(parsers.parse('{user} writes "{text}" to beginning of {file} on {client_node}'))
-def write_beginning(user, text, file, client_node, context):
-    client = get_client(client_node, user, context)
-    ret = run_cmd(user, client,
-                  'echo -n \'' + str(text) + '\'$(cat ' + file + ') > ' + make_path(file, client))
-    save_op_code(context, user, ret)
 
 
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 def write_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' > ' + make_path(file, client))
+    print "RET: ", ret
+    print "CMD: ", 'echo -n \'' + str(text) + '\' > ' + make_path(file, client)
     save_op_code(context, user, ret)
 
 
@@ -48,6 +41,7 @@ def write_text(user, text, file, client_node, context):
 def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
+    print "READ: ", read_text
     assert read_text == text
 
 

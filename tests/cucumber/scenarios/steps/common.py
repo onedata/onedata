@@ -97,11 +97,13 @@ def make_path(path, client):
 
 def run_cmd(user, client, cmd, output=False):
 
+    print "RUN_CMD", cmd
+
     # convert command into ascii string or list of ascii strings
     if isinstance(cmd, basestring):
         cmd = str(cmd)
     elif isinstance(cmd, list):
-        cmd = [str(x) for x in cmd]
+        cmd = [str(x) for x in cmd], cmd
 
     if user != 'root' and isinstance(cmd, str):
         cmd = 'su -c "' + cmd + '" ' + str(user)

@@ -84,8 +84,8 @@ def change_mode(user, file, mode, client_node, context):
     save_op_code(context, user, ret)
 
 
-@when(parsers.parse('size of {user}\'s {file} is {size} on {client_node}'))
-@then(parsers.parse('size of {user}\'s {file} is {size} on {client_node}'))
+@when(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
+@then(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
 def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)
     curr_size = run_cmd(user, client,
