@@ -32,9 +32,6 @@ def multi_mount(users, client_instances, mount_paths, ids, tokens, environment, 
 
     # current version is for environment with one GR
     gr_node = environment['gr_nodes'][0]
-    worker_node = environment['op_worker_nodes'][0]
-    gr = gr_node.split('@')[1]
-    worker = worker_node.split('@')[1]
 
     set_dns(environment)
 
@@ -61,17 +58,6 @@ def multi_mount(users, client_instances, mount_paths, ids, tokens, environment, 
             clean_mount_path(user, client)
 
         token_path = "/tmp/token"
-
-        # print "ENVIRONMENT", environment
-        # print "OP_DOMAIN", data['op_domain']
-        # print "WORKER", worker
-        # print "GR_DOMAIN", data['gr_domain']
-        # print "GR", gr
-
-        # run_cmd("root", client, 'gpasswd -a ' + user + ' fuse')
-
-        # ' && export GLOBAL_REGISTRY_URL=' + gr + \
-        # ' && export PROVIDER_HOSTNAME=' + worker + \
 
         cmd = 'mkdir -p ' + mount_path + \
               ' && export GLOBAL_REGISTRY_URL=' + data['gr_domain'] + \

@@ -32,8 +32,6 @@ def write_rand_text(user, megabytes, file, client_node, context):
 def write_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' > ' + make_path(file, client))
-    print "RET: ", ret
-    print "CMD: ", 'echo -n \'' + str(text) + '\' > ' + make_path(file, client)
     save_op_code(context, user, ret)
 
 
@@ -41,7 +39,6 @@ def write_text(user, text, file, client_node, context):
 def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
-    print "READ: ", read_text
     assert read_text == text
 
 

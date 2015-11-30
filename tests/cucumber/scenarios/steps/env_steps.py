@@ -41,9 +41,9 @@ def environment(request, context):
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments', context.env_json)
     env_desc = env.up(env_path)
-    # def fin():
-    #     docker.remove(request.environment['docker_ids'], force=True, volumes=True)
-    # request.addfinalizer(fin)
+    def fin():
+        docker.remove(request.environment['docker_ids'], force=True, volumes=True)
+    request.addfinalizer(fin)
     request.environment = env_desc
     return env_desc
 
