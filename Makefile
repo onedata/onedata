@@ -62,7 +62,7 @@ build_globalregistry: submodules
 build_oneclient: submodules
 	$(call make, oneclient) release
 
-build_op_worker: #submodules
+build_op_worker: submodules
 	$(call make, op_worker)
 
 build_op_ccm: submodules
