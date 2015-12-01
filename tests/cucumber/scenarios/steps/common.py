@@ -24,6 +24,12 @@ class Context:
         self.users = {}
 
     def update_timestamps(self, user, client, file):
+        """
+        Updates mtime and ctime of file in user's test context.
+        This timestamps are checked by user in functions:
+        user_wait_ctime() and user_wait_mtime() and compared
+        with actual timestamps read from stat
+        """
         times = run_cmd(user, client, "stat --format=%Y,%Z " + make_path(file, client),
                         output=True).split(",")
 
@@ -98,15 +104,18 @@ def user_wait(user, time, client_node, context):
     run_cmd(user, client, "sleep " + str(time))
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} size'))
-def user_wait_size(user, maxtime, file, context):
-    user_wait_size(user, maxtime, file, "client1", context)
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime'))
+def user_wait_mtime(user, maxtime, file, context):
+    user_wait_mtime(user, maxtime, file, "client1", context)
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} size on {client_node}'))
-def user_wait_size(user, maxtime, file, client_node, context):
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime on {client_node}'))
+def user_wait_mtime(user, maxtime, file, client_node, context):
     client = get_client(client_node, user, context)
     waited = 0
+    # compare mtime read from stat with last mtime saved by user
+    # inequality of these timestamps means that other client
+    # performed operation on the file
     while get_current_mtime(user, file, client) == context.get_last_mtime(user, file):
         time.sleep(1)
         waited += 1
@@ -114,15 +123,18 @@ def user_wait_size(user, maxtime, file, client_node, context):
             assert False
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} permissions'))
-def user_wait_perms(user, maxtime, file, context):
-    user_wait_size(user, maxtime, file, "client1", context)
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime'))
+def user_wait_ctime(user, maxtime, file, context):
+    user_wait_ctime(user, maxtime, file, "client1", context)
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} permissions on {client_node}'))
-def user_wait_perms(user, maxtime, file, client_node, context):
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime on {client_node}'))
+def user_wait_ctime(user, maxtime, file, client_node, context):
     client = get_client(client_node, user, context)
     waited = 0
+    # compare ctime read from stat with last ctime saved by user
+    # inequality of these timestamps means that other client
+    # performed operation on the file
     while get_current_ctime(user, file, client) == context.get_last_ctime(user, file):
         time.sleep(1)
         waited += 1
