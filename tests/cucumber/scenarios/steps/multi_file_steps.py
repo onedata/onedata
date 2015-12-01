@@ -22,7 +22,8 @@ def create_reg_file(user, files, client_node, context):
     for file in files:
         ret = run_cmd(user, client, 'touch ' + make_path(file, client))
         save_op_code(context, user, ret)
-        context.update_timestamps(user, client, file)
+        if ret == 0:
+            context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
@@ -33,7 +34,6 @@ def ls_present(user, files, path, client_node, context):
     ls_files = run_cmd(user, client, cmd, output=True).split()
     files = list_parser(files)
     for file in files:
-        context.update_timestamps(user, client, file)
         assert file in ls_files
 
 
@@ -45,7 +45,6 @@ def ls_absent(user, files, path, client_node, context):
     ls_files = run_cmd(user, client, cmd, output=True).split()
     files = list_parser(files)
     for file in files:
-        context.update_timestamps(user, client, file)
         assert file not in ls_files
 
 
@@ -54,7 +53,8 @@ def rename(user, file1, file2, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, "mv " + make_path(file1, client) + ' ' + make_path(file2, client))
     save_op_code(context, user, ret)
-    context.update_timestamps(user, client, file)
+    if ret == 0:
+        context.update_timestamps(user, client, file2)
 
 
 @when(parsers.parse('{user} deletes files {files} on {client_node}'))
@@ -86,7 +86,8 @@ def change_mode(user, file, mode, client_node, context):
     mode = str(mode)
     ret = run_cmd(user, client, 'chmod ' + mode + ' ' + make_path(file, client))
     save_op_code(context, user, ret)
-    context.update_timestamps(user, client, file)
+    if ret == 0:
+        context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
