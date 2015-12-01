@@ -25,4 +25,4 @@
 [submodule "op_worker"]
 	path = op_worker
 	url = ssh://git@git.plgrid.pl:7999/vfs/op-worker.git
-	branch = origin/feature/VFS-1363-add-user-context-to-helpers-operations
+	branch = feature/VFS-1363-add-user-context-to-helpers-operations
