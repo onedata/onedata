@@ -94,11 +94,14 @@ def client_ids(environment):
 ######################## STEPS ########################
 
 @when(parsers.parse('{user} waits {time} seconds'))
+@then(parsers.parse('{user} waits {time} seconds'))
 def user_wait_default(user, time, context):
     user_wait(user, time, "client1", context)
 
 
 @when(parsers.parse('{user} waits {time} seconds on {client_node}'))
+@then(parsers.parse('{user} waits {time} seconds on {client_node}'))
+@given(parsers.parse('{user} waits {time} seconds on {client_node}'))
 def user_wait(user, time, client_node, context):
     client = get_client(client_node, user, context)
     run_cmd(user, client, "sleep " + str(time))
