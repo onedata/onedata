@@ -28,37 +28,28 @@ Feature: Regular_file_CRUD
     And u1 writes "TEST TEXT ONEDATA" to file1
     Then u1 reads "TEST TEXT ONEDATA" from file1
     And u1 reads "TEST TEXT ONEDATA" from spaces/s1/file1
-    And size of u1's file1 is 18 bytes
-    And size of u1's spaces/s1/file1 is 18 bytes
+    And size of u1's file1 is 17 bytes
+    And size of u1's spaces/s1/file1 is 17 bytes
 
   Scenario: Append regular file
     When u1 creates regular files [file1]
     And u1 writes "TEST TEXT ONEDATA" to file1
-    And u1 reads "TEST TEXT ONEDATA" from file1
+    Then u1 reads "TEST TEXT ONEDATA" from file1
     And u1 appends " APPENDED TEXT" to file1
     Then u1 reads "TEST TEXT ONEDATA APPENDED TEXT" from file1
     And u1 reads "TEST TEXT ONEDATA APPENDED TEXT" from spaces/s1/file1
-    And size of u1's file1 is 18 bytes
-    And size of u1's spaces/s1/file1 is 18 bytes
+    And size of u1's file1 is 31 bytes
+    And size of u1's spaces/s1/file1 is 31 bytes
 
   Scenario: Replace word in file
     When u1 creates regular files [file1]
     And u1 writes "TEST ONEDATA TEST ONEDATA2 TEST ONEDATA3" to file1
     And u1 replaces "TEST" with "SYSTEM" in file1
     Then u1 reads "SYSTEM ONEDATA SYSTEM ONEDATA2 SYSTEM ONEDATA3" from file1
-    And u1 reads "SYSTEM ONEDATA SYSTEM ONEDATA2 SYSTEM ONEDATA3" from spaces/s1/file1
-    And size of u1's file1 is 47 bytes
-    And size of u1's spaces/s1/file1 is 47 bytes
+    Then u1 reads "SYSTEM ONEDATA SYSTEM ONEDATA2 SYSTEM ONEDATA3" from spaces/s1/file1
+    And size of u1's file1 is 46 bytes
+    And size of u1's spaces/s1/file1 is 46 bytes
 
-  Scenario: Write to beginning of regular file
-    When u1 creates regular files [file1]
-    And u1 writes "TEST TEXT ONEDATA" to file1
-    And u1 reads "TEST TEXT ONEDATA" from file1
-    And u1 writes "BEGINNING OF TEXT " to beginning of file1
-    Then u1 reads "BEGINNING OF TEXT TEST TEXT ONEDATA" from file1
-    And u1 reads "BEGINNING OF TEXT TEST TEXT ONEDATA" spaces/s1/file1
-    And size of u1's file1 is 36 bytes
-    And size of u1's spaces/s1/file1 is 36 bytes
 
   Scenario: Move regular file and read
     When u1 creates directory and parents [dir1/dir2, dir3]
@@ -72,8 +63,8 @@ Feature: Regular_file_CRUD
     And u1 sees [file1] in spaces/s1/dir3
     And u1 reads "TEST TEXT ONEDATA" from dir3/file1
     And u1 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1
-    And size of u1's dir3/file1 is 18 bytes
-    And size of u1's spaces/s1/dir3/file1 is 18 bytes
+    And size of u1's dir3/file1 is 17 bytes
+    And size of u1's spaces/s1/dir3/file1 is 17 bytes
 
   Scenario: Move big regular file and check MD5
     When u1 creates directory and parents [dir1/dir2, dir3]
@@ -98,11 +89,11 @@ Feature: Regular_file_CRUD
     And u1 sees [file1] in dir1/dir2
     And u1 sees [file1] in dir3
     And u1 sees [file1] in spaces/s1/dir1/dir2
-    And u1 sees [file1] in spaces/dir3
+    And u1 sees [file1] in spaces/s1/dir3
     And u1 reads "TEST TEXT ONEDATA" from dir3/file1
     And u1 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1
-    And size of u1's dir3/file1 is 18 bytes
-    And size of u1's spaces/s1/dir3/file1 is 18 bytes
+    And size of u1's dir3/file1 is 17 bytes
+    And size of u1's spaces/s1/dir3/file1 is 17 bytes
 
 
   Scenario: Copy big regular file and check MD5
@@ -117,5 +108,5 @@ Feature: Regular_file_CRUD
     And u1 sees [file1] in spaces/s1/dir3
     And u1 checks MD5 of dir3/file1
     And u1 checks MD5 of dir1/dir2/file1
-    And u1 checks MD5 of in spaces/s1/dir1/dir2/file1
-    And u1 checks MD5 of in spaces/s1/dir3/file1
+    And u1 checks MD5 of spaces/s1/dir1/dir2/file1
+    And u1 checks MD5 of spaces/s1/dir3/file1

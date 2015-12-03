@@ -21,10 +21,6 @@ def write_rand_text(user, megabytes, file, context):
     multi_reg_file_steps.write_rand_text(user, megabytes, file, "client1", context)
 
 
-@when(parsers.parse('{user} writes "{text}" to beginning of {file}'))
-def write_beginning(user, text, file, context):
-    multi_reg_file_steps.write_beginning(user, text, file, "client1", context)
-
 
 @when(parsers.parse('{user} writes "{text}" to {file}'))
 def write_text(user, text, file, context):

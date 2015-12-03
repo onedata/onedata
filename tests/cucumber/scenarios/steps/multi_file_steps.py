@@ -22,6 +22,8 @@ def create_reg_file(user, files, client_node, context):
     for file in files:
         ret = run_cmd(user, client, 'touch ' + make_path(file, client))
         save_op_code(context, user, ret)
+        if ret == 0:
+            context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
@@ -51,6 +53,8 @@ def rename(user, file1, file2, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, "mv " + make_path(file1, client) + ' ' + make_path(file2, client))
     save_op_code(context, user, ret)
+    if ret == 0:
+        context.update_timestamps(user, client, file2)
 
 
 @when(parsers.parse('{user} deletes files {files} on {client_node}'))
@@ -82,10 +86,12 @@ def change_mode(user, file, mode, client_node, context):
     mode = str(mode)
     ret = run_cmd(user, client, 'chmod ' + mode + ' ' + make_path(file, client))
     save_op_code(context, user, ret)
+    if ret == 0:
+        context.update_timestamps(user, client, file)
 
 
-@when(parsers.parse('size of {user}\'s {file} is {size} on {client_node}'))
-@then(parsers.parse('size of {user}\'s {file} is {size} on {client_node}'))
+@when(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
+@then(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
 def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)
     curr_size = run_cmd(user, client,

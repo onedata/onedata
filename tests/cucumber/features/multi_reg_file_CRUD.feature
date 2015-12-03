@@ -55,8 +55,8 @@ Feature: Multi_regular_file_CRUD
     Then u1 reads "TEST TEXT ONEDATA" from dir1/file1 on client1
     And u2 reads "TEST TEXT ONEDATA" from dir1/file1 on client2
     And last operation by u2 fails
-    And size of u1's dir1/file1 is 18 bytes on client1
-    And size of u2's dir1/file1 is 18 bytes on client2
+    And size of u1's dir1/file1 is 17 bytes on client1
+    And size of u2's dir1/file1 is 17 bytes on client2
     And last operation by u2 fails
 
   Scenario: Write to regular file with write permission
@@ -66,8 +66,8 @@ Feature: Multi_regular_file_CRUD
     And u2 writes "TEST TEXT ONEDATA" to dir1/file1 on client2
     Then u1 reads "TEST TEXT ONEDATA" from dir1/file1 on client1
     And u2 reads "TEST TEXT ONEDATA" from dir1/file1 on client2
-    And size of u1's dir1/file1 is 18 bytes on client1
-    And size of u2's dir1/file1 is 18 bytes on client2
+    And size of u1's dir1/file1 is 17 bytes on client1
+    And size of u2's dir1/file1 is 17 bytes on client2
 
   Scenario: Write to regular file without write permission
     When u1 creates directories [dir1] on client1
@@ -76,22 +76,22 @@ Feature: Multi_regular_file_CRUD
     And u2 writes "TEST TEXT ONEDATA" to dir1/file1 on client2
     Then u1 reads "TEST TEXT ONEDATA" from dir1/file1 on client1
     And u2 reads "TEST TEXT ONEDATA" from dir1/file1 on client2
-    And size of u1's dir1/file1 is 18 bytes on client1
-    And size of u2's dir1/file1 is 18 bytes on client2
+    And size of u1's dir1/file1 is 17 bytes on client1
+    And size of u2's dir1/file1 is 17 bytes on client2
 
   Scenario: Execute file with execute permission
     When u1 creates directories [dir1] on client1
     And u1 creates regular files [dir1/script.sh] on client1
-    And u1 changes dir1/file1 mode to 654 on client1
-    And u1 writes "echo TEST" to dir1/file1 on client1
+    And u1 changes dir1/script.sh mode to 654 on client1
+    And u1 writes "#!/usr/bin/env bash\n\necho TEST" to dir1/file1 on client1
     And u2 executes dir1/script.sh on client2
     And last operation by u2 succeeds
 
   Scenario: Execute file without execute permission
     When u1 creates directories [dir1] on client1
     And u1 creates regular files [dir1/script.sh] on client1
-    And u1 writes "echo TEST" to dir1/script.sh on client1
-    Then u1 reads "echo TEST" from dir1/script.sh on client1
+    And u1 writes "#!/usr/bin/env bash\n\necho TEST" to dir1/script.sh on client1
+    Then u1 reads "#!/usr/bin/env bash\n\necho TEST" from dir1/script.sh on client1
     And u2 executes dir1/script.sh on client2
     And last operation by u2 fails
 
@@ -110,10 +110,10 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in dir3 on client2
     And u1 sees [file1] in spaces/s1/dir3 on client1
     And u2 sees [file1] in spaces/s1/dir3 on client2
-    And u1 reads "TEST TEXT ONEDATA" from file1 on client1
-    And u1 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client1
-    And u2 reads "TEST TEXT ONEDATA" from file1 on client2
-    And u2 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client2
+    And u1 reads "TEST TEXT ONEDATA" from dir3/file1 on client1
+    And u1 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1 on client1
+    And u2 reads "TEST TEXT ONEDATA" from dir3/file1 on client2
+    And u2 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1 on client2
 
   Scenario: Move big regular file and check MD5
     When u1 creates directory and parents [dir1/dir2, dir3] on client1
@@ -121,7 +121,7 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 writes 1 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
-    And u1 renames dir1/dir2/file1 to dir3/file1
+    And u1 renames dir1/dir2/file1 to dir3/file1 on client1
     Then u1 doesn't see [file1] in dir1/dir2 on client1
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2 on client1
     And u2 doesn't see [file1] in dir1/dir2 on client2
@@ -141,7 +141,7 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 writes "TEST TEXT ONEDATA" to dir1/dir2/file1 on client1
-    When u1 copiers dir1/dir2/file1 to dir3/file1 on client1
+    When u1 copies regular file dir1/dir2/file1 to dir3/file1 on client1
     Then u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 sees [file1] in spaces/s1/dir1/dir2 on client1
@@ -150,10 +150,10 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in dir3 on client2
     And u1 sees [file1] in spaces/s1/dir3 on client1
     And u2 sees [file1] in spaces/s1/dir3 on client2
-    And u1 reads "TEST TEXT ONEDATA" from file1 on client1
-    And u1 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client1
-    And u2 reads "TEST TEXT ONEDATA" from file1 on client2
-    And u2 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client2
+    And u1 reads "TEST TEXT ONEDATA" from dir3/file1 on client1
+    And u1 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1 on client1
+    And u2 reads "TEST TEXT ONEDATA" from dir3/file1 on client2
+    And u2 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1 on client2
 
   Scenario: Copy big regular file and check MD5
     When u1 creates directory and parents [dir1/dir2, dir3] on client1
@@ -161,7 +161,7 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 writes 1024 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
-    And u1 copies dir1/dir2/file1 to dir3/file1
+    And u1 copies regular file dir1/dir2/file1 to dir3/file1 on client1
     Then u1 sees [file1] in dir1/dir2 on client1
     And u1 sees [file1] in spaces/s1/dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
