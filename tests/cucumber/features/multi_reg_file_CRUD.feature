@@ -43,7 +43,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates regular files [file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to file1 on client1
     Then u1 reads "TEST TEXT ONEDATA" from file1 on client1
-    And u2 waits 5 seconds on client2
+    And u2 waits 5 seconds on client2 # wait for events handling
     And u2 reads "TEST TEXT ONEDATA" from file1 on client2
     And size of u1's file1 is 17 bytes on client1
     And size of u2's file1 is 17 bytes on client2
@@ -54,7 +54,7 @@ Feature: Multi_regular_file_CRUD
     And u1 writes "TEST TEXT ONEDATA" to dir1/file1 on client1
     And u1 changes dir1/file1 mode to 620 on client1
     Then u1 reads "TEST TEXT ONEDATA" from dir1/file1 on client1
-    And u1 waits 5 seconds on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     And u2 reads "TEST TEXT ONEDATA" from dir1/file1 on client2
     And last operation by u2 fails
     And size of u1's dir1/file1 is 17 bytes on client1
@@ -67,7 +67,7 @@ Feature: Multi_regular_file_CRUD
     And u1 changes dir1/file1 mode to 620 on client1
     And u2 writes "TEST TEXT ONEDATA" to dir1/file1 on client2
     Then u1 reads "TEST TEXT ONEDATA" from dir1/file1 on client1
-    And u1 waits 5 seconds on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     And u2 reads "TEST TEXT ONEDATA" from dir1/file1 on client2
     And size of u1's dir1/file1 is 17 bytes on client1
     And size of u2's dir1/file1 is 17 bytes on client2
@@ -78,7 +78,7 @@ Feature: Multi_regular_file_CRUD
     And u1 changes dir1/file1 mode to 600 on client1
     And u2 writes "TEST TEXT ONEDATA" to dir1/file1 on client2
     Then u1 reads "TEST TEXT ONEDATA" from dir1/file1 on client1
-    And u1 waits 5 seconds on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     And u2 reads "TEST TEXT ONEDATA" from dir1/file1 on client2
     And size of u1's dir1/file1 is 17 bytes on client1
     And size of u2's dir1/file1 is 17 bytes on client2
@@ -96,7 +96,7 @@ Feature: Multi_regular_file_CRUD
     And u1 creates regular files [dir1/script.sh] on client1
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to dir1/script.sh on client1
     Then u1 reads "#!/usr/bin/env bash\n\necho TEST" from dir1/script.sh on client1
-    And u2 waits 5 seconds on client2
+    And u2 waits 5 seconds on client2 # wait for events handling
     And u2 executes dir1/script.sh on client2
     And last operation by u2 fails
 
@@ -115,7 +115,7 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in dir3 on client2
     And u1 sees [file1] in spaces/s1/dir3 on client1
     And u2 sees [file1] in spaces/s1/dir3 on client2
-    And u2 waits 5 seconds on client2
+    And u2 waits 5 seconds on client2 # wait for events handling
     And u1 reads "TEST TEXT ONEDATA" from dir3/file1 on client1
     And u1 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1 on client1
     And u2 reads "TEST TEXT ONEDATA" from dir3/file1 on client2
@@ -156,7 +156,7 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in dir3 on client2
     And u1 sees [file1] in spaces/s1/dir3 on client1
     And u2 sees [file1] in spaces/s1/dir3 on client2
-    And u2 waits 5 seconds on client2
+    And u2 waits 5 seconds on client2 # wait for events handling
     And u1 reads "TEST TEXT ONEDATA" from dir3/file1 on client1
     And u1 reads "TEST TEXT ONEDATA" from spaces/s1/dir3/file1 on client1
     And u2 reads "TEST TEXT ONEDATA" from dir3/file1 on client2
