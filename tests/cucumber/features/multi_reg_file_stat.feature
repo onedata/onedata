@@ -2,6 +2,7 @@ Feature: Multi_regular_file_stat
 
   Background:
     Given environment is defined in env.json
+    And storage directories are empty
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on nodes [1, 2] respectively,
@@ -18,6 +19,7 @@ Feature: Multi_regular_file_stat
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
     And u2 writes "TEST TEXT ONEDATA" to file1 on client2
+    And u2 waits 5 seconds on client2 # wait for events handling
     Then file type of u1's file1 is regular file on client1
 
   Scenario: Check default access permissions
@@ -31,6 +33,7 @@ Feature: Multi_regular_file_stat
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
     And u1 changes file1 mode to 211 on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     Then mode of u2's file1 is 211 on client2
 
   Scenario: Increase regular file size
@@ -39,6 +42,7 @@ Feature: Multi_regular_file_stat
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
     And u1 changes file1 size to 1000000 bytes on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     Then size of u2's file1 is 1000000 bytes on client2
 
   Scenario: Decrease regular file size
@@ -47,8 +51,10 @@ Feature: Multi_regular_file_stat
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
     And u1 changes file1 size to 1000000 bytes on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     And size of u2's file1 is 1000000 bytes on client2
     And u1 changes file1 size to 0 bytes on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     Then size of u2's file1 is 0 bytes on client2
 
   Scenario: Truncate regular file without write permission
@@ -57,6 +63,7 @@ Feature: Multi_regular_file_stat
     And u1 sees [file1] in dir1 on client1
     And u2 sees [file1] in dir1 on client2
     And u1 changes dir1/file1 mode to 644 on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     And u2 changes dir1/file1 size to 1000000 bytes on client2
     Then last operation by u2 fails
 
@@ -74,6 +81,7 @@ Feature: Multi_regular_file_stat
     And u1 sees [file1] in dir1 on client1
     And u2 sees [file1] in dir1 on client2
     And u1 changes dir1/file1 mode to 644 on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     And u2 updates [dir1/file1] timestamps on client2
     Then last operation by u2 fails
 
@@ -84,6 +92,7 @@ Feature: Multi_regular_file_stat
     And u1 sees [file1] in dir1 on client1
     And u2 sees [file1] in dir1 on client2
     And u1 changes dir1/file1 mode to 624 on client1
+    And u1 waits 5 seconds on client1 # wait for events handling
     And u2 updates [dir1/file1] timestamps on client2
     Then modification time of u2's file1 is equal to access time on client2
 

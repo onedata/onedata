@@ -11,6 +11,7 @@ from pytest_bdd import (given, when, then)
 
 import os
 import sys
+import shutil
 
 # these commands set up paths to scripts from 'bamboos'
 curr_dir = os.path.dirname(os.path.realpath(__file__))
@@ -22,7 +23,7 @@ root_dir = '/'.join(curr_dir_list[:ind+1])
 docker_dir = os.path.join(root_dir, 'bamboos', 'docker')
 sys.path.insert(0, docker_dir)
 
-from environment import docker, env
+from environment import common, docker, env
 
 
 @given(parsers.parse('environment is defined in {env_json}'))
@@ -31,6 +32,16 @@ def env_file(env_json, context):
     Remembers the environment filename.
     """
     context.env_json = env_json
+
+
+@given("storage directories are empty")
+def clear_storages(context):
+    curr_path = os.path.dirname(os.path.abspath(__file__))
+    env_path = os.path.join(curr_path, '..', '..', 'environments', context.env_json)
+    config = common.parse_json_file(env_path)
+    for _, os_config in config['os_configs'].iteritems():
+        for storage in os_config['storages']:
+            shutil.rmtree(storage, ignore_errors=True)
 
 
 @given("environment is up", scope="module")
