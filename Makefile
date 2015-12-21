@@ -4,7 +4,7 @@ export DISTRIBUTION
 
 ONEPROVIDER_VERSION	    ?= $(shell git describe --tags --always | tr - .)
 ONEPROVIDER_BUILD	    ?= 1
-OP_CCM_VERSION			?= $(shell git -C op_ccm describe --tags --always | tr - .)
+CLUSTER_MANAGER_VERSION	?= $(shell git -C cluster_manager describe --tags --always | tr - .)
 OP_WORKER_VERSION		?= $(shell git -C op_worker describe --tags --always | tr - .)
 OP_PANEL_VERSION		?= $(shell git -C onepanel describe --tags --always | tr - .)
 
@@ -21,7 +21,7 @@ MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
 MAKE_GLOBALREGISTRY := globalregistry/make.py -s onepanel -r .
 MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
 MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
-MAKE_OP_CCM := op_ccm/make.py -s op_ccm -r .
+MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
 
 make = $(1)/make.py -s $(1) -r .
 clean = $(call make, $(1)) clean
@@ -53,7 +53,7 @@ endif
 ## Build
 ##
 
-build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker build_op_ccm
+build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker build_cluster_manager
 
 build_bamboos: submodules
 	$(call make, bamboos)
@@ -70,8 +70,8 @@ build_oneclient: submodules
 build_op_worker: submodules
 	$(call make, op_worker)
 
-build_op_ccm: submodules
-	$(call make, op_ccm)
+build_cluster_manager: submodules
+	$(call make, cluster_manager)
 
 ##
 ## Test
@@ -91,7 +91,7 @@ test_cucumber:
 ##
 
 clean_all: clean_appmock clean_globalregistry clean_oneclient \
-           clean_op_worker clean_onepanel clean_op_ccm clean_packages
+           clean_op_worker clean_onepanel clean_cluster_manager clean_packages
 
 clean_appmock:
 	$(call clean, appmock)
@@ -108,8 +108,8 @@ clean_op_worker:
 clean_oneclient:
 	$(call clean, oneclient)
 
-clean_op_ccm:
-	$(call clean, op_ccm)
+clean_cluster_manager:
+	$(call clean, cluster_manager)
 
 clean_packages:
 	rm -rf oneprovider_meta/oneprovider.spec \
@@ -120,11 +120,11 @@ clean_packages:
 ## RPM packaging
 ##
 
-rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_op_ccm
+rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
-	sed -i 's/{{op_ccm_version}}/$(OP_CCM_VERSION)/g' oneprovider_meta/oneprovider.spec
+	sed -i 's/{{CLUSTER_MANAGER_VERSION}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider.spec
 
@@ -147,9 +147,9 @@ rpm_op_worker: clean_op_worker rpmdirs
 	$(call make_rpm, op_worker, package)
 	$(call mv_rpm, op_worker)
 
-rpm_op_ccm: clean_op_ccm rpmdirs
-	$(call make_rpm, op_ccm, package)
-	$(call mv_rpm, op_ccm)
+rpm_cluster_manager: clean_cluster_manager rpmdirs
+	$(call make_rpm, cluster_manager, package)
+	$(call mv_rpm, cluster_manager)
 
 rpm_oneclient: clean_oneclient rpmdirs
 	$(call make_rpm, oneclient, rpm)
@@ -162,11 +162,11 @@ rpmdirs:
 ## DEB packaging
 ##
 
-deb_oneprovider: deb_op_panel deb_op_worker deb_op_ccm
+deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider/DEBIAN/control
-	sed -i 's/{{op_ccm_version}}/$(OP_CCM_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
+	sed -i 's/{{CLUSTER_MANAGER_VERSION}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 
@@ -181,9 +181,9 @@ deb_op_worker: clean_op_worker debdirs
 	$(call make_deb, op_worker, package)
 	$(call mv_deb, op_worker)
 
-deb_op_ccm: clean_op_ccm debdirs
-	$(call make_deb, op_ccm, package)
-	$(call mv_deb, op_ccm)
+deb_cluster_manager: clean_cluster_manager debdirs
+	$(call make_deb, cluster_manager, package)
+	$(call mv_deb, cluster_manager)
 
 deb_oneclient: clean_oneclient debdirs
 	$(call make_deb, oneclient, deb)

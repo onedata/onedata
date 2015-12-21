@@ -7,8 +7,8 @@ packages = check_output(['ls', '/root/pkg']).split()
 packages = sorted(packages, reverse=True)
 op_worker_package = \
     [path for path in packages if path.startswith('op-worker')][0]
-op_ccm_package = \
-    [path for path in packages if path.startswith('op-ccm')][0]
+cluster_manager_package = \
+    [path for path in packages if path.startswith('cluster-manager')][0]
 op_panel_package = \
     [path for path in packages if path.startswith('op-panel')][0]
 oneclient_package = [path for path in packages
@@ -58,7 +58,7 @@ check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_panel_package)
             ], stderr=STDOUT)
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=op_ccm_package)
+                        'install'.format(package=cluster_manager_package)
             ], stderr=STDOUT)
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_worker_package)
@@ -69,7 +69,7 @@ check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
-check_call(['ls', '/etc/op_ccm/app.config'])
+check_call(['ls', '/etc/cluster_manager/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
 check_call(['/usr/bin/oneclient', '--help'])
 
@@ -77,7 +77,7 @@ check_call(['/usr/bin/oneclient', '--help'])
 check_call(['op_panel_admin', '--install', 'data/install.cfg'])
 
 # validate oneprovider is running
-check_call(['service', 'op_ccm', 'status'])
+check_call(['service', 'cluster_manager', 'status'])
 check_call(['service', 'op_worker', 'status'])
 
 # uninstall

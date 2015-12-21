@@ -54,12 +54,12 @@ class TestEnvUp:
             assert test_utils.ping(gr_db_ip)
             assert check_http_connectivity(gr_db_ip, 5984, '/_utils/', 200, use_ssl=False, number_of_retries=50)
 
-        # Check OP CCM nodes
-        # ccm_node is in form name@name.timestamp.dev.docker
-        for ccm_node in res['op_ccm_nodes']:
-            (ccm_name, sep, ccm_hostname) = ccm_node.partition('@')
-            ccm_ip = test_utils.dns_lookup(ccm_hostname, dns)
-            assert test_utils.ping(ccm_ip)
+        # Check OP CM nodes
+        # cm_node is in form name@name.timestamp.dev.docker
+        for cm_node in res['cluster_manager_nodes']:
+            (cm_name, sep, cm_hostname) = cm_node.partition('@')
+            cm_ip = test_utils.dns_lookup(cm_hostname, dns)
+            assert test_utils.ping(cm_ip)
 
         # Check OP worker nodes
         # w_node is in form name@name.timestamp.dev.docker
