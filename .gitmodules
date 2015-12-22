@@ -22,3 +22,7 @@
 	path = op_worker
 	url = ssh://git@git.plgrid.pl:7999/vfs/op-worker.git
 	branch = develop
+[submodule "cluster_manager"]
+	path = cluster_manager
+	url = ssh://git@git.plgrid.pl:7999/vfs/cluster-manager.git
+	branch = develop
