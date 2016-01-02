@@ -8,8 +8,8 @@ packages = sorted(packages, reverse=True)
 op_worker_package = [path for path in packages
                      if path.startswith('op-worker')
                      and path.endswith('.rpm')][0]
-op_ccm_package = [path for path in packages
-                  if path.startswith('op-ccm')
+cluster_manager_package = [path for path in packages
+                  if path.startswith('cluster-manager')
                   and path.endswith('.rpm')][0]
 op_panel_package = [path for path in packages
                     if path.startswith('op-panel')
@@ -34,19 +34,19 @@ check_call(['mkdir', '-p', '/run/lock/subsys']) #todo repair non mounting /run/l
 # install all
 check_call(['yum', '-y', '--enablerepo=onedata', 'install', 'couchbase-server'], stderr=STDOUT)
 check_call(['yum', '-y', 'install', '/root/pkg/' + op_panel_package], stderr=STDOUT)
-check_call(['yum', '-y', 'install', '/root/pkg/' + op_ccm_package], stderr=STDOUT)
+check_call(['yum', '-y', 'install', '/root/pkg/' + cluster_manager_package], stderr=STDOUT)
 check_call(['yum', '-y', '--enablerepo=onedata', 'install', '/root/pkg/' + op_worker_package], stderr=STDOUT)
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
-check_call(['ls', '/etc/op_ccm/app.config'])
+check_call(['ls', '/etc/cluster_manager/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
 
 # oneprovider configure&install
 check_call(['op_panel_admin', '--install', '/root/data/install.cfg'])
 
 # validate oneprovider is running
-check_call(['service', 'op_ccm', 'status'])
+check_call(['service', 'cluster_manager', 'status'])
 check_call(['service', 'op_worker', 'status'])
 
 # uninstall

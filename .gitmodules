@@ -14,10 +14,6 @@
 	path = bamboos
 	url = ssh://git@git.plgrid.pl:7999/vfs/bamboos.git
 	branch = develop
-[submodule "op_ccm"]
-	path = op_ccm
-	url = ssh://git@git.plgrid.pl:7999/vfs/op-ccm.git
-	branch = develop
 [submodule "onepanel"]
 	path = onepanel
 	url = ssh://git@git.plgrid.pl:7999/vfs/onepanel.git
@@ -25,4 +21,8 @@
 [submodule "op_worker"]
 	path = op_worker
 	url = ssh://git@git.plgrid.pl:7999/vfs/op-worker.git
+	branch = develop
+[submodule "cluster_manager"]
+	path = cluster_manager
+	url = ssh://git@git.plgrid.pl:7999/vfs/cluster-manager.git
 	branch = develop
