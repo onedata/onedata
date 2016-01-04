@@ -18,7 +18,7 @@ all: build deb_oneprovider rpm_oneprovider test
 
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
-MAKE_GLOBALREGISTRY := globalregistry/make.py -s onepanel -r .
+MAKE_GLOBALREGISTRY := globalregistry/make.py -s globalregistry -r .
 MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
 MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
 MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
@@ -124,7 +124,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
-	sed -i 's/{{CLUSTER_MANAGER_VERSION}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider.spec
+	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider.spec
 
