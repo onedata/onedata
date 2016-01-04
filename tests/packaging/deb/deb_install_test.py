@@ -25,7 +25,7 @@ class TestDebInstallation:
                   'apt-get install -y python && ' \
                   'python /root/data/deb_install_script.py'
 
-        assert 0 == docker.run(tty=True,
+        container = docker.run(tty=True,
                                interactive=True,
                                image='ubuntu:vivid',
                                hostname='devel.localhost.local',
@@ -36,5 +36,11 @@ class TestDebInstallation:
                                volumes=[
                                    (package_dir, '/root/pkg', 'ro'),
                                    (scripts_dir, '/root/data', 'ro')
-                               ],
-                               command=command)
+                               ])
+        try:
+            assert 0 == docker.exec_(container,
+                                     command=command,
+                                     interactive=True,
+                                     tty=True)
+        finally:
+            docker.remove([container], force=True, volumes=True)
