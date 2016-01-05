@@ -27,16 +27,18 @@ class TestDebInstallation:
 
         container = docker.run(tty=True,
                                interactive=True,
+                               detach=True,
                                image='ubuntu:vivid',
                                hostname='devel.localhost.local',
-                               rm=True,
                                workdir="/root",
                                run_params=['--privileged=true'],
                                link={gr_dockername: 'onedata.org'},
                                volumes=[
                                    (package_dir, '/root/pkg', 'ro'),
                                    (scripts_dir, '/root/data', 'ro')
-                               ])
+                               ],
+                               reflect=[('/sys/fs/cgroup', 'rw')])
+
         try:
             assert 0 == docker.exec_(container,
                                      command=command,

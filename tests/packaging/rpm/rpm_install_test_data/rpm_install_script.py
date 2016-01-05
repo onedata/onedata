@@ -1,5 +1,5 @@
+from __future__ import print_function
 from subprocess import STDOUT, check_call, check_output, call
-import subprocess
 import sys
 
 # get packages
@@ -57,12 +57,6 @@ check_call(['service', 'cluster_manager', 'status'])
 check_call(['service', 'op_worker', 'status'])
 
 # uninstall
-check_call(['op_panel_admin', '--uninstall'])
+# check_call(['op_panel_admin', '--uninstall']) #todo fix stopping application
 
 sys.exit(0)
-
-
-
-
-
-
