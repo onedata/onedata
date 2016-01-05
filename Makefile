@@ -43,11 +43,11 @@ mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source &
 branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
 	git submodule init
-#ifeq ($(branch),develop)
-#	git submodule update --remote
-#else
-#	git submodule update
-#endif
+ifeq ($(branch),develop)
+	git submodule update --remote
+else
+	git submodule update
+endif
 
 ##
 ## Build
