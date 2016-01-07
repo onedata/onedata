@@ -182,7 +182,9 @@ try:
                 # copy packages
                 repo_dir = APACHE_PREFIX + REPO_LOCATION[distro]
                 distro_contents = '/tmp/package/' + distro + '/*'
-                call(['cp', '-R', distro_contents, repo_dir])
+
+                proc = Popen(['cp','-R', distro_contents, repo_dir], stdout=PIPE, stderr=PIPE)
+                out,err = proc.communicate()
 
                 # update createrepo
                 #todo enable + set gpg_check to 1 in onedata_devel.repo file
