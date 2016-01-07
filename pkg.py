@@ -64,7 +64,7 @@ parser_push_deb = subparsers.add_parser(
 )
 parser_push_deb.add_argument(
     'distribution',
-    help='available distributions: sid',
+    help='available distributions: sid, fedora-21-x86_64, centos-7-x86_64, sl6x-x86_64',
 )
 parser_push_deb.add_argument(
     'deb',
