@@ -9,6 +9,7 @@ Manage package repository.
 """
 import argparse
 from subprocess import Popen, PIPE, check_call, check_output, CalledProcessError
+from glob import glob
 import sys
 import os
 
@@ -149,7 +150,7 @@ try:
         # update createrepo
         repo_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution]
         #todo enable + set gpg_check to 1 in onedata_devel.repo file
-        # call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
+        # call(['rpm', '--resign'] + glob(repo_dir + '/**/*.rpm')])
         call(['createrepo', repo_dir])
     elif args.action == 'push':
         # extract package targz
@@ -183,12 +184,11 @@ try:
                 repo_dir = APACHE_PREFIX + REPO_LOCATION[distro]
                 distro_contents = '/tmp/package/' + distro + '/*'
 
-                proc = Popen(['cp','-R', distro_contents, repo_dir], stdout=PIPE, stderr=PIPE)
-                out,err = proc.communicate()
+                call(['cp','-R'] + glob(distro_contents) + [repo_dir])
 
                 # update createrepo
                 #todo enable + set gpg_check to 1 in onedata_devel.repo file
-                # call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
+                # call(['rpm', '--resign'] + glob(repo_dir + '/**/*.rpm'))
                 call(['createrepo', repo_dir])
 except CalledProcessError as err:
     exit(err.returncode)
