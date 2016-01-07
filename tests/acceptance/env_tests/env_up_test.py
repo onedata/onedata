@@ -24,12 +24,17 @@ class TestEnvUp:
         # Check if number of started dockers is correct
         # The number should be:
         # 1 dns node
-        # 3 OP nodes
-        # 1 DB node for OP
-        # 2 GR nodes
-        # 2 DBs for GR nodes
+
+        # 4 op_worker nodes
+        # 2 cluster_manager nodes for op_workers
+        # 2 DB nodes for op_workers
+
+        # 1 GR nodes
+        # 1 DBs for GR nodes
+
         # 2 appmock nodes
-        # 4 client nodes
+
+        # 2 client nodes
         # ------------
         # 15 nodes
         assert 15 == len(res['docker_ids'])
