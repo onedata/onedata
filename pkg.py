@@ -13,8 +13,18 @@ import sys
 import os
 
 APACHE_PREFIX = '/var/www/onedata'
-REPO_LOCATION = {'sid': '/apt/debian', 'fedora-21-x86_64': '/yum/fedora/21'}
-REPO_TYPE = {'sid': 'deb', 'fedora-21-x86_64': 'rpm'}
+REPO_LOCATION = {
+    'sid': '/apt/debian',
+    'fedora-21-x86_64': '/yum/fedora/21',
+    'centos-7-x86_64': '/yum/centos/7x',
+    'sl6x-x86_64': '/yum/scientific/6x'
+}
+REPO_TYPE = {
+    'sid': 'deb',
+    'fedora-21-x86_64': 'rpm',
+    'centos-7-x86_64': 'rpm',
+    'sl6x-x86_64': 'rpm'
+}
 
 # create the top-level parser
 parser = argparse.ArgumentParser(
@@ -85,7 +95,7 @@ parser_push = subparsers.add_parser(
 )
 parser_push.add_argument(
     'targz',
-    help='Packed systest/package dir'
+    help='Packed onedata/package dir'
 )
 
 args = parser.parse_args()
