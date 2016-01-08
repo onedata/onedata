@@ -46,6 +46,10 @@ check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/cluster_manager/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
 
+# disable gr cert verification
+check_call(['sed', '-i', 's/\'{verify_gr_cert, true}\'/\'{verify_gr_cert, false}\'/g', '/etc/op_panel/app.config'])
+check_call(['service', 'onepanel', 'restart'])
+
 # fix missing bundle
 check_call(['touch', '/etc/ssl/cert.pem']) #todo do something with it
 
