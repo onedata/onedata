@@ -63,7 +63,7 @@ rest_mocks() -> [
             Binding = req:binding(binding, Req),
             Body = req:body(Req),
             PostParams = req:post_params(Req),
-            ResponseBody = gui_str:format_bin(
+            ResponseBody = str_utils:format_bin(
                 "Your request contained:~n" ++
                     "Host:        ~s~n" ++
                     "Path:        ~s~n" ++
