@@ -20,14 +20,15 @@ from common import *
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +
-                     '{mount_paths} on nodes {ids} respectively,\n' +
+                     '{mount_paths} on client_hosts\n' +
+                     '{client_hosts} respectively,\n' +
                      'using {tokens}'))
-def multi_mount(users, client_instances, mount_paths, ids, tokens, environment, context, client_ids):
+def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, environment, context, client_ids):
 
     users = list_parser(users)
     client_instances = list_parser(client_instances)
     mount_paths = list_parser(mount_paths)
-    ids = list_parser(ids)
+    client_hosts = list_parser(client_hosts)
     tokens = list_parser(tokens)
 
     # current version is for environment with one GR
@@ -41,9 +42,8 @@ def multi_mount(users, client_instances, mount_paths, ids, tokens, environment, 
         user = str(users[i])
         client_instance = str(client_instances[i])
         mount_path = str(mount_paths[i])
-        id = ids[i]
-        data = client_data[id][client_instance]
-        id = int(id)
+        client_host = client_hosts[i]
+        data = client_data[client_host][client_instance]
 
         token_arg = str(tokens[i])
 
@@ -51,7 +51,7 @@ def multi_mount(users, client_instances, mount_paths, ids, tokens, environment, 
         token = get_token(token_arg, user, gr_node)
 
         # create client object
-        client = Client(client_ids[id - 1], mount_path)
+        client = Client(client_ids[client_host], mount_path)
 
         # clean if there is directory in the mount_path
         if run_cmd(user, client, "ls " + mount_path) == 0:
@@ -90,7 +90,7 @@ def multi_mount(users, client_instances, mount_paths, ids, tokens, environment, 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
 def default_mount(user, mount_path, token, environment, context, client_ids):
     multi_mount(make_arg_list(user), make_arg_list("client1"), make_arg_list(mount_path),
-                make_arg_list('1'), make_arg_list(token), environment, context, client_ids)
+                make_arg_list('client_host_1'), make_arg_list(token), environment, context, client_ids)
 
 
 @then(parsers.parse('{spaces} are mounted for {user}'))
