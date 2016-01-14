@@ -50,8 +50,9 @@ check_call(['ls', '/etc/op_worker/app.config'])
 check_call(['sed', '-i', 's/{verify_gr_cert, true}/{verify_gr_cert, false}/g', '/etc/op_panel/app.config'])
 check_call(['service', 'op_panel', 'restart'])
 
-# fix missing bundle
-check_call(['touch', '/etc/ssl/cert.pem']) #todo do something with it
+# download missing bundle
+check_call(['wget', '-O', '/etc/ssl/cert.pem',
+            'https://raw.githubusercontent.com/bagder/ca-bundle/master/ca-bundle.crt'])
 
 # oneprovider configure&install
 check_call(['op_panel_admin', '--install', '/root/data/install.cfg'])
