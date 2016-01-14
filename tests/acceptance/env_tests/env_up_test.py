@@ -24,15 +24,20 @@ class TestEnvUp:
         # Check if number of started dockers is correct
         # The number should be:
         # 1 dns node
-        # 3 OP nodes
-        # 1 Riak node for OP
-        # 2 GR nodes
-        # 2 DBs for GR nodes
+
+        # 4 op_worker nodes
+        # 2 cluster_manager nodes for op_workers
+        # 2 DB nodes for op_workers
+
+        # 1 GR nodes
+        # 1 DB for GR nodes
+
         # 2 appmock nodes
+
         # 2 client nodes
         # ------------
-        # 14 nodes
-        assert 13 == len(res['docker_ids'])
+        # 15 nodes
+        assert 15 == len(res['docker_ids'])
         # Get the DNS ip
         dns = res['dns']
         # Will throw if the dns address is not legal
