@@ -30,7 +30,7 @@ class TestEnvUp:
         # 2 DB nodes for op_workers
 
         # 1 GR nodes
-        # 1 DBs for GR nodes
+        # 1 DB for GR nodes
 
         # 2 appmock nodes
 
