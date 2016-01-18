@@ -25,7 +25,7 @@ Feature: Regular_file_CRUD
 
   Scenario: Read and write to regular file
     When u1 creates regular files [file1]
-    And u1 writes "TEST TEXT ONEDATA" to file1
+    And u1 writes "TEST TEXT ONEDATA" to file1nv.
     Then u1 reads "TEST TEXT ONEDATA" from file1
     And u1 reads "TEST TEXT ONEDATA" from spaces/s1/file1
     And size of u1's file1 is 17 bytes
@@ -49,7 +49,6 @@ Feature: Regular_file_CRUD
     Then u1 reads "SYSTEM ONEDATA SYSTEM ONEDATA2 SYSTEM ONEDATA3" from spaces/s1/file1
     And size of u1's file1 is 46 bytes
     And size of u1's spaces/s1/file1 is 46 bytes
-
 
   Scenario: Move regular file and read
     When u1 creates directory and parents [dir1/dir2, dir3]
