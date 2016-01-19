@@ -95,7 +95,7 @@ Feature: Multi_regular_file_stat
     And u1 changes dir1/file1 mode to 624 on client1
     And u1 waits 5 seconds on client1 # wait for events handling
     And u2 updates [dir1/file1] timestamps on client2
-    Then modification time of u2's file1 is equal to access time on client2
+    Then modification time of u2's dir1/file1 is equal to access time on client2
 
   Scenario: Access time
     When u1 writes "TEST TEXT ONEDATA" to file1 on client1
