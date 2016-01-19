@@ -55,13 +55,13 @@ def test_read_write():
 def test_append():
     pass
 
-
-@scenario(
-    '../features/reg_file_CRUD.feature',
-    'Replace word in file'
-)
-def test_replace():
-    pass
+#TODO VFS-1507
+# @scenario(
+#     '../features/reg_file_CRUD.feature',
+#     'Replace word in file'
+# )
+# def test_replace():
+#     pass
 
 
 @scenario(
