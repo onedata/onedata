@@ -56,12 +56,13 @@ def test_change_access_someone():
 def test_timestamp():
     pass
 
-@scenario(
-    '../features/multi_directory_stat.feature',
-    'Update timestamps without write permission'
-)
-def test_update_timestamp_without_permission():
-    pass
+# TODO VFS-1506
+# @scenario(
+#     '../features/multi_directory_stat.feature',
+#     'Update timestamps without write permission'
+# )
+# def test_update_timestamp_without_permission():
+#     pass
 
 
 @scenario(

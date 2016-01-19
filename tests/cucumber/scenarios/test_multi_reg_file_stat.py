@@ -79,13 +79,13 @@ def test_truncate_without_permission():
 def test_timestamp():
     pass
 
-
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Update timestamps without write permission',
-)
-def test_update_timestamp_without_permission():
-    pass
+# TODO VFS-1506
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Update timestamps without write permission',
+# )
+# def test_update_timestamp_without_permission():
+#     pass
 
 
 @scenario(
