@@ -224,7 +224,6 @@ def test_move_to_subtree():
     pass
 
 # TODO VFS-1504
-#
 # @scenario(
 #     '../features/multi_directory_CRUD.feature',
 #     'Move directory to itself in spaces'
