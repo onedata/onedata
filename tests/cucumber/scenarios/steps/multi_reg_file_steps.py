@@ -34,7 +34,7 @@ def write_rand_text(user, megabytes, file, client_node, context):
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 def write_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' > ' + make_path(file, client))
+    ret = run_cmd(user, client, 'echo -en \'' + str(text) + '\' > ' + make_path(file, client))
     save_op_code(context, user, ret)
     if ret == 0:
         context.update_timestamps(user, client, file)
@@ -76,6 +76,7 @@ def replace(user, text1, text2, file, client_node, context):
 @when(parsers.parse('{user} executes {file} on {client_node}'))
 @then(parsers.parse('{user} executes {file} on {client_node}'))
 def execute_script(user, file, client_node, context):
+    time.sleep(600)
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, make_path(file, client))
     save_op_code(context, user, ret)

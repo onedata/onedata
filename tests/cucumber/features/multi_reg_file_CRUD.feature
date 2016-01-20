@@ -91,10 +91,9 @@ Feature: Multi_regular_file_CRUD
     When u1 creates directories [dir1] on client1
     And u1 creates regular files [dir1/script.sh] on client1
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to dir1/script.sh on client1
-    Then u1 reads "#!/usr/bin/env bash\n\necho TEST" from dir1/script.sh on client1
     And u2 waits 5 seconds on client2 # wait for events handling
     And u2 executes dir1/script.sh on client2
-    And last operation by u2 fails
+    Then last operation by u2 fails
 
   Scenario: Move regular file and read
     When u1 creates directory and parents [dir1/dir2, dir3] on client1
@@ -122,7 +121,7 @@ Feature: Multi_regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1] on client1
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
-    And u1 writes 1 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
+    And u1 writes 32 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
     And u1 renames dir1/dir2/file1 to dir3/file1 on client1
     Then u1 doesn't see [file1] in dir1/dir2 on client1
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2 on client1
@@ -163,7 +162,7 @@ Feature: Multi_regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1] on client1
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
-    And u1 writes 1 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
+    And u1 writes 32 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
     And u1 copies regular file dir1/dir2/file1 to dir3/file1 on client1
     Then u1 sees [file1] in dir1/dir2 on client1
     And u1 sees [file1] in spaces/s1/dir1/dir2 on client1
