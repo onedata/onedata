@@ -76,7 +76,6 @@ def replace(user, text1, text2, file, client_node, context):
 @when(parsers.parse('{user} executes {file} on {client_node}'))
 @then(parsers.parse('{user} executes {file} on {client_node}'))
 def execute_script(user, file, client_node, context):
-    time.sleep(600)
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, make_path(file, client))
     save_op_code(context, user, ret)
