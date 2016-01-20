@@ -64,13 +64,13 @@ def test_read_without_permission():
 def test_write_with_permission():
     pass
 
-
-@scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Write to regular file without write permission'
-)
-def test_write_without_permission():
-    pass
+# TODO VFS-1510
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Write to regular file without write permission'
+# )
+# def test_write_without_permission():
+#     pass
 
 
 @scenario(
