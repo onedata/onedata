@@ -47,6 +47,13 @@ def read(user, text, file, client_node, context):
     assert read_text == text
 
 
+@then(parsers.parse('{user} cannot read from {file} on {client_node}'))
+def cannot_read(user, file, client_node, context):
+    client = get_client(client_node, user, context)
+    ret = run_cmd(user, client, 'cat ' + make_path(file, client))
+    assert ret != 0
+
+
 @when(parsers.parse('{user} appends "{text}" to {file} on {client_node}'))
 def append(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
