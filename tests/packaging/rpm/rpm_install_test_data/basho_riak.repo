@@ -1,9 +1,0 @@
-[basho_riak]
-name=basho_riak
-baseurl=https://packagecloud.io/basho/riak/fedora/19/x86_64
-repo_gpgcheck=0
-gpgcheck=0
-enabled=1
-gpgkey=https://packagecloud.io/gpg.key
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt

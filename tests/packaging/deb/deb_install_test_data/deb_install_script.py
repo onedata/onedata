@@ -11,9 +11,12 @@ cluster_manager_package = \
     [path for path in packages if path.startswith('cluster-manager')][0]
 op_panel_package = \
     [path for path in packages if path.startswith('op-panel')][0]
-oneclient_package = [path for path in packages
-                     if path.startswith('oneclient')
-                     and not path.startswith('oneclient-debuginfo')][0]
+# oneclient_package = [path for path in packages %todo build client package
+#                      if path.startswith('oneclient')
+#                      and not path.startswith('oneclient-debuginfo')][0]
+oneprovider_package = [path for path in packages
+                       if path.startswith('oneprovider')][0]
+
 # update repositories
 check_call(['apt-get', 'update'])
 
@@ -30,18 +33,7 @@ check_call(['tee', '/etc/apt/sources.list.d/boost.list'],
 boost_utopic_repo.wait()
 
 # install dependencies
-check_call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https'])
-
-# add riak repo
-riak_key = Popen(['curl', 'https://packagecloud.io/gpg.key'], stdout=PIPE)
-check_call(['apt-key', 'add', '-'], stdin=riak_key.stdout)
-riak_key.wait()
-riak_utopic_repo = Popen(['curl', 'https://packagecloud.io/install/repositories'
-                                  '/basho/riak/config_file.list?os=ubuntu&dist='
-                                  'trusty'], stdout=PIPE)
-check_call(['tee', '/etc/apt/sources.list.d/basho.list'],
-           stdin=riak_utopic_repo.stdout)
-riak_utopic_repo.wait()
+check_call(['apt-get', '-y', 'install', 'curl', 'apt-transport-https', 'wget'])
 
 # add our own repo
 onedata_key = Popen(['curl', 'http://packages.onedata.org/GPG-KEY-onedata'], stdout=PIPE)
@@ -53,7 +45,13 @@ with open('/etc/apt/sources.list.d/onedata.list', 'w') as f:
 # update repositories
 check_call(['apt-get', 'update'])
 
-check_call(['apt-get', 'install', 'couchbase-server'])
+# get couchbase
+check_call(['wget', 'http://packages.couchbase.com/releases/4.0.0/couchbase-server-community_4.0.0-ubuntu14.04_amd64.deb'])
+
+# install
+check_call(['sh', '-c', 'dpkg -i couchbase-server-community_4.0.0-ubuntu14.04_amd64.deb '
+                        '; apt-get -f -y install'
+            ], stderr=STDOUT)
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_panel_package)
             ], stderr=STDOUT)
@@ -63,15 +61,24 @@ check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_worker_package)
             ], stderr=STDOUT)
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=oneclient_package)
-            ], stderr=STDOUT)
+# check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y ' %todo build client package
+#                         'install'.format(package=oneclient_package)
+#             ], stderr=STDOUT)
+check_call(['dpkg', '-i', '/root/pkg/{package}'.format(package=oneprovider_package)], stderr=STDOUT)
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/cluster_manager/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
-check_call(['/usr/bin/oneclient', '--help'])
+# check_call(['/usr/bin/oneclient', '--help']) %todo build client package
+
+# disable gr cert verification
+check_call(['sed', '-i', 's/{verify_gr_cert, true}/{verify_gr_cert, false}/g', '/etc/op_panel/app.config'])
+check_call(['service', 'op_panel', 'restart'])
+
+# download missing bundle
+check_call(['wget', '-O', '/etc/ssl/cert.pem',
+            'https://raw.githubusercontent.com/bagder/ca-bundle/master/ca-bundle.crt'])
 
 # oneprovider configure&install
 check_call(['op_panel_admin', '--install', 'data/install.cfg'])
@@ -81,6 +88,6 @@ check_call(['service', 'cluster_manager', 'status'])
 check_call(['service', 'op_worker', 'status'])
 
 # uninstall
-check_call(['op_panel_admin', '--uninstall'])
+# check_call(['op_panel_admin', '--uninstall'])  #todo fix stopping application
 
 sys.exit(0)
