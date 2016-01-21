@@ -97,13 +97,13 @@ def test_execute_without_permission():
 def test_move():
     pass
 
-
-@scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Move big regular file and check MD5'
-)
-def test_move_big():
-    pass
+# # TODO VFS-1513
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Move big regular file and check MD5'
+# )
+# def test_move_big():
+#     pass
 
 
 @scenario(
@@ -114,9 +114,10 @@ def test_copy():
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Copy big regular file and check MD5'
-)
-def test_copy_big():
-    pass
+# TODO VFS-1513
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Copy big regular file and check MD5'
+# )
+# def test_copy_big():
+#     pass

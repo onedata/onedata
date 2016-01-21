@@ -122,7 +122,9 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 writes 32 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
+    And u1 waits 10 seconds
     And u1 renames dir1/dir2/file1 to dir3/file1 on client1
+    And u1 waits 10 seconds
     Then u1 doesn't see [file1] in dir1/dir2 on client1
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2 on client1
     And u2 doesn't see [file1] in dir1/dir2 on client2
@@ -163,7 +165,9 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
     And u1 writes 32 MB of random characters to dir1/dir2/file1 on client1 and saves MD5
+    And u1 waits 10 seconds
     And u1 copies regular file dir1/dir2/file1 to dir3/file1 on client1
+    And u1 waits 10 seconds
     Then u1 sees [file1] in dir1/dir2 on client1
     And u1 sees [file1] in spaces/s1/dir1/dir2 on client1
     And u2 sees [file1] in dir1/dir2 on client2
