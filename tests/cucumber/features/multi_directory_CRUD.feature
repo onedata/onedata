@@ -264,8 +264,8 @@ Feature: Multi_directory_CRUD
     And u2 sees [dir2] in spaces/s1/dir1 on client2
     And u1 renames spaces/s1/dir1/dir2 to dir1/dir2 on client1
     Then last operation by u1 fails
-    And u1 sees [dir1/dir2] in dir1 on client1
-    And u1 sees [dir1/dir2] in dir1 on client2
+    And u1 sees [dir2] in dir1 on client1
+    And u2 sees [dir2] in dir1 on client2
 
   Scenario: Move directory to its subtree in spaces
     When u1 creates directory and parents [dir1/dir2/dir3] on client1
