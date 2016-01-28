@@ -85,9 +85,11 @@ def context():
 
 @pytest.fixture(scope="module")
 def client_ids(environment):
-    ids = []
+    ids = {}
     for client in environment['client_nodes']:
-        ids.append(docker.inspect(client)['Id'])
+        client = str(client)
+        client_name = client.split(".")[0]
+        ids[client_name] = docker.inspect(client)['Id']
     return ids
 
 

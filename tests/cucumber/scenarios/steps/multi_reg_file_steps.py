@@ -34,7 +34,7 @@ def write_rand_text(user, megabytes, file, client_node, context):
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 def write_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' > ' + make_path(file, client))
+    ret = run_cmd(user, client, 'echo -en \'' + str(text) + '\' > ' + make_path(file, client))
     save_op_code(context, user, ret)
     if ret == 0:
         context.update_timestamps(user, client, file)
@@ -45,6 +45,13 @@ def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
     assert read_text == text
+
+
+@then(parsers.parse('{user} cannot read from {file} on {client_node}'))
+def cannot_read(user, file, client_node, context):
+    client = get_client(client_node, user, context)
+    ret = run_cmd(user, client, 'cat ' + make_path(file, client))
+    assert ret != 0
 
 
 @when(parsers.parse('{user} appends "{text}" to {file} on {client_node}'))

@@ -57,12 +57,13 @@ def test_read_without_permission():
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Write to regular file with write permission'
-)
-def test_write_with_permission():
-    pass
+# TODO VFS-1510
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Write to regular file with write permission'
+# )
+# def test_write_with_permission():
+#     pass
 
 
 @scenario(
@@ -72,13 +73,13 @@ def test_write_with_permission():
 def test_write_without_permission():
     pass
 
-
-@scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Execute file with execute permission'
-)
-def test_execute_with_permission():
-    pass
+# TODO - VFS-1512
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Execute file with execute permission'
+# )
+# def test_execute_with_permission():
+#     pass
 
 
 @scenario(
@@ -96,13 +97,13 @@ def test_execute_without_permission():
 def test_move():
     pass
 
-
-@scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Move big regular file and check MD5'
-)
-def test_move_big():
-    pass
+# # TODO VFS-1513
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Move big regular file and check MD5'
+# )
+# def test_move_big():
+#     pass
 
 
 @scenario(
@@ -113,9 +114,10 @@ def test_copy():
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Copy big regular file and check MD5'
-)
-def test_copy_big():
-    pass
+# TODO VFS-1513
+# @scenario(
+#     '../features/multi_reg_file_CRUD.feature',
+#     'Copy big regular file and check MD5'
+# )
+# def test_copy_big():
+#     pass
