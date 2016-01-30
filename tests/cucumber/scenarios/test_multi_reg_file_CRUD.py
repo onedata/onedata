@@ -27,9 +27,17 @@ def test_create():
 
 @scenario(
     '../features/multi_reg_file_CRUD.feature',
-    'Rename regular file'
+    'Rename regular file without permission'
 )
-def test_rename():
+def test_rename_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Rename regular file with permission'
+)
+def test_rename_with_permission():
     pass
 
 

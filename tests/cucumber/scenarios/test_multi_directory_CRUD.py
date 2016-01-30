@@ -42,9 +42,17 @@ def test_create_in_spaces():
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
-    'Rename someone\'s directory'
+    'Rename someone\'s directory without permission'
 )
-def test_rename_someone():
+def test_rename_someone_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Rename someone\'s directory with permission'
+)
+def test_rename_someone_with_permission():
     pass
 
 
@@ -52,7 +60,7 @@ def test_rename_someone():
     '../features/multi_directory_CRUD.feature',
     'Rename own directory'
 )
-def test_rename_one():
+def test_rename_own():
     pass
 
 
