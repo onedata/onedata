@@ -19,7 +19,6 @@ class TestEnvUp:
 
     # Test if the env_up.py script works as expected.
     def test_env_up(self):
-        # For shorter code
         res = self.result
         # Check if number of started dockers is correct
         # The number should be:
@@ -72,7 +71,7 @@ class TestEnvUp:
             (w_name, sep, w_hostname) = w_node.partition('@')
             w_ip = test_utils.dns_lookup(w_hostname, dns)
             assert test_utils.ping(w_ip)
-            assert check_http_connectivity(w_ip, 443, '/', 200, number_of_retries=50)
+            assert check_http_connectivity(w_ip, 6666, '/nagios', 200, use_ssl=False, number_of_retries=50)
 
         # Check appmock nodes
         # am_node is in form name@name.timestamp.dev.docker

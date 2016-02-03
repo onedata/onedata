@@ -42,9 +42,17 @@ def test_create_in_spaces():
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
-    'Rename someone\'s directory'
+    'Rename someone\'s directory without permission'
 )
-def test_rename_someone():
+def test_rename_someone_without_permission():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Rename someone\'s directory with permission'
+)
+def test_rename_someone_with_permission():
     pass
 
 
@@ -52,7 +60,7 @@ def test_rename_someone():
     '../features/multi_directory_CRUD.feature',
     'Rename own directory'
 )
-def test_rename_one():
+def test_rename_own():
     pass
 
 
@@ -94,7 +102,6 @@ def test_create_subfile_without_permission():
 )
 def test_create_subfile_with_permission():
     pass
-
 
 
 @scenario(
@@ -224,32 +231,34 @@ def test_move_to_itself():
 def test_move_to_subtree():
     pass
 
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to itself in spaces'
-)
-def test_move_to_itself_spaces():
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to itself in default space'
-)
-def test_move_to_itself_default_space():
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to its subtree in spaces'
-)
-def test_move_to_subtree_spaces():
-    pass
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to its subtree in default space'
-)
-def test_move_to_subtree_default_space():
-    pass
+# TODO VFS-1504
+# @scenario(
+#     '../features/multi_directory_CRUD.feature',
+#     'Move directory to itself in spaces'
+# )
+# def test_move_to_itself_spaces():
+#     pass
+#
+#
+# @scenario(
+#     '../features/multi_directory_CRUD.feature',
+#     'Move directory to itself in default space'
+# )
+# def test_move_to_itself_default_space():
+#     pass
+#
+#
+# @scenario(
+#     '../features/multi_directory_CRUD.feature',
+#     'Move directory to its subtree in spaces'
+# )
+# def test_move_to_subtree_spaces():
+#     pass
+#
+#
+# @scenario(
+#     '../features/multi_directory_CRUD.feature',
+#     'Move directory to its subtree in default space'
+# )
+# def test_move_to_subtree_default_space():
+#     pass

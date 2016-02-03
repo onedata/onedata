@@ -79,50 +79,50 @@ def test_truncate_without_permission():
 def test_timestamp():
     pass
 
-
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Update timestamps without write permission',
-)
-def test_update_timestamp_without_permission():
-    pass
+# TODO VFS-1506
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Update timestamps without write permission',
+# )
+# def test_update_timestamp_without_permission():
+#     pass
 
 
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Update timestamps with write permission'
 )
-def test_timestamp_timestamp_with_permission():
+def test_update_timestamp_with_permission():
     pass
 
-
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Access time'
-)
-def test_access_time():
-    pass
-
-
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Modification time'
-)
-def test_modification_time():
-    pass
-
-
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Status-change time when changing mode'
-)
-def test_stat_change_time_chmod():
-    pass
-
-
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Status-change time when renaming'
-)
-def test_stat_change_time_mv():
-    pass
+# TODO VFS-1505
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Access time'
+# )
+# def test_access_time():
+#     pass
+#
+#
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Modification time'
+# )
+# def test_modification_time():
+#     pass
+#
+#
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Status-change time when changing mode'
+# )
+# def test_stat_change_time_chmod():
+#     pass
+#
+#
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Status-change time when renaming'
+# )
+# def test_stat_change_time_mv():
+#     pass

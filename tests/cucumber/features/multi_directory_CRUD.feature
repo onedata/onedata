@@ -4,7 +4,8 @@ Feature: Multi_directory_CRUD
     Given environment is defined in env.json
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
-      [/home/u1/onedata, /home/u2/onedata] on nodes [1, 2] respectively,
+      [/home/u1/onedata, /home/u2/onedata] on client_hosts
+      [client_host_1, client_host_2] respectively,
       using [token, token]
 
   Scenario: Create directory
@@ -31,14 +32,21 @@ Feature: Multi_directory_CRUD
     Then u1 doesn't see [dir1, dir2, dir3] in . on client1
     Then u2 doesn't see [dir1, dir2, dir3] in . on client2
 
-  Scenario: Rename someone's directory
+  Scenario: Rename someone's directory without permission
     When u1 creates directories [dir1] on client1
     And last operation by u1 succeeds
     And u2 renames dir1 to dir2 on client2
-    Then u1 sees [dir2] in . on client1
-    And u2 sees [dir2] in . on client2
-    And u1 doesn't see [dir1] in . on client1
-    And u2 doesn't see [dir1] in . on client2
+    Then last operation by u2 fails
+
+  Scenario: Rename someone's directory with permission
+    When u1 creates directory and parents [dir1/child1] on client1
+    And u1 changes dir1 mode to 775 on client1
+    And u2 renames dir1/child1 to dir1/child2 on client2
+    And last operation by u2 succeeds
+    Then u1 sees [child2] in dir1 on client1
+    And u1 doesn't see [child1] in dir1 on client1
+    And u2 sees [child2] in dir1 on client2
+    And u2 doesn't see [child1] in dir1 on client2
 
   Scenario: Rename own directory
     When u1 creates directories [dir1] on client1
