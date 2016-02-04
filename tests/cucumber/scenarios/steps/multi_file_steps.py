@@ -120,6 +120,7 @@ def check_time_within_maxtime(user, time1, time2, comparator, file, maxtime, cli
     client = get_client(client_node, user, context)
     file = str(file)
     waited = 0
+    maxtime = int(maxtime)
     while not compare(int(get_current_time(user, file, client, time1)),
                       int(get_current_time(user, file, client, time2)),
                       comparator):
