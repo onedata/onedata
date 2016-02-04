@@ -8,7 +8,7 @@ URL:        https://onedata.org
 Requires: cluster-manager = {{cluster_manager_version}}
 Requires: op-worker = {{op_worker_version}}
 Requires: op-panel = {{op_panel_version}}
-Requires: couchbase-server
+Requires: couchbase-server-community >= 4.0.0
 
 %description
 

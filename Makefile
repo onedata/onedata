@@ -18,7 +18,7 @@ all: build deb_oneprovider rpm_oneprovider test
 
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
-MAKE_GLOBALREGISTRY := globalregistry/make.py -s onepanel -r .
+MAKE_GLOBALREGISTRY := globalregistry/make.py -s globalregistry -r .
 MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
 MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
 MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
@@ -124,7 +124,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
-	sed -i 's/{{CLUSTER_MANAGER_VERSION}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider.spec
+	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider.spec
 
@@ -140,7 +140,8 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	$(call mv_rpm, oneprovider_meta)
 
 rpm_op_panel: clean_onepanel rpmdirs
-	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider,DISTRIBUTION=$(DISTRIBUTION)
+	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider \
+	    -e COUCHBASE_SERVER_SERVICE="service couchbase-server-community"
 	$(call mv_rpm, onepanel)
 
 rpm_op_worker: clean_op_worker rpmdirs
@@ -166,7 +167,7 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider/DEBIAN/control
-	sed -i 's/{{CLUSTER_MANAGER_VERSION}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
+	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 
@@ -174,7 +175,8 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	mv oneprovider_meta/oneprovider.deb package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
 
 deb_op_panel: clean_onepanel debdirs
-	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider,DISTRIBUTION=$(DISTRIBUTION)
+	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider \
+	    -e COUCHBASE_SERVER_SERVICE="service couchbase-server"
 	$(call mv_deb, onepanel)
 
 deb_op_worker: clean_op_worker debdirs

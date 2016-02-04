@@ -9,12 +9,23 @@ Manage package repository.
 """
 import argparse
 from subprocess import Popen, PIPE, check_call, check_output, CalledProcessError
+from glob import glob
 import sys
 import os
 
 APACHE_PREFIX = '/var/www/onedata'
-REPO_LOCATION = {'sid': '/apt/debian', 'fedora-21-x86_64': '/yum/fedora/21'}
-REPO_TYPE = {'sid': 'deb', 'fedora-21-x86_64': 'rpm'}
+REPO_LOCATION = {
+    'sid': '/apt/debian',
+    'fedora-21-x86_64': '/yum/fedora/21',
+    'centos-7-x86_64': '/yum/centos/7x',
+    'sl6x-x86_64': '/yum/scientific/6x'
+}
+REPO_TYPE = {
+    'sid': 'deb',
+    'fedora-21-x86_64': 'rpm',
+    'centos-7-x86_64': 'rpm',
+    'sl6x-x86_64': 'rpm'
+}
 
 # create the top-level parser
 parser = argparse.ArgumentParser(
@@ -53,7 +64,7 @@ parser_push_deb = subparsers.add_parser(
 )
 parser_push_deb.add_argument(
     'distribution',
-    help='available distributions: sid',
+    help='available distributions: sid, fedora-21-x86_64, centos-7-x86_64, sl6x-x86_64',
 )
 parser_push_deb.add_argument(
     'deb',
@@ -85,7 +96,7 @@ parser_push = subparsers.add_parser(
 )
 parser_push.add_argument(
     'targz',
-    help='Packed systest/package dir'
+    help='Packed onedata/package dir'
 )
 
 args = parser.parse_args()
@@ -139,7 +150,7 @@ try:
         # update createrepo
         repo_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution]
         #todo enable + set gpg_check to 1 in onedata_devel.repo file
-        # call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
+        # call(['rpm', '--resign'] + glob(repo_dir + '/**/*.rpm')])
         call(['createrepo', repo_dir])
     elif args.action == 'push':
         # extract package targz
@@ -172,11 +183,12 @@ try:
                 # copy packages
                 repo_dir = APACHE_PREFIX + REPO_LOCATION[distro]
                 distro_contents = '/tmp/package/' + distro + '/*'
-                call(['cp', '-R', distro_contents, repo_dir])
+
+                call(['cp','-R'] + glob(distro_contents) + [repo_dir])
 
                 # update createrepo
                 #todo enable + set gpg_check to 1 in onedata_devel.repo file
-                # call(['rpm', '--resign', repo_dir + '/**/*.rpm'])
+                # call(['rpm', '--resign'] + glob(repo_dir + '/**/*.rpm'))
                 call(['createrepo', repo_dir])
 except CalledProcessError as err:
     exit(err.returncode)

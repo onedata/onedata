@@ -24,7 +24,6 @@ class TestRpmInstallation:
         command = 'yum install -y python && ' \
                   'python /root/data/rpm_install_script.py'
 
-        command = command.format(package_dir=package_dir)
         container = docker.run(tty=True,
                                interactive=True,
                                detach=True,
@@ -40,9 +39,9 @@ class TestRpmInstallation:
                                reflect=[('/sys/fs/cgroup', 'rw')])
 
         try:
-          assert 0 == docker.exec_(container,
-                                  command=command,
-                                  interactive=True,
-                                  tty=True)
+            assert 0 == docker.exec_(container,
+                                     command=command,
+                                     interactive=True,
+                                     tty=True)
         finally:
-          docker.remove([container], force=True, volumes=True)
+            docker.remove([container], force=True, volumes=True)
