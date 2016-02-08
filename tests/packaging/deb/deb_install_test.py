@@ -49,5 +49,4 @@ class TestDebInstallation:
                                      interactive=True,
                                      tty=True)
         finally:
-            pass
-            # docker.remove([container], force=True, volumes=True)
+            docker.remove([container], force=True, volumes=True)

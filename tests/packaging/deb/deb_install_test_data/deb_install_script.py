@@ -6,17 +6,17 @@ from subprocess import STDOUT, check_call, check_output
 # get packages
 packages = check_output(['ls', '/root/pkg']).split()
 packages = sorted(packages, reverse=True)
-op_worker_package = \
-    [path for path in packages if path.startswith('op-worker')][0]
-cluster_manager_package = \
-    [path for path in packages if path.startswith('cluster-manager')][0]
 op_panel_package = \
     [path for path in packages if path.startswith('op-panel')][0]
-# oneclient_package = [path for path in packages %todo build client package
-#                      if path.startswith('oneclient')
-#                      and not path.startswith('oneclient-debuginfo')][0]
+cluster_manager_package = \
+    [path for path in packages if path.startswith('cluster-manager')][0]
+op_worker_package = \
+    [path for path in packages if path.startswith('op-worker')][0]
 oneprovider_package = [path for path in packages
                        if path.startswith('oneprovider')][0]
+oneclient_package = [path for path in packages
+                     if path.startswith('oneclient') and
+                     not path.startswith('oneclient-debuginfo')][0]
 
 # update repositories
 check_call(['apt-get', '-y', 'update'])
@@ -45,18 +45,17 @@ check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
 check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
                         'install'.format(package=op_worker_package)
             ], stderr=STDOUT)
-# check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y ' %todo build client package
-#                         'install'.format(package=oneclient_package)
-#             ], stderr=STDOUT)
-check_call(
-    ['dpkg', '-i', '/root/pkg/{package}'.format(package=oneprovider_package)],
-    stderr=STDOUT)
+check_call(['dpkg', '-i', '/root/pkg/{package}'.
+           format(package=oneprovider_package)], stderr=STDOUT)
+check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
+                        'install'.format(package=oneclient_package)
+            ], stderr=STDOUT)
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/cluster_manager/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
-# check_call(['/usr/bin/oneclient', '--help']) %todo build client package
+check_call(['/usr/bin/oneclient', '--help'])
 
 # disable gr cert verification
 check_call(['sed', '-i', 's/{verify_gr_cert, true}/{verify_gr_cert, false}/g',

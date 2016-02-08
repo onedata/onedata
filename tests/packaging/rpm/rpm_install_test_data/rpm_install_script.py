@@ -6,18 +6,21 @@ from subprocess import STDOUT, check_call, check_output
 # get packages
 packages = check_output(['ls', '/root/pkg']).split()
 packages = sorted(packages, reverse=True)
-op_worker_package = \
-    [path for path in packages if path.startswith('op-worker') and
+op_panel_package = \
+    [path for path in packages if path.startswith('op-panel') and
      path.endswith('.rpm')][0]
 cluster_manager_package = \
     [path for path in packages if path.startswith('cluster-manager') and
      path.endswith('.rpm')][0]
-op_panel_package = \
-    [path for path in packages if path.startswith('op-panel') and
+op_worker_package = \
+    [path for path in packages if path.startswith('op-worker') and
      path.endswith('.rpm')][0]
 oneprovider_package = \
     [path for path in packages if path.startswith('oneprovider') and
      path.endswith('.rpm')][0]
+oneclient_package = [path for path in packages
+                     if path.startswith('oneclient') and
+                     not path.startswith('oneclient-debuginfo')][0]
 
 # update repositories
 check_call(['dnf', '-y', 'update'])
@@ -41,11 +44,14 @@ check_call(['dnf', '-y', 'install', '/root/pkg/' + op_worker_package],
            stderr=STDOUT)
 check_call(['dnf', '-y', 'install', '/root/pkg/' + oneprovider_package],
            stderr=STDOUT)
+check_call(['dnf', '-y', 'install', '/root/pkg/' + oneclient_package],
+           stderr=STDOUT)
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/cluster_manager/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
+check_call(['/usr/bin/oneclient', '--help'])
 
 # disable gr cert verification
 check_call(['sed', '-i', 's/{verify_gr_cert, true}/{verify_gr_cert, false}/g',
