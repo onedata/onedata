@@ -66,7 +66,7 @@ parser_push_deb = subparsers.add_parser(
 )
 parser_push_deb.add_argument(
     'distribution',
-    help='available distributions: sid, fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64',
+    help='available distributions: sid',
 )
 parser_push_deb.add_argument(
     'deb',
@@ -80,7 +80,7 @@ parser_push_rpm = subparsers.add_parser(
 )
 parser_push_rpm.add_argument(
     'distribution',
-    help='Available distributions: fc21.',
+    help='Available distributions: fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64.',
 )
 parser_push_rpm.add_argument(
     'rpm',
