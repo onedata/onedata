@@ -16,6 +16,7 @@ import os
 APACHE_PREFIX = '/var/www/onedata'
 REPO_LOCATION = {
     'sid': '/apt/debian',
+    'wily': '/apt/ubuntu',
     'fedora-21-x86_64': '/yum/fedora/21',
     'fedora-23-x86_64': '/yum/fedora/23',
     'centos-7-x86_64': '/yum/centos/7x',
@@ -23,6 +24,7 @@ REPO_LOCATION = {
 }
 REPO_TYPE = {
     'sid': 'deb',
+    'wily': 'deb',
     'fedora-21-x86_64': 'rpm',
     'fedora-23-x86_64': 'rpm',
     'centos-7-x86_64': 'rpm',
@@ -66,7 +68,7 @@ parser_push_deb = subparsers.add_parser(
 )
 parser_push_deb.add_argument(
     'distribution',
-    help='available distributions: sid'
+    help='available distributions: sid, wily'
 )
 parser_push_deb.add_argument(
     'deb',
