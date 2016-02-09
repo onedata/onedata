@@ -1,10 +1,11 @@
-from tests.test_common import *
 from tests import test_utils
+from tests.test_common import *
 
-package_dir = os.path.join(os.getcwd(), 'package/fedora-21-x86_64/x86_64')
+package_dir = os.path.join(os.getcwd(), 'package/fedora-23-x86_64/x86_64')
 scripts_dir = os.path.dirname(test_utils.test_file('rpm_install_script.py'))
 
 from environment import docker, env
+import sys
 
 
 class TestRpmInstallation:
@@ -21,17 +22,20 @@ class TestRpmInstallation:
         gr_node = self.result['gr_nodes'][0]
         (_, _, gr_dockername) = gr_node.partition('@')
 
-        command = 'yum install -y python && ' \
+        command = 'dnf install -y python && ' \
                   'python /root/data/rpm_install_script.py'
 
         container = docker.run(tty=True,
                                interactive=True,
                                detach=True,
-                               image='onedata/fedora-systemd:21',
+                               image='onedata/fedora-systemd:22',
                                hostname='devel.localhost.local',
                                workdir="/root",
                                run_params=['--privileged=true'],
                                link={gr_dockername: 'onedata.org'},
+                               stdin=sys.stdin,
+                               stdout=sys.stdout,
+                               stderr=sys.stderr,
                                volumes=[
                                    (package_dir, '/root/pkg', 'ro'),
                                    (scripts_dir, '/root/data', 'ro')

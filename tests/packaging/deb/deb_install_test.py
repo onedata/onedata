@@ -1,10 +1,11 @@
-from tests.test_common import *
 from tests import test_utils
+from tests.test_common import *
 
-package_dir = os.path.join(os.getcwd(), 'package/vivid/binary-amd64')
+package_dir = os.path.join(os.getcwd(), 'package/wily/binary-amd64')
 scripts_dir = os.path.dirname(test_utils.test_file('deb_install_script.py'))
 
 from environment import docker, env
+import sys
 
 
 class TestDebInstallation:
@@ -28,11 +29,14 @@ class TestDebInstallation:
         container = docker.run(tty=True,
                                interactive=True,
                                detach=True,
-                               image='ubuntu:vivid',
+                               image='ubuntu:wily',
                                hostname='devel.localhost.local',
                                workdir="/root",
                                run_params=['--privileged=true'],
                                link={gr_dockername: 'onedata.org'},
+                               stdin=sys.stdin,
+                               stdout=sys.stdout,
+                               stderr=sys.stderr,
                                volumes=[
                                    (package_dir, '/root/pkg', 'ro'),
                                    (scripts_dir, '/root/data', 'ro')

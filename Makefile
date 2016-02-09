@@ -1,4 +1,4 @@
-# distro for package building (oneof: vivid, fedora-21-x86_64)
+# distro for package building (oneof: wily, fedora-23-x86_64)
 DISTRIBUTION            ?= none
 export DISTRIBUTION
 
@@ -10,7 +10,7 @@ OP_PANEL_VERSION		?= $(shell git -C onepanel describe --tags --always | tr - .)
 
 .PHONY: package.tar.gz
 
-all: build deb_oneprovider rpm_oneprovider test
+all: build deb rpm test
 
 ##
 ## Macros
@@ -120,6 +120,8 @@ clean_packages:
 ## RPM packaging
 ##
 
+rpm: rpm_oneprovider rpm_oneclient
+
 rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
@@ -162,6 +164,8 @@ rpmdirs:
 ##
 ## DEB packaging
 ##
+
+deb: deb_oneprovider deb_oneclient
 
 deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
