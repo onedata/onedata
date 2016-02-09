@@ -62,11 +62,11 @@ parser.add_argument(
 # create the parser for the "push_deb" command
 parser_push_deb = subparsers.add_parser(
     'push_deb',
-    help='Deploy package to apt repository.',
+    help='Deploy package to apt repository.'
 )
 parser_push_deb.add_argument(
     'distribution',
-    help='available distributions: sid',
+    help='available distributions: sid'
 )
 parser_push_deb.add_argument(
     'deb',
@@ -76,11 +76,11 @@ parser_push_deb.add_argument(
 # create the parser for the "push_rpm" command
 parser_push_rpm = subparsers.add_parser(
     'push_rpm',
-    help='Deploy package to yum repository.',
+    help='Deploy package to yum repository.'
 )
 parser_push_rpm.add_argument(
     'distribution',
-    help='Available distributions: fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64.',
+    help='Available distributions: fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64.'
 )
 parser_push_rpm.add_argument(
     'rpm',
@@ -94,7 +94,7 @@ parser_push_rpm.add_argument(
 # create the parser for the "push" command
 parser_push = subparsers.add_parser(
     'push',
-    help='Deploy .tar.gz package artifact.',
+    help='Deploy .tar.gz package artifact.'
 )
 parser_push.add_argument(
     'targz',
