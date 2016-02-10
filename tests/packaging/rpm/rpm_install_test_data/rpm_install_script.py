@@ -22,12 +22,6 @@ oneclient_package = [path for path in packages
                      if path.startswith('oneclient') and
                      not path.startswith('oneclient-debuginfo')][0]
 
-# update repositories
-check_call(['dnf', '-y', 'update'])
-
-# install dependencies
-check_call(['dnf', '-y', 'install', 'wget', 'curl'], stderr=STDOUT)
-
 # get couchbase
 check_call(['wget', 'http://packages.couchbase.com/releases/4.0.0/couchbase'
                     '-server-community-4.0.0-centos7.x86_64.rpm'])
@@ -46,6 +40,13 @@ check_call(['dnf', '-y', 'install', '/root/pkg/' + oneprovider_package],
            stderr=STDOUT)
 check_call(['dnf', '-y', 'install', '/root/pkg/' + oneclient_package],
            stderr=STDOUT)
+
+# increase couchbase memory quota
+check_call(['curl', '-s',  '-u', 'admin:password', '-X', 'POST',
+            'http://localhost:8091/pools/default', '-d', 'memoryQuota=512'])
+
+# fix couchbase server init script
+check_call(['sed', '-i', '-e', 's/-community//g', '/etc/init.d/couchbase-server'])
 
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
