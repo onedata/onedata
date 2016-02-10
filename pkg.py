@@ -5,13 +5,51 @@
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
-Manage package repository.
+Pushes .tar.gz package archives in onedata's bamboo artifact format:
+i. e.
+package/
+    fedora-23-x86_64
+        SRPMS
+            cluster-manager-1.0.0.1.ge1a52f4-1.fc23.src.rpm
+        x86_64
+            cluster-manager-1.0.0.1.ge1a52f4-1.fc23.x86_64.rpm
+    wily
+        binary-amd64
+            cluster-manager_1.0.0.1.ge1a52f4-1_amd64.deb
+        source
+            cluster-manager_1.0.0.1.ge1a52f4-1.diff.gz
+            cluster-manager_1.0.0.1.ge1a52f4-1.dsc
+            cluster-manager_1.0.0.1.ge1a52f4-1_amd64.changes
+            cluster-manager_1.0.0.1.ge1a52f4.orig.tar.gz
+
+Available distributions sid, wily, fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64
 """
 import argparse
 from subprocess import Popen, PIPE, check_call, check_output, CalledProcessError
-from glob import glob
 import sys
 import os
+
+CONFIG = '''
+Host docker_packages_devel
+ HostName 172.17.0.2
+ User root
+ ProxyCommand ssh packages_devel nc %h %p
+
+Host docker_packages
+ HostName 172.17.0.2
+ User root
+ ProxyCommand ssh packages nc %h %p
+
+Host packages_devel
+ HostName 149.156.11.4
+ Port 10107
+ User ubuntu
+
+Host packages
+ HostName 149.156.11.4
+ Port 10039
+ User ubuntu
+ '''
 
 APACHE_PREFIX = '/var/www/onedata'
 REPO_LOCATION = {
@@ -41,17 +79,10 @@ subparsers = parser.add_subparsers(
 )
 
 parser.add_argument(
-    '-u', '--user',
-    default='root',
-    action='store',
-    help='Username from package repository.',
-    dest='user')
-
-parser.add_argument(
     '--host',
-    default='localhost',
+    default=None,
     action='store',
-    help='Package repository hostname.',
+    help='[user@]hostname to connect with package repo. In ssh format.',
     dest='host')
 
 parser.add_argument(
@@ -61,36 +92,10 @@ parser.add_argument(
     help='Private key.',
     dest='identity')
 
-# create the parser for the "push_deb" command
-parser_push_deb = subparsers.add_parser(
-    'push_deb',
-    help='Deploy package to apt repository.'
-)
-parser_push_deb.add_argument(
-    'distribution',
-    help='available distributions: sid, wily'
-)
-parser_push_deb.add_argument(
-    'deb',
-    help='Package to deploy'
-)
-
-# create the parser for the "push_rpm" command
-parser_push_rpm = subparsers.add_parser(
-    'push_rpm',
-    help='Deploy package to yum repository.'
-)
-parser_push_rpm.add_argument(
-    'distribution',
-    help='Available distributions: fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64.'
-)
-parser_push_rpm.add_argument(
-    'rpm',
-    help='Package to deploy.'
-)
-parser_push_rpm.add_argument(
-    'src_rpm',
-    help='Source package to deploy.'
+# create the parser for the "config" command
+parser_config = subparsers.add_parser(
+        'config',
+        help='Print ssh config for onedata package repositories'
 )
 
 # create the parser for the "push" command
@@ -99,42 +104,44 @@ parser_push = subparsers.add_parser(
     help='Deploy .tar.gz package artifact.'
 )
 parser_push.add_argument(
-    'targz',
-    help='Packed onedata/package dir'
+    'package_artifact',
+    help='Package artifact in tar.gz format'
 )
 
 args = parser.parse_args()
 
 
-def cp_or_scp(full_hostname, identity_opt, source, dest_dir):
-    scp_command = ['scp'] + identity_opt + [source] + [full_hostname + ':' + dest_dir] \
-        if not full_hostname.endswith('@localhost') else ['cp', source, dest_dir]
+def cp_or_scp(hostname, identity_opt, source, dest_dir):
+    scp_command = ['scp'] + identity_opt + [source] + [hostname + ':' + dest_dir] \
+        if hostname else ['cp', source, dest_dir]
     check_call(scp_command, stdout=sys.stdout, stderr=sys.stderr)
 
 
-def ssh_or_sh(full_hostname, identity_opt, command, return_output = False):
-    ssh_command = ['ssh'] + identity_opt + [full_hostname] if args.host != 'localhost' else []
+def ssh_or_sh(hostname, identity_opt, command, return_output = False):
+    ssh_command = ['ssh'] + identity_opt + [hostname] if hostname else []
     if return_output:
         return check_output(ssh_command + command)
     else:
         return check_call(ssh_command + command, stdout=sys.stdout, stderr=sys.stderr)
 
-def untar_remote_or_local(full_hostname, identity_opt, targz, dest_dir):
-    ssh_command = ['ssh'] + identity_opt + [full_hostname] if args.host != 'localhost' else []
-    tar_stream = Popen(['cat', targz], stdout=PIPE)
+
+def untar_remote_or_local(hostname, identity_opt, package_artifact, dest_dir):
+    ssh_command = ['ssh'] + identity_opt + [hostname] if hostname else []
+    tar_stream = Popen(['cat', package_artifact], stdout=PIPE)
     check_call(ssh_command + ['tar', 'xzf', '-', '-C', dest_dir], stdin=tar_stream.stdout)
     tar_stream.wait()
 
 
 identity_opt = ['-i', args.identity] if args.identity else []
-full_hostname = args.user + '@' + args.host
 
-copy = lambda source, dest_dir: cp_or_scp(full_hostname, identity_opt, source, dest_dir)
-call = lambda command: ssh_or_sh(full_hostname, identity_opt, command, True)
-execute = lambda command: ssh_or_sh(full_hostname, identity_opt, command)
-untar = lambda targz, dest_dir: untar_remote_or_local(full_hostname, identity_opt, targz, dest_dir)
+copy = lambda source, dest_dir: cp_or_scp(args.host, identity_opt, source, dest_dir)
+call = lambda command: ssh_or_sh(args.host, identity_opt, command, True)
+execute = lambda command: ssh_or_sh(args.host, identity_opt, command)
+untar = lambda package_artifact, dest_dir: untar_remote_or_local(args.host, identity_opt, package_artifact, dest_dir)
 
 try:
+    if args.action == 'config':
+        print(CONFIG)
     if args.action == 'push_deb':
         # copy to tmp
         copy(args.deb, '/tmp/')
@@ -153,13 +160,12 @@ try:
 
         # update createrepo
         repo_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution]
-        #todo enable + set gpg_check to 1 in onedata_devel.repo file
-        # call(['rpm', '--resign'] + glob(repo_dir + '/**/*.rpm')])
+        call(['find', repo_dir, '-name', '*.rpm', '-exec', 'rpm', '--resign', '{}', ';'])
         call(['createrepo', repo_dir])
     elif args.action == 'push':
-        # extract package targz
+        # extract package_artifact
         execute(['rm', '-rf', '/tmp/package'])
-        untar(args.targz, '/tmp/')
+        untar(args.package_artifact, '/tmp/')
 
         # for each distribution inside
         for distro in call(['ls', '/tmp/package']).split():
@@ -175,24 +181,20 @@ try:
                         push_package_command = command + ['includedeb', distro, distro_binary_prefix + package]
                         execute(push_package_command)
 
-                        #todo enable
                         # add dsc sources to reprepro
-                        # distro_source_prefix = '/tmp/package/' + distro + '/source/'
-                        # for source in call(['ls', distro_source_prefix]).split():
-                        #     if source.endswith('.dsc'):
-                        #         push_source_command = \
-                        #             command + ['includedsc',distro, distro_source_prefix + source]
-                        #         execute(push_source_command)
+                        distro_source_prefix = '/tmp/package/' + distro + '/source/'
+                        push_source_command = command + ['includedsc', distro, '{}']
+                        call(['find', distro_source_prefix, '-name', '*.dsc', '-exec'] + push_source_command + ['\;'])
             elif REPO_TYPE[distro] == 'rpm':
                 # copy packages
                 repo_dir = APACHE_PREFIX + REPO_LOCATION[distro]
-                distro_contents = '/tmp/package/' + distro + '/*'
+                distro_contents = '/tmp/package/' + distro + '/.'
 
-                call(['cp','-R'] + glob(distro_contents) + [repo_dir])
+                call(['cp','-a', distro_contents, repo_dir])
 
                 # update createrepo
-                #todo enable + set gpg_check to 1 in onedata_devel.repo file
-                # call(['rpm', '--resign'] + glob(repo_dir + '/**/*.rpm'))
+                rpms = call(['find', repo_dir, '-name', '*.rpm']).split()
+                call(['rpm', '--resign'] + rpms)
                 call(['createrepo', repo_dir])
 except CalledProcessError as err:
     exit(err.returncode)
