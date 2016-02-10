@@ -26,7 +26,7 @@ class TestAppmockTCPExample:
     def test_tcp_example(self):
         [container] = self.result['docker_ids']
         appmock_ip = docker.inspect(container)['NetworkSettings']['IPAddress'].encode(
-            'ascii')
+                'ascii')
         # Send some requests, check counters, order appmock to send something to the client and receive it
         send_some_and_receive(appmock_ip)
         # Send multiple messages to itself and verify if they were received
@@ -42,7 +42,7 @@ def send_some_and_receive(appmock_ip):
     # Lets assume we are testing a code that sends some messages on tcp port
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     ssl_sock = ssl.wrap_socket(s)
-    ssl_sock.settimeout(10)
+    ssl_sock.settimeout(20)
     ssl_sock.connect((appmock_ip, 5555))
 
     type1_message = 'test5\n'
@@ -93,7 +93,7 @@ def send_some_and_receive(appmock_ip):
 def make_appmock_send_to_itself(appmock_ip):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     ssl_sock = ssl.wrap_socket(s)
-    ssl_sock.settimeout(10)
+    ssl_sock.settimeout(20)
     ssl_sock.connect((appmock_ip, 5555))
     appmock_client.tcp_server_send(appmock_ip, 5555, 'message', 1000)
     # Now receive 10 messages
@@ -108,7 +108,7 @@ def make_appmock_send_to_itself(appmock_ip):
 def wait_until_appmock_receives(appmock_ip):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     ssl_sock = ssl.wrap_socket(s)
-    ssl_sock.settimeout(10)
+    ssl_sock.settimeout(20)
     ssl_sock.connect((appmock_ip, 5555))
     for i in range(1000):
         ssl_sock.send('test1\n')
@@ -133,6 +133,8 @@ def wait_until_appmock_receives(appmock_ip):
     for i in range(5):
         ssl_sock.send('b\n')
     correct_history = ['a\n', 'a\n', 'a\n', 'a\n', 'a\n', 'b\n', 'b\n', 'b\n', 'b\n', 'b\n']
+    # Wait for messages to arrive
+    appmock_client.tcp_server_wait_for_any_messages(appmock_ip, 5555, 10)
     # Test the correctness of tcp_server_history endpoint
     result = appmock_client.tcp_server_history(appmock_ip, 5555)
     assert result == correct_history
@@ -149,7 +151,7 @@ def wait_until_appmock_receives(appmock_ip):
 def use_counter_endpoint(appmock_ip):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     ssl_sock = ssl.wrap_socket(s)
-    ssl_sock.settimeout(10)
+    ssl_sock.settimeout(20)
     ssl_sock.connect((appmock_ip, 6666))
     for i in range(20000):
         ssl_sock.send('sdfg\n')
