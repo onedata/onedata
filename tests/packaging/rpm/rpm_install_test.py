@@ -28,7 +28,7 @@ class TestRpmInstallation:
         container = docker.run(tty=True,
                                interactive=True,
                                detach=True,
-                               image='onedata/fedora-systemd:22',
+                               image='onedata/fedora-systemd:23',
                                hostname='devel.localhost.local',
                                workdir="/root",
                                run_params=['--privileged=true'],
