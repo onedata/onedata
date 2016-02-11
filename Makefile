@@ -10,7 +10,7 @@ OP_PANEL_VERSION		?= $(shell git -C onepanel describe --tags --always | tr - .)
 
 .PHONY: package.tar.gz
 
-all: build deb rpm test
+all: build
 
 ##
 ## Macros
@@ -81,7 +81,7 @@ test:
 	./test_run.py --test-dir tests/acceptance
 
 test_packaging: build_globalregistry
-	./test_run.py --test-dir tests/packaging -s
+	./test_run.py --test-dir tests/packaging/deb -s
 
 test_cucumber:
 	./test_run.py --test-dir tests/cucumber
