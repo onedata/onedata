@@ -41,10 +41,6 @@ check_call(['dnf', '-y', 'install', '/root/pkg/' + oneprovider_package],
 check_call(['dnf', '-y', 'install', '/root/pkg/' + oneclient_package],
            stderr=STDOUT)
 
-# increase couchbase memory quota
-check_call(['curl', '-s',  '-u', 'admin:password', '-X', 'POST',
-            'http://localhost:8091/pools/default', '-d', 'memoryQuota=512'])
-
 # fix couchbase server init script
 check_call(['sed', '-i', '-e', 's/-community//g', '/etc/init.d/couchbase-server'])
 
