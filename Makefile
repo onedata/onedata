@@ -35,6 +35,7 @@ mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source &
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64
+unpack = tar xzf $(1).tar.gz
 
 ##
 ## Submodules
@@ -73,6 +74,30 @@ build_op_worker: submodules
 build_cluster_manager: submodules
 	$(call make, cluster_manager)
 
+##
+## Artifacts
+##
+
+artifact: artifact_bamboos artifact_appmock artifact_globalregistry artifact_oneclient artifact_op_worker artifact_cluster_manager
+
+artifact_bamboos:
+	$(call unpack, bamboos)
+
+artifact_appmock:
+	$(call unpack, appmock)
+
+artifact_globalregistry:
+	$(call unpack, globalregistry)
+
+artifact_oneclient:
+	$(call unpack, oneclient)
+
+artifact_op_worker:
+	$(call unpack, op_worker)
+
+artifact_cluster_manager:
+	$(call unpack, cluster_manager)
+	
 ##
 ## Test
 ##
