@@ -143,7 +143,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 
 rpm_op_panel: clean_onepanel rpmdirs
 	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider \
-	    -e COUCHBASE_SERVER_SERVICE="service couchbase-server-community"
+	    -e COUCHBASE_SERVER_SERVICE="service couchbase-server"
 	$(call mv_rpm, onepanel)
 
 rpm_op_worker: clean_op_worker rpmdirs

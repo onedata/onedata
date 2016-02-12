@@ -29,7 +29,7 @@ class TestDebInstallation:
         container = docker.run(tty=True,
                                interactive=True,
                                detach=True,
-                               image='ubuntu:wily',
+                               image='ubuntu:15.10',
                                hostname='devel.localhost.local',
                                workdir="/root",
                                run_params=['--privileged=true'],
