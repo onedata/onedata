@@ -66,7 +66,7 @@ build_globalregistry: submodules
 	$(call make, globalregistry)
 
 build_oneclient: submodules
-	$(call make, oneclient) release
+	$(call make, oneclient)
 
 build_op_worker: submodules
 	$(call make, op_worker)
