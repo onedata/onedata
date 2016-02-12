@@ -66,7 +66,7 @@ build_globalregistry: submodules
 	$(call make, globalregistry)
 
 build_oneclient: submodules
-	$(call make, oneclient)
+	$(call make, oneclient) release
 
 build_op_worker: submodules
 	$(call make, op_worker)
@@ -90,7 +90,7 @@ artifact_globalregistry:
 	$(call unpack, globalregistry)
 
 artifact_oneclient:
-	$(call unpack, oneclient) release
+	$(call unpack, oneclient)
 
 artifact_op_worker:
 	$(call unpack, op_worker)
