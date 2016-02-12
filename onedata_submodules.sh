@@ -18,5 +18,5 @@ sed -i.bak "s#ONEDATA_GIT_URL#${ONEDATA_GIT_URL}#g" .gitmodules
 
 git submodule $@
 
-#rm -f .gitmodules
-#mv .gitmodules.bak .gitmodules
+rm -f .gitmodules
+mv .gitmodules.bak .gitmodules
