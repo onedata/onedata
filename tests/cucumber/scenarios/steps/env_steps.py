@@ -13,16 +13,15 @@ import os
 import sys
 import shutil
 
-# these commands set up paths to scripts from 'bamboos'
+# these commands set up path to test_common
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-
 curr_dir_list = curr_dir.split('/')
 ind = curr_dir_list.index('onedata')
-root_dir = '/'.join(curr_dir_list[:ind+1])
+root_dir = '/'.join(curr_dir_list[:ind + 1])
+# needed to import test_common from tests
+sys.path.insert(0, root_dir)
 
-docker_dir = os.path.join(root_dir, 'bamboos', 'docker')
-sys.path.insert(0, docker_dir)
-
+from tests import test_common
 from environment import common, docker, env
 
 
@@ -51,7 +50,10 @@ def environment(request, context):
     """
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments', context.env_json)
-    env_desc = env.up(env_path)
+
+    feature_name = request.module.__name__
+    logdir = os.path.join(test_common.cucumber_logdir, feature_name)
+    env_desc = env.up(env_path, logdir=logdir)
 
     def fin():
         docker.remove(request.environment['docker_ids'], force=True, volumes=True)
