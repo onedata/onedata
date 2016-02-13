@@ -10,9 +10,11 @@ class TestAppmockRestExample:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
+        logdir = get_logdir_name(acceptance_logdir, get_test_name(__file__))
         cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
                                 dns_server='none', uid=common.generate_uid(),
-                                config_path=os.path.join(test_utils.test_file('env.json')))
+                                config_path=os.path.join(test_utils.test_file('env.json')),
+                                logdir=logdir)
 
     @classmethod
     # Clean up removing all dockers created in the test
