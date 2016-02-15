@@ -2,6 +2,7 @@ from tests.test_common import *
 from tests import test_utils
 import socket
 import time
+import os
 
 from environment import docker, env
 
@@ -10,7 +11,8 @@ class TestEnvUp:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
-        cls.result = env.up(test_utils.test_file('env.json'))
+        logdir = get_logdir_name(acceptance_logdir, get_test_name(__file__))
+        cls.result = env.up(test_utils.test_file('env.json'), logdir=logdir)
 
     @classmethod
     # Clean up removing all dockers created in the test
