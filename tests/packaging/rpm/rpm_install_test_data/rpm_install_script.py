@@ -41,9 +41,6 @@ check_call(['dnf', '-y', 'install', '/root/pkg/' + oneprovider_package],
 check_call(['dnf', '-y', 'install', '/root/pkg/' + oneclient_package],
            stderr=STDOUT)
 
-# fix couchbase server init script
-check_call(['sed', '-i', '-e', 's/-community//g', '/etc/init.d/couchbase-server'])
-
 # package installation validation
 check_call(['service', 'op_panel', 'status'])
 check_call(['ls', '/etc/cluster_manager/app.config'])
