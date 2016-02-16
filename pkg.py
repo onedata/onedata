@@ -158,13 +158,16 @@ try:
                 distro_binary_prefix = '/tmp/package/' + distro + '/binary-amd64/'
                 for package in call(['ls', distro_binary_prefix]).split():
                     if package.endswith('.deb'):
-                        push_package_command = command + ['includedeb', distro, distro_binary_prefix + package]
-                        execute(push_package_command)
+                        try:
+                            push_package_command = command + ['includedeb', distro, distro_binary_prefix + package]
+                            execute(push_package_command)
 
-                        # add dsc sources to reprepro
-                        distro_source_prefix = '/tmp/package/' + distro + '/source/'
-                        push_source_command = command + ['includedsc', distro, '{}']
-                        call(['find', distro_source_prefix, '-name', '*.dsc', '-exec'] + push_source_command + ['\;'])
+                            # add dsc sources to reprepro
+                            distro_source_prefix = '/tmp/package/' + distro + '/source/'
+                            push_source_command = command + ['includedsc', distro, '{}']
+                            call(['find', distro_source_prefix, '-name', '*.dsc', '-exec'] + push_source_command + ['\;'])
+                        except CalledProcessError:
+                            pass
             elif REPO_TYPE[distro] == 'rpm':
                 # copy packages
                 repo_dir = APACHE_PREFIX + REPO_LOCATION[distro]
