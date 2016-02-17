@@ -22,7 +22,7 @@ package/
             cluster-manager_1.0.0.1.ge1a52f4-1_amd64.changes
             cluster-manager_1.0.0.1.ge1a52f4.orig.tar.gz
 
-Available distributions sid, wily, fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64
+Available distributions sid, vivid, wily, fedora-21-x86_64, fedora-23-x86_64, centos-7-x86_64, sl6x-x86_64
 """
 import argparse
 from subprocess import Popen, PIPE, check_call, check_output, CalledProcessError
@@ -54,6 +54,7 @@ Host packages
 APACHE_PREFIX = '/var/www/onedata'
 REPO_LOCATION = {
     'sid': '/apt/debian',
+    'vivid': '/apt/ubuntu',
     'wily': '/apt/ubuntu',
     'fedora-21-x86_64': '/yum/fedora/21',
     'fedora-23-x86_64': '/yum/fedora/23',
@@ -62,6 +63,7 @@ REPO_LOCATION = {
 }
 REPO_TYPE = {
     'sid': 'deb',
+    'vivid': 'deb',
     'wily': 'deb',
     'fedora-21-x86_64': 'rpm',
     'fedora-23-x86_64': 'rpm',
