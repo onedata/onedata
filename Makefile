@@ -5,8 +5,8 @@ DOCKER_REG_USER     ?= ""
 DOCKER_REG_PASSWORD ?= ""
 DOCKER_REG_EMAIL    ?= ""
 
-ONEPROVIDER_VERSION	?= $(shell git describe --tags --always | tr - .)
-ONEPROVIDER_BUILD	?= 1
+ONEPROVIDER_VERSION     ?= $(shell git describe --tags --always | tr - .)
+ONEPROVIDER_BUILD       ?= 1
 CLUSTER_MANAGER_VERSION	?= $(shell git -C cluster_manager describe --tags --always | tr - .)
 OP_WORKER_VERSION       ?= $(shell git -C op_worker describe --tags --always | tr - .)
 OP_PANEL_VERSION        ?= $(shell git -C onepanel describe --tags --always | tr - .)
