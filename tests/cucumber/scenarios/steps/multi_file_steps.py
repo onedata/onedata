@@ -13,6 +13,8 @@ from pytest_bdd import parsers
 from environment import docker, env
 from common import *
 
+import time
+
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
 @when(parsers.parse('{user} creates regular files {files} on {client_node}'))
@@ -112,7 +114,28 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
     assert compare(int(time1), int(time2), comparator)
 
 
+@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} to {time2} time on {client_node} within {maxtime} seconds'))
+@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} than {time2} time on {client_node} within {maxtime} seconds'))
+def check_time_within_maxtime(user, time1, time2, comparator, file, maxtime, client_node, context):
+    client = get_client(client_node, user, context)
+    file = str(file)
+    waited = 0
+    maxtime = int(maxtime)
+    while not compare(int(get_current_time(user, file, client, time1)),
+                      int(get_current_time(user, file, client, time2)),
+                      comparator):
+        time.sleep(1)
+        waited += 1
+        if waited >= maxtime:
+            assert False
+
 ####################################################################################################
+
+
+def get_current_time(user, file, client, time_type):
+    opt = get_time_opt(time_type)
+    return run_cmd(user, client, "stat --format=%" + opt + ' ' + make_path(file, client),
+                   output=True)
 
 
 def get_time_opt(time):
