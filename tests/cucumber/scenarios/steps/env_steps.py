@@ -37,7 +37,7 @@ def env_file(env_json, context):
 def clear_storages(context):
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments', context.env_json)
-    config = common.parse_json_file(env_path)
+    config = common.parse_json_config_file(env_path)
     for _, os_config in config['os_configs'].iteritems():
         for storage in os_config['storages']:
             shutil.rmtree(storage, ignore_errors=True)
