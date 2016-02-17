@@ -142,26 +142,6 @@ untar = lambda package_artifact, dest_dir: untar_remote_or_local(args.host, iden
 try:
     if args.action == 'config':
         print(CONFIG)
-    if args.action == 'push_deb':
-        # copy to tmp
-        copy(args.deb, '/tmp/')
-
-        # update reprepro
-        command = ['reprepro']
-        command.extend(['-b', APACHE_PREFIX + REPO_LOCATION[args.distribution]])
-        command.extend(['includedeb', args.distribution, '/tmp/' + os.path.basename(args.deb)])
-        call(command)
-    elif args.action == 'push_rpm':
-        # copy to repo
-        rpm_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution] + '/x86_64/'
-        srpm_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution] + '/SRPMS/'
-        copy(args.rpm, rpm_dir)
-        copy(args.src_rpm, srpm_dir)
-
-        # update createrepo
-        repo_dir = APACHE_PREFIX + REPO_LOCATION[args.distribution]
-        call(['find', repo_dir, '-name', '*.rpm', '-exec', 'rpm', '--resign', '{}', ';'])
-        call(['createrepo', repo_dir])
     elif args.action == 'push':
         # extract package_artifact
         execute(['rm', '-rf', '/tmp/package'])
@@ -178,13 +158,16 @@ try:
                 distro_binary_prefix = '/tmp/package/' + distro + '/binary-amd64/'
                 for package in call(['ls', distro_binary_prefix]).split():
                     if package.endswith('.deb'):
-                        push_package_command = command + ['includedeb', distro, distro_binary_prefix + package]
-                        execute(push_package_command)
+                        try:
+                            push_package_command = command + ['includedeb', distro, distro_binary_prefix + package]
+                            execute(push_package_command)
 
-                        # add dsc sources to reprepro
-                        distro_source_prefix = '/tmp/package/' + distro + '/source/'
-                        push_source_command = command + ['includedsc', distro, '{}']
-                        call(['find', distro_source_prefix, '-name', '*.dsc', '-exec'] + push_source_command + ['\;'])
+                            # add dsc sources to reprepro
+                            distro_source_prefix = '/tmp/package/' + distro + '/source/'
+                            push_source_command = command + ['includedsc', distro, '{}']
+                            call(['find', distro_source_prefix, '-name', '*.dsc', '-exec'] + push_source_command + ['\;'])
+                        except CalledProcessError:
+                            pass
             elif REPO_TYPE[distro] == 'rpm':
                 # copy packages
                 repo_dir = APACHE_PREFIX + REPO_LOCATION[distro]
@@ -193,8 +176,7 @@ try:
                 call(['cp','-a', distro_contents, repo_dir])
 
                 # update createrepo
-                rpms = call(['find', repo_dir, '-name', '*.rpm']).split()
-                call(['rpm', '--resign'] + rpms)
+                call(['find', repo_dir, '-name', '*.rpm', '-exec', 'rpmresign', '{}', '\';\''])
                 call(['createrepo', repo_dir])
 except CalledProcessError as err:
     exit(err.returncode)
