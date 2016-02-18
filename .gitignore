@@ -5,6 +5,9 @@
 
 test-reports/*
 
+tests/acceptance/logs
+tests/cucumber/logs
+
 package
 oneprovider_meta/package
 oneprovider_meta/oneprovider.spec

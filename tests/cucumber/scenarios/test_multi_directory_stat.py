@@ -72,34 +72,34 @@ def test_timestamp():
 def test_update_timestamp_with_permission():
     pass
 
-# TODO VFS-1505
-# @scenario(
-#     '../features/multi_directory_stat.feature',
-#     'Access time'
-# )
-# def test_access_time():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_directory_stat.feature',
-#     'Modification time'
-# )
-# def test_modification_time():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_directory_stat.feature',
-#     'Status-change time when changing mode'
-# )
-# def test_stat_change_time_chmod():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_directory_stat.feature',
-#     'Status-change time when renaming'
-# )
-# def test_stat_change_time_mv():
-#     pass
+
+@scenario(
+    '../features/multi_directory_stat.feature',
+    'Access time'
+)
+def test_access_time():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_stat.feature',
+    'Modification time'
+)
+def test_modification_time():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_stat.feature',
+    'Status-change time when changing mode'
+)
+def test_stat_change_time_chmod():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_stat.feature',
+    'Status-change time when renaming'
+)
+def test_stat_change_time_mv():
+    pass

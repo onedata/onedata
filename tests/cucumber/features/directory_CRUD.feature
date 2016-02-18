@@ -148,7 +148,6 @@ Feature: Directory_CRUD
     And u1 sees [dir1] in .
     And u1 renames dir1 to spaces/s1/dir1
     Then last operation by u1 fails
-    And [dir1] are in ls .
     And u1 sees [dir1] in .
     And u1 sees [dir1] in spaces/s1
 

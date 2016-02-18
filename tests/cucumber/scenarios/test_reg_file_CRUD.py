@@ -40,12 +40,13 @@ def test_delete():
     pass
 
 
-@scenario(
-    '../features/reg_file_CRUD.feature',
-    'Read and write to regular file'
-)
-def test_read_write():
-    pass
+# @TODO VFS-1647
+# @scenario(
+#     '../features/reg_file_CRUD.feature',
+#     'Read and write to regular file'
+# )
+# def test_read_write():
+#     pass
 
 
 @scenario(
