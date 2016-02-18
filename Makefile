@@ -69,7 +69,7 @@ build_globalregistry: submodules
 	$(call make, globalregistry)
 
 build_oneclient: submodules
-	$(call make, oneclient) release
+	$(call make, oneclient) deb-info
 
 build_op_worker: submodules
 	$(call make, op_worker)
@@ -240,5 +240,6 @@ package.tar.gz:
 docker:
 	$(MAKE) -C oneclient docker
 	./dockerbuild.py --user $(DOCKER_REG_USER) --password $(DOCKER_REG_PASSWORD) \
-                         --email $(DOCKER_REG_EMAIL) --name oneprovider \
-                         --build-arg RELEASE=$(DOCKER_RELEASE) --publish --remove packaging
+                         --email $(DOCKER_REG_EMAIL) --build-arg RELEASE=$(DOCKER_RELEASE) \
+                         --build-arg VERSION=$(ONEPROVIDER_VERSION) --name oneprovider \
+                         --publish --remove packaging

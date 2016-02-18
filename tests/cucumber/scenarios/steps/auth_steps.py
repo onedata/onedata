@@ -38,14 +38,9 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
 
     client_data = environment['client_data']
 
-    for i in range(len(users)):
-        user = str(users[i])
-        client_instance = str(client_instances[i])
-        mount_path = str(mount_paths[i])
-        client_host = client_hosts[i]
+    parameters = zip(users, client_instances, mount_paths, client_hosts, tokens)
+    for user, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
-
-        token_arg = str(tokens[i])
 
         # get token for user
         token = get_token(token_arg, user, gr_node)
@@ -57,17 +52,27 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
         if run_cmd(user, client, "ls " + mount_path) == 0:
             clean_mount_path(user, client)
 
+        # /root has to be accessible for gdb to access /root/bin/oneclient
+        assert run_cmd('root', client, 'chmod +x /root') == 0
+
         token_path = "/tmp/token"
 
-        cmd = 'mkdir -p ' + mount_path + \
-              ' && export GLOBAL_REGISTRY_URL=' + data['gr_domain'] + \
-              ' && export PROVIDER_HOSTNAME=' + data['op_domain'] + \
-              ' && export X509_USER_CERT=' + data['user_cert'] + \
-              ' && export X509_USER_KEY=' + data['user_key'] + \
-              ' && echo ' + token + ' > ' + token_path + \
-              ' && ./oneclient --authentication token --no_check_certificate ' + mount_path + \
-              ' < ' + token_path + \
-              ' && rm ' + token_path
+        cmd = ('mkdir -p {mount_path}'
+               ' && export GLOBAL_REGISTRY_URL={gr_domain}'
+               ' && export PROVIDER_HOSTNAME={op_domain}'
+               ' && export X509_USER_CERT={user_cert}'
+               ' && export X509_USER_KEY={user_key}'
+               ' && echo {token} > {token_path}'
+               ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+               ' && rm {token_path}').format(
+                    mount_path=mount_path,
+                    gr_domain=data['gr_domain'],
+                    op_domain=data['op_domain'],
+                    user_cert=data['user_cert'],
+                    user_key=data['user_key'],
+                    user=user,
+                    token=token,
+                    token_path=token_path)
 
         ret = run_cmd(user, client, cmd)
 

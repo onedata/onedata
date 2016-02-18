@@ -9,6 +9,8 @@ tests/acceptance/logs
 tests/cucumber/logs
 
 package
+dockerbuild-report.txt
+dockerbuild-sha.txt
 oneprovider_meta/package
 oneprovider_meta/oneprovider.spec
 oneprovider_meta/oneprovider/DEBIAN/control
