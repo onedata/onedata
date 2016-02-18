@@ -78,34 +78,34 @@ def test_timestamp():
 def test_update_timestamp():
     pass
 
-# TODO VFS-1505
-# @scenario(
-#     '../features/reg_file_stat.feature',
-#     'Access time'
-# )
-# def test_access_time():
-#     pass
-# 
-#
-# @scenario(
-#     '../features/reg_file_stat.feature',
-#     'Modification time'
-# )
-# def test_modification_time():
-#     pass
-#
-#
-# @scenario(
-#     '../features/reg_file_stat.feature',
-#     'Status-change time when changing mode'
-# )
-# def test_stat_change_time_chmod():
-#     pass
-#
-#
-# @scenario(
-#     '../features/reg_file_stat.feature',
-#     'Status-change time when renaming'
-# )
-# def test_stat_change_time_mv():
-#     pass
+
+@scenario(
+    '../features/reg_file_stat.feature',
+    'Access time'
+)
+def test_access_time():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
+    'Modification time'
+)
+def test_modification_time():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
+    'Status-change time when changing mode'
+)
+def test_stat_change_time_chmod():
+    pass
+
+
+@scenario(
+    '../features/reg_file_stat.feature',
+    'Status-change time when renaming'
+)
+def test_stat_change_time_mv():
+    pass

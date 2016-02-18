@@ -231,34 +231,34 @@ def test_move_to_itself():
 def test_move_to_subtree():
     pass
 
-# TODO VFS-1504
-# @scenario(
-#     '../features/multi_directory_CRUD.feature',
-#     'Move directory to itself in spaces'
-# )
-# def test_move_to_itself_spaces():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_directory_CRUD.feature',
-#     'Move directory to itself in default space'
-# )
-# def test_move_to_itself_default_space():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_directory_CRUD.feature',
-#     'Move directory to its subtree in spaces'
-# )
-# def test_move_to_subtree_spaces():
-#     pass
-#
-#
-# @scenario(
-#     '../features/multi_directory_CRUD.feature',
-#     'Move directory to its subtree in default space'
-# )
-# def test_move_to_subtree_default_space():
-#     pass
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Move directory to itself in spaces'
+)
+def test_move_to_itself_spaces():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Move directory to itself in default space'
+)
+def test_move_to_itself_default_space():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Move directory to its subtree in spaces'
+)
+def test_move_to_subtree_spaces():
+    pass
+
+
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Move directory to its subtree in default space'
+)
+def test_move_to_subtree_default_space():
+    pass
