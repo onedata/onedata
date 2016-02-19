@@ -1,0 +1,18 @@
+Name:		oneprovider
+Version:    {{oneprovider_version}}
+Release:	{{oneprovider_build}}%{?dist}
+Summary:    Meta package for oneprovider components
+License:    MIT
+URL:        https://onedata.org
+
+Requires: cluster-manager = {{cluster_manager_version}}
+Requires: op-worker = {{op_worker_version}}
+Requires: op-panel = {{op_panel_version}}
+Requires: couchbase-server-community >= 4.0.0
+
+%description
+
+%prep
+%setup -c -T
+%install
+%files

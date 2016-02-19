@@ -1,0 +1,28 @@
+[submodule "appmock"]
+	path = appmock
+	url = ONEDATA_GIT_URL/appmock.git
+	branch = develop
+[submodule "globalregistry"]
+	path = globalregistry
+	url = ONEDATA_GIT_URL/globalregistry.git
+	branch = develop
+[submodule "oneclient"]
+	path = oneclient
+	url = ONEDATA_GIT_URL/oneclient.git
+	branch = develop
+[submodule "bamboos"]
+	path = bamboos
+	url = ONEDATA_GIT_URL/bamboos.git
+	branch = develop
+[submodule "onepanel"]
+	path = onepanel
+	url = ONEDATA_GIT_URL/onepanel.git
+	branch = develop
+[submodule "op_worker"]
+	path = op_worker
+	url = ONEDATA_GIT_URL/op-worker.git
+	branch = develop
+[submodule "cluster_manager"]
+	path = cluster_manager
+	url = ONEDATA_GIT_URL/cluster-manager.git
+	branch = develop
