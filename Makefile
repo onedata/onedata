@@ -90,7 +90,7 @@ artifact_appmock:
 	$(call unpack, appmock)
 
 artifact_onezone:
-	$(call unpack, oz)
+	$(call unpack, oz_worker)
 
 artifact_oneclient:
 	$(call unpack, oneclient)
