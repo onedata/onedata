@@ -6,6 +6,10 @@ ARG RELEASE
 ARG VERSION=""
 ARG ONEPANEL_AUTOSTART=false
 
+# Get the image up to date
+RUN dnf -y upgrade && \
+    dnf clean all
+
 # Install oneprovider package
 RUN case ${RELEASE} in \
 		production) \
