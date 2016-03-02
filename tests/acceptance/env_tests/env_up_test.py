@@ -1,10 +1,7 @@
 from tests.test_common import *
-from tests import test_utils
-import socket
-import time
 import os
 import subprocess
-import script_up_test
+from env_test_utils import *
 import ast
 
 from environment import docker, env
@@ -20,7 +17,7 @@ class TestEnvUp:
             test_utils.test_file('env.json'),
             '-l', logdir
         ])
-        stripped_result = script_up_test.strip_output_logs(result)
+        stripped_result = strip_output_logs(result)
         cls.result = ast.literal_eval(stripped_result)
 
     @classmethod
@@ -49,8 +46,8 @@ class TestEnvUp:
         # 15 nodes
         assert 15 == len(env['docker_ids'])
 
-        script_up_test.check_globalregistry_up(env, 1)
-        script_up_test.check_cluster_manager_up(env, 2)
-        script_up_test.check_provider_worker_up(env, 4)
-        script_up_test.check_appmock_up(env, 2)
-        script_up_test.check_client_up(env, 2)
+        check_globalregistry_up(env, 1)
+        check_cluster_manager_up(env, 2)
+        check_provider_worker_up(env, 4)
+        check_appmock_up(env, 2)
+        check_client_up(env, 2)
