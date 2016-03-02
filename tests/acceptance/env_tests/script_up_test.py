@@ -12,20 +12,19 @@ from environment import docker, common, dns
 
 
 @pytest.mark.parametrize("script_name, dockers_num", [
-    # ("appmock_up", 2),
-    # ("client_up", 1),
-    # ("cluster_manager_up", 1),
+    ("appmock_up", 2),
+    ("client_up", 1),
+    ("cluster_manager_up", 1),
     ("panel_up", 2),
-    # ("couchbase_up", 2),
-    # ("riak_up", 2)
+    ("couchbase_up", 2),
+    ("riak_up", 2)
 
-    # przechodzi jak nie ma sieci
+    # ??? przechodzi jak nie ma sieci
     # ("globalregistry_up", 1),
 
-    # nie przechodzi, w envie pojawiaja sie 2 dnsy
+    # nie przechodzi, w envie pojawiaja sie IP-ki 2 dnsow sklejone
     # ("provider_up", {'cm_nodes': 1, 'opw_nodes': 2}),
     # ("cluster_up", {'cm_nodes': 1, 'cw_nodes': 1})
-
 ])
 def test_component_up(script_name, dockers_num):
     # setup
@@ -36,18 +35,18 @@ def test_component_up(script_name, dockers_num):
     teardown_testcase(environment)
 
 
-def test_s3_up():
-    output = subprocess.check_output(os.path.join(docker_dir, "s3_up.py"))
-    stripped_output = strip_output_logs(output)
-    output_dict = ast.literal_eval(stripped_output)
-    assert test_utils.ping(output_dict['host_name'].split(":")[0])
-
-
 def test_dns_up():
     output = subprocess.check_output(os.path.join(docker_dir, "dns_up.py"))
     stripped_output = strip_output_logs(output)
     output_dict = ast.literal_eval(stripped_output)
     assert test_utils.ping(output_dict['dns'])
+
+
+def check_s3_up():
+    output = subprocess.check_output(os.path.join(docker_dir, "s3_up.py"))
+    stripped_output = strip_output_logs(output)
+    output_dict = ast.literal_eval(stripped_output)
+    assert test_utils.ping(output_dict['host_name'].split(":")[0])
 
 
 # TODO Uncomment this test after integrating with VFS-1599
@@ -235,8 +234,10 @@ def check_panel_up(env, dockers_num):
         ip = test_utils.dns_lookup(hostname, dns)
         assert test_utils.ping(ip)
 
-#########################################################################
-# UTILS
+
+################################################################################
+# # INTERNAL FUNCTIONS
+################################################################################
 
 def get_empty_env():
     return {
@@ -288,6 +289,9 @@ def strip_output_logs(output):
 
 def prepare_cmd(script_name, uid, dns_server, config_path):
     cmd = [os.path.join(docker_dir, up_script(script_name))]
+    if is_no_config_script(script_name):
+        return cmd
+
     cmd.extend([
         '-d', dns_server,
         '-u', uid
@@ -295,6 +299,7 @@ def prepare_cmd(script_name, uid, dns_server, config_path):
     # couchbase_up.py and riak_up.py don't take config as argument
     if is_db_script(script_name):
         return cmd
+
     if script_name != "env_up":
         cmd.extend(bindir_options(script_name)),
 
@@ -311,8 +316,6 @@ def prepare_cmd(script_name, uid, dns_server, config_path):
             '-do', 'cluster_domains'
         ])
 
-    print "CMD: ", cmd
-
     return cmd
 
 
@@ -321,4 +324,4 @@ def is_db_script(name):
 
 
 def is_no_config_script(name):
-    return ["ceph_up, dns_up, s3_up"].__contains__(name)
+    return ["ceph_up", "s3_up"].__contains__(name)
