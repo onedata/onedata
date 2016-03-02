@@ -12,20 +12,20 @@ from environment import docker, common, dns
 
 
 @pytest.mark.parametrize("script_name, dockers_num", [
-    ("appmock_up", 2),
-    ("client_up", 1),
-    ("cluster_manager_up", 1),
+    # ("appmock_up", 2),
+    # ("client_up", 1),
+    # ("cluster_manager_up", 1),
     ("panel_up", 2),
-    ("couchbase_up", 2),
-    ("riak_up", 2),
-    # ("env_up", 15)
+    # ("couchbase_up", 2),
+    # ("riak_up", 2)
 
-    # ???BUG przechodzi jak nie ma sieci ("globalregistry_up", 2),
-    # ???BUG ("provider_up", {'cm_nodes': 1, 'op_worker_nodes': 2}), # nie przechodzi, w envie pojawiaja sie 2 dnsy
+    # przechodzi jak nie ma sieci
+    # ("globalregistry_up", 1),
 
-    # TODO nie ma binarek
-    # TODO ("cluster_up", {'cm_nodes': 1, 'cluster_worker_nodes': 1}) jaki path ?
-    # TODO "cluster_worker_up", jaki path ?
+    # nie przechodzi, w envie pojawiaja sie 2 dnsy
+    # ("provider_up", {'cm_nodes': 1, 'opw_nodes': 2}),
+    # ("cluster_up", {'cm_nodes': 1, 'cw_nodes': 1})
+
 ])
 def test_component_up(script_name, dockers_num):
     # setup
@@ -36,18 +36,18 @@ def test_component_up(script_name, dockers_num):
     teardown_testcase(environment)
 
 
-# def test_s3_up():
-#     output = subprocess.check_output(os.path.join(docker_dir, "s3_up.py"))
-#     stripped_output = strip_output_logs(output)
-#     output_dict = ast.literal_eval(stripped_output)
-#     assert test_utils.ping(output_dict['host_name'].split(":")[0])
-#
-#
-# def test_dns_up():
-#     output = subprocess.check_output(os.path.join(docker_dir, "dns_up.py"))
-#     stripped_output = strip_output_logs(output)
-#     output_dict = ast.literal_eval(stripped_output)
-#     assert test_utils.ping(output_dict['dns'])
+def test_s3_up():
+    output = subprocess.check_output(os.path.join(docker_dir, "s3_up.py"))
+    stripped_output = strip_output_logs(output)
+    output_dict = ast.literal_eval(stripped_output)
+    assert test_utils.ping(output_dict['host_name'].split(":")[0])
+
+
+def test_dns_up():
+    output = subprocess.check_output(os.path.join(docker_dir, "dns_up.py"))
+    stripped_output = strip_output_logs(output)
+    output_dict = ast.literal_eval(stripped_output)
+    assert test_utils.ping(output_dict['dns'])
 
 
 # TODO Uncomment this test after integrating with VFS-1599
@@ -74,7 +74,6 @@ def setup_test(script_name):
     stripped_output = strip_output_logs(output)
     output_dict = ast.literal_eval(stripped_output)
     common.merge(environment, output_dict)
-
 
     return environment
 
@@ -136,6 +135,22 @@ def check_cluster_manager_up(env, dockers_num):
 
 def check_cluster_up(env, dockers_num):
     check_cluster_manager_up(env, dockers_num['cm_nodes'])
+    check_cluster_worker_up(env, dockers_num['cw_nodes'])
+
+
+def check_cluster_worker_up(env, dockers_num):
+    key = 'op_worker_nodes'
+    assert dockers_num == len(env[key])
+    dns = env['dns']
+    # Will throw if the dns address is not legal
+    socket.inet_aton(dns)
+    for node in env[key]:
+        (name, sep, hostname) = node.partition('@')
+        ip = test_utils.dns_lookup(hostname, dns)
+        assert test_utils.ping(ip)
+        assert test_utils.check_http_connectivity(ip, 6666, '/nagios', 200,
+                                                  use_ssl=False,
+                                                  number_of_retries=50)
 
 
 def check_globalregistry_up(env, dockers_num):
@@ -220,18 +235,8 @@ def check_panel_up(env, dockers_num):
         ip = test_utils.dns_lookup(hostname, dns)
         assert test_utils.ping(ip)
 
-
-def check_env_up(env, dockers_num):
-    assert dockers_num == len(env['docker_ids'])
-    check_globalregistry_up(env, 1)
-    check_cluster_manager_up(env, 2)
-    check_provider_worker_up(env, 4)
-    check_appmock_up(env, 2)
-    check_client_up(env, 2)
-
 #########################################################################
 # UTILS
-
 
 def get_empty_env():
     return {
@@ -259,9 +264,7 @@ def bindir_options(script_name):
         ]
     elif name == "cluster":
         return [
-            '-bw', os.path.join(os.getcwd(), os.path.join('op_worker','cluster_worker')),
-            #TODO nie wiem jaki path
-            #TODO cluster_up nie ma domains_name
+            '-bw', os.path.join(os.getcwd(), 'cluster_worker'),
             '-bcm', os.path.join(os.getcwd(), 'cluster_manager')
         ]
     elif name == "client":
@@ -285,11 +288,10 @@ def strip_output_logs(output):
 
 def prepare_cmd(script_name, uid, dns_server, config_path):
     cmd = [os.path.join(docker_dir, up_script(script_name))]
-    if script_name != "env_up":
-        cmd.extend([
-            '-d', dns_server,
-            '-u', uid
-        ])
+    cmd.extend([
+        '-d', dns_server,
+        '-u', uid
+    ])
     # couchbase_up.py and riak_up.py don't take config as argument
     if is_db_script(script_name):
         return cmd
@@ -303,8 +305,20 @@ def prepare_cmd(script_name, uid, dns_server, config_path):
             '-l', get_logdir_name(acceptance_logdir, get_test_name(__file__))
         ])
     cmd.append(config_path)
+
+    if script_name == "cluster_up":
+        cmd.extend([
+            '-do', 'cluster_domains'
+        ])
+
+    print "CMD: ", cmd
+
     return cmd
 
 
 def is_db_script(name):
     return ["riak_up", "couchbase_up"].__contains__(name)
+
+
+def is_no_config_script(name):
+    return ["ceph_up, dns_up, s3_up"].__contains__(name)

@@ -57,7 +57,8 @@ endif
 ## Build
 ##
 
-build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker build_cluster_manager
+build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker \
+    build_cluster_manager build_cluster_worker build_onepanel
 
 build_bamboos: submodules
 	$(call make, bamboos)
@@ -77,14 +78,19 @@ build_op_worker: submodules
 build_cluster_manager: submodules
 	$(call make, cluster_manager)
 
+build_cluster_worker: submodules
+	$(call make, cluster_worker)
+
 build_onepanel: submodules
-    $(call make, onepanel)
+	$(call make, onepanel)
 
 ##
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_globalregistry artifact_oneclient artifact_op_worker artifact_cluster_manager
+artifact: artifact_bamboos artifact_appmock artifact_globalregistry \
+    artifact_oneclient artifact_op_worker artifact_cluster_manager \
+    artifact_cluster_worker artifact_onepanel
 
 artifact_bamboos:
 	$(call unpack, bamboos)
@@ -104,11 +110,17 @@ artifact_op_worker:
 artifact_cluster_manager:
 	$(call unpack, cluster_manager)
 
+artifact_cluster_worker:
+	$(call unpack, cluster_worker)
+	
+artifact_onepanel:
+	$(call unpack, onepanel)
+	
 ##
 ## Test
 ##
 
-test: build_onepanel
+test:
 	./test_run.py --test-dir tests/acceptance
 
 test_packaging: build_globalregistry
@@ -122,7 +134,8 @@ test_cucumber:
 ##
 
 clean_all: clean_appmock clean_globalregistry clean_oneclient \
-           clean_op_worker clean_onepanel clean_cluster_manager clean_packages
+           clean_op_worker clean_onepanel clean_cluster_manager \
+           clean_cluster_worker clean_packages
 
 clean_appmock:
 	$(call clean, appmock)
@@ -141,6 +154,9 @@ clean_oneclient:
 
 clean_cluster_manager:
 	$(call clean, cluster_manager)
+
+clean_cluster_worker:
+	$(call clean, cluster_worker)
 
 clean_packages:
 	rm -rf oneprovider_meta/oneprovider.spec \
