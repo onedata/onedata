@@ -77,6 +77,9 @@ build_op_worker: submodules
 build_cluster_manager: submodules
 	$(call make, cluster_manager)
 
+build_onepanel: submodules
+    $(call make, onepanel)
+
 ##
 ## Artifacts
 ##
@@ -105,7 +108,7 @@ artifact_cluster_manager:
 ## Test
 ##
 
-test:
+test: build_onepanel
 	./test_run.py --test-dir tests/acceptance
 
 test_packaging: build_globalregistry
