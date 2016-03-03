@@ -13,6 +13,7 @@
 # absolute paths
 TEST_DIR=$(pwd)/tests
 TMP_DIR=${TEST_DIR}/tmp
+REPORT_DIR=$(pwd)/test-reports
 
 # paths relative to tests directory
 CUCUMBER_DIR=cucumber
@@ -49,7 +50,7 @@ do
 
     # run tests per given env configuration file
     echo "Running cucumber tests for ${env_file_short}"
-    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR}
+    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR} --report-path ${REPORT_DIR}/results_${env_without_ext}.xml
 
     # delete edited test files
     rm -rf ${TMP_DIR}/${SCENARIO_DIR}/test*.py
