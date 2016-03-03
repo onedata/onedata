@@ -10,8 +10,6 @@
 # configurations.
 #####################################################################
 
-ENVS=("env.json" "env2.json")
-
 # absolute paths
 TEST_DIR=$(pwd)/tests
 TMP_DIR=${TEST_DIR}/tmp
@@ -19,6 +17,7 @@ TMP_DIR=${TEST_DIR}/tmp
 # paths relative to tests directory
 CUCUMBER_DIR=cucumber
 FEATURE_DIR=${CUCUMBER_DIR}/features
+ENV_DIR=${CUCUMBER_DIR}/environments
 
 # make tmp directory
 mkdir -p ${TMP_DIR}
@@ -27,14 +26,16 @@ mkdir -p ${TMP_DIR}
 cp -r  ${TEST_DIR}/${CUCUMBER_DIR} ${TMP_DIR}
 
 # run tests for every env configuration file
-for env_file in ${ENVS[*]}
+for env_file in ${TMP_DIR}/${ENV_DIR}/*.json
 do
+    env_file_short=$(basename ${env_file})
     # edit env configuration file name in every .feature file
     for feature_file in ${TMP_DIR}/${FEATURE_DIR}/*.feature
     do
-        sed -i s/'[a-zA-Z_0-9\-]*.json'/${env_file}/g ${feature_file}
+        sed -i s/'[a-zA-Z_0-9\-]*.json'/${env_file_short}/g ${feature_file}
     done
     # run tests per given env configuration file
+    echo "Running cucumber tests for ${env_file_short}"
     ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR}
 done
 
