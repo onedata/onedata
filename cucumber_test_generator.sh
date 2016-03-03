@@ -10,7 +10,6 @@
 # configurations.
 #####################################################################
 
-#TODO hardcoded envs???
 ENVS=("env.json" "env2.json")
 
 # absolute paths
@@ -30,21 +29,14 @@ cp -r  ${TEST_DIR}/${CUCUMBER_DIR} ${TMP_DIR}
 # run tests for every env configuration file
 for env_file in ${ENVS[*]}
 do
-    # edit env configuration file name in every feature
+    # edit env configuration file name in every .feature file
     for feature_file in ${TMP_DIR}/${FEATURE_DIR}/*.feature
     do
-        echo ${feature_file}
-        # TODO edit env name in all .feature files
-        # ...
+        sed -i s/'[a-zA-Z_0-9\-]*.json'/${env_file}/g ${feature_file}
     done
     # run tests per given env configuration file
-#    ./test_run.py --test-dir ${TMP_DIR}
+    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR}
 done
-
-#TODO  move logs to log directory
-# chyba nie trzeba bedzie, logi sa tam od razu, trzeba tylko dodac
-# podkatalog z nazwa enva
-
 
 # delete tmp directory
 rm -rf ${TMP_DIR}
