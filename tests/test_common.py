@@ -24,3 +24,11 @@ def get_test_name(filename):
 def get_logdir_name(root_dir, test_name):
     timestamp = str(time.time())
     return os.path.join(root_dir, ".".join([test_name, timestamp]))
+
+
+def make_logdir(root_dir, test_name):
+    """Logdir is created if it doesn't exist."""
+    name = get_logdir_name(root_dir, test_name)
+    if not os.path.exists(name):
+        os.makedirs(name)
+    return name

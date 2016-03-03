@@ -52,8 +52,10 @@ def environment(request, context):
     env_path = os.path.join(curr_path, '..', '..', 'environments', context.env_json)
 
     feature_name = request.module.__name__
-    logdir = test_common.get_logdir_name(test_common.cucumber_logdir,
-                                         os.path.join(context.env_json, feature_name))
+    logdir = test_common.make_logdir(
+        test_common.cucumber_logdir,
+        os.path.join(context.env_json.split(".")[0], feature_name))
+
     env_desc = env.up(env_path, logdir=logdir)
 
     def fin():
