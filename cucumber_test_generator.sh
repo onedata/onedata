@@ -18,6 +18,7 @@ TMP_DIR=${TEST_DIR}/tmp
 CUCUMBER_DIR=cucumber
 FEATURE_DIR=${CUCUMBER_DIR}/features
 ENV_DIR=${CUCUMBER_DIR}/environments
+SCENARIO_DIR=${CUCUMBER_DIR}/scenarios
 
 # make tmp directory
 mkdir -p ${TMP_DIR}
@@ -34,10 +35,26 @@ do
     do
         sed -i s/'[a-zA-Z_0-9\-]*.json'/${env_file_short}/g ${feature_file}
     done
+
+    env_without_ext=${env_file_short%.*}
+
+    for test_file in ${TMP_DIR}/${SCENARIO_DIR}/test*.py
+    do
+        # edit function name so that the same test functions run with
+        # different envs will be distinguishable on reports
+        # test function name will be expanded with env name
+        # original file will be backed-up in .bak file
+        sed -i.bak s/'\(def\s*test_[a-zA-Z0-9\_\-]*\)'/'\1_'${env_without_ext}/g ${test_file}
+    done
+
     # run tests per given env configuration file
     echo "Running cucumber tests for ${env_file_short}"
-    env_without_ext=${env_file_short%.*}
-    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR} --report-path test-reports/results_${env_without_ext}.xml
+    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR}
+
+    # delete edited test files
+    rm -rf ${TMP_DIR}/${SCENARIO_DIR}/test*.py
+    # retrieve test file from backup
+    rename 's/\.py\.bak/\.py/' ${TMP_DIR}/${SCENARIO_DIR}/*.bak
 done
 
 # delete tmp directory
