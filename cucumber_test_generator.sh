@@ -37,7 +37,7 @@ do
     # run tests per given env configuration file
     echo "Running cucumber tests for ${env_file_short}"
     env_without_ext=${env_file_short%.*}
-    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR} --report-path test-reports/result_${env_without_ext}.xml
+    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR} --report-path test-reports/results_${env_without_ext}.xml
 done
 
 # delete tmp directory
