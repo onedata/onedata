@@ -4,6 +4,12 @@
 CHANGELOG
 ---------
 
+### New Version Tag do not change this line
+
+
+* VFS-1621 Update all references.
+
+
 ### 3.0.0-aplha
 
 * VFS-1621 Add release dockerfile.
