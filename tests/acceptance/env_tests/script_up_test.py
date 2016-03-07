@@ -10,7 +10,7 @@ from environment import docker, common, dns
 
 @pytest.mark.parametrize("script_name, dockers_num", [
     # ("appmock_up", 2),
-    ("client_up", 2),
+    # ("client_up", 2),
     # ("cluster_manager_up", 1),
     # ("panel_up", 2),
     # ("couchbase_up", 2),
@@ -31,21 +31,21 @@ def test_component_up(script_name, dockers_num):
     # teardown
     teardown_testcase(environment)
 
-
-def test_dns_up():
-    output = subprocess.check_output(os.path.join(docker_dir, "dns_up.py"))
-    stripped_output = strip_output_logs(output)
-    output_dict = ast.literal_eval(stripped_output)
-    assert test_utils.ping(output_dict['dns'])
-    teardown_testcase(output_dict)
-
-
-def test_s3_up():
-    output = subprocess.check_output(os.path.join(docker_dir, "s3_up.py"))
-    stripped_output = strip_output_logs(output)
-    output_dict = ast.literal_eval(stripped_output)
-    assert test_utils.ping(output_dict['host_name'].split(":")[0])
-    teardown_testcase(output_dict)
+#
+# def test_dns_up():
+#     output = subprocess.check_output(os.path.join(docker_dir, "dns_up.py"))
+#     stripped_output = strip_output_logs(output)
+#     output_dict = ast.literal_eval(stripped_output)
+#     assert test_utils.ping(output_dict['dns'])
+#     teardown_testcase(output_dict)
+#
+#
+# def test_s3_up():
+#     output = subprocess.check_output(os.path.join(docker_dir, "s3_up.py"))
+#     stripped_output = strip_output_logs(output)
+#     output_dict = ast.literal_eval(stripped_output)
+#     assert test_utils.ping(output_dict['host_name'].split(":")[0])
+#     teardown_testcase(output_dict)
 
 # TODO Uncomment this test after integrating with VFS-1599
 # def test_ceph_up():
@@ -54,6 +54,21 @@ def test_s3_up():
 #     output_dict = ast.literal_eval(stripped_output)
 #     assert test_utils.ping(output_dict['host_name'])
 #     teardown_testcase(output_dict)
+
+
+def test_example_envs():
+    example_env_dir = os.path.join(project_dir, "bamboos", "example_env")
+    # for file in os.listdir(example_env_dir):
+    file = os.path.join(example_env_dir, "appmock_gr.json")
+    if file.endswith(".json"):
+        output = subprocess.check_output([
+            os.path.join(docker_dir, "env_up.py"),
+            os.path.join(example_env_dir, file)
+        ])
+        stripped_output = strip_output_logs(output)
+        output_dict = ast.literal_eval(stripped_output)
+        teardown_testcase(output_dict)
+
 
 # Run the evn_up.py script, capture and parse the output
 def setup_test(script_name):
