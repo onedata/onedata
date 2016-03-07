@@ -9,12 +9,12 @@ from environment import docker, common, dns
 
 
 @pytest.mark.parametrize("script_name, dockers_num", [
-    ("appmock_up", 2),
-    ("client_up", 1),
-    ("cluster_manager_up", 1),
-    ("panel_up", 2),
-    ("couchbase_up", 2),
-    ("riak_up", 2)
+    # ("appmock_up", 2),
+    # ("client_up", 2),
+    # ("cluster_manager_up", 1),
+    # ("panel_up", 2),
+    # ("couchbase_up", 2),
+    # ("riak_up", 2)
 
     # ??? przechodzi jak nie ma sieci
     # ("globalregistry_up", 1),
@@ -37,14 +37,15 @@ def test_dns_up():
     stripped_output = strip_output_logs(output)
     output_dict = ast.literal_eval(stripped_output)
     assert test_utils.ping(output_dict['dns'])
+    teardown_testcase(output_dict)
 
 
-def check_s3_up():
+def test_s3_up():
     output = subprocess.check_output(os.path.join(docker_dir, "s3_up.py"))
     stripped_output = strip_output_logs(output)
     output_dict = ast.literal_eval(stripped_output)
     assert test_utils.ping(output_dict['host_name'].split(":")[0])
-
+    teardown_testcase(output_dict)
 
 # TODO Uncomment this test after integrating with VFS-1599
 # def test_ceph_up():
