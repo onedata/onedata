@@ -10,7 +10,7 @@ from environment import docker, common, dns
 
 @pytest.mark.parametrize("script_name, dockers_num", [
     # ("appmock_up", 2),
-    # ("client_up", 2),
+    ("client_up", 2),
     # ("cluster_manager_up", 1),
     # ("panel_up", 2),
     # ("couchbase_up", 2),
@@ -53,7 +53,7 @@ def test_s3_up():
 #     stripped_output = strip_output_logs(output)
 #     output_dict = ast.literal_eval(stripped_output)
 #     assert test_utils.ping(output_dict['host_name'])
-
+#     teardown_testcase(output_dict)
 
 # Run the evn_up.py script, capture and parse the output
 def setup_test(script_name):
