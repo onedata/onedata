@@ -34,15 +34,16 @@ class TestEnvUp:
         # 2 cluster_manager nodes for op_workers
         # 2 DB nodes for op_workers
 
-        # 1 GR nodes
-        # 1 DB for GR nodes
+        # 1 OZ nodes
+        # 1 cluster_manager nodes for oz_worker
+        # 1 DB node for oz_worker
 
         # 2 appmock nodes
 
         # 2 client nodes
         # ------------
-        # 15 nodes
-        assert 15 == len(env['docker_ids'])
+        # 16 nodes
+        assert 16 == len(env['docker_ids'])
 
         check_globalregistry_up(env, 1)
         check_cluster_manager_up(env, 2)

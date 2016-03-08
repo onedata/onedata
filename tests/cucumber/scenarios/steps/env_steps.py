@@ -16,8 +16,7 @@ import shutil
 # these commands set up path to test_common
 curr_dir = os.path.dirname(os.path.realpath(__file__))
 curr_dir_list = curr_dir.split('/')
-ind = curr_dir_list.index('onedata')
-root_dir = '/'.join(curr_dir_list[:ind + 1])
+root_dir = '/'.join(curr_dir_list[:-4])
 # needed to import test_common from tests
 sys.path.insert(0, root_dir)
 

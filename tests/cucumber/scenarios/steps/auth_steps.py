@@ -31,8 +31,8 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     client_hosts = list_parser(client_hosts)
     tokens = list_parser(tokens)
 
-    # current version is for environment with one GR
-    gr_node = environment['gr_nodes'][0]
+    # current version is for environment with one OZ
+    oz_node = environment['oz_worker_nodes'][0]
 
     set_dns(environment)
 
@@ -43,7 +43,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
         data = client_data[client_host][client_instance]
 
         # get token for user
-        token = get_token(token_arg, user, gr_node)
+        token = get_token(token_arg, user, oz_node)
 
         # create client object
         client = Client(client_ids[client_host], mount_path)
@@ -66,7 +66,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
                ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
                ' && rm {token_path}').format(
                     mount_path=mount_path,
-                    gr_domain=data['gr_domain'],
+                    gr_domain=data['zone_domain'],
                     op_domain=data['op_domain'],
                     user_cert=data['user_cert'],
                     user_key=data['user_key'],
@@ -150,11 +150,11 @@ def set_dns(environment):
         conf.write("nameserver " + dns)
 
 
-def get_token(token, user, gr_node):
+def get_token(token, user, oz_node):
     if token == "bad token":
         token = "bad_token"
     elif token == "token":
         token = subprocess.check_output(
-            ['./tests/cucumber/scenarios/utils/get_token.escript', gr_node, user],
+            ['./tests/cucumber/scenarios/utils/get_token.escript', oz_node, user],
             stderr=subprocess.STDOUT)
     return token
