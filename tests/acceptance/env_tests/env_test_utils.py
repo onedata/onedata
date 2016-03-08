@@ -156,7 +156,3 @@ def get_module(name):
 
 def get_function(function_name):
     return getattr(get_module(__name__), function_name)
-
-
-def strip_output_logs(output):
-    return output.strip().split('\n')[-1]
