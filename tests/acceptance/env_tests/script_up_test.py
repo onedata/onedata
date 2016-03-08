@@ -35,7 +35,6 @@ def test_component_up(script_name, dockers_num):
 def test_example_envs(env):
     output = run_env_up_script("env_up.py", [env])
     teardown_testcase(output)
-#     TODO wywala sie env_up dla appmock_worker
 
 
 def test_dns_up():
