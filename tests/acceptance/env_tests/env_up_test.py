@@ -9,16 +9,14 @@ from environment import docker, env
 
 class TestEnvUp:
     @classmethod
-    # Run the evn_up.py script, capture and parse the output
+    # Run the env_up.py script, capture and parse the output
     def setup_class(cls):
         logdir = get_logdir_name(acceptance_logdir, get_test_name(__file__))
-        result = subprocess.check_output([
-            os.path.join(docker_dir, "env_up.py"),
-            test_utils.test_file('env.json'),
-            '-l', logdir
+        result = run_env_up_script("env_up.py", [
+            '-l', logdir,
+            test_utils.test_file('env.json')
         ])
-        stripped_result = strip_output_logs(result)
-        cls.result = ast.literal_eval(stripped_result)
+        cls.result = result
 
     @classmethod
     # Clean up removing all dockers created in the test
