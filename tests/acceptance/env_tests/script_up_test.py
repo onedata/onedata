@@ -31,7 +31,7 @@ def test_component_up(script_name, dockers_num):
     # teardown
     teardown_testcase(environment)
 
-#
+
 # def test_dns_up():
 #     output = subprocess.check_output(os.path.join(docker_dir, "dns_up.py"))
 #     stripped_output = strip_output_logs(output)
@@ -55,19 +55,16 @@ def test_component_up(script_name, dockers_num):
 #     assert test_utils.ping(output_dict['host_name'])
 #     teardown_testcase(output_dict)
 
-
-def test_example_envs():
-    example_env_dir = os.path.join(project_dir, "bamboos", "example_env")
-    # for file in os.listdir(example_env_dir):
-    file = os.path.join(example_env_dir, "appmock_gr.json")
-    if file.endswith(".json"):
-        output = subprocess.check_output([
-            os.path.join(docker_dir, "env_up.py"),
-            os.path.join(example_env_dir, file)
-        ])
-        stripped_output = strip_output_logs(output)
-        output_dict = ast.literal_eval(stripped_output)
-        teardown_testcase(output_dict)
+@pytest.mark.parametrize("env",
+    get_json_files(example_env_dir)
+)
+def test_example_envs(env):
+    output = subprocess.check_output([
+        os.path.join(docker_dir, "env_up.py"), env
+    ])
+    stripped_output = strip_output_logs(output)
+    output_dict = ast.literal_eval(stripped_output)
+    teardown_testcase(output_dict)
 
 
 # Run the evn_up.py script, capture and parse the output
@@ -179,3 +176,5 @@ def is_db_script(name):
 
 def is_no_config_script(name):
     return ["ceph_up", "s3_up"].__contains__(name)
+
+
