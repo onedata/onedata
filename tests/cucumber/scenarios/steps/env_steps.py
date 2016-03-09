@@ -13,14 +13,16 @@ import os
 import sys
 import shutil
 
-# these commands set up path to test_common
+# these commands add 'tests' to path to make it possible
+# to import 'test_common'
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-curr_dir_list = curr_dir.split('/')
-root_dir = '/'.join(curr_dir_list[:-4])
-# needed to import test_common from tests
-sys.path.insert(0, root_dir)
+curr_dir_list = curr_dir.split(os.path.sep)
+# find last occurence of 'tests' directory on path
+test_index_last = curr_dir_list[::-1].index('tests')
+test_dir = os.path.sep.join(curr_dir_list[:-test_index_last])
+sys.path.insert(0, test_dir)
 
-from tests import test_common
+import test_common
 from environment import common, docker, env
 
 
