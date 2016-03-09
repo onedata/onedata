@@ -52,7 +52,7 @@
                 "client1": {
                     "name": "client1",
                     "op_domain": "p1",
-                    "gr_domain": "gr1",
+                    "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/user1/onedata_cl1",
@@ -61,7 +61,7 @@
                 "client2": {
                     "name": "client2",
                     "op_domain": "p2",
-                    "gr_domain": "gr1",
+                    "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/user1/onedata_cl2",
@@ -75,7 +75,7 @@
                 "client1": {
                     "name": "client1",
                     "op_domain": "p1",
-                    "gr_domain": "gr1",
+                    "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/user1/onedata_cl1",
@@ -84,7 +84,7 @@
                 "client2": {
                     "name": "client2",
                     "op_domain": "p2",
-                    "gr_domain": "gr1",
+                    "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/user1/onedata_cl2",
