@@ -86,7 +86,7 @@ build_cluster_manager: submodules
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_globalregistry artifact_oneclient artifact_op_worker artifact_cluster_manager
+artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient artifact_op_worker artifact_cluster_manager
 
 artifact_bamboos:
 	$(call unpack, bamboos)
@@ -94,8 +94,8 @@ artifact_bamboos:
 artifact_appmock:
 	$(call unpack, appmock)
 
-artifact_globalregistry:
-	$(call unpack, globalregistry)
+artifact_onezone:
+	$(call unpack, oz_worker)
 
 artifact_oneclient:
 	$(call unpack, oneclient)

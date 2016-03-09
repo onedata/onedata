@@ -22,6 +22,8 @@ class TestEnvUp:
     # Test if the env_up.py script works as expected.
     def test_env_up(self):
         res = self.result
+        print(res)
+
         # Check if number of started dockers is correct
         # The number should be:
         # 1 dns node
@@ -30,35 +32,28 @@ class TestEnvUp:
         # 2 cluster_manager nodes for op_workers
         # 2 DB nodes for op_workers
 
-        # 1 GR nodes
-        # 1 DB for GR nodes
+        # 1 OZ nodes
+        # 1 cluster_manager nodes for oz_worker
+        # 1 DB node for oz_worker
 
         # 2 appmock nodes
 
         # 2 client nodes
         # ------------
-        # 15 nodes
-        assert 15 == len(res['docker_ids'])
+        # 16 nodes
+        assert 16 == len(res['docker_ids'])
         # Get the DNS ip
         dns = res['dns']
         # Will throw if the dns address is not legal
         socket.inet_aton(dns)
         # Check connectivity to system components using the DNS
-        # Check GR nodes
-        # gr_node is in form name@name.timestamp.dev.docker
-        for gr_node in res['gr_nodes']:
-            (gr_name, sep, gr_hostname) = gr_node.partition('@')
-            gr_ip = test_utils.dns_lookup(gr_hostname, dns)
-            assert test_utils.ping(gr_ip)
-            assert check_http_connectivity(gr_ip, 443, '/', 200, number_of_retries=50)
-
-        # Check GR DB nodes
-        # gr_db_node is in form name@name.timestamp.dev.docker
-        for gr_db_node in res['gr_db_nodes']:
-            (gr_db_name, sep, gr_db_hostname) = gr_db_node.partition('@')
-            gr_db_ip = test_utils.dns_lookup(gr_db_hostname, dns)
-            assert test_utils.ping(gr_db_ip)
-            assert check_http_connectivity(gr_db_ip, 5984, '/_utils/', 200, use_ssl=False, number_of_retries=50)
+        # Check OZ nodes
+        # oz_node is in form name@name.timestamp.dev.docker
+        for oz_node in res['oz_worker_nodes']:
+            (oz_name, sep, oz_hostname) = oz_node.partition('@')
+            oz_ip = test_utils.dns_lookup(oz_hostname, dns)
+            assert test_utils.ping(oz_ip)
+            assert check_http_connectivity(oz_ip, 443, '/', 200, number_of_retries=50)
 
         # Check OP CM nodes
         # cm_node is in form name@name.timestamp.dev.docker
