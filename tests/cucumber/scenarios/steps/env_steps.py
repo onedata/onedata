@@ -31,7 +31,7 @@ def env_file(env_json, context):
     """
     Remembers the environment filename.
     """
-    context.env_json = env_json
+    context.env_json = str(env_json)
 
 
 @given("storage directories are empty")
@@ -54,10 +54,9 @@ def environment(request, context):
 
     feature_name = request.module.__name__
     logdir = test_common.make_logdir(
-        test_common.cucumber_logdir,
-        os.path.join(context.env_json.split(".")[0], feature_name))
-
-    env_desc = env.up(env_path, logdir=logdir)
+            test_common.cucumber_logdir,
+            os.path.join(context.env_json.split(".")[0], feature_name))
+    env_desc = test_common.run_env_up_script("env_up.py", ['-l', logdir, env_path])
 
     def fin():
         docker.remove(request.environment['docker_ids'], force=True, volumes=True)
