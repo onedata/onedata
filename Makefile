@@ -88,11 +88,9 @@ build_onepanel: submodules
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_globalregistry \
-    artifact_oneclient artifact_op_worker artifact_cluster_manager \
-    artifact_cluster_worker artifact_onepanel
-artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient artifact_op_worker artifact_cluster_manager
-
+artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient \
+    artifact_op_worker artifact_cluster_manager artifact_cluster_worker \
+    artifact_onepanel
 artifact_bamboos:
 	$(call unpack, bamboos)
 
