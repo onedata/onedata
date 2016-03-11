@@ -213,12 +213,12 @@
                 },
                 "client2": {
                     "name": "client2",
-                    "op_domain": "p2",
+                    "op_domain": "p1",
                     "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata2",
-                    "token_for": "u2"
+                    "token_for": "u1"
                 }
             }
         },
@@ -278,7 +278,12 @@
                     {
                         "provider": "p1",
                         "supported_size": 1000000000
+                    },
+                    {
+                        "provider": "p2",
+                        "supported_size": 1000000000
                     }
+
                 ]
             },
             "s2": {
@@ -294,6 +299,10 @@
                 "providers": [
                     {
                         "provider": "p1",
+                        "supported_size": 1000000000
+                    },
+                    {
+                        "provider": "p2",
                         "supported_size": 1000000000
                     }
                 ]
