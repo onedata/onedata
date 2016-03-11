@@ -14,8 +14,11 @@ from pytest_bdd import parsers
 import subprocess
 import sys
 import time
+import os
+import pprint
 
 from environment import docker, env
+from environment import common as env_common
 from common import *
 
 
@@ -41,6 +44,10 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     parameters = zip(users, client_instances, mount_paths, client_hosts, tokens)
     for user, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
+
+        print "ENV: ", context.env_json
+        print "PATH: ", context.env_path
+        get_cookie(context.env_path, oz_node)
 
         # get token for user
         token = get_token(token_arg, user, oz_node)
@@ -158,3 +165,16 @@ def get_token(token, user, oz_node):
             ['./tests/cucumber/scenarios/utils/get_token.escript', oz_node, user],
             stderr=subprocess.STDOUT)
     return token
+
+
+def get_cookie(config_path, oz_node):
+    config = env_common.parse_json_config_file(config_path)
+    oz_domain = config['zone_domains'].keys()[0]
+    cm = config['zone_domains'][oz_domain].keys()[0]
+
+    print "OZ_DOMAIN", oz_domain
+    pp = pprint.PrettyPrinter(depth = 4)
+
+    pp.pprint(config['zone_domains'][oz_domain][cm])
+    # TODO finish getting cookie, refactor
+    print "OZ_NODE: ", oz_node

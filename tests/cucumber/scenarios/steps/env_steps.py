@@ -31,6 +31,8 @@ def env_file(env_json, context):
     """
     Remembers the environment filename.
     """
+    env_json = str(env_json)
+    context.env_path = os.path.join(test_common.cucumber_env_dir, env_json)
     context.env_json = env_json
 
 

@@ -10,6 +10,12 @@
 # configurations.
 #####################################################################
 
+if [ "$#" -gt 0 ]; then
+    TEST=$1
+else
+    TEST=""
+fi
+
 # absolute paths
 TEST_DIR=$(pwd)/tests
 TMP_DIR=${TEST_DIR}/tmp
@@ -20,6 +26,9 @@ CUCUMBER_DIR=cucumber
 FEATURE_DIR=${CUCUMBER_DIR}/features
 ENV_DIR=${CUCUMBER_DIR}/environments
 SCENARIO_DIR=${CUCUMBER_DIR}/scenarios
+
+
+#TODO add arguments -e environment and -t test
 
 # make tmp directory
 mkdir -p ${TMP_DIR}
@@ -50,7 +59,7 @@ do
 
     # run tests per given env configuration file
     echo "Running cucumber tests for ${env_file_short}"
-    ./test_run.py --test-dir ${TMP_DIR}/${CUCUMBER_DIR} --report-path ${REPORT_DIR}/results_${env_without_ext}.xml
+    ./test_run.py --test-dir ${TMP_DIR}/${SCENARIO_DIR}/${TEST} --report-path ${REPORT_DIR}/results_${env_without_ext}.xml
 
     # delete edited test files
     rm -rf ${TMP_DIR}/${SCENARIO_DIR}/test*.py

@@ -19,9 +19,9 @@ def test_successful_authorization():
     pass
 
 
-@scenario(
-    '../features/authorization.feature',
-    'Bad authorization'
-)
-def test_bad_authorization():
-    pass
+# @scenario(
+#     '../features/authorization.feature',
+#     'Bad authorization'
+# )
+# def test_bad_authorization():
+#     pass
