@@ -45,12 +45,10 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     for user, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
-        print "ENV: ", context.env_json
-        print "PATH: ", context.env_path
-        get_cookie(context.env_path, oz_node)
+        cookie = get_cookie(context.env_path, oz_node)
 
         # get token for user
-        token = get_token(token_arg, user, oz_node)
+        token = get_token(token_arg, user, oz_node, cookie)
 
         # create client object
         client = Client(client_ids[client_host], mount_path)
@@ -157,12 +155,12 @@ def set_dns(environment):
         conf.write("nameserver " + dns)
 
 
-def get_token(token, user, oz_node):
+def get_token(token, user, oz_node, cookie):
     if token == "bad token":
         token = "bad_token"
     elif token == "token":
         token = subprocess.check_output(
-            ['./tests/cucumber/scenarios/utils/get_token.escript', oz_node, user],
+            ['./tests/cucumber/scenarios/utils/get_token.escript', oz_node, user, cookie],
             stderr=subprocess.STDOUT)
     return token
 
@@ -170,11 +168,5 @@ def get_token(token, user, oz_node):
 def get_cookie(config_path, oz_node):
     config = env_common.parse_json_config_file(config_path)
     oz_domain = config['zone_domains'].keys()[0]
-    cm = config['zone_domains'][oz_domain].keys()[0]
-
-    print "OZ_DOMAIN", oz_domain
-    pp = pprint.PrettyPrinter(depth = 4)
-
-    pp.pprint(config['zone_domains'][oz_domain][cm])
-    # TODO finish getting cookie, refactor
-    print "OZ_NODE: ", oz_node
+    cm = config['zone_domains'][oz_domain]['cluster_manager'].keys()[0]
+    return str(config['zone_domains'][oz_domain]['cluster_manager'][cm]['vm.args']['setcookie'])
