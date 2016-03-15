@@ -45,7 +45,7 @@ class TestEnvUp:
         # 16 nodes
         assert 16 == len(env['docker_ids'])
 
-        check_onezone_up(env, 1)
+        check_zone_up(env, 1)
         check_cluster_manager_up(env, 3)
         check_provider_worker_up(env, 4)
         check_appmock_up(env, 2)

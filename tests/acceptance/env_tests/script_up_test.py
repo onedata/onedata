@@ -14,11 +14,9 @@ from environment import docker, common, dns
     ("panel_up", 2),
     ("couchbase_up", 2),
     ("riak_up", 2),
-    # # ???succeeds only when computer is offline
-    # ("globalregistry_up", 1),
-    # # both below tests fail, thera are 2 concatenated dns IP in script output
-    # ("provider_up", {'cm_nodes': 1, 'opw_nodes': 2}),
-    # ("cluster_up", {'cm_nodes': 1, 'cw_nodes': 1})
+    ("zone_up", 1),
+    ("provider_up", {'cm_nodes': 1, 'op_nodes': 2}),
+    ("cluster_up", {'cm_nodes': 1, 'cw_nodes': 1})
 ])
 def test_component_up(script_name, dockers_num):
     # setup
@@ -30,7 +28,7 @@ def test_component_up(script_name, dockers_num):
 
 
 @pytest.mark.parametrize(
-        "env", get_json_files(example_env_dir)
+    "env", get_json_files(example_env_dir)
 )
 def test_example_envs(env):
     output = run_env_up_script("env_up.py", [env])
@@ -90,8 +88,8 @@ def check_if_node_is_up(env, script_name, dockers_num):
 def get_empty_env():
     return {
         'docker_ids': [],
-        'gr_nodes': [],
-        'gr_db_nodes': [],
+        'oz_nodes': [],
+        'oz_db_nodes': [],
         'cluster_manager_nodes': [],
         'op_worker_nodes': [],
         'cluster_worker_nodes': [],
@@ -114,6 +112,11 @@ def bindir_options(script_name):
     elif name == "cluster":
         return [
             '-bw', os.path.join(os.getcwd(), 'cluster_worker'),
+            '-bcm', os.path.join(os.getcwd(), 'cluster_manager')
+        ]
+    elif name == "zone":
+        return [
+            '-boz', os.path.join(os.getcwd(), 'oz_worker'),
             '-bcm', os.path.join(os.getcwd(), 'cluster_manager')
         ]
     elif name == "client":
