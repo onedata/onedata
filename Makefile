@@ -108,7 +108,7 @@ artifact_cluster_manager:
 test:
 	./test_run.py --test-dir tests/acceptance
 
-test_packaging: build_globalregistry
+test_packaging: build_cluster_manager build_globalregistry
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
