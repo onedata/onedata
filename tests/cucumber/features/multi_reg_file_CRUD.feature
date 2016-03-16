@@ -12,6 +12,7 @@ Feature: Multi_regular_file_CRUD
   Scenario: Create regular file
     When u1 creates regular files [file1, file2, file3] on client1
     Then u1 sees [file1, file2, file3] in . on client1
+    And u2 waits 5 seconds on client2
     And u2 sees [file1, file2, file3] in . on client2
     And u1 sees [file1, file2, file3] in spaces/s1 on client1
     And u2 sees [file1, file2, file3] in spaces/s1 on client2
@@ -19,6 +20,7 @@ Feature: Multi_regular_file_CRUD
   Scenario: Rename regular file without permission
     When u1 creates regular files [file1] on client1
     And u1 sees [file1] in . on client1
+    And u2 waits 5 seconds on client2
     And u2 sees [file1] in . on client2
     And u2 renames file1 to file2 on client2
     Then last operation by u2 fails
@@ -28,9 +30,11 @@ Feature: Multi_regular_file_CRUD
     And u1 creates regular files [dir1/file1] on client1
     And u1 changes dir1 mode to 775 on client1
     And u1 sees [file1] in dir1 on client1
+    And u2 waits 5 seconds on client2
     And u2 sees [file1] in dir1 on client2
     And u2 renames dir1/file1 to dir1/file2 on client2
     And last operation by u2 succeeds
+    And u1 waits 5 seconds on client1
     Then u1 sees [file2] in dir1 on client1
     And u1 sees [file2] in spaces/s1/dir1 on client1
     And u2 sees [file2] in dir1 on client2
@@ -45,6 +49,7 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in . on client1
     And u2 sees [file1] in . on client2
     And u2 deletes files [file1] on client2
+    And u1 waits 5 seconds on client1
     Then u1 doesn't see [file1] in . on client1
     And u1 doesn't see [file1] in spaces/s1 on client1
     And u2 doesn't see [file1] in . on client2
