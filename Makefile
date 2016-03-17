@@ -11,6 +11,11 @@ CLUSTER_MANAGER_VERSION	?= $(shell git -C cluster_manager describe --tags --alwa
 OP_WORKER_VERSION       ?= $(shell git -C op_worker describe --tags --always | tr - .)
 OP_PANEL_VERSION        ?= $(shell git -C onepanel describe --tags --always | tr - .)
 
+GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
+GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
+ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
+export ONEDATA_GIT_URL
+
 .PHONY: package.tar.gz
 
 all: build
@@ -57,7 +62,8 @@ endif
 ## Build
 ##
 
-build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker build_cluster_manager
+build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker \
+    build_cluster_manager build_cluster_worker build_onepanel
 
 build_bamboos: submodules
 	$(call make, bamboos)
@@ -77,11 +83,19 @@ build_op_worker: submodules
 build_cluster_manager: submodules
 	$(call make, cluster_manager)
 
+build_cluster_worker: submodules
+	$(call make, cluster_worker)
+
+build_onepanel: submodules
+	$(call make, onepanel)
+
 ##
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient artifact_op_worker artifact_cluster_manager
+artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient \
+    artifact_op_worker artifact_cluster_manager artifact_cluster_worker \
+    artifact_onepanel
 
 artifact_bamboos:
 	$(call unpack, bamboos)
@@ -101,6 +115,12 @@ artifact_op_worker:
 artifact_cluster_manager:
 	$(call unpack, cluster_manager)
 
+artifact_cluster_worker:
+	$(call unpack, cluster_worker)
+
+artifact_onepanel:
+	$(call unpack, onepanel)
+
 ##
 ## Test
 ##
@@ -112,14 +132,15 @@ test_packaging: build_cluster_manager build_globalregistry
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
-	./test_run.py --test-dir tests/cucumber
+	./cucumber_test_generator.sh
 
 ##
 ## Clean
 ##
 
 clean_all: clean_appmock clean_globalregistry clean_oneclient \
-           clean_op_worker clean_onepanel clean_cluster_manager clean_packages
+           clean_op_worker clean_onepanel clean_cluster_manager \
+           clean_cluster_worker clean_packages
 
 clean_appmock:
 	$(call clean, appmock)
@@ -138,6 +159,9 @@ clean_oneclient:
 
 clean_cluster_manager:
 	$(call clean, cluster_manager)
+
+clean_cluster_worker:
+	$(call clean, cluster_worker)
 
 clean_packages:
 	rm -rf oneprovider_meta/oneprovider.spec \
