@@ -93,8 +93,6 @@ build_onepanel: submodules
 ## Artifacts
 ##
 
-
-
 artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient \
     artifact_op_worker artifact_cluster_manager artifact_cluster_worker \
     artifact_onepanel

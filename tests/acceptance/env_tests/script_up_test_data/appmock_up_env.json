@@ -59,7 +59,7 @@
                     },
                     "sys.config": {
                         "appmock": {
-                            "app_description_file": "./example_app_description.erl"
+                            "app_description_file": "./app_description.erl"
                         }
                     }
                 }
@@ -74,7 +74,7 @@
                     },
                     "sys.config": {
                         "appmock": {
-                            "app_description_file": "./example_app_description.erl"
+                            "app_description_file": "./app_description.erl"
                         }
                     }
                 }

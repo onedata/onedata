@@ -53,7 +53,7 @@ def check_cluster_up(env, dockers_num):
 
 
 def check_cluster_worker_up(env, dockers_num):
-    key = 'op_worker_nodes'
+    key = 'cluster_worker_nodes'
     assert dockers_num == len(env[key])
     dns = env['dns']
     # Will throw if the dns address is not legal
@@ -67,7 +67,7 @@ def check_cluster_worker_up(env, dockers_num):
                                                   number_of_retries=50)
 
 
-def check_onezone_up(env, dockers_num):
+def check_zone_up(env, dockers_num):
     key = 'oz_worker_nodes'
     print "ENV: ", env
     assert dockers_num == len(env[key])
@@ -97,7 +97,7 @@ def check_onezone_up(env, dockers_num):
 
 def check_provider_up(env, dockers_num):
     check_cluster_manager_up(env, dockers_num['cm_nodes'])
-    check_provider_worker_up(env, dockers_num['op_worker'])
+    check_provider_worker_up(env, dockers_num['op_nodes'])
 
 
 def check_provider_worker_up(env, dockers_num):
