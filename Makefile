@@ -11,6 +11,11 @@ CLUSTER_MANAGER_VERSION	?= $(shell git -C cluster_manager describe --tags --alwa
 OP_WORKER_VERSION       ?= $(shell git -C op_worker describe --tags --always | tr - .)
 OP_PANEL_VERSION        ?= $(shell git -C onepanel describe --tags --always | tr - .)
 
+GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
+GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
+ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
+export ONEDATA_GIT_URL
+
 .PHONY: package.tar.gz
 
 all: build
@@ -91,6 +96,7 @@ build_onepanel: submodules
 artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient \
     artifact_op_worker artifact_cluster_manager artifact_cluster_worker \
     artifact_onepanel
+
 artifact_bamboos:
 	$(call unpack, bamboos)
 
@@ -126,7 +132,7 @@ test_packaging: build_globalregistry
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
-	./test_run.py --test-dir tests/cucumber
+	./cucumber_test_generator.sh
 
 ##
 ## Clean

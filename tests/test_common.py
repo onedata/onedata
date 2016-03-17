@@ -12,8 +12,12 @@ project_dir = os.path.dirname(_script_dir)
 appmock_dir = os.path.join(project_dir, 'appmock')
 bamboos_dir = os.path.join(project_dir, 'bamboos')
 docker_dir = os.path.join(bamboos_dir, 'docker')
-cucumber_logdir = os.path.join(project_dir, "tests/cucumber/logs")
-acceptance_logdir = os.path.join(project_dir, "tests/acceptance/logs")
+test_dir = os.path.join(project_dir, "tests")
+cucumber_dir = os.path.join(test_dir, "cucumber")
+acceptance_dir = os.path.join(test_dir, "acceptance")
+cucumber_env_dir = os.path.join(cucumber_dir, "environments")
+cucumber_logdir = os.path.join(cucumber_dir, "logs")
+acceptance_logdir = os.path.join(acceptance_dir, "logs")
 example_env_dir = os.path.join(bamboos_dir, "example_env")
 
 # Append useful modules to the path
@@ -29,6 +33,14 @@ def get_test_name(filename):
 def get_logdir_name(root_dir, test_name):
     timestamp = str(time.time())
     return os.path.join(root_dir, ".".join([test_name, timestamp]))
+
+
+def make_logdir(root_dir, test_name):
+    """Logdir is created if it doesn't exist."""
+    name = get_logdir_name(root_dir, test_name)
+    if not os.path.exists(name):
+        os.makedirs(name)
+    return name
 
 
 def get_json_files(dir):

@@ -146,7 +146,7 @@ def prepare_args(script_name, uid, dns_server, config_path):
     # TODO delete client_up from below list after resolving VFS-1641
     if script_name not in ["client_up", "panel_up"]:
         args.extend([
-            '-l', get_logdir_name(acceptance_logdir, get_test_name(__file__))
+            '-l', make_logdir(acceptance_logdir, get_test_name(__file__))
         ])
     args.append(config_path)
 
