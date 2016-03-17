@@ -26,3 +26,7 @@
 	path = cluster_manager
 	url = ONEDATA_GIT_URL/cluster-manager.git
 	branch = develop
+[submodule "cluster_worker"]
+	path = cluster_worker
+	url = ONEDATA_GIT_URL/cluster-worker.git
+	branch = develop

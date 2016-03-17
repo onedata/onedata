@@ -48,11 +48,11 @@ def environment(request, context):
     Sets up environment and returns environment description.
     """
     curr_path = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(curr_path, '..', '..', 'environments', context.env_json)
+    env_path = os.path.join(curr_path, '..', '..', 'environments', str(context.env_json))
 
     feature_name = request.module.__name__
     logdir = test_common.get_logdir_name(test_common.cucumber_logdir, feature_name)
-    env_desc = env.up(env_path, logdir=logdir)
+    env_desc = test_common.run_env_up_script("env_up.py", ['-l', logdir, env_path])
 
     def fin():
         docker.remove(request.environment['docker_ids'], force=True, volumes=True)
