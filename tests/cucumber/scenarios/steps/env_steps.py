@@ -13,14 +13,16 @@ import os
 import sys
 import shutil
 
-# these commands set up path to test_common
+# these commands add 'tests' to path to make it possible
+# to import 'test_common'
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-curr_dir_list = curr_dir.split('/')
-root_dir = '/'.join(curr_dir_list[:-4])
-# needed to import test_common from tests
-sys.path.insert(0, root_dir)
+curr_dir_list = curr_dir.split(os.path.sep)
+# find last occurence of 'tests' directory on path
+test_index_last = curr_dir_list[::-1].index('tests')
+test_dir = os.path.sep.join(curr_dir_list[:-test_index_last])
+sys.path.insert(0, test_dir)
 
-from tests import test_common
+import test_common
 from environment import common, docker, env
 
 
@@ -29,6 +31,8 @@ def env_file(env_json, context):
     """
     Remembers the environment filename.
     """
+    env_json = str(env_json)
+    context.env_path = os.path.join(test_common.cucumber_env_dir, env_json)
     context.env_json = env_json
 
 
@@ -51,8 +55,10 @@ def environment(request, context):
     env_path = os.path.join(curr_path, '..', '..', 'environments', context.env_json)
 
     feature_name = request.module.__name__
-    logdir = test_common.get_logdir_name(test_common.cucumber_logdir, feature_name)
-    env_desc = env.up(env_path, logdir=logdir)
+    logdir = test_common.make_logdir(
+            test_common.cucumber_logdir,
+            os.path.join(context.env_json.split(".")[0], feature_name))
+    env_desc = test_common.run_env_up_script("env_up.py", ['-l', logdir, env_path])
 
     def fin():
         docker.remove(request.environment['docker_ids'], force=True, volumes=True)
