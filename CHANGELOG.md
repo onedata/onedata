@@ -4,10 +4,15 @@
 CHANGELOG
 ---------
 
-### New Version Tag do not change this line
+### 3.0.0-alpha3
 
-
-* VFS-1621 Update all references.
+* VFS-1677 -  using get_cookie function instead of hardcoding cookie in get_token.escript
+* VFS-1684 - bring env up by calling run_env_up_script in cucumber tests
+* VFS-1677-cucumber test generator sketch
+* VFS-1684 - add build_onepanel target to Makefile
+* VFS-1657 Add system update to release dockers.
+* VFS-1544 makefile rebranding
+* VFS-1544 onezone rebranding
 
 
 ### 3.0.0-aplha
