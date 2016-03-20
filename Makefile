@@ -11,6 +11,11 @@ CLUSTER_MANAGER_VERSION	?= $(shell git -C cluster_manager describe --tags --alwa
 OP_WORKER_VERSION       ?= $(shell git -C op_worker describe --tags --always | tr - .)
 OP_PANEL_VERSION        ?= $(shell git -C onepanel describe --tags --always | tr - .)
 
+GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
+GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
+ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
+export ONEDATA_GIT_URL
+
 .PHONY: package.tar.gz
 
 all: build
@@ -21,7 +26,7 @@ all: build
 
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
-MAKE_GLOBALREGISTRY := globalregistry/make.py -s globalregistry -r .
+MAKE_oz_worker := oz_worker/make.py -s oz_worker -r .
 MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
 MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
 MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
@@ -57,7 +62,8 @@ endif
 ## Build
 ##
 
-build: build_bamboos build_appmock build_globalregistry build_oneclient build_op_worker build_cluster_manager
+build: build_bamboos build_appmock build_oz_worker build_oneclient build_op_worker \
+    build_cluster_manager build_cluster_worker build_onepanel
 
 build_bamboos: submodules
 	$(call make, bamboos)
@@ -65,8 +71,8 @@ build_bamboos: submodules
 build_appmock: submodules
 	$(call make, appmock)
 
-build_globalregistry: submodules
-	$(call make, globalregistry)
+build_oz_worker: submodules
+	$(call make, oz_worker)
 
 build_oneclient: submodules
 	$(call make, oneclient) deb-info
@@ -77,11 +83,19 @@ build_op_worker: submodules
 build_cluster_manager: submodules
 	$(call make, cluster_manager)
 
+build_cluster_worker: submodules
+	$(call make, cluster_worker)
+
+build_onepanel: submodules
+	$(call make, onepanel)
+
 ##
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_globalregistry artifact_oneclient artifact_op_worker artifact_cluster_manager
+artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient \
+    artifact_op_worker artifact_cluster_manager artifact_cluster_worker \
+    artifact_onepanel
 
 artifact_bamboos:
 	$(call unpack, bamboos)
@@ -89,8 +103,8 @@ artifact_bamboos:
 artifact_appmock:
 	$(call unpack, appmock)
 
-artifact_globalregistry:
-	$(call unpack, globalregistry)
+artifact_onezone:
+	$(call unpack, oz_worker)
 
 artifact_oneclient:
 	$(call unpack, oneclient)
@@ -101,6 +115,12 @@ artifact_op_worker:
 artifact_cluster_manager:
 	$(call unpack, cluster_manager)
 
+artifact_cluster_worker:
+	$(call unpack, cluster_worker)
+
+artifact_onepanel:
+	$(call unpack, onepanel)
+
 ##
 ## Test
 ##
@@ -108,18 +128,19 @@ artifact_cluster_manager:
 test:
 	./test_run.py --test-dir tests/acceptance
 
-test_packaging: build_globalregistry
+test_packaging: build_cluster_manager build_oz_worker
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
-	./test_run.py --test-dir tests/cucumber
+	./cucumber_test_generator.sh
 
 ##
 ## Clean
 ##
 
-clean_all: clean_appmock clean_globalregistry clean_oneclient \
-           clean_op_worker clean_onepanel clean_cluster_manager clean_packages
+clean_all: clean_appmock clean_oz_worker clean_oneclient \
+           clean_op_worker clean_onepanel clean_cluster_manager \
+           clean_cluster_worker clean_packages
 
 clean_appmock:
 	$(call clean, appmock)
@@ -127,8 +148,8 @@ clean_appmock:
 clean_onepanel:
 	$(call clean, onepanel)
 
-clean_globalregistry:
-	$(call clean, globalregistry)
+clean_oz_worker:
+	$(call clean, oz_worker)
 
 clean_op_worker:
 	$(call clean, op_worker)
@@ -138,6 +159,9 @@ clean_oneclient:
 
 clean_cluster_manager:
 	$(call clean, cluster_manager)
+
+clean_cluster_worker:
+	$(call clean, cluster_worker)
 
 clean_packages:
 	rm -rf oneprovider_meta/oneprovider.spec \
@@ -170,8 +194,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	$(call mv_rpm, oneprovider_meta)
 
 rpm_op_panel: clean_onepanel rpmdirs
-	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider \
-	    -e COUCHBASE_SERVER_SERVICE="service couchbase-server"
+	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider
 	$(call mv_rpm, onepanel)
 
 rpm_op_worker: clean_op_worker rpmdirs
@@ -207,8 +230,7 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	mv oneprovider_meta/oneprovider.deb package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
 
 deb_op_panel: clean_onepanel debdirs
-	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider \
-	    -e COUCHBASE_SERVER_SERVICE="service couchbase-server"
+	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider
 	$(call mv_deb, onepanel)
 
 deb_op_worker: clean_op_worker debdirs

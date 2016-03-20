@@ -19,8 +19,8 @@ class TestRpmInstallation:
 
     # Test if installation has finished successfully
     def test_installation(self):
-        gr_node = self.result['gr_nodes'][0]
-        (_, _, gr_dockername) = gr_node.partition('@')
+        oz_node = self.result['oz_worker_nodes'][0]
+        (_, _, oz_dockername) = oz_node.partition('@')
 
         command = 'dnf install -y python && ' \
                   'python /root/data/rpm_install_script.py'
@@ -32,7 +32,7 @@ class TestRpmInstallation:
                                hostname='devel.localhost.local',
                                workdir="/root",
                                run_params=['--privileged=true'],
-                               link={gr_dockername: 'onedata.org'},
+                               link={oz_dockername: 'onedata.org'},
                                stdin=sys.stdin,
                                stdout=sys.stdout,
                                stderr=sys.stderr,

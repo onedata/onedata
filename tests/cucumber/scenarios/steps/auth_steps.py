@@ -12,10 +12,12 @@ from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers
 
 import subprocess
-import sys
 import time
+import os
+
 
 from environment import docker, env
+from environment import common as env_common
 from common import *
 
 
@@ -31,8 +33,8 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     client_hosts = list_parser(client_hosts)
     tokens = list_parser(tokens)
 
-    # current version is for environment with one GR
-    gr_node = environment['gr_nodes'][0]
+    # current version is for environment with one OZ
+    oz_node = environment['oz_worker_nodes'][0]
 
     set_dns(environment)
 
@@ -42,8 +44,10 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     for user, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
+        # get OZ cookie from env description file
+        cookie = get_cookie(context.env_path, oz_node)
         # get token for user
-        token = get_token(token_arg, user, gr_node)
+        token = get_token(token_arg, user, oz_node, cookie)
 
         # create client object
         client = Client(client_ids[client_host], mount_path)
@@ -66,7 +70,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
                ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
                ' && rm {token_path}').format(
                     mount_path=mount_path,
-                    gr_domain=data['gr_domain'],
+                    gr_domain=data['zone_domain'],
                     op_domain=data['op_domain'],
                     user_cert=data['user_cert'],
                     user_key=data['user_key'],
@@ -150,11 +154,18 @@ def set_dns(environment):
         conf.write("nameserver " + dns)
 
 
-def get_token(token, user, gr_node):
+def get_token(token, user, oz_node, cookie):
     if token == "bad token":
         token = "bad_token"
     elif token == "token":
         token = subprocess.check_output(
-            ['./tests/cucumber/scenarios/utils/get_token.escript', gr_node, user],
+            ['./tests/cucumber/scenarios/utils/get_token.escript', oz_node, user, cookie],
             stderr=subprocess.STDOUT)
     return token
+
+
+def get_cookie(config_path, oz_node):
+    config = env_common.parse_json_config_file(config_path)
+    oz_domain = config['zone_domains'].keys()[0]
+    cm = config['zone_domains'][oz_domain]['cluster_manager'].keys()[0]
+    return str(config['zone_domains'][oz_domain]['cluster_manager'][cm]['vm.args']['setcookie'])

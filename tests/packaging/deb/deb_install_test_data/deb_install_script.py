@@ -57,8 +57,8 @@ check_call(['ls', '/etc/cluster_manager/app.config'])
 check_call(['ls', '/etc/op_worker/app.config'])
 check_call(['/usr/bin/oneclient', '--help'])
 
-# disable gr cert verification
-check_call(['sed', '-i', 's/{verify_gr_cert, true}/{verify_gr_cert, false}/g',
+# disable OZ cert verification
+check_call(['sed', '-i', 's/{verify_oz_cert, true}/{verify_oz_cert, false}/g',
             '/etc/op_panel/app.config'])
 check_call(['service', 'op_panel', 'restart'])
 
@@ -75,6 +75,7 @@ check_call(['service', 'cluster_manager', 'status'])
 check_call(['service', 'op_worker', 'status'])
 
 # uninstall
-check_call(['op_panel_admin', '--uninstall'])
+# @todo Fix op_worker stop - VFS-1757
+# check_call(['op_panel_admin', '--uninstall'])
 
 sys.exit(0)

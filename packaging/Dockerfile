@@ -6,6 +6,10 @@ ARG RELEASE
 ARG VERSION=""
 ARG ONEPANEL_AUTOSTART=false
 
+# Get the image up to date
+RUN dnf -y upgrade && \
+    dnf clean all
+
 # Install oneprovider package
 RUN case ${RELEASE} in \
 		production) \
@@ -15,7 +19,7 @@ RUN case ${RELEASE} in \
 		*) \
 			curl -o install.sh http://onedata-dev-packages.cloud.plgrid.pl/install_oneprovider.sh; \
                         sh install.sh ${VERSION}; \
-			sed -i 's/{verify_gr_cert, true}/{verify_gr_cert, false}/g' /etc/op_panel/app.config \
+			sed -i 's/{verify_oz_cert, true}/{verify_oz_cert, false}/g' /etc/op_panel/app.config \
 			;; \
 	esac
 
