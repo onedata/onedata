@@ -26,7 +26,7 @@ all: build
 
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
-MAKE_oz_worker := oz_worker/make.py -s oz_worker -r .
+MAKE_OZ_WORKER := oz_worker/make.py -s oz_worker -r .
 MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
 MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
 MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
@@ -93,8 +93,8 @@ build_onepanel: submodules
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient \
-    artifact_op_worker artifact_cluster_manager artifact_cluster_worker \
+artifact: artifact_bamboos artifact_appmock artifact_oneclient artifact_op_worker \
+    artifact_oz_worker artifact_cluster_manager artifact_cluster_worker \
     artifact_onepanel
 
 artifact_bamboos:
@@ -103,14 +103,14 @@ artifact_bamboos:
 artifact_appmock:
 	$(call unpack, appmock)
 
-artifact_onezone:
-	$(call unpack, oz_worker)
-
 artifact_oneclient:
 	$(call unpack, oneclient)
 
 artifact_op_worker:
 	$(call unpack, op_worker)
+
+artifact_oz_worker:
+	$(call unpack, oz_worker)
 
 artifact_cluster_manager:
 	$(call unpack, cluster_manager)
@@ -128,7 +128,7 @@ artifact_onepanel:
 test:
 	./test_run.py --test-dir tests/acceptance
 
-test_packaging: build_cluster_manager build_oz_worker
+test_packaging:
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
