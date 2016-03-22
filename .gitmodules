@@ -2,8 +2,8 @@
 	path = appmock
 	url = ONEDATA_GIT_URL/appmock.git
 	branch = develop
-[submodule "globalregistry"]
-	path = globalregistry
+[submodule "oz_worker"]
+	path = oz_worker
 	url = ONEDATA_GIT_URL/globalregistry.git
 	branch = develop
 [submodule "oneclient"]

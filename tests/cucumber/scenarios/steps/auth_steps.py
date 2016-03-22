@@ -12,7 +12,6 @@ from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers
 
 import subprocess
-import sys
 import time
 import os
 
@@ -45,8 +44,8 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     for user, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
+        # get OZ cookie from env description file
         cookie = get_cookie(context.env_path, oz_node)
-
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
 

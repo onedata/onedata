@@ -6,10 +6,10 @@
 %%% @end
 %%%-------------------------------------------------------------------
 %%% @doc
-%%% This is an example app description used by appmock.
+%%% This is an app description used by appmock.
 %%% @end
 %%%-------------------------------------------------------------------
--module(example_app_description).
+-module(app_description).
 -behaviour(mock_app_description_behaviour).
 
 -include_lib("appmock/include/appmock.hrl").
