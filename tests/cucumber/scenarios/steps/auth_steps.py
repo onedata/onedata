@@ -39,18 +39,17 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     set_dns(environment)
 
     client_data = environment['client_data']
+    clients = create_clients(users, client_hosts, mount_paths, client_ids)
+    clean_spaces_all_users(users, clients)
 
-    parameters = zip(users, client_instances, mount_paths, client_hosts, tokens)
-    for user, client_instance, mount_path, client_host, token_arg in parameters:
+    parameters = zip(users, clients, client_instances, mount_paths, client_hosts, tokens)
+    for user, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
         # get OZ cookie from env description file
         cookie = get_cookie(context.env_path, oz_node)
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
-
-        # create client object
-        client = Client(client_ids[client_host], mount_path)
 
         # clean if there is directory in the mount_path
         if run_cmd(user, client, "ls " + mount_path) == 0:
@@ -118,8 +117,21 @@ def check_spaces(spaces, user, context):
 ####################################################################################################
 
 
-def clean_mount_path(user, client):
+def create_clients(users, client_hosts, mount_paths, client_ids):
+    clients = []
+    params = zip(users, client_hosts, mount_paths)
+    for user, client_host, mount_path in params:
+        clients.append(Client(client_ids[client_host], mount_path))
+    return clients
 
+
+def clean_spaces_all_users(users, clients):
+    params = zip(users, clients)
+    for user, client in params:
+        clean_spaces(user, client)
+
+
+def clean_spaces(user, client):
     # if directory spaces exists
     if run_cmd(user, client, 'ls ' + make_path('spaces', client)) == 0:
         spaces = run_cmd(user, client, 'ls ' + make_path('spaces', client), output=True)
@@ -128,6 +140,10 @@ def clean_mount_path(user, client):
         for space in spaces:
             run_cmd(user, client, "rm -rf " + make_path('spaces/' + space + '/*', client))
 
+
+def clean_mount_path(user, client):
+
+    clean_spaces(user, client)
     # get pid of running oneclient node
     pid = run_cmd('root', client,
                   " | ".join(
