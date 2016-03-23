@@ -75,7 +75,6 @@ check_call(['service', 'cluster_manager', 'status'])
 check_call(['service', 'op_worker', 'status'])
 
 # uninstall
-# @todo Fix op_worker stop - VFS-1757
-# check_call(['op_panel_admin', '--uninstall'])
+check_call(['op_panel_admin', '--uninstall'])
 
 sys.exit(0)
