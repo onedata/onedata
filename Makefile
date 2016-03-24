@@ -62,11 +62,8 @@ endif
 ## Build
 ##
 
-build: build_bamboos build_appmock build_oz_worker build_oneclient build_op_worker \
+build: build_appmock build_oz_worker build_oneclient build_op_worker \
     build_cluster_manager build_cluster_worker build_onepanel
-
-build_bamboos: submodules
-	$(call make, bamboos)
 
 build_appmock: submodules
 	$(call make, appmock)
