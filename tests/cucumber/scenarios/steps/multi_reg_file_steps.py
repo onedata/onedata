@@ -46,6 +46,12 @@ def read(user, text, file, client_node, context):
     read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
     assert read_text == text
 
+@then(parsers.parse('{user} reads "" from {file} on {client_node}'))
+def read(user, file, client_node, context):
+    client = get_client(client_node, user, context)
+    read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
+    assert read_text == ''
+
 
 @then(parsers.parse('{user} cannot read from {file} on {client_node}'))
 def cannot_read(user, file, client_node, context):
