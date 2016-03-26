@@ -90,6 +90,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates directories [dir1] on client1
     And u1 creates regular files [dir1/file1] on client1
     And u1 changes dir1/file1 mode to 600 on client1
+    And u2 waits 10 seconds on client2 # wait for events handling
     And u2 writes "TEST TEXT ONEDATA" to dir1/file1 on client2
     Then last operation by u2 fails
     And u1 sees [file1] in dir1 on client1
