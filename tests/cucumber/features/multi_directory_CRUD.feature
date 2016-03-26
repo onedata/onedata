@@ -139,7 +139,7 @@ Feature: Multi_directory_CRUD
     And u2 doesn't see [dir1] in . on client2
     And u2 creates directories [dir1] on client2
     Then u2 sees [dir1] in . on client2
-    And u1 waits 10 seconds on client2
+    And u1 waits 10 seconds on client1
     And u1 sees [dir1] in . on client1
 
   Scenario: Child directories

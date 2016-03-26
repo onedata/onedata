@@ -266,7 +266,6 @@
         "spaces": {
             "s1": {
                 "displayed_name": "s1",
-                "storage": "/mnt/st1",
                 "users": [
                     "u1",
                     "u2"
@@ -274,21 +273,19 @@
                 "groups": [
                     "g1"
                 ],
-                "providers": [
-                    {
-                        "provider": "p1",
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
                         "supported_size": 1000000000
                     },
-                    {
-                        "provider": "p2",
+                    "p2":{
+                        "storage": "/mnt/st1",
                         "supported_size": 1000000000
                     }
-
-                ]
+                }
             },
             "s2": {
                 "displayed_name": "s2",
-                "storage": "/mnt/st1",
                 "users": [
                     "u1",
                     "u2"
@@ -296,16 +293,16 @@
                 "groups": [
                     "g1"
                 ],
-                "providers": [
-                    {
-                        "provider": "p1",
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
                         "supported_size": 1000000000
                     },
-                    {
-                        "provider": "p2",
+                    "p2":{
+                        "storage": "/mnt/st1",
                         "supported_size": 1000000000
                     }
-                ]
+                }
             }
         }
     }
