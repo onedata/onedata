@@ -10,12 +10,6 @@
 # configurations.
 #####################################################################
 
-if [ "$#" -gt 0 ]; then
-    TEST=$1
-else
-    TEST=""
-fi
-
 # absolute paths
 TEST_DIR=$(pwd)/tests
 TMP_DIR=${TEST_DIR}/tmp
@@ -27,9 +21,6 @@ FEATURE_DIR=${CUCUMBER_DIR}/features
 ENV_DIR=${CUCUMBER_DIR}/environments
 SCENARIO_DIR=${CUCUMBER_DIR}/scenarios
 
-
-#TODO add arguments -e environment and -t test
-
 # make tmp directory
 mkdir -p ${TMP_DIR}
 
@@ -37,7 +28,7 @@ mkdir -p ${TMP_DIR}
 cp -r  ${TEST_DIR}/${CUCUMBER_DIR} ${TMP_DIR}
 
 # run tests for every env configuration file
-for env_file in ${TMP_DIR}/${ENV_DIR}/env3.json
+for env_file in ${TMP_DIR}/${ENV_DIR}/*.json
 do
     env_file_short=$(basename ${env_file})
     # edit env configuration file name in every .feature file
