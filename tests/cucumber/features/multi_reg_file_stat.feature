@@ -1,7 +1,7 @@
 Feature: Multi_regular_file_stat
 
   Background:
-    Given environment is defined in env.json
+    Given environment is defined in env3.json
     And storage directories are empty
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
@@ -23,13 +23,13 @@ Feature: Multi_regular_file_stat
     And u2 waits 10 seconds on client2
     And u2 sees [file1] in . on client2
     And u2 writes "TEST TEXT ONEDATA" to file1 on client2
-    And u2 waits 10 seconds on client2 # wait for events handling
+    And u1 waits 10 seconds on client1 # wait for events handling
     Then file type of u1's file1 is regular file on client1
 
   Scenario: Check default access permissions
     When u1 creates regular files [file1] on client1
     And u1 sees [file1] in . on client1
-    And u2 waits 30 seconds on client2
+    And u2 waits 10 seconds on client2
     And u2 sees [file1] in . on client2
     Then mode of u2's file1 is 664 on client2
 
@@ -62,7 +62,7 @@ Feature: Multi_regular_file_stat
     And u1 waits 10 seconds on client1 # wait for events handling
     And size of u2's file1 is 1000000 bytes on client2
     And u1 changes file1 size to 0 bytes on client1
-    And u1 waits 10 seconds on client1 # wait for events handling
+    And u2 waits 15 seconds on client2 # wait for events handling
     Then size of u2's file1 is 0 bytes on client2
 
   Scenario: Truncate regular file without write permission
@@ -116,8 +116,8 @@ Feature: Multi_regular_file_stat
     And u1 waits 1 seconds on client1
     # call sleep, to be sure that time of write and read is different
     Then u1 reads "TEST TEXT ONEDATA" from file1 on client1
-    And access time of u2's file1 becomes greater than modification time on client2 within 5 seconds
-    And access time of u2's file1 becomes greater than status-change time on client2 within 5 seconds
+    And access time of u2's file1 becomes greater than modification time on client2 within 10 seconds
+    And access time of u2's file1 becomes greater than status-change time on client2 within 10 seconds
 
   Scenario: Modification time
     When u1 creates regular files [file1] on client1
@@ -128,8 +128,8 @@ Feature: Multi_regular_file_stat
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to file1 on client1
     Then last operation by u1 succeeds
-    And modification time of u2's file1 becomes greater than access time on client2 within 5 seconds
-    And modification time of u2's file1 becomes equal to status-change time on client2 within 5 seconds
+    And modification time of u2's file1 becomes greater than access time on client2 within 10 seconds
+    And modification time of u2's file1 becomes equal to status-change time on client2 within 10 seconds
 
   Scenario: Status-change time when changing mode
     When u1 creates regular files [file1] on client1
@@ -140,8 +140,8 @@ Feature: Multi_regular_file_stat
     # call sleep, to be sure that time of above and below operations is different
     And u1 changes file1 mode to 211 on client1
     Then last operation by u1 succeeds
-    And status-change time of u2's file1 becomes greater than modification time on client2 within 5 seconds
-    And status-change time of u2's file1 becomes greater than access time on client2 within 5 seconds
+    And status-change time of u2's file1 becomes greater than modification time on client2 within 10 seconds
+    And status-change time of u2's file1 becomes greater than access time on client2 within 10 seconds
 
   Scenario: Status-change time when renaming
     When u1 creates regular files [file1] on client1
@@ -152,5 +152,6 @@ Feature: Multi_regular_file_stat
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames file1 to file2 on client1
     Then last operation by u1 succeeds
-    And status-change time of u2's file2 becomes greater than modification time on client2 within 5 seconds
-    And status-change time of u2's file2 becomes greater than access time on client2 within 5 seconds
+    And u2 waits 10 seconds on client2
+    And status-change time of u2's file2 becomes greater than modification time on client2 within 10 seconds
+    And status-change time of u2's file2 becomes greater than access time on client2 within 10 seconds

@@ -129,6 +129,7 @@ def clean_spaces_all_users(users, clients):
     params = zip(users, clients)
     for user, client in params:
         clean_spaces(user, client)
+    time.sleep(10)
 
 
 def clean_spaces(user, client):

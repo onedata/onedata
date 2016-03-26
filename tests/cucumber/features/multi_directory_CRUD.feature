@@ -132,14 +132,14 @@ Feature: Multi_directory_CRUD
 
   Scenario: Recreate directory deleted by other user
     When u1 creates directories [dir1] on client1
-    And u2 waits 15 seconds on client2
+    And u2 waits 10 seconds on client2
     And u2 sees [dir1] in . on client2
     And u1 deletes empty directories [dir1] on client1
-    And u2 waits 15 seconds on client2
+    And u2 waits 10 seconds on client2
     And u2 doesn't see [dir1] in . on client2
     And u2 creates directories [dir1] on client2
     Then u2 sees [dir1] in . on client2
-    And u1 waits 15 seconds on client2
+    And u1 waits 10 seconds on client2
     And u1 sees [dir1] in . on client1
 
   Scenario: Child directories
@@ -162,7 +162,7 @@ Feature: Multi_directory_CRUD
 
   Scenario: Duplication
     When u1 creates directories [dir1] on client1
-    And u2 waits 15 seconds on client2
+    And u2 waits 10 seconds on client2
     And u2 creates directories [dir1] on client2
     Then last operation by u2 fails
 
@@ -176,7 +176,7 @@ Feature: Multi_directory_CRUD
     #rmdir -p dir1/dir2/dir3
     When u1 creates directory and parents [dir1/dir2/dir3] on client1
     And u1 sees [dir1] in . on client1
-    And u2 waits 15 seconds on client2
+    And u2 waits 10 seconds on client2
     And u2 sees [dir1] in . on client2
     And u1 sees [dir2] in dir1 on client1
     And u2 sees [dir2] in dir1 on client2
@@ -188,7 +188,6 @@ Feature: Multi_directory_CRUD
     And u1 waits 10 seconds on client1
     And u1 sees [dir1] in . on client1
     And u1 doesn't see [dir2] in dir1 on client1
-    And u1 doesn't see [dir3] in dir1/dir2 on client1
 
   Scenario: Delete non-empty directory in wrong way
     #wrong way means using rmdir instead of rm -rf
@@ -212,7 +211,7 @@ Feature: Multi_directory_CRUD
     When u1 creates directory and parents [dir1/child1, dir1/child2, dir2/dir3/child1]
       on client1
     And u1 sees [dir1, dir2] in . on client1
-    And u2 waits 15 seconds on client2
+    And u2 waits 10 seconds on client2
     And u2 sees [dir1, dir2] in . on client2
     And u1 sees [child1, child2] in dir1 on client1
     And u2 sees [child1, child2] in dir1 on client2
@@ -320,7 +319,7 @@ Feature: Multi_directory_CRUD
   Scenario: Move directory to its subtree in spaces
     When u1 creates directory and parents [dir1/dir2/dir3] on client1
     And u1 sees [dir1] in . on client1
-    And u2 waits 15 seconds on client2
+    And u2 waits 10 seconds on client2
     And u2 sees [dir1] in . on client2
     And u1 sees [dir2] in dir1 on client1
     And u2 sees [dir2] in dir1 on client2
