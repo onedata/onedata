@@ -37,7 +37,7 @@ mkdir -p ${TMP_DIR}
 cp -r  ${TEST_DIR}/${CUCUMBER_DIR} ${TMP_DIR}
 
 # run tests for every env configuration file
-for env_file in ${TMP_DIR}/${ENV_DIR}/*.json
+for env_file in ${TMP_DIR}/${ENV_DIR}/env3.json
 do
     env_file_short=$(basename ${env_file})
     # edit env configuration file name in every .feature file
