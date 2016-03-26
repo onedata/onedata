@@ -50,7 +50,7 @@ do
 
     # run tests per given env configuration file
     echo "Running cucumber tests for ${env_file_short}"
-    ./test_run.py --test-dir ${TMP_DIR}/${SCENARIO_DIR}/${TEST} --report-path ${REPORT_DIR}/results_${env_without_ext}.xml
+    ./test_run.py --test-dir ${TMP_DIR}/${SCENARIO_DIR} --report-path ${REPORT_DIR}/results_${env_without_ext}.xml
 
     # delete edited test files
     rm -rf ${TMP_DIR}/${SCENARIO_DIR}/test*.py
