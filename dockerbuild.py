@@ -1,1 +1,1 @@
-bamboos/packaging/dockerbuild.py
+bamboos/docker/dockerbuild.py
