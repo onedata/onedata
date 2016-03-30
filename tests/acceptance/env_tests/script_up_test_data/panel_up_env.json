@@ -67,14 +67,14 @@
                     "setcookie": "cookie7"
                 },
                 "sys.config": {
-                    "multicast_address": {
-                        "string": "239.255.0.1"
-                    },
-                    "verify_gr_cert": false
+                    "onepanel": {
+                        "multicast_address": {
+                            "string": "239.255.0.1"
+                        },
+                        "verify_gr_cert": false
+                    }
                 },
                 "packages": [
-                    "cluster_manager",
-                    "op_worker"
                 ],
                 "storages": [
                     "storage1"
@@ -86,14 +86,14 @@
                     "setcookie": "cookie7"
                 },
                 "sys.config": {
-                    "multicast_address": {
-                        "string": "239.255.0.1"
-                    },
-                    "verify_gr_cert": false
+                    "onepanel": {
+                        "multicast_address": {
+                            "string": "239.255.0.1"
+                        },
+                        "verify_gr_cert": false
+                    }
                 },
                 "packages": [
-                    "cluster_manager",
-                    "op_worker"
                 ],
                 "storages": [
                     "storage1"
