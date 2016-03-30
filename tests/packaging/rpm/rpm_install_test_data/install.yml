@@ -29,3 +29,4 @@ cluster:
 oneprovider:
   register: true
   name: "provider"
+  redirection_point: "https://devel.localhost.local"
