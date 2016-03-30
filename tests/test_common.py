@@ -30,6 +30,11 @@ def get_test_name(filename):
     return test_name
 
 
+def get_test_data_dir(test_file):
+    """Returns absolute path to directory <test_file>_data"""
+    return "{0}_data".format(os.path.realpath(test_file).rstrip('.py'))
+
+
 def get_logdir_name(root_dir, test_name):
     timestamp = str(time.time())
     return os.path.join(root_dir, ".".join([test_name, timestamp]))
@@ -77,3 +82,5 @@ def strip_output_logs(output):
     from output, returns env description
     """
     return output.strip().split('\n')[-1]
+
+
