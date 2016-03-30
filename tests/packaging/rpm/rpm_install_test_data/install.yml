@@ -1,0 +1,31 @@
+# Sample installation config file
+
+cluster:
+  domain_name: "localhost.local"
+  nodes:
+    node:
+      hostname: "devel"
+
+  manager:
+    default_node: "node"
+    nodes:
+      - "node"
+  worker:
+    nodes:
+      - "node"
+  database:
+    nodes:
+      - "node"
+
+  storage:
+    NFS:
+      type: "POSIX"
+      mount_point: "/mnt"
+
+  settings:
+    open_files_limit: 65535
+    processes_limit: 65535
+
+oneprovider:
+  register: true
+  name: "provider"
