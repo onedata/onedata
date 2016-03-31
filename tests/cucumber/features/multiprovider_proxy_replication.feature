@@ -11,11 +11,28 @@ Feature: Multiprovider_proxy_replication
 
   Scenario: Create files and see them on external provider
     When u1 creates regular files [file1, file2, file3] on client1
-    Then u2 waits 5 seconds on client2 # wait for events handling
-    And u2 sees [file1, file2, file3] in /spaces/s1 on client2
+    Then u2 waits 10 seconds on client2 # wait for events handling
     And u2 sees [file1, file2, file3] in . on client2
 
   Scenario: Create empty file and read it on external provider
     When u1 creates regular files [file] on client1
-    Then u2 waits 5 seconds on client2 # wait for events handling
+    Then u2 waits 10 seconds on client2 # wait for events handling
     And u2 reads "" from file on client2
+
+  Scenario: Write to file and check size on remote provider
+    When u1 creates regular files [file] on client1
+    And u1 writes "TEST TEXT ONEDATA" to file1 on client1
+    Then u2 waits 10 seconds on client2 # wait for events handling
+    And size of u2's file1 is 17 bytes on client2
+
+  Scenario: Write to file and read on remote provider
+    When u1 creates regular files [file1] on client1
+    And u1 writes "TEST TEXT ONEDATA" to file1 on client1
+    Then u2 waits 10 seconds on client2 # wait for events handling
+    And u2 reads "TEST TEXT ONEDATA" from file1 on client2
+
+  Scenario: Big file transfer with MD5 check
+    When u1 creates regular files [file1] on client1
+    And u1 writes 16 MB of random characters to file1 on client1 and saves MD5
+    Then u2 waits 10 seconds on client2 # wait for events handling
+    And u2 checks MD5 of file1 on client2

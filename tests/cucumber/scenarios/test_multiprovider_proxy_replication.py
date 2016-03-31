@@ -30,3 +30,27 @@ def test_create_and_list():
 )
 def test_create_empty_and_read():
     pass
+
+
+@scenario(
+    '../features/multiprovider_proxy_replication.feature',
+    'Write to file and check size on remote provider'
+)
+def test_write_and_check_size():
+    pass
+
+
+@scenario(
+    '../features/multiprovider_proxy_replication.feature',
+    'Write to file and read on remote provider'
+)
+def test_write_and_read():
+    pass
+
+
+@scenario(
+    '../features/multiprovider_proxy_replication.feature',
+    'Big file transfer with MD5 check'
+)
+def test_big_transfer_and_md5_check():
+    pass
