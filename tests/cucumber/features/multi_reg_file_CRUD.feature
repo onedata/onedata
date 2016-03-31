@@ -2,7 +2,6 @@ Feature: Multi_regular_file_CRUD
 
   Background:
     Given environment is defined in env.json
-    And storage directories are empty
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
