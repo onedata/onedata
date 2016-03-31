@@ -11,7 +11,6 @@ from pytest_bdd import (given, when, then)
 
 import os
 import sys
-import shutil
 
 # these commands add 'tests' to path to make it possible
 # to import 'test_common'
@@ -67,7 +66,7 @@ def environment(persistent_environment, request, context):
     # TODO when VFS-1832 will be resolved
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments',
-                        context.env_json)
+                            context.env_json)
     config = common.parse_json_config_file(env_path)
 
     def fin():
