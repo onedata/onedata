@@ -12,8 +12,6 @@ from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers
 
 import subprocess
-import time
-import os
 
 
 from environment import docker, env
@@ -25,7 +23,8 @@ from common import *
                      '{mount_paths} on client_hosts\n' +
                      '{client_hosts} respectively,\n' +
                      'using {tokens}'))
-def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, environment, context, client_ids):
+def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
+                request, environment, context, client_ids):
 
     users = list_parser(users)
     client_instances = list_parser(client_instances)
@@ -39,22 +38,22 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     set_dns(environment)
 
     client_data = environment['client_data']
+    clients = create_clients(users, client_hosts, mount_paths, client_ids)
 
-    parameters = zip(users, client_instances, mount_paths, client_hosts, tokens)
-    for user, client_instance, mount_path, client_host, token_arg in parameters:
+    def fin():
+        params = zip(users, clients)
+        for user, client in params:
+            clean_mount_path(user, client)
+    request.addfinalizer(fin)
+
+    parameters = zip(users, clients, client_instances, mount_paths, client_hosts, tokens)
+    for user, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
         # get OZ cookie from env description file
         cookie = get_cookie(context.env_path, oz_node)
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
-
-        # create client object
-        client = Client(client_ids[client_host], mount_path)
-
-        # clean if there is directory in the mount_path
-        if run_cmd(user, client, "ls " + mount_path) == 0:
-            clean_mount_path(user, client)
 
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
@@ -97,9 +96,10 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
-def default_mount(user, mount_path, token, environment, context, client_ids):
+def default_mount(user, mount_path, token, request, environment, context, client_ids):
     multi_mount(make_arg_list(user), make_arg_list("client1"), make_arg_list(mount_path),
-                make_arg_list('client_host_1'), make_arg_list(token), environment, context, client_ids)
+                make_arg_list('client_host_1'), make_arg_list(token), request,
+                environment, context, client_ids)
 
 
 @then(parsers.parse('{spaces} are mounted for {user}'))
@@ -118,8 +118,15 @@ def check_spaces(spaces, user, context):
 ####################################################################################################
 
 
-def clean_mount_path(user, client):
+def create_clients(users, client_hosts, mount_paths, client_ids):
+    clients = []
+    params = zip(users, client_hosts, mount_paths)
+    for user, client_host, mount_path in params:
+        clients.append(Client(client_ids[client_host], mount_path))
+    return clients
 
+
+def clean_spaces(user, client):
     # if directory spaces exists
     if run_cmd(user, client, 'ls ' + make_path('spaces', client)) == 0:
         spaces = run_cmd(user, client, 'ls ' + make_path('spaces', client), output=True)
@@ -128,6 +135,10 @@ def clean_mount_path(user, client):
         for space in spaces:
             run_cmd(user, client, "rm -rf " + make_path('spaces/' + space + '/*', client))
 
+
+def clean_mount_path(user, client):
+
+    clean_spaces(user, client)
     # get pid of running oneclient node
     pid = run_cmd('root', client,
                   " | ".join(
