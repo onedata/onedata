@@ -5,7 +5,7 @@ if [ "$ONEPANEL_MULTICAST_ADDRESS" ]; then
 fi
 
 sed -i s/onepanel@127.0.0.1/onepanel@`hostname -f`/g /etc/op_panel/vm.args;
-service op_panel start
+service op_panel start 2> /dev/null
 
 if [ "$ONEPANEL_BATCH_MODE" ]; then
 	op_panel_admin --install "$ONEPANEL_BATCH_MODE_CONFIG"
