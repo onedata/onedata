@@ -24,7 +24,7 @@ RUN case ${RELEASE} in \
 	esac
 
 # Add missing CA bundle (required for server cert validation)
-RUN curl -o /etc/ssl/cert.pem https://raw.githubusercontent.com/bagder/ca-bundle/master/ca-bundle.crt
+ADD ca-bundle.pem /etc/ssl/cert.pem
 
 EXPOSE 53 5555 443 8443 80 8876 8877 9443
 
