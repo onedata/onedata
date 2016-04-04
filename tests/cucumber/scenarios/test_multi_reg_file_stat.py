@@ -104,26 +104,26 @@ def test_update_timestamp_with_permission():
 # def test_access_time():
 #     pass
 
+
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Modification time'
+)
+def test_modification_time():
+    pass
+
 # TODO VFS-1821
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Modification time'
-# )
-# def test_modification_time():
-#     pass
-#
-#
 # @scenario(
 #     '../features/multi_reg_file_stat.feature',
 #     'Status-change time when changing mode'
 # )
 # def test_stat_change_time_chmod():
 #     pass
-#
-#
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Status-change time when renaming'
-# )
-# def test_stat_change_time_mv():
-#     pass
+
+
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Status-change time when renaming'
+)
+def test_stat_change_time_mv():
+    pass

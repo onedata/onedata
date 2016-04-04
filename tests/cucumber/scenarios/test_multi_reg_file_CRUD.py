@@ -48,6 +48,7 @@ def test_rename_with_permission():
 def test_delete():
     pass
 
+
 # TODO VFS-1822
 # @scenario(
 #     '../features/multi_reg_file_CRUD.feature',
