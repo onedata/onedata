@@ -54,3 +54,35 @@ def test_write_and_read():
 )
 def test_big_transfer_and_md5_check():
     pass
+
+
+@scenario(
+    '../features/multiprovider_proxy_replication.feature',
+    'Remote file override'
+)
+def test_remote_file_override():
+    pass
+
+
+@scenario(
+    '../features/multiprovider_proxy_replication.feature',
+    'Remote file removal'
+)
+def test_remote_file_removal():
+    pass
+
+
+@scenario(
+    '../features/multiprovider_proxy_replication.feature',
+    'Sequential appends'
+)
+def test_sequential_appends():
+    pass
+
+# todo fix python syntax
+# @scenario(
+#     '../features/multiprovider_proxy_replication.feature',
+#     'Conflict on disjoint blocks'
+# )
+# def test_conflict_on_disjoint_blocks():
+#     pass

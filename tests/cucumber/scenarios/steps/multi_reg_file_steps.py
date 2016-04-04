@@ -19,12 +19,27 @@ from environment import docker, env
 from common import *
 
 
+@when(parsers.parse('{user} writes "{data}" at offset {offset} to {file} on {client_node}'))
+def write_at_offset(user, data, offset, file, client_node, context):
+    client = get_client(client_node, user, context)
+    path = make_path(file, client)
+    write_command = '''python -c 'with open(\\'{path}\\', \\'r+b\\') as file:
+    file.seek({offset})
+    file.write(\\'{data}\\')' '''\
+        .format(path=path, offset=offset, data=data)
+    ret = run_cmd(user, client, write_command)
+    save_op_code(context, user, ret)
+    if ret == 0:
+        context.update_timestamps(user, client, file)
+
+
 @when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))
 def write_rand_text(user, megabytes, file, client_node, context):
     client = get_client(client_node, user, context)
     path = make_path(file, client)
-    ret = run_cmd(user, client, 'dd if=/dev/urandom of=' + path + ' bs=' + megabytes +'M count=1')
-    md5 = run_cmd(user, client, 'md5sum ' + path, output=True)
+    run_cmd(user, client, 'dd if=/dev/urandom of=/tmp/random_data bs=1M count=' + megabytes)
+    ret = run_cmd(user, client, 'dd if=/tmp/random_data of=' + path + ' bs=1M')
+    md5 = run_cmd(user, client, 'md5sum /tmp/random_data', output=True)
     context.md5 = md5.split()[0]
     save_op_code(context, user, ret)
     if ret == 0:

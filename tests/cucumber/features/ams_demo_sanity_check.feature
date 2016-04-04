@@ -1,7 +1,7 @@
 Feature: Ams_demo_sanity_check
 
   Background:
-    Given environment is defined in ams_demo_env.json
+    Given environment is defined in ams_demo_directio_env.json
     And storage directories are empty
     And environment is up
     And [u1, u2, u1, u2, u1, u2] start oneclients [client1_p1, client2_p1, client1_p2, client2_p2, client1_p3, client2_p3] in
