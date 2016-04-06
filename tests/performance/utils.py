@@ -1,7 +1,4 @@
-import json
-
-
-class PerformanceReport:
+class Report:
 
     def __init__(self, name):
         self.name = name
@@ -9,12 +6,15 @@ class PerformanceReport:
 
     def add_to_report(self, key, value):
         print "ADD TO REPORT ", key
-        if isinstance(value, PerformanceReport):
+        if isinstance(value, Report):
             self.add_nested_report(key, value)
         else:
             self.report[self.name][key] = value
 
     def add_nested_report(self, key, value):
+        if key == "suites":
+            f = open('debug', 'a')
+            f.write("NESTED " + value.report.keys()[0])
         print "BEFORE ADD: ", self.report
         print "ADDING KEY: ", key
         print "ADDING VALUE: ", value.report
@@ -23,36 +23,44 @@ class PerformanceReport:
         print "AFTER ADD: ", self.report
 
 
-class JsonReport(PerformanceReport):
+class PerformanceReport(Report):
 
-    def __init__(self, name):
-        PerformanceReport.__init__(self, name)
+    def __init__(self, name, repository, commit, branch):
+        Report.__init__(self, name)
         self.report[name] = {'suites': {}}
+        self.add_to_report('repository', repository)
+        self.add_to_report('commit', commit)
+        self.add_to_report('branch', branch)
 
-    def dump(self, file_name):
-        f = open(file_name, 'w')
-        f.write(json.dumps(self.report))
 
-
-class Suite(PerformanceReport):
+class SuiteReport(Report):
 
     def __init__(self, name, description, copyright, authors):
-        PerformanceReport.__init__(self, name)
+        Report.__init__(self, name)
         self.add_to_report('name', name)
         self.add_to_report('description', description)
         self.add_to_report('copyright', copyright)
         self.add_to_report('authors', authors)
         self.add_to_report('cases', {})
-        print "SUITE: ", self.report
+        # print "SUITE: ", self.report
 
 
-class Case(PerformanceReport):
+class CaseReport(Report):
 
     def __init__(self, name, description,):
-        PerformanceReport.__init__(self, name)
+        Report.__init__(self, name)
         self.add_to_report('name', name)
         self.add_to_report('description', description)
-        print "CASE: ", self.report
+        self.add_to_report('configs', {})
+        # print "CASE: ", self.report
+
+
+class ConfigReport(Report):
+    def __init__(self, name, description, repeats):
+        Report.__init__(self, name)
+        self.add_to_report('name', name)
+        self.add_to_report('description', description)
+        self.add_to_report('repeats', repeats)
 
 
 def merge_configs(config, default_config):
@@ -66,7 +74,3 @@ def merge_configs(config, default_config):
         elif key != 'description' and key not in merged_config.keys():
             merged_config[key] = default_config[key]
     return merged_config
-
-
-def suite_name(module):
-    return module.split('.')[-1]

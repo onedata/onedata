@@ -23,53 +23,67 @@ print sys.path
 import test_common
 import pytest
 import json
+import inspect
 
 
 def performance(default_config, configs):
     # TODO add writing output to json (fixture)
     def wrap(test_function):
-        def wrapped_test_function(self, clients, json_output):
-            suite = suite_name(test_function.__module__)
-            case = test_function.__name__
 
-            # TODO get below information marked as TODO
-            json_output.add_to_report('repository', 'TODO')
-            json_output.add_to_report('branch', 'TODO')
-            json_output.add_to_report('commit', 'TODO')
-            suite = Suite(suite, 'TODO', 'TODO', ['TODO'])
-            case = Case(case, default_config['description'])
+        def wrapped_test_function(self, clients, json_output, suite_report):
+            case_report = test_function.__name__
+            case_report = CaseReport(case_report, default_config['description'])
 
-            for custom_config_name, custom_config in configs.items():
-                merged = merge_configs(custom_config, default_config)
-                for repeat in range(merged['repeats']):
-                    test_function(self, clients, merged['parameters'])
+            for case_config_name, case_config in configs.items():
+                merged_config = merge_configs(case_config, default_config)
+                config_report = ConfigReport(case_config_name,
+                                             merged_config['description'],
+                                             merged_config['repeats'])
+                for repeat in range(merged_config['repeats']):
+                    test_function(self, clients, merged_config['parameters'])
 
-            # TODO add test results to json_output
-            suite.add_to_report('cases', case)
-            json_output.add_to_report('suites', suite)
+                case_report.add_to_report('configs', config_report)
+            suite_report.add_to_report('cases', case_report)
             print json_output.report
 
         return wrapped_test_function
+
     return wrap
 
 
 @pytest.fixture(scope="session")
 def json_output(request):
-
-    json_report = JsonReport("performance")
+    performance_report = PerformanceReport("performance",
+                                           "repository_TODO",   # TODO
+                                           "commit_TODO",       # TODO
+                                           "branch_TODO")       # TODO
 
     def fin():
-        json_report.dump(test_common.performance_output)
+        f = open(test_common.performance_output, 'w')
+        f.write(json.dumps(performance_report.report))
+
     request.addfinalizer(fin)
+    return performance_report
 
-    return json_report
-
-
-#todo MAYBE CLASS IS NOT NEEDED
+# todo MAYBE CLASS IS NOT NEEDED
 class TestPerformance:
-    @pytest.fixture(scope="module", params=
-        test_common.get_json_files(test_common.performance_env_dir)
-    )
+
+    @pytest.fixture(scope="module")
+    def suite_report(self, request, json_output):
+        report = SuiteReport(test_common
+                             .get_test_name(inspect.getfile(self.__class__)),
+                             "suite_description_TODO",  # TODO
+                             "suite_copyright_TODO",    # TODO
+                             "suite_authors_TODO")      # TODO
+
+        def fin():
+            json_output.add_to_report("suites", report)
+
+        request.addfinalizer(fin)
+        return report
+
+    @pytest.fixture(scope="module", params=test_common
+                    .get_json_files(test_common.performance_env_dir))
     def env_description_file(self, request):
         """This fixture must be overridden in performance test module if you
         want to start tests from given module with different environments that
@@ -92,9 +106,8 @@ class TestPerformance:
         # return env
         return env_description_file
 
-
     # TODO this fixture is similiar to client_ids in cucumber tests
-    # TODO it should be moved to conftest.py
+    # TODO it should be moved to common conftest.py
     @pytest.fixture(scope="module")
     def clients(self, environment, env_description_file):
         print "RUNNING CLIENT_FIXTURE"
@@ -134,8 +147,3 @@ class TestPerformance:
         #         run_cmd('root', mounted_clients[client_name], cmd)
         # return mounted_clients
         return environment
-
-
-#### TODO json_data should be a fixture which will be dumped to file in finalizer
-# TODO scope = session, trzeba bedzie brac nazwy w wrapperze
-
