@@ -15,9 +15,14 @@ docker_dir = os.path.join(bamboos_dir, 'docker')
 test_dir = os.path.join(project_dir, "tests")
 cucumber_dir = os.path.join(test_dir, "cucumber")
 acceptance_dir = os.path.join(test_dir, "acceptance")
-cucumber_env_dir = os.path.join(cucumber_dir, "environments")
+performance_dir = os.path.join(test_dir, "performance")
 cucumber_logdir = os.path.join(cucumber_dir, "logs")
 acceptance_logdir = os.path.join(acceptance_dir, "logs")
+performance_logdir = os.path.join(performance_dir, "logs")
+performance_env_dir = os.path.join(performance_dir, "environments")
+# performance_output = os.path.join(performance_logdir, "performance.json")
+# TODO after uncommenting env_up in tests, unomment above line and delete below line
+performance_output = os.path.join(performance_dir, "performance.json")
 example_env_dir = os.path.join(bamboos_dir, "example_env")
 
 # Append useful modules to the path

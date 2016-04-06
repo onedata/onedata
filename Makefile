@@ -131,6 +131,9 @@ test_packaging:
 test_cucumber:
 	./cucumber_test_generator.sh
 
+test_performance:
+	./test_run.py --test-dir tests/performance
+
 ##
 ## Clean
 ##

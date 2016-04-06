@@ -83,6 +83,7 @@ def context():
     return Context()
 
 
+# TODO do we need ids in tests ? names should be enough
 @pytest.fixture(scope="module")
 def client_ids(environment):
     ids = {}

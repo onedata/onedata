@@ -47,7 +47,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
         # get OZ cookie from env description file
         cookie = get_cookie(context.env_path, oz_node)
         # get token for user
-        token = get_token(token_arg, user, oz_node, cookie)
+        token = get_token(user, oz_node, cookie, token_arg)
 
         # create client object
         client = Client(client_ids[client_host], mount_path)
@@ -154,7 +154,7 @@ def set_dns(environment):
         conf.write("nameserver " + dns)
 
 
-def get_token(token, user, oz_node, cookie):
+def get_token(user, oz_node, cookie, token="token"):
     if token == "bad token":
         token = "bad_token"
     elif token == "token":
