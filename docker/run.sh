@@ -7,4 +7,8 @@ fi
 sed -i s/onepanel@127.0.0.1/onepanel@`hostname -f`/g /etc/op_panel/vm.args;
 service op_panel start
 
+if [ "$ONEPANEL_BATCH_MODE" ]; then
+	op_panel_admin --install "$ONEPANEL_BATCH_MODE_CONFIG"
+fi
+
 while true; do sleep 60; done

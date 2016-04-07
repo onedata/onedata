@@ -68,7 +68,7 @@ check_call(['wget', '-O', '/etc/ssl/cert.pem',
             'ca-bundle.crt'])
 
 # oneprovider configure and install
-check_call(['op_panel_admin', '--install', 'data/install.cfg'])
+check_call(['op_panel_admin', '--install', '/root/data/install.yml'])
 
 # validate oneprovider is running
 check_call(['service', 'cluster_manager', 'status'])
