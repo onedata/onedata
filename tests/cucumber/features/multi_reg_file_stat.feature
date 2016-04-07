@@ -1,7 +1,7 @@
 Feature: Multi_regular_file_stat
 
   Background:
-    Given environment is defined in env3.json
+    Given environment is defined in env.json
     And storage directories are empty
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
