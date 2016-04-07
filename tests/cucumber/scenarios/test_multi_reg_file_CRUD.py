@@ -50,20 +50,21 @@ def test_delete():
 
 
 # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Read and write to regular file'
-# )
-# def test_read_write():
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Read and write to regular file'
+)
+def test_read_write():
+    pass
+
 
 # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Read regular file without read permission'
-# )
-# def test_read_without_permission():
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Read regular file without read permission'
+)
+def test_read_without_permission():
+    pass
 
 
 # TODO VFS-1510
@@ -98,13 +99,14 @@ def test_write_without_permission():
 def test_execute_without_permission():
     pass
 
+
 # TODO VFS-1823
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Move regular file and read'
-# )
-# def test_move():
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Move regular file and read'
+)
+def test_move():
+    pass
 
 # TODO VFS-1513
 # @scenario(
@@ -114,13 +116,14 @@ def test_execute_without_permission():
 # def test_move_big():
 #     pass
 
+
 # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Copy regular file and read'
-# )
-# def test_copy():
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Copy regular file and read'
+)
+def test_copy():
+    pass
 
 
 # TODO VFS-1513

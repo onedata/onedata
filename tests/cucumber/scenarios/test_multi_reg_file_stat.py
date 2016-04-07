@@ -40,13 +40,14 @@ def test_type():
 def test_default_access():
     pass
 
+
 # TODO VFS-1820
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Change access permissions'
-# )
-# def test_change_access():
-#     pass
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Change access permissions'
+)
+def test_change_access():
+    pass
 
 
 @scenario(
@@ -64,13 +65,14 @@ def test_increase_size():
 def test_decrease_size():
     pass
 
+
 # TODO VFS-1820
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Truncate regular file without write permission'
-# )
-# def test_truncate_without_permission():
-#     pass
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Truncate regular file without write permission'
+)
+def test_truncate_without_permission():
+    pass
 
 
 @scenario(
@@ -96,13 +98,14 @@ def test_timestamp():
 def test_update_timestamp_with_permission():
     pass
 
+
 # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Access time'
-# )
-# def test_access_time():
-#     pass
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Access time'
+)
+def test_access_time():
+    pass
 
 
 @scenario(
@@ -112,13 +115,14 @@ def test_update_timestamp_with_permission():
 def test_modification_time():
     pass
 
+
 # TODO VFS-1821
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Status-change time when changing mode'
-# )
-# def test_stat_change_time_chmod():
-#     pass
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Status-change time when changing mode'
+)
+def test_stat_change_time_chmod():
+    pass
 
 
 @scenario(
