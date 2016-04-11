@@ -10,7 +10,8 @@ Module implements pytest-bdd steps for authorization and mounting oneclient.
 import pytest
 from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers
-
+import os
+import time
 import subprocess
 
 
@@ -93,6 +94,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
                 "rm -rf " + os.path.join(os.path.dirname(mount_path), ".local"))
 
         save_op_code(context, user, ret)
+    time.sleep(20)
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))

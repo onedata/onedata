@@ -135,13 +135,13 @@ def test_rename_subfile_without_permission():
 def test_rename_subfile_with_permission():
     pass
 
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Recreate directory deleted by other user'
-)
-def test_recreate():
-    pass
+# TODO VFS-1824
+# @scenario(
+#     '../features/multi_directory_CRUD.feature',
+#     'Recreate directory deleted by other user'
+# )
+# def test_recreate():
+#     pass
 
 
 @scenario(

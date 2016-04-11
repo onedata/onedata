@@ -11,12 +11,12 @@ from environment import docker, common, dns
     ("appmock_up", 2),
     ("client_up", 2),
     ("cluster_manager_up", 1),
+    ("cluster_up", {'cm_nodes': 1, 'cw_nodes': 1}),
     ("panel_up", 2),
+    ("provider_up", {'cm_nodes': 1, 'op_nodes': 2}),
+    ("zone_up", 1),
     ("couchbase_up", 2),
     ("riak_up", 2),
-    ("zone_up", 1),
-    ("provider_up", {'cm_nodes': 1, 'op_nodes': 2}),
-    ("cluster_up", {'cm_nodes': 1, 'cw_nodes': 1})
 ])
 def test_component_up(script_name, dockers_num):
     # setup
