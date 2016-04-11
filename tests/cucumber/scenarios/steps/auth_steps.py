@@ -93,7 +93,11 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
                 "rm -rf " + os.path.join(os.path.dirname(mount_path), ".local"))
 
         save_op_code(context, user, ret)
-    time.sleep(20)
+
+    # TODO This is just a temporary solution, delete it after resolving VFS-1881
+    if context.env_json not in ['env.json', 'env2.json']:
+        time.sleep(5)
+
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
