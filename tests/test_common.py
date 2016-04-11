@@ -53,18 +53,25 @@ def get_json_files(dir):
     return jsons
 
 
-def run_env_up_script(script, args=[]):
+def run_env_up_script(script, args=[], output_log_file=None):
     """Runs given script to bring up test environment.
     Script must be located in docker_dir directory (see test_common.py)
     If script fails, functions skips test.
     """
     cmd = [os.path.join(docker_dir, script)]
+    output = ''
     if args:
         cmd.extend(args)
+
     try:
         output = subprocess.check_output(cmd)
-    except subprocess.CalledProcessError:
-        pytest.skip(script + " script failed")
+    except subprocess.CalledProcessError as error:
+        output = error.output
+        pytest.skip(script + " script failed with error:\n" + error.output)
+    finally:
+        if output_log_file:
+            with open(output_log_file, 'w+') as file:
+                file.write(output)
 
     stripped_output = strip_output_logs(output)
     # get dict from string

@@ -58,7 +58,9 @@ def environment(request, context):
     logdir = test_common.make_logdir(
             test_common.cucumber_logdir,
             os.path.join(context.env_json.split(".")[0], feature_name))
-    env_desc = test_common.run_env_up_script("env_up.py", ['-l', logdir, env_path])
+    env_desc_log_file = os.path.join(logdir, 'env_desc.log')
+    env_desc = test_common.run_env_up_script('env_up.py', ['-l', logdir, env_path],
+                                             output_log_file=env_desc_log_file)
 
     def fin():
         docker.remove(request.environment['docker_ids'], force=True, volumes=True)
