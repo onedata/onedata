@@ -1,1 +1,1 @@
-bamboos/packaging/pkg.py
+bamboos/package/pkg.py

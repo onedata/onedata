@@ -16,6 +16,7 @@ from steps.common import *
 from steps.multi_file_steps import *
 from steps.multi_reg_file_steps import *
 
+
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Check file type when empty'
@@ -40,6 +41,7 @@ def test_default_access():
     pass
 
 
+# TODO VFS-1820
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Change access permissions'
@@ -64,6 +66,7 @@ def test_decrease_size():
     pass
 
 
+# TODO VFS-1820
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Truncate regular file without write permission'
@@ -96,6 +99,7 @@ def test_update_timestamp_with_permission():
     pass
 
 
+# TODO VFS-1822
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Access time'
@@ -112,6 +116,7 @@ def test_modification_time():
     pass
 
 
+# TODO VFS-1821
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Status-change time when changing mode'

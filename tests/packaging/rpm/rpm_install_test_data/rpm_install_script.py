@@ -58,14 +58,13 @@ check_call(['wget', '-O', '/etc/ssl/cert.pem',
             'ca-bundle.crt'])
 
 # oneprovider configure and install
-check_call(['op_panel_admin', '--install', '/root/data/install.cfg'])
+check_call(['op_panel_admin', '--install', '/root/data/install.yml'])
 
 # validate oneprovider is running
 check_call(['service', 'cluster_manager', 'status'])
 check_call(['service', 'op_worker', 'status'])
 
 # uninstall
-# @todo Fix op_worker stop - VFS-1757
-# check_call(['op_panel_admin', '--uninstall'])
+check_call(['op_panel_admin', '--uninstall'])
 
 sys.exit(0)

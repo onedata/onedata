@@ -4,7 +4,7 @@
 	branch = develop
 [submodule "oz_worker"]
 	path = oz_worker
-	url = ONEDATA_GIT_URL/oz_worker.git
+	url = ONEDATA_GIT_URL/oz-worker.git
 	branch = develop
 [submodule "oneclient"]
 	path = oneclient
