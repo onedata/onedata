@@ -45,7 +45,10 @@
         },
         "cfg1": {
             "storages": [
-                "/mnt/st1"
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                }
             ],
             "users": [
                 "u1",
@@ -68,7 +71,10 @@
         },
         "cfg2": {
             "storages": [
-                "/mnt/st2"
+                {
+                    "type": "posix",
+                    "name": "/mnt/st2"
+                }
             ],
             "users": [
                 "u1",
