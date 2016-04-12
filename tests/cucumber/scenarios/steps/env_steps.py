@@ -43,7 +43,7 @@ def clear_storages(context):
     config = common.parse_json_config_file(env_path)
     for _, os_config in config['os_configs'].iteritems():
         for storage in os_config['storages']:
-            shutil.rmtree(storage, ignore_errors=True)
+            shutil.rmtree(storage['name'], ignore_errors=True)
 
 
 @given("environment is up", scope="module")
