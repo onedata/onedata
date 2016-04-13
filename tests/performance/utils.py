@@ -1,40 +1,41 @@
 class Report:
-
     def __init__(self, name):
         self.name = name
         self.report = {name: {}}
 
     def add_to_report(self, key, value):
-        print "ADD TO REPORT ", key
         if isinstance(value, Report):
             self.add_nested_report(key, value)
         else:
             self.report[self.name][key] = value
 
     def add_nested_report(self, key, value):
-        if key == "suites":
-            f = open('debug', 'a')
-            f.write("NESTED " + value.report.keys()[0])
-        print "BEFORE ADD: ", self.report
-        print "ADDING KEY: ", key
-        print "ADDING VALUE: ", value.report
         self.report[self.name][key][value.name] = value.report[value.name]
-        # self.report[self.name][key][value.name].update(value.report)
-        print "AFTER ADD: ", self.report
 
 
 class PerformanceReport(Report):
-
     def __init__(self, name, repository, commit, branch):
         Report.__init__(self, name)
-        self.report[name] = {'suites': {}}
+        # self.report[name] = {'suites': {}}
+        self.report[name] = {'envs': {}}
         self.add_to_report('repository', repository)
         self.add_to_report('commit', commit)
         self.add_to_report('branch', branch)
 
+    # def add_suite_report(self, env, suite_report):
+    #     self.report[self.name]['envs'].update({env: {
+    #         suite_report.name: suite_report.report
+    #     }})
+
+
+class EnvironmentReport(Report):
+    def __init__(self, name):
+        Report.__init__(self, name)
+        self.add_to_report('name', name)
+        self.add_to_report('suites', {})
+
 
 class SuiteReport(Report):
-
     def __init__(self, name, description, copyright, authors):
         Report.__init__(self, name)
         self.add_to_report('name', name)
@@ -42,17 +43,14 @@ class SuiteReport(Report):
         self.add_to_report('copyright', copyright)
         self.add_to_report('authors', authors)
         self.add_to_report('cases', {})
-        # print "SUITE: ", self.report
 
 
-class CaseReport(Report):
-
-    def __init__(self, name, description,):
+class TestCaseReport(Report):
+    def __init__(self, name, description, ):
         Report.__init__(self, name)
         self.add_to_report('name', name)
         self.add_to_report('description', description)
         self.add_to_report('configs', {})
-        # print "CASE: ", self.report
 
 
 class ConfigReport(Report):
@@ -60,17 +58,90 @@ class ConfigReport(Report):
         Report.__init__(self, name)
         self.add_to_report('name', name)
         self.add_to_report('description', description)
-        self.add_to_report('repeats', repeats)
+        self.add_to_report('repeats_number', repeats)
+        self.add_to_report('parameters', [])
+        self.add_to_report('successful_repeats_summary', [])
+        self.add_to_report('successful_repeats_details', [])
+        self.add_to_report('successful_repeats_average', [])
+        self.add_to_report('failed_repeats_details', {})
 
 
-def merge_configs(config, default_config):
-    merged_config = dict(config)
-    params_key = 'parameters'
-    for key in default_config.keys():
-        if key == params_key and params_key in config.keys():
-            merged_params = dict(default_config[params_key])
-            merged_params.update(config[params_key])
-            merged_config[params_key] = merged_params
-        elif key != 'description' and key not in merged_config.keys():
-            merged_config[key] = default_config[key]
-    return merged_config
+class TestResult:
+    def __init__(self, name, value, description, unit=""):
+        self.name = name
+        self.value = value
+        self.description = description
+        self.unit = unit
+
+
+class TestResultReport:
+
+    def __init__(self):
+        self.details = {}
+        self.summary = {}
+        self.average = {}
+        self.num = 0
+
+    def prepare_report(self):
+        for key in self.details:
+            avg = float(self.summary[key]['value'])/self.num
+            self.average[key]['value'] = avg
+        self.details = dict_to_list(self.details)
+        self.summary = dict_to_list(self.summary)
+        self.average = dict_to_list(self.average)
+
+    def add_single_test_results(self, test_results, repeat):
+        for test_result in test_results:
+            if repeat == 0:
+                self.add_new(test_result, repeat)
+            else:
+                self.add_existing(test_result, repeat)
+        self.num += 1
+
+    def add_new(self, test_result, repeat):
+        name = test_result.name
+        val = test_result.value
+        new_result = {
+            'name': name,
+            'description': test_result.description,
+            'unit': test_result.unit,
+        }
+        self.details[name] = new_result
+        self.details[name]['value'] = {str(repeat): val}
+        self.summary[name] = dict(new_result)
+        self.summary[name]['value'] = val
+        self.average[name] = dict(new_result)
+
+    def add_existing(self, test_result, repeat):
+        name = test_result.name
+        val = test_result.value
+        self.details[name]['value'].update({str(repeat): val})
+        self.summary[name]['value'] += val
+
+
+def update_dict(base, updating):
+    new_dict = dict(base)
+    for key in updating.keys():
+        if key in base.keys() and \
+                isinstance(updating[key], dict) and \
+                isinstance(new_dict[key], dict):
+
+            new_dict[key] = update_dict(new_dict[key], updating[key])
+        else:
+            new_dict[key] = updating[key]
+    return new_dict
+
+
+def dict_to_list(dict):
+    list = []
+    for key in dict.keys():
+        new_elem = dict[key]
+        new_elem['name'] = key
+        list.append(new_elem)
+    return list
+
+
+def ensure_list(elem):
+    if not isinstance(elem, list):
+        elem = [elem]
+    return elem
