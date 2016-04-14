@@ -16,8 +16,8 @@ import os
 import re
 import subprocess
 
-# TODO functions used in cucumber and acceptance tests should be moved to utils
-
+# TODO functions used in cucumber and acceptance tests should be moved to common files
+# higher in files hierarchy
 REPEATS = 1
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
@@ -26,20 +26,7 @@ SYSBENCH_OUTPUT_REGEX = r'Total transferred \d+.?\d+?\w+\s+\((\d+.?\d+)(\w+/\w+)
 SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
 
 
-class TestSimple(TestPerformance):
-    @pytest.fixture(scope="module", params=[
-        "/home/kuba/IdeaProjects/work/VFS-1793/onedata/tests/performance/environments/env.json"])
-    def env_description_file(self, request):
-        """This fixture must be overridden in performance test module if you
-        want to start tests from given module with different environments that
-        those defined in performance/environments directory
-        """
-        return request.param
-
-    @pytest.fixture(scope="module", params=[
-        "/home/kuba/IdeaProjects/work/VFS-1793/onedata/tests/performance/environments/env.json"])
-    def env_description_file(self, request):
-        return request.param
+class TestFileSystem(TestPerformance):
 
     @performance(
             default_config={
@@ -101,15 +88,8 @@ class TestSimple(TestPerformance):
         block_size_unit = params['block_size']['unit']
         client_name, client = clients.items()[0]
 
-        print "SIZE: ", size
-        print "BLOCK_SIZE", block_size
-
-        test_file = os.path.join(client.mount_path, "testfile")
         test_file = temp_file(client, client.mount_path)
-        test_file_host = os.path.join("/tmp", "testfile")
-        test_file_host = temp_file(client, "/tmp")
-        # create_file(client, test_file)
-        # create_file(client, test_file_host)
+        test_file_host = temp_file(client, get_home_dir(client))
         dev_zero = os.path.join('/dev', 'zero')
 
         write_output = dd(client, dev_zero, test_file, block_size,
@@ -184,7 +164,7 @@ class TestSimple(TestPerformance):
         mode = params['mode']['value']
 
         dir_path = temp_dir(client, client.mount_path)
-        dir_path_host = temp_dir(client, "/home/u1")
+        dir_path_host = temp_dir(client, get_home_dir(client))
 
         output = sysbench_tests(threads_number, total_size, files_number, mode,
                                 client, dir_path)
@@ -235,13 +215,11 @@ def dd(client, input, output, block_size, block_size_unit, size, size_unit):
             bs=int(block_size),
             count=int(count))
 
-    return run_cmd('u1', client, cmd, output=True)
-    # return docker.exec_(container=client.docker_id, command=cmd, output=True)
+    return run_cmd(client.user, client, cmd, output=True)
 
 
 def parse_dd_output(dd_output):
-    dd_output = dd_output.split("\n")[
-        -1].strip()  # TODO improve regex and use search instead of splitting lines
+    dd_output = dd_output.split("\n")[-1].strip()
     m = re.match(DD_OUTPUT_PATTERN, dd_output)
     value = float(m.group(1))
     unit = m.group(2)
@@ -278,18 +256,14 @@ def create_file(client, path):
     run_cmd('u1', client, "touch " + path)
 
 
-# TODO check
 def temp_file(client, path):
     cmd = '''import tempfile
 handle, file_path = tempfile.mkstemp(dir="{dir}")
-print file_path'''.format(dir=path)
+print file_path'''
 
+    cmd = cmd.format(dir=path)
     cmd = ["python -c '{command}'".format(command=cmd)]
 
-    # file_path = docker.exec_(
-    #         container=client.docker_id,
-    #         command=["python", "-c", cmd],
-    #         output=True)
     return run_cmd(client.user, client, cmd, output=True).strip()
 
 
@@ -366,3 +340,6 @@ def parse_sysbench_output(output):
 
     return ((transfer, transfer_unit), (requests_velocity, requests_velocity_unit))
 
+
+def get_home_dir(client):
+    return os.path.join("/home", client.user)

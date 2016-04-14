@@ -91,7 +91,6 @@ def json_output(request):
     return performance_report
 
 
-# todo MAYBE CLASS IS NOT NEEDED
 class TestPerformance:
     @pytest.fixture(scope="module")
     def suite_report(self, request, env_report):
