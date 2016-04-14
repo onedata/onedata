@@ -148,23 +148,24 @@ def ensure_list(elem):
     return elem
 
 
-def generate_configs(params, description_format):
+def generate_configs(params, description_skeleton):
     keys = params.keys()
     configs = {}
     i = 0
-    carthesian_product = itertools.product(*params.values())
-    print carthesian_product
+    combinations = itertools.product(*params.values())
+    print combinations
 
-    for combination in carthesian_product:
+    for combination in combinations:
         conf_name = 'config{}'.format(i)
-        configs[conf_name] = {}
-        new_params = {}
-        zipped = zip(keys, combination)
-        for key, value in zipped:
+        configs[conf_name] = dict()
+        new_params = dict(zip(keys, combination))
+        print new_params
+        description = description_skeleton.format(**new_params)
+        for key, value in new_params.items():
             new_params[key] = {'value': value}
         configs[conf_name].update({
             'parameters': new_params,
-            'description': "DESCRIPTION"
+            'description': description
         })
         i += 1
 
