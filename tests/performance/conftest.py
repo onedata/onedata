@@ -111,21 +111,6 @@ class TestPerformance:
 
         def fin():
                 env_report.add_to_report("suites", report)
-            # json_output.add_suite_report(env_desc_short, report)
-            # if not json_output.report[env_desc_short]:
-            #     f = open("out", 'a')
-            #     f.write(str(report))
-            #     f.write("\n###################\n")
-            #     f.write(report.name)
-            #     f.write("\n###################\n")
-            #     f.write(str(report.report))
-            #     f.write("\n###################\n")
-            #     tmp = dict(report[name])
-            #     report['envs'].update({env_desc_short: tmp})
-            #     report.del()
-            # else:
-            #     json_output.report[end]
-
         request.addfinalizer(fin)
         return report
 
@@ -139,7 +124,6 @@ class TestPerformance:
 
         request.addfinalizer(fin)
         return report
-
 
     @pytest.fixture(scope="module", params=get_json_files(performance_env_dir))
     def env_description_file(self, request):
@@ -161,7 +145,6 @@ class TestPerformance:
 
         request.addfinalizer(fin)
         return env
-        # return env_description_file
 
     # TODO this fixture is similiar to client_ids in cucumber tests
     # TODO it should be moved to common conftest.py
@@ -209,4 +192,3 @@ class TestPerformance:
                 print "RETURN: ", run_cmd(user, mounted_clients[client_name],
                                           cmd, output=True)
         return mounted_clients
-        # return environment

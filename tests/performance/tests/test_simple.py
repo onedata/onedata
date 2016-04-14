@@ -1,21 +1,41 @@
+"""
+This module contains performance tests of onedata on acceptance level
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = """(C) 2015 ACK CYFRONET AGH,
+This software is released under the MIT license cited in 'LICENSE.txt'."""
+
+
 from tests.performance.conftest import TestPerformance, performance
 from environment import docker, env
 import pytest
-from tests.performance.utils import TestResult
+from tests.performance.utils import TestResult, generate_configs
 import random
 from cucumber.scenarios.steps.common import Client, run_cmd
 import os
 import re
+import subprocess
 
 # TODO functions used in cucumber and acceptance tests should be moved to utils
 
-REPEATS = 1
+REPEATS = 10
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
-import subprocess
+SYSBENCH_OUTPUT_REGEX = r'Total transferred \d+.?\d+?\w+\s+\((\d+.?\d+)(\w+/\w+)\)\s+(\d+.?\d+?)\s+(\w+/\w+)'
+SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
+
 
 class TestSimple(TestPerformance):
+    @pytest.fixture(scope="module", params=[
+        "/home/kuba/IdeaProjects/work/VFS-1793/onedata/tests/performance/environments/env.json"])
+    def env_description_file(self, request):
+        """This fixture must be overridden in performance test module if you
+        want to start tests from given module with different environments that
+        those defined in performance/environments directory
+        """
+        return request.param
+
     # @pytest.fixture(scope="module", params=[
     #     "/home/kuba/IdeaProjects/work/VFS-1793/onedata/tests/performance/environments/env.json"])
     # def env_description_file(self, request):
@@ -163,7 +183,6 @@ class TestSimple(TestPerformance):
 #################################################
 
 def dd(client, input, output, block_size, block_size_unit, size, size_unit):
-
     block_size_unit = SI_prefix_to_default(block_size_unit)
     size_unit = SI_prefix_to_default(size_unit)
     size = convert_size(size, size_unit, 'k')
@@ -180,14 +199,13 @@ def dd(client, input, output, block_size, block_size_unit, size, size_unit):
             bs=int(block_size),
             count=int(count))
 
-    print "DD: ", dd
     return run_cmd('u1', client, cmd, output=True)
     # return docker.exec_(container=client.docker_id, command=cmd, output=True)
 
 
-def parse_dd_throughput(dd_output):
-    print "DD OUTPUT: ", dd_output
-    dd_output = dd_output.split("\n")[-1].strip()
+def parse_dd_output(dd_output):
+    dd_output = dd_output.split("\n")[
+        -1].strip()  # TODO improve regex and use search instead of splitting lines
     m = re.match(DD_OUTPUT_PATTERN, dd_output)
     value = float(m.group(1))
     unit = m.group(2)
@@ -228,5 +246,92 @@ def create_file(client, path):
     run_cmd('u1', client, "touch " + path)
 
 
+# TODO check
+def temp_file(client, path):
+    cmd = '''import tempfile
+handle, file_path = tempfile.mkstemp(dir="{dir}")
+print file_path'''.format(dir=path)
+
+    cmd = ["python -c '{command}'".format(command=cmd)]
+
+    # file_path = docker.exec_(
+    #         container=client.docker_id,
+    #         command=["python", "-c", cmd],
+    #         output=True)
+    return run_cmd(client.user, client, cmd, output=True).strip()
+
+
+def temp_dir(client, path):
+    cmd = '''import tempfile
+print tempfile.mkdtemp(dir="{dir}")'''.format(dir=path)
+    # dir_path = docker.exec_(
+    #         container=client.docker_id,
+    #         command=["python -c '{command}'".format(command=cmd)],
+    #         output=True)
+
+    cmd = ["python -c '{command}'".format(command=cmd)]
+    return run_cmd(client.user, client, cmd, output=True).strip()
+
+
 def delete_file(client, path):
     run_cmd('u1', client, "rm -rf " + path)
+
+
+def sysbench_tests(threads_number, total_size, file_number, mode, client, dir):
+    run_sysbench_prepare(threads_number, total_size, file_number, mode, client,
+                         dir)
+    output = run_sysbench(threads_number, total_size, file_number, mode, client,
+                          dir)
+    run_sysbench_cleanup(threads_number, total_size, file_number, mode, client,
+                         dir)
+    return output
+
+
+def run_sysbench_prepare(threads_number, total_size, file_number, mode, client,
+                         dir):
+    sysbench(threads_number, total_size, file_number, mode, "prepare", client,
+             dir)
+
+
+def run_sysbench_cleanup(threads_number, total_size, file_number, mode, client,
+                         dir):
+    sysbench(threads_number, total_size, file_number, mode, "cleanup", client,
+             dir)
+
+
+def run_sysbench(threads_number, total_size, file_number, mode, client, dir):
+    return sysbench(threads_number, total_size, file_number, mode, "run",
+                    client, dir)
+
+
+def sysbench(threads_number, total_size, file_number, mode, type, client, dir):
+    cmd = sysbench_command(threads_number, total_size, file_number, mode, type,
+                           dir)
+    return run_cmd(client.user, client, [cmd], output=True)
+
+
+def sysbench_command(threads_number, total_size, file_number, mode, type, dir):
+
+    cmd = "cd {dir} && " \
+          "sysbench --num-threads={threads_number} --test=fileio " \
+          "--file-total-size={total_size}M --file-num={file_number} " \
+          "--file-test-mode={mode} {type}".format(
+            dir=dir,
+            threads_number=threads_number,
+            total_size=total_size,
+            file_number=file_number,
+            mode=mode,
+            type=type)
+
+    return cmd
+
+
+def parse_sysbench_output(output):
+    m = re.search(SYSBENCH_OUTPUT_PATTERN, output)
+    transfer = float(m.group(1))
+    transfer_unit = m.group(2)
+    requests_velocity = float(m.group(3))
+    requests_velocity_unit = m.group(4)
+
+    return ((transfer, transfer_unit), (requests_velocity, requests_velocity_unit))
+

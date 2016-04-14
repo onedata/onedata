@@ -1,3 +1,9 @@
+import itertools
+import subprocess
+import os
+import re
+
+
 class Report:
     def __init__(self, name):
         self.name = name
@@ -21,11 +27,6 @@ class PerformanceReport(Report):
         self.add_to_report('repository', repository)
         self.add_to_report('commit', commit)
         self.add_to_report('branch', branch)
-
-    # def add_suite_report(self, env, suite_report):
-    #     self.report[self.name]['envs'].update({env: {
-    #         suite_report.name: suite_report.report
-    #     }})
 
 
 class EnvironmentReport(Report):
@@ -145,3 +146,52 @@ def ensure_list(elem):
     if not isinstance(elem, list):
         elem = [elem]
     return elem
+
+
+def generate_configs(params, description_format):
+    keys = params.keys()
+    configs = {}
+    i = 0
+    carthesian_product = itertools.product(*params.values())
+    print carthesian_product
+
+    for combination in carthesian_product:
+        conf_name = 'config{}'.format(i)
+        configs[conf_name] = {}
+        new_params = {}
+        zipped = zip(keys, combination)
+        for key, value in zipped:
+            new_params[key] = {'value': value}
+        configs[conf_name].update({
+            'parameters': new_params,
+            'description': "DESCRIPTION"
+        })
+        i += 1
+
+    return configs
+
+
+def get_branch_name():
+    return subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+
+
+def get_commit():
+    return subprocess.check_output(["git", "rev-parse", "HEAD"])
+
+
+def get_repository():
+    toplevel = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'])
+    return os.path.basename(toplevel).strip()
+
+
+def get_copyright(mod):
+    return mod.__copyright__ if hasattr(mod, '__copyright__') else ''
+
+
+def get_authors(mod):
+    author = mod.__author__ if hasattr(mod, '__author__') else ''
+    return re.split(r'\s*,\s*', author)
+
+
+def get_suite_description(mod):
+    return mod.__doc__
