@@ -16,9 +16,9 @@ import os
 import re
 import subprocess
 
-# TODO functions used in cucumber and acceptance tests should be moved to common files
+# TODO functions used in cucumber, acceptance and performance tests should be moved to common files
 # TODO higher in files hierarchy
-REPEATS = 100
+REPEATS = 1
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
@@ -38,49 +38,10 @@ class TestFileSystem(TestPerformance):
                 },
                 'description': 'Test of dd throughput'
             },
-            configs={
-                'small_block1': {
-                    'parameters': {
-                        'block_size': {'value': 4},
-                        'size': {'value': 1024}
-
-                    },
-                    'description': "Small block and small file"},
-                # 'small_block2': {
-                #     'parameters': {'block_size': {'value': 4},
-                #                    'size': {'value': 1048576}},
-                #     'description': "Small block and medium file"},
-                # 'small_block3': {
-                #     'parameters': {'block_size': {'value': 4},
-                #                    'size': {'value': 10485760}},
-                #     'description': "Small block and big file"},
-                'medium_block1': {
-                    'parameters': {'block_size': {'value': 128},
-                                   'size': {'value': 1024}},
-                    'description': "Medium block and small file"},
-                # 'medium_block2': {
-                #     'parameters': {'block_size': {'value': 128},
-                #                    'size': {'value': 1048576}},
-                #     'description': "Medium block and medium file"},
-                # 'medium_block3': {
-                #     'parameters': {'block_size': {'value': 128},
-                #                    'size': {'value': 10485760}},
-                #     'description': "Medium block and big file"},
-                'big_block1': {
-                    'parameters': {'block_size': {'value': 1024},
-                                   'size': {'value': 1024}},
-                    'description': "Big block and big file"},
-                # 'big_block2': {
-                #     'parameters': {'block_size': {'value': 1024},
-                #                    'size': {'value': 1048576}},
-                #     'description': "Big block and big file"},
-                # 'big_block3': {
-                #     'parameters': {'block_size': {'value': 1024},
-                #                    'size': {'value': 10485760}},
-                #     'description': "Big block and big file"}
-            }
-
-    )
+            configs=generate_configs({
+                'block_size': [1, 4, 128, 1024],
+                'size': [1024, 1048576, 10485760]
+            }, "DD TEST -- block size: {block_size} size: {size}"))
     def test_dd(self, clients, params):
 
         size = params['size']['value']
@@ -139,14 +100,18 @@ class TestFileSystem(TestPerformance):
                     'mode': {
                         'description': "Modes",
                         'unit': ""
+                    },
+                    'total_size': {
+                        'description': "Total size",
+                        'unit': "MB"
                     }
                 },
                 'description': 'Sysbench test'
             },
             configs=generate_configs({
-                'files_number': [10],  # , 100, 1000],
-                'threads_number': [1],  # , 16],
-                'total_size': [10],  # , 100, 1000],  # in M
+                'files_number': [10, 100, 1000],
+                'threads_number': [1, 16],
+                'total_size': [10, 100, 1000],
                 'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
             }, 'SYSBENCH TEST -- '
                'Files number: {files_number} '
