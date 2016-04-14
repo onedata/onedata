@@ -337,8 +337,6 @@ def parse_sysbench_output(output):
     requests_velocity = float(m.group(3))
     requests_velocity_unit = m.group(4)
 
-    #TODO return testresult
-
     return ((transfer, transfer_unit), (requests_velocity, requests_velocity_unit))
 
 
