@@ -13,7 +13,7 @@ sys.path.insert(0, test_dir)
 
 from test_common import make_logdir, get_test_name, get_json_files, \
     performance_output, performance_env_dir, acceptance_logdir, \
-    run_env_up_script
+    run_env_up_script, performance_logdir
 from cucumber.scenarios.steps.common import Client, run_cmd
 
 print sys.path
@@ -84,6 +84,8 @@ def json_output(request):
                                            get_commit(), get_branch_name())
 
     def fin():
+        if not os.path.exists(performance_logdir):
+            os.makedirs(performance_logdir)
         f = open(performance_output, 'w')
         f.write(json.dumps(performance_report.report))
 
