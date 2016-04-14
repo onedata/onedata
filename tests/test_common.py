@@ -20,9 +20,9 @@ cucumber_logdir = os.path.join(cucumber_dir, "logs")
 acceptance_logdir = os.path.join(acceptance_dir, "logs")
 performance_logdir = os.path.join(performance_dir, "logs")
 performance_env_dir = os.path.join(performance_dir, "environments")
-# performance_output = os.path.join(performance_logdir, "performance.json")
+performance_output = os.path.join(performance_logdir, "performance.json")
 # TODO after uncommenting env_up in tests, unomment above line and delete below line
-performance_output = os.path.join(performance_dir, "performance.json")
+# performance_output = os.path.join(performance_dir, "performance.json")
 example_env_dir = os.path.join(bamboos_dir, "example_env")
 
 # Append useful modules to the path
