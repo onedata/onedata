@@ -23,10 +23,10 @@ from common import *
 def write_at_offset(user, data, offset, file, client_node, context):
     client = get_client(client_node, user, context)
     path = make_path(file, client)
-    write_command = '''python -c 'with open(\\'{path}\\', \\'r+b\\') as file:
+    write_command = '''python -c "with open(\\"{path}\\", \\"r+b\\") as file:
     file.seek({offset})
-    file.write(\\'{data}\\')' '''\
-        .format(path=path, offset=offset, data=data)
+    file.write(\\"{data}\\")"
+'''.format(path=path, offset=offset, data=data)
     ret = run_cmd(user, client, write_command)
     save_op_code(context, user, ret)
     if ret == 0:

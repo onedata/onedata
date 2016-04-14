@@ -58,7 +58,7 @@ def test_big_transfer_and_md5_check():
 
 @scenario(
     '../features/multiprovider_proxy_replication.feature',
-    'Remote file override'
+    'Create nonempty file and override its contents on remote provider'
 )
 def test_remote_file_override():
     pass
@@ -66,7 +66,7 @@ def test_remote_file_override():
 
 @scenario(
     '../features/multiprovider_proxy_replication.feature',
-    'Remote file removal'
+    'Create nonempty file and remove it on remote provider'
 )
 def test_remote_file_removal():
     pass
@@ -74,15 +74,15 @@ def test_remote_file_removal():
 
 @scenario(
     '../features/multiprovider_proxy_replication.feature',
-    'Sequential appends'
+    'Create nonempty file, append remotely, append locally and read both'
 )
 def test_sequential_appends():
     pass
 
-# todo fix python syntax
-# @scenario(
-#     '../features/multiprovider_proxy_replication.feature',
-#     'Conflict on disjoint blocks'
-# )
-# def test_conflict_on_disjoint_blocks():
-#     pass
+
+@scenario(
+    '../features/multiprovider_proxy_replication.feature',
+    'Concurrently write disjoint ranges and read the same on both providers'
+)
+def test_conflict_on_disjoint_blocks():
+    pass

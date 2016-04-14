@@ -42,16 +42,16 @@ Feature: Multiprovider_proxy_replication
     Then user waits 10 seconds
     And u2 checks MD5 of file1 on client2
 
-  Scenario: Remote file override
+  Scenario: Create nonempty file and override its contents on remote provider
     When user waits 5 seconds
     And u1 creates regular files [file1] on client1
     And u1 writes "123456789" to file1 on client1
     And user waits 10 seconds
     And u2 writes "abcd" to file1 on client2
-    Then user waits 10 seconds
+    Then user waits 15 seconds
     And u1 reads "abcd" from file1 on client1
 
-  Scenario: Remote file removal
+  Scenario: Create nonempty file and remove it on remote provider
     When user waits 5 seconds
     And u1 creates regular files [file1] on client1
     And u1 writes "123456789" to file1 on client1
@@ -61,7 +61,7 @@ Feature: Multiprovider_proxy_replication
     Then user waits 10 seconds
     And u2 doesn't see [file1] in . on client2
 
-  Scenario: Sequential appends
+  Scenario: Create nonempty file, append remotely, append locally and read both
     When user waits 5 seconds
     And u1 creates regular files [file1] on client1
     And u1 writes "a" to file1 on client1
@@ -73,9 +73,10 @@ Feature: Multiprovider_proxy_replication
     And u1 reads "abc" from file1 on client1
     And u2 reads "abc" from file1 on client2
 
-  Scenario: Conflict on disjoint blocks
+  Scenario: Concurrently write disjoint ranges and read the same on both providers
     When user waits 5 seconds
     And u1 creates regular files [file1] on client1
+    And user waits 10 seconds
     And u2 writes "defg" at offset 3 to file1 on client2
     And u1 writes "abc" at offset 0 to file1 on client1
     Then user waits 10 seconds
