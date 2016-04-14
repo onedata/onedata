@@ -16,7 +16,6 @@ from test_common import make_logdir, get_test_name, get_json_files, \
     run_env_up_script, performance_logdir
 from cucumber.scenarios.steps.common import Client, run_cmd
 
-print sys.path
 from cucumber.scenarios.steps.auth_steps import set_dns, get_cookie, get_token
 from environment import docker
 
@@ -48,20 +47,30 @@ def performance(default_config, configs):
 
                 test_result_report = TestResultReport()
                 max_repeats = merged_config['repeats']
+                succces_rate = merged_config['success_rate']
                 repeats = 0
-
+                failed_repeats = 0
+                successful_repeats = 0
+                failed_details = {}
                 while repeats < max_repeats:
-                    test_results = test_function(
-                            self, clients,
-                            merged_config.get('parameters', {}))
 
-                    test_results = ensure_list(test_results)
-                    test_result_report.add_single_test_results(test_results,
-                                                               repeats)
-                    repeats += 1
+                    try:
+                        test_results = test_function(
+                                self, clients,
+                                merged_config.get('parameters', {}))
+                    except Exception as e:
+                        failed_repeats += 1
+                        failed_details[str(repeats)] = str(e)
+                    else:
+                        test_results = ensure_list(test_results)
+                        test_result_report.add_single_test_results(
+                                test_results, repeats)
+                        successful_repeats += 1
+                    finally:
+                        repeats += 1
 
                 config_report.add_to_report('completed', int(time.time()))
-                config_report.add_to_report('successful_repeats', repeats)
+                config_report.add_to_report('successful_repeats', successful_repeats)
                 test_result_report.prepare_report()
                 config_report.add_to_report('successful_repeats_details',
                                             test_result_report.details)
@@ -69,8 +78,17 @@ def performance(default_config, configs):
                                             test_result_report.summary)
                 config_report.add_to_report('successful_repeats_average',
                                             test_result_report.average)
+                config_report.add_to_report("failed_repeats_details", failed_details)
 
                 test_case_report.add_to_report('configs', config_report)
+
+                if is_success_rate_satisfied(successful_repeats, failed_repeats, succces_rate):
+                    suite_report.add_to_report('cases', test_case_report)
+                    pytest.fail("Test suite: {suite} failed because of too "
+                                "many failures: {failures}"
+                                .format(suite=suite_report.name,
+                                        failures=failed_repeats))
+
             suite_report.add_to_report('cases', test_case_report)
 
         return wrapped_test_function
@@ -104,7 +122,8 @@ class TestPerformance:
                              get_authors(module))
 
         def fin():
-                env_report.add_to_report("suites", report)
+            env_report.add_to_report("suites", report)
+
         request.addfinalizer(fin)
         return report
 
@@ -165,7 +184,6 @@ class TestPerformance:
                 # /root has to be accessible for gdb to access /root/bin/oneclient
                 assert run_cmd('root', mounted_clients[client_name],
                                'chmod +x /root') == 0
-                print "DATA: ", data
                 cmd = ('mkdir -p {mount_path}'
                        ' && export GLOBAL_REGISTRY_URL={gr_domain}'
                        ' && export PROVIDER_HOSTNAME={op_domain}'
@@ -186,3 +204,7 @@ class TestPerformance:
                 mounted_clients[client_name].user = user
                 run_cmd(user, mounted_clients[client_name], cmd, output=True)
         return mounted_clients
+
+
+def is_success_rate_satisfied(successful_repeats, failed_repeats, rate):
+    return rate / 100.0 > float(successful_repeats) / (successful_repeats + failed_repeats)

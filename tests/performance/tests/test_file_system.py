@@ -17,8 +17,8 @@ import re
 import subprocess
 
 # TODO functions used in cucumber and acceptance tests should be moved to common files
-# higher in files hierarchy
-REPEATS = 1
+# TODO higher in files hierarchy
+REPEATS = 100
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
@@ -82,6 +82,7 @@ class TestFileSystem(TestPerformance):
 
     )
     def test_dd(self, clients, params):
+
         size = params['size']['value']
         size_unit = params['size']['unit']
         block_size = params['block_size']['value']

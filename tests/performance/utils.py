@@ -93,7 +93,7 @@ class TestResultReport:
 
     def add_single_test_results(self, test_results, repeat):
         for test_result in test_results:
-            if repeat == 0:
+            if test_result.name not in self.details.keys():
                 self.add_new(test_result, repeat)
             else:
                 self.add_existing(test_result, repeat)
@@ -153,13 +153,11 @@ def generate_configs(params, description_skeleton):
     configs = {}
     i = 0
     combinations = itertools.product(*params.values())
-    print combinations
 
     for combination in combinations:
         conf_name = 'config{}'.format(i)
         configs[conf_name] = dict()
         new_params = dict(zip(keys, combination))
-        print new_params
         description = description_skeleton.format(**new_params)
         for key, value in new_params.items():
             new_params[key] = {'value': value}
