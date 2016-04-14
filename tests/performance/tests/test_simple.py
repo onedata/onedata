@@ -18,7 +18,7 @@ import subprocess
 
 # TODO functions used in cucumber and acceptance tests should be moved to utils
 
-REPEATS = 10
+REPEATS = 1
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
@@ -36,10 +36,10 @@ class TestSimple(TestPerformance):
         """
         return request.param
 
-    # @pytest.fixture(scope="module", params=[
-    #     "/home/kuba/IdeaProjects/work/VFS-1793/onedata/tests/performance/environments/env.json"])
-    # def env_description_file(self, request):
-    #     return request.param
+    @pytest.fixture(scope="module", params=[
+        "/home/kuba/IdeaProjects/work/VFS-1793/onedata/tests/performance/environments/env.json"])
+    def env_description_file(self, request):
+        return request.param
 
     @performance(
             default_config={
@@ -105,26 +105,28 @@ class TestSimple(TestPerformance):
         print "BLOCK_SIZE", block_size
 
         test_file = os.path.join(client.mount_path, "testfile")
+        test_file = temp_file(client, client.mount_path)
         test_file_host = os.path.join("/tmp", "testfile")
+        test_file_host = temp_file(client, "/tmp")
         # create_file(client, test_file)
         # create_file(client, test_file_host)
         dev_zero = os.path.join('/dev', 'zero')
 
         write_output = dd(client, dev_zero, test_file, block_size,
                           block_size_unit, size, size_unit)
-        write_throughput = parse_dd_throughput(write_output)
+        write_throughput = parse_dd_output(write_output)
 
         read_output = dd(client, test_file, dev_zero, block_size,
                          block_size_unit, size, size_unit)
-        read_throughput = parse_dd_throughput(read_output)
+        read_throughput = parse_dd_output(read_output)
 
         write_output_host = dd(client, dev_zero, test_file_host, block_size,
                                block_size_unit, size, size_unit)
-        write_throughput_host = parse_dd_throughput(write_output_host)
+        write_throughput_host = parse_dd_output(write_output_host)
 
         read_output_host = dd(client, test_file_host, dev_zero, block_size,
                               block_size_unit, size, size_unit)
-        read_throughput_host = parse_dd_throughput(read_output_host)
+        read_throughput_host = parse_dd_output(read_output_host)
 
         delete_file(client, test_file)
         delete_file(client, test_file_host)
@@ -134,53 +136,87 @@ class TestSimple(TestPerformance):
                        "Throughput of write operation in onedata", "MB/s"),
             TestResult('read_throughput', read_throughput,
                        "Throughput of read operation in onedata", "MB/s"),
-            TestResult('write_throughput_host on host', write_throughput_host,
+            TestResult('write_throughput_host', write_throughput_host,
                        "Throughput of write operation", "MB/s"),
             TestResult('read_throughput_host', read_throughput_host,
                        "Throughput of read operation on host", "MB/s")
         ]
 
-        # @performance(
-        #         default_config={
-        #             'repeats': REPEATS,
-        #             'success_rate': SUCCESS_RATE,
-        #             'parameters': {
-        #                 'files_number': {
-        #                     'description': "Number of files",
-        #                     'unit': ""
-        #                 },
-        #                 'threads_number': {
-        #                     'description': "Number of threads",
-        #                     'unit': ""
-        #                 },
-        #                 'mode': {
-        #                     'description': "Modes",
-        #                     'unit': ""
-        #                 }
-        #             },
-        #             'description': 'Sysbench test'
-        #         },
-        #         configs={
-        #             'name1': {
-        #                 'description': 'Description of name1 config',
-        #                 'parameters': {
-        #                     'sizes': {
-        #                         'value': [1, 2, 3, 4]
-        #                     }
-        #                 }
-        #             }
-        #         }
-        # )
-        # def test1(self, clients, params):
-        #     # print "TEST clients: ", clients
-        #     # print "TEST CONFIG: ", params
-        #     #size = params['size']
-        #     #blocksize = params['blockSize']
-        #     #
-        #     return [TestResult("time", random.randint(1, 10), "time", "ms")]
+    @performance(
+            default_config={
+                'repeats': REPEATS,
+                'success_rate': SUCCESS_RATE,
+                'parameters': {
+                    'files_number': {
+                        'description': "Number of files",
+                        'unit': ""
+                    },
+                    'threads_number': {
+                        'description': "Number of threads",
+                        'unit': ""
+                    },
+                    'mode': {
+                        'description': "Modes",
+                        'unit': ""
+                    }
+                },
+                'description': 'Sysbench test'
+            },
+            configs=generate_configs({
+                'files_number': [10],  # , 100, 1000],
+                'threads_number': [1],  # , 16],
+                'total_size': [10],  # , 100, 1000],  # in M
+                'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
+            }, 'SYSBENCH TEST -- '
+               'Files number: {files_number} '
+               'Threads number: {threads_number} '
+               'Total Size: {total_size} '
+               'Mode: {mode}')
+
+    )
+    def test_sysbench(self, clients, params):
+
+        client_name, client = clients.items()[0]
+
+        threads_number = params['threads_number']['value']
+        files_number = params['files_number']['value']
+        total_size = params['total_size']['value']
+        mode = params['mode']['value']
+
+        dir_path = temp_dir(client, client.mount_path)
+        dir_path_host = temp_dir(client, "/home/u1")
+
+        output = sysbench_tests(threads_number, total_size, files_number, mode,
+                                client, dir_path)
+
+        output_host = sysbench_tests(threads_number, total_size, files_number,
+                                     mode, client, dir_path_host)
+
+        (
+            (transfer, transfer_unit),
+            (requests_velocity, requests_velocity_unit)
+        ) = parse_sysbench_output(output)
+
+        (
+            (transfer_host, transfer_unit_host),
+            (requests_velocity_host, requests_velocity_unit_host)
+        ) = parse_sysbench_output(output_host)
+
+        return [
+            TestResult("transfer", transfer, "Transfer velocity in onedata",
+                       transfer_unit),
+            TestResult("requests", requests_velocity,
+                       "Requests per second in onedata",
+                       requests_velocity_unit),
+            TestResult("transfer_host", transfer_host,
+                       "Transfer velocity on host", transfer_unit_host),
+            TestResult("requests_host", requests_velocity_host,
+                       "Requests per second on host",
+                       requests_velocity_unit_host)
+        ]
 
 
-#################################################
+################################################################################
 
 def dd(client, input, output, block_size, block_size_unit, size, size_unit):
     block_size_unit = SI_prefix_to_default(block_size_unit)
@@ -237,10 +273,6 @@ def is_SI_prefix(prefix):
 def SI_prefix_to_default(prefix):
     return prefix.upper().strip("B")
 
-    # def generate_configs(sizes, block_sizes):
-    #     for size in sizes:
-    #         for block_size in block_sizes:
-
 
 def create_file(client, path):
     run_cmd('u1', client, "touch " + path)
@@ -263,12 +295,9 @@ print file_path'''.format(dir=path)
 
 def temp_dir(client, path):
     cmd = '''import tempfile
-print tempfile.mkdtemp(dir="{dir}")'''.format(dir=path)
-    # dir_path = docker.exec_(
-    #         container=client.docker_id,
-    #         command=["python -c '{command}'".format(command=cmd)],
-    #         output=True)
+print tempfile.mkdtemp(dir="{dir}")'''
 
+    cmd = cmd.format(dir=path)
     cmd = ["python -c '{command}'".format(command=cmd)]
     return run_cmd(client.user, client, cmd, output=True).strip()
 
@@ -332,6 +361,8 @@ def parse_sysbench_output(output):
     transfer_unit = m.group(2)
     requests_velocity = float(m.group(3))
     requests_velocity_unit = m.group(4)
+
+    #TODO return testresult
 
     return ((transfer, transfer_unit), (requests_velocity, requests_velocity_unit))
 
