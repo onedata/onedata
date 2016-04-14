@@ -1,10 +1,3 @@
-"""
-Author: Jakub Kudzia
-Copyright (C) 2016 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Module implements fixtures used in performance tests.
-"""
 import os
 import sys
 from utils import *
@@ -59,8 +52,9 @@ def performance(default_config, configs):
 
                 while repeats < max_repeats:
                     test_results = test_function(
-                            self, clients, merged_config.get('parameters', {})
-                    )
+                            self, clients,
+                            merged_config.get('parameters', {}))
+
                     test_results = ensure_list(test_results)
                     test_result_report.add_single_test_results(test_results,
                                                                repeats)
@@ -86,10 +80,8 @@ def performance(default_config, configs):
 
 @pytest.fixture(scope="session")
 def json_output(request):
-    performance_report = PerformanceReport("performance",
-                                           "repository_TODO",  # TODO
-                                           "commit_TODO",  # TODO
-                                           "branch_TODO")  # TODO
+    performance_report = PerformanceReport("performance", get_repository(),
+                                           get_commit(), get_branch_name())
 
     def fin():
         f = open(performance_output, 'w')
@@ -103,11 +95,12 @@ def json_output(request):
 class TestPerformance:
     @pytest.fixture(scope="module")
     def suite_report(self, request, env_report):
+        module = inspect.getmodule(self.__class__)
         name = get_test_name(inspect.getfile(self.__class__))
         report = SuiteReport(name,
-                             "suite_description_TODO",  # TODO
-                             "suite_copyright_TODO",  # TODO
-                             ["suite_authors_TODO"])  # TODO
+                             get_suite_description(module),
+                             get_copyright(module),
+                             get_authors(module))
 
         def fin():
                 env_report.add_to_report("suites", report)
@@ -189,6 +182,6 @@ class TestPerformance:
                         token_path=token_path)
 
                 user = client_data[client_host][client]['token_for']
-                print "RETURN: ", run_cmd(user, mounted_clients[client_name],
-                                          cmd, output=True)
+                mounted_clients[client_name].user = user
+                run_cmd(user, mounted_clients[client_name], cmd, output=True)
         return mounted_clients
