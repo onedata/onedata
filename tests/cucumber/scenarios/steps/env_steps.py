@@ -72,7 +72,8 @@ def environment(persistent_environment, request, context):
     def fin():
         for _, os_config in config['os_configs'].iteritems():
             for storage in os_config['storages']:
-                clear_storage(os.path.join(common.storage_host_path(storage)))
+                if storage['type'] == 'posix':
+                    clear_storage(os.path.join(common.storage_host_path(storage['name'])))
 
     request.addfinalizer(fin)
     return persistent_environment
