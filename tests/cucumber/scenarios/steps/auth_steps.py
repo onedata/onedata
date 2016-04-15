@@ -100,7 +100,6 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         time.sleep(5)
 
 
-
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
 def default_mount(user, mount_path, token, request, environment, context, client_ids):
     multi_mount(make_arg_list(user), make_arg_list("client1"), make_arg_list(mount_path),
