@@ -53,6 +53,24 @@ def get_json_files(dir):
     return jsons
 
 
+def env_description_files(dir, *envs):
+    """Returns list of absolute paths to environment
+    description files from  dir"""
+    envs_absolute_paths = []
+    for env in envs:
+        envs_absolute_paths.append(os.path.join(dir, env))
+    return envs_absolute_paths
+
+
+def env_name(env_description_file_path):
+    """Returns name of environment based on environment description file name
+    i.e
+    for file 'env1.json' returns 'env1'
+    for file '/abs/path/env2.json return 'env2'
+    """
+    return os.path.splitext(os.path.basename(env_description_file_path))[0]
+
+
 def run_env_up_script(script, args=[]):
     """Runs given script to bring up test environment.
     Script must be located in docker_dir directory (see test_common.py)
