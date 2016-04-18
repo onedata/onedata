@@ -12,7 +12,6 @@ from pytest_bdd import given, when, then
 from pytest_bdd import parsers
 
 import os
-import sys
 from environment import docker
 
 ####################### CLASSES #######################
