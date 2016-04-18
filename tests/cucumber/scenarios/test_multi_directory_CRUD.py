@@ -20,7 +20,7 @@ from steps.common import *
     '../features/multi_directory_CRUD.feature',
     'Create directory'
 )
-def test_create():
+def test_create(env_description_file):
     pass
 
 
@@ -28,7 +28,7 @@ def test_create():
     '../features/multi_directory_CRUD.feature',
     'Create directory in default space'
 )
-def test_create_default_spaces():
+def test_create_default_spaces(env_description_file):
     pass
 
 
@@ -36,7 +36,7 @@ def test_create_default_spaces():
     '../features/multi_directory_CRUD.feature',
     'Create directory in non-default space'
 )
-def test_create_in_spaces():
+def test_create_in_spaces(env_description_file):
     pass
 
 
@@ -44,7 +44,7 @@ def test_create_in_spaces():
     '../features/multi_directory_CRUD.feature',
     'Rename someone\'s directory without permission'
 )
-def test_rename_someone_without_permission():
+def test_rename_someone_without_permission(env_description_file):
     pass
 
 
@@ -52,7 +52,7 @@ def test_rename_someone_without_permission():
     '../features/multi_directory_CRUD.feature',
     'Rename someone\'s directory with permission'
 )
-def test_rename_someone_with_permission():
+def test_rename_someone_with_permission(env_description_file):
     pass
 
 
@@ -60,7 +60,7 @@ def test_rename_someone_with_permission():
     '../features/multi_directory_CRUD.feature',
     'Rename own directory'
 )
-def test_rename_own():
+def test_rename_own(env_description_file):
     pass
 
 
@@ -68,7 +68,7 @@ def test_rename_own():
     '../features/multi_directory_CRUD.feature',
     'Delete someone\'s empty directory'
 )
-def test_delete_someone():
+def test_delete_someone(env_description_file):
     pass
 
 
@@ -76,7 +76,7 @@ def test_delete_someone():
     '../features/multi_directory_CRUD.feature',
     'Delete own empty directory'
 )
-def test_delete_own():
+def test_delete_own(env_description_file):
     pass
 
 
@@ -84,7 +84,7 @@ def test_delete_own():
     '../features/multi_directory_CRUD.feature',
     'List directory without read permission'
 )
-def test_list_dir_without_permission():
+def test_list_dir_without_permission(env_description_file):
     pass
 
 
@@ -92,7 +92,7 @@ def test_list_dir_without_permission():
     '../features/multi_directory_CRUD.feature',
     'Create file in directory without write permission'
 )
-def test_create_subfile_without_permission():
+def test_create_subfile_without_permission(env_description_file):
     pass
 
 
@@ -100,7 +100,7 @@ def test_create_subfile_without_permission():
     '../features/multi_directory_CRUD.feature',
     'Create file in directory with write permission'
 )
-def test_create_subfile_with_permission():
+def test_create_subfile_with_permission(env_description_file):
     pass
 
 
@@ -108,7 +108,7 @@ def test_create_subfile_with_permission():
     '../features/multi_directory_CRUD.feature',
     'Delete file in directory without write permission'
 )
-def test_delete_subfile_without_permission():
+def test_delete_subfile_without_permission(env_description_file):
     pass
 
 
@@ -116,7 +116,7 @@ def test_delete_subfile_without_permission():
     '../features/multi_directory_CRUD.feature',
     'Delete file in directory with write permission'
 )
-def test_delete_subfile_with_permission():
+def test_delete_subfile_with_permission(env_description_file):
     pass
 
 
@@ -124,7 +124,7 @@ def test_delete_subfile_with_permission():
     '../features/multi_directory_CRUD.feature',
     'Rename file in directory without write permission'
 )
-def test_rename_subfile_without_permission():
+def test_rename_subfile_without_permission(env_description_file):
     pass
 
 
@@ -132,7 +132,7 @@ def test_rename_subfile_without_permission():
     '../features/multi_directory_CRUD.feature',
     'Rename file in directory without write permission'
 )
-def test_rename_subfile_with_permission():
+def test_rename_subfile_with_permission(env_description_file):
     pass
 
 # TODO VFS-1824
@@ -140,7 +140,7 @@ def test_rename_subfile_with_permission():
 #     '../features/multi_directory_CRUD.feature',
 #     'Recreate directory deleted by other user'
 # )
-# def test_recreate():
+# def test_recreate(env_description_file):
 #     pass
 
 
@@ -148,7 +148,7 @@ def test_rename_subfile_with_permission():
     '../features/multi_directory_CRUD.feature',
     'Child directories'
 )
-def test_children():
+def test_children(env_description_file):
     pass
 
 
@@ -156,7 +156,7 @@ def test_children():
     '../features/multi_directory_CRUD.feature',
     'Child directories 2'
 )
-def test_children2():
+def test_children2(env_description_file):
     pass
 
 
@@ -164,7 +164,7 @@ def test_children2():
     '../features/multi_directory_CRUD.feature',
     'Duplication'
 )
-def test_duplication():
+def test_duplication(env_description_file):
     pass
 
 
@@ -172,7 +172,7 @@ def test_duplication():
     '../features/multi_directory_CRUD.feature',
     'Duplication in spaces'
 )
-def test_duplication_spaces():
+def test_duplication_spaces(env_description_file):
     pass
 
 
@@ -180,7 +180,7 @@ def test_duplication_spaces():
     '../features/multi_directory_CRUD.feature',
     'Delete empty directory and parents'
 )
-def test_delete_parents():
+def test_delete_parents(env_description_file):
     pass
 
 
@@ -188,7 +188,7 @@ def test_delete_parents():
     '../features/multi_directory_CRUD.feature',
     'Delete non-empty directory in wrong way'
 )
-def test_delete_non_empty_wrong():
+def test_delete_non_empty_wrong(env_description_file):
     pass
 
 
@@ -196,7 +196,7 @@ def test_delete_non_empty_wrong():
     '../features/multi_directory_CRUD.feature',
     'Delete non-empty directory'
 )
-def test_delete_non_empty():
+def test_delete_non_empty(env_description_file):
     pass
 
 
@@ -204,7 +204,7 @@ def test_delete_non_empty():
     '../features/multi_directory_CRUD.feature',
     'Move directory'
 )
-def test_move():
+def test_move(env_description_file):
     pass
 
 
@@ -212,7 +212,7 @@ def test_move():
     '../features/multi_directory_CRUD.feature',
     'Copy directory'
 )
-def test_copy():
+def test_copy(env_description_file):
     pass
 
 
@@ -220,7 +220,7 @@ def test_copy():
     '../features/multi_directory_CRUD.feature',
     'Move directory to itself'
 )
-def test_move_to_itself():
+def test_move_to_itself(env_description_file):
     pass
 
 
@@ -228,7 +228,7 @@ def test_move_to_itself():
     '../features/multi_directory_CRUD.feature',
     'Move directory to its subtree'
 )
-def test_move_to_subtree():
+def test_move_to_subtree(env_description_file):
     pass
 
 
@@ -236,7 +236,7 @@ def test_move_to_subtree():
     '../features/multi_directory_CRUD.feature',
     'Move directory to itself in spaces'
 )
-def test_move_to_itself_spaces():
+def test_move_to_itself_spaces(env_description_file):
     pass
 
 
@@ -244,7 +244,7 @@ def test_move_to_itself_spaces():
     '../features/multi_directory_CRUD.feature',
     'Move directory to itself in default space'
 )
-def test_move_to_itself_default_space():
+def test_move_to_itself_default_space(env_description_file):
     pass
 
 
@@ -252,7 +252,7 @@ def test_move_to_itself_default_space():
     '../features/multi_directory_CRUD.feature',
     'Move directory to its subtree in spaces'
 )
-def test_move_to_subtree_spaces():
+def test_move_to_subtree_spaces(env_description_file):
     pass
 
 
@@ -260,5 +260,5 @@ def test_move_to_subtree_spaces():
     '../features/multi_directory_CRUD.feature',
     'Move directory to its subtree in default space'
 )
-def test_move_to_subtree_default_space():
+def test_move_to_subtree_default_space(env_description_file):
     pass

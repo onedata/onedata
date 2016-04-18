@@ -5,8 +5,9 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common functions for handling test environment.
 """
 
-from tests.test_common import (make_logdir, cucumber_logdir, run_env_up_script,
-                               env_name)
+from tests.test_common import (make_logdir, run_env_up_script, env_name,
+                               cucumber_logdir, default_cucumber_env_dir,
+                               get_json_files)
 from environment import common, docker
 
 import pytest
@@ -16,14 +17,15 @@ from pytest_bdd import given, then
 import os
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="module",
+                params=get_json_files(default_cucumber_env_dir))
 def env_description_file(request):
     """NOTE: This fixture must be overridden in every test module. As params
     for overridden fixture you must specify .json files with description
     of test environment for which you want tests from given module to be
     started.
     """
-    pass
+    return request.param
 
 
 @pytest.fixture(scope="module")

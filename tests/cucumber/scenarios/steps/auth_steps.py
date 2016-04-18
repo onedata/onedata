@@ -11,7 +11,6 @@ from environment import docker, env
 from environment.common import parse_json_config_file
 from common import *
 
-# import pytest
 from pytest_bdd import given, then
 from pytest_bdd import parsers
 
