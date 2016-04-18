@@ -5,24 +5,15 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common functions for handling test environment.
 """
 
+from tests.test_common import (make_logdir, cucumber_logdir, run_env_up_script,
+                               env_name)
+from environment import common, docker
+
 import pytest
 from pytest_bdd import parsers
-from pytest_bdd import (given, when, then)
+from pytest_bdd import given, then
 
 import os
-import sys
-
-# these commands add 'tests' to path to make it possible
-# to import 'test_common'
-curr_dir = os.path.dirname(os.path.realpath(__file__))
-curr_dir_list = curr_dir.split(os.path.sep)
-# find last occurence of 'tests' directory on path
-test_index_last = curr_dir_list[::-1].index('tests')
-test_dir = os.path.sep.join(curr_dir_list[:-test_index_last])
-sys.path.insert(0, test_dir)
-
-import test_common
-from environment import common, docker, env
 
 
 @pytest.fixture(scope="module")
@@ -45,11 +36,9 @@ def persistent_environment(request, context, env_description_file):
                             env_description_file)
 
     feature_name = request.module.__name__
-    logdir = test_common.make_logdir(
-            test_common.cucumber_logdir,
-            os.path.join(env_description_file.split(".")[0], feature_name))
-    env_desc = test_common.run_env_up_script("env_up.py",
-                                             ['-l', logdir, env_path])
+    logdir = make_logdir(cucumber_logdir, os.path
+                         .join(env_name(env_description_file), feature_name))
+    env_desc = run_env_up_script("env_up.py", ['-l', logdir, env_path])
 
     def fin():
         docker.remove(request.environment['docker_ids'], force=True,
@@ -73,7 +62,8 @@ def environment(persistent_environment, request, context, env_description_file):
         for _, os_config in config['os_configs'].iteritems():
             for storage in os_config['storages']:
                 if storage['type'] == 'posix':
-                    clear_storage(os.path.join(common.storage_host_path(storage['name'])))
+                    clear_storage(
+                        os.path.join(common.storage_host_path(storage['name'])))
 
     request.addfinalizer(fin)
     return persistent_environment

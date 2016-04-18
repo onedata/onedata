@@ -6,18 +6,18 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
+from tests.test_common import env_name
+from environment import docker, env
+from environment.common import parse_json_config_file
+from common import *
 
-import pytest
-from pytest_bdd import (given, when, then)
+# import pytest
+from pytest_bdd import given, then
 from pytest_bdd import parsers
+
 import os
 import time
 import subprocess
-
-
-from environment import docker, env
-from environment import common as env_common
-from common import *
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +
@@ -25,7 +25,8 @@ from common import *
                      '{client_hosts} respectively,\n' +
                      'using {tokens}'))
 def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
-                request, environment, context, client_ids):
+                request, environment, context, client_ids,
+                env_description_file):
 
     users = list_parser(users)
     client_instances = list_parser(client_instances)
@@ -45,6 +46,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         params = zip(users, clients)
         for user, client in params:
             clean_mount_path(user, client)
+
     request.addfinalizer(fin)
 
     parameters = zip(users, clients, client_instances, mount_paths, client_hosts, tokens)
@@ -52,7 +54,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         data = client_data[client_host][client_instance]
 
         # get OZ cookie from env description file
-        cookie = get_cookie(context.env_path, oz_node)
+        cookie = get_cookie(env_description_file, oz_node)
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
 
@@ -96,15 +98,18 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         save_op_code(context, user, ret)
 
     # TODO This is just a temporary solution, delete it after resolving VFS-1881
-    if context.env_json not in ['env.json', 'env2.json']:
+    if env_name(env_description_file) not in ['env.json', 'env2.json']:
         time.sleep(5)
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
-def default_mount(user, mount_path, token, request, environment, context, client_ids):
-    multi_mount(make_arg_list(user), make_arg_list("client1"), make_arg_list(mount_path),
-                make_arg_list('client_host_1'), make_arg_list(token), request,
-                environment, context, client_ids)
+def default_mount(user, mount_path, token, request, environment, context,
+                  client_ids, env_description_file):
+
+    multi_mount(make_arg_list(user), make_arg_list("client1"),
+                make_arg_list(mount_path), make_arg_list('client_host_1'),
+                make_arg_list(token), request, environment, context, client_ids,
+                env_description_file)
 
 
 @then(parsers.parse('{spaces} are mounted for {user}'))
@@ -181,7 +186,7 @@ def get_token(token, user, oz_node, cookie):
 
 
 def get_cookie(config_path, oz_node):
-    config = env_common.parse_json_config_file(config_path)
+    config = parse_json_config_file(config_path)
     oz_domain = config['zone_domains'].keys()[0]
     cm = config['zone_domains'][oz_domain]['cluster_manager'].keys()[0]
     return str(config['zone_domains'][oz_domain]['cluster_manager'][cm]['vm.args']['setcookie'])
