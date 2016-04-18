@@ -5,8 +5,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common functions for handling test environment.
 """
 
-from pytest_bdd import parsers
 import pytest
+from pytest_bdd import parsers
 from pytest_bdd import (given, when, then)
 
 import os
@@ -25,29 +25,29 @@ import test_common
 from environment import common, docker, env
 
 
-@given(parsers.parse('environment is defined in {env_json}'))
-def env_file(env_json, context):
+@pytest.fixture(scope="module")
+def env_description_file(request):
+    """NOTE: This fixture must be overridden in every test module. As params
+    for overridden fixture you must specify .json files with description
+    of test environment for which you want tests from given module to be
+    started.
     """
-    Remembers the environment filename.
-    """
-    env_json = str(env_json)
-    context.env_path = os.path.join(test_common.cucumber_env_dir, env_json)
-    context.env_json = env_json
+    pass
 
 
 @pytest.fixture(scope="module")
-def persistent_environment(request, context):
+def persistent_environment(request, context, env_description_file):
     """
     Sets up environment and returns environment description.
     """
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments',
-                            context.env_json)
+                            env_description_file)
 
     feature_name = request.module.__name__
     logdir = test_common.make_logdir(
             test_common.cucumber_logdir,
-            os.path.join(context.env_json.split(".")[0], feature_name))
+            os.path.join(env_description_file.split(".")[0], feature_name))
     env_desc = test_common.run_env_up_script("env_up.py",
                                              ['-l', logdir, env_path])
 
@@ -61,12 +61,12 @@ def persistent_environment(request, context):
 
 
 @given("environment is up")
-def environment(persistent_environment, request, context):
+def environment(persistent_environment, request, context, env_description_file):
     # TODO storage path should be read from persistent environment
     # TODO when VFS-1832 will be resolved
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments',
-                            context.env_json)
+                            env_description_file)
     config = common.parse_json_config_file(env_path)
 
     def fin():
