@@ -6,6 +6,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements some common basic functions and functionality.
 """
+from tests.test_common import env_name
 
 import pytest
 from pytest_bdd import given, when, then
@@ -105,9 +106,9 @@ def user_wait_default(user, seconds):
 @when(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
 @then(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
 @given(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
-def user_wait_up_to(user, seconds, context):
+def user_wait_up_to(user, seconds, context, env_description_file):
     # TODO This is just a temporary solution, delete it after resolving VFS-1881
-    if context.env_json not in ['env.json', 'env2.json']:
+    if env_name(env_description_file) not in ['env', 'env2']:
         time.sleep(int(seconds))
     else:
         time.sleep(1)

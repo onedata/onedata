@@ -97,7 +97,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         save_op_code(context, user, ret)
 
     # TODO This is just a temporary solution, delete it after resolving VFS-1881
-    if env_name(env_description_file) not in ['env.json', 'env2.json']:
+    if env_name(env_description_file) not in ['env', 'env2']:
         time.sleep(5)
 
 
