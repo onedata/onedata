@@ -129,7 +129,7 @@ test_packaging:
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
-	./cucumber_test_generator.sh
+	./test_run.py --test-dir tests/cucumber
 
 ##
 ## Clean
