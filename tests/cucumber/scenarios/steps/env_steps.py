@@ -18,14 +18,15 @@ import os
 
 
 @pytest.fixture(scope="module",
-                params=get_json_files(default_cucumber_env_dir))
+                params=get_json_files(default_cucumber_env_dir, relative=True))
 def env_description_file(request):
     """NOTE: This fixture must be overridden in every test module. As params
     for overridden fixture you must specify .json files with description
     of test environment for which you want tests from given module to be
     started.
     """
-    return request.param
+    absolute_path = os.path.join(default_cucumber_env_dir, request.param)
+    return absolute_path
 
 
 @pytest.fixture(scope="module")

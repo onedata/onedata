@@ -4,7 +4,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for operations on different storages with provider luma
 """
-from tests.test_common import custom_cucumber_env_dir, env_description_files
+from tests.test_common import custom_cucumber_env_dir
 
 from pytest_bdd import scenario
 
@@ -14,10 +14,10 @@ from steps.file_steps import *
 from steps.reg_file_steps import *
 
 
-@pytest.fixture(scope="module", params=env_description_files(
-        custom_cucumber_env_dir, "env_luma_provider.json"))
+@pytest.fixture(scope="module", params=["env_luma_provider.json"])
 def env_description_file(request):
-    return request.param
+    absolute_path = os.path.join(custom_cucumber_env_dir, request.param)
+    return absolute_path
 
 
 @scenario(
