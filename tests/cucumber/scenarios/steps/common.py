@@ -83,7 +83,6 @@ def context():
     return Context()
 
 
-# TODO do we need ids in tests ? names should be enough
 @pytest.fixture(scope="module")
 def client_ids(environment):
     ids = {}
@@ -96,18 +95,23 @@ def client_ids(environment):
 
 ######################## STEPS ########################
 
-@when(parsers.parse('{user} waits {time} seconds'))
-@then(parsers.parse('{user} waits {time} seconds'))
-def user_wait_default(user, time, context):
-    user_wait(user, time, "client1", context)
+@when(parsers.parse('{user} waits {seconds} second'))
+@then(parsers.parse('{user} waits {seconds} second'))
+@when(parsers.parse('{user} waits {seconds} seconds'))
+@then(parsers.parse('{user} waits {seconds} seconds'))
+def user_wait_default(user, seconds):
+    time.sleep(int(seconds))
 
 
-@when(parsers.parse('{user} waits {time} seconds on {client_node}'))
-@then(parsers.parse('{user} waits {time} seconds on {client_node}'))
-@given(parsers.parse('{user} waits {time} seconds on {client_node}'))
-def user_wait(user, time, client_node, context):
-    client = get_client(client_node, user, context)
-    run_cmd(user, client, "sleep " + str(time))
+@when(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
+@then(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
+@given(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
+def user_wait_up_to(user, seconds, context):
+    # TODO This is just a temporary solution, delete it after resolving VFS-1881
+    if context.env_json not in ['env.json', 'env2.json']:
+        time.sleep(int(seconds))
+    else:
+        time.sleep(1)
 
 
 @when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime'))

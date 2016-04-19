@@ -24,7 +24,10 @@
     "os_configs": {
         "cfg1": {
             "storages": [
-                "/mnt/st1"
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                }
             ],
             "users": [
                 "u1",
@@ -169,7 +172,7 @@
                 },
                 "client2": {
                     "name": "client2",
-                    "op_domain": "p2",
+                    "op_domain": "p1",
                     "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
