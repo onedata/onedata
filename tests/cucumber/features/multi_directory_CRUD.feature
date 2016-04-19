@@ -13,7 +13,6 @@ Feature: Multi_directory_CRUD
       on client1
     Then u1 sees [dir1, dir2, dir3] in . on client1
     And u1 sees [dir1, dir2, dir3] in spaces/s1 on client1
-    And u2 waits up to 10 seconds for environment synchronization
     And u2 sees [dir1, dir2, dir3] in . on client2
     And u2 sees [dir1, dir2, dir3] in spaces/s1 on client2
 

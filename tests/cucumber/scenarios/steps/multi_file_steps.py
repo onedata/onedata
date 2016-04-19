@@ -33,10 +33,17 @@ def create_reg_file(user, files, client_node, context):
 def ls_present(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
     cmd = 'ls ' + make_path(path, client)
-    ls_files = run_cmd(user, client, cmd, output=True).split()
     files = list_parser(files)
-    for file in files:
-        assert file in ls_files
+
+    def condition(cmd_output):
+        print cmd_output
+        output = cmd_output.split()
+        for file in files:
+            if file not in output:
+                return False
+        return True
+
+    assert repeat_until(user, client, cmd, condition, timeout=60, output=True)
 
 
 @when(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))

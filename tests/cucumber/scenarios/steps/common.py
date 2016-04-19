@@ -30,7 +30,8 @@ class Context:
         user_wait_ctime() and user_wait_mtime() and compared
         with actual timestamps read from stat
         """
-        times = run_cmd(user, client, "stat --format=%Y,%Z " + make_path(file, client),
+        times = run_cmd(user, client,
+                        "stat --format=%Y,%Z " + make_path(file, client),
                         output=True).split(",")
 
         mtime = times[0]
@@ -103,9 +104,12 @@ def user_wait_default(user, seconds):
     time.sleep(int(seconds))
 
 
-@when(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
-@then(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
-@given(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
+@when(parsers.parse(
+        '{user} waits up to {seconds} seconds for environment synchronization'))
+@then(parsers.parse(
+        '{user} waits up to {seconds} seconds for environment synchronization'))
+@given(parsers.parse(
+        '{user} waits up to {seconds} seconds for environment synchronization'))
 def user_wait_up_to(user, seconds, context):
     # TODO This is just a temporary solution, delete it after resolving VFS-1881
     if context.env_json not in ['env.json', 'env2.json']:
@@ -114,38 +118,44 @@ def user_wait_up_to(user, seconds, context):
         time.sleep(1)
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime'))
+@when(parsers.parse(
+        '{user} waits max {maxtime} seconds for change of {file} mtime'))
 def user_wait_mtime(user, maxtime, file, context):
     user_wait_mtime(user, maxtime, file, "client1", context)
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime on {client_node}'))
+@when(parsers.parse(
+        '{user} waits max {maxtime} seconds for change of {file} mtime on {client_node}'))
 def user_wait_mtime(user, maxtime, file, client_node, context):
     client = get_client(client_node, user, context)
     waited = 0
     # compare mtime read from stat with last mtime saved by user
     # inequality of these timestamps means that other client
     # performed operation on the file
-    while get_current_mtime(user, file, client) == context.get_last_mtime(user, file):
+    while get_current_mtime(user, file, client) == context.get_last_mtime(user,
+                                                                          file):
         time.sleep(1)
         waited += 1
         if waited >= maxtime:
             assert False
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime'))
+@when(parsers.parse(
+        '{user} waits max {maxtime} seconds for change of {file} ctime'))
 def user_wait_ctime(user, maxtime, file, context):
     user_wait_ctime(user, maxtime, file, "client1", context)
 
 
-@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime on {client_node}'))
+@when(parsers.parse(
+        '{user} waits max {maxtime} seconds for change of {file} ctime on {client_node}'))
 def user_wait_ctime(user, maxtime, file, client_node, context):
     client = get_client(client_node, user, context)
     waited = 0
     # compare ctime read from stat with last ctime saved by user
     # inequality of these timestamps means that other client
     # performed operation on the file
-    while get_current_ctime(user, file, client) == context.get_last_ctime(user, file):
+    while get_current_ctime(user, file, client) == context.get_last_ctime(user,
+                                                                          file):
         time.sleep(1)
         waited += 1
         if waited >= maxtime:
@@ -214,3 +224,18 @@ def run_cmd(user, client, cmd, output=False):
 
 def get_client(client_node, user, context):
     return context.users[user].clients[client_node]
+
+
+def repeat_until(user, client, cmd, condition, timeout=0, output=False):
+    # todo maybe timeout should be remembered as client's attribute
+
+    def check_condition():
+        return condition(run_cmd(user, client, cmd, output))
+
+    cmd_output = check_condition()
+    while timeout > 0 and not cmd_output:
+        time.sleep(1)
+        timeout -= 1
+        cmd_output = check_condition()
+
+    return timeout > 0 or cmd_output
