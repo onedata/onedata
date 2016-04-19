@@ -44,19 +44,22 @@ def make_logdir(root_dir, test_name):
     return name
 
 
-def get_json_files(dir):
+def get_json_files(dir, relative=False):
     """Gets all .json files from given directory
     Returns list of files' absolute paths"""
     jsons = []
     for file in os.listdir(dir):
         if file.endswith(".json"):
-            jsons.append(os.path.join(dir, file))
+            if not relative:
+                jsons.append(os.path.join(dir, file))
+            else:
+                jsons.append(file)
     return jsons
 
 
 def env_description_files(dir, *envs):
     """Returns list of absolute paths to environment
-    description files from  dir"""
+    description files envs from  dir"""
     envs_absolute_paths = []
     for env in envs:
         envs_absolute_paths.append(os.path.join(dir, env))
