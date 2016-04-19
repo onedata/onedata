@@ -22,7 +22,6 @@ class Report:
 class PerformanceReport(Report):
     def __init__(self, name, repository, commit, branch):
         Report.__init__(self, name)
-        # self.report[name] = {'suites': {}}
         self.report[name] = {'envs': {}}
         self.add_to_report('repository', repository)
         self.add_to_report('commit', commit)
