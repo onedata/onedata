@@ -30,3 +30,7 @@
 	path = cluster_worker
 	url = ONEDATA_GIT_URL/cluster-worker.git
 	branch = develop
+[submodule "luma"]
+	path = luma
+	url = ONEDATA_GIT_URL/luma.git
+	branch = develop

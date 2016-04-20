@@ -56,7 +56,7 @@ Feature: Regular_file_stat
   Scenario: Access time
     When u1 writes "TEST TEXT ONEDATA" to file1
     And u1 sees file1 in .
-    And u1 waits 1 seconds
+    And u1 waits 1 second
     # call sleep, to be sure that time of write and read is different
     Then u1 reads "TEST TEXT ONEDATA" from file1
     And access time of u1's file1 becomes greater than modification time within 5 seconds
@@ -65,7 +65,7 @@ Feature: Regular_file_stat
   Scenario: Modification time
     When u1 creates regular files [file1]
     And u1 sees file1 in .
-    And u1 waits 1 seconds
+    And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to file1
     Then last operation by u1 succeeds
@@ -75,7 +75,7 @@ Feature: Regular_file_stat
   Scenario: Status-change time when changing mode
     When u1 creates regular files [file1]
     And u1 sees file1 in .
-    And u1 waits 1 seconds
+    And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 changes file1 mode to 211
     Then last operation by u1 succeeds
@@ -85,10 +85,10 @@ Feature: Regular_file_stat
   Scenario: Status-change time when renaming
     When u1 creates regular files [file1]
     And u1 sees file1 in .
-    And u1 waits 1 seconds
+    And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames file1 to file2
     Then last operation by u1 succeeds
-    And u1 waits 1 seconds
+    And u1 waits 1 second
     And status-change time of u1's file2 becomes greater than modification time within 5 seconds
     And status-change time of u1's file2 becomes greater than access time within 5 seconds

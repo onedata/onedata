@@ -15,6 +15,7 @@ from steps.common import *
 from steps.file_steps import *
 from steps.reg_file_steps import *
 
+
 @scenario(
     '../features/reg_file_stat.feature',
     'Check file type when empty'
