@@ -46,7 +46,7 @@
         "cfg1": {
             "storages": [
                 {
-                    "type": "posix",
+                    "type": "nfs",
                     "name": "/mnt/st1"
                 }
             ],
@@ -72,7 +72,7 @@
         "cfg2": {
             "storages": [
                 {
-                    "type": "posix",
+                    "type": "nfs",
                     "name": "/mnt/st2"
                 }
             ],
