@@ -132,8 +132,7 @@ def user_wait_mtime(user, maxtime, file, client_node, context):
     # compare mtime read from stat with last mtime saved by user
     # inequality of these timestamps means that other client
     # performed operation on the file
-    while get_current_mtime(user, file, client) == context.get_last_mtime(user,
-                                                                          file):
+    while get_current_mtime(user, file, client) == context.get_last_mtime(user,file):
         time.sleep(1)
         waited += 1
         if waited >= maxtime:
@@ -226,16 +225,63 @@ def get_client(client_node, user, context):
     return context.users[user].clients[client_node]
 
 
-def repeat_until(user, client, cmd, condition, timeout=0, output=False):
+def repeat_until(condition, timeout=0):
     # todo maybe timeout should be remembered as client's attribute
 
-    def check_condition():
-        return condition(run_cmd(user, client, cmd, output))
-
-    cmd_output = check_condition()
-    while timeout > 0 and not cmd_output:
+    condition_satisfied = condition()
+    while not condition_satisfied and timeout > 0:
+        print "TIMEOUT: ", timeout
         time.sleep(1)
         timeout -= 1
-        cmd_output = check_condition()
+        condition_satisfied = condition()
+    return timeout > 0 or condition_satisfied
 
-    return timeout > 0 or cmd_output
+
+def ls(client, user="root", path=".", output=True):
+    cmd = "ls {path}".format(path=path)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def mv(client, src, dest, user="root", output=False):
+    cmd = "mv {src} {dest}".format(src=src, dest=dest)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def chmod(client, mode, file, user="root", output=False):
+    cmd = "chmod {mode} {file}".format(mode=mode, file=file)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def stat(client, path, format=None, user="root", output=True):
+    cmd = "stat {path} {format}".format(
+            path=path,
+            format="--format={0}".format(format) if format else "")
+    return run_cmd(user, client, cmd, output=output)
+
+
+def rm(client, path, recursive=False, force=False, user="root", output=False):
+    cmd = "rm {recursive} {force} {path}".format(
+            recursive="-r" if recursive else "",
+            force="-f" if force else "",
+            path=path)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def rmdir(client, path, recursive=False, user="root", output=False):
+    cmd = "rmdir {recursive} {path}".format(
+            recursive="-p" if recursive else "",
+            path=path)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def mkdir(client, path, recursive=False, user="root", output=False):
+    cmd = "mkdir {recursive} {path}".format(
+            recursive="-p" if recursive else "",
+            path=path)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def touch(client, path, user="root", output=False):
+    cmd = "touch {path}".format(path=path)
+    return run_cmd(user, client, cmd, output=output)
+
