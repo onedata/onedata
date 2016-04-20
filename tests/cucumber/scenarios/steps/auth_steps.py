@@ -69,7 +69,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
                ' && export X509_USER_KEY={user_key}'
                ' && echo {token} > {token_path}'
                ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
-               ' && rm {token_path}').format(
+               ).format(
                     mount_path=mount_path,
                     gr_domain=data['zone_domain'],
                     op_domain=data['op_domain'],
@@ -93,6 +93,9 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         # remove accessToken to mount many clients on one docker
         run_cmd(user, client,
                 "rm -rf " + os.path.join(os.path.dirname(mount_path), ".local"))
+
+        run_cmd(user, client,
+                "rm -rf " + token_path)
 
         save_op_code(context, user, ret)
 

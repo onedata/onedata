@@ -79,14 +79,14 @@ class File:
 ###################### FIXTURES  ######################
 
 @pytest.fixture(scope="module")
-def context():
+def context(env_description_file):
     return Context()
 
 
-@pytest.fixture()
-def client_ids(environment):
+@pytest.fixture(scope="module")
+def client_ids(persistent_environment):
     ids = {}
-    for client in environment['client_nodes']:
+    for client in persistent_environment['client_nodes']:
         client = str(client)
         client_name = client.split(".")[0]
         ids[client_name] = docker.inspect(client)['Id']

@@ -44,7 +44,8 @@ def persistent_environment(request, context, env_description_file):
     env_desc = run_env_up_script("env_up.py", ['-l', logdir, env_path])
 
     def fin():
-        docker.remove(request.environment['docker_ids'], force=True,
+        docker.remove(request.environment['docker_ids'],
+                      force=True,
                       volumes=True)
 
     request.addfinalizer(fin)
