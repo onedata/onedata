@@ -83,7 +83,7 @@ def context():
     return Context()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def client_ids(environment):
     ids = {}
     for client in environment['client_nodes']:

@@ -10,10 +10,9 @@ Module implements pytest-bdd steps for authorization and mounting oneclient.
 import pytest
 from pytest_bdd import (given, when, then)
 from pytest_bdd import parsers
-
-import subprocess
-import time
 import os
+import time
+import subprocess
 
 
 from environment import docker, env
@@ -25,7 +24,8 @@ from common import *
                      '{mount_paths} on client_hosts\n' +
                      '{client_hosts} respectively,\n' +
                      'using {tokens}'))
-def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, environment, context, client_ids):
+def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
+                request, environment, context, client_ids):
 
     users = list_parser(users)
     client_instances = list_parser(client_instances)
@@ -40,7 +40,12 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
 
     client_data = environment['client_data']
     clients = create_clients(users, client_hosts, mount_paths, client_ids)
-    clean_spaces_all_users(users, clients)
+
+    def fin():
+        params = zip(users, clients)
+        for user, client in params:
+            clean_mount_path(user, client)
+    request.addfinalizer(fin)
 
     parameters = zip(users, clients, client_instances, mount_paths, client_hosts, tokens)
     for user, client, client_instance, mount_path, client_host, token_arg in parameters:
@@ -50,10 +55,6 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
         cookie = get_cookie(context.env_path, oz_node)
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
-
-        # clean if there is directory in the mount_path
-        if run_cmd(user, client, "ls " + mount_path) == 0:
-            clean_mount_path(user, client)
 
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
@@ -101,11 +102,11 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
         time.sleep(5)
 
 
-
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
-def default_mount(user, mount_path, token, environment, context, client_ids):
+def default_mount(user, mount_path, token, request, environment, context, client_ids):
     multi_mount(make_arg_list(user), make_arg_list("client1"), make_arg_list(mount_path),
-                make_arg_list('client_host_1'), make_arg_list(token), environment, context, client_ids)
+                make_arg_list('client_host_1'), make_arg_list(token), request,
+                environment, context, client_ids)
 
 
 @then(parsers.parse('{spaces} are mounted for {user}'))
@@ -130,13 +131,6 @@ def create_clients(users, client_hosts, mount_paths, client_ids):
     for user, client_host, mount_path in params:
         clients.append(Client(client_ids[client_host], mount_path))
     return clients
-
-
-def clean_spaces_all_users(users, clients):
-    params = zip(users, clients)
-    for user, client in params:
-        clean_spaces(user, client)
-    time.sleep(10)
 
 
 def clean_spaces(user, client):
