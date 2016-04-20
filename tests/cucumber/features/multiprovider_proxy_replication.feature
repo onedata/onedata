@@ -5,7 +5,7 @@ Feature: Multiprovider_proxy_replication
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
-      [client_host_1, client_host_2] respectively,
+      [client-host-1, client-host-2] respectively,
       using [token, token]
 
   Scenario: Create files and see them on external provider

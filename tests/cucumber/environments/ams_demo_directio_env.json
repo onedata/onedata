@@ -298,7 +298,7 @@
         }
     },
     "oneclient": {
-        "client_host_1_p1": {
+        "client-host-1-p1": {
             "os_config": "cfg1",
             "clients": {
                 "client1": {
@@ -312,7 +312,7 @@
                 }
             }
         },
-        "client_host_2_p1": {
+        "client-host-2-p1": {
             "os_config": "cfg1",
             "clients": {
                 "client2": {
@@ -326,7 +326,7 @@
                 }
             }
         },
-        "client_host_1_p2": {
+        "client-host-1-p2": {
             "os_config": "cfg2",
             "clients": {
                 "client2": {
@@ -340,7 +340,7 @@
                 }
             }
         },
-        "client_host_2_p2": {
+        "client-host-2-p2": {
             "os_config": "cfg2",
             "clients": {
                 "client2": {
@@ -354,7 +354,7 @@
                 }
             }
         },
-        "client_host_1_p3": {
+        "client-host-1-p3": {
             "os_config": "cfg3",
             "clients": {
                 "client2": {
@@ -368,7 +368,7 @@
                 }
             }
         },
-        "client_host_2_p3": {
+        "client-host-2-p3": {
             "os_config": "cfg3",
             "clients": {
                 "client2": {

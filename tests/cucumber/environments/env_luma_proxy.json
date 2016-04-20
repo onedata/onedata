@@ -148,7 +148,7 @@
         }
     },
     "oneclient": {
-        "client_host_1": {
+        "client-host-1": {
             "os_config": "cfg1",
             "clients": {
                 "client1": {

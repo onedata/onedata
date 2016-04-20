@@ -6,7 +6,7 @@ Feature: Ams_demo_sanity_check
     And environment is up
     And [u1, u2, u1, u2, u1, u2] start oneclients [client1_p1, client2_p1, client1_p2, client2_p2, client1_p3, client2_p3] in
       [/home/u1/onedata, /home/u2/onedata, /home/u1/onedata, /home/u2/onedata, /home/u1/onedata, /home/u2/onedata] on client_hosts
-      [client_host_1_p1, client_host_2_p1, client_host_1_p2, client_host_2_p2, client_host_1_p3, client_host_2_p3] respectively,
+      [client-host-1-p1, client-host-2-p1, client-host-1-p2, client-host-2-p2, client-host-1-p3, client-host-2-p3] respectively,
       using [token, token, token, token, token, token]
 
 #
