@@ -202,7 +202,7 @@
         }
     },
     "oneclient": {
-        "client_host_1": {
+        "client-host1": {
             "os_config": "cfg2",
             "clients": {
                 "client1": {
@@ -225,7 +225,7 @@
                 }
             }
         },
-        "client_host_2": {
+        "client-host2": {
             "os_config": "cfg2",
             "clients": {
                 "client1": {
