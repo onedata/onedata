@@ -299,3 +299,42 @@ def cp(client, src, dest, recursive=False, user="root", output=False):
             src=src,
             dest=dest)
     return run_cmd(user, client, cmd, output=output)
+
+
+def truncate(client, file_path, size, user="root", output=False):
+    cmd = "truncate --size={size} {file_path}".format(size=size, file_path=file_path)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def dd(client, block_size, count, output_file, input_file="/dev/zero",
+       user="root", output=True):
+
+    cmd = "dd {input} {output} {bs} {count}".format(
+        input="if={}".format(input_file),
+        output="of={}".format(output_file),
+        bs="bs={}M".format(block_size),  # block_size is in MB
+        count="count={}".format(count))
+    return run_cmd(user, client, cmd, output=output)
+
+
+def echo_to_file(client, text, file_path, new_line=False, escape=False,
+                 user="root", overwrite=True, output=False):
+
+    cmd = "echo {newline} {escape} '{text}' {redirect} {file_path}".format(
+        newline="-n" if not new_line else "",
+        escape="-n" if escape else "",
+        text=text,
+        redirect=">" if overwrite else ">>",
+        file_path=file_path)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def cat(client, file_path, user="root", output=True):
+    cmd = "cat {file_path}".format(file_path=file_path)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def md5sum(client, file_path, user="root", output=True):
+    cmd = "md5sum {file_path}".format(file_path=file_path)
+    return run_cmd(user, client, cmd, output=output)
+

@@ -72,7 +72,6 @@ Feature: Multi_directory_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 creates directories [dir1/dir2] on client1
-    And u2 waits up to 10 seconds for environment synchronization
     Then modification time of u2's dir1 is greater than access time on client2
     And modification time of u2's dir1 is equal to status-change time on client2
 
@@ -81,7 +80,6 @@ Feature: Multi_directory_stat
     When u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     When u1 renames dir1 to dir2 on client1
-    And u2 waits up to 10 seconds for environment synchronization
     Then status-change time of u2's dir2 is greater than modification time on client2
     Then status-change time of u2's dir2 is greater than access time on client2
 
@@ -90,6 +88,5 @@ Feature: Multi_directory_stat
     When u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     When u1 changes dir1 mode to 211 on client1
-    And u2 waits up to 10 seconds for environment synchronization
     Then status-change time of u2's dir1 is greater than modification time on client2
     Then status-change time of u2's dir1 is greater than access time on client2

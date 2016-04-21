@@ -145,7 +145,7 @@ def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)
     file_path = make_path(file, client)
     size = str(size)
-    check_using_stat(user, client, file_path, 'mode', size)
+    check_using_stat(user, client, file_path, 'size', size)
 
 
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} to {time2} time on {client_node}'))
@@ -160,7 +160,9 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
         return_code = stat(client, file_path, user=user, output=False)
         if return_code == 0:
             time1 = stat(client, file_path, format=opt1, user=user)
+            print "TIME1: ", time1
             time2 = stat(client, file_path, format=opt2, user=user)
+            print "TIME2: ", time2
             return compare(int(time1), int(time2), comparator)
         else:
             return False
