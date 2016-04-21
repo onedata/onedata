@@ -145,11 +145,11 @@ def check_size(user, file, size, client_node, context):
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} than {time2} time on {client_node}'))
 def check_time(user, time1, time2, comparator, file, client_node, context):
     client = get_client(client_node, user, context)
-    opt1 = get_time_opt(time1)
-    opt2 = get_time_opt(time2)
-    file = str(file)
-    time1 = run_cmd(user, client, "stat --format=%" + opt1 + ' ' + make_path(file, client), output=True)
-    time2 = run_cmd(user, client, "stat --format=%" + opt2 + ' ' + make_path(file, client), output=True)
+    opt1 = get_stat_option(time1)
+    opt2 = get_stat_option(time2)
+    file_path = make_path(str(file), client)
+    time1 = stat(client, file_path, format=opt1, user=user)
+    time2 = stat(client, file_path, format=opt2, user=user)
     assert compare(int(time1), int(time2), comparator)
 
 
@@ -187,9 +187,9 @@ def check_using_stat(user, client, file_path, parameter, expected_value):
 
 
 def get_current_time(user, file, client, time_type):
-    opt = get_time_opt(time_type)
-    return run_cmd(user, client, "stat --format=%" + opt + ' ' + make_path(file, client),
-                   output=True)
+    opt = get_stat_option(time_type)
+    file_path = make_path(file, client)
+    return stat(client, file_path, format=opt, user=user)
 
 
 def get_stat_option(parameter):
@@ -204,17 +204,6 @@ def get_stat_option(parameter):
     }
 
     return formats[parameter]
-
-
-def get_time_opt(time):
-    if time == "access":
-        return 'X'
-    elif time == "modification":
-        return 'Y'
-    elif time == "status-change":
-        return 'Z'
-    else:
-        raise ValueError("Wrong argument to function get_time_opt")
 
 
 def compare(val1, val2, comparator):
