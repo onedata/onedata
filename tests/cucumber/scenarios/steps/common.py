@@ -23,6 +23,7 @@ class Context:
     def __init__(self):
         self.users = {}
 
+    #TODO delete saving timestamps in context after introducing active waits
     def update_timestamps(self, user, client, file):
         """
         Updates mtime and ctime of file in user's test context.
@@ -236,6 +237,8 @@ def repeat_until(condition, timeout=0):
         condition_satisfied = condition()
     return timeout > 0 or condition_satisfied
 
+# FILE SYSTEM OPERATIONS
+
 
 def ls(client, user="root", path=".", output=True):
     cmd = "ls {path}".format(path=path)
@@ -267,21 +270,32 @@ def rm(client, path, recursive=False, force=False, user="root", output=False):
     return run_cmd(user, client, cmd, output=output)
 
 
-def rmdir(client, path, recursive=False, user="root", output=False):
-    cmd = "rmdir {recursive} {path}".format(
+def rmdir(client, dir_path, recursive=False, from_path=None, user="root",
+          output=False):
+    cmd = ("{from_path}"
+           "rmdir {recursive} {path}"
+           ).format(
+            from_path="cd {0} &&".format(from_path) if from_path else "",
             recursive="-p" if recursive else "",
-            path=path)
+            path=dir_path)
     return run_cmd(user, client, cmd, output=output)
 
 
-def mkdir(client, path, recursive=False, user="root", output=False):
+def mkdir(client, dir_path, recursive=False, user="root", output=False):
     cmd = "mkdir {recursive} {path}".format(
             recursive="-p" if recursive else "",
-            path=path)
+            path=dir_path)
     return run_cmd(user, client, cmd, output=output)
 
 
-def touch(client, path, user="root", output=False):
-    cmd = "touch {path}".format(path=path)
+def touch(client, file_path, user="root", output=False):
+    cmd = "touch {path}".format(path=file_path)
     return run_cmd(user, client, cmd, output=output)
 
+
+def cp(client, src, dest, recursive=False, user="root", output=False):
+    cmd = "cp {recursive} {src} {dest}".format(
+            recursive="-r" if recursive else "",
+            src=src,
+            dest=dest)
+    return run_cmd(user, client, cmd, output=output)

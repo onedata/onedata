@@ -56,6 +56,7 @@ def test_change_access_someone():
 def test_timestamp():
     pass
 
+
 # TODO VFS-1506
 # @scenario(
 #     '../features/multi_directory_stat.feature',

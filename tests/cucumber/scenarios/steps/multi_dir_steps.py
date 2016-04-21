@@ -45,7 +45,8 @@ def delete_empty(user, dirs, client_node, context):
     client = get_client(client_node, user, context)
     dirs = list_parser(dirs)
     for dir in dirs:
-        ret = run_cmd(user, client, 'rmdir ' + make_path(dir, client))
+        path = make_path(dir, client)
+        ret = rmdir(client, path, user=user)
         save_op_code(context, user, ret)
 
 
@@ -54,7 +55,8 @@ def delete_non_empty(user, dirs, client_node, context):
     client = get_client(client_node, user, context)
     dirs = list_parser(dirs)
     for dir in dirs:
-        ret = run_cmd(user, client, 'rm -rf ' + make_path(dir, client))
+        path = make_path(dir, client)
+        ret = rm(client, path, recursive=True, force=True, user=user)
         save_op_code(context, user, ret)
 
 
@@ -64,14 +66,17 @@ def delete_parents(user, paths, client_node, context):
     client = get_client(client_node, user, context)
     paths = list_parser(paths)
     for path in paths:
-        ret = run_cmd(user, client, 'cd ' + client.mount_path + ' && rmdir -p ' + str(path))
+        ret = rmdir(client, str(path), recursive=True,
+                    from_path=client.mount_path, user=user)
         save_op_code(context, user, ret)
 
 
 @when(parsers.parse('{user} copies directory {dir1} to {dir2} on {client_node}'))
 def copy_dir(user, dir1, dir2, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(user, client, 'cp -r ' + make_path(dir1, client) + ' ' + make_path(dir2, client))
+    src_path = make_path(dir1, client)
+    dest_path = make_path(dir2, client)
+    ret = cp(client, src_path, dest_path, recursive=True, user=user)
     save_op_code(context, user, ret)
 
 

@@ -22,10 +22,17 @@ def create_reg_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        ret = touch(client, make_path(file, client), user)
-        save_op_code(context, user, ret)
-        if ret == 0:
-            context.update_timestamps(user, client, file)
+        file_path = make_path(file, client)
+
+        def condition():
+            return_code = touch(client, file_path, user)
+            save_op_code(context, user, return_code)
+            if return_code == 0:
+                context.update_timestamps(user, client, file)
+                return True
+            return False
+
+        assert repeat_until(condition, timeout=60)
 
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
@@ -120,7 +127,7 @@ def check_type(user, file, file_type, client_node, context):
     client = get_client(client_node, user, context)
     file_path = make_path(file, client)
 
-    check_using_stat(user, client, file_path, 'mode', file_type)
+    check_using_stat(user, client, file_path, 'file type', file_type)
 
 
 @when(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
@@ -147,21 +154,30 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
     client = get_client(client_node, user, context)
     opt1 = get_stat_option(time1)
     opt2 = get_stat_option(time2)
-    file_path = make_path(str(file), client)
-    time1 = stat(client, file_path, format=opt1, user=user)
-    time2 = stat(client, file_path, format=opt2, user=user)
-    assert compare(int(time1), int(time2), comparator)
+    file_path = make_path(file, client)
 
+    def condition():
+        return_code = stat(client, file_path, user=user, output=False)
+        if return_code == 0:
+            time1 = stat(client, file_path, format=opt1, user=user)
+            time2 = stat(client, file_path, format=opt2, user=user)
+            return compare(int(time1), int(time2), comparator)
+        else:
+            return False
+
+    assert repeat_until(condition, timeout=60)
+    
 
 @then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} to {time2} time on {client_node} within {maxtime} seconds'))
 @then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} than {time2} time on {client_node} within {maxtime} seconds'))
 def check_time_within_maxtime(user, time1, time2, comparator, file, maxtime, client_node, context):
+    # TODO delete this step
     client = get_client(client_node, user, context)
     file = str(file)
     waited = 0
     maxtime = int(maxtime)
-    while not compare(int(get_current_time(user, file, client, time1)),
-                      int(get_current_time(user, file, client, time2)),
+    while not compare(int(get_timestamp(user, file, client, time1)),
+                      int(get_timestamp(user, file, client, time2)),
                       comparator):
         time.sleep(1)
         waited += 1
@@ -186,7 +202,7 @@ def check_using_stat(user, client, file_path, parameter, expected_value):
     assert repeat_until(condition, timeout=60)
 
 
-def get_current_time(user, file, client, time_type):
+def get_timestamp(user, file, client, time_type):
     opt = get_stat_option(time_type)
     file_path = make_path(file, client)
     return stat(client, file_path, format=opt, user=user)
