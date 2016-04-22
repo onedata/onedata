@@ -5,20 +5,19 @@ __author__ = "Jakub Kudzia"
 __copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
 
-from tests.performance.conftest import TestPerformance, performance
+from tests.performance.conftest import AbstractPerformanceTest, performance
 from tests.cucumber.scenarios.steps.common import Client, run_cmd
-from tests.performance.utils import (TestResult, generate_configs, temp_dir,
-                                     get_home_dir)
+from tests.performance.utils import (Result, generate_configs, temp_dir,
+                                     get_home_dir, delete_file)
 
 from environment import docker, env
 
-import pytest
 import os
 import re
 
 # TODO functions used in cucumber, acceptance and performance tests should be moved to common files
 # TODO higher in files hierarchy
-REPEATS = 100
+REPEATS = 1
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
@@ -26,7 +25,7 @@ SYSBENCH_OUTPUT_REGEX = r'Total transferred \d+.?\d+?\w+\s+\((\d+.?\d+)(\w+/\w+)
 SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
 
 
-class TestSysbench(TestPerformance):
+class TestSysbench(AbstractPerformanceTest):
 
     @performance(
             default_config={
@@ -53,10 +52,10 @@ class TestSysbench(TestPerformance):
                 'description': 'Testing file system using sysbench'
             },
             configs=generate_configs({
-                'files_number': [10],#, 100, 1000],
-                'threads_number': [1],#,, 16],
-                'total_size': [10],#, 100, 1000],
-                'mode': ["rndrw"],#, "rndrd", "rndwr", "seqwr", "seqrd"]
+                'files_number': [10, 100, 1000],
+                'threads_number': [1, 16],
+                'total_size': [10, 100, 1000],
+                'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
             }, 'SYSBENCH TEST -- '
                'Files number: {files_number} '
                'Threads number: {threads_number} '
@@ -65,51 +64,53 @@ class TestSysbench(TestPerformance):
 
     )
     def test_sysbench(self, clients, params):
-        client_name, client = clients.items()[0]
+        client_directio = clients['client_directio']
+        client_proxy = clients['client_proxy']
         threads_number = params['threads_number']['value']
         files_number = params['files_number']['value']
         total_size = params['total_size']['value']
         mode = params['mode']['value']
 
-        dir_path = temp_dir(client, client.mount_path)
-        dir_path_host = temp_dir(client, get_home_dir(client))
+        dir_path_directio = temp_dir(client_directio, client_directio.mount_path)
+        dir_path_proxy = temp_dir(client_proxy, client_proxy.mount_path)
+        dir_path_host = temp_dir(client_proxy, get_home_dir(client_proxy))
 
+        test_result1 = execute_sysbench_test(client_directio, threads_number,
+                                             total_size, files_number, mode,
+                                             dir_path_directio, "direct IO")
 
-        (
-            (transfer, transfer_unit),
-            (requests_velocity, requests_velocity_unit)
-        ) = parse_sysbench_output(sysbench_tests(threads_number, total_size, files_number, mode,
-                                                 client, dir_path))
+        test_result2 = execute_sysbench_test(client_proxy, threads_number,
+                                             total_size, files_number, mode,
+                                             dir_path_proxy, "cluster-proxy")
 
-        (
-            (transfer_host, transfer_unit_host),
-            (requests_velocity_host, requests_velocity_unit_host)
-        ) = parse_sysbench_output(sysbench_tests(threads_number, total_size, files_number,
-                                                 mode, client, dir_path_host))
+        test_result3 = execute_sysbench_test(client_proxy, threads_number,
+                                             total_size, files_number, mode,
+                                             dir_path_host, "host system")
 
-        return [
-            TestResult("transfer", transfer, "Transfer velocity in onedata",
-                       transfer_unit),
-            TestResult("requests", requests_velocity,
-                       "Requests per second in onedata",
-                       requests_velocity_unit),
-            TestResult("transfer_host", transfer_host,
-                       "Transfer velocity on host", transfer_unit_host),
-            TestResult("requests_host", requests_velocity_host,
-                       "Requests per second on host",
-                       requests_velocity_unit_host)
-        ]
+        delete_file(client_directio, dir_path_directio)
+        delete_file(client_proxy, dir_path_proxy)
+        delete_file(client_proxy, dir_path_host)
 
+        return test_result1 + test_result2 + test_result3
 
 ################################################################################
 
-def execute_sysbench_test(threads_number, total_size, files_number,
-                          mode, client, dir_path_host):
-    (
-        (transfer_host, transfer_unit_host),
-        (requests_velocity_host, requests_velocity_unit_host)
-    ) = parse_sysbench_output(sysbench_tests(threads_number, total_size, files_number,
-                                             mode, client, dir_path_host))
+
+def execute_sysbench_test(client, threads_number, total_size, files_number,
+                          mode, dir_path, description):
+    out = parse_sysbench_output(sysbench_tests(
+            threads_number, total_size, files_number, mode, client, dir_path))
+    return [
+        Result("transfer_{}".format(description),
+               out['transfer'],
+                   "Transfer velocity in case of {}".format(description),
+               out['transfer_unit']),
+        Result("requests_{}".format(description),
+               out['requests_velocity'],
+                   "Requests per second in onedata {}".format(description),
+               out['requests_velocity_unit']),
+    ]
+
 
 def sysbench_tests(threads_number, total_size, file_number, mode, client, dir):
     run_sysbench_prepare(threads_number, total_size, file_number, mode, client, dir)
@@ -137,10 +138,10 @@ def sysbench(threads_number, total_size, file_number, mode, type, client, dir):
 
 def sysbench_command(threads_number, total_size, file_number, mode, type, dir):
 
-    cmd = "cd {dir} && " \
-          "sysbench --num-threads={threads_number} --test=fileio " \
-          "--file-total-size={total_size}M --file-num={file_number} " \
-          "--file-test-mode={mode} {type}".format(
+    cmd = ('cd {dir} && '
+           'sysbench --num-threads={threads_number} --test=fileio '
+           '--file-total-size={total_size}M --file-num={file_number} '
+           '--file-test-mode={mode} {type}').format(
             dir=dir,
             threads_number=threads_number,
             total_size=total_size,
@@ -158,4 +159,7 @@ def parse_sysbench_output(output):
     requests_velocity = float(m.group(3))
     requests_velocity_unit = m.group(4)
 
-    return ((transfer, transfer_unit), (requests_velocity, requests_velocity_unit))
+    return {'transfer': transfer,
+            'transfer_unit': transfer_unit,
+            'requests_velocity': requests_velocity,
+            'requests_velocity_unit':requests_velocity_unit}
