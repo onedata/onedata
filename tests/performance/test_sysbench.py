@@ -1,8 +1,8 @@
 """
-This module contains performance tests of onedata on acceptance level
+This module contains performance tests of oneclient using sysbench benchmark.
 """
 __author__ = "Jakub Kudzia"
-__copyright__ = """(C) 2015 ACK CYFRONET AGH,
+__copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
 
 
@@ -11,14 +11,14 @@ from environment import docker, env
 import pytest
 from tests.performance.utils import TestResult, generate_configs
 import random
-from cucumber.scenarios.steps.common import Client, run_cmd
+from tests.cucumber.scenarios.steps.common import Client, run_cmd
 import os
 import re
 import subprocess
 
 # TODO functions used in cucumber, acceptance and performance tests should be moved to common files
 # TODO higher in files hierarchy
-REPEATS = 1
+REPEATS = 100
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
@@ -26,63 +26,7 @@ SYSBENCH_OUTPUT_REGEX = r'Total transferred \d+.?\d+?\w+\s+\((\d+.?\d+)(\w+/\w+)
 SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
 
 
-class TestFileSystem(TestPerformance):
-
-    @performance(
-            default_config={
-                'repeats': REPEATS,
-                'success_rate': SUCCESS_RATE,
-                'parameters': {
-                    'size': {'description': "size", 'unit': "kB"},
-                    'block_size': {'description': "size of block", 'unit': "kB"}
-                },
-                'description': 'Test of dd throughput'
-            },
-            configs=generate_configs({
-                'block_size': [1, 4, 128, 1024],
-                'size': [1024, 1048576, 10485760]
-            }, "DD TEST -- block size: {block_size} size: {size}"))
-    def test_dd(self, clients, params):
-
-        size = params['size']['value']
-        size_unit = params['size']['unit']
-        block_size = params['block_size']['value']
-        block_size_unit = params['block_size']['unit']
-        client_name, client = clients.items()[0]
-
-        test_file = temp_file(client, client.mount_path)
-        test_file_host = temp_file(client, get_home_dir(client))
-        dev_zero = os.path.join('/dev', 'zero')
-
-        write_output = dd(client, dev_zero, test_file, block_size,
-                          block_size_unit, size, size_unit)
-        write_throughput = parse_dd_output(write_output)
-
-        read_output = dd(client, test_file, dev_zero, block_size,
-                         block_size_unit, size, size_unit)
-        read_throughput = parse_dd_output(read_output)
-
-        write_output_host = dd(client, dev_zero, test_file_host, block_size,
-                               block_size_unit, size, size_unit)
-        write_throughput_host = parse_dd_output(write_output_host)
-
-        read_output_host = dd(client, test_file_host, dev_zero, block_size,
-                              block_size_unit, size, size_unit)
-        read_throughput_host = parse_dd_output(read_output_host)
-
-        delete_file(client, test_file)
-        delete_file(client, test_file_host)
-
-        return [
-            TestResult('write_throughput', write_throughput,
-                       "Throughput of write operation in onedata", "MB/s"),
-            TestResult('read_throughput', read_throughput,
-                       "Throughput of read operation in onedata", "MB/s"),
-            TestResult('write_throughput_host', write_throughput_host,
-                       "Throughput of write operation", "MB/s"),
-            TestResult('read_throughput_host', read_throughput_host,
-                       "Throughput of read operation on host", "MB/s")
-        ]
+class TestSysbench(TestPerformance):
 
     @performance(
             default_config={
@@ -109,10 +53,10 @@ class TestFileSystem(TestPerformance):
                 'description': 'Sysbench test'
             },
             configs=generate_configs({
-                'files_number': [10, 100, 1000],
-                'threads_number': [1, 16],
-                'total_size': [10, 100, 1000],
-                'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
+                'files_number': [10],#, 100, 1000],
+                'threads_number': [1],#,, 16],
+                'total_size': [10],#, 100, 1000],
+                'mode': ["rndrw"],#, "rndrd", "rndwr", "seqwr", "seqrd"]
             }, 'SYSBENCH TEST -- '
                'Files number: {files_number} '
                'Threads number: {threads_number} '
@@ -163,35 +107,6 @@ class TestFileSystem(TestPerformance):
 
 
 ################################################################################
-
-def dd(client, input, output, block_size, block_size_unit, size, size_unit):
-    block_size_unit = SI_prefix_to_default(block_size_unit)
-    size_unit = SI_prefix_to_default(size_unit)
-    size = convert_size(size, size_unit, 'k')
-    # block size is always passed as multiplication of kB (= 1024B not 1000B)
-    block_size = convert_size(block_size, block_size_unit, 'k')
-    count = size / block_size
-
-    cmd = "dd if={input} " \
-          "of={output} " \
-          "bs={bs}k " \
-          "count={count} 2>&1".format(
-            input=input,
-            output=output,
-            bs=int(block_size),
-            count=int(count))
-
-    return run_cmd(client.user, client, cmd, output=True)
-
-
-def parse_dd_output(dd_output):
-    dd_output = dd_output.split("\n")[-1].strip()
-    m = re.match(DD_OUTPUT_PATTERN, dd_output)
-    value = float(m.group(1))
-    unit = m.group(2)
-    size_unit = unit.split('/')[0]
-    return convert_size(value, size_unit, 'M')
-
 
 def convert_size(value, prefix, convert_to_prefix):
     convert_to_prefix = convert_to_prefix.upper()

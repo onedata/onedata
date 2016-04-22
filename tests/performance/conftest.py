@@ -1,28 +1,20 @@
+from tests.test_common import (make_logdir, get_test_name, get_json_files,
+                               performance_output, performance_env_dir,
+                               acceptance_logdir, run_env_up_script,
+                               performance_logdir)
+
+from tests.cucumber.scenarios.steps.common import Client, run_cmd
+from tests.cucumber.scenarios.steps.auth_steps import (set_dns, get_cookie,
+                                                       get_token)
+
 import os
-import sys
 from utils import *
-
-# these commands add 'tests' to path to make it possible
-# to import 'test_common'
-curr_dir = os.path.dirname(os.path.realpath(__file__))
-curr_dir_list = curr_dir.split(os.path.sep)
-# find last occurence of 'tests' directory on path
-test_index_last = curr_dir_list[::-1].index('tests')
-test_dir = os.path.sep.join(curr_dir_list[:-test_index_last])
-sys.path.insert(0, test_dir)
-
-from test_common import make_logdir, get_test_name, get_json_files, \
-    performance_output, performance_env_dir, acceptance_logdir, \
-    run_env_up_script, performance_logdir
-from cucumber.scenarios.steps.common import Client, run_cmd
-
-from cucumber.scenarios.steps.auth_steps import set_dns, get_cookie, get_token
-from environment import docker
-
 import pytest
 import json
 import inspect
 import time
+
+from environment import docker
 
 
 def performance(default_config, configs):
