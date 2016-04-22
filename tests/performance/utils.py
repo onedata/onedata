@@ -68,7 +68,7 @@ class ConfigReport(Report):
         self.add_to_report('failed_repeats_details', {})
 
 
-class TestResult:
+class Result:
     def __init__(self, name, value, description, unit=""):
         self.name = name
         self.value = value
@@ -76,7 +76,7 @@ class TestResult:
         self.unit = unit
 
 
-class TestResultReport:
+class ResultReport:
 
     def __init__(self):
         self.details = {}
@@ -150,6 +150,13 @@ def ensure_list(elem):
 
 
 def generate_configs(params, description_skeleton):
+    """This function generates all combinations of given parameters. Format of
+    returnev value is appropriate for @performance decorator
+    :param description_skeleton: skeleton of config description, it will be
+    filled with parameter values
+    :param params: dictionary of parameters in form
+    {"param_name": [val1, val2, val3]}
+    """
     keys = params.keys()
     configs = {}
     i = 0
@@ -203,6 +210,17 @@ print tempfile.mkdtemp(dir="{dir}")'''
 
     cmd = cmd.format(dir=path)
     cmd = ["python -c '{command}'".format(command=cmd)]
+    return run_cmd(client.user, client, cmd, output=True).strip()
+
+
+def temp_file(client, path):
+    cmd = '''import tempfile
+handle, file_path = tempfile.mkstemp(dir="{dir}")
+print file_path'''
+
+    cmd = cmd.format(dir=path)
+    cmd = ["python -c '{command}'".format(command=cmd)]
+
     return run_cmd(client.user, client, cmd, output=True).strip()
 
 

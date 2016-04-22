@@ -4,13 +4,11 @@ This module contains performance tests of dd operation in oneclient
 __author__ = "Jakub Kudzia"
 __copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
-from tests.test_common import performance_env_dir
-from tests.performance.conftest import TestPerformance, performance
+from tests.performance.conftest import AbstractPerformanceTest, performance
 from tests.cucumber.scenarios.steps.common import Client, run_cmd
-from tests.performance.utils import (TestResult, generate_configs, temp_dir,
+from tests.performance.utils import (Result, generate_configs, temp_file,
                                      get_home_dir, delete_file)
 
-import pytest
 import os
 import re
 
@@ -24,16 +22,7 @@ SYSBENCH_OUTPUT_REGEX = r'Total transferred \d+.?\d+?\w+\s+\((\d+.?\d+)(\w+/\w+)
 SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
 
 
-class Testdd(TestPerformance):
-
-    @pytest.fixture(scope="module",
-                    params=[os.path.join(performance_env_dir, "env.json")])
-    def env_description_file(self, request):
-        """This fixture must be overridden in performance test module if you
-        want to start tests from given module with different environments that
-        those defined in performance/environments directory
-        """
-        return request.param
+class Testdd(AbstractPerformanceTest):
 
     @performance(
             default_config={
@@ -46,8 +35,8 @@ class Testdd(TestPerformance):
                 'description': 'Test of dd throughput'
             },
             configs=generate_configs({
-                'block_size': [1],#, 4, 128, 1024],
-                'size': [1024],# 1048576, 10485760]
+                'block_size': [1, 4, 128, 1024],
+                'size': [1024, 1048576, 10485760]
             }, "DD TEST -- block size: {block_size} size: {size}"))
     def test_dd(self, clients, params):
         size = params['size']['value']
@@ -56,8 +45,6 @@ class Testdd(TestPerformance):
         block_size_unit = params['block_size']['unit']
         client_directio = clients['client_directio']
         client_proxy = clients['client_proxy']
-        
-        # client_name, client = clients.items()[0]
 
         test_file_directio = temp_file(client_directio, client_directio.mount_path)
         test_file_proxy = temp_file(client_proxy, client_proxy.mount_path)
@@ -74,10 +61,6 @@ class Testdd(TestPerformance):
         test_result3 = execute_dd_test(client_proxy, test_file_host, block_size,
                                        block_size_unit, size, size_unit,
                                        "host system")
-
-        print test_result1
-        print test_result2
-        print test_result3
 
         delete_file(client_directio, test_file_directio)
         delete_file(client_proxy, test_file_proxy)
@@ -102,12 +85,12 @@ def execute_dd_test(client, test_file, block_size, block_size_unit, size,
                                          size_unit))
 
     return [
-        TestResult('write_throughput_{}'.format(description),
-                   write_throughput,
+        Result('write_throughput_{}'.format(description),
+               write_throughput,
                    "Throughput of write operation in case of {}".format(description),
                    "MB/s"),
-        TestResult('read_throughput_{}'.format(description),
-                   read_throughput,
+        Result('read_throughput_{}'.format(description),
+               read_throughput,
                    "Throughput of read operation in case of {}".format(description),
                    "MB/s")
     ]
@@ -168,14 +151,3 @@ def SI_prefix_to_default(prefix):
 
 def create_file(client, path):
     run_cmd(client.user, client, "touch " + path)
-
-
-def temp_file(client, path):
-    cmd = '''import tempfile
-handle, file_path = tempfile.mkstemp(dir="{dir}")
-print file_path'''
-
-    cmd = cmd.format(dir=path)
-    cmd = ["python -c '{command}'".format(command=cmd)]
-
-    return run_cmd(client.user, client, cmd, output=True).strip()

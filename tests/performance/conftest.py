@@ -41,7 +41,7 @@ def performance(default_config, configs):
     """
     def wrap(test_function):
 
-        def wrapped_test_function(self, clients, json_output, suite_report):
+        def wrapped_test_function(self, clients, suite_report):
             test_case_report = test_function.__name__
             test_case_report = TestCaseReport(test_case_report,
                                               default_config['description'])
@@ -53,11 +53,10 @@ def performance(default_config, configs):
                                              merged_config['description'],
                                              merged_config['repeats'])
 
-                config_report.add_to_report(
-                        'parameters',
-                        dict_to_list(merged_config.get('parameters', {})))
+                config_report.add_to_report('parameters',
+                                   dict_to_list(merged_config.get('parameters', {})))
 
-                test_result_report = TestResultReport()
+                test_result_report = ResultReport()
                 max_repeats = merged_config['repeats']
                 succces_rate = merged_config['success_rate']
                 repeats = 0
@@ -120,15 +119,13 @@ def json_output(request):
     return performance_report
 
 
-class TestPerformance:
+class AbstractPerformanceTest:
     @pytest.fixture(scope="module")
     def suite_report(self, request, env_report):
         module = inspect.getmodule(self.__class__)
         name = get_test_name(inspect.getfile(self.__class__))
-        report = SuiteReport(name,
-                             get_suite_description(module),
-                             get_copyright(module),
-                             get_authors(module))
+        report = SuiteReport(name, get_suite_description(module),
+                             get_copyright(module), get_authors(module))
 
         def fin():
             env_report.add_to_report("suites", report)
