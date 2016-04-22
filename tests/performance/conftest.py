@@ -1,3 +1,11 @@
+"""
+This module contains functions that are used to run performance tests on
+acceptance level.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = """(C) 2016 ACK CYFRONET AGH,
+This software is released under the MIT license cited in 'LICENSE.txt'."""
+
 from tests.test_common import (make_logdir, get_test_name, get_json_files,
                                performance_output, performance_env_dir,
                                acceptance_logdir, run_env_up_script,
@@ -18,6 +26,19 @@ from environment import docker
 
 
 def performance(default_config, configs):
+    """This function is meant to run performance test. It allows to start
+    test cases multiple times and for many configs. It should be used as
+    decorator to test function.
+    :param default_config: dictionary with keys:
+        - repeats - how many times test should be started for each config
+        - success_rate - if rate of successful tests is lower than this
+          parameter, whole test will fail
+        - parameters - dictionary with parameters that are specific for given
+          test case
+        - description - description of test case
+    :param configs: dictionary of configs. For each of this configs test case
+                    will be started
+    """
     def wrap(test_function):
 
         def wrapped_test_function(self, clients, json_output, suite_report):
@@ -34,8 +55,7 @@ def performance(default_config, configs):
 
                 config_report.add_to_report(
                         'parameters',
-                        dict_to_list(merged_config.get('parameters', {}))
-                )
+                        dict_to_list(merged_config.get('parameters', {})))
 
                 test_result_report = TestResultReport()
                 max_repeats = merged_config['repeats']
@@ -64,17 +84,14 @@ def performance(default_config, configs):
                 config_report.add_to_report('completed', int(time.time()))
                 config_report.add_to_report('successful_repeats', successful_repeats)
                 test_result_report.prepare_report()
-                config_report.add_to_report('successful_repeats_details',
-                                            test_result_report.details)
-                config_report.add_to_report('successful_repeats_summary',
-                                            test_result_report.summary)
-                config_report.add_to_report('successful_repeats_average',
-                                            test_result_report.average)
+                config_report.add_to_report('successful_repeats_details', test_result_report.details)
+                config_report.add_to_report('successful_repeats_summary', test_result_report.summary)
+                config_report.add_to_report('successful_repeats_average', test_result_report.average)
                 config_report.add_to_report("failed_repeats_details", failed_details)
 
                 test_case_report.add_to_report('configs', config_report)
 
-                if is_success_rate_satisfied(successful_repeats, failed_repeats, succces_rate):
+                if not is_success_rate_satisfied(successful_repeats, failed_repeats, succces_rate):
                     suite_report.add_to_report('cases', test_case_report)
                     pytest.fail("Test suite: {suite} failed because of too "
                                 "many failures: {failures}"
@@ -199,4 +216,4 @@ class TestPerformance:
 
 
 def is_success_rate_satisfied(successful_repeats, failed_repeats, rate):
-    return rate / 100.0 > float(successful_repeats) / (successful_repeats + failed_repeats)
+    return rate * (successful_repeats + failed_repeats) <= 100 * successful_repeats
