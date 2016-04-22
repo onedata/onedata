@@ -1,0 +1,181 @@
+"""
+This module contains performance tests of dd operation in oneclient
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = """(C) 2016 ACK CYFRONET AGH,
+This software is released under the MIT license cited in 'LICENSE.txt'."""
+from tests.test_common import performance_env_dir
+from tests.performance.conftest import TestPerformance, performance
+from tests.cucumber.scenarios.steps.common import Client, run_cmd
+from tests.performance.utils import (TestResult, generate_configs, temp_dir,
+                                     get_home_dir, delete_file)
+
+import pytest
+import os
+import re
+
+# TODO functions used in cucumber, acceptance and performance tests should be moved to common files
+# TODO higher in files hierarchy
+REPEATS = 1
+SUCCESS_RATE = 95
+DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
+DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
+SYSBENCH_OUTPUT_REGEX = r'Total transferred \d+.?\d+?\w+\s+\((\d+.?\d+)(\w+/\w+)\)\s+(\d+.?\d+?)\s+(\w+/\w+)'
+SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
+
+
+class Testdd(TestPerformance):
+
+    @pytest.fixture(scope="module",
+                    params=[os.path.join(performance_env_dir, "env.json")])
+    def env_description_file(self, request):
+        """This fixture must be overridden in performance test module if you
+        want to start tests from given module with different environments that
+        those defined in performance/environments directory
+        """
+        return request.param
+
+    @performance(
+            default_config={
+                'repeats': REPEATS,
+                'success_rate': SUCCESS_RATE,
+                'parameters': {
+                    'size': {'description': "size", 'unit': "kB"},
+                    'block_size': {'description': "size of block", 'unit': "kB"}
+                },
+                'description': 'Test of dd throughput'
+            },
+            configs=generate_configs({
+                'block_size': [1],#, 4, 128, 1024],
+                'size': [1024],# 1048576, 10485760]
+            }, "DD TEST -- block size: {block_size} size: {size}"))
+    def test_dd(self, clients, params):
+        size = params['size']['value']
+        size_unit = params['size']['unit']
+        block_size = params['block_size']['value']
+        block_size_unit = params['block_size']['unit']
+        client_directio = clients['client_directio']
+        client_proxy = clients['client_proxy']
+        
+        # client_name, client = clients.items()[0]
+
+        test_file_directio = temp_file(client_directio, client_directio.mount_path)
+        test_file_proxy = temp_file(client_proxy, client_proxy.mount_path)
+        test_file_host = temp_file(client_proxy, get_home_dir(client_proxy))
+
+        test_result1 = execute_dd_test(client_directio, test_file_directio,
+                                       block_size, block_size_unit, size,
+                                       size_unit, "direct IO")
+
+        test_result2 = execute_dd_test(client_proxy, test_file_proxy,
+                                       block_size, block_size_unit, size,
+                                       size_unit, "cluster-proxy")
+
+        test_result3 = execute_dd_test(client_proxy, test_file_host, block_size,
+                                       block_size_unit, size, size_unit,
+                                       "host system")
+
+        print test_result1
+        print test_result2
+        print test_result3
+
+        delete_file(client_directio, test_file_directio)
+        delete_file(client_proxy, test_file_proxy)
+        delete_file(client_proxy, test_file_host)
+
+        return test_result1 + test_result2 + test_result3
+
+
+################################################################################
+
+def execute_dd_test(client, test_file, block_size, block_size_unit, size,
+                    size_unit, description):
+
+    dev_zero = os.path.join('/dev', 'zero')
+
+    write_throughput = parse_dd_output(dd(client, dev_zero, test_file,
+                                          block_size, block_size_unit, size,
+                                          size_unit))
+
+    read_throughput = parse_dd_output(dd(client, test_file, dev_zero,
+                                         block_size,block_size_unit, size,
+                                         size_unit))
+
+    return [
+        TestResult('write_throughput_{}'.format(description),
+                   write_throughput,
+                   "Throughput of write operation in case of {}".format(description),
+                   "MB/s"),
+        TestResult('read_throughput_{}'.format(description),
+                   read_throughput,
+                   "Throughput of read operation in case of {}".format(description),
+                   "MB/s")
+    ]
+
+
+def dd(client, input, output, block_size, block_size_unit, size, size_unit):
+    block_size_unit = SI_prefix_to_default(block_size_unit)
+    size_unit = SI_prefix_to_default(size_unit)
+    size = convert_size(size, size_unit, 'k')
+    block_size = convert_size(block_size, block_size_unit, 'k')
+    count = size / block_size
+
+    cmd = "dd if={input} " \
+          "of={output} " \
+          "bs={bs}k " \
+          "count={count} 2>&1".format(
+            input=input,
+            output=output,
+            bs=int(block_size),
+            count=int(count))
+
+    return run_cmd(client.user, client, cmd, output=True)
+
+
+def parse_dd_output(dd_output):
+    dd_output = dd_output.split("\n")[-1].strip()
+    m = re.match(DD_OUTPUT_PATTERN, dd_output)
+    value = float(m.group(1))
+    unit = m.group(2)
+    size_unit = unit.split('/')[0]
+    return convert_size(value, size_unit, 'M')
+
+
+def convert_size(value, prefix, convert_to_prefix):
+    convert_to_prefix = convert_to_prefix.upper()
+    si_powers_prefixes = ['kB', 'MB', 'GB', 'TB']
+    si_powers_values = [1000 ** p for p in range(1, 5)]
+    si_powers = dict(zip(si_powers_prefixes, si_powers_values))
+    powers_prefixes = ['K', 'M', 'G', 'T']
+    powers_values = [1024 ** p for p in range(1, 5)]
+    powers = dict(zip(powers_prefixes, powers_values))
+
+    if is_SI_prefix(prefix):
+        factor = float(si_powers[prefix]) / powers[convert_to_prefix]
+    else:
+        factor = float(powers[prefix]) / powers[convert_to_prefix]
+
+    return value * factor
+
+
+def is_SI_prefix(prefix):
+    return prefix.endswith('B')
+
+
+def SI_prefix_to_default(prefix):
+    return prefix.upper().strip("B")
+
+
+def create_file(client, path):
+    run_cmd(client.user, client, "touch " + path)
+
+
+def temp_file(client, path):
+    cmd = '''import tempfile
+handle, file_path = tempfile.mkstemp(dir="{dir}")
+print file_path'''
+
+    cmd = cmd.format(dir=path)
+    cmd = ["python -c '{command}'".format(command=cmd)]
+
+    return run_cmd(client.user, client, cmd, output=True).strip()

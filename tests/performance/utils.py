@@ -1,3 +1,5 @@
+from tests.cucumber.scenarios.steps.common import run_cmd
+
 import itertools
 import subprocess
 import os
@@ -193,3 +195,20 @@ def get_authors(mod):
 
 def get_suite_description(mod):
     return mod.__doc__
+
+
+def temp_dir(client, path):
+    cmd = '''import tempfile
+print tempfile.mkdtemp(dir="{dir}")'''
+
+    cmd = cmd.format(dir=path)
+    cmd = ["python -c '{command}'".format(command=cmd)]
+    return run_cmd(client.user, client, cmd, output=True).strip()
+
+
+def delete_file(client, path):
+    run_cmd(client.user, client, "rm -rf " + path)
+
+
+def get_home_dir(client):
+    return os.path.join("/home", client.user)
