@@ -1,7 +1,6 @@
 Feature: Multi_authorization
 
   Background:
-    Given environment is defined in env.json
     Given environment is up
 
   Scenario: Successful authorization
