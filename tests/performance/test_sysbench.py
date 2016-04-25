@@ -21,7 +21,7 @@ REPEATS = 1
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
-SYSBENCH_OUTPUT_REGEX = r'Total transferred \d+.?\d+?\w+\s+\((\d+.?\d+)(\w+/\w+)\)\s+(\d+.?\d+?)\s+(\w+/\w+)'
+SYSBENCH_OUTPUT_REGEX = r'Total transferred (\d+(\.\d+))?\w+\s+\((\d+(\.\d+)?)(\w+/\w+)\)\s+(\d+(\.\d+)?)\s+(\w+/\w+)'
 SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
 
 
@@ -52,10 +52,10 @@ class TestSysbench(AbstractPerformanceTest):
                 'description': 'Testing file system using sysbench'
             },
             configs=generate_configs({
-                'files_number': [10, 100, 1000],
+                'files_number': [10, 100],# 1000],
                 'threads_number': [1, 16],
-                'total_size': [10, 100, 1000],
-                'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
+                'total_size': [100],# 1000],
+                'mode': ["rndrw"]#, "rndrd", "rndwr", "seqwr", "seqrd"]
             }, 'SYSBENCH TEST -- '
                'Files number: {files_number} '
                'Threads number: {threads_number} '
@@ -154,12 +154,12 @@ def sysbench_command(threads_number, total_size, file_number, mode, type, dir):
 
 def parse_sysbench_output(output):
     m = re.search(SYSBENCH_OUTPUT_PATTERN, output)
-    transfer = float(m.group(1))
-    transfer_unit = m.group(2)
-    requests_velocity = float(m.group(3))
-    requests_velocity_unit = m.group(4)
+    transfer = float(m.group(3))
+    transfer_unit = m.group(5)
+    requests_velocity = float(m.group(6))
+    requests_velocity_unit = m.group(8)
 
     return {'transfer': transfer,
             'transfer_unit': transfer_unit,
             'requests_velocity': requests_velocity,
-            'requests_velocity_unit':requests_velocity_unit}
+            'requests_velocity_unit': requests_velocity_unit}
