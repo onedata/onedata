@@ -1,7 +1,6 @@
 Feature: LUMA provider test
 
   Background:
-    Given environment is defined in env_luma_provider.json
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
 

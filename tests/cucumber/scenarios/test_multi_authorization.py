@@ -16,7 +16,7 @@ from steps.common import *
     '../features/multi_authorization.feature',
     'Successful authorization',
 )
-def test_successful_authorization():
+def test_successful_authorization(env_description_file):
     pass
 
 
@@ -24,7 +24,7 @@ def test_successful_authorization():
     '../features/multi_authorization.feature',
     'Successful authorization - 1 client per user',
 )
-def test_successful_authorization2():
+def test_successful_authorization2(env_description_file):
     pass
 
 
@@ -32,7 +32,7 @@ def test_successful_authorization2():
     '../features/multi_authorization.feature',
     'Successful authorization - 2 clients of one user',
 )
-def test_successful_authorization3():
+def test_successful_authorization3(env_description_file):
     pass
 
 
@@ -40,7 +40,7 @@ def test_successful_authorization3():
     '../features/multi_authorization.feature',
     'Bad and good authorization',
 )
-def test_good_and_bad_authorization():
+def test_good_and_bad_authorization(env_description_file):
     pass
 
 
@@ -48,5 +48,5 @@ def test_good_and_bad_authorization():
     '../features/multi_authorization.feature',
     'Bad authorization',
 )
-def test_bad_authorization():
+def test_bad_authorization(env_description_file):
     pass
