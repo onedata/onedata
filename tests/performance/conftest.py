@@ -8,12 +8,13 @@ This software is released under the MIT license cited in 'LICENSE.txt'."""
 
 from tests.test_common import (make_logdir, get_test_name, get_json_files,
                                performance_output, performance_env_dir,
-                               acceptance_logdir, run_env_up_script,
-                               performance_logdir)
+                               run_env_up_script, performance_logdir)
 
 from tests.cucumber.scenarios.steps.common import Client, run_cmd
+from tests.cucumber.scenarios.steps.env_steps import clear_storage
 from tests.cucumber.scenarios.steps.auth_steps import (set_dns, get_cookie,
                                                        get_token)
+from environment import common, docker, env
 
 import os
 from utils import *
@@ -46,6 +47,9 @@ def performance(default_config, configs):
             test_case_report = TestCaseReport(test_case_report,
                                               default_config['description'])
 
+            failed = False
+            error_msg = ""
+
             for config_name, config in configs.items():
 
                 merged_config = update_dict(default_config, config)
@@ -70,6 +74,7 @@ def performance(default_config, configs):
                                 self, clients,
                                 merged_config.get('parameters', {}))
                     except Exception as e:
+                        print "Testcase failed beceause of: ", str(e)
                         failed_repeats += 1
                         failed_details[str(repeats)] = str(e)
                     else:
@@ -91,13 +96,16 @@ def performance(default_config, configs):
                 test_case_report.add_to_report('configs', config_report)
 
                 if not is_success_rate_satisfied(successful_repeats, failed_repeats, succces_rate):
-                    suite_report.add_to_report('cases', test_case_report)
-                    pytest.fail("Test suite: {suite} failed because of too "
-                                "many failures: {failures}"
-                                .format(suite=suite_report.name,
-                                        failures=failed_repeats))
+                    error_msg = ("Test suite: {suite} failed because of too "
+                                 "many failures: {failures}"
+                                 ).format(suite=suite_report.name,
+                                          failures=failed_repeats)
+                    failed = True
+                    break
 
             suite_report.add_to_report('cases', test_case_report)
+            if failed:
+                pytest.fail(error_msg)
 
         return wrapped_test_function
 
@@ -153,8 +161,9 @@ class AbstractPerformanceTest:
         return request.param
 
     @pytest.fixture(scope="module")
-    def environment(self, request, env_description_file):
-        logdir = make_logdir(acceptance_logdir, get_test_name(__file__))
+    def persistent_environment(self, request, env_description_file):
+        test_name = get_test_name(inspect.getfile(self.__class__))
+        logdir = make_logdir(performance_logdir, test_name)
         env = run_env_up_script("env_up.py", [
             '-l', logdir, env_description_file
         ])
@@ -165,12 +174,28 @@ class AbstractPerformanceTest:
         request.addfinalizer(fin)
         return env
 
+    @pytest.fixture()
+    def environment(self, persistent_environment, request, env_description_file):
+        # TODO storage path should be read from persistent environment
+        # TODO when VFS-1832 will be resolved
+        config = common.parse_json_config_file(env_description_file)
+
+        def fin():
+            for _, os_config in config['os_configs'].iteritems():
+                for storage in os_config['storages']:
+                    if storage['type'] == 'posix':
+                        clear_storage(os.path.join(common.storage_host_path(storage['name'])))
+
+        request.addfinalizer(fin)
+        return persistent_environment
+
+
     # TODO this fixture is similiar to client_ids in cucumber tests
     # TODO it should be moved to common conftest.py
-    @pytest.fixture(scope="module")
+    @pytest.fixture()
     def clients(self, environment, env_description_file):
         client_dockers = environment['client_nodes']
-        # current version is for environment with one OZ
+        # current version is for environment withenvironment one OZ
         oz_node = environment['oz_worker_nodes'][0]
         set_dns(environment)
         client_data = environment['client_data']
