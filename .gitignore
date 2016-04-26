@@ -10,8 +10,8 @@ tests/cucumber/logs
 tests/tmp
 
 package
-dockerbuild-report.txt
-dockerbuild-sha.txt
+docker-build-list.json
+docker-build-report.txt
 oneprovider_meta/package
 oneprovider_meta/oneprovider.spec
 oneprovider_meta/oneprovider/DEBIAN/control
