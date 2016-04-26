@@ -1,8 +1,7 @@
 Feature: Regular_file_stat
 
   Background:
-    Given environment is defined in env.json
-    And environment is up
+    Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
 
   Scenario: Check file type when empty

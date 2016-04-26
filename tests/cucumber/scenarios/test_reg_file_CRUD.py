@@ -20,7 +20,7 @@ from steps.common import *
     '../features/reg_file_CRUD.feature',
     'Create regular file'
 )
-def test_create():
+def test_create(env_description_file):
     pass
 
 
@@ -28,7 +28,7 @@ def test_create():
     '../features/reg_file_CRUD.feature',
     'Rename regular file'
 )
-def test_rename():
+def test_rename(env_description_file):
     pass
 
 
@@ -36,7 +36,7 @@ def test_rename():
     '../features/reg_file_CRUD.feature',
     'Delete regular file'
 )
-def test_delete():
+def test_delete(env_description_file):
     pass
 
 
@@ -45,7 +45,7 @@ def test_delete():
 #     '../features/reg_file_CRUD.feature',
 #     'Read and write to regular file'
 # )
-# def test_read_write():
+# def test_read_write(env_description_file):
 #     pass
 
 
@@ -53,7 +53,7 @@ def test_delete():
     '../features/reg_file_CRUD.feature',
     'Append regular file'
 )
-def test_append():
+def test_append(env_description_file):
     pass
 
 # TODO VFS-1507
@@ -61,7 +61,7 @@ def test_append():
 #     '../features/reg_file_CRUD.feature',
 #     'Replace word in file'
 # )
-# def test_replace():
+# def test_replace(env_description_file):
 #     pass
 
 
@@ -69,7 +69,7 @@ def test_append():
     '../features/reg_file_CRUD.feature',
     'Move regular file and read'
 )
-def test_move():
+def test_move(env_description_file):
     pass
 
 # TODO VFS-1513
@@ -77,7 +77,7 @@ def test_move():
 #     '../features/reg_file_CRUD.feature',
 #     'Move big regular file and check MD5'
 # )
-# def test_move_big():
+# def test_move_big(env_description_file):
 #     pass
 
 
@@ -85,7 +85,7 @@ def test_move():
     '../features/reg_file_CRUD.feature',
     'Copy regular file and read'
 )
-def test_copy():
+def test_copy(env_description_file):
     pass
 
 # TODO VFS-1513
@@ -93,5 +93,5 @@ def test_copy():
 #     '../features/reg_file_CRUD.feature',
 #     'Copy big regular file and check MD5'
 # )
-# def test_copy_big():
+# def test_copy_big(env_description_file):
 #     pass
