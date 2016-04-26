@@ -1,7 +1,7 @@
 Feature: Multiprovider_proxy_replication
 
   Background:
-    Given environment is defined in multiprovider_proxy_env.json
+    Given environment is defined in multiprovider_directio_env.json
     And environment is up
     And [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
@@ -32,7 +32,10 @@ Feature: Multiprovider_proxy_replication
 
   Scenario: Big file transfer with MD5 check
     When u1 creates regular files [file1] on client1
-    And u1 writes 16 MB of random characters to file1 on client1 and saves MD5
+    And u1 writes 8 MB of random characters to file1 on client1 and saves MD5
+    And user waits 10 seconds
+    And u2 checks MD5 of file1 on client2
+    And u1 writes 8 MB of random characters to file1 on client1 and saves MD5
     Then user waits 10 seconds
     And u2 checks MD5 of file1 on client2
 
