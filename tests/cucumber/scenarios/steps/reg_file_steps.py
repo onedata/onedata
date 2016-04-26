@@ -58,5 +58,5 @@ def copy_reg_file(user, file, path, context):
 
 
 @when(parsers.parse('{user} changes {file} size to {new_size} bytes'))
-def truncate(user, file, new_size, context):
-    multi_reg_file_steps.truncate(user, file, new_size, "client1", context)
+def do_truncate(user, file, new_size, context):
+    multi_reg_file_steps.do_truncate(user, file, new_size, "client1", context)

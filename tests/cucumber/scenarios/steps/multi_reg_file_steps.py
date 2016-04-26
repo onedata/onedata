@@ -48,8 +48,11 @@ def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
 
     def condition():
-        read_text = cat(client, make_path(file, client), user=user)
-        return read_text == text
+        if 0 == cat(client, make_path(file, client), user=user, output=False):
+            read_text = cat(client, make_path(file, client), user=user)
+            return read_text == text
+        else:
+            return False
 
     repeat_until(condition, timeout=60)
 
@@ -64,7 +67,7 @@ def cannot_read(user, file, client_node, context):
 @when(parsers.parse('{user} appends "{text}" to {file} on {client_node}'))
 def append(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
-    file_path = make_path(file, client),
+    file_path = make_path(file, client)
     ret = echo_to_file(client, str(text), file_path, user=user, overwrite=False)
     # ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' >> ' + make_path(file, client))
     save_op_code(context, user, ret)
@@ -96,9 +99,16 @@ def execute_script(user, file, client_node, context):
 def check_md5(user, file, client_node, context):
     client = get_client(client_node, user, context)
     # md5 = run_cmd(user, client, 'md5sum ' + make_path(file, client), output=True)
-    md5 = md5sum(client, make_path(file, client))
-    assert md5.split()[0] == context.md5
 
+    def condition():
+        md5 = md5sum(client, make_path(file, client))
+        return md5.split()[0] == context.md5
+
+    assert repeat_until(condition, timeout=60)
+
+    # md5 = md5sum(client, make_path(file, client))
+    # assert md5.split()[0] == context.md5
+#
 
 @when(parsers.parse('{user} copies regular file {file} to {path} on {client_node}'))
 def copy_reg_file(user, file, path, client_node, context):

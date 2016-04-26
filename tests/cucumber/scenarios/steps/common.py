@@ -322,7 +322,7 @@ def echo_to_file(client, text, file_path, new_line=False, escape=False,
 
     cmd = "echo {newline} {escape} '{text}' {redirect} {file_path}".format(
         newline="-n" if not new_line else "",
-        escape="-n" if escape else "",
+        escape="-e" if escape else "",
         text=text,
         redirect=">" if overwrite else ">>",
         file_path=file_path)
@@ -337,4 +337,3 @@ def cat(client, file_path, user="root", output=True):
 def md5sum(client, file_path, user="root", output=True):
     cmd = "md5sum {file_path}".format(file_path=file_path)
     return run_cmd(user, client, cmd, output=output)
-
