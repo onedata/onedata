@@ -6,13 +6,13 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements some common basic functions and functionality.
 """
+from tests.test_common import env_name
 
 import pytest
 from pytest_bdd import given, when, then
 from pytest_bdd import parsers
 
 import os
-import sys
 from environment import docker
 
 ####################### CLASSES #######################
@@ -79,14 +79,14 @@ class File:
 ###################### FIXTURES  ######################
 
 @pytest.fixture(scope="module")
-def context():
+def context(env_description_file):
     return Context()
 
 
-@pytest.fixture()
-def client_ids(environment):
+@pytest.fixture(scope="module")
+def client_ids(persistent_environment):
     ids = {}
-    for client in environment['client_nodes']:
+    for client in persistent_environment['client_nodes']:
         client = str(client)
         client_name = client.split(".")[0]
         ids[client_name] = docker.inspect(client)['Id']
@@ -106,9 +106,9 @@ def user_wait_default(user, seconds):
 @when(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
 @then(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
 @given(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
-def user_wait_up_to(user, seconds, context):
+def user_wait_up_to(user, seconds, context, env_description_file):
     # TODO This is just a temporary solution, delete it after resolving VFS-1881
-    if context.env_json not in ['env.json', 'env2.json']:
+    if env_name(env_description_file) not in ['env', 'env2']:
         time.sleep(int(seconds))
     else:
         time.sleep(1)

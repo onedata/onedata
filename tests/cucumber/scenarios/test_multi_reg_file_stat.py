@@ -21,7 +21,7 @@ from steps.multi_reg_file_steps import *
     '../features/multi_reg_file_stat.feature',
     'Check file type when empty'
 )
-def test_type_empty():
+def test_type_empty(env_description_file):
     pass
 
 
@@ -29,7 +29,7 @@ def test_type_empty():
     '../features/multi_reg_file_stat.feature',
     'Check file type when non-empty'
 )
-def test_type():
+def test_type(env_description_file):
     pass
 
 
@@ -37,7 +37,7 @@ def test_type():
     '../features/multi_reg_file_stat.feature',
     'Check default access permissions'
 )
-def test_default_access():
+def test_default_access(env_description_file):
     pass
 
 
@@ -46,7 +46,7 @@ def test_default_access():
     '../features/multi_reg_file_stat.feature',
     'Change access permissions'
 )
-def test_change_access():
+def test_change_access(env_description_file):
     pass
 
 
@@ -54,7 +54,7 @@ def test_change_access():
     '../features/multi_reg_file_stat.feature',
     'Increase regular file size'
 )
-def test_increase_size():
+def test_increase_size(env_description_file):
     pass
 
 
@@ -62,7 +62,7 @@ def test_increase_size():
     '../features/multi_reg_file_stat.feature',
     'Decrease regular file size'
 )
-def test_decrease_size():
+def test_decrease_size(env_description_file):
     pass
 
 
@@ -71,7 +71,7 @@ def test_decrease_size():
     '../features/multi_reg_file_stat.feature',
     'Truncate regular file without write permission'
 )
-def test_truncate_without_permission():
+def test_truncate_without_permission(env_description_file):
     pass
 
 
@@ -79,7 +79,7 @@ def test_truncate_without_permission():
     '../features/multi_reg_file_stat.feature',
     'Timestamps at creation'
 )
-def test_timestamp():
+def test_timestamp(env_description_file):
     pass
 
 # TODO VFS-1506
@@ -87,7 +87,7 @@ def test_timestamp():
 #     '../features/multi_reg_file_stat.feature',
 #     'Update timestamps without write permission',
 # )
-# def test_update_timestamp_without_permission():
+# def test_update_timestamp_without_permission(env_description_file):
 #     pass
 
 
@@ -95,7 +95,7 @@ def test_timestamp():
     '../features/multi_reg_file_stat.feature',
     'Update timestamps with write permission'
 )
-def test_update_timestamp_with_permission():
+def test_update_timestamp_with_permission(env_description_file):
     pass
 
 
@@ -104,7 +104,7 @@ def test_update_timestamp_with_permission():
     '../features/multi_reg_file_stat.feature',
     'Access time'
 )
-def test_access_time():
+def test_access_time(env_description_file):
     pass
 
 
@@ -112,7 +112,7 @@ def test_access_time():
     '../features/multi_reg_file_stat.feature',
     'Modification time'
 )
-def test_modification_time():
+def test_modification_time(env_description_file):
     pass
 
 
@@ -121,7 +121,7 @@ def test_modification_time():
     '../features/multi_reg_file_stat.feature',
     'Status-change time when changing mode'
 )
-def test_stat_change_time_chmod():
+def test_stat_change_time_chmod(env_description_file):
     pass
 
 
@@ -129,5 +129,5 @@ def test_stat_change_time_chmod():
     '../features/multi_reg_file_stat.feature',
     'Status-change time when renaming'
 )
-def test_stat_change_time_mv():
+def test_stat_change_time_mv(env_description_file):
     pass

@@ -20,7 +20,7 @@ from steps.reg_file_steps import *
     '../features/directory_stat.feature',
     'Check file type'
 )
-def test_type():
+def test_type(env_description_file):
     pass
 
 
@@ -28,7 +28,7 @@ def test_type():
     '../features/directory_stat.feature',
     'Check default access permissions'
 )
-def test_default_access():
+def test_default_access(env_description_file):
     pass
 
 
@@ -36,7 +36,7 @@ def test_default_access():
     '../features/directory_stat.feature',
     'Change access permissions'
 )
-def test_change_access():
+def test_change_access(env_description_file):
     pass
 
 
@@ -44,7 +44,7 @@ def test_change_access():
     '../features/directory_stat.feature',
     'Timestamps at creation'
 )
-def test_timestamp():
+def test_timestamp(env_description_file):
     pass
 
 
@@ -52,7 +52,7 @@ def test_timestamp():
     '../features/directory_stat.feature',
     'Update timestamps'
 )
-def test_update_timestamp():
+def test_update_timestamp(env_description_file):
     pass
 
 
@@ -60,7 +60,7 @@ def test_update_timestamp():
     '../features/directory_stat.feature',
     'Access time'
 )
-def test_access_time():
+def test_access_time(env_description_file):
     pass
 
 
@@ -68,7 +68,7 @@ def test_access_time():
     '../features/directory_stat.feature',
     'Modification time'
 )
-def test_modification_time():
+def test_modification_time(env_description_file):
     pass
 
 
@@ -76,7 +76,7 @@ def test_modification_time():
     '../features/directory_stat.feature',
     'Status-change time when changing mode'
 )
-def test_stat_change_time_chmod():
+def test_stat_change_time_chmod(env_description_file):
     pass
 
 
@@ -84,5 +84,5 @@ def test_stat_change_time_chmod():
     '../features/directory_stat.feature',
     'Status-change time when renaming'
 )
-def test_stat_change_time_mv():
+def test_stat_change_time_mv(env_description_file):
     pass

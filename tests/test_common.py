@@ -15,7 +15,8 @@ docker_dir = os.path.join(bamboos_dir, 'docker')
 test_dir = os.path.join(project_dir, "tests")
 cucumber_dir = os.path.join(test_dir, "cucumber")
 acceptance_dir = os.path.join(test_dir, "acceptance")
-cucumber_env_dir = os.path.join(cucumber_dir, "environments")
+default_cucumber_env_dir = os.path.join(cucumber_dir, "default_environments")
+custom_cucumber_env_dir = os.path.join(cucumber_dir, "custom_environments")
 cucumber_logdir = os.path.join(cucumber_dir, "logs")
 acceptance_logdir = os.path.join(acceptance_dir, "logs")
 example_env_dir = os.path.join(bamboos_dir, "example_env")
@@ -43,14 +44,35 @@ def make_logdir(root_dir, test_name):
     return name
 
 
-def get_json_files(dir):
+def get_json_files(dir, relative=False):
     """Gets all .json files from given directory
     Returns list of files' absolute paths"""
     jsons = []
     for file in os.listdir(dir):
         if file.endswith(".json"):
-            jsons.append(os.path.join(dir, file))
+            if not relative:
+                jsons.append(os.path.join(dir, file))
+            else:
+                jsons.append(file)
     return jsons
+
+
+def env_description_files(dir, *envs):
+    """Returns list of absolute paths to environment
+    description files envs from  dir"""
+    envs_absolute_paths = []
+    for env in envs:
+        envs_absolute_paths.append(os.path.join(dir, env))
+    return envs_absolute_paths
+
+
+def env_name(env_description_file_path):
+    """Returns name of environment based on environment description file name
+    i.e
+    for file 'env1.json' returns 'env1'
+    for file '/abs/path/env2.json return 'env2'
+    """
+    return os.path.splitext(os.path.basename(env_description_file_path))[0]
 
 
 def run_env_up_script(script, args=[], output_log_file=None):
