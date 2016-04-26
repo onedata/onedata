@@ -41,7 +41,7 @@ def persistent_environment(request, context, env_description_file):
     feature_name = request.module.__name__
     logdir = make_logdir(cucumber_logdir, os.path
                          .join(env_name(env_description_file), feature_name))
-    env_desc = run_env_up_script("env_up.py", ['-l', logdir, env_path])
+    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
 
     def fin():
         docker.remove(request.environment['docker_ids'],
