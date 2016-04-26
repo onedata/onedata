@@ -1,8 +1,7 @@
 Feature: Regular_file_CRUD
 
   Background:
-    Given environment is defined in env3.json
-    And environment is up
+    Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
     
   Scenario: Create regular file

@@ -4,7 +4,6 @@ DOCKER_RELEASE      ?= development
 DOCKER_REG_NAME     ?= "docker.onedata.org"
 DOCKER_REG_USER     ?= ""
 DOCKER_REG_PASSWORD ?= ""
-DOCKER_REG_EMAIL    ?= ""
 
 ONEPROVIDER_VERSION     ?= $(shell git describe --tags --always | tr - .)
 ONEPROVIDER_BUILD       ?= 1
@@ -130,7 +129,7 @@ test_packaging:
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
-	./cucumber_test_generator.sh
+	./test_run.py --test-dir tests/cucumber
 
 ##
 ## Clean
@@ -259,7 +258,7 @@ package.tar.gz:
 
 docker:
 	$(MAKE) -C oneclient docker
-	./dockerbuild.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
-                         --password $(DOCKER_REG_PASSWORD) --email $(DOCKER_REG_EMAIL) \
-                         --build-arg RELEASE=$(DOCKER_RELEASE) --build-arg VERSION=$(ONEPROVIDER_VERSION) \
-                         --name oneprovider --publish --remove docker
+	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
+                          --password $(DOCKER_REG_PASSWORD) --build-arg RELEASE=$(DOCKER_RELEASE) \
+                          --build-arg VERSION=$(ONEPROVIDER_VERSION) --name oneprovider \
+                          --publish --remove docker

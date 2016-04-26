@@ -6,6 +6,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements some common basic functions and functionality.
 """
+from tests.test_common import env_name
 
 import pytest
 from pytest_bdd import given, when, then
@@ -81,14 +82,14 @@ class File:
 ###################### FIXTURES  ######################
 
 @pytest.fixture(scope="module")
-def context():
+def context(env_description_file):
     return Context()
 
 
-@pytest.fixture()
-def client_ids(environment):
+@pytest.fixture(scope="module")
+def client_ids(persistent_environment):
     ids = {}
-    for client in environment['client_nodes']:
+    for client in persistent_environment['client_nodes']:
         client = str(client)
         client_name = client.split(".")[0]
         ids[client_name] = docker.inspect(client)['Id']
@@ -105,57 +106,49 @@ def user_wait_default(user, seconds):
     time.sleep(int(seconds))
 
 
-@when(parsers.parse(
-        '{user} waits up to {seconds} seconds for environment synchronization'))
-@then(parsers.parse(
-        '{user} waits up to {seconds} seconds for environment synchronization'))
-@given(parsers.parse(
-        '{user} waits up to {seconds} seconds for environment synchronization'))
-def user_wait_up_to(user, seconds, context):
+@when(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
+@then(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
+@given(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
+def user_wait_up_to(user, seconds, context, env_description_file):
     # TODO This is just a temporary solution, delete it after resolving VFS-1881
-    if context.env_json not in ['env.json', 'env2.json']:
+    if env_name(env_description_file) not in ['env', 'env2']:
         time.sleep(int(seconds))
     else:
         time.sleep(1)
 
 
-@when(parsers.parse(
-        '{user} waits max {maxtime} seconds for change of {file} mtime'))
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime'))
 def user_wait_mtime(user, maxtime, file, context):
     user_wait_mtime(user, maxtime, file, "client1", context)
 
 
-@when(parsers.parse(
-        '{user} waits max {maxtime} seconds for change of {file} mtime on {client_node}'))
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime on {client_node}'))
 def user_wait_mtime(user, maxtime, file, client_node, context):
     client = get_client(client_node, user, context)
     waited = 0
     # compare mtime read from stat with last mtime saved by user
     # inequality of these timestamps means that other client
     # performed operation on the file
-    while get_current_mtime(user, file, client) == context.get_last_mtime(user,file):
+    while get_current_mtime(user, file, client) == context.get_last_mtime(user, file):
         time.sleep(1)
         waited += 1
         if waited >= maxtime:
             assert False
 
 
-@when(parsers.parse(
-        '{user} waits max {maxtime} seconds for change of {file} ctime'))
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime'))
 def user_wait_ctime(user, maxtime, file, context):
     user_wait_ctime(user, maxtime, file, "client1", context)
 
 
-@when(parsers.parse(
-        '{user} waits max {maxtime} seconds for change of {file} ctime on {client_node}'))
+@when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime on {client_node}'))
 def user_wait_ctime(user, maxtime, file, client_node, context):
     client = get_client(client_node, user, context)
     waited = 0
     # compare ctime read from stat with last ctime saved by user
     # inequality of these timestamps means that other client
     # performed operation on the file
-    while get_current_ctime(user, file, client) == context.get_last_ctime(user,
-                                                                          file):
+    while get_current_ctime(user, file, client) == context.get_last_ctime(user, file):
         time.sleep(1)
         waited += 1
         if waited >= maxtime:
