@@ -36,7 +36,7 @@ class Testdd(AbstractPerformanceTest):
             },
             configs=generate_configs({
                 'block_size': [1, 4, 128, 1024],
-                'size': [1024, 1048576, 10485760]
+                'size': [1024]#, 1048576]#, 10485760]
             }, "DD TEST -- block size: {block_size} size: {size}"))
     def test_dd(self, clients, params):
         size = params['size']['value']
@@ -54,9 +54,9 @@ class Testdd(AbstractPerformanceTest):
                                        block_size, block_size_unit, size,
                                        size_unit, "direct IO")
 
-        test_result2 = execute_dd_test(client_proxy, test_file_proxy,
-                                       block_size, block_size_unit, size,
-                                       size_unit, "cluster-proxy")
+        # test_result2 = execute_dd_test(client_proxy, test_file_proxy,
+        #                                block_size, block_size_unit, size,
+        #                                size_unit, "cluster-proxy")
 
         test_result3 = execute_dd_test(client_proxy, test_file_host, block_size,
                                        block_size_unit, size, size_unit,
@@ -66,7 +66,8 @@ class Testdd(AbstractPerformanceTest):
         delete_file(client_proxy, test_file_proxy)
         delete_file(client_proxy, test_file_host)
 
-        return test_result1 + test_result2 + test_result3
+        # return test_result1 + test_result2 + test_result3
+        return test_result1 + test_result3
 
 
 ################################################################################

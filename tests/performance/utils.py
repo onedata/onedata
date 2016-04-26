@@ -205,22 +205,14 @@ def get_suite_description(mod):
 
 
 def temp_dir(client, path):
-    cmd = '''import tempfile
-print tempfile.mkdtemp(dir="{dir}")'''
-
-    cmd = cmd.format(dir=path)
-    cmd = ["python -c '{command}'".format(command=cmd)]
+    cmd = "mktemp --directory {dir}".format(
+            dir="--tmpdir={}".format(path) if path else "")
     return run_cmd(client.user, client, cmd, output=True).strip()
 
 
-def temp_file(client, path):
-    cmd = '''import tempfile
-handle, file_path = tempfile.mkstemp(dir="{dir}")
-print file_path'''
-
-    cmd = cmd.format(dir=path)
-    cmd = ["python -c '{command}'".format(command=cmd)]
-
+def temp_file(client, path=None):
+    cmd = "mktemp {dir}".format(
+            dir="--tmpdir={}".format(path) if path else "")
     return run_cmd(client.user, client, cmd, output=True).strip()
 
 
