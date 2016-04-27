@@ -94,32 +94,6 @@
                     "u2"
                 ]
             }
-        },
-        "cfg3": {
-            "storages": [
-                {
-                    "type": "posix",
-                    "name": "/mnt/st3"
-                }
-            ],
-            "users": [
-                "u1",
-                "u2"
-            ],
-            "groups": {
-                "s1": [
-                    "u1",
-                    "u2"
-                ],
-                "s2": [
-                    "u1",
-                    "u2"
-                ],
-                "fuse": [
-                    "u1",
-                    "u2"
-                ]
-            }
         }
     },
     "provider_domains": {
@@ -210,50 +184,6 @@
                     }
                 }
             }
-        },
-        "p3": {
-            "db_driver": "couchdb",
-            "os_config": "cfg3",
-            "cluster_manager": {
-                "cm1": {
-                    "vm.args": {
-                        "setcookie": "cookie4"
-                    },
-                    "sys.config": {
-                        "cluster_manager": {
-                            "cm_nodes": [
-                                "cm1"
-                            ],
-                            "worker_num": 1
-                        }
-                    }
-                }
-            },
-            "op_worker": {
-                "worker1": {
-                    "vm.args": {
-                        "setcookie": "cookie4"
-                    },
-                    "sys.config": {
-                        "op_worker": {
-                            "cm_nodes": [
-                                "cm1"
-                            ],
-                            "db_nodes": [
-                                "dbnode1"
-                            ],
-                            "oz_domain": "oz1",
-                            "verify_oz_cert": false
-                        }
-                    },
-                    "storage": {
-                        "storage1": {
-                            "volume_path": "/media/storage",
-                            "host_path": "/tmp/blah"
-                        }
-                    }
-                }
-            }
         }
     },
     "zone_domains": {
@@ -262,7 +192,7 @@
             "cluster_manager": {
                 "cm": {
                     "vm.args": {
-                        "setcookie": "cookie5"
+                        "setcookie": "cookie4"
                     },
                     "sys.config": {
                         "cluster_manager": {
@@ -277,7 +207,7 @@
             "oz_worker": {
                 "node1": {
                     "vm.args": {
-                        "setcookie": "cookie5"
+                        "setcookie": "cookie4"
                     },
                     "sys.config": {
                         "oz_worker": {
@@ -298,11 +228,11 @@
         }
     },
     "oneclient": {
-        "client-host-1-p1": {
-            "os_config": "cfg1",
+        "client-host1": {
+            "os_config": "cfg0",
             "clients": {
                 "client1": {
-                    "name": "client1_p1",
+                    "name": "client1",
                     "op_domain": "p1",
                     "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
@@ -312,68 +242,12 @@
                 }
             }
         },
-        "client-host-2-p1": {
-            "os_config": "cfg1",
+        "client-host2": {
+            "os_config": "cfg0",
             "clients": {
                 "client2": {
-                    "name": "client2_p1",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u2/onedata",
-                    "token_for": "u2"
-                }
-            }
-        },
-        "client-host-1-p2": {
-            "os_config": "cfg2",
-            "clients": {
-                "client2": {
-                    "name": "client1_p2",
+                    "name": "client2",
                     "op_domain": "p2",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
-                }
-            }
-        },
-        "client-host-2-p2": {
-            "os_config": "cfg2",
-            "clients": {
-                "client2": {
-                    "name": "client2_p2",
-                    "op_domain": "p2",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u2/onedata",
-                    "token_for": "u2"
-                }
-            }
-        },
-        "client-host-1-p3": {
-            "os_config": "cfg3",
-            "clients": {
-                "client2": {
-                    "name": "client1_p3",
-                    "op_domain": "p3",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
-                }
-            }
-        },
-        "client-host-2-p3": {
-            "os_config": "cfg3",
-            "clients": {
-                "client2": {
-                    "name": "client2_p3",
-                    "op_domain": "p3",
                     "zone_domain": "oz1",
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
@@ -386,21 +260,30 @@
     "global_setup": {
         "users": {
             "u1": {
-                "default_space": "u1_space"
+                "default_space": "s1"
             },
             "u2": {
-                "default_space": "u2_space"
+                "default_space": "s1"
             }
         },
-        "groups": {},
+        "groups": {
+            "g1": {
+                "users": [
+                    "u1",
+                    "u2"
+                ]
+            }
+        },
         "spaces": {
-            "s1_id": {
+            "s1": {
                 "displayed_name": "s1",
                 "users": [
                     "u1",
                     "u2"
                 ],
-                "groups": [],
+                "groups": [
+                    "g1"
+                ],
                 "providers": {
                     "p1": {
                         "storage": "/mnt/st1",
@@ -408,52 +291,6 @@
                     },
                     "p2": {
                         "storage": "/mnt/st2",
-                        "supported_size": 1000000000
-                    }
-                }
-            },
-            "s2_id": {
-                "displayed_name": "s2",
-                "users": [
-                    "u1",
-                    "u2"
-                ],
-                "groups": [],
-                "providers": {
-                    "p2": {
-                        "storage": "/mnt/st2",
-                        "supported_size": 1000000000
-                    },
-                    "p3": {
-                        "storage": "/mnt/st3",
-                        "supported_size": 1000000000
-                    }
-                }
-            },
-            "u1_space": {
-                "displayed_name": "u1_space",
-                "users": [
-                    "u1",
-                    "u2"
-                ],
-                "groups": [],
-                "providers": {
-                    "p1": {
-                        "storage": "/mnt/st1",
-                        "supported_size": 1000000000
-                    }
-                }
-            },
-            "u2_space": {
-                "displayed_name": "u2_space",
-                "users": [
-                    "u1",
-                    "u2"
-                ],
-                "groups": [],
-                "providers": {
-                    "p1": {
-                        "storage": "/mnt/st1",
                         "supported_size": 1000000000
                     }
                 }

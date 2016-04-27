@@ -62,8 +62,6 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
 
         token_path = "/tmp/token"
 
-        time.sleep(1)
-
         cmd = ('mkdir -p {mount_path}'
                ' && export GLOBAL_REGISTRY_URL={gr_domain}'
                ' && export PROVIDER_HOSTNAME={op_domain}'
@@ -165,17 +163,11 @@ def clean_mount_path(user, client):
         # kill oneclient process
         run_cmd("root", client, "kill -KILL " + str(pid))
 
-    time.sleep(1)
-
     # unmount onedata
     run_cmd(user, client, "fusermount -u " + client.mount_path)
 
-    time.sleep(1)
-
     # remove onedata dir
     run_cmd("root", client, "rm -rf " + client.mount_path)
-
-    time.sleep(1)
 
 
 def set_dns(environment):
