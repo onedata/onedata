@@ -9,7 +9,7 @@ Test suite for reading/changing  metadata of regular files in onedata.
 from pytest_bdd import scenario
 
 from steps.env_steps import *
-from steps.auth_steps import *
+from steps.multi_auth_steps import *
 from steps.dir_steps import *
 from steps.common import *
 from steps.file_steps import *

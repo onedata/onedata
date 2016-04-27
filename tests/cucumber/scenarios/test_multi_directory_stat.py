@@ -10,7 +10,7 @@ in multi-client environment.
 from pytest_bdd import scenario
 
 from steps.env_steps import *
-from steps.auth_steps import *
+from steps.multi_auth_steps import *
 from steps.multi_dir_steps import *
 from steps.common import *
 from steps.multi_file_steps import *

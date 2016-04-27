@@ -6,6 +6,7 @@ Feature: Multi_directory_CRUD
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
+    And oneclient is started for [u1, u2] on [client1, client2]
 
   Scenario: Create directory
     When u1 creates directories [dir1, dir2, dir3]
