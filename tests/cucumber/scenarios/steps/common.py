@@ -24,37 +24,6 @@ class Context:
     def __init__(self):
         self.users = {}
 
-    # #TODO delete saving timestamps in context after introducing active waits
-    # def update_timestamps(self, user, client, file):
-    #     """
-    #     Updates mtime and ctime of file in user's test context.
-    #     This timestamps are checked by user in functions:
-    #     user_wait_ctime() and user_wait_mtime() and compared
-    #     with actual timestamps read from stat
-    #     """
-    #     times = run_cmd(user, client,
-    #                     "stat --format=%Y,%Z " + make_path(file, client),
-    #                     output=True).split(",")
-    #
-    #     mtime = times[0]
-    #     ctime = times[1]
-    #
-    #     if not file in self.users[user].files.keys():
-    #         self.users[user].files[file] = File(mtime, ctime)
-    #     else:
-    #         self.users[user].files[file].set_timestamps(mtime, ctime)
-    #
-    # def get_last_mtime(self, user, file):
-    #     self.get_last_time(user, str(file), "mtime")
-    #
-    # def get_last_ctime(self, user, file):
-    #     self.get_last_time(user, str(file), "ctime")
-    #
-    # def get_last_time(self, user, file, time_type):
-    #     if file not in self.users[user].files.keys():
-    #         return 0
-    #     return getattr(self.users[user].files[file], time_type)
-
 
 class User:
     def __init__(self, client_node, client):
@@ -106,55 +75,6 @@ def user_wait_default(user, seconds):
     time.sleep(int(seconds))
 
 
-# @when(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
-# @then(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
-# @given(parsers.parse('{user} waits up to {seconds} seconds for environment synchronization'))
-# def user_wait_up_to(user, seconds, context, env_description_file):
-#     # TODO This is just a temporary solution, delete it after resolving VFS-1881
-#     if env_name(env_description_file) not in ['env', 'env2']:
-#         time.sleep(int(seconds))
-#     else:
-#         time.sleep(1)
-
-
-# @when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime'))
-# def user_wait_mtime(user, maxtime, file, context):
-#     user_wait_mtime(user, maxtime, file, "client1", context)
-#
-#
-# @when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} mtime on {client_node}'))
-# def user_wait_mtime(user, maxtime, file, client_node, context):
-#     client = get_client(client_node, user, context)
-#     waited = 0
-#     # compare mtime read from stat with last mtime saved by user
-#     # inequality of these timestamps means that other client
-#     # performed operation on the file
-#     while get_current_mtime(user, file, client) == context.get_last_mtime(user, file):
-#         time.sleep(1)
-#         waited += 1
-#         if waited >= maxtime:
-#             assert False
-#
-#
-# @when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime'))
-# def user_wait_ctime(user, maxtime, file, context):
-#     user_wait_ctime(user, maxtime, file, "client1", context)
-#
-#
-# @when(parsers.parse('{user} waits max {maxtime} seconds for change of {file} ctime on {client_node}'))
-# def user_wait_ctime(user, maxtime, file, client_node, context):
-#     client = get_client(client_node, user, context)
-#     waited = 0
-#     # compare ctime read from stat with last ctime saved by user
-#     # inequality of these timestamps means that other client
-#     # performed operation on the file
-#     while get_current_ctime(user, file, client) == context.get_last_ctime(user, file):
-#         time.sleep(1)
-#         waited += 1
-#         if waited >= maxtime:
-#             assert False
-
-
 @when(parsers.parse('last operation by {user} succeeds'))
 @then(parsers.parse('last operation by {user} succeeds'))
 def success(user, context):
@@ -180,20 +100,6 @@ def make_arg_list(arg):
 
 def save_op_code(context, user, op_code):
     context.users[user].last_op_ret_code = op_code
-
-
-# def get_current_mtime(user, file, client):
-#     get_current_time(user, str(file), client, "mtime")
-#
-#
-# def get_current_ctime(user, file, client):
-#     get_current_time(user, str(file), client, "ctime")
-#
-#
-# def get_current_time(user, file, client, time_type):
-#     opt = "Y" if time_type == "mtime" else "Z"
-#     return run_cmd(user, client, "stat --format=%" + opt + ' ' + make_path(file, client),
-#                    output=True)
 
 
 def make_path(path, client):
@@ -223,7 +129,7 @@ def repeat_until(condition, timeout=0):
     # todo maybe timeout should be remembered as client's attribute
 
     condition_satisfied = condition()
-    while not condition_satisfied and timeout > 0:
+    while not condition_satisfied and timeout >= 0:
         print "TIMEOUT: ", timeout
         time.sleep(1)
         timeout -= 1

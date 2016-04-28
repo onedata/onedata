@@ -30,7 +30,7 @@ def create_reg_file(user, files, client_node, context):
             save_op_code(context, user, return_code)
             return return_code == 0
 
-        assert repeat_until(condition, timeout=60)
+        assert repeat_until(condition, timeout=10)
 
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
@@ -43,8 +43,6 @@ def ls_present(user, files, path, client_node, context):
     def condition():
 
         try:
-            # return_code = ls(client, user, path, output=False)
-            # if return_code == 0:
             cmd_output = ls(client, user, path).split()
             for file in files:
                 if file not in cmd_output:
@@ -54,7 +52,7 @@ def ls_present(user, files, path, client_node, context):
             return False
 
     # #TODO read timeout from env
-    assert repeat_until(condition, timeout=60)
+    assert repeat_until(condition, timeout=10)
 
 
 @when(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
@@ -65,8 +63,6 @@ def ls_absent(user, files, path, client_node, context):
     files = list_parser(files)
 
     def condition():
-        # return_code = ls(client, user, path, output=False)
-        # if return_code == 0:
         try:
             cmd_output = ls(client, user, path).split()
             for file in files:
@@ -76,7 +72,7 @@ def ls_absent(user, files, path, client_node, context):
         except subprocess.CalledProcessError:
             return False
 
-    assert repeat_until(condition, timeout=60)
+    assert repeat_until(condition, timeout=10)
 
 
 @when(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
@@ -90,7 +86,7 @@ def rename(user, file1, file2, client_node, context):
         save_op_code(context, user, cmd_return_code)
         return cmd_return_code == 0
 
-    repeat_until(condition, timeout=60)
+    repeat_until(condition, timeout=10)
 
 
 @when(parsers.parse('{user} deletes files {files} on {client_node}'))
@@ -115,7 +111,7 @@ def change_mode(user, file, mode, client_node, context):
         save_op_code(context, user, cmd_return_code)
         return cmd_return_code == 0
 
-    repeat_until(condition, timeout=60)
+    repeat_until(condition, timeout=10)
 
 
 @then(parsers.parse('file type of {user}\'s {file} is {file_type} on {client_node}'))
@@ -160,13 +156,8 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
             return compare(int(times[0]), int(times[1]), comparator)
         except subprocess.CalledProcessError:
             return False
-        # if return_code == 0:
-        #     time1 = stat(client, file_path, format=opt1, user=user)
-        #     print "TIME1: ", time1
-        #     time2 = stat(client, file_path, format=opt2, user=user)
-        #     print "TIME2: ", time2
 
-    assert repeat_until(condition, timeout=60)
+    assert repeat_until(condition, timeout=10)
     
 
 @then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} to {time2} time on {client_node} within {maxtime} seconds'))
@@ -194,14 +185,12 @@ def check_using_stat(user, client, file_path, parameter, expected_value):
 
     def condition():
         try:
-        # return_code = stat(client, file_path, format=opt, user=user, output=False)
-        # if return_code == 0:
             cmd_output = stat(client, file_path, format=opt, user=user)
             return cmd_output == expected_value
         except subprocess.CalledProcessError:
             return False
 
-    assert repeat_until(condition, timeout=60)
+    assert repeat_until(condition, timeout=10)
 
 
 def get_timestamp(user, file, client, time_type):

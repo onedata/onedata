@@ -6,7 +6,6 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
-from tests.test_common import env_name
 from environment import docker, env
 from environment.common import parse_json_config_file
 from common import *
@@ -58,6 +57,11 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
 
+        print "User {user} mounts oneclient using token: {token}"\
+            .format(
+                user=user,
+                token=token)
+
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
 
@@ -92,30 +96,21 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
             context.users[user] = User(client_instance, client)
 
         # remove accessToken to mount many clients on one docker
-        run_cmd(user, client,
-                "rm -rf " + os.path.join(os.path.dirname(mount_path), ".local"))
+        rm(client, recursive=True, force=True,
+           path=os.path.join(os.path.dirname(mount_path), ".local"))
 
-        run_cmd(user, client,
-                "rm -rf " + token_path)
+        rm(client, recursive=True, force=True, path=token_path)
 
+        time.sleep(10)
+        if token != 'bad_token':
+            clean_spaces(user, client)
         save_op_code(context, user, ret)
-
-    # time.sleep(10)
-
-
-# @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
-# def default_mount(user, mount_path, token, request, environment, context,
-#                   client_ids, env_description_file):
-#     multi_mount(make_arg_list(user), make_arg_list("client1"),
-#                 make_arg_list(mount_path), make_arg_list('client-host1'),
-#                 make_arg_list(token), request, environment, context, client_ids,
-#                 env_description_file)
 
 
 @then(parsers.parse('{spaces} are mounted for {user}'))
 def check_spaces(spaces, user, context):
-    # time.sleep(3)
     # sleep to be sure that environment is up
+    time.sleep(10)
     spaces = list_parser(spaces)
     user = str(user)
     for client_instance, client in context.users[user].clients.items():
@@ -133,7 +128,7 @@ def check_spaces(spaces, user, context):
             except subprocess.CalledProcessError:
                 return False
 
-        repeat_until(condition, timeout=60)
+        repeat_until(condition, timeout=10)
 
 
 @given(parsers.parse('oneclient is started for {users} on {clients}'))
@@ -144,11 +139,6 @@ def is_oneclient_started_multi(users, clients, context):
     for user, client in params:
         multi_file_steps.ls_present(user, make_arg_list('spaces'), '.', client,
                                     context)
-
-
-# @given(parsers.parse('oneclient is started for {user}'))
-# def is_oneclient_started(user, context):
-#     is_oneclient_started_multi(user, 'client1', context)
 
 
 ####################################################################################################
@@ -163,36 +153,53 @@ def create_clients(users, client_hosts, mount_paths, client_ids):
 
 
 def clean_spaces(user, client):
-    # if directory spaces exists
-    if run_cmd(user, client, 'ls ' + make_path('spaces', client)) == 0:
-        spaces = run_cmd(user, client, 'ls ' + make_path('spaces', client), output=True)
+    try:
+        spaces = ls(client, user=user, path=make_path('spaces', client))
         spaces = spaces.split("\n")
         # clean spaces
         for space in spaces:
-            run_cmd(user, client, "rm -rf " + make_path('spaces/' + space + '/*', client))
+                rm(client, recursive=True, user=user, force=True,
+                   path=make_path(os.path.join('spaces', str(space), '*'),
+                                  client))
+    except:
+        pytest.skip("Test skipped beacause of failing to clean spaces")
+
+
+def clean_spaces_safe(user, client):
+    spaces = ls(client, user=user, path=make_path('spaces', client))
+    spaces = spaces.split("\n")
+    # clean spaces
+    for space in spaces:
+        try:
+            rm(client, recursive=True, user=user, force=True,
+               path=make_path(os.path.join('spaces', str(space), '*'), client))
+        except:
+            pass
 
 
 def clean_mount_path(user, client):
+    try:
+        clean_spaces_safe(user, client)
+    except:
+        pass
+    finally:
+        # get pid of running oneclient node
+        pid = run_cmd('root', client,
+                      " | ".join(
+                          ["ps aux",
+                           "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
+                           "grep -v 'grep'",
+                           "awk '{print $2}'"]),
+                      output=True)
 
-    clean_spaces(user, client)
-    # get pid of running oneclient node
-    pid = run_cmd('root', client,
-                  " | ".join(
-                      ["ps aux",
-                       "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
-                       "grep -v 'grep'",
-                       "awk '{print $2}'"]),
-                  output=True)
+        if pid != "":
+            # kill oneclient process
+            run_cmd("root", client, "kill -KILL " + str(pid))
 
-    if pid != "":
-        # kill oneclient process
-        run_cmd("root", client, "kill -KILL " + str(pid))
-
-    # unmount onedata
-    run_cmd(user, client, "fusermount -u " + client.mount_path)
-
-    # remove onedata dir
-    run_cmd("root", client, "rm -rf " + client.mount_path)
+        # unmount onedata
+        run_cmd(user, client, "fusermount -u " + client.mount_path)
+        # remove onedata dir
+        rm(client, recursive=True, force=True, path=client.mount_path, output=True)
 
 
 def set_dns(environment):

@@ -27,8 +27,6 @@ def write_rand_text(user, megabytes, file, client_node, context):
     md5 = md5sum(client, file_path, user=user)
     context.md5 = md5.split()[0]
     save_op_code(context, user, ret)
-    # if ret == 0:
-    #     context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
@@ -37,8 +35,6 @@ def write_text(user, text, file, client_node, context):
     file_path = make_path(file, client)
     ret = echo_to_file(client, str(text), file_path, escape=True, user=user)
     save_op_code(context, user, ret)
-    # if ret == 0:
-    #     context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('{user} reads "{text}" from {file} on {client_node}'))
@@ -50,12 +46,11 @@ def read(user, text, file, client_node, context):
 
         try:
             read_text = cat(client, make_path(file, client), user=user)
-        # if 0 == cat(client, make_path(file, client), user=user, output=False):
             return read_text == text
         except subprocess.CalledProcessError:
             return False
 
-    assert repeat_until(condition, timeout=60)
+    assert repeat_until(condition, timeout=10)
 
 
 @then(parsers.parse('{user} cannot read from {file} on {client_node}'))
@@ -70,10 +65,7 @@ def append(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     file_path = make_path(file, client)
     ret = echo_to_file(client, str(text), file_path, user=user, overwrite=False)
-    # ret = run_cmd(user, client, 'echo -n \'' + str(text) + '\' >> ' + make_path(file, client))
     save_op_code(context, user, ret)
-    # if ret == 0:
-    #     context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('{user} replaces "{text1}" with "{text2}" in {file} on {client_node}'))
@@ -82,8 +74,6 @@ def replace(user, text1, text2, file, client_node, context):
     ret = run_cmd(user, client,
                   'sed -i \'s/' + text1 + '/' + text2 + '/g\' ' + make_path(file, client))
     save_op_code(context, user, ret)
-    # if ret == 0:
-    #     context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('{user} executes {file} on {client_node}'))
@@ -92,24 +82,18 @@ def execute_script(user, file, client_node, context):
     client = get_client(client_node, user, context)
     ret = run_cmd(user, client, make_path(file, client))
     save_op_code(context, user, ret)
-    # if ret == 0:
-    #     context.update_timestamps(user, client, file)
 
 
 @then(parsers.parse('{user} checks MD5 of {file} on {client_node}'))
 def check_md5(user, file, client_node, context):
     client = get_client(client_node, user, context)
-    # md5 = run_cmd(user, client, 'md5sum ' + make_path(file, client), output=True)
 
     def condition():
         md5 = md5sum(client, make_path(file, client))
         return md5.split()[0] == context.md5
 
-    assert repeat_until(condition, timeout=60)
+    assert repeat_until(condition, timeout=10)
 
-    # md5 = md5sum(client, make_path(file, client))
-    # assert md5.split()[0] == context.md5
-#
 
 @when(parsers.parse('{user} copies regular file {file} to {path} on {client_node}'))
 def copy_reg_file(user, file, path, client_node, context):
@@ -117,8 +101,6 @@ def copy_reg_file(user, file, path, client_node, context):
     src_path = make_path(file, client)
     dest_path = make_path(path, client)
     ret = cp(client, src_path, dest_path, user=user)
-    # if ret == 0:
-    #     context.update_timestamps(user, client, file)
     save_op_code(context, user, ret)
 
 
@@ -126,8 +108,5 @@ def copy_reg_file(user, file, path, client_node, context):
 def do_truncate(user, file, new_size, client_node, context):
     client = get_client(client_node, user, context)
     file_path = make_path(file, client)
-    print "USER: ", user
     ret = truncate(client, file_path, new_size, user=user)
-    # if ret == 0:
-    #     context.update_timestamps(user, client, file)
     save_op_code(context, user, ret)

@@ -24,8 +24,6 @@ def create(user, dirs, client_node, context):
         path = make_path(dir, client)
         return_code = mkdir(client, path, user=user)
         save_op_code(context, user, return_code)
-        # if return_code == 0:
-        #     context.update_timestamps(user, client, dir)
 
 
 @when(parsers.parse('{user} creates directory and parents {paths} on {client_node}'))
@@ -36,8 +34,6 @@ def create_parents(user, paths, client_node, context):
     for path in paths:
         return_code = mkdir(client, make_path(path, client), recursive=True, user=user)
         save_op_code(context, user, return_code)
-        # if return_code == 0:
-        #     context.update_timestamps(user, client, path)
 
 
 @when(parsers.parse('{user} deletes empty directories {dirs} on {client_node}'))
@@ -93,4 +89,4 @@ def list_dir(user, dir, client_node, context):
         except:
             return True
 
-    assert repeat_until(condition, timeout=60)
+    assert repeat_until(condition, timeout=10)
