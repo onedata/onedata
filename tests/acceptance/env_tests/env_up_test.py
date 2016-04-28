@@ -12,10 +12,9 @@ class TestEnvUp:
     # Run the env_up.py script, capture and parse the output
     def setup_class(cls):
         logdir = make_logdir(acceptance_logdir, get_test_name(__file__))
-        result = run_env_up_script("env_up.py", [
-            '-l', logdir,
-            test_utils.test_file('env.json')
-        ])
+        result = run_env_up_script("env_up.py",
+                                   config=test_utils.test_file('env.json'),
+                                   logdir=logdir)
         cls.result = result
 
     @classmethod

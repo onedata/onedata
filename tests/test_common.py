@@ -5,6 +5,10 @@ import subprocess
 import pytest
 import ast
 
+# env_up log files
+PREPARE_ENV_LOG_FILE = "prepare_test_environment.log"
+PREPARE_ENV_ERROR_LOG_FILE = "prepare_test_environment_error.log"
+
 _script_dir = os.path.dirname(os.path.realpath(__file__))
 
 # Define variables for use in tests
@@ -75,29 +79,47 @@ def env_name(env_description_file_path):
     return os.path.splitext(os.path.basename(env_description_file_path))[0]
 
 
-def run_env_up_script(script, args=[], output_log_file=None):
+def run_env_up_script(script, config=None, logdir=None, args=[]):
     """Runs given script to bring up test environment.
     Script must be located in docker_dir directory (see test_common.py)
     If script fails, functions skips test.
     """
     cmd = [os.path.join(docker_dir, script)]
-    output = ''
+
+    if logdir:
+        cmd.extend(['-l', logdir])
     if args:
         cmd.extend(args)
+    if config:
+        cmd.append(config)
 
     try:
-        output = subprocess.check_output(cmd)
-    except subprocess.CalledProcessError as error:
-        output = error.output
-        pytest.skip(script + " script failed with error:\n" + error.output)
-    finally:
-        if output_log_file:
-            with open(output_log_file, 'w+') as file:
-                file.write(output)
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+    except Exception as e:
+        if isinstance(e, subprocess.CalledProcessError):
+            err_msg = e.output
+        else:
+            err_msg = str(e)
+        if not logdir:
+            # even if script doesn't have logdir option we want logs from
+            # executing this script
+            logdir = make_logdir(acceptance_dir, script)
+        logfile_error_path = os.path.join(logdir, PREPARE_ENV_ERROR_LOG_FILE)
+        save_log_to_file(logfile_error_path, err_msg)
+        pytest.skip("{script} script failed because of {reason}".format(
+            script=script,
+            reason=err_msg
+        ))
 
     stripped_output = strip_output_logs(output)
+
     # get dict from string
     output_dict = ast.literal_eval(stripped_output)
+    if logdir:
+        logfile_path = os.path.join(logdir, PREPARE_ENV_LOG_FILE)
+        logfile = open(logfile_path, 'w')
+        logfile.write(stripped_output)
+        logfile.close()
     return output_dict
 
 
@@ -106,3 +128,9 @@ def strip_output_logs(output):
     from output, returns env description
     """
     return output.strip().split('\n')[-1]
+
+
+def save_log_to_file(file_path, log):
+    f = open(file_path, 'w')
+    f.write(log)
+    f.close()
