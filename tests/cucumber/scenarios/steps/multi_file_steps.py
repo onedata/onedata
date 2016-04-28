@@ -14,6 +14,7 @@ from environment import docker, env
 from common import *
 
 import time
+import subprocess
 
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
@@ -27,10 +28,7 @@ def create_reg_file(user, files, client_node, context):
         def condition():
             return_code = touch(client, file_path, user)
             save_op_code(context, user, return_code)
-            if return_code == 0:
-                context.update_timestamps(user, client, file)
-                return True
-            return False
+            return return_code == 0
 
         assert repeat_until(condition, timeout=60)
 
@@ -43,17 +41,19 @@ def ls_present(user, files, path, client_node, context):
     files = list_parser(files)
 
     def condition():
-        return_code = ls(client, user, path, output=False)
-        if return_code == 0:
+
+        try:
+            # return_code = ls(client, user, path, output=False)
+            # if return_code == 0:
             cmd_output = ls(client, user, path).split()
             for file in files:
                 if file not in cmd_output:
                     return False
             return True
-        else:
+        except subprocess.CalledProcessError:
             return False
 
-    #TODO read timeout from env
+    # #TODO read timeout from env
     assert repeat_until(condition, timeout=60)
 
 
@@ -65,14 +65,15 @@ def ls_absent(user, files, path, client_node, context):
     files = list_parser(files)
 
     def condition():
-        return_code = ls(client, user, path, output=False)
-        if return_code == 0:
+        # return_code = ls(client, user, path, output=False)
+        # if return_code == 0:
+        try:
             cmd_output = ls(client, user, path).split()
             for file in files:
                 if file in cmd_output:
                     return False
             return True
-        else:
+        except subprocess.CalledProcessError:
             return False
 
     assert repeat_until(condition, timeout=60)
@@ -87,10 +88,7 @@ def rename(user, file1, file2, client_node, context):
     def condition():
         cmd_return_code = mv(client, src, dest, user)
         save_op_code(context, user, cmd_return_code)
-        if cmd_return_code == 0:
-            context.update_timestamps(user, client, file2)
-            return True
-        return False
+        return cmd_return_code == 0
 
     repeat_until(condition, timeout=60)
 
@@ -106,6 +104,7 @@ def delete_file(user, files, client_node, context):
 
 
 @when(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
+@then(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
 def change_mode(user, file, mode, client_node, context):
     client = get_client(client_node, user, context)
     mode = str(mode)
@@ -114,10 +113,7 @@ def change_mode(user, file, mode, client_node, context):
     def condition():
         cmd_return_code = chmod(client, mode, file_path, user)
         save_op_code(context, user, cmd_return_code)
-        if cmd_return_code == 0:
-            context.update_timestamps(user, client, file)
-            return True
-        return False
+        return cmd_return_code == 0
 
     repeat_until(condition, timeout=60)
 
@@ -126,7 +122,6 @@ def change_mode(user, file, mode, client_node, context):
 def check_type(user, file, file_type, client_node, context):
     client = get_client(client_node, user, context)
     file_path = make_path(file, client)
-
     check_using_stat(user, client, file_path, 'file type', file_type)
 
 
@@ -157,15 +152,19 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
     file_path = make_path(file, client)
 
     def condition():
-        return_code = stat(client, file_path, user=user, output=False)
-        if return_code == 0:
-            time1 = stat(client, file_path, format=opt1, user=user)
-            print "TIME1: ", time1
-            time2 = stat(client, file_path, format=opt2, user=user)
-            print "TIME2: ", time2
-            return compare(int(time1), int(time2), comparator)
-        else:
+
+        try:
+            times = stat(client, file_path, user=user,
+                         format="{t1} {t2}".format(t1=opt1, t2=opt2))
+            times = times.split(" ")
+            return compare(int(times[0]), int(times[1]), comparator)
+        except subprocess.CalledProcessError:
             return False
+        # if return_code == 0:
+        #     time1 = stat(client, file_path, format=opt1, user=user)
+        #     print "TIME1: ", time1
+        #     time2 = stat(client, file_path, format=opt2, user=user)
+        #     print "TIME2: ", time2
 
     assert repeat_until(condition, timeout=60)
     
@@ -194,11 +193,12 @@ def check_using_stat(user, client, file_path, parameter, expected_value):
     opt = get_stat_option(parameter)
 
     def condition():
-        return_code = stat(client, file_path, format=opt, user=user, output=False)
-        if return_code == 0:
+        try:
+        # return_code = stat(client, file_path, format=opt, user=user, output=False)
+        # if return_code == 0:
             cmd_output = stat(client, file_path, format=opt, user=user)
             return cmd_output == expected_value
-        else:
+        except subprocess.CalledProcessError:
             return False
 
     assert repeat_until(condition, timeout=60)

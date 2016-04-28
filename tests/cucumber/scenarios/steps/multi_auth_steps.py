@@ -100,7 +100,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
 
         save_op_code(context, user, ret)
 
-    time.sleep(10)
+    # time.sleep(10)
 
 
 # @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))

@@ -53,6 +53,7 @@ def check_mode(user, file, mode, context):
     multi_file_steps.change_mode(user, file, mode, "client1", context)
 
 
+@then(parsers.parse('{user} changes {file} mode to {mode}'))
 @when(parsers.parse('{user} changes {file} mode to {mode}'))
 def change_mode(user, file, mode, context):
     multi_file_steps.change_mode(user, file, mode, "client1", context)
