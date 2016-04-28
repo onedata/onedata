@@ -5,7 +5,6 @@ Feature: Authorization
 
   Scenario: Successful authorization
     Given u1 starts oneclient in /home/u1/onedata using token
-    And oneclient is started for u1
     Then last operation by u1 succeeds
     And [s1, s2] are mounted for u1
 

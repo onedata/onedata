@@ -6,7 +6,7 @@ Feature: Multi_regular_file_stat
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
-    And oneclient is started for [u1, u2] on [client1, client2]
+#    And oneclient is started for [u1, u2] on [client1, client2]
 
   Scenario: Check file type when empty
     When u1 creates regular files [file1] on client1
