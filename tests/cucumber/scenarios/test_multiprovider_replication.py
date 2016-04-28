@@ -19,7 +19,8 @@ from steps.multi_reg_file_steps import *
 from steps.common import *
 
 
-@pytest.fixture(scope="module", params=["multiprovider_env.json"])
+@pytest.fixture(scope="module", params=["multiprovider_env.json",
+                                        "multiprovider_directio_env.json"])
 def env_description_file(request):
     absolute_path = os.path.join(custom_cucumber_env_dir, request.param)
     return absolute_path
