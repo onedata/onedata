@@ -84,12 +84,12 @@ def test_timestamp(env_description_file):
 
 
 # # TODO VFS-1506
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Update timestamps without write permission',
-)
-def test_update_timestamp_without_permission(env_description_file):
-    pass
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Update timestamps without write permission',
+# )
+# def test_update_timestamp_without_permission(env_description_file):
+#     pass
 
 
 @scenario(
@@ -101,12 +101,12 @@ def test_update_timestamp_with_permission(env_description_file):
 
 
 # # TODO VFS-1822
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Access time'
-)
-def test_access_time(env_description_file):
-    pass
+# @scenario(
+#     '../features/multi_reg_file_stat.feature',
+#     'Access time'
+# )
+# def test_access_time(env_description_file):
+#     pass
 
 
 @scenario(
