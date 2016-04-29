@@ -58,30 +58,30 @@ def test_delete_by_other_user(env_description_file):
 
 
 # # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Read and write to regular file'
-# )
-# def test_read_write(env_description_file):
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Read and write to regular file'
+)
+def test_read_write(env_description_file):
+    pass
 
 
-# # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Read regular file without read permission'
-# )
-# def test_read_without_permission(env_description_file):
-#     pass
+# TODO VFS-1822
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Read regular file without read permission'
+)
+def test_read_without_permission(env_description_file):
+    pass
 
-#
-# # TODO VFS-1510
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Write to regular file with write permission'
-# )
-# def test_write_with_permission(env_description_file):
-#     pass
+
+# TODO VFS-1510
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Write to regular file with write permission'
+)
+def test_write_with_permission(env_description_file):
+    pass
 
 
 @scenario(
@@ -110,12 +110,12 @@ def test_write_without_permission(env_description_file):
 
 
 # # TODO VFS-1823
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Move regular file and read'
-# )
-# def test_move(env_description_file):
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Move regular file and read'
+)
+def test_move(env_description_file):
+    pass
 
 
 # # TODO VFS-1513
@@ -128,12 +128,12 @@ def test_write_without_permission(env_description_file):
 
 
 # # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_CRUD.feature',
-#     'Copy regular file and read'
-# )
-# def test_copy(env_description_file):
-#     pass
+@scenario(
+    '../features/multi_reg_file_CRUD.feature',
+    'Copy regular file and read'
+)
+def test_copy(env_description_file):
+    pass
 
 
 # # TODO VFS-1513
