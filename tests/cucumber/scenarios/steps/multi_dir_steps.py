@@ -89,4 +89,4 @@ def list_dir(user, dir, client_node, context):
         except:
             return True
 
-    assert repeat_until(condition, timeout=10)
+    assert repeat_until(condition, client.timeout)

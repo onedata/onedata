@@ -50,7 +50,7 @@ def read(user, text, file, client_node, context):
         except subprocess.CalledProcessError:
             return False
 
-    assert repeat_until(condition, timeout=10)
+    assert repeat_until(condition, client.timeout)
 
 
 @then(parsers.parse('{user} cannot read from {file} on {client_node}'))
@@ -92,7 +92,7 @@ def check_md5(user, file, client_node, context):
         md5 = md5sum(client, make_path(file, client))
         return md5.split()[0] == context.md5
 
-    assert repeat_until(condition, timeout=10)
+    assert repeat_until(condition, client.timeout)
 
 
 @when(parsers.parse('{user} copies regular file {file} to {path} on {client_node}'))

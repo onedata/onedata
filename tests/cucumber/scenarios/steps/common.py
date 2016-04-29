@@ -34,8 +34,12 @@ class User:
 
 class Client:
     def __init__(self, docker_id, mount_path):
+        self.timeout = 0
         self.docker_id = docker_id
         self.mount_path = mount_path
+
+    def set_timeout(self, timeout):
+        self.timeout = timeout
 
 
 class File:

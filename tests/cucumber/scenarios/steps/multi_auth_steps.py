@@ -56,6 +56,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         cookie = get_cookie(env_description_file, oz_node)
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
+        client.set_timeout(data.get('default_timeout', 0))
 
         print "User {user} mounts oneclient using token: {token}"\
             .format(
@@ -128,7 +129,7 @@ def check_spaces(spaces, user, context):
             except subprocess.CalledProcessError:
                 return False
 
-        repeat_until(condition, timeout=10)
+        repeat_until(condition, timeout=client.timeout)
 
 
 @given(parsers.parse('oneclient is started for {users} on {clients}'))
