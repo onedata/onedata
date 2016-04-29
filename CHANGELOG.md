@@ -4,6 +4,15 @@
 CHANGELOG
 ---------
 
+### 3.0.0-beta3
+
+* GUI update
+* Provider proxy channel added
+* Faster proxy for oneclient
+* LUMA integrated
+* Code covering
+
+
 ### 3.0.0-beta1
 
 * New oneclient with faster proxy and SMB
