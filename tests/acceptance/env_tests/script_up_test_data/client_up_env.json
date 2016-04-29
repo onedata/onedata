@@ -4,7 +4,10 @@
     "os_configs": {
         "cfg1": {
             "storages": [
-                "/mnt/st1"
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                }
             ],
             "users": [
                 "user1"
@@ -17,8 +20,14 @@
         },
         "cfg2": {
             "storages": [
-                "/mnt/st1",
-                "/mnt/st2"
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                },
+                {
+                    "type": "posix",
+                    "name": "/mnt/st2"
+                }
             ],
             "users": [
                 "user1",
@@ -46,7 +55,7 @@
         }
     },
     "oneclient": {
-        "client_host_1": {
+        "client-host1": {
             "os_config": "cfg1",
             "clients": {
                 "client1": {
@@ -69,7 +78,7 @@
                 }
             }
         },
-        "client_host_2": {
+        "client-host2": {
             "os_config": "cfg2",
             "clients": {
                 "client1": {
