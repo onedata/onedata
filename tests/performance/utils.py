@@ -29,6 +29,15 @@ class PerformanceReport(Report):
         self.add_to_report('commit', commit)
         self.add_to_report('branch', branch)
 
+    def add_nested_report(self, key, value):
+        #TODO move this implementation to super class
+        if value.name not in self.report[self.name][key].keys():
+            self.report[self.name][key][value.name] = value.report[value.name]
+        else:
+            # self.report[self.name][key][value.name].update(value.report[value.name])
+            self.report[self.name][key][value.name] = \
+                update_dict(self.report[self.name][key][value.name], value.report[value.name])
+
 
 class EnvironmentReport(Report):
     def __init__(self, name):

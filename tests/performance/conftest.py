@@ -164,9 +164,9 @@ class AbstractPerformanceTest:
     def persistent_environment(self, request, env_description_file):
         test_name = get_test_name(inspect.getfile(self.__class__))
         logdir = make_logdir(performance_logdir, test_name)
-        env = run_env_up_script("env_up.py", [
-            '-l', logdir, env_description_file
-        ])
+        env = run_env_up_script("env_up.py",
+                                logdir=logdir,
+                                config=env_description_file)
 
         def fin():
             docker.remove(env['docker_ids'], force=True, volumes=True)
@@ -176,15 +176,11 @@ class AbstractPerformanceTest:
 
     @pytest.fixture()
     def environment(self, persistent_environment, request, env_description_file):
-        # TODO storage path should be read from persistent environment
-        # TODO when VFS-1832 will be resolved
-        config = common.parse_json_config_file(env_description_file)
 
         def fin():
-            for _, os_config in config['os_configs'].iteritems():
-                for storage in os_config['storages']:
-                    if storage['type'] == 'posix':
-                        clear_storage(os.path.join(common.storage_host_path(storage['name'])))
+            if 'posix' in persistent_environment['storages'].keys():
+                for storage_name, storage in persistent_environment['storages']['posix'].items():
+                    clear_storage(storage['host_path'])
 
         request.addfinalizer(fin)
         return persistent_environment

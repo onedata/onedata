@@ -9,6 +9,7 @@ from tests.performance.conftest import AbstractPerformanceTest, performance
 from tests.cucumber.scenarios.steps.common import Client, run_cmd
 from tests.performance.utils import (Result, generate_configs, temp_dir,
                                      get_home_dir, delete_file)
+from tests.test_common import performance_logdir
 
 from environment import docker, env
 
@@ -55,7 +56,7 @@ class TestSysbench(AbstractPerformanceTest):
                 'files_number': [10, 100],# 1000],
                 'threads_number': [1, 16],
                 'total_size': [100],# 1000],
-                'mode': ["rndrw"]#, "rndrd", "rndwr", "seqwr", "seqrd"]
+                'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
             }, 'SYSBENCH TEST -- '
                'Files number: {files_number} '
                'Threads number: {threads_number} '
