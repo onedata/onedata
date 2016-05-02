@@ -3,9 +3,10 @@
 set -e
 
 ROOT="/data"
-DIRS=("/etc/op_panel" "/etc/op_worker" "/etc/cluster_manager" "/var/lib/op_panel" \
-    "/usr/lib64/op_panel" "/opt/couchbase/var/lib/couchbase" "/var/log/op_panel" \
-    "/var/log/op_worker" "/var/log/cluster_manager")
+DIRS=("/etc/op_panel" "/etc/op_worker" "/etc/cluster_manager" \
+    "/var/lib/op_panel" "/var/lib/op_worker" "/var/lib/cluster_manager" \
+    "/usr/lib64/op_panel" "/opt/couchbase/var/lib/couchbase" \
+    "/var/log/op_panel" "/var/log/op_worker" "/var/log/cluster_manager")
 
 function is_configured {
     if [ -n "`op_panel_admin --config | grep undefined`" ]; then
@@ -34,9 +35,14 @@ function remove_dirs {
 }
 
 function start_services {
-    service couchbase-server start 2> /dev/null
+    echo -n "Starting couchbase-server: "
+    service couchbase-server start 2>/dev/null 1>/dev/null && \
+    echo "[  OK  ]" || (echo "[FAILED]" && exit 1)
+    sleep 5
     service cluster_manager start 2> /dev/null
+    sleep 5
     service op_worker start 2> /dev/null
+    echo -e "\nAll services started."
 }
 
 add_dirs
