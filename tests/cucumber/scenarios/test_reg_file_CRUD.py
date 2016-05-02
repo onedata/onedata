@@ -9,7 +9,7 @@ Test suite for CRUD operations on regular files in onedata.
 from pytest_bdd import scenario
 
 from steps.env_steps import *
-from steps.multi_auth_steps import *
+from steps.auth_steps import *
 from steps.dir_steps import *
 from steps.file_steps import *
 from steps.reg_file_steps import *
@@ -41,12 +41,12 @@ def test_delete(env_description_file):
 
 
 # @TODO VFS-1647
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Read and write to regular file'
-# )
-# def test_read_write(env_description_file):
-#     pass
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Read and write to regular file'
+)
+def test_read_write(env_description_file):
+    pass
 
 
 @scenario(
