@@ -14,9 +14,7 @@ GIT_URL=$(git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$//g')
 GIT_URL=$(if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
 ONEDATA_GIT_URL=$(if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
 
-sed -i.bak "s#ONEDATA_GIT_URL#${ONEDATA_GIT_URL}#g" .gitmodules
+sed "s#ONEDATA_GIT_URL#${ONEDATA_GIT_URL}#g" gitmodules.template > .gitmodules
 
 git submodule $@
 
-rm -f .gitmodules
-mv .gitmodules.bak .gitmodules
