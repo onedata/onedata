@@ -37,9 +37,9 @@ def write_at_offset(user, data, offset, file, client_node, context):
 def write_rand_text(user, megabytes, file, client_node, context):
     client = get_client(client_node, user, context)
     path = make_path(file, client)
-    run_cmd(user, client, 'dd if=/dev/urandom of=/tmp/random_data bs=1M count=' + megabytes)
-    ret = run_cmd(user, client, 'dd if=/tmp/random_data of=' + path + ' bs=1M')
-    md5 = run_cmd(user, client, 'md5sum /tmp/random_data', output=True)
+    ret = run_cmd(user, client, 'dd if=/dev/urandom of=' + path + ' bs=' +
+                  megabytes +'M count=1')
+    md5 = run_cmd(user, client, 'md5sum ' + path, output=True)
     context.md5 = md5.split()[0]
     save_op_code(context, user, ret)
     if ret == 0:
@@ -62,11 +62,8 @@ def read(user, text, file, client_node, context):
     assert read_text == text
 
 @then(parsers.parse('{user} reads "" from {file} on {client_node}'))
-def read(user, file, client_node, context):
-    client = get_client(client_node, user, context)
-    read_text = run_cmd(user, client, 'cat ' + make_path(file, client), output=True)
-    assert read_text == ''
-
+def read_empty(user, file, client_node, context):
+    read(user, '', file, client_node, context)
 
 @then(parsers.parse('{user} cannot read from {file} on {client_node}'))
 def cannot_read(user, file, client_node, context):
