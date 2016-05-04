@@ -17,6 +17,7 @@ from pytest_bdd import parsers
 import os
 import time
 import subprocess
+import pytest
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +
@@ -171,11 +172,8 @@ def clean_spaces_safe(user, client):
     spaces = spaces.split("\n")
     # clean spaces
     for space in spaces:
-        try:
-            rm(client, recursive=True, user=user, force=True,
-               path=make_path(os.path.join('spaces', str(space), '*'), client))
-        except:
-            pass
+        rm(client, recursive=True, user=user, force=True,
+           path=make_path(os.path.join('spaces', str(space), '*'), client))
 
 
 def clean_mount_path(user, client):
@@ -198,7 +196,9 @@ def clean_mount_path(user, client):
             run_cmd("root", client, "kill -KILL " + str(pid))
 
         # unmount onedata
-        run_cmd(user, client, "fusermount -u " + client.mount_path)
+        fusermount(client, client.mount_path, user=user, unmount=True,
+                   lazy=True)
+        # run_cmd(user, client, "fusermount -ul " + client.mount_path)
         # remove onedata dir
         rm(client, recursive=True, force=True, path=client.mount_path, output=True)
 

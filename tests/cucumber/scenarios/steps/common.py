@@ -69,6 +69,22 @@ def client_ids(persistent_environment):
     return ids
 
 
+@pytest.fixture(autouse=True)
+def skip_by_env(request, env_description_file):
+    if request.node.get_marker('skip_env'):
+        env = env_name(env_description_file)
+        if env in request.node.get_marker('skip_env').args:
+            pytest.skip('skipped on env: {}'.format(env))
+
+
+@pytest.fixture(autouse=True)
+def xfail_by_env(request, env_description_file):
+    if request.node.get_marker('xfail_env'):
+        env = env_name(env_description_file)
+        if env in request.node.get_marker('xfail_env').args:
+            pytest.xfail('xfailed on env: {}'.format(env))
+
+
 ######################## STEPS ########################
 
 @when(parsers.parse('{user} waits {seconds} second'))
@@ -240,3 +256,14 @@ def cat(client, file_path, user="root", output=True):
 def md5sum(client, file_path, user="root", output=True):
     cmd = "md5sum {file_path}".format(file_path=file_path)
     return run_cmd(user, client, cmd, output=output)
+
+
+def fusermount(client, path, user='root', unmount=False, lazy=False,
+               quiet=False, output=False):
+    cmd = "fusermount {unmount} {lazy} {quiet} {path}".format(
+        unmount="-u" if unmount else "",
+        lazy="-z" if lazy else "",
+        quiet="-q" if quiet else "",
+        path=path
+    )
+    return run_cmd(user, client, cmd, output)
