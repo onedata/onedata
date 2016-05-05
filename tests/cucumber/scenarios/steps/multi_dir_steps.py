@@ -5,13 +5,6 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on directories in multiclient environment.
 """
-
-import pytest
-from pytest_bdd import (given, when, then)
-from pytest_bdd import parsers
-import time
-
-from environment import docker, env
 from common import *
 
 

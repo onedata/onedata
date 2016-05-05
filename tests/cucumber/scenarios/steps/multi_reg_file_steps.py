@@ -5,18 +5,9 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on regular files.
 """
-import subprocess
-
-import pytest
-from pytest_bdd import (given, when, then)
-from pytest_bdd import parsers
-import time
-import string
-import random
-from os import *
-
-from environment import docker, env
 from common import *
+
+import subprocess
 
 
 @when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))

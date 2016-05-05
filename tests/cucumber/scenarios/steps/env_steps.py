@@ -5,12 +5,10 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements common functions for handling test environment.
 """
-import time
-
 from tests.test_common import (make_logdir, run_env_up_script, env_name,
                                cucumber_logdir, default_cucumber_env_dir,
                                get_json_files)
-from environment import common, docker
+from environment import docker
 
 import pytest
 from pytest_bdd import parsers
@@ -53,7 +51,6 @@ def persistent_environment(request, context, env_description_file):
 
     request.addfinalizer(fin)
     request.environment = env_desc
-    time.sleep(90)
     return env_desc
 
 

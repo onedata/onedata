@@ -8,9 +8,6 @@ Module implements pytest-bdd steps for authorization and mounting oneclient.
 from common import *
 import multi_auth_steps
 
-from pytest_bdd import given
-from pytest_bdd import parsers
-
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
 def default_mount(user, mount_path, token, request, environment, context,
