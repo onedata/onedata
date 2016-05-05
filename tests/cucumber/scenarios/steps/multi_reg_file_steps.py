@@ -62,8 +62,8 @@ def append(user, text, file, client_node, context):
 @when(parsers.parse('{user} replaces "{text1}" with "{text2}" in {file} on {client_node}'))
 def replace(user, text1, text2, file, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(user, client,
-                  'sed -i \'s/' + text1 + '/' + text2 + '/g\' ' + make_path(file, client))
+    file_path = make_path(file, client)
+    ret = replace_pattern(client, file_path, text1, text2, user)
     save_op_code(context, user, ret)
 
 
@@ -80,10 +80,12 @@ def check_md5(user, file, client_node, context):
     client = get_client(client_node, user, context)
 
     def condition():
-        md5 = md5sum(client, make_path(file, client))
+        md5 = md5sum(client, make_path(file, client), user=user)
         return md5.split()[0] == context.md5
 
-    assert repeat_until(condition, client.timeout)
+    assert repeat_until(condition, 30)
+    #hardcoding this timeout can be replaced by using step "user waits 30 seconds"
+
 
 
 @when(parsers.parse('{user} copies regular file {file} to {path} on {client_node}'))
