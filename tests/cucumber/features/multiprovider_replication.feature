@@ -41,9 +41,9 @@ Feature: Multiprovider_replication
   Scenario: Create nonempty file and override its contents on remote provider
     When u1 creates regular files [file1] on client1
     And u1 writes "123456789" to file1 on client1
-    And u1 waits up to 10 seconds for environment synchronization
+    And user waits 10 seconds
     And u2 writes "abcd" to file1 on client2
-    Then user waits 15 seconds
+    Then user waits 10 seconds
     And u1 reads "abcd" from file1 on client1
 
   Scenario: Create nonempty file and remove it on remote provider
