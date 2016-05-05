@@ -5,15 +5,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common steps for operation on files (both regular files
 and directories)in multiclient environment.
 """
-
-import pytest
-from pytest_bdd import (given, when, then)
-from pytest_bdd import parsers
-
-from environment import docker, env
 from common import *
 
-import time
 import subprocess
 
 
@@ -51,7 +44,6 @@ def ls_present(user, files, path, client_node, context):
         except subprocess.CalledProcessError:
             return False
 
-    # #TODO read timeout from env
     assert repeat_until(condition, client.timeout)
 
 
@@ -91,12 +83,18 @@ def rename(user, file1, file2, client_node, context):
 
 @when(parsers.parse('{user} deletes files {files} on {client_node}'))
 def delete_file(user, files, client_node, context):
+    # time.sleep(6000)
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
         path = make_path(file, client)
-        ret = rm(client, path, user)
-        save_op_code(context, user, ret)
+
+        def condition():
+            ret = rm(client, path, user)
+            save_op_code(context, user, ret)
+            return ret == 0
+
+        repeat_until(condition, timeout=client.timeout)
 
 
 @when(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
@@ -160,23 +158,7 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
     assert repeat_until(condition, client.timeout)
     
 
-@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} to {time2} time on {client_node} within {maxtime} seconds'))
-@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} than {time2} time on {client_node} within {maxtime} seconds'))
-def check_time_within_maxtime(user, time1, time2, comparator, file, maxtime, client_node, context):
-    # TODO delete this step
-    client = get_client(client_node, user, context)
-    file = str(file)
-    waited = 0
-    maxtime = int(maxtime)
-    while not compare(int(get_timestamp(user, file, client, time1)),
-                      int(get_timestamp(user, file, client, time2)),
-                      comparator):
-        time.sleep(1)
-        waited += 1
-        if waited >= maxtime:
-            assert False
-
-####################################################################################################
+################################################################################
 
 
 def check_using_stat(user, client, file_path, parameter, expected_value):

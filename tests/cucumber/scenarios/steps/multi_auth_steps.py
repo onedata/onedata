@@ -6,18 +6,11 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
-from environment import docker, env
 from environment.common import parse_json_config_file
 from common import *
 import multi_file_steps
 
-from pytest_bdd import given, then
-from pytest_bdd import parsers
-
-import os
-import time
 import subprocess
-import pytest
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +
@@ -103,9 +96,9 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
 
         rm(client, recursive=True, force=True, path=token_path)
 
-        time.sleep(10)
+        time.sleep(5)
         if token != 'bad_token':
-            clean_spaces(user, client)
+            clean_spaces_safe(user, client)
         save_op_code(context, user, ret)
 
 
@@ -133,6 +126,7 @@ def check_spaces(spaces, user, context):
         repeat_until(condition, timeout=client.timeout)
 
 
+# TODO is this step needed ???
 @given(parsers.parse('oneclient is started for {users} on {clients}'))
 def is_oneclient_started_multi(users, clients, context):
     users = list_parser(users)
@@ -154,20 +148,14 @@ def create_clients(users, client_hosts, mount_paths, client_ids):
     return clients
 
 
-def clean_spaces(user, client):
+def clean_spaces_safe(user, client):
     try:
-        spaces = ls(client, user=user, path=make_path('spaces', client))
-        spaces = spaces.split("\n")
-        # clean spaces
-        for space in spaces:
-                rm(client, recursive=True, user=user, force=True,
-                   path=make_path(os.path.join('spaces', str(space), '*'),
-                                  client))
+        clean_spaces(user, client)
     except:
         pytest.skip("Test skipped beacause of failing to clean spaces")
 
 
-def clean_spaces_safe(user, client):
+def clean_spaces(user, client):
     spaces = ls(client, user=user, path=make_path('spaces', client))
     spaces = spaces.split("\n")
     # clean spaces
@@ -178,7 +166,7 @@ def clean_spaces_safe(user, client):
 
 def clean_mount_path(user, client):
     try:
-        clean_spaces_safe(user, client)
+        clean_spaces(user, client)
     except:
         pass
     finally:
