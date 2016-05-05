@@ -6,15 +6,14 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements some common basic functions and functionality.
 """
-from tests.test_common import env_name
-
 import pytest
 from pytest_bdd import given, when, then
 from pytest_bdd import parsers
 
-import os
-import sys
+from tests.test_common import env_name
 from environment import docker
+
+import os
 
 ####################### CLASSES #######################
 import time
@@ -71,18 +70,42 @@ def client_ids(persistent_environment):
 
 @pytest.fixture(autouse=True)
 def skip_by_env(request, env_description_file):
+    """This function skips test cases decorated with:
+    @pytest.mark.skip_env(*envs).
+    Test won't start for each env in envs.
+    If you want to skip whole module, you must define
+    global variable in that module named pytestmark in
+    the following way:
+    pytestmark = pytest.mark.skip_env(*envs)
+    """
     if request.node.get_marker('skip_env'):
         env = env_name(env_description_file)
-        if env in request.node.get_marker('skip_env').args:
-            pytest.skip('skipped on env: {}'.format(env))
+        args = request.node.get_marker('skip_env').kwargs
+        reason = args['reason']
+        if env in args['envs']:
+                pytest.skip('skipped on env: {env} with reason: {reason}'
+                            .format(env=env, reason=reason))
 
 
 @pytest.fixture(autouse=True)
 def xfail_by_env(request, env_description_file):
+    """This function marks test cases decorated with:
+    @pytest.mark.skip_env(*envs)
+    as expected to fail:
+    Test will be marked as expected to fail for each
+    env in envs.
+    If you want to mark whole module, you must define
+    global variable in that module named pytestmark in
+    the following way:
+    pytestmark = pytest.mark.xfail_env(*envs)
+    """
     if request.node.get_marker('xfail_env'):
         env = env_name(env_description_file)
-        if env in request.node.get_marker('xfail_env').args:
-            pytest.xfail('xfailed on env: {}'.format(env))
+        args = request.node.get_marker('xfail_env').kwargs
+        reason = args['reason']
+        if env in args['envs']:
+            pytest.xfail('xfailed on env: {env} with reason: {reason}'
+                         .format(env=env, reason=reason))
 
 
 ######################## STEPS ########################
@@ -146,7 +169,6 @@ def get_client(client_node, user, context):
 
 
 def repeat_until(condition, timeout=0):
-    # todo maybe timeout should be remembered as client's attribute
 
     condition_satisfied = condition()
     while not condition_satisfied and timeout >= 0:
