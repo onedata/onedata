@@ -8,6 +8,7 @@ from pytest_bdd import scenario
 
 from steps.env_steps import *
 from steps.auth_steps import *
+from steps.multi_auth_steps import *
 from steps.common import *
 
 

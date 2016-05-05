@@ -10,7 +10,7 @@ in multi-client environment.
 from pytest_bdd import scenario
 
 from steps.env_steps import *
-from steps.auth_steps import *
+from steps.multi_auth_steps import *
 from steps.multi_dir_steps import *
 from steps.multi_file_steps import *
 from steps.common import *
@@ -135,13 +135,18 @@ def test_rename_subfile_without_permission(env_description_file):
 def test_rename_subfile_with_permission(env_description_file):
     pass
 
+
 # TODO VFS-1824
-# @scenario(
-#     '../features/multi_directory_CRUD.feature',
-#     'Recreate directory deleted by other user'
-# )
-# def test_recreate(env_description_file):
-#     pass
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="u2 is unable to create direcory with the same name "
+               "although first one was deleted")
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Recreate directory deleted by other user'
+)
+def test_recreate(env_description_file):
+    pass
 
 
 @scenario(

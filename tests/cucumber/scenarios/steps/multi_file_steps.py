@@ -5,15 +5,9 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common steps for operation on files (both regular files
 and directories)in multiclient environment.
 """
-
-import pytest
-from pytest_bdd import (given, when, then)
-from pytest_bdd import parsers
-
-from environment import docker, env
 from common import *
 
-import time
+import subprocess
 
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
@@ -22,41 +16,69 @@ def create_reg_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        ret = run_cmd(user, client, 'touch ' + make_path(file, client))
-        save_op_code(context, user, ret)
-        if ret == 0:
-            context.update_timestamps(user, client, file)
+        file_path = make_path(file, client)
+
+        def condition():
+            return_code = touch(client, file_path, user)
+            save_op_code(context, user, return_code)
+            return return_code == 0
+
+        assert repeat_until(condition, client.timeout)
 
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 @then(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 def ls_present(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
-    cmd = 'ls ' + make_path(path, client)
-    ls_files = run_cmd(user, client, cmd, output=True).split()
+    path = make_path(path, client)
     files = list_parser(files)
-    for file in files:
-        assert file in ls_files
+
+    def condition():
+
+        try:
+            cmd_output = ls(client, user, path).split()
+            for file in files:
+                if file not in cmd_output:
+                    return False
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+    assert repeat_until(condition, client.timeout)
 
 
 @when(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
 @then(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
 def ls_absent(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
-    cmd = 'ls ' + make_path(path, client)
-    ls_files = run_cmd(user, client, cmd, output=True).split()
+    path = make_path(path, client)
     files = list_parser(files)
-    for file in files:
-        assert file not in ls_files
+
+    def condition():
+        try:
+            cmd_output = ls(client, user, path).split()
+            for file in files:
+                if file in cmd_output:
+                    return False
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+    assert repeat_until(condition, client.timeout)
 
 
 @when(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
 def rename(user, file1, file2, client_node, context):
     client = get_client(client_node, user, context)
-    ret = run_cmd(user, client, "mv " + make_path(file1, client) + ' ' + make_path(file2, client))
-    save_op_code(context, user, ret)
-    if ret == 0:
-        context.update_timestamps(user, client, file2)
+    src = make_path(file1, client)
+    dest = make_path(file2, client)
+
+    def condition():
+        cmd_return_code = mv(client, src, dest, user)
+        save_op_code(context, user, cmd_return_code)
+        return cmd_return_code == 0
+
+    repeat_until(condition, client.timeout)
 
 
 @when(parsers.parse('{user} deletes files {files} on {client_node}'))
@@ -64,89 +86,112 @@ def delete_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        ret = run_cmd(user, client, "rm " + make_path(file, client))
-        save_op_code(context, user, ret)
+        path = make_path(file, client)
 
+        def condition():
+            ret = rm(client, path, user=user)
+            save_op_code(context, user, ret)
+            return ret == 0
 
-@then(parsers.parse('file type of {user}\'s {file} is {fileType} on {client_node}'))
-def check_type(user, file, fileType, client_node, context):
-    client = get_client(client_node, user, context)
-    currFileType = run_cmd(user, client, 'stat ' + make_path(file, client) + ' --format=%F', output=True)
-    assert fileType == currFileType
-
-
-@then(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
-def check_mode(user, file, mode, client_node, context):
-    client = get_client(client_node, user, context)
-    curr_mode = run_cmd(user, client, 'stat --format=%a ' + make_path(file, client), output=True)
-    assert mode == curr_mode
+        repeat_until(condition, timeout=client.timeout)
 
 
 @when(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
+@then(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
 def change_mode(user, file, mode, client_node, context):
     client = get_client(client_node, user, context)
     mode = str(mode)
-    ret = run_cmd(user, client, 'chmod ' + mode + ' ' + make_path(file, client))
-    save_op_code(context, user, ret)
-    if ret == 0:
-        context.update_timestamps(user, client, file)
+    file_path = make_path(file, client)
+
+    def condition():
+        cmd_return_code = chmod(client, mode, file_path, user)
+        save_op_code(context, user, cmd_return_code)
+        return cmd_return_code == 0
+
+    repeat_until(condition, client.timeout)
+
+
+@then(parsers.parse('file type of {user}\'s {file} is {file_type} on {client_node}'))
+def check_type(user, file, file_type, client_node, context):
+    client = get_client(client_node, user, context)
+    file_path = make_path(file, client)
+    check_using_stat(user, client, file_path, 'file type', file_type)
+
+
+@when(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
+@then(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
+def check_mode(user, file, mode, client_node, context):
+    client = get_client(client_node, user, context)
+    mode = str(mode)
+    file_path = make_path(file, client)
+    check_using_stat(user, client, file_path, 'mode', mode)
 
 
 @when(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
 @then(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
 def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)
-    curr_size = run_cmd(user, client,
-                        "stat --format=%s " + make_path(file, client),
-                        output=True)
-    assert size == curr_size
+    file_path = make_path(file, client)
+    size = str(size)
+    check_using_stat(user, client, file_path, 'size', size)
 
 
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} to {time2} time on {client_node}'))
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} than {time2} time on {client_node}'))
 def check_time(user, time1, time2, comparator, file, client_node, context):
     client = get_client(client_node, user, context)
-    opt1 = get_time_opt(time1)
-    opt2 = get_time_opt(time2)
-    file = str(file)
-    time1 = run_cmd(user, client, "stat --format=%" + opt1 + ' ' + make_path(file, client), output=True)
-    time2 = run_cmd(user, client, "stat --format=%" + opt2 + ' ' + make_path(file, client), output=True)
-    assert compare(int(time1), int(time2), comparator)
+    opt1 = get_stat_option(time1)
+    opt2 = get_stat_option(time2)
+    file_path = make_path(file, client)
+
+    def condition():
+
+        try:
+            times = stat(client, file_path, user=user,
+                         format="{t1} {t2}".format(t1=opt1, t2=opt2))
+            times = times.split(" ")
+            return compare(int(times[0]), int(times[1]), comparator)
+        except subprocess.CalledProcessError:
+            return False
+
+    assert repeat_until(condition, client.timeout)
+    
+
+################################################################################
 
 
-@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} to {time2} time on {client_node} within {maxtime} seconds'))
-@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} than {time2} time on {client_node} within {maxtime} seconds'))
-def check_time_within_maxtime(user, time1, time2, comparator, file, maxtime, client_node, context):
-    client = get_client(client_node, user, context)
-    file = str(file)
-    waited = 0
-    maxtime = int(maxtime)
-    while not compare(int(get_current_time(user, file, client, time1)),
-                      int(get_current_time(user, file, client, time2)),
-                      comparator):
-        time.sleep(1)
-        waited += 1
-        if waited >= maxtime:
-            assert False
+def check_using_stat(user, client, file_path, parameter, expected_value):
 
-####################################################################################################
+    opt = get_stat_option(parameter)
+
+    def condition():
+        try:
+            cmd_output = stat(client, file_path, format=opt, user=user)
+            return cmd_output == expected_value
+        except subprocess.CalledProcessError:
+            return False
+
+    assert repeat_until(condition, client.timeout)
 
 
-def get_current_time(user, file, client, time_type):
-    opt = get_time_opt(time_type)
-    return run_cmd(user, client, "stat --format=%" + opt + ' ' + make_path(file, client),
-                   output=True)
+def get_timestamp(user, file, client, time_type):
+    opt = get_stat_option(time_type)
+    file_path = make_path(file, client)
+    return stat(client, file_path, format=opt, user=user)
 
 
-def get_time_opt(time):
-    if time == "access":
-        return 'X'
-    elif time == "modification":
-        return 'Y'
-    elif time == "status-change":
-        return 'Z'
-    else:
-        raise ValueError("Wrong argument to function get_time_opt")
+def get_stat_option(parameter):
+
+    formats = {
+        'access': '%X',
+        'modification': '%Y',
+        'status-change': '%Z',
+        'file type': '%F',
+        'mode': '%a',
+        'size': '%s'
+    }
+
+    return formats[parameter]
 
 
 def compare(val1, val2, comparator):

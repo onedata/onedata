@@ -1,14 +1,14 @@
 """Author: Piotr Ociepka
+Author: Jakub Kudzia
 Copyright (C) 2015 ACK CYFRONET AGH
 This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements common functions for handling test environment.
 """
-
 from tests.test_common import (make_logdir, run_env_up_script, env_name,
                                cucumber_logdir, default_cucumber_env_dir,
                                get_json_files)
-from environment import common, docker
+from environment import docker
 
 import pytest
 from pytest_bdd import parsers
@@ -18,7 +18,8 @@ import os
 
 
 @pytest.fixture(scope="module",
-                params=get_json_files(default_cucumber_env_dir, relative=True))
+                # params=get_json_files(default_cucumber_env_dir, relative=True))
+                params=["env3.json"])
 def env_description_file(request):
     """NOTE: This fixture must be overridden in every test module. As params
     for overridden fixture you must specify .json files with description
@@ -38,7 +39,7 @@ def persistent_environment(request, context, env_description_file):
     env_path = os.path.join(curr_path, '..', '..', 'environments',
                             env_description_file)
 
-    feature_name = request.module.__name__
+    feature_name = request.module.__name__.split('.')[-1]
     logdir = make_logdir(cucumber_logdir, os.path
                          .join(env_name(env_description_file), feature_name))
     env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
@@ -54,20 +55,12 @@ def persistent_environment(request, context, env_description_file):
 
 
 @given("environment is up")
-def environment(persistent_environment, request, context, env_description_file):
-    # TODO storage path should be read from persistent environment
-    # TODO when VFS-1832 will be resolved
-    curr_path = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(curr_path, '..', '..', 'environments',
-                            env_description_file)
-    config = common.parse_json_config_file(env_path)
+def environment(persistent_environment, request):
 
     def fin():
-        for _, os_config in config['os_configs'].iteritems():
-            for storage in os_config['storages']:
-                if storage['type'] == 'posix':
-                    clear_storage(
-                        os.path.join(common.storage_host_path(storage['name'])))
+        if 'posix' in persistent_environment['storages'].keys():
+            for storage_name, storage in persistent_environment['storages']['posix'].items():
+                clear_storage(storage['host_path'])
 
     request.addfinalizer(fin)
     return persistent_environment

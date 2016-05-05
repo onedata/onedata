@@ -3,6 +3,7 @@ Feature: Regular_file_CRUD
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
+    And oneclient is started for u1
     
   Scenario: Create regular file
     When u1 creates regular files [file1, file2, file3]
@@ -55,6 +56,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from dir1/dir2/file1
     And u1 renames dir1/dir2/file1 to dir3/file1
     Then u1 doesn't see [file1] in dir1/dir2
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2
@@ -70,7 +72,6 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes 32 MB of random characters to dir1/dir2/file1 and saves MD5
-    And u1 waits 10 seconds
     And u1 renames dir1/dir2/file1 to dir3/file1
     Then u1 doesn't see [file1] in dir1/dir2
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2
@@ -84,6 +85,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from dir1/dir2/file1
     And u1 copies regular file dir1/dir2/file1 to dir3
     Then u1 sees [dir1, dir3] in .
     And u1 sees [file1] in dir1/dir2
@@ -101,9 +103,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes 32 MB of random characters to dir1/dir2/file1 and saves MD5
-    And u1 waits 10 seconds
     And u1 copies regular file dir1/dir2/file1 to dir3/file1
-    And u1 waits 10 seconds
     Then u1 sees [file1] in dir1/dir2
     And u1 sees [file1] in dir3
     And u1 sees [file1] in spaces/s1/dir1/dir2

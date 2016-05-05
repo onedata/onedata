@@ -3,6 +3,7 @@ Feature: LUMA proxy test
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
+    And oneclient is started for u1
 
   Scenario: Operations on POSIX storage
     When u1 creates regular files [spaces/posix/file1]

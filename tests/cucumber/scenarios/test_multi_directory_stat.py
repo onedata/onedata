@@ -10,7 +10,7 @@ in multi-client environment.
 from pytest_bdd import scenario
 
 from steps.env_steps import *
-from steps.auth_steps import *
+from steps.multi_auth_steps import *
 from steps.multi_dir_steps import *
 from steps.common import *
 from steps.multi_file_steps import *
@@ -56,13 +56,18 @@ def test_change_access_someone(env_description_file):
 def test_timestamp(env_description_file):
     pass
 
-# TODO VFS-1506
-# @scenario(
-#     '../features/multi_directory_stat.feature',
-#     'Update timestamps without write permission'
-# )
-# def test_update_timestamp_without_permission(env_description_file):
-#     pass
+
+# # TODO VFS-1506
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="touch on file without write permission should fail, "
+               "it will be checked in VFS-1506")
+@scenario(
+    '../features/multi_directory_stat.feature',
+    'Update timestamps without write permission'
+)
+def test_update_timestamp_without_permission(env_description_file):
+    pass
 
 
 @scenario(
@@ -89,6 +94,11 @@ def test_modification_time(env_description_file):
     pass
 
 
+# TODO VFS-1821
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="status-change times is equal to access and modification, "
+               "it will be checked VFS-1821")
 @scenario(
     '../features/multi_directory_stat.feature',
     'Status-change time when changing mode'

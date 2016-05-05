@@ -5,13 +5,6 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on regular files.
 """
-
-import pytest
-from pytest_bdd import (given, when, then)
-from pytest_bdd import parsers
-import time
-
-from environment import docker, env
 from common import *
 import multi_reg_file_steps
 
@@ -26,6 +19,7 @@ def write_text(user, text, file, context):
     multi_reg_file_steps.write_text(user, text, file, "client1", context)
 
 
+@when(parsers.parse('{user} reads "{text}" from {file}'))
 @then(parsers.parse('{user} reads "{text}" from {file}'))
 def read(user, text, file, context):
     multi_reg_file_steps.read(user, text, file, "client1", context)
@@ -58,5 +52,5 @@ def copy_reg_file(user, file, path, context):
 
 
 @when(parsers.parse('{user} changes {file} size to {new_size} bytes'))
-def truncate(user, file, new_size, context):
-    multi_reg_file_steps.truncate(user, file, new_size, "client1", context)
+def do_truncate(user, file, new_size, context):
+    multi_reg_file_steps.do_truncate(user, file, new_size, "client1", context)
