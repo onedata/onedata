@@ -19,10 +19,14 @@ docker_dir = os.path.join(bamboos_dir, 'docker')
 test_dir = os.path.join(project_dir, "tests")
 cucumber_dir = os.path.join(test_dir, "cucumber")
 acceptance_dir = os.path.join(test_dir, "acceptance")
+performance_dir = os.path.join(test_dir, "performance")
 default_cucumber_env_dir = os.path.join(cucumber_dir, "default_environments")
 custom_cucumber_env_dir = os.path.join(cucumber_dir, "custom_environments")
 cucumber_logdir = os.path.join(cucumber_dir, "logs")
 acceptance_logdir = os.path.join(acceptance_dir, "logs")
+performance_logdir = os.path.join(performance_dir, "logs")
+performance_env_dir = os.path.join(performance_dir, "environments")
+performance_output = os.path.join(performance_logdir, "performance.json")
 example_env_dir = os.path.join(bamboos_dir, "example_env")
 
 # Append useful modules to the path
@@ -33,6 +37,11 @@ def get_test_name(filename):
     filename = filename.split("/")[-1]
     (test_name, ext) = filename.split(".")
     return test_name
+
+
+def get_test_data_dir(test_file):
+    """Returns absolute path to directory <test_file>_data"""
+    return "{0}_data".format(os.path.realpath(test_file).rstrip('.py'))
 
 
 def get_logdir_name(root_dir, test_name):

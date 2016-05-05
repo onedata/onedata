@@ -131,6 +131,9 @@ test_packaging:
 test_cucumber:
 	./test_run.py --test-dir tests/cucumber
 
+test_performance:
+	./test_run.py --test-dir tests/performance
+
 ##
 ## Clean
 ##

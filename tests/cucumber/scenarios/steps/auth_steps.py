@@ -55,7 +55,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         # get OZ cookie from env description file
         cookie = get_cookie(env_description_file, oz_node)
         # get token for user
-        token = get_token(token_arg, user, oz_node, cookie)
+        token = get_token(user, oz_node, cookie, token_arg)
 
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
@@ -176,7 +176,7 @@ def set_dns(environment):
         conf.write("nameserver " + dns)
 
 
-def get_token(token, user, oz_node, cookie):
+def get_token(user, oz_node, cookie, token="token"):
     if token == "bad token":
         token = "bad_token"
     elif token == "token":

@@ -85,7 +85,7 @@ def clear_storage(storage_path):
     # we don't have permissions to clean storage directory
     # therefore docker with this directory mounted is started
     # (docker has root permissions) and dir is cleaned via docke
-    cmd = 'sh -c "rm -r {path}"'.format(path=os.path.join(storage_path, '*'))
+    cmd = 'sh -c "rm -rf {path}"'.format(path=os.path.join(storage_path, '*'))
     docker.run(tty=True,
                rm=True,
                interactive=True,
