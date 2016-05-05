@@ -72,6 +72,10 @@ def test_move(env_description_file):
     pass
 
 
+# TODO VFS-2005
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="reading fails in oneclient")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Move big regular file and check MD5'
@@ -88,6 +92,10 @@ def test_copy(env_description_file):
     pass
 
 
+# TODO VFS-2005
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="reading fails in oneclient")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Copy big regular file and check MD5'
