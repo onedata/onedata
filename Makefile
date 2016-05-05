@@ -1,9 +1,9 @@
 # distro for package building (oneof: wily, fedora-23-x86_64)
 DISTRIBUTION        ?= none
 DOCKER_RELEASE      ?= development
+DOCKER_REG_NAME     ?= "docker.onedata.org"
 DOCKER_REG_USER     ?= ""
 DOCKER_REG_PASSWORD ?= ""
-DOCKER_REG_EMAIL    ?= ""
 
 ONEPROVIDER_VERSION     ?= $(shell git describe --tags --always | tr - .)
 ONEPROVIDER_BUILD       ?= 1
@@ -16,7 +16,7 @@ GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgr
 ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
 export ONEDATA_GIT_URL
 
-.PHONY: package.tar.gz
+.PHONY: docker package.tar.gz
 
 all: build
 
@@ -26,7 +26,7 @@ all: build
 
 MAKE_APPMOCK := appmock/make.py -s appmock -r .
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
-MAKE_oz_worker := oz_worker/make.py -s oz_worker -r .
+MAKE_OZ_WORKER := oz_worker/make.py -s oz_worker -r .
 MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
 MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
 MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
@@ -62,11 +62,8 @@ endif
 ## Build
 ##
 
-build: build_bamboos build_appmock build_oz_worker build_oneclient build_op_worker \
+build: build_appmock build_oz_worker build_oneclient build_op_worker \
     build_cluster_manager build_cluster_worker build_onepanel
-
-build_bamboos: submodules
-	$(call make, bamboos)
 
 build_appmock: submodules
 	$(call make, appmock)
@@ -93,8 +90,8 @@ build_onepanel: submodules
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_onezone artifact_oneclient \
-    artifact_op_worker artifact_cluster_manager artifact_cluster_worker \
+artifact: artifact_bamboos artifact_appmock artifact_oneclient artifact_op_worker \
+    artifact_oz_worker artifact_cluster_manager artifact_cluster_worker \
     artifact_onepanel
 
 artifact_bamboos:
@@ -103,14 +100,14 @@ artifact_bamboos:
 artifact_appmock:
 	$(call unpack, appmock)
 
-artifact_onezone:
-	$(call unpack, oz_worker)
-
 artifact_oneclient:
 	$(call unpack, oneclient)
 
 artifact_op_worker:
 	$(call unpack, op_worker)
+
+artifact_oz_worker:
+	$(call unpack, oz_worker)
 
 artifact_cluster_manager:
 	$(call unpack, cluster_manager)
@@ -128,11 +125,11 @@ artifact_onepanel:
 test:
 	./test_run.py --test-dir tests/acceptance
 
-test_packaging: build_cluster_manager build_oz_worker
+test_packaging:
 	./test_run.py --test-dir tests/packaging -s
 
 test_cucumber:
-	./cucumber_test_generator.sh
+	./test_run.py --test-dir tests/cucumber
 
 ##
 ## Clean
@@ -261,7 +258,7 @@ package.tar.gz:
 
 docker:
 	$(MAKE) -C oneclient docker
-	./dockerbuild.py --user $(DOCKER_REG_USER) --password $(DOCKER_REG_PASSWORD) \
-                         --email $(DOCKER_REG_EMAIL) --build-arg RELEASE=$(DOCKER_RELEASE) \
-                         --build-arg VERSION=$(ONEPROVIDER_VERSION) --name oneprovider \
-                         --publish --remove packaging
+	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
+                          --password $(DOCKER_REG_PASSWORD) --build-arg RELEASE=$(DOCKER_RELEASE) \
+                          --build-arg VERSION=$(ONEPROVIDER_VERSION) --name oneprovider \
+                          --publish --remove docker

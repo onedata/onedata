@@ -15,7 +15,7 @@ from steps.common import *
     '../features/authorization.feature',
     'Successful authorization'
 )
-def test_successful_authorization():
+def test_successful_authorization(env_description_file):
     pass
 
 
@@ -23,5 +23,5 @@ def test_successful_authorization():
     '../features/authorization.feature',
     'Bad authorization'
 )
-def test_bad_authorization():
+def test_bad_authorization(env_description_file):
     pass

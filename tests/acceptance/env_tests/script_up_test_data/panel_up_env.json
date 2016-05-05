@@ -8,7 +8,10 @@
     "os_configs": {
         "cfg1": {
             "storages": [
-                "/mnt/st1"
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                }
             ],
             "users": [
                 "user1"
@@ -21,8 +24,14 @@
         },
         "cfg2": {
             "storages": [
-                "/mnt/st1",
-                "/mnt/st2"
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                },
+                {
+                    "type": "posix",
+                    "name": "/mnt/st2"
+                }
             ],
             "users": [
                 "user1",
@@ -67,14 +76,14 @@
                     "setcookie": "cookie7"
                 },
                 "sys.config": {
-                    "multicast_address": {
-                        "string": "239.255.0.1"
-                    },
-                    "verify_gr_cert": false
+                    "onepanel": {
+                        "multicast_address": {
+                            "string": "239.255.0.1"
+                        },
+                        "verify_gr_cert": false
+                    }
                 },
                 "packages": [
-                    "cluster_manager",
-                    "op_worker"
                 ],
                 "storages": [
                     "storage1"
@@ -86,14 +95,14 @@
                     "setcookie": "cookie7"
                 },
                 "sys.config": {
-                    "multicast_address": {
-                        "string": "239.255.0.1"
-                    },
-                    "verify_gr_cert": false
+                    "onepanel": {
+                        "multicast_address": {
+                            "string": "239.255.0.1"
+                        },
+                        "verify_gr_cert": false
+                    }
                 },
                 "packages": [
-                    "cluster_manager",
-                    "op_worker"
                 ],
                 "storages": [
                     "storage1"

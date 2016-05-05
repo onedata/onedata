@@ -21,7 +21,7 @@ from steps.common import *
     '../features/multi_reg_file_CRUD.feature',
     'Create regular file'
 )
-def test_create():
+def test_create(env_description_file):
     pass
 
 
@@ -29,7 +29,7 @@ def test_create():
     '../features/multi_reg_file_CRUD.feature',
     'Rename regular file without permission'
 )
-def test_rename_without_permission():
+def test_rename_without_permission(env_description_file):
     pass
 
 
@@ -37,7 +37,7 @@ def test_rename_without_permission():
     '../features/multi_reg_file_CRUD.feature',
     'Rename regular file with permission'
 )
-def test_rename_with_permission():
+def test_rename_with_permission(env_description_file):
     pass
 
 
@@ -45,23 +45,25 @@ def test_rename_with_permission():
     '../features/multi_reg_file_CRUD.feature',
     'Delete regular file'
 )
-def test_delete():
+def test_delete(env_description_file):
     pass
 
 
+# TODO VFS-1822
 @scenario(
     '../features/multi_reg_file_CRUD.feature',
     'Read and write to regular file'
 )
-def test_read_write():
+def test_read_write(env_description_file):
     pass
 
 
+# TODO VFS-1822
 @scenario(
     '../features/multi_reg_file_CRUD.feature',
     'Read regular file without read permission'
 )
-def test_read_without_permission():
+def test_read_without_permission(env_description_file):
     pass
 
 
@@ -70,7 +72,7 @@ def test_read_without_permission():
 #     '../features/multi_reg_file_CRUD.feature',
 #     'Write to regular file with write permission'
 # )
-# def test_write_with_permission():
+# def test_write_with_permission(env_description_file):
 #     pass
 
 
@@ -78,7 +80,7 @@ def test_read_without_permission():
     '../features/multi_reg_file_CRUD.feature',
     'Write to regular file without write permission'
 )
-def test_write_without_permission():
+def test_write_without_permission(env_description_file):
     pass
 
 # TODO - VFS-1512
@@ -86,7 +88,7 @@ def test_write_without_permission():
 #     '../features/multi_reg_file_CRUD.feature',
 #     'Execute file with execute permission'
 # )
-# def test_execute_with_permission():
+# def test_execute_with_permission(env_description_file):
 #     pass
 
 
@@ -94,31 +96,33 @@ def test_write_without_permission():
     '../features/multi_reg_file_CRUD.feature',
     'Execute file without execute permission'
 )
-def test_execute_without_permission():
+def test_execute_without_permission(env_description_file):
     pass
 
 
+# TODO VFS-1823
 @scenario(
     '../features/multi_reg_file_CRUD.feature',
     'Move regular file and read'
 )
-def test_move():
+def test_move(env_description_file):
     pass
 
-# # TODO VFS-1513
+# TODO VFS-1513
 # @scenario(
 #     '../features/multi_reg_file_CRUD.feature',
 #     'Move big regular file and check MD5'
 # )
-# def test_move_big():
+# def test_move_big(env_description_file):
 #     pass
 
 
+# TODO VFS-1822
 @scenario(
     '../features/multi_reg_file_CRUD.feature',
     'Copy regular file and read'
 )
-def test_copy():
+def test_copy(env_description_file):
     pass
 
 
@@ -127,5 +131,5 @@ def test_copy():
 #     '../features/multi_reg_file_CRUD.feature',
 #     'Copy big regular file and check MD5'
 # )
-# def test_copy_big():
+# def test_copy_big(env_description_file):
 #     pass

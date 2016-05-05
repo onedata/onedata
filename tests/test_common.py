@@ -5,6 +5,10 @@ import subprocess
 import pytest
 import ast
 
+# env_up log files
+PREPARE_ENV_LOG_FILE = "prepare_test_environment.log"
+PREPARE_ENV_ERROR_LOG_FILE = "prepare_test_environment_error.log"
+
 _script_dir = os.path.dirname(os.path.realpath(__file__))
 
 # Define variables for use in tests
@@ -15,7 +19,8 @@ docker_dir = os.path.join(bamboos_dir, 'docker')
 test_dir = os.path.join(project_dir, "tests")
 cucumber_dir = os.path.join(test_dir, "cucumber")
 acceptance_dir = os.path.join(test_dir, "acceptance")
-cucumber_env_dir = os.path.join(cucumber_dir, "environments")
+default_cucumber_env_dir = os.path.join(cucumber_dir, "default_environments")
+custom_cucumber_env_dir = os.path.join(cucumber_dir, "custom_environments")
 cucumber_logdir = os.path.join(cucumber_dir, "logs")
 acceptance_logdir = os.path.join(acceptance_dir, "logs")
 example_env_dir = os.path.join(bamboos_dir, "example_env")
@@ -43,32 +48,78 @@ def make_logdir(root_dir, test_name):
     return name
 
 
-def get_json_files(dir):
+def get_json_files(dir, relative=False):
     """Gets all .json files from given directory
     Returns list of files' absolute paths"""
     jsons = []
     for file in os.listdir(dir):
         if file.endswith(".json"):
-            jsons.append(os.path.join(dir, file))
+            if not relative:
+                jsons.append(os.path.join(dir, file))
+            else:
+                jsons.append(file)
     return jsons
 
 
-def run_env_up_script(script, args=[]):
+def env_description_files(dir, *envs):
+    """Returns list of absolute paths to environment
+    description files envs from  dir"""
+    envs_absolute_paths = []
+    for env in envs:
+        envs_absolute_paths.append(os.path.join(dir, env))
+    return envs_absolute_paths
+
+
+def env_name(env_description_file_path):
+    """Returns name of environment based on environment description file name
+    i.e
+    for file 'env1.json' returns 'env1'
+    for file '/abs/path/env2.json return 'env2'
+    """
+    return os.path.splitext(os.path.basename(env_description_file_path))[0]
+
+
+def run_env_up_script(script, config=None, logdir=None, args=[]):
     """Runs given script to bring up test environment.
     Script must be located in docker_dir directory (see test_common.py)
     If script fails, functions skips test.
     """
     cmd = [os.path.join(docker_dir, script)]
+
+    if logdir:
+        cmd.extend(['-l', logdir])
     if args:
         cmd.extend(args)
+    if config:
+        cmd.append(config)
+
     try:
-        output = subprocess.check_output(cmd)
-    except subprocess.CalledProcessError:
-        pytest.skip(script + " script failed")
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+    except Exception as e:
+        if isinstance(e, subprocess.CalledProcessError):
+            err_msg = e.output
+        else:
+            err_msg = str(e)
+        if not logdir:
+            # even if script doesn't have logdir option we want logs from
+            # executing this script
+            logdir = make_logdir(acceptance_dir, script)
+        logfile_error_path = os.path.join(logdir, PREPARE_ENV_ERROR_LOG_FILE)
+        save_log_to_file(logfile_error_path, err_msg)
+        pytest.skip("{script} script failed because of {reason}".format(
+            script=script,
+            reason=err_msg
+        ))
 
     stripped_output = strip_output_logs(output)
+
     # get dict from string
     output_dict = ast.literal_eval(stripped_output)
+    if logdir:
+        logfile_path = os.path.join(logdir, PREPARE_ENV_LOG_FILE)
+        logfile = open(logfile_path, 'w')
+        logfile.write(stripped_output)
+        logfile.close()
     return output_dict
 
 
@@ -77,3 +128,9 @@ def strip_output_logs(output):
     from output, returns env description
     """
     return output.strip().split('\n')[-1]
+
+
+def save_log_to_file(file_path, log):
+    f = open(file_path, 'w')
+    f.write(log)
+    f.close()

@@ -4,6 +4,26 @@
 CHANGELOG
 ---------
 
+### 3.0.0-beta3
+
+* GUI update
+* Provider proxy channel added
+* Faster proxy for oneclient
+* LUMA integrated
+* Code covering
+
+
+### 3.0.0-beta1
+
+* New oneclient with faster proxy and SMB
+* New op_worker with subscriptions and new GUI
+* VFS-1804 Add redirection point to oneprovider config.
+* VFS-1804 Adjust packaging tests config files.
+* VFS-1757 Fix onedata deinstallation.
+* Update environment descriptions, remove bamboos compilation.
+* VFS-1788 Use onezone artifact during onedata packages tests.
+
+
 ### 3.0.0-alpha3
 
 * VFS-1677 -  using get_cookie function instead of hardcoding cookie in get_token.escript

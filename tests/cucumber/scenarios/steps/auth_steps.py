@@ -6,26 +6,26 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
+from tests.test_common import env_name
+from environment import docker, env
+from environment.common import parse_json_config_file
+from common import *
 
-import pytest
-from pytest_bdd import (given, when, then)
+from pytest_bdd import given, then
 from pytest_bdd import parsers
 
-import subprocess
-import time
 import os
-
-
-from environment import docker, env
-from environment import common as env_common
-from common import *
+import time
+import subprocess
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +
                      '{mount_paths} on client_hosts\n' +
                      '{client_hosts} respectively,\n' +
                      'using {tokens}'))
-def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, environment, context, client_ids):
+def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
+                request, environment, context, client_ids,
+                env_description_file):
 
     users = list_parser(users)
     client_instances = list_parser(client_instances)
@@ -39,22 +39,23 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
     set_dns(environment)
 
     client_data = environment['client_data']
+    clients = create_clients(users, client_hosts, mount_paths, client_ids)
 
-    parameters = zip(users, client_instances, mount_paths, client_hosts, tokens)
-    for user, client_instance, mount_path, client_host, token_arg in parameters:
+    def fin():
+        params = zip(users, clients)
+        for user, client in params:
+            clean_mount_path(user, client)
+
+    request.addfinalizer(fin)
+
+    parameters = zip(users, clients, client_instances, mount_paths, client_hosts, tokens)
+    for user, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
         # get OZ cookie from env description file
-        cookie = get_cookie(context.env_path, oz_node)
+        cookie = get_cookie(env_description_file, oz_node)
         # get token for user
         token = get_token(token_arg, user, oz_node, cookie)
-
-        # create client object
-        client = Client(client_ids[client_host], mount_path)
-
-        # clean if there is directory in the mount_path
-        if run_cmd(user, client, "ls " + mount_path) == 0:
-            clean_mount_path(user, client)
 
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
@@ -68,7 +69,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
                ' && export X509_USER_KEY={user_key}'
                ' && echo {token} > {token_path}'
                ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
-               ' && rm {token_path}').format(
+               ).format(
                     mount_path=mount_path,
                     gr_domain=data['zone_domain'],
                     op_domain=data['op_domain'],
@@ -93,13 +94,23 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens, envi
         run_cmd(user, client,
                 "rm -rf " + os.path.join(os.path.dirname(mount_path), ".local"))
 
+        run_cmd(user, client,
+                "rm -rf " + token_path)
+
         save_op_code(context, user, ret)
+
+    # TODO This is just a temporary solution, delete it after resolving VFS-1881
+    if env_name(env_description_file) not in ['env', 'env2']:
+        time.sleep(5)
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
-def default_mount(user, mount_path, token, environment, context, client_ids):
-    multi_mount(make_arg_list(user), make_arg_list("client1"), make_arg_list(mount_path),
-                make_arg_list('client_host_1'), make_arg_list(token), environment, context, client_ids)
+def default_mount(user, mount_path, token, request, environment, context,
+                  client_ids, env_description_file):
+    multi_mount(make_arg_list(user), make_arg_list("client1"),
+                make_arg_list(mount_path), make_arg_list('client-host1'),
+                make_arg_list(token), request, environment, context, client_ids,
+                env_description_file)
 
 
 @then(parsers.parse('{spaces} are mounted for {user}'))
@@ -118,8 +129,15 @@ def check_spaces(spaces, user, context):
 ####################################################################################################
 
 
-def clean_mount_path(user, client):
+def create_clients(users, client_hosts, mount_paths, client_ids):
+    clients = []
+    params = zip(users, client_hosts, mount_paths)
+    for user, client_host, mount_path in params:
+        clients.append(Client(client_ids[client_host], mount_path))
+    return clients
 
+
+def clean_spaces(user, client):
     # if directory spaces exists
     if run_cmd(user, client, 'ls ' + make_path('spaces', client)) == 0:
         spaces = run_cmd(user, client, 'ls ' + make_path('spaces', client), output=True)
@@ -128,6 +146,10 @@ def clean_mount_path(user, client):
         for space in spaces:
             run_cmd(user, client, "rm -rf " + make_path('spaces/' + space + '/*', client))
 
+
+def clean_mount_path(user, client):
+
+    clean_spaces(user, client)
     # get pid of running oneclient node
     pid = run_cmd('root', client,
                   " | ".join(
@@ -165,7 +187,7 @@ def get_token(token, user, oz_node, cookie):
 
 
 def get_cookie(config_path, oz_node):
-    config = env_common.parse_json_config_file(config_path)
+    config = parse_json_config_file(config_path)
     oz_domain = config['zone_domains'].keys()[0]
     cm = config['zone_domains'][oz_domain]['cluster_manager'].keys()[0]
     return str(config['zone_domains'][oz_domain]['cluster_manager'][cm]['vm.args']['setcookie'])
