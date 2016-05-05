@@ -83,14 +83,13 @@ def rename(user, file1, file2, client_node, context):
 
 @when(parsers.parse('{user} deletes files {files} on {client_node}'))
 def delete_file(user, files, client_node, context):
-    # time.sleep(6000)
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
         path = make_path(file, client)
 
         def condition():
-            ret = rm(client, path, user)
+            ret = rm(client, path, user=user)
             save_op_code(context, user, ret)
             return ret == 0
 
