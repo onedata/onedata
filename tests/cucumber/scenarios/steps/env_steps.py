@@ -18,8 +18,7 @@ import os
 
 
 @pytest.fixture(scope="module",
-                # params=get_json_files(default_cucumber_env_dir, relative=True))
-                params=["env3.json"])
+                params=get_json_files(default_cucumber_env_dir, relative=True))
 def env_description_file(request):
     """NOTE: This fixture must be overridden in every test module. As params
     for overridden fixture you must specify .json files with description
