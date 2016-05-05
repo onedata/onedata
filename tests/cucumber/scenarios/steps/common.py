@@ -280,6 +280,15 @@ def md5sum(client, file_path, user="root", output=True):
     return run_cmd(user, client, cmd, output=output)
 
 
+def replace_pattern(client, file_path, pattern, new_text, user='root',
+                    output=False):
+    cmd = 'sed -i \'s/{pattern}/{new_text}/g\' {file_path}'.format(
+            pattern=pattern,
+            new_text=new_text,
+            file_path=file_path)
+    return run_cmd(user, client, cmd, output=output)
+
+
 def fusermount(client, path, user='root', unmount=False, lazy=False,
                quiet=False, output=False):
     cmd = "fusermount {unmount} {lazy} {quiet} {path}".format(

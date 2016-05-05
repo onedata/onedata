@@ -186,9 +186,8 @@ def clean_mount_path(user, client):
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True,
                    lazy=True)
-        # run_cmd(user, client, "fusermount -ul " + client.mount_path)
-        # remove onedata dir
-        rm(client, recursive=True, force=True, path=client.mount_path, output=True)
+        rm(client, recursive=True, force=True, path=client.mount_path,
+           output=True)
 
 
 def set_dns(environment):
