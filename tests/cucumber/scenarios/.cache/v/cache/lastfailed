@@ -1,5 +1,0 @@
-{
-  "test_multiprovider_replication.py::test_big_transfer_and_md5_check[multiprovider_env.json]": true, 
-  "test_multiprovider_replication.py::test_conflict_on_disjoint_blocks[multiprovider_env.json]": true, 
-  "test_multiprovider_replication.py::test_sequential_appends[multiprovider_env.json]": true
-}
