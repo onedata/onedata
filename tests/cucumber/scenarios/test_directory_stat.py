@@ -72,6 +72,11 @@ def test_modification_time(env_description_file):
     pass
 
 
+# TODO VFS-1821
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="status-change times is equal to access and modification, "
+               "it will be checked VFS-1821")
 @scenario(
     '../features/directory_stat.feature',
     'Status-change time when changing mode'
