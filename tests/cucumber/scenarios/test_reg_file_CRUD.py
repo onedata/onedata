@@ -40,7 +40,6 @@ def test_delete(env_description_file):
     pass
 
 
-# @TODO VFS-1647
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Read and write to regular file'
@@ -56,13 +55,13 @@ def test_read_write(env_description_file):
 def test_append(env_description_file):
     pass
 
-# TODO VFS-1507
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Replace word in file'
-# )
-# def test_replace(env_description_file):
-#     pass
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Replace word in file'
+)
+def test_replace(env_description_file):
+    pass
 
 
 @scenario(
@@ -72,13 +71,13 @@ def test_append(env_description_file):
 def test_move(env_description_file):
     pass
 
-# TODO VFS-1513
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Move big regular file and check MD5'
-# )
-# def test_move_big(env_description_file):
-#     pass
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Move big regular file and check MD5'
+)
+def test_move_big(env_description_file):
+    pass
 
 
 @scenario(
@@ -88,10 +87,10 @@ def test_move(env_description_file):
 def test_copy(env_description_file):
     pass
 
-# TODO VFS-1513
-# @scenario(
-#     '../features/reg_file_CRUD.feature',
-#     'Copy big regular file and check MD5'
-# )
-# def test_copy_big(env_description_file):
-#     pass
+
+@scenario(
+    '../features/reg_file_CRUD.feature',
+    'Copy big regular file and check MD5'
+)
+def test_copy_big(env_description_file):
+    pass

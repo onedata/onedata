@@ -19,6 +19,7 @@ def write_text(user, text, file, context):
     multi_reg_file_steps.write_text(user, text, file, "client1", context)
 
 
+@when(parsers.parse('{user} reads "{text}" from {file}'))
 @then(parsers.parse('{user} reads "{text}" from {file}'))
 def read(user, text, file, context):
     multi_reg_file_steps.read(user, text, file, "client1", context)

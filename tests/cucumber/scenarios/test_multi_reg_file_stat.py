@@ -84,7 +84,7 @@ def test_timestamp(env_description_file):
 # # TODO VFS-1506
 @pytest.mark.xfail_env(
         envs=["env", "env2", "env3"],
-        reason="touch in file without write permission should fail, "
+        reason="touch on file without write permission should fail, "
                "it will be checked in VFS-1506")
 @scenario(
     '../features/multi_reg_file_stat.feature',

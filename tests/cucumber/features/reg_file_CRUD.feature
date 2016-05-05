@@ -56,6 +56,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from dir1/dir2/file1
     And u1 renames dir1/dir2/file1 to dir3/file1
     Then u1 doesn't see [file1] in dir1/dir2
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2
@@ -84,6 +85,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from dir1/dir2/file1
     And u1 copies regular file dir1/dir2/file1 to dir3
     Then u1 sees [dir1, dir3] in .
     And u1 sees [file1] in dir1/dir2
