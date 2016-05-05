@@ -41,7 +41,6 @@ def test_default_access(env_description_file):
     pass
 
 
-# TODO VFS-1820
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Change access permissions'
@@ -66,7 +65,6 @@ def test_decrease_size(env_description_file):
     pass
 
 
-# # TODO VFS-1820
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Truncate regular file without write permission'
@@ -84,12 +82,16 @@ def test_timestamp(env_description_file):
 
 
 # # TODO VFS-1506
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Update timestamps without write permission',
-# )
-# def test_update_timestamp_without_permission(env_description_file):
-#     pass
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="touch in file without write permission should fail, "
+               "it will be checked in VFS-1506")
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Update timestamps without write permission',
+)
+def test_update_timestamp_without_permission(env_description_file):
+    pass
 
 
 @scenario(
@@ -101,12 +103,15 @@ def test_update_timestamp_with_permission(env_description_file):
 
 
 # # TODO VFS-1822
-# @scenario(
-#     '../features/multi_reg_file_stat.feature',
-#     'Access time'
-# )
-# def test_access_time(env_description_file):
-#     pass
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="reading fails in oneclient")
+@scenario(
+    '../features/multi_reg_file_stat.feature',
+    'Access time'
+)
+def test_access_time(env_description_file):
+    pass
 
 
 @scenario(
@@ -117,7 +122,11 @@ def test_modification_time(env_description_file):
     pass
 
 
-# # TODO VFS-1821
+# TODO VFS-1821
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="status-change times is equal to access and modification, "
+               "it will be checked VFS-1821")
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Status-change time when changing mode'

@@ -119,7 +119,7 @@ Feature: Multi_regular_file_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 changes file1 mode to 211 on client1
-    Then last operation by u1 succeeds
+    Then mode of u2's file1 is 211 on client2
     And status-change time of u2's file1 is greater than modification time on client2
     And status-change time of u2's file1 is greater than access time on client2
 
@@ -130,6 +130,6 @@ Feature: Multi_regular_file_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames file1 to file2 on client1
-    Then last operation by u1 succeeds
+    Then u2 sees [file2] in . on client2
     And status-change time of u2's file2 is greater than modification time on client2
     And status-change time of u2's file2 is greater than access time on client2
