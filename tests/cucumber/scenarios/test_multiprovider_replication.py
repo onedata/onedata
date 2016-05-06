@@ -57,7 +57,7 @@ def test_write_and_check_size(env_description_file):
 def test_write_and_read(env_description_file):
     pass
 
-# todo fix missing md5 step
+# # todo fix missing md5 step
 # @scenario(
 #     '../features/multiprovider_replication.feature',
 #     'Big file transfer with MD5 check'
@@ -81,7 +81,7 @@ def test_remote_file_override(env_description_file):
 def test_remote_file_removal(env_description_file):
     pass
 
-# todo fix environement synchronization
+# # todo fix environement synchronization
 # @scenario(
 #     '../features/multiprovider_replication.feature',
 #     'Create nonempty file, append remotely, append locally and read both'
@@ -89,7 +89,7 @@ def test_remote_file_removal(env_description_file):
 # def test_sequential_appends(env_description_file):
 #     pass
 #
-# todo fix environement synchronization
+# # todo fix environement synchronization
 # @scenario(
 #     '../features/multiprovider_replication.feature',
 #     'Concurrently write disjoint ranges and read the same on both providers'
