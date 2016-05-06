@@ -6,26 +6,21 @@ __author__ = "Jakub Kudzia"
 __copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
 
-from tests.test_common import (make_logdir, get_json_files,
-                               performance_output, performance_env_dir,
-                               run_env_up_script, performance_logdir)
-from tests.test_utils import get_file_name, make_logdir, get_json_files, \
-    run_env_up_script
+import inspect
+import json
+import time
 
-from tests.cucumber.scenarios.steps.common import Client, run_cmd
+import pytest
+from environment import docker
+from tests.test_utils import (get_file_name, make_logdir, get_json_files,
+                              run_env_up_script)
+
+from tests.cucumber.scenarios.steps.common import Client
 from tests.cucumber.scenarios.steps.env_steps import clear_storage
 from tests.cucumber.scenarios.steps.multi_auth_steps import (set_dns, get_cookie,
                                                        get_token)
-from environment import common, docker, env
-
-import os
+from tests.utils.test_common import *
 from utils import *
-import pytest
-import json
-import inspect
-import time
-
-from environment import docker
 
 
 def performance(default_config, configs):

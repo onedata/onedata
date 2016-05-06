@@ -5,16 +5,15 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements common functions for handling test environment.
 """
-from tests.test_common import *
-from tests.test_utils import (get_file_name, make_logdir, get_json_files,
-                              run_env_up_script)
-from environment import docker
+import os
 
 import pytest
-from pytest_bdd import parsers
+from environment import docker
 from pytest_bdd import given, then
+from pytest_bdd import parsers
+from tests.test_utils import (get_file_name, make_logdir, run_env_up_script)
 
-import os
+from tests.utils.test_common import *
 
 
 @pytest.fixture(scope="module",

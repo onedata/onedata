@@ -4,13 +4,10 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for operations on different storages with proxy luma
 """
-from tests.test_common import custom_cucumber_env_dir
 
 from pytest_bdd import scenario
 
 from steps.env_steps import *
-from steps.auth_steps import *
-from steps.file_steps import *
 from steps.reg_file_steps import *
 
 

@@ -6,15 +6,14 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements some common basic functions and functionality.
 """
-import pytest
-from pytest_bdd import given, when, then
-from pytest_bdd import parsers
-
-from tests.test_utils import get_file_name
-from environment import docker
-
 import os
 
+import pytest
+from environment import docker
+from pytest_bdd import parsers
+from pytest_bdd import when, then
+
+from tests.utils.file_utils import get_file_name
 ####################### CLASSES #######################
 import time
 

@@ -5,16 +5,12 @@ __author__ = "Jakub Kudzia"
 __copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
 
+import re
+
+from tests.cucumber.scenarios.steps.common import run_cmd
 from tests.performance.conftest import AbstractPerformanceTest, performance
-from tests.cucumber.scenarios.steps.common import Client, run_cmd
 from tests.performance.utils import (Result, generate_configs, temp_dir,
                                      get_home_dir, delete_file)
-from tests.test_common import performance_logdir
-
-from environment import docker, env
-
-import os
-import re
 
 # TODO functions used in cucumber, acceptance and performance tests should be moved to common files
 # TODO higher in files hierarchy

@@ -1,9 +1,9 @@
-from tests.test_utils import run_os_command
-
 import dns.resolver
 import re
 import requests
 import time
+
+from tests.utils.utils import run_os_command
 
 
 def dns_lookup(host, dns_addr):

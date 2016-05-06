@@ -1,6 +1,6 @@
-from tests.test_utils import (config_file, get_file_name, make_logdir,
-                              run_env_up_script)
-from tests.test_common import *
+from tests import *
+from tests.utils.utils import run_env_up_script
+from tests.utils.file_utils import config_file, get_file_name, make_logdir
 from test_utils import *
 
 from environment import docker
@@ -10,7 +10,7 @@ class TestEnvUp:
     @classmethod
     # Run the env_up.py script, capture and parse the output
     def setup_class(cls):
-        logdir = make_logdir(acceptance_logdir, get_file_name(__file__))
+        logdir = make_logdir(ACCEPTANCE_LOGDIR, get_file_name(__file__))
         result = run_env_up_script("env_up.py",
                                    config=config_file('env.json'),
                                    logdir=logdir)

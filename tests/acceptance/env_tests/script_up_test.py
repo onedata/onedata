@@ -1,11 +1,12 @@
-from tests.test_common import *
-from tests.test_utils import (config_file,  get_function, get_file_name,
-                              make_logdir, get_json_files, run_env_up_script)
-from tests.acceptance.test_utils import ping
+from tests import *
+from tests.utils.utils import run_env_up_script
+from tests.utils.file_utils import (config_file, get_file_name, make_logdir,
+                                    get_json_files, get_function)
+from tests.utils.http_utils import ping
 import test_utils
+
 from environment import docker, common, dns
 
-import os
 import pytest
 
 
@@ -30,10 +31,10 @@ def test_component_up(script_name, dockers_num):
 
 
 @pytest.mark.parametrize(
-    "env", get_json_files(example_env_dir)
+    "env", get_json_files(EXAMPLE_ENV_DIR)
 )
 def test_example_envs(env):
-    logdir = make_logdir(acceptance_logdir,
+    logdir = make_logdir(ACCEPTANCE_LOGDIR,
                          os.path.join(get_file_name(__file__),
                                       env.split(os.path.sep)[-1]))
     output = run_env_up_script("env_up.py", config=env, logdir=logdir)
@@ -72,7 +73,7 @@ def setup_test(script_name):
 
     args = prepare_args(script_name, uid, dns_server)
 
-    logdir = make_logdir(acceptance_logdir,
+    logdir = make_logdir(ACCEPTANCE_LOGDIR,
                          os.path.join(get_file_name(__file__), script_name))
 
     output = run_env_up_script(up_script(script_name),
