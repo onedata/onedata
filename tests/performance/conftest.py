@@ -6,13 +6,15 @@ __author__ = "Jakub Kudzia"
 __copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
 
-from tests.test_common import (make_logdir, get_test_name, get_json_files,
+from tests.test_common import (make_logdir, get_json_files,
                                performance_output, performance_env_dir,
                                run_env_up_script, performance_logdir)
+from tests.test_utils import get_file_name, make_logdir, get_json_files, \
+    run_env_up_script
 
 from tests.cucumber.scenarios.steps.common import Client, run_cmd
 from tests.cucumber.scenarios.steps.env_steps import clear_storage
-from tests.cucumber.scenarios.steps.auth_steps import (set_dns, get_cookie,
+from tests.cucumber.scenarios.steps.multi_auth_steps import (set_dns, get_cookie,
                                                        get_token)
 from environment import common, docker, env
 
@@ -131,7 +133,7 @@ class AbstractPerformanceTest:
     @pytest.fixture(scope="module")
     def suite_report(self, request, env_report):
         module = inspect.getmodule(self.__class__)
-        name = get_test_name(inspect.getfile(self.__class__))
+        name = get_file_name(inspect.getfile(self.__class__))
         report = SuiteReport(name, get_suite_description(module),
                              get_copyright(module), get_authors(module))
 
@@ -162,7 +164,7 @@ class AbstractPerformanceTest:
 
     @pytest.fixture(scope="module")
     def persistent_environment(self, request, env_description_file):
-        test_name = get_test_name(inspect.getfile(self.__class__))
+        test_name = get_file_name(inspect.getfile(self.__class__))
         logdir = make_logdir(performance_logdir, test_name)
         env = run_env_up_script("env_up.py",
                                 logdir=logdir,

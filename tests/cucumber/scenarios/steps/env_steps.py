@@ -5,9 +5,9 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements common functions for handling test environment.
 """
-from tests.test_common import (make_logdir, run_env_up_script, env_name,
-                               cucumber_logdir, default_cucumber_env_dir,
-                               get_json_files)
+from tests.test_common import *
+from tests.test_utils import (get_file_name, make_logdir, get_json_files,
+                              run_env_up_script)
 from environment import docker
 
 import pytest
@@ -41,7 +41,7 @@ def persistent_environment(request, context, env_description_file):
 
     feature_name = request.module.__name__.split('.')[-1]
     logdir = make_logdir(cucumber_logdir, os.path
-                         .join(env_name(env_description_file), feature_name))
+                         .join(get_file_name(env_description_file), feature_name))
     env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
 
     def fin():

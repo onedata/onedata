@@ -2,7 +2,7 @@ from tests import test_utils
 from tests.test_common import *
 
 package_dir = os.path.join(os.getcwd(), 'package/fedora-23-x86_64/x86_64')
-scripts_dir = os.path.dirname(test_utils.test_file('rpm_install_script.py'))
+scripts_dir = os.path.dirname(test_utils.config_file('rpm_install_script.py'))
 
 from environment import docker, env
 import sys
@@ -11,7 +11,7 @@ import sys
 class TestRpmInstallation:
     @classmethod
     def setup_class(cls):
-        cls.result = env.up(test_utils.test_file('env.json'))
+        cls.result = env.up(test_utils.config_file('env.json'))
 
     @classmethod
     def teardown_class(cls):

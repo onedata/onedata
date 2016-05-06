@@ -1,6 +1,6 @@
-import sys
+from tests.acceptance import test_utils
+
 import socket
-from tests import test_utils
 
 
 def check_appmock_up(env, dockers_num):
@@ -149,11 +149,3 @@ def check_panel_up(env, dockers_num):
         (name, sep, hostname) = node.partition('@')
         ip = test_utils.dns_lookup(hostname, dns)
         assert test_utils.ping(ip)
-
-
-def get_module(name):
-    return sys.modules[name]
-
-
-def get_function(function_name):
-    return getattr(get_module(__name__), function_name)

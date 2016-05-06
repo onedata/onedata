@@ -49,7 +49,8 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
         # get OZ cookie from env description file
         cookie = get_cookie(env_description_file, oz_node)
         # get token for user
-        token = get_token(token_arg, user, oz_node, cookie)
+        if token_arg != 'bad_token':
+            token = get_token(token_arg, user, oz_node, cookie)
         client.set_timeout(data.get('default_timeout', 0))
 
         print "User {user} mounts oneclient using token: {token}"\

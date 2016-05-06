@@ -10,7 +10,7 @@ import pytest
 from pytest_bdd import given, when, then
 from pytest_bdd import parsers
 
-from tests.test_common import env_name
+from tests.test_utils import get_file_name
 from environment import docker
 
 import os
@@ -79,7 +79,7 @@ def skip_by_env(request, env_description_file):
     pytestmark = pytest.mark.skip_env(*envs)
     """
     if request.node.get_marker('skip_env'):
-        env = env_name(env_description_file)
+        env = get_file_name(env_description_file)
         args = request.node.get_marker('skip_env').kwargs
         reason = args['reason']
         if env in args['envs']:
@@ -100,7 +100,7 @@ def xfail_by_env(request, env_description_file):
     pytestmark = pytest.mark.xfail_env(*envs)
     """
     if request.node.get_marker('xfail_env'):
-        env = env_name(env_description_file)
+        env = get_file_name(env_description_file)
         args = request.node.get_marker('xfail_env').kwargs
         reason = args['reason']
         if env in args['envs']:

@@ -1,19 +1,22 @@
 from tests.test_common import *
-from tests import test_utils
-import os
-
+from tests.test_utils import get_file_name, make_logdir, config_file
+from tests.acceptance import test_utils
 from appmock import appmock_client
 from environment import docker, appmock, common
+
+import os
 
 
 class TestAppmockRestExample:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
-        logdir = make_logdir(acceptance_logdir, get_test_name(__file__))
-        cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
-                                dns_server='none', uid=common.generate_uid(),
-                                config_path=os.path.join(test_utils.test_file('env.json')),
+        logdir = make_logdir(acceptance_logdir, get_file_name(__file__))
+        cls.result = appmock.up(image='onedata/builder',
+                                bindir=appmock_dir,
+                                dns_server='none',
+                                uid=common.generate_uid(),
+                                config_path=os.path.join(config_file('env.json')),
                                 logdir=logdir)
 
     @classmethod
