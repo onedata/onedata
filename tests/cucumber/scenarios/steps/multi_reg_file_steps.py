@@ -5,9 +5,12 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on regular files.
 """
-from common import *
-
 import subprocess
+
+from common import *
+from tests.utils.client_utils import cp, truncate, dd, echo_to_file, cat, \
+    md5sum, replace_pattern
+from tests.utils.docker_utils import run_cmd
 
 
 @when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))

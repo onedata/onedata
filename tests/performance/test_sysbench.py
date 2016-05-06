@@ -7,10 +7,11 @@ This software is released under the MIT license cited in 'LICENSE.txt'."""
 
 import re
 
-from tests.cucumber.scenarios.steps.common import run_cmd
+from tests.utils.docker_utils import run_cmd
 from tests.performance.conftest import AbstractPerformanceTest, performance
-from tests.performance.utils import (Result, generate_configs, temp_dir,
-                                     get_home_dir, delete_file)
+from tests.utils.performance_utils import (Result, generate_configs, temp_dir,
+                                           get_home_dir, delete_file,
+                                           performance)
 
 # TODO functions used in cucumber, acceptance and performance tests should be moved to common files
 # TODO higher in files hierarchy

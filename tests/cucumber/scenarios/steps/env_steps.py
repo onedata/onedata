@@ -5,52 +5,11 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements common functions for handling test environment.
 """
-import os
-
-import pytest
 from environment import docker
 from pytest_bdd import given, then
 from pytest_bdd import parsers
-from tests.test_utils import (get_file_name, make_logdir, run_env_up_script)
 
-from tests.utils.test_common import *
-
-
-@pytest.fixture(scope="module",
-                # params=get_json_files(default_cucumber_env_dir, relative=True))
-                params=["env3.json"])
-def env_description_file(request):
-    """NOTE: This fixture must be overridden in every test module. As params
-    for overridden fixture you must specify .json files with description
-    of test environment for which you want tests from given module to be
-    started.
-    """
-    absolute_path = os.path.join(default_cucumber_env_dir, request.param)
-    return absolute_path
-
-
-@pytest.fixture(scope="module")
-def persistent_environment(request, context, env_description_file):
-    """
-    Sets up environment and returns environment description.
-    """
-    curr_path = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(curr_path, '..', '..', 'environments',
-                            env_description_file)
-
-    feature_name = request.module.__name__.split('.')[-1]
-    logdir = make_logdir(cucumber_logdir, os.path
-                         .join(get_file_name(env_description_file), feature_name))
-    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
-
-    def fin():
-        docker.remove(request.environment['docker_ids'],
-                      force=True,
-                      volumes=True)
-
-    request.addfinalizer(fin)
-    request.environment = env_desc
-    return env_desc
+from tests import *
 
 
 @given("environment is up")

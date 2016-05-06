@@ -6,11 +6,14 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
-from environment.common import parse_json_config_file
-from common import *
-import multi_file_steps
-
 import subprocess
+
+from environment.common import parse_json_config_file
+
+import multi_file_steps
+from common import *
+from tests.utils.client_utils import User, Client, ls, rm, fusermount
+from tests.utils.docker_utils import run_cmd
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +

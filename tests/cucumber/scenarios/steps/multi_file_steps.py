@@ -5,9 +5,10 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common steps for operation on files (both regular files
 and directories)in multiclient environment.
 """
-from common import *
-
 import subprocess
+
+from common import *
+from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch
 
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))

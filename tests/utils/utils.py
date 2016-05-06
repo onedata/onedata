@@ -1,10 +1,13 @@
-import ast
-import subprocess
-
-import pytest
-
+"""This module contains utility functions to be used in acceptance tests."""
 from tests import *
 from tests.utils.file_utils import make_logdir, save_log_to_file
+
+import ast
+import re
+import subprocess
+import pytest
+
+__author__ = "Jakub Kudzia"
 
 
 def run_os_command(cmd, output=True):
@@ -76,3 +79,14 @@ def strip_output_logs(output):
     return output.strip().split('\n')[-1]
 
 
+def get_copyright(mod):
+    return mod.__copyright__ if hasattr(mod, '__copyright__') else ''
+
+
+def get_authors(mod):
+    author = mod.__author__ if hasattr(mod, '__author__') else ''
+    return re.split(r'\s*,\s*', author)
+
+
+def get_suite_description(mod):
+    return mod.__doc__
