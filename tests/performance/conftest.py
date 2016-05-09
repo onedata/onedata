@@ -59,51 +59,9 @@ class AbstractPerformanceTest:
         request.addfinalizer(fin)
         return report
 
-    # @pytest.fixture(scope="module", params=get_json_files(PERFORMANCE_ENV_DIR))
-    # def env_description_file(self, request):
-    #     """This fixture must be overridden in performance test module if you
-    #     want to start tests from given module with different environments that
-    #     those defined in performance/environments directory
-    #     """
-    #     return request.param
-
-    # @pytest.fixture(scope="module")
-    # def persistent_environment(self, request, env_description_file):
-    #     test_name = get_file_name(inspect.getfile(self.__class__))
-    #     logdir = make_logdir(PERFORMANCE_LOGDIR, test_name)
-    #     env = run_env_up_script("env_up.py",
-    #                             logdir=logdir,
-    #                             config=env_description_file)
-    #
-    #     def fin():
-    #         docker.remove(env['docker_ids'], force=True, volumes=True)
-    #
-    #     request.addfinalizer(fin)
-    #     return env
-
-    # @pytest.fixture()
-    # def environment(self, persistent_environment, request, env_description_file):
-    #
-    #     def fin():
-    #         if 'posix' in persistent_environment['storages'].keys():
-    #             for storage_name, storage in persistent_environment['storages']['posix'].items():
-    #                 clear_storage(storage['host_path'])
-    #
-    #     request.addfinalizer(fin)
-    #     return persistent_environment
-    #
-
-    # TODO this fixture is similiar to client_ids in cucumber tests
-    # TODO it should be moved to common conftest.py
     @pytest.fixture()
     def clients(self, request, environment, context, client_ids,
                 env_description_file):
-        # users = self.users.keys()
-        # clients = [users[u] for u in users]
-        # print "CLIENTS: "
-
-        print get_users(environment)
-        # assert False
 
         mount_users(request, environment, context, client_ids,
                     env_description_file, **get_users(environment))

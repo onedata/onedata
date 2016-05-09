@@ -13,8 +13,6 @@ from tests.utils.performance_utils import (Result, generate_configs, performance
 from tests.utils.client_utils import temp_dir,  user_home_dir, rm, \
     get_client
 
-# TODO functions used in cucumber, acceptance and performance tests should be moved to common files
-# TODO higher in files hierarchy
 REPEATS = 1
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'

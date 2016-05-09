@@ -15,8 +15,6 @@ __copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
 
 
-# TODO functions used in cucumber, acceptance and performance tests should be moved to common files
-# TODO higher in files hierarchy
 REPEATS = 1
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
