@@ -57,7 +57,7 @@ def test_write_and_check_size(env_description_file):
 def test_write_and_read(env_description_file):
     pass
 
-# # todo fix missing md5 step
+# # todo fix
 # @scenario(
 #     '../features/multiprovider_replication.feature',
 #     'Big file transfer with MD5 check'

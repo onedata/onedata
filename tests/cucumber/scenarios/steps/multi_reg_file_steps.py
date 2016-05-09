@@ -101,6 +101,7 @@ def execute_script(user, file, client_node, context):
         context.update_timestamps(user, client, file)
 
 
+@when(parsers.parse('{user} checks MD5 of {file} on {client_node}'))
 @then(parsers.parse('{user} checks MD5 of {file} on {client_node}'))
 def check_md5(user, file, client_node, context):
     client = get_client(client_node, user, context)
