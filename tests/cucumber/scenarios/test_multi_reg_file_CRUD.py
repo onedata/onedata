@@ -57,10 +57,6 @@ def test_delete_by_other_user(env_description_file):
     pass
 
 
-# # TODO VFS-2005
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Read and write to regular file'
@@ -69,10 +65,6 @@ def test_read_write(env_description_file):
     pass
 
 
-# # TODO VFS-2005
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Read regular file without read permission'
@@ -81,10 +73,6 @@ def test_read_without_permission(env_description_file):
     pass
 
 
-# TODO VFS 2005
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Write to regular file with write permission'
@@ -101,10 +89,6 @@ def test_write_without_permission(env_description_file):
     pass
 
 
-# TODO VFS 2005 and later (maybe) VFS-1512
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Execute file with execute permission'
@@ -113,10 +97,6 @@ def test_execute_with_permission(env_description_file):
     pass
 
 
-# TODO VFS 2005 and later (maybe) VFS-1512
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Execute file without execute permission'
@@ -125,6 +105,9 @@ def test_execute_without_permission(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(
+        envs=["env", "env2", "env3"],
+        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Move regular file and read'
@@ -133,7 +116,7 @@ def test_move(env_description_file):
     pass
 
 
-# TODO VFS-2005
+# # TODO VFS-2005
 @pytest.mark.xfail_env(
         envs=["env", "env2", "env3"],
         reason="reading fails in oneclient")
@@ -145,10 +128,6 @@ def test_move_big(env_description_file):
     pass
 
 
-# TODO VFS-2005
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Copy regular file and read'
@@ -157,10 +136,6 @@ def test_copy(env_description_file):
     pass
 
 
-# TODO VFS-2005
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Copy big regular file and check MD5'

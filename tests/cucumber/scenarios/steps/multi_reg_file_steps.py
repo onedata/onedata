@@ -32,11 +32,13 @@ def write_text(user, text, file, client_node, context):
 @then(parsers.parse('{user} reads "{text}" from {file} on {client_node}'))
 def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
+    text = text.decode('string_escape')
 
     def condition():
 
         try:
             read_text = cat(client, make_path(file, client), user=user)
+            print "READ: ", read_text
             return read_text == text
         except subprocess.CalledProcessError:
             return False
