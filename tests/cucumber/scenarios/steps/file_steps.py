@@ -5,7 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common steps for operation on files (both regular files
 and directories).
 """
-from common import *
+from cucumber_utils import *
 import multi_file_steps
 
 

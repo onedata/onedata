@@ -2,6 +2,8 @@
 from tests import *
 from tests.utils.file_utils import make_logdir, save_log_to_file
 
+from environment.common import parse_json_config_file
+
 import ast
 import re
 import subprocess
@@ -90,3 +92,26 @@ def get_authors(mod):
 
 def get_suite_description(mod):
     return mod.__doc__
+
+
+def set_dns(environment):
+    with open("/etc/resolv.conf", "w") as conf:
+        dns = environment['dns']
+        conf.write("nameserver " + dns)
+
+
+def get_token(token, user, oz_node, cookie):
+    if token == "bad token":
+        token = "bad_token"
+    elif token == "token":
+        token = subprocess.check_output([
+            os.path.join(UTILS_DIR, 'get_token.escript'), oz_node, user, cookie],
+            stderr=subprocess.STDOUT)
+    return token
+
+
+def get_cookie(config_path, oz_node):
+    config = parse_json_config_file(config_path)
+    oz_domain = config['zone_domains'].keys()[0]
+    cm = config['zone_domains'][oz_domain]['cluster_manager'].keys()[0]
+    return str(config['zone_domains'][oz_domain]['cluster_manager'][cm]['vm.args']['setcookie'])

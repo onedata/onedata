@@ -15,6 +15,10 @@ def pytest_addoption(parser):
 
 
 def pytest_generate_tests(metafunc):
+    print "GENERATE"
+    print dir(metafunc)
+    print dir(metafunc.config)
+    # assert False
     if 'test_type' in metafunc.fixturenames:
         test_type = metafunc.config.option.test_type
         if test_type in ['cucumber', 'performance']:
@@ -69,18 +73,16 @@ def persistent_environment(request, context, test_type, env_description_file):
     return env_desc
 
 
-def map_test_type_to_env_dir(test_type):
-    return {
-        'cucumber': DEFAULT_CUCUMBER_ENV_DIR,
-        'performance': PERFORMANCE_ENV_DIR
-    }[test_type]
+@pytest.fixture()
+def environment(persistent_environment, request):
 
+    def fin():
+        if 'posix' in persistent_environment['storages'].keys():
+            for storage_name, storage in persistent_environment['storages']['posix'].items():
+                clear_storage(storage['host_path'])
 
-def map_test_type_to_logdir(test_type):
-    return {
-        'cucumber': CUCUMBER_LOGDIR,
-        'performance': PERFORMANCE_LOGDIR
-    }.get(test_type, CUCUMBER_LOGDIR)
+    request.addfinalizer(fin)
+    return persistent_environment
 
 
 @pytest.fixture(scope="module")
@@ -133,3 +135,28 @@ def xfail_by_env(request, env_description_file):
                          .format(env=env, reason=reason))
 
 
+def map_test_type_to_env_dir(test_type):
+    return {
+        'cucumber': DEFAULT_CUCUMBER_ENV_DIR,
+        'performance': PERFORMANCE_ENV_DIR
+    }[test_type]
+
+
+def map_test_type_to_logdir(test_type):
+    return {
+        'cucumber': CUCUMBER_LOGDIR,
+        'performance': PERFORMANCE_LOGDIR
+    }.get(test_type, CUCUMBER_LOGDIR)
+
+
+def clear_storage(storage_path):
+    # we don't have permissions to clean storage directory
+    # therefore docker with this directory mounted is started
+    # (docker has root permissions) and dir is cleaned via docke
+    cmd = 'sh -c "rm -rf {path}"'.format(path=os.path.join(storage_path, '*'))
+    docker.run(tty=True,
+               rm=True,
+               interactive=True,
+               reflect=[(storage_path, 'rw')],
+               image='onedata/worker',
+               command=cmd)

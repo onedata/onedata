@@ -7,7 +7,7 @@ and directories)in multiclient environment.
 """
 import subprocess
 
-from common import *
+from cucumber_utils import *
 from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch
 
 

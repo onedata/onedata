@@ -5,14 +5,17 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
-from common import *
+from cucumber_utils import *
 import multi_auth_steps
+from tests.utils.client_utils import mount_users
+
+from pytest_bdd import given
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
 def default_mount(user, mount_path, token, request, environment, context,
                   client_ids, env_description_file):
-    multi_auth_steps.multi_mount(make_arg_list(user), make_arg_list("client1"),
+    mount_users(make_arg_list(user), make_arg_list("client1"),
                 make_arg_list(mount_path), make_arg_list('client-host1'),
                 make_arg_list(token), request, environment, context, client_ids,
                 env_description_file)

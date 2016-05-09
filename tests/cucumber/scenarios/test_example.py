@@ -10,7 +10,7 @@ Tests steps implementation are imported from scenarios/steps directory.
 
 from pytest_bdd import scenario
 
-from steps.common import *
+from steps.cucumber_utils import *
 from steps.env_steps import *
 
 

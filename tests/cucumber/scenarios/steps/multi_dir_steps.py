@@ -5,7 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on directories in multiclient environment.
 """
-from common import *
+from cucumber_utils import *
 from tests.utils.client_utils import ls, rm, rmdir, mkdir, cp
 
 

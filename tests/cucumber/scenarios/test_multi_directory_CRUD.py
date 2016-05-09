@@ -13,7 +13,7 @@ from steps.env_steps import *
 from steps.multi_auth_steps import *
 from steps.multi_dir_steps import *
 from steps.multi_file_steps import *
-from steps.common import *
+from steps.cucumber_utils import *
 
 
 @scenario(

@@ -16,7 +16,7 @@ from tests.utils.file_utils import get_file_name, make_logdir, get_json_files
 from tests.utils.git_utils import get_branch_name, get_commit, get_repository
 from tests.utils.performance_utils import *
 from tests.utils.utils import run_env_up_script, get_copyright, get_authors, \
-    get_suite_description
+    get_suite_description, set_dns, get_token, get_cookie
 
 __author__ = "Jakub Kudzia"
 __copyright__ = """(C) 2016 ACK CYFRONET AGH

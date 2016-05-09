@@ -5,7 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on regular files.
 """
-from common import *
+from cucumber_utils import *
 import multi_reg_file_steps
 
 

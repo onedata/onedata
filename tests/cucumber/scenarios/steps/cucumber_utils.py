@@ -83,6 +83,4 @@ def repeat_until(condition, timeout=0):
         condition_satisfied = condition()
     return timeout > 0 or condition_satisfied
 
-# FILE SYSTEM OPERATIONS
-
 

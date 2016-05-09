@@ -9,7 +9,7 @@ from pytest_bdd import scenario
 
 from steps.env_steps import *
 from steps.multi_auth_steps import *
-from steps.common import *
+from steps.cucumber_utils import *
 
 
 @scenario(

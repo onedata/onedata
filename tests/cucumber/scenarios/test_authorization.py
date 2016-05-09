@@ -9,7 +9,13 @@ from pytest_bdd import scenario
 from steps.env_steps import *
 from steps.auth_steps import *
 from steps.multi_auth_steps import *
-from steps.common import *
+from steps.cucumber_utils import *
+
+
+@pytest.fixture(scope="module", params=["env.json"])
+def env_description_file(request):
+    absolute_path = os.path.join(DEFAULT_CUCUMBER_ENV_DIR, request.param)
+    return absolute_path
 
 
 @scenario(
