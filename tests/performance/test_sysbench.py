@@ -59,11 +59,11 @@ class TestSysbench(AbstractPerformanceTest):
                'Mode: {mode}')
 
     )
-    def test_sysbench(self, context, params):
+    def test_sysbench(self, context, clients, params):
         user_directio = "u1"
         user_proxy = "u2"
-        client_directio = get_client("client-host1", user_directio, context)
-        client_proxy = get_client("client-host2", user_proxy, context)
+        client_directio = get_client("client-directio", user_directio, context)
+        client_proxy = get_client("client-proxy", user_proxy, context)
         threads_number = params['threads_number']['value']
         files_number = params['files_number']['value']
         total_size = params['total_size']['value']
@@ -79,16 +79,19 @@ class TestSysbench(AbstractPerformanceTest):
                                  path=user_home_dir(user_proxy),
                                  user=user_proxy)
 
-        test_result1 = execute_sysbench_test(client_directio, threads_number,
-                                             total_size, files_number, mode,
+        test_result1 = execute_sysbench_test(client_directio, user_directio,
+                                             threads_number, total_size,
+                                             files_number, mode,
                                              dir_path_directio, "direct IO")
 
-        test_result2 = execute_sysbench_test(client_proxy, threads_number,
-                                             total_size, files_number, mode,
+        test_result2 = execute_sysbench_test(client_proxy, user_proxy,
+                                             threads_number, total_size,
+                                             files_number, mode,
                                              dir_path_proxy, "cluster-proxy")
 
-        test_result3 = execute_sysbench_test(client_proxy, threads_number,
-                                             total_size, files_number, mode,
+        test_result3 = execute_sysbench_test(client_proxy, user_proxy,
+                                             threads_number, total_size,
+                                             files_number, mode,
                                              dir_path_host, "host system")
 
         rm(client_directio, dir_path_directio, recursive=True, force=True,
@@ -103,10 +106,10 @@ class TestSysbench(AbstractPerformanceTest):
 ################################################################################
 
 
-def execute_sysbench_test(client, threads_number, total_size, files_number,
+def execute_sysbench_test(client, user, threads_number, total_size, files_number,
                           mode, dir_path, description):
     out = parse_sysbench_output(sysbench_tests(
-            threads_number, total_size, files_number, mode, client, dir_path))
+            threads_number, total_size, files_number, mode, client, user, dir_path))
     return [
         Result("transfer_{}".format(description),
                out['transfer'],
@@ -119,28 +122,32 @@ def execute_sysbench_test(client, threads_number, total_size, files_number,
     ]
 
 
-def sysbench_tests(threads_number, total_size, file_number, mode, client, dir):
-    run_sysbench_prepare(threads_number, total_size, file_number, mode, client, dir)
-    output = run_sysbench(threads_number, total_size, file_number, mode, client, dir)
-    run_sysbench_cleanup(threads_number, total_size, file_number, mode, client, dir)
+def sysbench_tests(threads_number, total_size, file_number, mode, client, user, dir):
+    run_sysbench_prepare(threads_number, total_size, file_number, mode, client, user, dir)
+    output = run_sysbench(threads_number, total_size, file_number, mode, client, user, dir)
+    run_sysbench_cleanup(threads_number, total_size, file_number, mode, client, user, dir)
     return output
 
 
-def run_sysbench_prepare(threads_number, total_size, file_number, mode, client, dir):
-    sysbench(threads_number, total_size, file_number, mode, "prepare", client, dir)
+def run_sysbench_prepare(threads_number, total_size, file_number, mode, client, user, dir):
+    sysbench(threads_number, total_size, file_number, mode, "prepare", client,
+             user, dir)
 
 
-def run_sysbench_cleanup(threads_number, total_size, file_number, mode, client, dir):
-    sysbench(threads_number, total_size, file_number, mode, "cleanup", client, dir)
+def run_sysbench_cleanup(threads_number, total_size, file_number, mode, client, user, dir):
+    sysbench(threads_number, total_size, file_number, mode, "cleanup", client,
+             user, dir)
 
 
-def run_sysbench(threads_number, total_size, file_number, mode, client, dir):
-    return sysbench(threads_number, total_size, file_number, mode, "run", client, dir)
+def run_sysbench(threads_number, total_size, file_number, mode, client, user, dir):
+    return sysbench(threads_number, total_size, file_number, mode, "run",
+                    client, user, dir)
 
 
-def sysbench(threads_number, total_size, file_number, mode, type, client, dir):
+def sysbench(threads_number, total_size, file_number, mode, type, client, user,
+             dir):
     cmd = sysbench_command(threads_number, total_size, file_number, mode, type, dir)
-    return run_cmd(client.user, client, [cmd], output=True)
+    return run_cmd(user, client, [cmd], output=True)
 
 
 def sysbench_command(threads_number, total_size, file_number, mode, type, dir):
