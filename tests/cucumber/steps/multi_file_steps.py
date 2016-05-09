@@ -8,7 +8,8 @@ and directories)in multiclient environment.
 import subprocess
 
 from cucumber_utils import *
-from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch
+from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch, client_mount_path, \
+    save_op_code, get_client
 
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
@@ -17,7 +18,7 @@ def create_reg_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        file_path = make_path(file, client)
+        file_path = client_mount_path(file, client)
 
         def condition():
             return_code = touch(client, file_path, user)
@@ -31,7 +32,7 @@ def create_reg_file(user, files, client_node, context):
 @then(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 def ls_present(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
-    path = make_path(path, client)
+    path = client_mount_path(path, client)
     files = list_parser(files)
 
     def condition():
@@ -52,7 +53,7 @@ def ls_present(user, files, path, client_node, context):
 @then(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
 def ls_absent(user, files, path, client_node, context):
     client = get_client(client_node, user, context)
-    path = make_path(path, client)
+    path = client_mount_path(path, client)
     files = list_parser(files)
 
     def condition():
@@ -71,8 +72,8 @@ def ls_absent(user, files, path, client_node, context):
 @when(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
 def rename(user, file1, file2, client_node, context):
     client = get_client(client_node, user, context)
-    src = make_path(file1, client)
-    dest = make_path(file2, client)
+    src = client_mount_path(file1, client)
+    dest = client_mount_path(file2, client)
 
     def condition():
         cmd_return_code = mv(client, src, dest, user)
@@ -87,7 +88,7 @@ def delete_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
     for file in files:
-        path = make_path(file, client)
+        path = client_mount_path(file, client)
 
         def condition():
             ret = rm(client, path, user=user)
@@ -102,7 +103,7 @@ def delete_file(user, files, client_node, context):
 def change_mode(user, file, mode, client_node, context):
     client = get_client(client_node, user, context)
     mode = str(mode)
-    file_path = make_path(file, client)
+    file_path = client_mount_path(file, client)
 
     def condition():
         cmd_return_code = chmod(client, mode, file_path, user)
@@ -115,7 +116,7 @@ def change_mode(user, file, mode, client_node, context):
 @then(parsers.parse('file type of {user}\'s {file} is {file_type} on {client_node}'))
 def check_type(user, file, file_type, client_node, context):
     client = get_client(client_node, user, context)
-    file_path = make_path(file, client)
+    file_path = client_mount_path(file, client)
     check_using_stat(user, client, file_path, 'file type', file_type)
 
 
@@ -124,7 +125,7 @@ def check_type(user, file, file_type, client_node, context):
 def check_mode(user, file, mode, client_node, context):
     client = get_client(client_node, user, context)
     mode = str(mode)
-    file_path = make_path(file, client)
+    file_path = client_mount_path(file, client)
     check_using_stat(user, client, file_path, 'mode', mode)
 
 
@@ -132,7 +133,7 @@ def check_mode(user, file, mode, client_node, context):
 @then(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
 def check_size(user, file, size, client_node, context):
     client = get_client(client_node, user, context)
-    file_path = make_path(file, client)
+    file_path = client_mount_path(file, client)
     size = str(size)
     check_using_stat(user, client, file_path, 'size', size)
 
@@ -143,7 +144,7 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
     client = get_client(client_node, user, context)
     opt1 = get_stat_option(time1)
     opt2 = get_stat_option(time2)
-    file_path = make_path(file, client)
+    file_path = client_mount_path(file, client)
 
     def condition():
 
@@ -177,7 +178,7 @@ def check_using_stat(user, client, file_path, parameter, expected_value):
 
 def get_timestamp(user, file, client, time_type):
     opt = get_stat_option(time_type)
-    file_path = make_path(file, client)
+    file_path = client_mount_path(file, client)
     return stat(client, file_path, format=opt, user=user)
 
 

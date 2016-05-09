@@ -5,8 +5,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on regular files.
 """
-from cucumber_utils import *
 import multi_reg_file_steps
+from cucumber_utils import *
 
 
 @when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} and saves MD5'))

@@ -1,10 +1,8 @@
 import os
-
+import time
 import pytest
 
-from tests.cucumber.scenarios.steps.cucumber_utils import make_path
 from tests.utils.docker_utils import run_cmd
-from tests.cucumber.scenarios.steps.cucumber_utils import *
 from tests.utils.utils import set_dns, get_token, get_cookie
 
 
@@ -25,15 +23,9 @@ class Client:
         self.timeout = timeout
 
 
-def mount_users(users, client_instances, mount_paths, client_hosts, tokens,
-                request, environment, context, client_ids,
-                env_description_file):
-
-    users = list_parser(users)
-    client_instances = list_parser(client_instances)
-    mount_paths = list_parser(mount_paths)
-    client_hosts = list_parser(client_hosts)
-    tokens = list_parser(tokens)
+def mount_users(request, environment, context, client_ids, env_description_file,
+                users=[], client_instances=[], mount_paths=[],
+                client_hosts=[], tokens=[]):
 
     # current version is for environment with one OZ
     oz_node = environment['oz_worker_nodes'][0]
@@ -61,8 +53,7 @@ def mount_users(users, client_instances, mount_paths, client_hosts, tokens,
             token = get_token(token_arg, user, oz_node, cookie)
         client.set_timeout(data.get('default_timeout', 0))
 
-        print "User {user} mounts oneclient using token: {token}" \
-            .format(
+        print "User {user} mounts oneclient using token: {token}" .format(
                 user=user,
                 token=token)
 
@@ -177,15 +168,15 @@ def truncate(client, file_path, size, user="root", output=False):
     return run_cmd(user, client, cmd, output=output)
 
 
-def dd(client, block_size, count, output_file, input_file="/dev/zero",
-       user="root", output=True):
+def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
+       user="root", output=False, error=False):
 
     cmd = "dd {input} {output} {bs} {count}".format(
         input="if={}".format(input_file),
         output="of={}".format(output_file),
-        bs="bs={}M".format(block_size),  # block_size is in MB
+        bs="bs={0}{1}".format(block_size, unit),
         count="count={}".format(count))
-    return run_cmd(user, client, cmd, output=output)
+    return run_cmd(user, client, cmd, output=output, error=True)
 
 
 def echo_to_file(client, text, file_path, new_line=False, escape=False,
@@ -246,12 +237,12 @@ def clean_spaces_safe(user, client):
 
 
 def clean_spaces(user, client):
-    spaces = ls(client, user=user, path=make_path('spaces', client))
+    spaces = ls(client, user=user, path=client_mount_path('spaces', client))
     spaces = spaces.split("\n")
     # clean spaces
     for space in spaces:
         rm(client, recursive=True, user=user, force=True,
-           path=make_path(os.path.join('spaces', str(space), '*'), client))
+           path=client_mount_path(os.path.join('spaces', str(space), '*'), client))
 
 
 def clean_mount_path(user, client):
@@ -278,3 +269,31 @@ def clean_mount_path(user, client):
                    lazy=True)
         rm(client, recursive=True, force=True, path=client.mount_path,
            output=True)
+
+
+def client_mount_path(path, client):
+    return os.path.join(client.mount_path, str(path))
+
+
+def save_op_code(context, user, op_code):
+    context.users[user].last_op_ret_code = op_code
+
+
+def get_client(client_node, user, context):
+    return context.users[user].clients[client_node]
+
+
+def temp_dir(client, path=None, user='root', output=True):
+    cmd = "mktemp --directory {dir}".format(
+            dir="--tmpdir={}".format(path) if path else "")
+    return run_cmd(user, client, cmd, output).strip()
+
+
+def temp_file(client, path=None, user="root", output=True):
+    cmd = "mktemp {dir}".format(
+            dir="--tmpdir={}".format(path) if path else "")
+    return run_cmd(user, client, cmd, output).strip()
+
+
+def user_home_dir(user="root"):
+    return os.path.join("/home", user)

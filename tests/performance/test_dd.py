@@ -1,17 +1,19 @@
 """
 This module contains performance tests of dd operation in oneclient
 """
-__author__ = "Jakub Kudzia"
-__copyright__ = """(C) 2016 ACK CYFRONET AGH,
-This software is released under the MIT license cited in 'LICENSE.txt'."""
 import os
 import re
 
-from tests.utils.docker_utils import run_cmd
-from tests.performance.conftest import AbstractPerformanceTest, performance
-from tests.utils.performance_utils import (Result, generate_configs, temp_file,
-                                           get_home_dir, delete_file,
-                                           performance)
+from tests.performance.conftest import AbstractPerformanceTest
+from tests.utils.performance_utils import (Result, generate_configs, performance)
+from tests.utils.client_utils import (get_client, temp_file, rm,
+                                      user_home_dir, dd)
+
+
+__author__ = "Jakub Kudzia"
+__copyright__ = """(C) 2016 ACK CYFRONET AGH,
+This software is released under the MIT license cited in 'LICENSE.txt'."""
+
 
 # TODO functions used in cucumber, acceptance and performance tests should be moved to common files
 # TODO higher in files hierarchy
@@ -39,51 +41,68 @@ class Testdd(AbstractPerformanceTest):
                 'block_size': [1, 4, 128, 1024],
                 'size': [1024]#, 1048576]#, 10485760]
             }, "DD TEST -- block size: {block_size} size: {size}"))
-    def test_dd(self, clients, params):
+    def test_dd(self, context, clients, params):
+
         size = params['size']['value']
         size_unit = params['size']['unit']
         block_size = params['block_size']['value']
         block_size_unit = params['block_size']['unit']
-        client_directio = clients['client_directio']
-        client_proxy = clients['client_proxy']
+        user_directio = "u1"
+        user_proxy = "u2"
 
-        test_file_directio = temp_file(client_directio, client_directio.mount_path)
-        test_file_proxy = temp_file(client_proxy, client_proxy.mount_path)
-        test_file_host = temp_file(client_proxy, get_home_dir(client_proxy))
+        client_directio = get_client("client-directio", user_directio, context)
+        client_proxy = get_client("client-proxy", user_proxy, context)
 
-        test_result1 = execute_dd_test(client_directio, test_file_directio,
-                                       block_size, block_size_unit, size,
-                                       size_unit, "direct IO")
 
-        test_result2 = execute_dd_test(client_proxy, test_file_proxy,
-                                       block_size, block_size_unit, size,
-                                       size_unit, "cluster-proxy")
+        test_file_directio = temp_file(client_directio,
+                                       path=client_directio.mount_path,
+                                       user=user_directio)
 
-        test_result3 = execute_dd_test(client_proxy, test_file_host, block_size,
+        test_file_proxy = temp_file(client_proxy,
+                                    path=client_proxy.mount_path,
+                                    user=user_proxy)
+        test_file_host = temp_file(client_proxy,
+                                   path=user_home_dir(user_proxy),
+                                   user=user_proxy)
+
+        test_result1 = execute_dd_test(client_directio, user_directio,
+                                       test_file_directio, block_size,
                                        block_size_unit, size, size_unit,
-                                       "host system")
+                                       "direct IO")
 
-        delete_file(client_directio, test_file_directio)
-        delete_file(client_proxy, test_file_proxy)
-        delete_file(client_proxy, test_file_host)
+        test_result2 = execute_dd_test(client_proxy, user_proxy,
+                                       test_file_proxy, block_size,
+                                       block_size_unit, size, size_unit,
+                                       "cluster-proxy")
+
+        test_result3 = execute_dd_test(client_proxy, user_proxy, test_file_host,
+                                       block_size, block_size_unit, size,
+                                       size_unit, "host system")
+
+        rm(client_directio, test_file_directio, recursive=True, force=True,
+           user=user_directio)
+        rm(client_proxy, test_file_proxy, recursive=True, force=True,
+           user=user_proxy)
+        rm(client_proxy, test_file_host, recursive=True, force=True,
+           user=user_proxy)
 
         return test_result1 + test_result2 + test_result3
 
 
 ################################################################################
 
-def execute_dd_test(client, test_file, block_size, block_size_unit, size,
+def execute_dd_test(client, user, test_file, block_size, block_size_unit, size,
                     size_unit, description):
 
     dev_zero = os.path.join('/dev', 'zero')
 
-    write_throughput = parse_dd_output(dd(client, dev_zero, test_file,
-                                          block_size, block_size_unit, size,
-                                          size_unit))
+    write_throughput = parse_dd_output(do_dd(client, user, dev_zero, test_file,
+                                             block_size, block_size_unit, size,
+                                             size_unit))
 
-    read_throughput = parse_dd_output(dd(client, test_file, dev_zero,
-                                         block_size,block_size_unit, size,
-                                         size_unit))
+    read_throughput = parse_dd_output(do_dd(client, user, test_file, dev_zero,
+                                            block_size, block_size_unit, size,
+                                            size_unit))
 
     return [
         Result('write_throughput_{}'.format(description),
@@ -97,23 +116,15 @@ def execute_dd_test(client, test_file, block_size, block_size_unit, size,
     ]
 
 
-def dd(client, input, output, block_size, block_size_unit, size, size_unit):
+def do_dd(client, user, input, output, block_size, block_size_unit, size, size_unit):
     block_size_unit = SI_prefix_to_default(block_size_unit)
     size_unit = SI_prefix_to_default(size_unit)
     size = convert_size(size, size_unit, 'k')
     block_size = convert_size(block_size, block_size_unit, 'k')
     count = size / block_size
 
-    cmd = "dd if={input} " \
-          "of={output} " \
-          "bs={bs}k " \
-          "count={count} 2>&1".format(
-            input=input,
-            output=output,
-            bs=int(block_size),
-            count=int(count))
-
-    return run_cmd(client.user, client, cmd, output=True)
+    return dd(client, int(block_size), int(count), output, unit='k',
+              output=True, error=True, input_file=input, user=user)
 
 
 def parse_dd_output(dd_output):
@@ -148,7 +159,3 @@ def is_SI_prefix(prefix):
 
 def SI_prefix_to_default(prefix):
     return prefix.upper().strip("B")
-
-
-def create_file(client, path):
-    run_cmd(client.user, client, "touch " + path)

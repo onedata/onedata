@@ -4,12 +4,14 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for operations on different storages with proxy luma
 """
-from pytest_bdd import scenario
+from tests import *
+from tests.cucumber.steps.auth_steps import *
+from tests.cucumber.steps.file_steps import *
+from tests.cucumber.steps.reg_file_steps import *
+from tests.cucumber.steps.env_steps import *
 
-from steps.file_steps import *
-from steps.auth_steps import *
-from steps.env_steps import *
-from steps.reg_file_steps import *
+from pytest_bdd import scenario
+import pytest
 
 
 @pytest.fixture(scope="module", params=["env_luma_proxy.json"])

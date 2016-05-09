@@ -123,16 +123,16 @@ artifact_onepanel:
 ##
 
 test:
-	./test_run.py --test-dir tests/acceptance
+	./test_run.py --test-type acceptance --test-dir tests/acceptance
 
 test_packaging:
-	./test_run.py --test-dir tests/packaging -s
+	./test_run.py --test-type packaging --test-dir tests/packaging -s
 
 test_cucumber:
-	./test_run.py --test-dir tests/cucumber
+	./test_run.py --test-type cucumber --test-dir tests/cucumber
 
 test_performance:
-	./test_run.py --test-dir tests/performance
+	./test_run.py --test-type performance --test-dir tests/performance
 
 ##
 ## Clean

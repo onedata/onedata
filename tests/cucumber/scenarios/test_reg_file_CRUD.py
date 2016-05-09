@@ -5,16 +5,14 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for CRUD operations on regular files in onedata.
 """
+from tests.cucumber.steps.auth_steps import *
+from tests.cucumber.steps.cucumber_utils import *
+from tests.cucumber.steps.dir_steps import *
+from tests.cucumber.steps.file_steps import *
+from tests.cucumber.steps.reg_file_steps import *
 
 from pytest_bdd import scenario
-
-from steps.env_steps import *
-from steps.auth_steps import *
-from steps.dir_steps import *
-from steps.file_steps import *
-from steps.reg_file_steps import *
-from steps.cucumber_utils import *
-
+import pytest
 
 @scenario(
     '../features/reg_file_CRUD.feature',

@@ -6,8 +6,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on directories.
 """
-from cucumber_utils import *
 import multi_dir_steps
+from cucumber_utils import *
 
 
 @when(parsers.parse('{user} creates directories {dirs}'))

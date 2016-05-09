@@ -5,8 +5,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Module implements common steps for operation on files (both regular files
 and directories).
 """
-from cucumber_utils import *
 import multi_file_steps
+from cucumber_utils import *
 
 
 @when(parsers.parse('{user} updates {files} timestamps'))

@@ -1,10 +1,7 @@
 import itertools
-import os
 import time
 
 import pytest
-
-from tests.utils.docker_utils import run_cmd
 
 
 def performance(default_config, configs):
@@ -23,7 +20,7 @@ def performance(default_config, configs):
     """
     def wrap(test_function):
 
-        def wrapped_test_function(self, clients, suite_report):
+        def wrapped_test_function(self, context, clients, suite_report):
             test_case_report = test_function.__name__
             test_case_report = TestCaseReport(test_case_report,
                                               default_config['description'])
@@ -52,7 +49,7 @@ def performance(default_config, configs):
 
                     try:
                         test_results = test_function(
-                                self, clients,
+                                self, context, clients,
                                 merged_config.get('parameters', {}))
                     except Exception as e:
                         print "Testcase failed beceause of: ", str(e)
@@ -272,27 +269,6 @@ def generate_configs(params, description_skeleton):
         i += 1
 
     return configs
-
-
-#TODO move to docker utils
-def temp_dir(client, path):
-    cmd = "mktemp --directory {dir}".format(
-            dir="--tmpdir={}".format(path) if path else "")
-    return run_cmd(client.user, client, cmd, output=True).strip()
-
-#TODO move to docker utils
-def temp_file(client, path=None):
-    cmd = "mktemp {dir}".format(
-            dir="--tmpdir={}".format(path) if path else "")
-    return run_cmd(client.user, client, cmd, output=True).strip()
-
-#TODO move to docker utils
-def delete_file(client, path):
-    run_cmd(client.user, client, "rm -rf " + path)
-
-
-def get_home_dir(client):
-    return os.path.join("/home", client.user)
 
 
 def is_success_rate_satisfied(successful_repeats, failed_repeats, rate):

@@ -6,26 +6,11 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements some common basic functions and functionality.
 """
-import os
 
-import pytest
-from pytest_bdd import parsers
-from pytest_bdd import when, then
-
-####################### CLASSES #######################
 import time
 
-
-class Context:
-    def __init__(self):
-        self.users = {}
-
-
-###################### FIXTURES  ######################
-
-@pytest.fixture(scope="module")
-def context(env_description_file):
-    return Context()
+from pytest_bdd import parsers
+from pytest_bdd import when, then
 
 
 ######################## STEPS ########################
@@ -59,18 +44,6 @@ def list_parser(list):
 
 def make_arg_list(arg):
     return "[" + arg + "]"
-
-
-def save_op_code(context, user, op_code):
-    context.users[user].last_op_ret_code = op_code
-
-
-def make_path(path, client):
-    return os.path.join(client.mount_path, str(path))
-
-
-def get_client(client_node, user, context):
-    return context.users[user].clients[client_node]
 
 
 def repeat_until(condition, timeout=0):

@@ -8,10 +8,10 @@ This software is released under the MIT license cited in 'LICENSE.txt'."""
 import re
 
 from tests.utils.docker_utils import run_cmd
-from tests.performance.conftest import AbstractPerformanceTest, performance
-from tests.utils.performance_utils import (Result, generate_configs, temp_dir,
-                                           get_home_dir, delete_file,
-                                           performance)
+from tests.performance.conftest import AbstractPerformanceTest
+from tests.utils.performance_utils import (Result, generate_configs, performance)
+from tests.utils.client_utils import temp_dir,  user_home_dir, rm, \
+    get_client
 
 # TODO functions used in cucumber, acceptance and performance tests should be moved to common files
 # TODO higher in files hierarchy
@@ -61,17 +61,25 @@ class TestSysbench(AbstractPerformanceTest):
                'Mode: {mode}')
 
     )
-    def test_sysbench(self, clients, params):
-        client_directio = clients['client_directio']
-        client_proxy = clients['client_proxy']
+    def test_sysbench(self, context, params):
+        user_directio = "u1"
+        user_proxy = "u2"
+        client_directio = get_client("client-host1", user_directio, context)
+        client_proxy = get_client("client-host2", user_proxy, context)
         threads_number = params['threads_number']['value']
         files_number = params['files_number']['value']
         total_size = params['total_size']['value']
         mode = params['mode']['value']
 
-        dir_path_directio = temp_dir(client_directio, client_directio.mount_path)
-        dir_path_proxy = temp_dir(client_proxy, client_proxy.mount_path)
-        dir_path_host = temp_dir(client_proxy, get_home_dir(client_proxy))
+        dir_path_directio = temp_dir(client_directio,
+                                     path=client_directio.mount_path,
+                                     user=user_directio)
+        dir_path_proxy = temp_dir(client_proxy,
+                                  path=client_proxy.mount_path,
+                                  user=user_proxy)
+        dir_path_host = temp_dir(client_proxy,
+                                 path=user_home_dir(user_proxy),
+                                 user=user_proxy)
 
         test_result1 = execute_sysbench_test(client_directio, threads_number,
                                              total_size, files_number, mode,
@@ -85,9 +93,12 @@ class TestSysbench(AbstractPerformanceTest):
                                              total_size, files_number, mode,
                                              dir_path_host, "host system")
 
-        delete_file(client_directio, dir_path_directio)
-        delete_file(client_proxy, dir_path_proxy)
-        delete_file(client_proxy, dir_path_host)
+        rm(client_directio, dir_path_directio, recursive=True, force=True,
+           user=user_directio)
+        rm(client_proxy, dir_path_proxy, recursive=True, force=True,
+            user=user_proxy)
+        rm(client_proxy, dir_path_host, recursive=True, force=True,
+            user=user_proxy)
 
         return test_result1 + test_result2 + test_result3
 

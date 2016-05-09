@@ -4,12 +4,14 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for authorization and mounting onedata client.
 """
-from pytest_bdd import scenario
+from tests import *
+from tests.cucumber.steps.auth_steps import *
+from tests.cucumber.steps.cucumber_utils import *
+from tests.cucumber.steps.multi_auth_steps import *
+from tests.cucumber.steps.env_steps import *
 
-from steps.env_steps import *
-from steps.auth_steps import *
-from steps.multi_auth_steps import *
-from steps.cucumber_utils import *
+from pytest_bdd import scenario
+import pytest
 
 
 @pytest.fixture(scope="module", params=["env.json"])

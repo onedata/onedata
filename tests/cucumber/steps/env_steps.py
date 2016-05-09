@@ -5,11 +5,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements common functions for handling test environment.
 """
-from environment import docker
 from pytest_bdd import given, then
 from pytest_bdd import parsers
-
-from tests import *
 
 
 @given("environment is up")

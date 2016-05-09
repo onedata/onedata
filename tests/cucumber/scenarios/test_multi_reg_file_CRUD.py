@@ -6,15 +6,14 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Test suite for CRUD operations on regular files in onedata,
 in multi-client environment.
 """
+from tests.cucumber.steps.cucumber_utils import *
+from tests.cucumber.steps.multi_auth_steps import *
+from tests.cucumber.steps.multi_dir_steps import *
+from tests.cucumber.steps.multi_file_steps import *
+from tests.cucumber.steps.multi_reg_file_steps import *
 
 from pytest_bdd import scenario
-
-from steps.env_steps import *
-from steps.multi_auth_steps import *
-from steps.multi_dir_steps import *
-from steps.multi_file_steps import *
-from steps.multi_reg_file_steps import *
-from steps.cucumber_utils import *
+import pytest
 
 
 @scenario(

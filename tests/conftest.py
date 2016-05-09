@@ -11,14 +11,10 @@ import pytest
 def pytest_addoption(parser):
     parser.addoption("--test-type", action="store", default=None,
                      help="type of test (cucumber, acceptance,"
-                          "performance, package)")
+                          "performance, packaging)")
 
 
 def pytest_generate_tests(metafunc):
-    print "GENERATE"
-    print dir(metafunc)
-    print dir(metafunc.config)
-    # assert False
     if 'test_type' in metafunc.fixturenames:
         test_type = metafunc.config.option.test_type
         if test_type in ['cucumber', 'performance']:
@@ -48,7 +44,7 @@ def env_description_file(request, test_type, env):
 
 
 @pytest.fixture(scope="module")
-def persistent_environment(request, context, test_type, env_description_file):
+def persistent_environment(request, test_type, env_description_file):
     """
     Sets up environment and returns environment description.
     """
@@ -160,3 +156,13 @@ def clear_storage(storage_path):
                reflect=[(storage_path, 'rw')],
                image='onedata/worker',
                command=cmd)
+
+
+class Context:
+    def __init__(self):
+        self.users = {}
+
+
+@pytest.fixture(scope="module")
+def context(env_description_file):
+    return Context()
