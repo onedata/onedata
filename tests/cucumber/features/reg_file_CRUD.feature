@@ -3,7 +3,7 @@ Feature: Regular_file_CRUD
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
-    And oneclient is started for u1
+#    And oneclient is started for u1
     
   Scenario: Create regular file
     When u1 creates regular files [file1, file2, file3]
