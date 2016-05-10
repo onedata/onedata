@@ -13,11 +13,11 @@ RUN dnf -y upgrade && \
 # Install oneprovider package
 RUN case ${RELEASE} in \
 		production) \
-			curl -o install.sh http://packages.onedata.org/install_oneprovider.sh; \
+			curl -o install.sh http://get.onedata.org/oneprovider.sh; \
                         sh install.sh ${VERSION}; \
 			;; \
 		*) \
-			curl -o install.sh http://onedata-dev-packages.cloud.plgrid.pl/install_oneprovider.sh; \
+			curl -o install.sh http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh; \
                         sh install.sh ${VERSION}; \
 			sed -i 's/{verify_oz_cert, true}/{verify_oz_cert, false}/g' /etc/op_panel/app.config \
 			;; \
