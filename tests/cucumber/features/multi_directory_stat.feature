@@ -6,7 +6,7 @@ Feature: Multi_directory_stat
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
-    And oneclient is started for [u1, u2] on [client1, client2]
+#    And oneclient is started for [u1, u2] on [client1, client2]
 
 
   Scenario: Check file type
@@ -21,11 +21,15 @@ Feature: Multi_directory_stat
     When u1 creates directories [dir1] on client1
     And u1 changes dir1 mode to 211 on client1
     Then mode of u2's dir1 is 211 on client2
+    And u1 changes dir1 mode to 775 on client1
+    Then mode of u2's dir1 is 775 on client2
 
   Scenario: Change someone's file access permissions
     When u1 creates directories [dir1] on client1
     And u2 changes dir1 mode to 211 on client2
     Then last operation by u2 fails
+    And mode of u2's dir1 is 775 on client2
+    And mode of u1's dir1 is 775 on client1
  
   Scenario: Timestamps at creation
     When u1 creates directories [dir1] on client1

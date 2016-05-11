@@ -5,6 +5,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on regular files.
 """
+from common import *
+
 import subprocess
 
 from cucumber_utils import *
@@ -35,6 +37,7 @@ def write_text(user, text, file, client_node, context):
 @then(parsers.parse('{user} reads "{text}" from {file} on {client_node}'))
 def read(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
+    text = text.decode('string_escape')
 
     def condition():
 
@@ -83,8 +86,11 @@ def check_md5(user, file, client_node, context):
     client = get_client(client_node, user, context)
 
     def condition():
-        md5 = md5sum(client, client_mount_path(file, client), user=user)
-        return md5.split()[0] == context.md5
+        try:
+            md5 = md5sum(client, make_path(file, client), user=user)
+            return md5.split()[0] == context.md5
+        except subprocess.CalledProcessError:
+            return False
 
     assert repeat_until(condition, 30)
     #hardcoding this timeout can be replaced by using step "user waits 30 seconds"

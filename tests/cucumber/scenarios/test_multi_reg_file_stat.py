@@ -102,10 +102,6 @@ def test_update_timestamp_with_permission(env_description_file):
     pass
 
 
-# # TODO VFS-1822
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="reading fails in oneclient")
 @scenario(
     '../features/multi_reg_file_stat.feature',
     'Access time'

@@ -3,7 +3,6 @@ Feature: Directory_stat
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
-    And oneclient is started for u1
 
   Scenario: Check file type
     When u1 creates directories [dir1]
@@ -14,8 +13,11 @@ Feature: Directory_stat
     Then mode of u1's dir1 is 755
 
   Scenario: Change access permissions
-    When u1 creates directories [dir1]
+    When u1 creates directories [dir]
     And u1 changes dir1 mode to 211
+    Then mode of u1's dir1 is 211
+    And u1 changes dir1 mode to 755
+    And mode of u1's dir1 is 755
 
   Scenario: Timestamps at creation
     When u1 creates directories [dir1]
