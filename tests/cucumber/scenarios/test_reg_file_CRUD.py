@@ -40,6 +40,8 @@ def test_delete(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+                       reason="Problem when reading too fast from spaces")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Read and write to regular file'
@@ -48,6 +50,8 @@ def test_read_write(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+                       reason="Problem when reading too fast from spaces")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Append regular file'
@@ -56,6 +60,8 @@ def test_append(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+                       reason="Problem when reading too fast from spaces")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Replace word in file'

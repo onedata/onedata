@@ -82,8 +82,11 @@ def check_md5(user, file, client_node, context):
     client = get_client(client_node, user, context)
 
     def condition():
-        md5 = md5sum(client, make_path(file, client), user=user)
-        return md5.split()[0] == context.md5
+        try:
+            md5 = md5sum(client, make_path(file, client), user=user)
+            return md5.split()[0] == context.md5
+        except subprocess.CalledProcessError:
+            return False
 
     assert repeat_until(condition, 30)
     #hardcoding this timeout can be replaced by using step "user waits 30 seconds"
