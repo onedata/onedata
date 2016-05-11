@@ -91,7 +91,7 @@ def client_ids(persistent_environment):
     return ids
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def skip_by_env(request, env_description_file):
     """This function skips test cases decorated with:
     @pytest.mark.skip_env(*envs).
@@ -110,7 +110,7 @@ def skip_by_env(request, env_description_file):
                             .format(env=env, reason=reason))
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def xfail_by_env(request, env_description_file):
     """This function marks test cases decorated with:
     @pytest.mark.skip_env(*envs)

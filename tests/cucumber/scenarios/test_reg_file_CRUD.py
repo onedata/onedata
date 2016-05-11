@@ -5,6 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for CRUD operations on regular files in onedata.
 """
+from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.dir_steps import *

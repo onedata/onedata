@@ -5,7 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Module implements pytest-bdd steps for operations on regular files.
 """
-from common import *
+from tests import *
 
 import subprocess
 
