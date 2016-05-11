@@ -92,9 +92,9 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
 
         # remove accessToken to mount many clients on one docker
         rm(client, recursive=True, force=True,
-           path=os.path.join(os.path.dirname(mount_path), ".local"))
+           path=os.path.join(os.path.dirname(mount_path), ".local"), user=user)
 
-        rm(client, recursive=True, force=True, path=token_path)
+        rm(client, recursive=True, force=True, path=token_path, user=user)
 
         time.sleep(5)
         if token != 'bad_token':
@@ -184,8 +184,8 @@ def clean_mount_path(user, client):
             run_cmd("root", client, "kill -KILL " + str(pid))
 
         # unmount onedata
-        fusermount(client, client.mount_path, user=user, unmount=True,
-                   lazy=True)
+        fusermount(client, client.mount_path, user=user, unmount=True)
+                   # lazy=True)
         rm(client, recursive=True, force=True, path=client.mount_path,
            output=True)
 
