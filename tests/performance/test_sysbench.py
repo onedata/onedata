@@ -10,8 +10,7 @@ import re
 from tests.utils.docker_utils import run_cmd
 from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import (Result, generate_configs, performance)
-from tests.utils.client_utils import temp_dir,  user_home_dir, rm, \
-    get_client
+from tests.utils.client_utils import mktemp,  user_home_dir, rm, get_client
 
 REPEATS = 1
 SUCCESS_RATE = 95
@@ -69,15 +68,20 @@ class TestSysbench(AbstractPerformanceTest):
         total_size = params['total_size']['value']
         mode = params['mode']['value']
 
-        dir_path_directio = temp_dir(client_directio,
-                                     path=client_directio.mount_path,
-                                     user=user_directio)
-        dir_path_proxy = temp_dir(client_proxy,
-                                  path=client_proxy.mount_path,
-                                  user=user_proxy)
-        dir_path_host = temp_dir(client_proxy,
-                                 path=user_home_dir(user_proxy),
-                                 user=user_proxy)
+
+        dir_path_directio = mktemp(client_directio,
+                                   path=client_directio.mount_path,
+                                   dir=True,
+                                   user=user_directio)
+
+        dir_path_proxy = mktemp(client_proxy,
+                                path=client_proxy.mount_path,
+                                dir=True,
+                                user=user_proxy)
+        dir_path_host = mktemp(client_proxy,
+                               path=user_home_dir(user_proxy),
+                               dir=True,
+                               user=user_proxy)
 
         test_result1 = execute_sysbench_test(client_directio, user_directio,
                                              threads_number, total_size,

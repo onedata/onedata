@@ -201,6 +201,13 @@ def md5sum(client, file_path, user="root", output=True):
     return run_cmd(user, client, cmd, output=output)
 
 
+def mktemp(client, path=None, dir=False, user="root", output=True):
+    cmd = "mktemp {dir} {path}".format(
+            dir="--directory" if dir else "",
+            path="--tmpdir={}".format(path) if path else "")
+    return run_cmd(user, client, cmd, output).strip()
+
+
 def replace_pattern(client, file_path, pattern, new_text, user='root',
                     output=False):
     cmd = 'sed -i \'s/{pattern}/{new_text}/g\' {file_path}'.format(
@@ -281,18 +288,6 @@ def save_op_code(context, user, op_code):
 
 def get_client(client_node, user, context):
     return context.users[user].clients[client_node]
-
-
-def temp_dir(client, path=None, user='root', output=True):
-    cmd = "mktemp --directory {dir}".format(
-            dir="--tmpdir={}".format(path) if path else "")
-    return run_cmd(user, client, cmd, output).strip()
-
-
-def temp_file(client, path=None, user="root", output=True):
-    cmd = "mktemp {dir}".format(
-            dir="--tmpdir={}".format(path) if path else "")
-    return run_cmd(user, client, cmd, output).strip()
 
 
 def user_home_dir(user="root"):

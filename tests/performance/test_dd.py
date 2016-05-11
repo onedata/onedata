@@ -6,7 +6,7 @@ import re
 
 from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import (Result, generate_configs, performance)
-from tests.utils.client_utils import (get_client, temp_file, rm,
+from tests.utils.client_utils import (get_client, mktemp, rm,
                                       user_home_dir, dd)
 
 
@@ -15,7 +15,7 @@ __copyright__ = """(C) 2016 ACK CYFRONET AGH,
 This software is released under the MIT license cited in 'LICENSE.txt'."""
 
 
-REPEATS = 1
+REPEATS = 5
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
@@ -37,7 +37,7 @@ class Testdd(AbstractPerformanceTest):
             },
             configs=generate_configs({
                 'block_size': [1, 4, 128, 1024],
-                'size': [1024]#, 1048576]#, 10485760]
+                'size': [1024, 1048576],# 10485760]
             }, "DD TEST -- block size: {block_size} size: {size}"))
     def test_dd(self, context, clients, params):
 
@@ -52,16 +52,16 @@ class Testdd(AbstractPerformanceTest):
         client_proxy = get_client("client-proxy", user_proxy, context)
 
 
-        test_file_directio = temp_file(client_directio,
-                                       path=client_directio.mount_path,
-                                       user=user_directio)
+        test_file_directio = mktemp(client_directio,
+                                    path=client_directio.mount_path,
+                                    user=user_directio)
 
-        test_file_proxy = temp_file(client_proxy,
-                                    path=client_proxy.mount_path,
-                                    user=user_proxy)
-        test_file_host = temp_file(client_proxy,
-                                   path=user_home_dir(user_proxy),
-                                   user=user_proxy)
+        test_file_proxy = mktemp(client_proxy,
+                                 path=client_proxy.mount_path,
+                                 user=user_proxy)
+        test_file_host = mktemp(client_proxy,
+                                path=user_home_dir(user_proxy),
+                                user=user_proxy)
 
         test_result1 = execute_dd_test(client_directio, user_directio,
                                        test_file_directio, block_size,
