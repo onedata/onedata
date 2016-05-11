@@ -6,6 +6,7 @@ Test suite for operations on different storages with provider luma
 """
 from tests import *
 from tests.cucumber.steps.reg_file_steps import *
+from tests.cucumber.steps.file_steps import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *
 

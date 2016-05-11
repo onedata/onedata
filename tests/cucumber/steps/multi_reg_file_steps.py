@@ -87,14 +87,12 @@ def check_md5(user, file, client_node, context):
 
     def condition():
         try:
-            md5 = md5sum(client, make_path(file, client), user=user)
+            md5 = md5sum(client, client_mount_path(file, client), user=user)
             return md5.split()[0] == context.md5
         except subprocess.CalledProcessError:
             return False
 
-    assert repeat_until(condition, 30)
-    #hardcoding this timeout can be replaced by using step "user waits 30 seconds"
-
+    assert repeat_until(condition, client.timeout)
 
 
 @when(parsers.parse('{user} copies regular file {file} to {path} on {client_node}'))
