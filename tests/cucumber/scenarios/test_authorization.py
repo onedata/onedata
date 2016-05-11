@@ -14,12 +14,6 @@ from pytest_bdd import scenario
 import pytest
 
 
-@pytest.fixture(scope="module", params=["env.json"])
-def env_description_file(request):
-    absolute_path = os.path.join(DEFAULT_CUCUMBER_ENV_DIR, request.param)
-    return absolute_path
-
-
 @scenario(
     '../features/authorization.feature',
     'Successful authorization'

@@ -37,7 +37,7 @@ class Testdd(AbstractPerformanceTest):
             },
             configs=generate_configs({
                 'block_size': [1, 4, 128, 1024],
-                'size': [1024, 1048576],# 10485760]
+                'size': [1024, 10240]#, 1048576, 10485760]
             }, "DD TEST -- block size: {block_size} size: {size}"))
     def test_dd(self, context, clients, params):
 
