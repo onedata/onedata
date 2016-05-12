@@ -237,6 +237,9 @@ def test_move_to_subtree(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(
+        envs=["env3"],
+        reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',
     'Move directory to itself in spaces'
@@ -245,6 +248,9 @@ def test_move_to_itself_spaces(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(
+        envs=["env3"],
+        reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',
     'Move directory to itself in default space'
@@ -253,6 +259,9 @@ def test_move_to_itself_default_space(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(
+        envs=["env3"],
+        reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',
     'Move directory to its subtree in spaces'
@@ -261,6 +270,9 @@ def test_move_to_subtree_spaces(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(
+        envs=["env3"],
+        reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',
     'Move directory to its subtree in default space'

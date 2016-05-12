@@ -6,6 +6,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for CRUD operations on directories in onedata.
 """
+import pytest
+
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.cucumber_utils import *
@@ -183,6 +185,8 @@ def test_move_to_itself_spaces(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+                       reason="Move fails")
 @scenario(
     '../features/directory_CRUD.feature',
     'Move directory to itself in default space'

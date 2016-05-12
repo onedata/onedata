@@ -91,6 +91,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
         if token_arg != "bad token":
             # if token was different than "bad token", check if logging succeeded
             if ret != 0:
+                clean_mount_path(user, client)
                 pytest.skip("Error mounting oneclient")
 
         if user in context.users:
