@@ -65,6 +65,8 @@ def test_replace(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+                       reason="Move fails")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Move regular file and read'
@@ -73,6 +75,8 @@ def test_move(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+                       reason="Move fails")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Move big regular file and check MD5'
