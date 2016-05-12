@@ -96,8 +96,6 @@ def mount_users(request, environment, context, client_ids, env_description_file,
            user=user)
 
         rm(client, recursive=True, force=True, path=token_path, user=user)
-
-        time.sleep(5)
         if token != 'bad_token':
             clean_spaces_safe(user, client)
         save_op_code(context, user, ret)

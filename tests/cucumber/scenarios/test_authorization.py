@@ -6,11 +6,11 @@ Test suite for authorization and mounting onedata client.
 """
 from tests import *
 from tests.cucumber.steps.auth_steps import *
+from tests.cucumber.steps.multi_auth_steps import *
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
 
 from pytest_bdd import scenario
-import pytest
 
 
 @scenario(

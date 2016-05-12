@@ -33,7 +33,6 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
 @then(parsers.parse('{spaces} are mounted for {user}'))
 def check_spaces(spaces, user, context):
     # sleep to be sure that environment is up
-    time.sleep(10)
     spaces = list_parser(spaces)
     user = str(user)
     for client_instance, client in context.users[user].clients.items():
