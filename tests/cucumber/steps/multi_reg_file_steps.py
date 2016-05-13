@@ -18,18 +18,17 @@ from tests.utils.docker_utils import run_cmd
 @when(parsers.parse('{user} writes "{data}" at offset {offset} to {file} on {client_node}'))
 def write_at_offset(user, data, offset, file, client_node, context):
     client = get_client(client_node, user, context)
-    path = make_path(file, client)
+    path = client_mount_path(file, client)
     write_command = '''python -c "with open(\\"{path}\\", \\"r+b\\") as file:
     file.seek({offset})
     file.write(\\"{data}\\")"
 '''.format(path=path, offset=offset, data=data)
     ret = run_cmd(user, client, write_command)
     save_op_code(context, user, ret)
-    if ret == 0:
-        context.update_timestamps(user, client, file)
 
 
 @when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))
+@then(parsers.parse('{user} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))
 def write_rand_text(user, megabytes, file, client_node, context):
     client = get_client(client_node, user, context)
     file_path = client_mount_path(file, client)
@@ -63,9 +62,11 @@ def read(user, text, file, client_node, context):
 
     assert repeat_until(condition, client.timeout)
 
+
 @then(parsers.parse('{user} reads "" from {file} on {client_node}'))
 def read_empty(user, file, client_node, context):
     read(user, '', file, client_node, context)
+
 
 @then(parsers.parse('{user} cannot read from {file} on {client_node}'))
 def cannot_read(user, file, client_node, context):

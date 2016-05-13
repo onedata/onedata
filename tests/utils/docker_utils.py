@@ -11,9 +11,9 @@ def run_cmd(user, client, cmd, output=False, error=False):
         cmd = [str(x) for x in cmd]
 
     if user != 'root' and isinstance(cmd, str):
-        cmd = 'su -c "' + cmd + '" ' + str(user)
+        cmd = ['su', '-c', cmd, str(user)]
     elif user != 'root' and isinstance(cmd, list):
-        cmd = ["su", "-c"] + cmd + [str(user)]\
+        cmd = ["su", "-c"] + cmd + [str(user)]
 
     return docker.exec_(container=client.docker_id, command=cmd, output=output,
                         tty=True, stderr=subprocess.STDOUT if error else None)
