@@ -121,6 +121,7 @@ def xfail_by_env(request, env_description_file):
     global variable in that module named pytestmark in
     the following way:
     pytestmark = pytest.mark.xfail_env(*envs)
+    Running tests with --runxfail causes tests marked as xfail to run
     """
     if request.node.get_marker('xfail_env'):
         env = get_file_name(env_description_file)
