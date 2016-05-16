@@ -1,6 +1,6 @@
 %%%-------------------------------------------------------------------
-%%% @author Lukasz Opiola
-%%% @copyright (C) 2015 ACK CYFRONET AGH
+%%% @author Jakub Kudzia
+%%% @copyright (C) 2016 ACK CYFRONET AGH
 %%% This software is released under the MIT license
 %%% cited in 'LICENSE.txt'.
 %%% @end
@@ -17,53 +17,71 @@
 
 -export([rest_mocks/0, tcp_server_mocks/0]).
 
+-define(MOCK_TOKEN, <<"mock_token">>).
+-record(mocked_user, {name, login, email, uid}).
+-define(MOCK_USER(Name, Login, Email, UID),
+    #mocked_user{name=Name, login=Login, email=Email, uid=UID}).
+-define(MOCKED_USERS, #{
+    0 => ?MOCK_USER(<<"u1">>, <<"login1">>, <<"u1@mail.com">>, <<"uid1">>),
+    1 => ?MOCK_USER(<<"u2">>, <<"login2">>, <<"u2@mail.com">>, <<"uid2">>),
+    2 => ?MOCK_USER(<<"u3">>, <<"login3">>, <<"u3@mail.com">>, <<"uid3">>),
+    3 => ?MOCK_USER(<<"u4">>, <<"login4">>, <<"u4@mail.com">>, <<"uid4">>),
+    4 => ?MOCK_USER(<<"u5">>, <<"login5">>, <<"u5@mail.com">>, <<"uid5">>)
+}).
+
 % This function should return a list of #rest_mock{} records,
 % which in essence hold mappings {Port, Path} -> {Response}.
 % If a request is performed on certain port and certain path, the response will be returned.
 rest_mocks() -> [
-    %% TODO
-    #rest_mock{port = 443, path = <<"/1/oauth2/authorize">>, response =
-    fun(Req, _State) ->
-        {RedirectionPoint, _} = cowboy_req:qs_val(<<"redirect_uri">>, Req, undefined),
-        {State, _} = cowboy_req:qs_val(<<"state">>, Req, undefined),
-        URL = <<RedirectionPoint/binary, "?code=mockcode&state=", State/binary>>,
-        {#rest_response{code = 307, headers = [{<<"location">>, URL}]},
-            _State
-        }
-    end},
+    %% TODODisplayName
+    #rest_mock{port = 443, path = <<"/1/oauth2/authorize">>,
+        response = fun(Req, State) ->
+            io:format("State~p~n", [State]),
+            {RedirectionPoint, _} = cowboy_req:qs_val(<<"redirect_uri">>, Req, undefined),
+            {ReqState, _} = cowboy_req:qs_val(<<"state">>, Req, undefined),
+            io:format("State~p~n", [State]),
+            URL = <<RedirectionPoint/binary, "?code=mockcode&state=", ReqState/binary>>,
+            io:format("State~p~n", [State]),
+            {#rest_response{code = 307, headers = [{<<"location">>, URL}]}, State + 1}
+        end,
+        initial_state = 0},
 
 
-    #rest_mock{port = 443, path = <<"/1/oauth2/token">>, response =
-    fun(Req, _State) ->
-        Proplist = req:post_params(Req),
-        Code = proplists:get_value(<<"code">>, Proplist),
-        GrantType = proplists:get_value(<<"grant_type">>, Proplist),
-        RedirectionPoint = proplists:get_value(<<"redirect_uri">>, Proplist),
-        Headers = req:headers(Req),
-        io:format("Your request contained:~n" ++
-            "Code:        ~p~n" ++
-            "GrantType: ~p~n" ++
-            "RedirectionPoint:  ~p~n" ++
-            "Headers:     ~p~n",
-            [Code, GrantType, RedirectionPoint, Headers]),
+    #rest_mock{port = 443, path = <<"/1/oauth2/token">>,
+        response = fun(Req, State) ->
+            Proplist = req:post_params(Req),
+            Code = proplists:get_value(<<"code">>, Proplist),
+            GrantType = proplists:get_value(<<"grant_type">>, Proplist),
+            RedirectionPoint = proplists:get_value(<<"redirect_uri">>, Proplist),
+            Headers = req:headers(Req),
+            io:format("Your request contained:~n" ++
+                "Code:        ~p~n" ++
+                "GrantType: ~p~n" ++
+                "RedirectionPoint:  ~p~n" ++
+                "Headers:     ~p~n",
+                [Code, GrantType, RedirectionPoint, Headers]),
 
-        Body = json_utils:encode([
-            {<<"access_token">>, <<"mock_access_token">>},
-            {<<"uid">>, <<"mock_uid">>}]),
-        URL = <<RedirectionPoint/binary, "?code=mockcode">>,
-        {#rest_response{code = 200, body = Body}, _State}
-    end},
+            #mocked_user{uid=UID} = maps:get(State, ?MOCKED_USERS),
+            Body = json_utils:encode([
+                {<<"access_token">>, <<?MOCK_TOKEN/binary, (integer_to_binary(State))/binary >>},
+                {<<"uid">>, UID}]),
+            URL = <<RedirectionPoint/binary, "?code=mockcode">>,
+            {#rest_response{code = 200, body = Body}, State + 1}
+        end,
+        initial_state = 0},
 
-    #rest_mock{port = 443, path = <<"/1/account/info">>, response =
-    fun(_Req, _State) ->
-
-        Body = json_utils:encode([
-            {<<"email">>, <<"mock_email">>},
-            {<<"display_name">>, <<"mock_name">>},
-            {<<"login">>, <<"mock_login">>}]),
-        {#rest_response{code = 200, body = Body}, _State}
-    end}
+    #rest_mock{port = 443, path = <<"/1/account/info">>,
+        response = fun(_Req, State) ->
+            #mocked_user{name=Name, login=Login, email=Email} = maps:get(State, ?MOCKED_USERS),
+            Body = json_utils:encode([
+                {<<"email">>, Email},
+                {<<"display_name">>, Name},
+                {<<"login">>, Login}]),
+            {#rest_response{code = 200, body = Body}, State + 1}
+        end,
+        initial_state = 0}
 ].
+
 
 
 % This function should return a list of #tcp_server_mock{} records. A TCP server will be
