@@ -1,6 +1,8 @@
-# Created by kuba at 5/11/16
-Feature: #Enter feature name here
-  # Enter feature description here
+Feature: User management
 
-  Scenario: # Enter scenario name here
-    # Enter steps here
+  Background:
+    Given openId server is started
+
+  Scenario: User registration
+    When u1 registers in onedata
+    And u1 is registered

@@ -7,6 +7,7 @@ Module implements pytest-bdd steps for operations on regular files.
 """
 import multi_reg_file_steps
 from cucumber_utils import *
+from pytest_bdd import when, then, parsers
 
 
 @when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} and saves MD5'))

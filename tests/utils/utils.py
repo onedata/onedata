@@ -8,6 +8,7 @@ import ast
 import re
 import subprocess
 import pytest
+import os
 
 __author__ = "Jakub Kudzia"
 
@@ -111,7 +112,11 @@ def get_token(token, user, oz_node, cookie):
 
 
 def get_cookie(config_path, oz_node):
+    if '@' in oz_node:
+        _, _, oz_node = oz_node.partition('@')
+    domain_name = oz_node.split(".")[1]
     config = parse_json_config_file(config_path)
-    oz_domain = config['zone_domains'].keys()[0]
-    cm = config['zone_domains'][oz_domain]['cluster_manager'].keys()[0]
-    return str(config['zone_domains'][oz_domain]['cluster_manager'][cm]['vm.args']['setcookie'])
+    # oz_domain = config['zone_domains'].keys()[0]
+    cm_config = config['zone_domains'][domain_name]['cluster_manager']
+    key = cm_config.keys()[0]
+    return str(cm_config[key]['vm.args']['setcookie'])

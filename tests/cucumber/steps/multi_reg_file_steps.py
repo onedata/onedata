@@ -87,7 +87,7 @@ def check_md5(user, file, client_node, context):
 
     def condition():
         try:
-            md5 = md5sum(client, make_path(file, client), user=user)
+            md5 = md5sum(client, client_mount_path(file, client), user=user)
             return md5.split()[0] == context.md5
         except subprocess.CalledProcessError:
             return False
