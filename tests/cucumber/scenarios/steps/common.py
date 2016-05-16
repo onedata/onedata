@@ -205,7 +205,7 @@ def run_cmd(user, client, cmd, output=False):
         cmd = [str(x) for x in cmd]
 
     if user != 'root' and isinstance(cmd, str):
-        cmd = 'su -c "' + cmd + '" ' + str(user)
+        cmd = ['su', '-c', cmd, str(user)]
     elif user != 'root' and isinstance(cmd, list):
         cmd = ["su", "-c"] + cmd + [str(user)]
 

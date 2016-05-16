@@ -4,6 +4,8 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for operations on different storages with provider luma
 """
+import pytest
+
 from tests.test_common import custom_cucumber_env_dir
 
 from pytest_bdd import scenario
