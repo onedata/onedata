@@ -5,6 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for CRUD operations on regular files in onedata.
 """
+from tests import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.cucumber_utils import *
@@ -14,6 +15,15 @@ from tests.cucumber.steps.reg_file_steps import *
 
 from pytest_bdd import scenario
 import pytest
+
+
+@pytest.fixture(scope="module",
+                params=["singleprovider_singleclient_directio.json",
+                        "singleprovider_singleclient_proxy.json"])
+def env_description_file(request):
+    absolute_path = os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
+    return absolute_path
+
 
 @scenario(
     '../features/reg_file_CRUD.feature',
@@ -55,8 +65,9 @@ def test_append(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
-                        reason="File disappears after replace")
+@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
+                             "singleprovider_singleclient_proxy"],
+                       reason="File disappears after replace")
 @scenario(
     '../features/reg_file_CRUD.feature',
     'Replace word in file'
@@ -65,7 +76,8 @@ def test_replace(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
+                             "singleprovider_singleclient_proxy"],
                        reason="Move fails")
 @scenario(
     '../features/reg_file_CRUD.feature',
@@ -75,7 +87,8 @@ def test_move(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
+                             "singleprovider_singleclient_proxy"],
                        reason="Move fails")
 @scenario(
     '../features/reg_file_CRUD.feature',

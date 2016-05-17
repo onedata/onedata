@@ -185,7 +185,7 @@ def test_move_to_itself_spaces(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["env", "env2", "env3"],
+@pytest.mark.xfail_env(envs=["singlepr,ovider_directio", "env2", "env3"],
                        reason="Move fails")
 @scenario(
     '../features/directory_CRUD.feature',

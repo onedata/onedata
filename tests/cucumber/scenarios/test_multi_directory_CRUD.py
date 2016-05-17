@@ -138,7 +138,7 @@ def test_rename_subfile_with_permission(env_description_file):
 
 # TODO VFS-1824
 @pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
+        envs=["singleprovider_singleclient_directio", "env2", "env3"],
         reason="u2 is unable to create direcory with the same name "
                "although first one was deleted")
 @scenario(
@@ -238,7 +238,7 @@ def test_move_to_subtree(env_description_file):
 
 
 @pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
+        envs=["singleprovider_singleclient_directio", "env2", "env3"],
         reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',
@@ -249,7 +249,7 @@ def test_move_to_itself_spaces(env_description_file):
 
 
 @pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
+        envs=["singleprovider_singleclient_directio", "env2", "env3"],
         reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',
@@ -260,7 +260,7 @@ def test_move_to_itself_default_space(env_description_file):
 
 
 @pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
+        envs=["singleprovider_singleclient_directio", "env2", "env3"],
         reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',
@@ -271,7 +271,7 @@ def test_move_to_subtree_spaces(env_description_file):
 
 
 @pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
+        envs=["singleprovider_singleclient_directio", "env2", "env3"],
         reason="move fails")
 @scenario(
     '../features/multi_directory_CRUD.feature',

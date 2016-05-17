@@ -5,6 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 
 Test suite for reading/changing  metadata of regular files in onedata.
 """
+from tests import *
 from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.cucumber_utils import *
@@ -15,6 +16,15 @@ from tests.cucumber.steps.reg_file_steps import *
 
 from pytest_bdd import scenario
 import pytest
+
+
+@pytest.fixture(scope="module",
+                params=["singleprovider_singleclient_directio.json",
+                        "singleprovider_singleclient_proxy.json"])
+def env_description_file(request):
+    absolute_path = os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
+    return absolute_path
+
 
 @scenario(
     '../features/reg_file_stat.feature',
@@ -97,10 +107,9 @@ def test_modification_time(env_description_file):
 
 
 # TODO VFS-1821
-@pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="status-change times is equal to access and modification, "
-               "it will be checked VFS-1821")
+@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
+                             "singleprovider_singleclient_proxy"],
+                       reason="status-change times is equal to access and modification")
 @scenario(
     '../features/reg_file_stat.feature',
     'Status-change time when changing mode'
