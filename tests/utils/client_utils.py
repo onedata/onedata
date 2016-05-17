@@ -1,5 +1,4 @@
 import os
-import time
 import pytest
 import subprocess
 
@@ -64,17 +63,14 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
         token_path = "/tmp/token"
 
-        cmd = 'echo {token} > {token_path}'.format(token=token,
-                                                   token_path=token_path)
-
-        run_cmd('root', client, cmd, output=True)
+        # echo_to_file(client, token, token_path, output=True)
 
         cmd = ('mkdir -p {mount_path}'
                ' && export GLOBAL_REGISTRY_URL={gr_domain}'
                ' && export PROVIDER_HOSTNAME={op_domain}'
                ' && export X509_USER_CERT={user_cert}'
                ' && export X509_USER_KEY={user_key}'
-               # ' && echo {token} > {token_path}'
+               ' && echo {token} > {token_path}'
                ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
                ).format(
                 mount_path=mount_path,
@@ -83,7 +79,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
                 user_cert=data['user_cert'],
                 user_key=data['user_key'],
                 user=user,
-                # token=token,
+                token=token,
                 token_path=token_path)
 
         ret = run_cmd(user, client, cmd)
@@ -253,12 +249,10 @@ def clean_spaces_safe(user, client):
         try:
             clean_spaces(user, client)
             return True
-        except subprocess.CalledProcessError as e:
-            print "ERROR CLEANING SPACES: ", e.message
+        except subprocess.CalledProcessError:
             return False
 
-    ret = repeat_until(condition, 5)
-    return ret
+    return repeat_until(condition, 5)
 
 
 def clean_spaces(user, client):
@@ -293,8 +287,7 @@ def clean_mount_path(user, client):
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True)
         # lazy=True)
-        rm(client, recursive=True, force=True, path=client.mount_path,
-           output=True)
+        rm(client, recursive=True, force=True, path=client.mount_path)
 
 
 def client_mount_path(path, client):

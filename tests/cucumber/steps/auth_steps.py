@@ -20,9 +20,3 @@ def default_mount(user, mount_path, token, request, environment, context,
                 mount_paths=[mount_path], client_hosts=['client-host1'],
                 tokens=[token])
 
-
-@given(parsers.parse('oneclient is started for {user}'))
-def is_oneclient_started(user, context):
-    multi_auth_steps.is_oneclient_started_multi(make_arg_list(user),
-                                                make_arg_list('client1'),
-                                                context)

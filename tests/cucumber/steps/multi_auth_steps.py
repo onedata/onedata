@@ -51,14 +51,3 @@ def check_spaces(spaces, user, context):
                 return False
 
         assert repeat_until(condition, timeout=client.timeout)
-
-
-# TODO is this step needed ???
-@given(parsers.parse('oneclient is started for {users} on {clients}'))
-def is_oneclient_started_multi(users, clients, context):
-    users = list_parser(users)
-    clients = list_parser(clients)
-    params = zip(users, clients)
-    for user, client in params:
-        multi_file_steps.ls_present(user, make_arg_list('spaces'), '.', client,
-                                    context)
