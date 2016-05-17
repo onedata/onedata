@@ -24,7 +24,7 @@ def config_file(relative_file_path):
 
 def get_file_name(file_path):
     """Returns name of file, basing on file_path.
-    Name is acquired by removing parent directories from file_path and strippin
+    Name is acquired by removing parent directories from file_path and stripping
     extension.
     i.e. get_file_name("dir1/dir2/file.py") will return "file"
     """
