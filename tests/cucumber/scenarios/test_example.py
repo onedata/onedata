@@ -11,15 +11,15 @@ from tests import *
 from pytest_bdd import scenario
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
+from tests.utils.file_utils import env_file
 
 import pytest
 
 
 @pytest.fixture(scope="module",
-                params=["singleprovider_singleclient_directio.json"])
+                params=["singleprovider_singleclient_directio"])
 def env_description_file(request):
-    absolute_path = os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
-    return absolute_path
+    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario(

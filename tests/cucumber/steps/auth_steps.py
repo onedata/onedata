@@ -20,3 +20,8 @@ def default_mount(user, mount_path, token, request, environment, context,
                 mount_paths=[mount_path], client_hosts=['client-host1'],
                 tokens=[token])
 
+
+@then(parsers.parse('{spaces} are mounted for {user}'))
+def check_spaces(spaces, user, context):
+    multi_auth_steps.check_spaces(spaces, user, make_arg_list("client1"),
+                                  context)

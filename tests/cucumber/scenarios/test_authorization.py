@@ -9,17 +9,16 @@ from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.multi_auth_steps import *
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
+from tests.utils.file_utils import env_file
 
 from pytest_bdd import scenario
 import pytest
 
 
 @pytest.fixture(scope="module",
-                params=["singleprovider_singleclient_directio.json",
-                        "singleprovider_singleclient_proxy.json"])
+                params=["singleclient_authorization"])
 def env_description_file(request):
-    absolute_path = os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
-    return absolute_path
+    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario(

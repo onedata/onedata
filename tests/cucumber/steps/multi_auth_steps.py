@@ -12,7 +12,8 @@ from pytest_bdd import given
 
 import multi_file_steps
 from cucumber_utils import *
-from tests.utils.client_utils import ls, mount_users, client_mount_path
+from tests.utils.client_utils import (ls, mount_users, client_mount_path,
+                                      get_client)
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +
@@ -30,16 +31,17 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
                 tokens=list_parser(tokens))
 
 
-@then(parsers.parse('{spaces} are mounted for {user}'))
-def check_spaces(spaces, user, context):
+@then(parsers.parse('{spaces} are mounted for {user} on {client_nodes}'))
+def check_spaces(spaces, user, client_nodes, context):
     # sleep to be sure that environment is up
     spaces = list_parser(spaces)
     user = str(user)
-    for client_instance, client in context.users[user].clients.items():
+    client_nodes = list_parser(client_nodes)
+    for client_node in client_nodes:
+        client = get_client(client_node, user, context)
         spaces_path = client_mount_path("spaces", client)
 
         def condition():
-
             try:
                 spaces_in_client = ls(client, path=spaces_path, user=user)
                 spaces_in_client = spaces_in_client.split("\n")

@@ -76,3 +76,17 @@ def get_module(name):
 def get_function(module, function_name):
     """Returns function object from given module"""
     return getattr(module, function_name)
+
+
+def ensure_json(file):
+    """Ensures that file has .json extension."""
+    if os.path.splitext(file)[1] != ".json ":
+        file = ".".join([file, "json"])
+    return file
+
+
+def env_file(dir, file):
+    """Returns absolut path to environment file from dir. Ensures that file
+    has .json extension"""
+    return os.path.join(dir, ensure_json(file))
+
