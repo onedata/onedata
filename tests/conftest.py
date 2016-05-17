@@ -105,7 +105,8 @@ def skip_by_env(request, env_description_file):
         env = get_file_name(env_description_file)
         args = request.node.get_marker('skip_env').kwargs
         reason = args['reason']
-        if env in args['envs']:
+        arg_envs = [get_file_name(e) for e in args['envs']]
+        if env in arg_envs:
                 pytest.skip('skipped on env: {env} with reason: {reason}'
                             .format(env=env, reason=reason))
 
@@ -127,7 +128,8 @@ def xfail_by_env(request, env_description_file):
         env = get_file_name(env_description_file)
         args = request.node.get_marker('xfail_env').kwargs
         reason = args['reason']
-        if env in args['envs']:
+        arg_envs = [get_file_name(e) for e in args['envs']]
+        if env in arg_envs:
             pytest.xfail('xfailed on env: {env} with reason: {reason}'
                          .format(env=env, reason=reason))
 
