@@ -1,11 +1,10 @@
+"""Module implements pytest-bdd steps for authorization and mounting oneclient.
 """
-Author: Piotr Ociepka
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-Module implements pytest-bdd steps for authorization and mounting oneclient.
-"""
 import subprocess
 
 from pytest_bdd import given

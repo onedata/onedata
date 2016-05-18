@@ -1,10 +1,10 @@
+"""Module implements pytest-bdd steps for operations on directories in multiclient environment.
 """
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-Module implements pytest-bdd steps for operations on directories in multiclient environment.
-"""
 from cucumber_utils import *
 from tests.utils.client_utils import ls, rm, rmdir, mkdir, cp, client_mount_path, \
     save_op_code, get_client

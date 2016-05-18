@@ -1,11 +1,10 @@
+"""This module implements some common basic functions and functionality for
+cucumber-like tests of onedata.
 """
-Author: Piotr Ociepka
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Module implements some common basic functions and functionality.
-"""
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 import time
 
