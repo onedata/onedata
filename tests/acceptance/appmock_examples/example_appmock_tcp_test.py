@@ -1,3 +1,9 @@
+"""This module contains tests of appmock mocking tcp server.
+"""
+__author__ = "Lukasz Opiola"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 from tests import *
 from tests.utils.path_utils import config_file, get_file_name, make_logdir
 

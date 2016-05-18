@@ -1,6 +1,13 @@
-import socket
+"""This module contains utility functions used in env_up tests.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 from tests.utils import net_utils
+
+import socket
 
 
 def check_appmock_up(env, dockers_num):

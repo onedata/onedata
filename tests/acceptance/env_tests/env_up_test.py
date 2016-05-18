@@ -1,3 +1,10 @@
+"""This module contains acceptance test of env_up script.
+"""
+__author__ = "Lukasz Opiola, Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests import *
 from tests.utils.utils import run_env_up_script
 from tests.utils.path_utils import config_file, get_file_name, make_logdir

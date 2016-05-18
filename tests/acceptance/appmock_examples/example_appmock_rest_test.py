@@ -1,3 +1,10 @@
+"""This module contains tests of appmock mocking rest endpoints.
+"""
+__author__ = "Lukasz Opiola"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from environment import docker, appmock, common
 
 from appmock import appmock_client

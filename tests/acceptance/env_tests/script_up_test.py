@@ -1,10 +1,17 @@
+"""This module contains acceptance tests of scripts that bring up dockerized
+test environment.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests import *
 from tests.utils.utils import run_env_up_script
 from tests.utils.path_utils import (config_file, get_file_name, make_logdir,
                                     get_json_files, get_function)
 from tests.utils.net_utils import ping
 import test_utils
-
 from environment import docker, common, dns
 
 import pytest
