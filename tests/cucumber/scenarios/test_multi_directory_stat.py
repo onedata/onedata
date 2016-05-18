@@ -1,11 +1,10 @@
-"""
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Test suite for reading/changing  metadata of directories in onedata,
+"""Test suite for reading/changing  metadata of directories in onedata,
 in multi-client environment.
 """
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.multi_auth_steps import *
@@ -59,9 +58,12 @@ def test_timestamp(env_description_file):
 
 # # TODO VFS-1506
 @pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="touch on file without write permission should fail, "
-               "it will be checked in VFS-1506")
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
+          "multiprovider_directio"],
+    reason="touch on file without write permission should fail, "
+           "it will be checked in VFS-1506")
 @scenario(
     '../features/multi_directory_stat.feature',
     'Update timestamps without write permission'
@@ -96,9 +98,12 @@ def test_modification_time(env_description_file):
 
 # TODO VFS-1821
 @pytest.mark.xfail_env(
-        envs=["env", "env2", "env3"],
-        reason="status-change times is equal to access and modification, "
-               "it will be checked VFS-1821")
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
+          "multiprovider_directio"],
+    reason="status-change times is equal to access and modification, "
+           "it will be checked VFS-1821")
 @scenario(
     '../features/multi_directory_stat.feature',
     'Status-change time when changing mode'

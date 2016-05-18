@@ -1,18 +1,27 @@
+"""Test suite for CRUD operations on directories in onedata.
 """
-Author: Piotr Ociepka
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-Test suite for CRUD operations on directories in onedata.
-"""
+from tests import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.dir_steps import *
 from tests.cucumber.steps.file_steps import *
+from tests.utils.path_utils import env_file
 
+import pytest
 from pytest_bdd import scenario
+
+
+@pytest.fixture(scope="module",
+                params=["singleprovider_singleclient_directio",
+                        "singleprovider_singleclient_proxy"])
+def env_description_file(request):
+    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario(
@@ -183,6 +192,9 @@ def test_move_to_itself_spaces(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
+                             "singleprovider_singleclient_proxy"],
+                       reason="Move fails")
 @scenario(
     '../features/directory_CRUD.feature',
     'Move directory to itself in default space'

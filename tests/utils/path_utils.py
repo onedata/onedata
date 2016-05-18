@@ -1,12 +1,14 @@
-"""This file contains util functions that should be used to operate on files
-and file paths in acceptance tests"""
+"""This file contains utility functions for operation on file paths.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 import inspect
 import os
 import sys
 import time
-
-__author__ = "Jakub Kudzia"
 
 
 def config_file(relative_file_path):
@@ -24,7 +26,7 @@ def config_file(relative_file_path):
 
 def get_file_name(file_path):
     """Returns name of file, basing on file_path.
-    Name is acquired by removing parent directories from file_path and strippin
+    Name is acquired by removing parent directories from file_path and stripping
     extension.
     i.e. get_file_name("dir1/dir2/file.py") will return "file"
     """
@@ -76,3 +78,17 @@ def get_module(name):
 def get_function(module, function_name):
     """Returns function object from given module"""
     return getattr(module, function_name)
+
+
+def ensure_json(file):
+    """Ensures that file has .json extension."""
+    if os.path.splitext(file)[1] != ".json ":
+        file = ".".join([file, "json"])
+    return file
+
+
+def env_file(dir, file):
+    """Returns absolut path to environment file from dir. Ensures that file
+    has .json extension"""
+    return os.path.join(dir, ensure_json(file))
+

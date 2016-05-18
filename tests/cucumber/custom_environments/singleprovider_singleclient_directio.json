@@ -30,42 +30,17 @@
                 }
             ],
             "users": [
-                "u1",
-                "u2"
+                "u1"
             ],
             "groups": {
                 "s1": [
-                    "u1",
-                    "u2"
+                    "u1"
                 ],
                 "s2": [
-                    "u1",
-                    "u2"
+                    "u1"
                 ],
                 "fuse": [
-                    "u1",
-                    "u2"
-                ]
-            }
-        },
-        "cfg2": {
-            "storages": [],
-            "users": [
-                "u1",
-                "u2"
-            ],
-            "groups": {
-                "s1": [
-                    "u1",
-                    "u2"
-                ],
-                "s2": [
-                    "u1",
-                    "u2"
-                ],
-                "fuse": [
-                    "u1",
-                    "u2"
+                    "u1"
                 ]
             }
         }
@@ -104,12 +79,6 @@
                             ],
                             "oz_domain": "oz1",
                             "verify_oz_cert": false
-                        }
-                    },
-                    "storage": {
-                        "storage1": {
-                            "volume_path": "/media/storage",
-                            "host_path": "/tmp/blah"
                         }
                     }
                 }
@@ -159,7 +128,7 @@
     },
     "oneclient": {
         "client-host1": {
-            "os_config": "cfg2",
+            "os_config": "cfg1",
             "clients": {
                 "client1": {
                     "name": "client1",
@@ -168,43 +137,7 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1",
-                    "default_timeout": 10
-                },
-                "client2": {
-                    "name": "client2",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata2",
-                    "token_for": "u1",
-                    "default_timeout": 10
-                }
-            }
-        },
-        "client-host2": {
-            "os_config": "cfg2",
-            "clients": {
-                "client1": {
-                    "name": "client1",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1",
-                    "default_timeout": 10
-                },
-                "client2": {
-                    "name": "client2",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u2/onedata",
-                    "token_for": "u2",
-                    "default_timeout": 10
+                    "token_for": "u1"
                 }
             }
         }
@@ -221,8 +154,7 @@
         "groups": {
             "g1": {
                 "users": [
-                    "u1",
-                    "u2"
+                    "u1"
                 ]
             }
         },
@@ -230,8 +162,7 @@
             "s1": {
                 "displayed_name": "s1",
                 "users": [
-                    "u1",
-                    "u2"
+                    "u1"
                 ],
                 "groups": [
                     "g1"
@@ -246,8 +177,7 @@
             "s2": {
                 "displayed_name": "s2",
                 "users": [
-                    "u1",
-                    "u2"
+                    "u1"
                 ],
                 "groups": [
                     "g1"

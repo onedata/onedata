@@ -1,10 +1,10 @@
+"""Module implements pytest-bdd steps for operations on regular files.
 """
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-Module implements pytest-bdd steps for operations on regular files.
-"""
 import multi_reg_file_steps
 from cucumber_utils import *
 from pytest_bdd import when, then, parsers

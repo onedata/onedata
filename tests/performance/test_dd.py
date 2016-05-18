@@ -1,19 +1,17 @@
+"""This module contains performance tests of dd operation in oneclient.
 """
-This module contains performance tests of dd operation in oneclient
-"""
-import os
-import re
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import (Result, generate_configs, performance)
 from tests.utils.client_utils import (get_client, mktemp, rm,
                                       user_home_dir, dd)
 
-
-__author__ = "Jakub Kudzia"
-__copyright__ = """(C) 2016 ACK CYFRONET AGH,
-This software is released under the MIT license cited in 'LICENSE.txt'."""
-
+import os
+import re
 
 REPEATS = 5
 SUCCESS_RATE = 95
@@ -26,19 +24,19 @@ SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
 class Testdd(AbstractPerformanceTest):
 
     @performance(
-            default_config={
-                'repeats': REPEATS,
-                'success_rate': SUCCESS_RATE,
-                'parameters': {
-                    'size': {'description': "size", 'unit': "kB"},
-                    'block_size': {'description': "size of block", 'unit': "kB"}
-                },
-                'description': 'Test of dd throughput'
+        default_config={
+            'repeats': REPEATS,
+            'success_rate': SUCCESS_RATE,
+            'parameters': {
+                'size': {'description': "size", 'unit': "kB"},
+                'block_size': {'description': "size of block", 'unit': "kB"}
             },
-            configs=generate_configs({
-                'block_size': [1, 4, 128, 1024],
-                'size': [1024, 1048576],# 10485760]
-            }, "DD TEST -- block size: {block_size} size: {size}"))
+            'description': 'Test of dd throughput'
+        },
+        configs=generate_configs({
+            'block_size': [1, 4, 128, 1024],
+            'size': [1024, 10240]#, 1048576, 10485760]
+        }, "DD TEST -- block size: {block_size} size: {size}"))
     def test_dd(self, context, clients, params):
 
         size = params['size']['value']
@@ -50,7 +48,6 @@ class Testdd(AbstractPerformanceTest):
 
         client_directio = get_client("client-directio", user_directio, context)
         client_proxy = get_client("client-proxy", user_proxy, context)
-
 
         test_file_directio = mktemp(client_directio,
                                     path=client_directio.mount_path,
@@ -105,12 +102,12 @@ def execute_dd_test(client, user, test_file, block_size, block_size_unit, size,
     return [
         Result('write_throughput_{}'.format(description),
                write_throughput,
-                   "Throughput of write operation in case of {}".format(description),
-                   "MB/s"),
+               "Throughput of write operation in case of {}".format(description),
+                "MB/s"),
         Result('read_throughput_{}'.format(description),
                read_throughput,
-                   "Throughput of read operation in case of {}".format(description),
-                   "MB/s")
+               "Throughput of read operation in case of {}".format(description),
+               "MB/s")
     ]
 
 

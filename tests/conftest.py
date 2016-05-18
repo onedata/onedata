@@ -1,5 +1,13 @@
+"""
+Definitions of fixtures used in acceptance, cucumber and performance tests.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests import *
-from tests.utils.file_utils import make_logdir, get_file_name, get_json_files
+from tests.utils.path_utils import make_logdir, get_file_name, get_json_files
 from tests.utils.utils import run_env_up_script
 
 from environment import docker
@@ -34,10 +42,13 @@ def test_type():
 
 @pytest.fixture(scope="module")
 def env_description_file(request, test_type, env):
-    """NOTE: This fixture must be overridden in every test module. As params
+    """NOTE: If you want to start tests in given suite with environments
+    different than all .json files from DEFAULT_CUCUMBER_ENV_DIR or
+    PERFORMANCE_ENV_DIR (cucumber and performance tests respectively)
+    this fixture must be overridden in that test module. As params
     for overridden fixture you must specify .json files with description
-    of test environment for which you want tests from given module to be
-    started.
+    of test environment for which you want tests to be started.
+    This fixture must return absolute path to given .json.
     """
     absolute_path = os.path.join(map_test_type_to_env_dir(test_type), env)
     return absolute_path
@@ -105,7 +116,8 @@ def skip_by_env(request, env_description_file):
         env = get_file_name(env_description_file)
         args = request.node.get_marker('skip_env').kwargs
         reason = args['reason']
-        if env in args['envs']:
+        arg_envs = [get_file_name(e) for e in args['envs']]
+        if env in arg_envs:
                 pytest.skip('skipped on env: {env} with reason: {reason}'
                             .format(env=env, reason=reason))
 
@@ -121,12 +133,14 @@ def xfail_by_env(request, env_description_file):
     global variable in that module named pytestmark in
     the following way:
     pytestmark = pytest.mark.xfail_env(*envs)
+    Running tests with --runxfail causes tests marked as xfail to run
     """
     if request.node.get_marker('xfail_env'):
         env = get_file_name(env_description_file)
         args = request.node.get_marker('xfail_env').kwargs
         reason = args['reason']
-        if env in args['envs']:
+        arg_envs = [get_file_name(e) for e in args['envs']]
+        if env in arg_envs:
             pytest.xfail('xfailed on env: {env} with reason: {reason}'
                          .format(env=env, reason=reason))
 

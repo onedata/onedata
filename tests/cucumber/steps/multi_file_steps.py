@@ -1,15 +1,17 @@
-"""Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Module implements common steps for operation on files (both regular files
-and directories)in multiclient environment.
+"""Module implements common steps for operation on files (both regular files
+and directories)in multi-client environment.
 """
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 import subprocess
 
 from cucumber_utils import *
-from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch, client_mount_path, \
-    save_op_code, get_client
+from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
+                                      client_mount_path, save_op_code,
+                                      get_client)
 
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))

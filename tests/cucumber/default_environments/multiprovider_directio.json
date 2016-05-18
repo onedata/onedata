@@ -25,35 +25,52 @@
         "cfg1": {
             "storages": [
                 {
-                  "type": "posix",
-                  "name": "/mnt/st1"
-                },
-                {
-                  "type": "ceph",
-                  "name": "ceph",
-                  "pool": "onedata:8"
-                },
-                {
-                  "type": "s3",
-                  "name": "s3",
-                  "bucket": "onedata"
+                    "type": "posix",
+                    "name": "/mnt/st1"
                 }
             ],
             "users": [
-                "u1"
+                "u1",
+                "u2"
             ],
             "groups": {
-                "ceph": [
-                    "u1"
+                "s1": [
+                    "u1",
+                    "u2"
                 ],
-                "posix": [
-                    "u1"
-                ],
-                "s3": [
-                    "u1"
+                "s2": [
+                    "u1",
+                    "u2"
                 ],
                 "fuse": [
-                    "u1"
+                    "u1",
+                    "u2"
+                ]
+            }
+        },
+        "cfg2": {
+            "storages": [
+                {
+                    "type": "posix",
+                    "name": "/mnt/st2"
+                }
+            ],
+            "users": [
+                "u1",
+                "u2"
+            ],
+            "groups": {
+                "s1": [
+                    "u1",
+                    "u2"
+                ],
+                "s2": [
+                    "u1",
+                    "u2"
+                ],
+                "fuse": [
+                    "u1",
+                    "u2"
                 ]
             }
         }
@@ -93,6 +110,56 @@
                             "oz_domain": "oz1",
                             "verify_oz_cert": false
                         }
+                    },
+                    "storage": {
+                        "storage1": {
+                            "volume_path": "/media/storage",
+                            "host_path": "/tmp/blah"
+                        }
+                    }
+                }
+            }
+        },
+        "p2": {
+            "db_driver": "couchdb",
+            "os_config": "cfg2",
+            "cluster_manager": {
+                "cm1": {
+                    "vm.args": {
+                        "setcookie": "cookie3"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "worker_num": 1
+                        }
+                    }
+                }
+            },
+            "op_worker": {
+                "worker1": {
+                    "vm.args": {
+                        "setcookie": "cookie3"
+                    },
+                    "sys.config": {
+                        "op_worker": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "db_nodes": [
+                                "dbnode1"
+                            ],
+                            "oz_domain": "oz1",
+                            "verify_oz_cert": false
+                        }
+                    },
+                    "storage": {
+                        "storage1": {
+                            "volume_path": "/media/storage",
+                            "host_path": "/tmp/blah"
+                        }
                     }
                 }
             }
@@ -104,7 +171,7 @@
             "cluster_manager": {
                 "cm": {
                     "vm.args": {
-                        "setcookie": "cookie3"
+                        "setcookie": "cookie4"
                     },
                     "sys.config": {
                         "cluster_manager": {
@@ -119,7 +186,7 @@
             "oz_worker": {
                 "node1": {
                     "vm.args": {
-                        "setcookie": "cookie3"
+                        "setcookie": "cookie4"
                     },
                     "sys.config": {
                         "oz_worker": {
@@ -150,7 +217,23 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
+                    "token_for": "u1",
+                    "default_timeout": 10
+                }
+            }
+        },
+        "client-host2": {
+            "os_config": "cfg2",
+            "clients": {
+                "client2": {
+                    "name": "client2",
+                    "op_domain": "p2",
+                    "zone_domain": "oz1",
+                    "user_cert": "./cert.pem",
+                    "user_key": "./cert.pem",
+                    "mounting_path": "/home/u2/onedata",
+                    "token_for": "u2",
+                    "default_timeout": 10
                 }
             }
         }
@@ -158,51 +241,26 @@
     "global_setup": {
         "users": {
             "u1": {
-                "default_space": "posix"
+                "default_space": "s1"
+            },
+            "u2": {
+                "default_space": "s1"
             }
         },
         "groups": {
             "g1": {
                 "users": [
-                    "u1"
+                    "u1",
+                    "u2"
                 ]
             }
         },
         "spaces": {
-            "ceph": {
-                "displayed_name": "ceph",
+            "s1": {
+                "displayed_name": "s1",
                 "users": [
-                    "u1"
-                ],
-                "groups": [
-                    "g1"
-                ],
-                "providers": {
-                    "p1": {
-                        "storage": "ceph",
-                        "supported_size": 1000000000
-                    }
-                }
-            },
-            "s3": {
-                "displayed_name": "s3",
-                "users": [
-                    "u1"
-                ],
-                "groups": [
-                    "g1"
-                ],
-                "providers": {
-                    "p1": {
-                        "storage": "s3",
-                        "supported_size": 1000000000
-                    }
-                }
-            },
-            "posix": {
-                "displayed_name": "posix",
-                "users": [
-                    "u1"
+                    "u1",
+                    "u2"
                 ],
                 "groups": [
                     "g1"
@@ -210,6 +268,30 @@
                 "providers": {
                     "p1": {
                         "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    },
+                    "p2":{
+                        "storage": "/mnt/st2",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "s2": {
+                "displayed_name": "s2",
+                "users": [
+                    "u1",
+                    "u2"
+                ],
+                "groups": [
+                    "g1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    },
+                    "p2":{
+                        "storage": "/mnt/st2",
                         "supported_size": 1000000000
                     }
                 }

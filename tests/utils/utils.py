@@ -1,6 +1,6 @@
 """This module contains utility functions to be used in acceptance tests."""
 from tests import *
-from tests.utils.file_utils import make_logdir, save_log_to_file
+from tests.utils.path_utils import make_logdir, save_log_to_file
 
 from environment.common import parse_json_config_file
 

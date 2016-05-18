@@ -1,9 +1,9 @@
-"""
-This module contains performance tests of oneclient using sysbench benchmark.
+"""This module contains performance tests of oneclient using sysbench benchmark.
 """
 __author__ = "Jakub Kudzia"
-__copyright__ = """(C) 2016 ACK CYFRONET AGH,
-This software is released under the MIT license cited in 'LICENSE.txt'."""
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 import re
 
@@ -23,41 +23,39 @@ SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
 class TestSysbench(AbstractPerformanceTest):
 
     @performance(
-            default_config={
-                'repeats': REPEATS,
-                'success_rate': SUCCESS_RATE,
-                'parameters': {
-                    'files_number': {
-                        'description': "Number of files",
-                        'unit': ""
-                    },
-                    'threads_number': {
-                        'description': "Number of threads",
-                        'unit': ""
-                    },
-                    'mode': {
-                        'description': "Modes",
-                        'unit': ""
-                    },
-                    'total_size': {
-                        'description': "Total size",
-                        'unit': "MB"
-                    }
+        default_config={
+            'repeats': REPEATS,
+            'success_rate': SUCCESS_RATE,
+            'parameters': {
+                'files_number': {
+                    'description': "Number of files",
+                    'unit': ""
                 },
-                'description': 'Testing file system using sysbench'
+                'threads_number': {
+                    'description': "Number of threads",
+                    'unit': ""
+                },
+                'mode': {
+                    'description': "Modes",
+                    'unit': ""
+                },
+                'total_size': {
+                    'description': "Total size",
+                    'unit': "MB"
+                }
             },
-            configs=generate_configs({
-                'files_number': [10, 100],# 1000],
-                'threads_number': [1, 16],
-                'total_size': [100],# 1000],
-                'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
-            }, 'SYSBENCH TEST -- '
-               'Files number: {files_number} '
-               'Threads number: {threads_number} '
-               'Total Size: {total_size} '
-               'Mode: {mode}')
-
-    )
+            'description': 'Testing file system using sysbench'
+        },
+        configs=generate_configs({
+            'files_number': [10, 100],# 1000],
+            'threads_number': [1, 16],
+            'total_size': [100],# 1000],
+            'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
+        }, 'SYSBENCH TEST -- '
+           'Files number: {files_number} '
+           'Threads number: {threads_number} '
+           'Total Size: {total_size} '
+           'Mode: {mode}'))
     def test_sysbench(self, context, clients, params):
         user_directio = "u1"
         user_proxy = "u2"
@@ -67,7 +65,6 @@ class TestSysbench(AbstractPerformanceTest):
         files_number = params['files_number']['value']
         total_size = params['total_size']['value']
         mode = params['mode']['value']
-
 
         dir_path_directio = mktemp(client_directio,
                                    path=client_directio.mount_path,
@@ -112,16 +109,17 @@ class TestSysbench(AbstractPerformanceTest):
 
 def execute_sysbench_test(client, user, threads_number, total_size, files_number,
                           mode, dir_path, description):
-    out = parse_sysbench_output(sysbench_tests(
-            threads_number, total_size, files_number, mode, client, user, dir_path))
+    out = parse_sysbench_output(sysbench_tests(threads_number, total_size,
+                                               files_number, mode, client,
+                                               user, dir_path))
     return [
         Result("transfer_{}".format(description),
                out['transfer'],
-                   "Transfer velocity in case of {}".format(description),
+               "Transfer velocity in case of {}".format(description),
                out['transfer_unit']),
         Result("requests_{}".format(description),
                out['requests_velocity'],
-                   "Requests per second in onedata {}".format(description),
+               "Requests per second in onedata {}".format(description),
                out['requests_velocity_unit']),
     ]
 

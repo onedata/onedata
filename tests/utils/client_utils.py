@@ -1,9 +1,19 @@
-import os
-import time
-import pytest
+"""This module contains utility functions for using client instances under
+tests. Client is started in docker during acceptance, cucumber and performance
+tests.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-from tests.utils.docker_utils import run_cmd
 from tests.utils.utils import set_dns, get_token, get_cookie
+from tests.utils.docker_utils import run_cmd
+from tests.cucumber.steps.cucumber_utils import repeat_until
+
+import os
+import pytest
+import subprocess
 
 
 class User:
@@ -26,7 +36,6 @@ class Client:
 def mount_users(request, environment, context, client_ids, env_description_file,
                 users=[], client_instances=[], mount_paths=[],
                 client_hosts=[], tokens=[]):
-
     # current version is for environment with one OZ
     oz_node = environment['oz_worker_nodes'][0]
 
@@ -42,7 +51,8 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
     request.addfinalizer(fin)
 
-    parameters = zip(users, clients, client_instances, mount_paths, client_hosts, tokens)
+    parameters = zip(users, clients, client_instances, mount_paths,
+                     client_hosts, tokens)
     for user, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
@@ -53,7 +63,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
             token = get_token(token_arg, user, oz_node, cookie)
         client.set_timeout(data.get('default_timeout', 0))
 
-        print "User {user} mounts oneclient using token: {token}" .format(
+        print "User {user} mounts oneclient using token: {token}".format(
                 user=user,
                 token=token)
 
@@ -61,6 +71,8 @@ def mount_users(request, environment, context, client_ids, env_description_file,
         assert run_cmd('root', client, 'chmod +x /root') == 0
 
         token_path = "/tmp/token"
+
+        # echo_to_file(client, token, token_path, output=True)
 
         cmd = ('mkdir -p {mount_path}'
                ' && export GLOBAL_REGISTRY_URL={gr_domain}'
@@ -83,7 +95,9 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
         if token_arg != "bad token":
             # if token was different than "bad token", check if logging succeeded
-            assert ret == 0
+            if ret != 0:
+                clean_mount_path(user, client)
+                pytest.skip("Error mounting oneclient")
 
         if user in context.users:
             context.users[user].clients[client_instance] = client
@@ -92,14 +106,13 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
         # remove accessToken to mount many clients on one docker
         rm(client, recursive=True, force=True,
-           path=os.path.join(os.path.dirname(mount_path), ".local"),
-           user=user)
+           path=os.path.join(os.path.dirname(mount_path), ".local"))
 
-        rm(client, recursive=True, force=True, path=token_path, user=user)
-
-        time.sleep(5)
+        rm(client, recursive=True, force=True, path=token_path)
         if token != 'bad_token':
-            clean_spaces_safe(user, client)
+            if not clean_spaces_safe(user, client):
+                pytest.skip("Test skipped beacause of failing to clean spaces")
+
         save_op_code(context, user, ret)
 
 
@@ -146,6 +159,7 @@ def rmdir(client, dir_path, recursive=False, from_path=None, user="root",
 
 def mkdir(client, dir_path, recursive=False, user="root", output=False):
     cmd = "mkdir {recursive} {path}".format(
+
             recursive="-p" if recursive else "",
             path=dir_path)
     return run_cmd(user, client, cmd, output=output)
@@ -165,30 +179,29 @@ def cp(client, src, dest, recursive=False, user="root", output=False):
 
 
 def truncate(client, file_path, size, user="root", output=False):
-    cmd = "truncate --size={size} {file_path}".format(size=size, file_path=file_path)
+    cmd = "truncate --size={size} {file_path}".format(size=size,
+                                                      file_path=file_path)
     return run_cmd(user, client, cmd, output=output)
 
 
 def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
        user="root", output=False, error=False):
-
     cmd = "dd {input} {output} {bs} {count}".format(
-        input="if={}".format(input_file),
-        output="of={}".format(output_file),
-        bs="bs={0}{1}".format(block_size, unit),
-        count="count={}".format(count))
+            input="if={}".format(input_file),
+            output="of={}".format(output_file),
+            bs="bs={0}{1}".format(block_size, unit),
+            count="count={}".format(count))
     return run_cmd(user, client, cmd, output=output, error=True)
 
 
 def echo_to_file(client, text, file_path, new_line=False, escape=False,
                  user="root", overwrite=True, output=False):
-
     cmd = "echo {newline} {escape} '{text}' {redirect} {file_path}".format(
-        newline="-n" if not new_line else "",
-        escape="-e" if escape else "",
-        text=text,
-        redirect=">" if overwrite else ">>",
-        file_path=file_path)
+            newline="-n" if not new_line else "",
+            escape="-e" if escape else "",
+            text=text,
+            redirect=">" if overwrite else ">>",
+            file_path=file_path)
     return run_cmd(user, client, cmd, output=output)
 
 
@@ -221,10 +234,10 @@ def replace_pattern(client, file_path, pattern, new_text, user='root',
 def fusermount(client, path, user='root', unmount=False, lazy=False,
                quiet=False, output=False):
     cmd = "fusermount {unmount} {lazy} {quiet} {path}".format(
-        unmount="-u" if unmount else "",
-        lazy="-z" if lazy else "",
-        quiet="-q" if quiet else "",
-        path=path
+            unmount="-u" if unmount else "",
+            lazy="-z" if lazy else "",
+            quiet="-q" if quiet else "",
+            path=path
     )
     return run_cmd(user, client, cmd, output)
 
@@ -238,10 +251,14 @@ def create_clients(users, client_hosts, mount_paths, client_ids):
 
 
 def clean_spaces_safe(user, client):
-    try:
-        clean_spaces(user, client)
-    except:
-        pytest.skip("Test skipped beacause of failing to clean spaces")
+    def condition():
+        try:
+            clean_spaces(user, client)
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+    return repeat_until(condition, 5)
 
 
 def clean_spaces(user, client):
@@ -250,7 +267,8 @@ def clean_spaces(user, client):
     # clean spaces
     for space in spaces:
         rm(client, recursive=True, user=user, force=True,
-           path=client_mount_path(os.path.join('spaces', str(space), '*'), client))
+           path=client_mount_path(os.path.join('spaces', str(space), '*'),
+                                  client))
 
 
 def clean_mount_path(user, client):
@@ -262,10 +280,10 @@ def clean_mount_path(user, client):
         # get pid of running oneclient node
         pid = run_cmd('root', client,
                       " | ".join(
-                          ["ps aux",
-                           "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
-                           "grep -v 'grep'",
-                           "awk '{print $2}'"]),
+                              ["ps aux",
+                               "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
+                               "grep -v 'grep'",
+                               "awk '{print $2}'"]),
                       output=True)
 
         if pid != "":
@@ -274,9 +292,8 @@ def clean_mount_path(user, client):
 
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True)
-                   # lazy=True)
-        rm(client, recursive=True, force=True, path=client.mount_path,
-           output=True)
+        # lazy=True)
+        rm(client, recursive=True, force=True, path=client.mount_path)
 
 
 def client_mount_path(path, client):

@@ -25,31 +25,35 @@
         "cfg1": {
             "storages": [
                 {
-                  "type": "posix",
-                  "name": "/mnt/st1"
-                },
-                {
-                  "type": "ceph",
-                  "name": "ceph",
-                  "pool": "onedata:8"
-                },
-                {
-                  "type": "s3",
-                  "name": "s3",
-                  "bucket": "onedata"
+                    "type": "posix",
+                    "name": "/mnt/st1"
                 }
             ],
             "users": [
                 "u1"
             ],
             "groups": {
-                "ceph": [
+                "s1": [
                     "u1"
                 ],
-                "posix": [
+                "s2": [
                     "u1"
                 ],
-                "s3": [
+                "fuse": [
+                    "u1"
+                ]
+            }
+        },
+        "cfg2": {
+            "storages": [],
+            "users": [
+                "u1"
+            ],
+            "groups": {
+                "s1": [
+                    "u1"
+                ],
+                "s2": [
                     "u1"
                 ],
                 "fuse": [
@@ -141,7 +145,7 @@
     },
     "oneclient": {
         "client-host1": {
-            "os_config": "cfg1",
+            "os_config": "cfg2",
             "clients": {
                 "client1": {
                     "name": "client1",
@@ -158,7 +162,10 @@
     "global_setup": {
         "users": {
             "u1": {
-                "default_space": "posix"
+                "default_space": "s1"
+            },
+            "u2": {
+                "default_space": "s1"
             }
         },
         "groups": {
@@ -169,8 +176,8 @@
             }
         },
         "spaces": {
-            "ceph": {
-                "displayed_name": "ceph",
+            "s1": {
+                "displayed_name": "s1",
                 "users": [
                     "u1"
                 ],
@@ -179,28 +186,13 @@
                 ],
                 "providers": {
                     "p1": {
-                        "storage": "ceph",
+                        "storage": "/mnt/st1",
                         "supported_size": 1000000000
                     }
                 }
             },
-            "s3": {
-                "displayed_name": "s3",
-                "users": [
-                    "u1"
-                ],
-                "groups": [
-                    "g1"
-                ],
-                "providers": {
-                    "p1": {
-                        "storage": "s3",
-                        "supported_size": 1000000000
-                    }
-                }
-            },
-            "posix": {
-                "displayed_name": "posix",
+            "s2": {
+                "displayed_name": "s2",
                 "users": [
                     "u1"
                 ],

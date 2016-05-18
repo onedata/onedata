@@ -1,10 +1,11 @@
-"""Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Module implements common steps for operation on files (both regular files
+"""Module implements common steps for operation on files (both regular files
 and directories).
 """
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 import multi_file_steps
 from cucumber_utils import *
 

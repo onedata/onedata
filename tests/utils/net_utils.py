@@ -1,9 +1,17 @@
+"""This module contains net utility functions for acceptance, cucumber
+and performance tests.
+"""
+__author__ = "Lukasz Opiola, Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+from tests.utils.utils import run_os_command
+
 import dns.resolver
 import re
 import requests
 import time
-
-from tests.utils.utils import run_os_command
 
 
 def dns_lookup(host, dns_addr):
