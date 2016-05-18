@@ -58,7 +58,10 @@ def test_timestamp(env_description_file):
 
 # # TODO VFS-1506
 @pytest.mark.xfail_env(
-    envs=["singleprovider_singleclient_directio", "env2", "env3"],
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
+          "multiprovider_directio"],
     reason="touch on file without write permission should fail, "
            "it will be checked in VFS-1506")
 @scenario(
@@ -95,7 +98,10 @@ def test_modification_time(env_description_file):
 
 # TODO VFS-1821
 @pytest.mark.xfail_env(
-    envs=["singleprovider_singleclient_directio", "env2", "env3"],
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
+          "multiprovider_directio"],
     reason="status-change times is equal to access and modification, "
            "it will be checked VFS-1821")
 @scenario(

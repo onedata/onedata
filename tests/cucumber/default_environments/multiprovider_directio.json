@@ -49,27 +49,6 @@
             }
         },
         "cfg2": {
-            "storages": [],
-            "users": [
-                "u1",
-                "u2"
-            ],
-            "groups": {
-                "s1": [
-                    "u1",
-                    "u2"
-                ],
-                "s2": [
-                    "u1",
-                    "u2"
-                ],
-                "fuse": [
-                    "u1",
-                    "u2"
-                ]
-            }
-        },
-        "cfg3": {
             "storages": [
                 {
                     "type": "posix",
@@ -143,7 +122,7 @@
         },
         "p2": {
             "db_driver": "couchdb",
-            "os_config": "cfg3",
+            "os_config": "cfg2",
             "cluster_manager": {
                 "cm1": {
                     "vm.args": {
@@ -229,7 +208,7 @@
     },
     "oneclient": {
         "client-host1": {
-            "os_config": "cfg2",
+            "os_config": "cfg1",
             "clients": {
                 "client1": {
                     "name": "client1",
@@ -238,16 +217,6 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1",
-                    "default_timeout": 10
-                },
-                "client2": {
-                    "name": "client2",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata2",
                     "token_for": "u1",
                     "default_timeout": 10
                 }
@@ -256,16 +225,6 @@
         "client-host2": {
             "os_config": "cfg2",
             "clients": {
-                "client1": {
-                    "name": "client1",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1",
-                    "default_timeout": 10
-                },
                 "client2": {
                     "name": "client2",
                     "op_domain": "p2",

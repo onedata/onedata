@@ -107,8 +107,11 @@ def test_execute_without_permission(env_description_file):
 
 #  TODO
 @pytest.mark.xfail_env(
-        envs=["singleprovider_singleclient_directio", "env2", "env3"],
-        reason="move is being reimplemented")
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
+          "multiprovider_directio"],
+    reason="move is being reimplemented")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Move regular file and read'
@@ -119,8 +122,11 @@ def test_move(env_description_file):
 
 # TODO
 @pytest.mark.xfail_env(
-        envs=["singleprovider_singleclient_directio", "env2", "env3"],
-        reason="move is being reimplemented")
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
+          "multiprovider_directio"],
+    reason="move is being reimplemented")
 @scenario(
         '../features/multi_reg_file_CRUD.feature',
         'Move big regular file and check MD5'
