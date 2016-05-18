@@ -1,5 +1,13 @@
+"""
+Definitions of fixtures used in acceptance, cucumber and performance tests.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests import *
-from tests.utils.file_utils import make_logdir, get_file_name, get_json_files
+from tests.utils.path_utils import make_logdir, get_file_name, get_json_files
 from tests.utils.utils import run_env_up_script
 
 from environment import docker

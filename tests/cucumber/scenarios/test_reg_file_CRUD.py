@@ -12,7 +12,7 @@ from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.dir_steps import *
 from tests.cucumber.steps.file_steps import *
 from tests.cucumber.steps.reg_file_steps import *
-from tests.utils.file_utils import env_file
+from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
 import pytest

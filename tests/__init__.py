@@ -1,17 +1,19 @@
 """This file contains definitions of constants used in tests.
-It also append usefule modules to sys.path to make them available
-in tests.
+It also append useful modules to sys.path to make them available in tests.
 """
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 import os
 import sys
 
-__author__ = "Jakub Kudzia"
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
+_current_dir = os.path.dirname(os.path.realpath(__file__))
 
 # # Define constants for use in tests
 # directories
-PROJECT_DIR = os.path.dirname(current_dir)
+PROJECT_DIR = os.path.dirname(_current_dir)
 APPMOCK_DIR = os.path.join(PROJECT_DIR, 'appmock')
 BAMBOOS_DIR = os.path.join(PROJECT_DIR, 'bamboos')
 DOCKER_DIR = os.path.join(BAMBOOS_DIR, 'docker')

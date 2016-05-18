@@ -1,10 +1,19 @@
+"""This module contains utility functions for using client instances under
+tests. Client is started in docker during acceptance, cucumber and performance
+tests.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+from tests.utils.utils import set_dns, get_token, get_cookie
+from tests.utils.docker_utils import run_cmd
+from tests.cucumber.steps.cucumber_utils import repeat_until
+
 import os
 import pytest
 import subprocess
-
-from tests.cucumber.steps.cucumber_utils import repeat_until
-from tests.utils.docker_utils import run_cmd
-from tests.utils.utils import set_dns, get_token, get_cookie
 
 
 class User:
@@ -42,8 +51,8 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
     request.addfinalizer(fin)
 
-    parameters = zip(users, clients, client_instances, mount_paths, client_hosts,
-                     tokens)
+    parameters = zip(users, clients, client_instances, mount_paths,
+                     client_hosts, tokens)
     for user, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
@@ -177,24 +186,22 @@ def truncate(client, file_path, size, user="root", output=False):
 
 def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
        user="root", output=False, error=False):
-
     cmd = "dd {input} {output} {bs} {count}".format(
-        input="if={}".format(input_file),
-        output="of={}".format(output_file),
-        bs="bs={0}{1}".format(block_size, unit),
-        count="count={}".format(count))
+            input="if={}".format(input_file),
+            output="of={}".format(output_file),
+            bs="bs={0}{1}".format(block_size, unit),
+            count="count={}".format(count))
     return run_cmd(user, client, cmd, output=output, error=True)
 
 
 def echo_to_file(client, text, file_path, new_line=False, escape=False,
                  user="root", overwrite=True, output=False):
-
     cmd = "echo {newline} {escape} '{text}' {redirect} {file_path}".format(
-        newline="-n" if not new_line else "",
-        escape="-e" if escape else "",
-        text=text,
-        redirect=">" if overwrite else ">>",
-        file_path=file_path)
+            newline="-n" if not new_line else "",
+            escape="-e" if escape else "",
+            text=text,
+            redirect=">" if overwrite else ">>",
+            file_path=file_path)
     return run_cmd(user, client, cmd, output=output)
 
 
@@ -227,10 +234,10 @@ def replace_pattern(client, file_path, pattern, new_text, user='root',
 def fusermount(client, path, user='root', unmount=False, lazy=False,
                quiet=False, output=False):
     cmd = "fusermount {unmount} {lazy} {quiet} {path}".format(
-        unmount="-u" if unmount else "",
-        lazy="-z" if lazy else "",
-        quiet="-q" if quiet else "",
-        path=path
+            unmount="-u" if unmount else "",
+            lazy="-z" if lazy else "",
+            quiet="-q" if quiet else "",
+            path=path
     )
     return run_cmd(user, client, cmd, output)
 
@@ -244,7 +251,6 @@ def create_clients(users, client_hosts, mount_paths, client_ids):
 
 
 def clean_spaces_safe(user, client):
-
     def condition():
         try:
             clean_spaces(user, client)

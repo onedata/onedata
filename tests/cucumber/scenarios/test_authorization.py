@@ -9,7 +9,7 @@ from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.multi_auth_steps import *
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
-from tests.utils.file_utils import env_file
+from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
 import pytest

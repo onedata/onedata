@@ -1,6 +1,6 @@
 from tests import *
 from tests.utils.utils import run_env_up_script
-from tests.utils.file_utils import config_file, get_file_name, make_logdir
+from tests.utils.path_utils import config_file, get_file_name, make_logdir
 from test_utils import *
 
 from environment import docker

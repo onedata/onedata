@@ -9,7 +9,7 @@ from environment import docker
 
 from tests import *
 from tests.utils.client_utils import mount_users
-from tests.utils.file_utils import get_file_name
+from tests.utils.path_utils import get_file_name
 from tests.utils.git_utils import get_branch_name, get_commit, get_repository
 from tests.utils.performance_utils import *
 from tests.utils.utils import get_copyright, get_authors, get_suite_description

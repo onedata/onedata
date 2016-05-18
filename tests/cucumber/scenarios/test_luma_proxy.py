@@ -5,6 +5,7 @@ This software is released under the MIT license cited in 'LICENSE.txt'
 Test suite for operations on different storages with proxy luma
 """
 from tests import *
+from tests.utils.path_utils import env_file
 from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.file_steps import *
 from tests.cucumber.steps.reg_file_steps import *
@@ -14,10 +15,9 @@ from pytest_bdd import scenario
 import pytest
 
 
-@pytest.fixture(scope="module", params=["env_luma_proxy.json"])
+@pytest.fixture(scope="module", params=["env_luma_proxy"])
 def env_description_file(request):
-    absolute_path = os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
-    return absolute_path
+    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario(

@@ -2,8 +2,8 @@ from environment import docker, appmock, common
 
 from appmock import appmock_client
 from tests import *
-from tests.utils import http_utils
-from tests.utils.file_utils import config_file, get_file_name, make_logdir
+from tests.utils import net_utils
+from tests.utils.path_utils import config_file, get_file_name, make_logdir
 
 
 class TestAppmockRestExample:
@@ -61,15 +61,15 @@ class TestAppmockRestExample:
 def some_rest_using_function(appmock_ip):
     # Lets assume we are testing a code that needs to call
     # mocked component several times
-    http_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
-    http_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
-    http_utils.http_get(appmock_ip, 8080, "/test2", True)
-    http_utils.http_get(appmock_ip, 8080, "/test2", True)
-    http_utils.http_get(appmock_ip, 8080, "/test2", True)
-    http_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    http_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    http_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    http_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    http_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    http_utils.http_get(appmock_ip, 8080, "/test3", True)
-    http_utils.http_get(appmock_ip, 443, "/some/path", True)
+    net_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
+    net_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
+    net_utils.http_get(appmock_ip, 8080, "/test2", True)
+    net_utils.http_get(appmock_ip, 8080, "/test2", True)
+    net_utils.http_get(appmock_ip, 8080, "/test2", True)
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
+    net_utils.http_get(appmock_ip, 8080, "/test3", True)
+    net_utils.http_get(appmock_ip, 443, "/some/path", True)

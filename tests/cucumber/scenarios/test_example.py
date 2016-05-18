@@ -11,7 +11,7 @@ from tests import *
 from pytest_bdd import scenario
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
-from tests.utils.file_utils import env_file
+from tests.utils.path_utils import env_file
 
 import pytest
 

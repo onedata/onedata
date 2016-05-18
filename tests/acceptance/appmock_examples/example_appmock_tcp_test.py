@@ -1,5 +1,5 @@
 from tests import *
-from tests.utils.file_utils import config_file, get_file_name, make_logdir
+from tests.utils.path_utils import config_file, get_file_name, make_logdir
 
 from environment import docker, appmock, common
 from appmock import appmock_client

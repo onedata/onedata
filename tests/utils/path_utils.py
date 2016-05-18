@@ -1,12 +1,14 @@
-"""This file contains util functions that should be used to operate on files
-and file paths in acceptance tests"""
+"""This file contains utility functions for operation on file paths.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 import inspect
 import os
 import sys
 import time
-
-__author__ = "Jakub Kudzia"
 
 
 def config_file(relative_file_path):
