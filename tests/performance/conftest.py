@@ -1,11 +1,10 @@
+"""This module contains definitions of pytest fixtures that are used in
+performance tests of onedata.
 """
-This module contains functions that are used to run performance tests on
-acceptance level.
-"""
-import inspect
-import json
-
-from environment import docker
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 from tests import *
 from tests.utils.client_utils import mount_users
@@ -13,10 +12,10 @@ from tests.utils.path_utils import get_file_name
 from tests.utils.git_utils import get_branch_name, get_commit, get_repository
 from tests.utils.performance_utils import *
 from tests.utils.utils import get_copyright, get_authors, get_suite_description
+from environment import docker
 
-__author__ = "Jakub Kudzia"
-__copyright__ = """(C) 2016 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'."""
+import inspect
+import json
 
 
 @pytest.fixture(scope="session")
