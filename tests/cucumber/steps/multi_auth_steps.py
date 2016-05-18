@@ -5,14 +5,12 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import subprocess
-
-from pytest_bdd import given
-
-import multi_file_steps
-from cucumber_utils import *
 from tests.utils.client_utils import (ls, mount_users, client_mount_path,
                                       get_client)
+from cucumber_utils import *
+
+from pytest_bdd import given
+import subprocess
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +
@@ -32,7 +30,6 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
 
 @then(parsers.parse('{spaces} are mounted for {user} on {client_nodes}'))
 def check_spaces(spaces, user, client_nodes, context):
-    # sleep to be sure that environment is up
     spaces = list_parser(spaces)
     user = str(user)
     client_nodes = list_parser(client_nodes)
