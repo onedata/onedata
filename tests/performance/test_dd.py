@@ -1,5 +1,4 @@
-"""
-This module contains performance tests of dd operation in oneclient
+"""This module contains performance tests of dd operation in oneclient.
 """
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"

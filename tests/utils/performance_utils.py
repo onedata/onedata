@@ -54,17 +54,17 @@ def performance(default_config, configs):
                 while repeats < max_repeats:
 
                     try:
-                        test_results = test_function(
-                                self, context, clients,
-                                merged_config.get('parameters', {}))
+                        test_results = test_function(self, context, clients,
+                                                     merged_config
+                                                     .get('parameters', {}))
                     except Exception as e:
                         print "Testcase failed beceause of: ", str(e)
                         failed_repeats += 1
                         failed_details[str(repeats)] = str(e)
                     else:
                         test_results = ensure_list(test_results)
-                        test_result_report.add_single_test_results(
-                                test_results, repeats)
+                        test_result_report.add_single_test_results(test_results,
+                                                                   repeats)
                         successful_repeats += 1
                     finally:
                         repeats += 1
@@ -108,7 +108,11 @@ class Report:
             self.report[self.name][key] = value
 
     def add_nested_report(self, key, value):
-        self.report[self.name][key][value.name] = value.report[value.name]
+        if value.name not in self.report[self.name][key].keys():
+            self.report[self.name][key][value.name] = value.report[value.name]
+        else:
+            self.report[self.name][key][value.name] = \
+                update_dict(self.report[self.name][key][value.name], value.report[value.name])
 
 
 class PerformanceReport(Report):
@@ -118,15 +122,6 @@ class PerformanceReport(Report):
         self.add_to_report('repository', repository)
         self.add_to_report('commit', commit)
         self.add_to_report('branch', branch)
-
-    def add_nested_report(self, key, value):
-        #TODO move this implementation to super class
-        if value.name not in self.report[self.name][key].keys():
-            self.report[self.name][key][value.name] = value.report[value.name]
-        else:
-            # self.report[self.name][key][value.name].update(value.report[value.name])
-            self.report[self.name][key][value.name] = \
-                update_dict(self.report[self.name][key][value.name], value.report[value.name])
 
 
 class EnvironmentReport(Report):
@@ -273,7 +268,6 @@ def generate_configs(params, description_skeleton):
             'description': description
         })
         i += 1
-
     return configs
 
 

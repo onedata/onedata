@@ -1,5 +1,4 @@
-"""
-This module contains performance tests of oneclient using sysbench benchmark.
+"""This module contains performance tests of oneclient using sysbench benchmark.
 """
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
