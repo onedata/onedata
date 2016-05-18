@@ -1,5 +1,4 @@
-"""
-Test suite for reading/changing  metadata of regular files in onedata,
+"""Test suite for reading/changing  metadata of regular files in onedata,
 in multi-client environment.
 """
 __author__ = "Jakub Kudzia"

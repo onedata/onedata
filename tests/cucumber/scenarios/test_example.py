@@ -1,12 +1,14 @@
-"""Author: Piotr Ociepka
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Example test suite for acceptance tests with pytest-bdd.
-In features/example.feature file we could define tests using Gherkin language.
-This file represents one test suite - we have to declare all scenarios from .feature file.
-Tests steps implementation are imported from scenarios/steps directory.
+"""Example test suite for cucumber-like tests with pytest-bdd.
+Test scenario is defined in tests/cucumber/features/example.feature file in
+Gherkin language. This file represents one test suite - we have to declare all
+scenarios from .feature file.
+Tests steps implementation are imported from tests/cucumber/steps directory.
 """
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests import *
 from pytest_bdd import scenario
 from tests.cucumber.steps.cucumber_utils import *
@@ -23,11 +25,11 @@ def env_description_file(request):
 
 
 @scenario(
-        '../features/example.feature',
-        'Hello world'
+    '../features/example.feature',
+    'Hello world'
 )
 def test_hello(env_description_file):
-    """This tag defines which scenario we want to perform.
-    test_hello() function could have pass-implementation.
+    """@scenario decorator defines which test will ber run. This function can
+    have 'pass' implementation.
     """
     pass

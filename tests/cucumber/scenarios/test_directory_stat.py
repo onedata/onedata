@@ -1,10 +1,10 @@
+"""Test suite for reading/changing  metadata of directories in onedata.
 """
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-Test suite for reading/changing  metadata of directories in onedata.
-"""
 from tests import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *
@@ -83,9 +83,9 @@ def test_modification_time(env_description_file):
 
 # TODO VFS-1821
 @pytest.mark.xfail_env(
-        envs=["singleprovider_singleclient_directio",
-              "singleprovider_singleclient_proxy"],
-        reason="status-change times is equal to access and modification")
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_singleclient_proxy"],
+    reason="status-change times is equal to access and modification")
 @scenario(
     '../features/directory_stat.feature',
     'Status-change time when changing mode'

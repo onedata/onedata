@@ -1,9 +1,10 @@
-"""Author: Michal Wrona
-Copyright (C) 2016 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Test suite for operations on different storages with provider luma
+"""Test suite for operations on different storages with provider luma.
 """
+__author__ = "Michal Wrona"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests import *
 from tests.utils.path_utils import env_file
 from tests.cucumber.steps.reg_file_steps import *

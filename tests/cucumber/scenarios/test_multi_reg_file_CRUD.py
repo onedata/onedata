@@ -1,11 +1,11 @@
-"""
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Test suite for CRUD operations on regular files in onedata,
+"""Test suite for CRUD operations on regular files in onedata,
 in multi-client environment.
 """
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.multi_auth_steps import *
@@ -18,32 +18,32 @@ import pytest
 
 
 @scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Create regular file'
+        '../features/multi_reg_file_CRUD.feature',
+        'Create regular file'
 )
 def test_create(env_description_file):
     pass
 
 
 @scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Rename regular file without permission'
+        '../features/multi_reg_file_CRUD.feature',
+        'Rename regular file without permission'
 )
 def test_rename_without_permission(env_description_file):
     pass
 
 
 @scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Rename regular file with permission'
+        '../features/multi_reg_file_CRUD.feature',
+        'Rename regular file with permission'
 )
 def test_rename_with_permission(env_description_file):
     pass
 
 
 @scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Delete regular file by owner'
+        '../features/multi_reg_file_CRUD.feature',
+        'Delete regular file by owner'
 )
 def test_delete_by_owner(env_description_file):
     pass
@@ -122,8 +122,8 @@ def test_move(env_description_file):
         envs=["singleprovider_singleclient_directio", "env2", "env3"],
         reason="move is being reimplemented")
 @scenario(
-    '../features/multi_reg_file_CRUD.feature',
-    'Move big regular file and check MD5'
+        '../features/multi_reg_file_CRUD.feature',
+        'Move big regular file and check MD5'
 )
 def test_move_big(env_description_file):
     pass

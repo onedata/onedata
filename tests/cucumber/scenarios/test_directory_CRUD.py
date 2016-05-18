@@ -1,11 +1,10 @@
+"""Test suite for CRUD operations on directories in onedata.
 """
-Author: Piotr Ociepka
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-Test suite for CRUD operations on directories in onedata.
-"""
 from tests import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *

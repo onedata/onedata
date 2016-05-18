@@ -1,9 +1,10 @@
-"""Author: Piotr Ociepka
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Test suite for authorization and mounting onedata client.
+"""Test suite for authorization and mounting onedata client.
 """
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests import *
 from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.multi_auth_steps import *
