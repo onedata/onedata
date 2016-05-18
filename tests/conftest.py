@@ -42,10 +42,13 @@ def test_type():
 
 @pytest.fixture(scope="module")
 def env_description_file(request, test_type, env):
-    """NOTE: This fixture must be overridden in every test module. As params
+    """NOTE: If you want to start tests in given suite with environments
+    different than all .json files from DEFAULT_CUCUMBER_ENV_DIR or
+    PERFORMANCE_ENV_DIR (cucumber and performance tests respectively)
+    this fixture must be overridden in that test module. As params
     for overridden fixture you must specify .json files with description
-    of test environment for which you want tests from given module to be
-    started.
+    of test environment for which you want tests to be started.
+    This fixture must return absolute path to given .json.
     """
     absolute_path = os.path.join(map_test_type_to_env_dir(test_type), env)
     return absolute_path
