@@ -46,7 +46,7 @@ def performance(default_config, configs):
 
                 test_result_report = ResultReport()
                 max_repeats = merged_config['repeats']
-                succces_rate = merged_config['success_rate']
+                succes_rate = merged_config['success_rate']
                 repeats = 0
                 failed_repeats = 0
                 successful_repeats = 0
@@ -79,7 +79,7 @@ def performance(default_config, configs):
 
                 test_case_report.add_to_report('configs', config_report)
 
-                if not is_success_rate_satisfied(successful_repeats, failed_repeats, succces_rate):
+                if not is_success_rate_satisfied(successful_repeats, failed_repeats, succes_rate):
                     error_msg = ("Test suite: {suite} failed because of too "
                                  "many failures: {failures}"
                                  ).format(suite=suite_report.name,
