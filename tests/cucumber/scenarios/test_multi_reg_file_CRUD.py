@@ -107,7 +107,7 @@ def test_execute_without_permission(env_description_file):
 
 #  TODO
 @pytest.mark.xfail_env(
-    envs=["singleprovider_singleclient_directio",
+    envs=["singleprovider_multiclient_directio",
           "singleprovider_multiclient_proxy",
           "multiprovider_proxy",
           "multiprovider_directio"],
@@ -122,7 +122,7 @@ def test_move(env_description_file):
 
 # TODO
 @pytest.mark.xfail_env(
-    envs=["singleprovider_singleclient_directio",
+    envs=["singleprovider_multiclient_directio",
           "singleprovider_multiclient_proxy",
           "multiprovider_proxy",
           "multiprovider_directio"],
