@@ -1,7 +1,8 @@
 #!/usr/bin/env escript
-%%! -name gettoken@test
+%%! -name loadauthconfig@test
 
 main([OZ_Node, Cookie]) ->
-    true = erlang:set_cookie(list_to_atom(OZ_Node), list_to_atom(Cookie)),
-    Ret = rpc:call(list_to_atom(OZ_Node), auth_config, load_auth_config, []),
+    OZ = list_to_atom(OZ_Node),
+    true = erlang:set_cookie(OZ, list_to_atom(Cookie)),
+    Ret = rpc:call(OZ, auth_config, load_auth_config, []),
     Ret = ok.
