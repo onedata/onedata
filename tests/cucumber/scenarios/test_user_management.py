@@ -5,14 +5,14 @@ from pytest_bdd import scenario
 import pytest
 
 
-@pytest.fixture(scope="module", params=["tmp.json"])
+@pytest.fixture(scope="module", params=["auth.json"])
 def env_description_file(request):
     return os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario(
-        '../features/user_management.feature',
-        'User registration'
+    '../features/user_management.feature',
+    'User registration'
 )
 def test_type_empty(env_description_file):
     pass

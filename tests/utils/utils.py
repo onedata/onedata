@@ -111,12 +111,20 @@ def get_token(token, user, oz_node, cookie):
     return token
 
 
-def get_cookie(config_path, oz_node):
-    if '@' in oz_node:
-        _, _, oz_node = oz_node.partition('@')
-    domain_name = oz_node.split(".")[1]
+def get_oz_cookie(config_path, oz_node):
+    return get_cookie(config_path, oz_node, 'zone_domains')
+
+
+def get_op_cookie(config_path, op_node):
+    return get_cookie(config_path, op_node, 'provider_domains')
+
+
+def get_cookie(config_path, node, domain):
+    if '@' in node:
+        _, _, node = node.partition('@')
+    domain_name = node.split(".")[1]
     config = parse_json_config_file(config_path)
     # oz_domain = config['zone_domains'].keys()[0]
-    cm_config = config['zone_domains'][domain_name]['cluster_manager']
+    cm_config = config[domain][domain_name]['cluster_manager']
     key = cm_config.keys()[0]
     return str(cm_config[key]['vm.args']['setcookie'])

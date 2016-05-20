@@ -7,7 +7,7 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.utils import set_dns, get_token, get_cookie
+from tests.utils.utils import set_dns, get_token, get_oz_cookie
 from tests.utils.docker_utils import run_cmd
 from tests.cucumber.steps.cucumber_utils import repeat_until
 
@@ -57,7 +57,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
         data = client_data[client_host][client_instance]
 
         # get OZ cookie from env description file
-        cookie = get_cookie(env_description_file, oz_node)
+        cookie = get_oz_cookie(env_description_file, oz_node)
         # get token for user
         if token_arg != 'bad_token':
             token = get_token(token_arg, user, oz_node, cookie)

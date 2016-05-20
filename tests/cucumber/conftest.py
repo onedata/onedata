@@ -6,6 +6,13 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+from tests import *
+from tests.utils.utils import set_dns, get_oz_cookie
+from environment import docker
+
+import os
+import subprocess
+import tempfile
 import pytest
 
 
@@ -21,7 +28,6 @@ def xfail_by_env(xfail_by_env):
     """Autouse fixture defined in tests.conftest
     """
     pass
-
 
 
 @pytest.fixture(scope="module")
@@ -55,13 +61,13 @@ def open_id(persistent_environment, env_description_file):
 
     for oz_node in oz_nodes:
         oz_host = oz_node.split('@')[1]
-        cookie = get_cookie(env_description_file, oz_node)
+        cookie = get_oz_cookie(env_description_file, oz_node)
 
         docker.cp(oz_host, tmp_file, CONFIG_PATH, True)
-
-        time.sleep(5)
 
         subprocess.check_output([os.path.join(UTILS_DIR, 'load_auth_config.escript'),
                                  oz_node, cookie], stderr=subprocess.STDOUT)
 
     os.remove(tmp_file)
+    return open_id_ip
+

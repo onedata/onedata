@@ -22,7 +22,6 @@
     space_names = #{} :: #{SpaceId :: binary() => SpaceName :: binary()},
     default_space :: binary() | undefined,
     groups = [] :: [GroupId :: binary()],
-    % TODO this is a mock
     first_space_support_token = <<"">> :: binary(),
     % This allows to remember the provider which was selected for user, so DNS knows where to redirect
     default_provider = undefined :: binary() | undefined,
