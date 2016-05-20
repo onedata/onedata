@@ -58,8 +58,8 @@ Feature: Regular_file_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of write and read is different
     Then u1 reads "TEST TEXT ONEDATA" from file1
-    And access time of u1's file1 becomes greater than modification time within 5 seconds
-    And access time of u1's file1 becomes greater than status-change time within 5 seconds
+    And access time of u1's file1 is greater than modification time
+    And access time of u1's file1 is greater than status-change time
 
   Scenario: Modification time
     When u1 creates regular files [file1]
@@ -68,8 +68,8 @@ Feature: Regular_file_stat
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to file1
     Then last operation by u1 succeeds
-    And modification time of u1's file1 becomes greater than access time within 5 seconds
-    And modification time of u1's file1 becomes equal to status-change time within 5 seconds
+    And modification time of u1's file1 is greater than access time
+    And modification time of u1's file1 is equal to status-change time
 
   Scenario: Status-change time when changing mode
     When u1 creates regular files [file1]
@@ -78,8 +78,8 @@ Feature: Regular_file_stat
     # call sleep, to be sure that time of above and below operations is different
     And u1 changes file1 mode to 211
     Then last operation by u1 succeeds
-    And status-change time of u1's file1 becomes greater than modification time within 5 seconds
-    And status-change time of u1's file1 becomes greater than access time within 5 seconds
+    And status-change time of u1's file1 is greater than modification time
+    And status-change time of u1's file1 is greater than access time
 
   Scenario: Status-change time when renaming
     When u1 creates regular files [file1]
@@ -89,5 +89,5 @@ Feature: Regular_file_stat
     And u1 renames file1 to file2
     Then last operation by u1 succeeds
     And u1 waits 1 second
-    And status-change time of u1's file2 becomes greater than modification time within 5 seconds
-    And status-change time of u1's file2 becomes greater than access time within 5 seconds
+    And status-change time of u1's file2 is greater than modification time
+    And status-change time of u1's file2 is greater than access time

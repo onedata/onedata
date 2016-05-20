@@ -93,12 +93,6 @@
                             "oz_domain": "oz1",
                             "verify_oz_cert": false
                         }
-                    },
-                    "storage": {
-                        "storage1": {
-                            "volume_path": "/media/storage",
-                            "host_path": "/tmp/blah"
-                        }
                     }
                 }
             }

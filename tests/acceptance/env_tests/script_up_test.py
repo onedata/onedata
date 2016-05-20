@@ -1,10 +1,20 @@
-import subprocess
-from tests.test_common import *
-from env_test_utils import *
-import os
-import pytest
+"""This module contains acceptance tests of scripts that bring up dockerized
+test environment.
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
+from tests import *
+from tests.utils.utils import run_env_up_script
+from tests.utils.path_utils import (config_file, get_file_name, make_logdir,
+                                    get_json_files, get_function)
+from tests.utils.net_utils import ping
+import test_utils
 from environment import docker, common, dns
+
+import pytest
 
 
 @pytest.mark.parametrize("script_name, dockers_num", [
@@ -28,11 +38,11 @@ def test_component_up(script_name, dockers_num):
 
 
 @pytest.mark.parametrize(
-    "env", get_json_files(example_env_dir)
+    "env", get_json_files(EXAMPLE_ENV_DIR)
 )
 def test_example_envs(env):
-    logdir = make_logdir(acceptance_logdir,
-                         os.path.join(get_test_name(__file__),
+    logdir = make_logdir(ACCEPTANCE_LOGDIR,
+                         os.path.join(get_file_name(__file__),
                                       env.split(os.path.sep)[-1]))
     output = run_env_up_script("env_up.py", config=env, logdir=logdir)
     teardown_testcase(output)
@@ -40,13 +50,13 @@ def test_example_envs(env):
 
 def test_dns_up():
     output = run_env_up_script("dns_up.py")
-    assert test_utils.ping(output['dns'])
+    assert ping(output['dns'])
     teardown_testcase(output)
 
 
 def test_s3_up():
     output = run_env_up_script("s3_up.py")
-    assert test_utils.ping(output['host_name'].split(":")[0])
+    assert ping(output['host_name'].split(":")[0])
     teardown_testcase(output)
 
 # TODO Uncomment this test after integrating with VFS-1599
@@ -60,7 +70,7 @@ def test_s3_up():
 def setup_test(script_name):
     config_path = None
     if not is_no_args_script(script_name) and not is_db_script(script_name):
-        config_path = test_utils.test_file('_'.join([script_name, 'env.json']))
+        config_path = config_file('_'.join([script_name, 'env.json']))
     uid = common.generate_uid()
     environment = get_empty_env()
 
@@ -70,8 +80,8 @@ def setup_test(script_name):
 
     args = prepare_args(script_name, uid, dns_server)
 
-    logdir = make_logdir(acceptance_logdir,
-                         os.path.join(get_test_name(__file__), script_name))
+    logdir = make_logdir(ACCEPTANCE_LOGDIR,
+                         os.path.join(get_file_name(__file__), script_name))
 
     output = run_env_up_script(up_script(script_name),
                                config=config_path,
@@ -90,7 +100,7 @@ def teardown_testcase(environment):
 # # Test if the *_up.py script works as expected.
 def check_if_node_is_up(env, script_name, dockers_num):
     function_name = '_'.join(['check', script_name])
-    get_function(function_name)(env, dockers_num)
+    get_function(test_utils, function_name)(env, dockers_num)
 
 
 ################################################################################

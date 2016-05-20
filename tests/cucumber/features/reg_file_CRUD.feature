@@ -3,7 +3,7 @@ Feature: Regular_file_CRUD
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
-    
+
   Scenario: Create regular file
     When u1 creates regular files [file1, file2, file3]
     Then u1 sees [file1, file2, file3] in .
@@ -36,7 +36,6 @@ Feature: Regular_file_CRUD
     Then u1 reads "TEST TEXT ONEDATA" from file1
     And u1 appends " APPENDED TEXT" to file1
     Then u1 reads "TEST TEXT ONEDATA APPENDED TEXT" from file1
-    And u1 waits 1 second
     And u1 reads "TEST TEXT ONEDATA APPENDED TEXT" from spaces/s1/file1
     And size of u1's file1 is 31 bytes
     And size of u1's spaces/s1/file1 is 31 bytes
@@ -55,6 +54,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from dir1/dir2/file1
     And u1 renames dir1/dir2/file1 to dir3/file1
     Then u1 doesn't see [file1] in dir1/dir2
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2
@@ -70,7 +70,6 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes 32 MB of random characters to dir1/dir2/file1 and saves MD5
-    And u1 waits 10 seconds
     And u1 renames dir1/dir2/file1 to dir3/file1
     Then u1 doesn't see [file1] in dir1/dir2
     And u1 doesn't see [file1] in spaces/s1/dir1/dir2
@@ -84,6 +83,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from dir1/dir2/file1
     And u1 copies regular file dir1/dir2/file1 to dir3
     Then u1 sees [dir1, dir3] in .
     And u1 sees [file1] in dir1/dir2
@@ -101,9 +101,7 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [dir1/dir2/file1]
     And u1 sees [file1] in dir1/dir2
     And u1 writes 32 MB of random characters to dir1/dir2/file1 and saves MD5
-    And u1 waits 10 seconds
     And u1 copies regular file dir1/dir2/file1 to dir3/file1
-    And u1 waits 10 seconds
     Then u1 sees [file1] in dir1/dir2
     And u1 sees [file1] in dir3
     And u1 sees [file1] in spaces/s1/dir1/dir2

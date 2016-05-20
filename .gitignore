@@ -7,8 +7,9 @@ test-reports/*
 
 tests/acceptance/logs
 tests/cucumber/logs
-tests/cucumber/scenarios/.cache
-tests/tmp
+tests/performance/logs
+tests/**/.cache
+
 
 package
 docker-build-list.json
