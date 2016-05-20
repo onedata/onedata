@@ -42,13 +42,13 @@ def http_get(ip, port, path, use_ssl):
     return response.status_code, response.headers, response.text
 
 
-def http_post(ip, port, path, use_ssl, data):
+def http_post(ip, port, path, use_ssl, data, headers = None):
     """Helper function that perform a HTTP GET request
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
     response = requests.post('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
-                             data, verify=False, timeout=10)
+                             data, verify=False, headers=headers, timeout=10)
     return response.status_code, response.headers, response.text
 
 
