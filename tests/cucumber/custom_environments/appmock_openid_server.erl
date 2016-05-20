@@ -22,11 +22,11 @@
 -define(MOCK_USER(Name, Login, Email, UID),
     #mocked_user{name=Name, login=Login, email=Email, uid=UID}).
 -define(MOCKED_USERS, #{
-    0 => ?MOCK_USER(<<"u1">>, <<"login1">>, <<"u1@mail.com">>, <<"uid1">>),
-    1 => ?MOCK_USER(<<"u2">>, <<"login2">>, <<"u2@mail.com">>, <<"uid2">>),
-    2 => ?MOCK_USER(<<"u3">>, <<"login3">>, <<"u3@mail.com">>, <<"uid3">>),
-    3 => ?MOCK_USER(<<"u4">>, <<"login4">>, <<"u4@mail.com">>, <<"uid4">>),
-    4 => ?MOCK_USER(<<"u5">>, <<"login5">>, <<"u5@mail.com">>, <<"uid5">>)
+    1 => ?MOCK_USER(<<"u1">>, <<"login1">>, <<"u1@mail.com">>, <<"uid1">>),
+    2 => ?MOCK_USER(<<"u2">>, <<"login2">>, <<"u2@mail.com">>, <<"uid2">>),
+    3 => ?MOCK_USER(<<"u3">>, <<"login3">>, <<"u3@mail.com">>, <<"uid3">>),
+    4 => ?MOCK_USER(<<"u4">>, <<"login4">>, <<"u4@mail.com">>, <<"uid4">>),
+    5 => ?MOCK_USER(<<"u5">>, <<"login5">>, <<"u5@mail.com">>, <<"uid5">>)
 }).
 
 % This function should return a list of #rest_mock{} records,
@@ -44,7 +44,7 @@ rest_mocks() -> [
             io:format("State~p~n", [State]),
             {#rest_response{code = 307, headers = [{<<"location">>, URL}]}, State + 1}
         end,
-        initial_state = 0},
+        initial_state = 1},
 
 
     #rest_mock{port = 443, path = <<"/1/oauth2/token">>,
@@ -68,7 +68,7 @@ rest_mocks() -> [
             URL = <<RedirectionPoint/binary, "?code=mockcode">>,
             {#rest_response{code = 200, body = Body}, State + 1}
         end,
-        initial_state = 0},
+        initial_state = 1},
 
     #rest_mock{port = 443, path = <<"/1/account/info">>,
         response = fun(_Req, State) ->
@@ -79,7 +79,7 @@ rest_mocks() -> [
                 {<<"login">>, Login}]),
             {#rest_response{code = 200, body = Body}, State + 1}
         end,
-        initial_state = 0}
+        initial_state = 1}
 ].
 
 
