@@ -111,20 +111,26 @@ def get_token(token, user, oz_node, cookie):
     return token
 
 
-def get_oz_cookie(config_path, oz_node):
-    return get_cookie(config_path, oz_node, 'zone_domains')
+def get_oz_cookie(config_path, oz_name, node_name=True):
+    return get_cookie(config_path, oz_name, 'zone_domains', node_name)
 
 
-def get_op_cookie(config_path, op_node):
-    return get_cookie(config_path, op_node, 'provider_domains')
+def get_op_cookie(config_path, op_name, node_name=True):
+    return get_cookie(config_path, op_name, 'provider_domains', node_name)
 
 
-def get_cookie(config_path, node, domain):
-    if '@' in node:
-        _, _, node = node.partition('@')
-    domain_name = node.split(".")[1]
+def get_cookie(config_path, name, domain, node_name=True):
+    """Reads erlang cookie from file at config path.
+    node_name = True means that argument name is a node name, otherwise
+    it is a domain name.
+    """
+    if '@' in name:
+        _, _, name = name.partition('@')
+    if node_name:
+        domain_name = name.split(".")[1]
+    else:
+        domain_name = name.split(".")[0]
     config = parse_json_config_file(config_path)
-    # oz_domain = config['zone_domains'].keys()[0]
     cm_config = config[domain][domain_name]['cluster_manager']
     key = cm_config.keys()[0]
     return str(cm_config[key]['vm.args']['setcookie'])

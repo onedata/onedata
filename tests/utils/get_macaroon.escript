@@ -49,7 +49,7 @@ main([OZNode, OZCookie, OPNode, OPCookie, Email, ProviderId]) ->
     OP = list_to_atom(OPNode),
     true = erlang:set_cookie(OZ, list_to_atom(OZCookie)),
     true = erlang:set_cookie(OP, list_to_atom(OPCookie)),
-        {ok, #document{value=#onedata_user{name=UserID}}} = rpc:call(OZ, user_logic, get_user_doc, [{email, list_to_binary(Email)}]),
+        {ok, #document{key=UserID}} = rpc:call(OZ, user_logic, get_user_doc, [{email, list_to_binary(Email)}]),
     SrlzdMacaroon = rpc:call(OZ, auth_logic, gen_token, [UserID, list_to_binary(ProviderId)]),
     {ok, Macaroon} = rpc:call(OZ, macaroon, deserialize, [SrlzdMacaroon]),
     Caveats = rpc:call(OZ, macaroon, third_party_caveats, [Macaroon]),
@@ -57,7 +57,7 @@ main([OZNode, OZCookie, OPNode, OPCookie, Email, ProviderId]) ->
     DischMacaroons = lists:map(
         fun({_, CaveatId}) ->
             {ok, SrlzdDM} = rpc:call(OP, oz_users, authorize, [CaveatId]),
-            {ok, DM} = rpc:call(OP, macaroon, deserialize, [SrlzdDM]),
+            {ok, DM} = rpc:call(OZ, macaroon, deserialize, [SrlzdDM]),
             DM
         end, Caveats),
 
@@ -69,11 +69,11 @@ main([OZNode, OZCookie, OPNode, OPCookie, Email, ProviderId]) ->
         end, DischMacaroons),
     % Bound discharge macaroons are sent in one header,
     % separated by spaces.
-    {ok, SerializedMacaroon} = rpc:call(OZ, macaroon, serialize, [Macaroon]),
+    {ok, SrlzdMacaroon} = rpc:call(OZ, macaroon, serialize, [Macaroon]),
     BoundMacaroonsValue = rpc:call(OZ, str_utils, join_binary, [BoundMacaroons, <<" ">>]),
 
     Headers = rpc:call(OZ, json_utils, encode, [[
-        {<<"macaroon">>, SerializedMacaroon},
+        {<<"macaroon">>, SrlzdMacaroon},
         {<<"discharge-macaroons">>, BoundMacaroonsValue}
     ]]),
     io:format("~s", [Headers]).

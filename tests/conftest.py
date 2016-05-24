@@ -162,7 +162,7 @@ def map_test_type_to_logdir(test_type):
 def clear_storage(storage_path):
     # we don't have permissions to clean storage directory
     # therefore docker with this directory mounted is started
-    # (docker has root permissions) and dir is cleaned via docke
+    # (docker has root permissions) and dir is cleaned via docker
     cmd = 'sh -c "rm -rf {path}"'.format(path=os.path.join(storage_path, '*'))
     docker.run(tty=True,
                rm=True,
@@ -175,6 +175,12 @@ def clear_storage(storage_path):
 class Context:
     def __init__(self):
         self.users = {}
+
+    def get_user(self, user):
+        return self.users[user]
+
+    def get_client(self, user, client_node):
+        return self.users[user].get_client(client_node)
 
 
 @pytest.fixture(scope="module")

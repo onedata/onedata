@@ -35,5 +35,8 @@ EXAMPLE_ENV_DIR = os.path.join(BAMBOOS_DIR, "example_env")
 PREPARE_ENV_LOG_FILE = "prepare_test_environment.log"
 PREPARE_ENV_ERROR_LOG_FILE = "prepare_test_environment_error.log"
 
+REST_PORT = 8443
+DEFAULT_HEADERS = {'content-type': 'application/json'}
+
 # Append useful modules to the path
 sys.path = [PROJECT_DIR, DOCKER_DIR] + sys.path

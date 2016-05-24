@@ -17,10 +17,23 @@ import subprocess
 
 
 class User:
-    def __init__(self, client_node, client):
-        self.clients = {client_node: client}
+    def __init__(self, client_node=None, client=None, headers=None,
+                 email=None, id=None):
+
+        if client_node:
+            self.clients = {client_node: client}
         self.last_op_ret_code = 0
         self.files = {}
+        self.spaces = {}
+        self.headers = headers
+        self.email = email
+        self.id = id
+        self.tokens = {'support': {},
+                       'creation': {},
+                       'space_invite': {}}
+
+    def get_client(self, client_node):
+        return self.clients.get(client_node, None)
 
 
 class Client:
@@ -34,8 +47,12 @@ class Client:
 
 
 def mount_users(request, environment, context, client_ids, env_description_file,
-                users=[], client_instances=[], mount_paths=[],
-                client_hosts=[], tokens=[]):
+                users=[], ids=[], client_instances=[], mount_paths=[],
+                client_hosts=[], tokens=[], check=True):
+
+    if not ids:
+        ids = users
+
     # current version is for environment with one OZ
     oz_node = environment['oz_worker_nodes'][0]
 
@@ -51,16 +68,20 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
     request.addfinalizer(fin)
 
-    parameters = zip(users, clients, client_instances, mount_paths,
+    parameters = zip(users, ids, clients, client_instances, mount_paths,
                      client_hosts, tokens)
-    for user, client, client_instance, mount_path, client_host, token_arg in parameters:
+    for user, id, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
+        oz_domain = data['zone_domain']
+
         # get OZ cookie from env description file
-        cookie = get_oz_cookie(env_description_file, oz_node)
+        cookie = get_oz_cookie(env_description_file, oz_domain, node_name=False)
+
         # get token for user
         if token_arg != 'bad_token':
-            token = get_token(token_arg, user, oz_node, cookie)
+            token = get_token(token_arg, id, oz_node, cookie)
+
         client.set_timeout(data.get('default_timeout', 0))
 
         print "User {user} mounts oneclient using token: {token}".format(
@@ -83,7 +104,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
                ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
                ).format(
                 mount_path=mount_path,
-                gr_domain=data['zone_domain'],
+                gr_domain=oz_domain,
                 op_domain=data['op_domain'],
                 user_cert=data['user_cert'],
                 user_key=data['user_key'],
@@ -95,21 +116,24 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
         if token_arg != "bad token":
             # if token was different than "bad token", check if logging succeeded
-            if ret != 0:
+            if check and ret != 0:
                 clean_mount_path(user, client)
                 pytest.skip("Error mounting oneclient")
 
-        if user in context.users:
+
+        if user in context.users and hasattr(context.users[user], "clients"):
             context.users[user].clients[client_instance] = client
+        elif user in context.users:
+            context.users[user].clients = {client_instance: client}
         else:
-            context.users[user] = User(client_instance, client)
+            context.users[user] = User(client_instance, client, id=id)
 
         # remove accessToken to mount many clients on one docker
         rm(client, recursive=True, force=True,
            path=os.path.join(os.path.dirname(mount_path), ".local"))
 
         rm(client, recursive=True, force=True, path=token_path)
-        if token != 'bad_token':
+        if check and token != 'bad_token':
             if not clean_spaces_safe(user, client):
                 pytest.skip("Test skipped beacause of failing to clean spaces")
 
@@ -117,7 +141,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
 
 def ls(client, user="root", path=".", output=True):
-    cmd = "ls {path}".format(path=path)
+    cmd = "ls {path}".format(path=path.replace("'", "\\'").replace(" ", "\ "))
     return run_cmd(user, client, cmd, output=output)
 
 

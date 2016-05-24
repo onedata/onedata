@@ -13,6 +13,8 @@ import re
 import requests
 import time
 
+requests.packages.urllib3.disable_warnings()
+
 
 def dns_lookup(host, dns_addr):
     """Helper function to check host's ip using given dns"""
@@ -29,26 +31,41 @@ def dns_lookup(host, dns_addr):
 
 def ping(ip):
     """Helper function that checks if given ip is reachable with ping"""
-    print "PING: " ,run_os_command(['ping', '-c 1', ip], output=False)
     return 0 == run_os_command(['ping', '-c 1', ip], output=False)
 
 
-def http_get(ip, port, path, use_ssl):
+def http_get(ip, port, path, use_ssl, headers = None, verify=False, cert=None):
     """Helper function that perform a HTTP GET request
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
-    response = requests.get('{0}://{1}:{2}{3}'.format(protocol, ip, port, path), verify=False, timeout=10)
+    response = requests.get('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
+                            verify=verify, headers=headers, timeout=10,
+                            cert=cert)
     return response.status_code, response.headers, response.text
 
 
-def http_post(ip, port, path, use_ssl, data, headers = None):
-    """Helper function that perform a HTTP GET request
+def http_post(ip, port, path, use_ssl, data=None, headers = None, verify=False,
+              cert=None):
+    """Helper function that perform a HTTP POST request
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
+    # print "POST: ", ip, port, path, data, headers, cert
     response = requests.post('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
-                             data, verify=False, headers=headers, timeout=10)
+                             data, verify=verify, headers=headers, timeout=10,
+                             cert=cert)
+    return response.status_code, response.headers, response.text
+
+
+def http_delete(ip, port, path, use_ssl, headers=None, verify=False, cert=None):
+    """Helper function that perform a HTTP DELETE request
+    Returns a tuple (Code, Headers, Body)
+    """
+    protocol = 'https' if use_ssl else 'http'
+    response = requests.delete('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
+                            verify=verify, headers=headers, timeout=10,
+                            cert=cert)
     return response.status_code, response.headers, response.text
 
 
