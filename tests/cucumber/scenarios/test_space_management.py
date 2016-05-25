@@ -1,5 +1,5 @@
 from tests import *
-from tests.cucumber.steps.user_management_steps import *
+from tests.cucumber.steps.space_management_steps import *
 from tests.cucumber.steps.env_steps import *
 # from tests.cucumber.steps.auth_steps import *
 from tests.cucumber.steps.spaces_steps import *
@@ -17,7 +17,7 @@ def env_description_file(request):
 
 
 # @scenario(
-#         '../features/user_management.feature',
+#         '../features/space_management.feature',
 #         'Check default space'
 # )
 # def test_default_space(env_description_file):
@@ -25,7 +25,7 @@ def env_description_file(request):
 #
 #
 # @scenario(
-#         '../features/user_management.feature',
+#         '../features/space_management.feature',
 #         'New space with support'
 # )
 # def test_support_space(env_description_file):
@@ -33,7 +33,7 @@ def env_description_file(request):
 #
 #
 # @scenario(
-#         '../features/user_management.feature',
+#         '../features/space_management.feature',
 #         'New space without support'
 # )
 # def test_new_space_without_support(env_description_file):
@@ -41,7 +41,7 @@ def env_description_file(request):
 #
 #
 # @scenario(
-#         '../features/user_management.feature',
+#         '../features/space_management.feature',
 #         'Invite user to default space'
 # )
 # def test_invite_to_default_space(env_description_file):
@@ -49,7 +49,7 @@ def env_description_file(request):
 #
 #
 # @scenario(
-#         '../features/user_management.feature',
+#         '../features/space_management.feature',
 #         'Invite user to non-default space'
 # )
 # def test_invite_to_non_default_space(env_description_file):
@@ -57,7 +57,7 @@ def env_description_file(request):
 
 
 # @scenario(
-#         '../features/user_management.feature',
+#         '../features/space_management.feature',
 #         'Remove user from space'
 # )
 # def test_remove_user_from_space(env_description_file):
@@ -65,7 +65,7 @@ def env_description_file(request):
 
 
 @scenario(
-        '../features/user_management.feature',
+        '../features/space_management.feature',
         'Delete space'
 )
 def test_delete_space(env_description_file):
