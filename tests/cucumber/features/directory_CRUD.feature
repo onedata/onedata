@@ -3,7 +3,6 @@ Feature: Directory_CRUD
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
-#    And oneclient is started for u1
 
   Scenario: Create directory
     When u1 creates directories [dir1, dir2, dir3]

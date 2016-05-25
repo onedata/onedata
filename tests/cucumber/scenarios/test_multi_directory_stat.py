@@ -58,7 +58,7 @@ def test_timestamp(env_description_file):
 
 # # TODO VFS-1506
 @pytest.mark.xfail_env(
-    envs=["singleprovider_singleclient_directio",
+    envs=["singleprovider_multiclient_directio",
           "singleprovider_multiclient_proxy",
           "multiprovider_proxy",
           "multiprovider_directio"],
@@ -98,7 +98,7 @@ def test_modification_time(env_description_file):
 
 # TODO VFS-1821
 @pytest.mark.xfail_env(
-    envs=["singleprovider_singleclient_directio",
+    envs=["singleprovider_multiclient_directio",
           "singleprovider_multiclient_proxy",
           "multiprovider_proxy",
           "multiprovider_directio"],
