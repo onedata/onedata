@@ -38,27 +38,35 @@ def env_description_file(request):
 # )
 # def test_new_space_without_support(env_description_file):
 #     pass
+#
+#
+# @scenario(
+#         '../features/user_management.feature',
+#         'Invite user to default space'
+# )
+# def test_invite_to_default_space(env_description_file):
+#     pass
+#
+#
+# @scenario(
+#         '../features/user_management.feature',
+#         'Invite user to non-default space'
+# )
+# def test_invite_to_non_default_space(env_description_file):
+#     pass
+
+
+# @scenario(
+#         '../features/user_management.feature',
+#         'Remove user from space'
+# )
+# def test_remove_user_from_space(env_description_file):
+#     pass
 
 
 @scenario(
         '../features/user_management.feature',
-        'Invite user to default space'
+        'Delete space'
 )
-def test_invite_to_default_space(env_description_file):
-    pass
-
-
-@scenario(
-        '../features/user_management.feature',
-        'Invite user to non-default space'
-)
-def test_invite_to_non_default_space(env_description_file):
-    pass
-
-
-@scenario(
-        '../features/user_management.feature',
-        'Remove user from space'
-)
-def test_remove_user_from_space(env_description_file):
+def test_delete_space(env_description_file):
     pass
