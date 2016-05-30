@@ -4,6 +4,17 @@
 CHANGELOG
 ---------
 
+### 3.0.0-beta5
+
+* Metadata synchronization between providers improved.
+* Support for nested groups.
+
+
+### 3.0.0-beta4
+
+* Rename redeisgned.
+
+
 ### 3.0.0-beta3
 
 * GUI update

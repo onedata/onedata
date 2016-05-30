@@ -1,18 +1,13 @@
-"""Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Module implements common steps for operation on files (both regular files
+"""Module implements common steps for operation on files (both regular files
 and directories).
 """
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-import pytest
-from pytest_bdd import (given, when, then)
-from pytest_bdd import parsers
-
-from environment import docker, env
-from common import *
 import multi_file_steps
+from cucumber_utils import *
 
 
 @when(parsers.parse('{user} updates {files} timestamps'))
@@ -53,6 +48,7 @@ def check_mode(user, file, mode, context):
     multi_file_steps.change_mode(user, file, mode, "client1", context)
 
 
+@then(parsers.parse('{user} changes {file} mode to {mode}'))
 @when(parsers.parse('{user} changes {file} mode to {mode}'))
 def change_mode(user, file, mode, context):
     multi_file_steps.change_mode(user, file, mode, "client1", context)
@@ -67,10 +63,5 @@ def check_size(user, file, size, context):
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} than {time2} time'))
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} to {time2} time'))
 def check_time(user, time1, time2, comparator, file, context):
-    multi_file_steps.check_time(user, time1, time2, comparator, file, "client1", context)
-
-
-@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} to {time2} time within {maxtime} seconds'))
-@then(parsers.parse('{time1} time of {user}\'s {file} becomes {comparator} than {time2} time within {maxtime} seconds'))
-def check_time_within_maxtime(user, time1, time2, comparator, file, maxtime, context):
-    multi_file_steps.check_time_within_maxtime(user, time1, time2, comparator, file, maxtime, "client1", context)
+    multi_file_steps.check_time(user, time1, time2, comparator, file, "client1",
+                                context)

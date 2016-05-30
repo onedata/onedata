@@ -1,20 +1,12 @@
+"""Module implements pytest-bdd steps for operations on directories.
 """
-Author: Piotr Ociepka
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Module implements pytest-bdd steps for operations on directories.
-"""
-
-import pytest
-from pytest_bdd import (given, when, then)
-from pytest_bdd import parsers
-import time
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 import multi_dir_steps
-from environment import docker, env
-from common import *
+from cucumber_utils import *
 
 
 @when(parsers.parse('{user} creates directories {dirs}'))
@@ -46,7 +38,8 @@ def delete_parents(user, paths, context):
 def copy_dir(user, dir1, dir2, context):
     multi_dir_steps.copy_dir(user, dir1, dir2, "client1", context)
 
+
 @when(parsers.parse('{user} can\'t list {dir}'))
 @then(parsers.parse('{user} can\'t list {dir}'))
 def list_dir(user, dir, context):
-    list_dir(user, dir, "client1", context)
+    multi_dir_steps.list_dir(user, dir, "client1", context)

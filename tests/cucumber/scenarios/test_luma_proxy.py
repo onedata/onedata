@@ -1,23 +1,24 @@
-"""Author: Michal Wrona
-Copyright (C) 2016 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Test suite for operations on different storages with proxy luma
+"""Test suite for operations on different storages with proxy luma
 """
-from tests.test_common import custom_cucumber_env_dir
+__author__ = "Michal Wrona"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+from tests import *
+from tests.utils.path_utils import env_file
+from tests.cucumber.steps.auth_steps import *
+from tests.cucumber.steps.file_steps import *
+from tests.cucumber.steps.reg_file_steps import *
+from tests.cucumber.steps.env_steps import *
 
 from pytest_bdd import scenario
-
-from steps.env_steps import *
-from steps.auth_steps import *
-from steps.file_steps import *
-from steps.reg_file_steps import *
+import pytest
 
 
-@pytest.fixture(scope="module", params=["env_luma_proxy.json"])
+@pytest.fixture(scope="module", params=["env_luma_proxy"])
 def env_description_file(request):
-    absolute_path = os.path.join(custom_cucumber_env_dir, request.param)
-    return absolute_path
+    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario(
