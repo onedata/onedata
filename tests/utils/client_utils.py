@@ -262,12 +262,12 @@ def clean_spaces_safe(user, client):
 
 
 def clean_spaces(user, client):
-    spaces = ls(client, user=user, path=client_mount_path('spaces', client))
+    spaces = ls(client, user=user, path=client.mount_path)
     spaces = spaces.split("\n")
     # clean spaces
     for space in spaces:
         rm(client, recursive=True, user=user, force=True,
-           path=client_mount_path(os.path.join('spaces', str(space), '*'),
+           path=client_mount_path(os.path.join(str(space), '*'),
                                   client))
 
 
