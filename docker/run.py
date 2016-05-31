@@ -6,6 +6,7 @@ import os
 import time
 import re
 import shutil
+import socket
 import subprocess as sp
 import sys
 
@@ -28,7 +29,7 @@ def replace(file_path, pattern, value):
         f.truncate()
         f.write(content)
 
-def copy_files():
+def copy_missing_files():
     for rootdir in DIRS:
         for subdir, _, files in os.walk(rootdir):
             subdir_path = os.path.join(ROOT, subdir[1:])
@@ -57,7 +58,7 @@ def link_dirs():
             os.symlink(source_path, dest_path)
 
 def set_node_name(file_path):
-    hostname = sp.check_output(['hostname', '-f']).rstrip('\n')
+    hostname = socket.getfqdn()
     replace(file_path, r'-name .*', '-name onepanel@{0}'.format(hostname))
 
 def set_multicast_address(file_path, multicast_address):
@@ -65,13 +66,13 @@ def set_multicast_address(file_path, multicast_address):
         '{{multicast_address, "{0}"}}'.format(multicast_address))
 
 def start_service(service_name, stdout=None):
-    with open('/dev/null', 'w') as stderr:
+    with open(os.devnull, 'w') as stderr:
         sp.check_call(['service', service_name, 'start'], stdout=stdout,
             stderr=stderr)
 
 def start_services():
     log('Starting couchbase-server: ', '')
-    with open('/dev/null', 'w') as stdout:
+    with open(os.devnull, 'w') as stdout:
         start_service('couchbase-server', stdout)
     log('[  OK  ]')
     start_service('cluster_manager')
@@ -80,7 +81,7 @@ def start_services():
     log('\nCongratulations! onezone has been successfully started.')
 
 def is_configured():
-    return not 'undefined' in sp.check_output(['op_panel_admin', '--config'])
+    return 'undefined' not in sp.check_output(['op_panel_admin', '--config'])
 
 def get_container_id():
     with open('/proc/self/cgroup', 'r') as f:
@@ -132,7 +133,7 @@ def infinite_loop():
         time.sleep(1)
 
 if __name__ == '__main__':
-    copy_files()
+    copy_missing_files()
     remove_dirs()
     link_dirs()
 
