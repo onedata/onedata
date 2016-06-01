@@ -20,7 +20,7 @@ def spaces_creation(user, spaces, environment, context):
     spaces = list_parser(spaces)
     user = context.get_user(user)
     for space in spaces:
-        space_id = create_space(user, space, context)
+        space_id = create_space(user, space)
         user.spaces.update({space: space_id})
 
 
@@ -29,7 +29,7 @@ def space_support_request(user, spaces, environment, context):
     spaces = list_parser(spaces)
     user = context.get_user(user)
     for space in spaces:
-        token = request_support(user, space, context)
+        token = request_support(user, space)
         user.tokens['support'].update({space: token})
 
 
@@ -40,32 +40,33 @@ def space_support(spaces, user, size, context):
     user = context.get_user(user)
     for space in spaces:
         size = 1024 * 1024 * int(size)
-        support_space(user, space, size, context)
+        support_space(user, space, size)
 
 
 @when(parsers.parse('{user1} invites {user2} to space {space}'))
 def space_invitation(user1, user2, space, context):
     user1 = context.get_user(user1)
     user2 = context.get_user(user2)
-    token = invite_to_space(user1, user2, space, context)
+    token = invite_to_space(user1, user2, space)
     user2.tokens['space_invite'].update({space: token})
 
 
 @when(parsers.parse('{user} joins space {space}'))
 def space_join(user, space, context):
     user = context.get_user(user)
-    join_space(user, space, context)
+    join_space(user, space)
 
 
 @when(parsers.parse('{user1} removes {user2} from space {space}'))
 def removing_user_from_space(user1, user2, space, context):
     user1 = context.get_user(user1)
     user2 = context.get_user(user2)
-    remove_user(user1, user2, space, context)
+    remove_user(user1, user2, space)
 
 
 @when(parsers.parse('{user} deletes space {space}'))
 def removing_user_from_space(user, space, context):
-    user1 = context.get_user(user)
-    delete_space(user, space, context)
+    user = context.get_user(user)
+    delete_space(user, space)
+
 

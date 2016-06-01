@@ -1,8 +1,8 @@
 from tests import *
-from tests.cucumber.steps.space_management_steps import *
+from tests.cucumber.steps.spaces_steps import *
 from tests.cucumber.steps.env_steps import *
 # from tests.cucumber.steps.auth_steps import *
-from tests.cucumber.steps.spaces_steps import *
+from tests.cucumber.steps.user_steps import *
 from tests.cucumber.steps.multi_file_steps import *
 from tests.cucumber.steps.multi_reg_file_steps import *
 from tests.cucumber.steps.multi_dir_steps import *
@@ -22,16 +22,16 @@ def env_description_file(request):
 # )
 # def test_default_space(env_description_file):
 #     pass
-#
-#
-# @scenario(
-#         '../features/space_management.feature',
-#         'New space with support'
-# )
-# def test_support_space(env_description_file):
-#     pass
-#
-#
+
+
+@scenario(
+        '../features/space_management.feature',
+        'New space with support'
+)
+def test_support_space(env_description_file):
+    pass
+
+
 # @scenario(
 #         '../features/space_management.feature',
 #         'New space without support'
@@ -54,19 +54,19 @@ def env_description_file(request):
 # )
 # def test_invite_to_non_default_space(env_description_file):
 #     pass
-
-
+#
+#
 # @scenario(
 #         '../features/space_management.feature',
 #         'Remove user from space'
 # )
 # def test_remove_user_from_space(env_description_file):
 #     pass
-
-
-@scenario(
-        '../features/space_management.feature',
-        'Delete space'
-)
-def test_delete_space(env_description_file):
-    pass
+#
+#
+# @scenario(
+#         '../features/space_management.feature',
+#         'Delete space'
+# )
+# def test_delete_space(env_description_file):
+#     pass

@@ -30,6 +30,11 @@ PERFORMANCE_LOGDIR = os.path.join(PERFORMANCE_DIR, "logs")
 PERFORMANCE_ENV_DIR = os.path.join(PERFORMANCE_DIR, "environments")
 PERFORMANCE_OUTPUT = os.path.join(PERFORMANCE_LOGDIR, "performance.json")
 EXAMPLE_ENV_DIR = os.path.join(BAMBOOS_DIR, "example_env")
+PROVIDER_CERT_DIR = os.path.join("root", "bin", "node", "etc", "certs")
+PROVIDER_KEY_FILE = "grpkey.pem"
+PROVIDER_CERT_FILE = "grpcert.pem"
+PROVIDER_KEY_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_KEY_FILE)
+PROVIDER_CERT_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_CERT_FILE)
 
 # env_up log files
 PREPARE_ENV_LOG_FILE = "prepare_test_environment.log"

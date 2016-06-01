@@ -2,6 +2,8 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
+from tests.utils.path_utils import escape
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -17,8 +19,9 @@ import subprocess
 
 
 class User:
-    def __init__(self, client_node=None, client=None, headers=None,
-                 email=None, id=None):
+    def __init__(self, client_node=None, client=None, headers=None, email=None,
+                 id=None, provider_id=None, op_domain=None,
+                 oz_domain=None):
 
         if client_node:
             self.clients = {client_node: client}
@@ -31,6 +34,9 @@ class User:
         self.tokens = {'support': {},
                        'creation': {},
                        'space_invite': {}}
+        self.provider_id = provider_id
+        self.op_domain = op_domain
+        self.oz_domain = oz_domain
 
     def get_client(self, client_node):
         return self.clients.get(client_node, None)
@@ -61,12 +67,12 @@ def mount_users(request, environment, context, client_ids, env_description_file,
     client_data = environment['client_data']
     clients = create_clients(users, client_hosts, mount_paths, client_ids)
 
-    def fin():
-        params = zip(users, clients)
-        for user, client in params:
-            clean_mount_path(user, client)
+    # def fin():
+    #     params = zip(users, clients)
+    #     for user, client in params:
+    #         clean_mount_path(user, client)
 
-    request.addfinalizer(fin)
+    # request.addfinalizer(fin)
 
     parameters = zip(users, ids, clients, client_instances, mount_paths,
                      client_hosts, tokens)
@@ -84,9 +90,8 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
         client.set_timeout(data.get('default_timeout', 0))
 
-        print "User {user} mounts oneclient using token: {token}".format(
-                user=user,
-                token=token)
+        print "User {user} mounts oneclient using token: {token}"\
+            .format(user=user, token=token), len(token)
 
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
@@ -94,6 +99,8 @@ def mount_users(request, environment, context, client_ids, env_description_file,
         token_path = "/tmp/token"
 
         # echo_to_file(client, token, token_path, output=True)
+        # t = cat(client, token_path)
+        # print t, len(t)
 
         cmd = ('mkdir -p {mount_path}'
                ' && export GLOBAL_REGISTRY_URL={gr_domain}'
@@ -114,12 +121,10 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
         ret = run_cmd(user, client, cmd)
 
-        if token_arg != "bad token":
-            # if token was different than "bad token", check if logging succeeded
-            if check and ret != 0:
-                clean_mount_path(user, client)
-                pytest.skip("Error mounting oneclient")
-
+        if ret != 0 and check and token_arg != "bad token":
+            # if token was different than "bad token" and mounting failed
+            clean_mount_path(user, client)
+            pytest.skip("Error mounting oneclient")
 
         if user in context.users and hasattr(context.users[user], "clients"):
             context.users[user].clients[client_instance] = client
@@ -133,16 +138,19 @@ def mount_users(request, environment, context, client_ids, env_description_file,
            path=os.path.join(os.path.dirname(mount_path), ".local"))
 
         rm(client, recursive=True, force=True, path=token_path)
-        if check and token != 'bad_token':
-            if not clean_spaces_safe(user, client):
-                pytest.skip("Test skipped beacause of failing to clean spaces")
+
+        # if check and token != 'bad_token':
+        #     if not clean_spaces_safe(user, client):
+        #         pytest.skip("Test skipped beacause of failing to clean spaces")
 
         save_op_code(context, user, ret)
 
 
 def ls(client, user="root", path=".", output=True):
-    cmd = "ls {path}".format(path=path.replace("'", "\\'").replace(" ", "\ "))
-    return run_cmd(user, client, cmd, output=output)
+    """CAUTION: this function returns list of paths not string"""
+    cmd = "ls {path}".format(path=escape(path))
+    # paths are separated with 2 spaces
+    return run_cmd(user, client, cmd, output=output).split("  ")
 
 
 def mv(client, src, dest, user="root", output=False):
@@ -166,7 +174,7 @@ def rm(client, path, recursive=False, force=False, user="root", output=False):
     cmd = "rm {recursive} {force} {path}".format(
             recursive="-r" if recursive else "",
             force="-f" if force else "",
-            path=path)
+            path=escape(path))
     return run_cmd(user, client, cmd, output=output)
 
 
@@ -287,8 +295,6 @@ def clean_spaces_safe(user, client):
 
 def clean_spaces(user, client):
     spaces = ls(client, user=user, path=client_mount_path('spaces', client))
-    spaces = spaces.split("\n")
-    # clean spaces
     for space in spaces:
         rm(client, recursive=True, user=user, force=True,
            path=client_mount_path(os.path.join('spaces', str(space), '*'),
@@ -297,6 +303,7 @@ def clean_spaces(user, client):
 
 def clean_mount_path(user, client):
     try:
+        pass
         clean_spaces(user, client)
     except:
         pass

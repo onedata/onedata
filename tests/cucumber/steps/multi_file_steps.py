@@ -40,7 +40,8 @@ def ls_present(user, files, path, client_node, context):
     def condition():
 
         try:
-            cmd_output = ls(client, user, path).split()
+            #split with 2 spaces, because paths are separated
+            cmd_output = ls(client, user, path)#.split('  ')
             print "ls: ", cmd_output
             for file in files:
                 if file not in cmd_output:
@@ -61,7 +62,7 @@ def ls_absent(user, files, path, client_node, context):
 
     def condition():
         try:
-            cmd_output = ls(client, user, path).split()
+            cmd_output = ls(client, user, path)#.split('  ')
             print "ls: ", cmd_output
             for file in files:
                 if file in cmd_output:

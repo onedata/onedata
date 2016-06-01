@@ -1,3 +1,5 @@
+import shutil
+
 from tests import *
 from tests.cucumber.steps import multi_auth_steps
 from tests.cucumber.steps.cucumber_utils import list_parser, make_arg_list
@@ -34,10 +36,7 @@ def open_id(persistent_environment, env_description_file):
 
     CONFIG_PATH = os.path.join('/root', 'bin', 'node', 'data', 'auth.config')
 
-    # tmp_dir = tempfile.mkdtemp()
-    # tmp_file = tempfile.mktemp(dir=tmp_dir)
     tmp_file = tempfile.mktemp()
-    # docker.cp(oz_host, CONFIG_PATH, tmp_dir, False)
 
     with open(tmp_file, 'w') as f:
         f.write(auth_content)
@@ -48,15 +47,41 @@ def open_id(persistent_environment, env_description_file):
 
         docker.cp(oz_host, tmp_file, CONFIG_PATH, True)
 
-        subprocess.check_output(
-                [os.path.join(UTILS_DIR, 'load_auth_config.escript'),
-                 oz_node, cookie], stderr=subprocess.STDOUT)
+        subprocess.check_output([
+            os.path.join(UTILS_DIR, 'load_auth_config.escript'),
+            oz_node,
+            cookie],
+            stderr=subprocess.STDOUT)
 
     os.remove(tmp_file)
     return open_id_ip
 
 
-@given(parsers.parse('there are users {users} with emails\n{emails}'))
+@given(parsers.parse('users {users} will authorize with {provider_ids} certs'))
+def save_user_data(users, provider_ids, context, environment):
+    users = list_parser(users)
+    provider_ids = list_parser(provider_ids)
+
+    # current version is for one oz
+    oz_domain = environment['oz_worker_nodes'][0].split(".", 1)[-1]
+
+    if not hasattr(context, "users"):
+        context.users = {}
+
+    for user, provider_id in zip(users, provider_ids):
+        op_domain = environment['domain_mappings'][provider_id]
+        if user not in context.users:
+            context.users[user] = User(provider_id=provider_id,
+                                       op_domain=op_domain,
+                                       oz_domain=oz_domain)
+        else:
+            context.users[user].provider_id = provider_id
+            context.users[user].op_domain = op_domain
+            context.users[user].oz_domain = oz_domain
+    return users
+
+
+@given(parsers.parse('users {users} will log in with emails {emails}'))
 def save_users(users, emails, context):
     users = list_parser(users)
     emails = list_parser(emails)
@@ -76,99 +101,109 @@ def login(persistent_environment, open_id, context):
     open id server appmoc
     """
     users = context.users.keys()
-    oz_nodes = persistent_environment['oz_worker_nodes']
-    oz_node = oz_nodes[0]
-    oz_host = oz_node.split('@')[1]
-
-    op_nodes = persistent_environment['op_worker_nodes']
-    op_node = op_nodes[0]
-    op_host = op_node.split('@')[1]
-
-    oz_ip = docker_ip(oz_host)
-    context.oz_ip = oz_ip
-    context.oz_domain = ".".join(oz_host.split('.')[1::])
-
-    op_ip = docker_ip(op_host)
-    context.op_ip = op_ip
-    context.op_domain = ".".join(op_host.split('.')[1::])
+    # oz_nodes = persistent_environment['oz_worker_nodes']
+    # oz_node = oz_nodes[0]
+    # oz_host = oz_node.split('@')[1]
+    #
+    # op_nodes = persistent_environment['op_worker_nodes']
+    # op_node = op_nodes[0]
+    # op_host = op_node.split('@')[1]
+    #
+    # oz_ip = docker_ip(oz_host)
+    # context.oz_ip = oz_ip
+    # context.oz_domain = ".".join(oz_host.split('.')[1::])
+    #
+    # op_ip = docker_ip(op_host)
+    # context.op_ip = op_ip
+    # context.op_domain = ".".join(op_host.split('.')[1::])
 
     for user in users:
-        http_get(oz_ip, 443, "/do_login?provider=dropbox", True)
+        user = context.get_user(user)
+        print "LOGIN: ", http_get(user.oz_domain, 443,
+                                  "/do_login?provider=dropbox", True)
 
 
 @given(parsers.parse('users are authorized'), scope="module")
 def get_macaroon(request, persistent_environment, env_description_file, open_id,
                  context):
+
     users = context.users.keys()
-    oz_nodes = persistent_environment['oz_worker_nodes']
-    oz_node = oz_nodes[0]
-    oz_cookie = get_oz_cookie(env_description_file, oz_node)
+    # # # TODO move this function to utils
+    # subprocess.call(['openssl', 'genrsa', '-out', key_file, '2048'])
+    # subprocess.call(
+    #         ['openssl', 'req', '-new', '-batch', '-key', key_file, '-out',
+    #          csr_file])
+    #
+    # with open(csr_file, 'r') as csr:
+    #     csr_content = csr.read()
+    #
+    # _, _, cert_content = http_post(context.oz_domain, REST_PORT, "/provider",
+    #                                True,
+    #                                data=json.dumps({
+    #                                    'csr': csr_content,
+    #                                    'clientName': "test_provider",
+    #                                    'redirectionPoint': "",
+    #                                    'urls': ["{url}:{port}"
+    #                                        .format(
+    #                                            url=context.op_domain,
+    #                                            port=443)]}),
+    #                                headers=DEFAULT_HEADERS)
+    #
+    # with open(cert_file, 'w') as cert:
+    #     cert.write(json.loads(cert_content)['certificate'])
 
-    op_nodes = persistent_environment['op_worker_nodes']
-    op_node = op_nodes[0]
-    op_cookie = get_op_cookie(env_description_file, op_node)
-
-    key_file = os.path.join(os.path.dirname(__file__), "key.pem")
-    cert_file = os.path.join(os.path.dirname(__file__), "cert.pem")
-    csr_file = os.path.join(os.path.dirname(__file__), "csr.pem")
-    context.key_file = key_file
-    context.cert_file = cert_file
-
-    # TODO move this function to utils
-    subprocess.call(['openssl', 'genrsa', '-out', key_file, '2048'])
-    subprocess.call(
-            ['openssl', 'req', '-new', '-batch', '-key', key_file, '-out',
-             csr_file])
-
-    with open(csr_file, 'r') as csr:
-        csr_content = csr.read()
-
-    _, _, cert_content = http_post(context.oz_domain, REST_PORT, "/provider",
-                                   True,
-                                   data=json.dumps({
-                                       'csr': csr_content,
-                                       'clientName': "test_provider",
-                                       'redirectionPoint': "",
-                                       'urls': ["{url}:{port}"
-                                                    .format(
-                                           url=context.op_domain, port=443)]}),
-                                   headers=DEFAULT_HEADERS)
-
-    with open(cert_file, 'w') as cert:
-        cert.write(json.loads(cert_content)['certificate'])
+    cert_dir = tempfile.mkdtemp() #todo to delete
 
     for user in users:
+        tempdir = tempfile.mkdtemp(suffix=user, dir=cert_dir)
         user = context.get_user(user)
+        oz_node = get_first_oz_erl_node(user.oz_domain, persistent_environment)
+        op_node = get_first_op_erl_node(user.op_domain, persistent_environment)
+        oz_cookie = get_oz_cookie(env_description_file, oz_node)
+        op_cookie = get_op_cookie(env_description_file, op_node)
+
+        op_worker = get_first_op_worker(user.op_domain, persistent_environment)
+
+        docker.cp(op_worker, PROVIDER_KEY_PATH, tempdir, False)
+        docker.cp(op_worker, PROVIDER_CERT_PATH, tempdir, False)
+
+        cert_file = os.path.join(tempdir, PROVIDER_CERT_FILE)
+        key_file = os.path.join(tempdir, PROVIDER_KEY_FILE)
+
         headers_str = subprocess \
             .check_output([os.path.join(UTILS_DIR, 'get_macaroon.escript'),
-                           oz_node, oz_cookie, op_node, op_cookie,
-                           "{}".format(user.email),
-                           "p1"],
-                          stderr=subprocess.STDOUT)  # TODO provider id is hardcoded
+                           oz_node, oz_cookie, op_node, op_cookie, user.email,
+                           user.provider_id],
+                          stderr=subprocess.STDOUT)
         auth_headers = json.loads(headers_str.split('\n')[-1])
         user.headers = dict(DEFAULT_HEADERS)
         user.headers.update(auth_headers)
+        _, _, body = http_get(user.oz_domain, REST_PORT, "/user", True,
+                              headers=user.headers,
+                              cert=(cert_file, key_file))
+
+        user.id = json.loads(body)['userId']
+        user.cert_file = cert_file
+        user.key_file = key_file
+
         print "HEADERS: ", user.headers
 
     def fin():
-        os.remove(key_file)
-        os.remove(cert_file)
-        os.remove(csr_file)
+        shutil.rmtree(cert_dir)
 
     request.addfinalizer(fin)
 
 
-@given('users info is saved', scope="module")
-def save_info(context):
-    users = context.users.keys()
-    for user in users:
-        user = context.get_user(user)
-
-        _, _, body = http_get(context.oz_domain, REST_PORT, "/user", True,
-                              headers=user.headers,
-                              cert=(context.cert_file, context.key_file))
-
-        user.id = json.loads(body)['userId']
+# @given('users info is saved', scope="module")
+# def save_info(context):
+#     users = context.users.keys()
+#     for user in users:
+#         user = context.get_user(user)
+#
+#         _, _, body = http_get(context.oz_domain, REST_PORT, "/user", True,
+#                               headers=user.headers,
+#                               cert=(context.cert_file, context.key_file))
+#
 
 
 # TODO this step is slightly different than one in auth_steps
@@ -211,3 +246,28 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
 def check_spaces(spaces, user, client_node, context):
     multi_auth_steps.check_spaces(spaces, user, make_arg_list(client_node),
                                   context)
+
+
+def get_first_op_erl_node(domain, env):
+    return get_first_erl_node(domain, env, 'op')
+
+
+def get_first_oz_erl_node(domain, env):
+    return get_first_erl_node(domain, env, 'oz')
+
+
+def get_first_erl_node(domain, env, key):
+    key = {
+        'op': 'op_worker_nodes',
+        'oz': 'oz_worker_nodes'
+    }[key]
+    # returns first node from list
+    return [node for node in env[key] if node.endswith(domain)][0]
+
+
+def get_first_op_worker(domain, env):
+    return get_first_op_erl_node(domain, env).split('@')[-1]
+
+
+def get_first_oz_worker(domain, env):
+    return get_first_oz_erl_node(domain, env).split('@')[-1]
