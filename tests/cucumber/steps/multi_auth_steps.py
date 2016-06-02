@@ -35,7 +35,6 @@ def check_spaces(spaces, user, client_nodes, context):
     client_nodes = list_parser(client_nodes)
     for client_node in client_nodes:
         client = get_client(client_node, user, context)
-        # spaces_path = client_mount_path("spaces", client)
 
         def condition():
             try:
