@@ -35,6 +35,8 @@ PROVIDER_KEY_FILE = "grpkey.pem"
 PROVIDER_CERT_FILE = "grpcert.pem"
 PROVIDER_KEY_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_KEY_FILE)
 PROVIDER_CERT_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_CERT_FILE)
+ENV_CONFIGURATOR_ESCRIPT = os.path.join(BAMBOOS_DIR, 'env_configurator',
+                                        'env_configurator.escript')
 
 # env_up log files
 PREPARE_ENV_LOG_FILE = "prepare_test_environment.log"

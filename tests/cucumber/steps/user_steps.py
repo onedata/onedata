@@ -58,7 +58,7 @@ def open_id(persistent_environment, env_description_file):
 
 
 @given(parsers.parse('users {users} will authorize with {provider_ids} certs'))
-def save_user_data(users, provider_ids, context, environment):
+def save_user_data(users, provider_ids, context, environment, env_description_file):
     users = list_parser(users)
     provider_ids = list_parser(provider_ids)
 
@@ -74,7 +74,7 @@ def save_user_data(users, provider_ids, context, environment):
             context.users[user] = User(provider_id=provider_id,
                                        op_domain=op_domain,
                                        oz_domain=oz_domain)
-        else:
+        else:   #TODO not needed ???
             context.users[user].provider_id = provider_id
             context.users[user].op_domain = op_domain
             context.users[user].oz_domain = oz_domain
@@ -96,31 +96,27 @@ def save_users(users, emails, context):
 
 
 @given('users are logged in', scope="module")
-def login(persistent_environment, open_id, context):
+def login(persistent_environment, open_id, context, env_description_file):
     """Note number of users cannot be grater than number of users mocked in
     open id server appmoc
     """
     users = context.users.keys()
-    # oz_nodes = persistent_environment['oz_worker_nodes']
-    # oz_node = oz_nodes[0]
-    # oz_host = oz_node.split('@')[1]
-    #
-    # op_nodes = persistent_environment['op_worker_nodes']
-    # op_node = op_nodes[0]
-    # op_host = op_node.split('@')[1]
-    #
-    # oz_ip = docker_ip(oz_host)
-    # context.oz_ip = oz_ip
-    # context.oz_domain = ".".join(oz_host.split('.')[1::])
-    #
-    # op_ip = docker_ip(op_host)
-    # context.op_ip = op_ip
-    # context.op_domain = ".".join(op_host.split('.')[1::])
-
     for user in users:
         user = context.get_user(user)
-        print "LOGIN: ", http_get(user.oz_domain, 443,
-                                  "/do_login?provider=dropbox", True)
+        http_get(user.oz_domain, 443, "/do_login?provider=dropbox", True)
+        oz_node = get_first_oz_erl_node(user.oz_domain, persistent_environment)
+        op_node = get_first_op_erl_node(user.op_domain, persistent_environment)
+        oz_cookie = get_oz_cookie(env_description_file, oz_node)
+        op_cookie = get_op_cookie(env_description_file, op_node)
+        op_worker = get_first_op_worker(user.op_domain, persistent_environment)
+        oz_worker = get_first_oz_worker(user.oz_domain, persistent_environment)
+
+        user.oz_node = oz_node
+        user.op_node = op_node
+        user.oz_cookie = oz_cookie
+        user.op_cookie = op_cookie
+        user.op_worker = op_worker
+        user.oz_worker = oz_worker
 
 
 @given(parsers.parse('users are authorized'), scope="module")
@@ -128,52 +124,22 @@ def get_macaroon(request, persistent_environment, env_description_file, open_id,
                  context):
 
     users = context.users.keys()
-    # # # TODO move this function to utils
-    # subprocess.call(['openssl', 'genrsa', '-out', key_file, '2048'])
-    # subprocess.call(
-    #         ['openssl', 'req', '-new', '-batch', '-key', key_file, '-out',
-    #          csr_file])
-    #
-    # with open(csr_file, 'r') as csr:
-    #     csr_content = csr.read()
-    #
-    # _, _, cert_content = http_post(context.oz_domain, REST_PORT, "/provider",
-    #                                True,
-    #                                data=json.dumps({
-    #                                    'csr': csr_content,
-    #                                    'clientName': "test_provider",
-    #                                    'redirectionPoint': "",
-    #                                    'urls': ["{url}:{port}"
-    #                                        .format(
-    #                                            url=context.op_domain,
-    #                                            port=443)]}),
-    #                                headers=DEFAULT_HEADERS)
-    #
-    # with open(cert_file, 'w') as cert:
-    #     cert.write(json.loads(cert_content)['certificate'])
-
     cert_dir = tempfile.mkdtemp() #todo to delete
 
     for user in users:
         tempdir = tempfile.mkdtemp(suffix=user, dir=cert_dir)
         user = context.get_user(user)
-        oz_node = get_first_oz_erl_node(user.oz_domain, persistent_environment)
-        op_node = get_first_op_erl_node(user.op_domain, persistent_environment)
-        oz_cookie = get_oz_cookie(env_description_file, oz_node)
-        op_cookie = get_op_cookie(env_description_file, op_node)
 
-        op_worker = get_first_op_worker(user.op_domain, persistent_environment)
-
-        docker.cp(op_worker, PROVIDER_KEY_PATH, tempdir, False)
-        docker.cp(op_worker, PROVIDER_CERT_PATH, tempdir, False)
+        docker.cp(user.op_worker, PROVIDER_KEY_PATH, tempdir, False)
+        docker.cp(user.op_worker, PROVIDER_CERT_PATH, tempdir, False)
 
         cert_file = os.path.join(tempdir, PROVIDER_CERT_FILE)
         key_file = os.path.join(tempdir, PROVIDER_KEY_FILE)
 
         headers_str = subprocess \
             .check_output([os.path.join(UTILS_DIR, 'get_macaroon.escript'),
-                           oz_node, oz_cookie, op_node, op_cookie, user.email,
-                           user.provider_id],
+                           user.oz_node, user.oz_cookie, user.op_node,
+                           user.op_cookie, user.email, user.provider_id],
                           stderr=subprocess.STDOUT)
         auth_headers = json.loads(headers_str.split('\n')[-1])
         user.headers = dict(DEFAULT_HEADERS)
@@ -186,24 +152,10 @@ def get_macaroon(request, persistent_environment, env_description_file, open_id,
         user.cert_file = cert_file
         user.key_file = key_file
 
-        print "HEADERS: ", user.headers
-
     def fin():
         shutil.rmtree(cert_dir)
 
     request.addfinalizer(fin)
-
-
-# @given('users info is saved', scope="module")
-# def save_info(context):
-#     users = context.users.keys()
-#     for user in users:
-#         user = context.get_user(user)
-#
-#         _, _, body = http_get(context.oz_domain, REST_PORT, "/user", True,
-#                               headers=user.headers,
-#                               cert=(context.cert_file, context.key_file))
-#
 
 
 # TODO this step is slightly different than one in auth_steps

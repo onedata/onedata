@@ -93,6 +93,6 @@ def env_file(dir, file):
     return os.path.join(dir, ensure_json(file))
 
 
-def escape(path):
+def escape_path(path):
     """Returns path with escaped space and apostrophe"""
     return path.replace("'", "\\'").replace(" ", "\ ")

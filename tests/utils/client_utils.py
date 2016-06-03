@@ -2,7 +2,7 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
-from tests.utils.path_utils import escape
+from tests.utils.path_utils import escape_path
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -67,12 +67,12 @@ def mount_users(request, environment, context, client_ids, env_description_file,
     client_data = environment['client_data']
     clients = create_clients(users, client_hosts, mount_paths, client_ids)
 
-    # def fin():
-    #     params = zip(users, clients)
-    #     for user, client in params:
-    #         clean_mount_path(user, client)
+    def fin():
+        params = zip(users, clients)
+        for user, client in params:
+            clean_mount_path(user, client)
 
-    # request.addfinalizer(fin)
+    request.addfinalizer(fin)
 
     parameters = zip(users, ids, clients, client_instances, mount_paths,
                      client_hosts, tokens)
@@ -91,16 +91,12 @@ def mount_users(request, environment, context, client_ids, env_description_file,
         client.set_timeout(data.get('default_timeout', 0))
 
         print "User {user} mounts oneclient using token: {token}"\
-            .format(user=user, token=token), len(token)
+            .format(user=user, token=token)
 
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
 
         token_path = "/tmp/token"
-
-        # echo_to_file(client, token, token_path, output=True)
-        # t = cat(client, token_path)
-        # print t, len(t)
 
         cmd = ('mkdir -p {mount_path}'
                ' && export GLOBAL_REGISTRY_URL={gr_domain}'
@@ -148,79 +144,78 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
 def ls(client, user="root", path=".", output=True):
     """CAUTION: this function returns list of paths not string"""
-    cmd = "ls {path}".format(path=escape(path))
-    # paths are separated with 2 spaces
-    return run_cmd(user, client, cmd, output=output).split("  ")
+    cmd = "ls {path}".format(path=escape_path(path))
+    # sometimes paths are separated with 2 spaces, sometimes with '\n\
+    return run_cmd(user, client, cmd, output=output).strip()\
+        .replace('  ', '\n').split('\n')
 
 
 def mv(client, src, dest, user="root", output=False):
-    cmd = "mv {src} {dest}".format(src=src, dest=dest)
+    cmd = "mv {src} {dest}".format(src=escape_path(src), dest=escape_path(dest))
     return run_cmd(user, client, cmd, output=output)
 
 
 def chmod(client, mode, file, user="root", output=False):
-    cmd = "chmod {mode} {file}".format(mode=mode, file=file)
+    cmd = "chmod {mode} {file}".format(mode=mode, file=escape_path(file))
     return run_cmd(user, client, cmd, output=output)
 
 
 def stat(client, path, format=None, user="root", output=True):
-    cmd = "stat {path} {format}".format(
-            path=path,
-            format="--format='{0}'".format(format) if format else "")
+    cmd = "stat {path} {format}".format(path=escape_path(path),
+                                        format="--format='{0}'"
+                                        .format(format) if format else "")
     return run_cmd(user, client, cmd, output=output)
 
 
 def rm(client, path, recursive=False, force=False, user="root", output=False):
-    cmd = "rm {recursive} {force} {path}".format(
-            recursive="-r" if recursive else "",
-            force="-f" if force else "",
-            path=escape(path))
+    cmd = "rm {recursive} {force} {path}"\
+        .format(recursive="-r" if recursive else "",
+                force="-f" if force else "",
+                path=escape_path(path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def rmdir(client, dir_path, recursive=False, from_path=None, user="root",
           output=False):
     cmd = ("{from_path}"
-           "rmdir {recursive} {path}"
-           ).format(
-            from_path="cd {0} &&".format(from_path) if from_path else "",
+           "rmdir {recursive} {path}").format(
+            from_path="cd {0} &&".format(escape_path(from_path)) if from_path else "",
             recursive="-p" if recursive else "",
-            path=dir_path)
+            path=escape_path(dir_path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def mkdir(client, dir_path, recursive=False, user="root", output=False):
-    cmd = "mkdir {recursive} {path}".format(
-
-            recursive="-p" if recursive else "",
-            path=dir_path)
+    cmd = "mkdir {recursive} {path}".format(recursive="-p" if recursive else "",
+                                            path=escape_path(dir_path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def touch(client, file_path, user="root", output=False):
-    cmd = "touch {path}".format(path=file_path)
+    cmd = "touch {path}".format(path=escape_path(file_path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def cp(client, src, dest, recursive=False, user="root", output=False):
-    cmd = "cp {recursive} {src} {dest}".format(
+    cmd = "cp {recursive} {src} {dest}"\
+        .format(
             recursive="-r" if recursive else "",
-            src=src,
-            dest=dest)
+            src=escape_path(src),
+            dest=escape_path(dest))
     return run_cmd(user, client, cmd, output=output)
 
 
 def truncate(client, file_path, size, user="root", output=False):
     cmd = "truncate --size={size} {file_path}".format(size=size,
-                                                      file_path=file_path)
+                                                      file_path=escape_path(file_path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
        user="root", output=False, error=False):
     cmd = "dd {input} {output} {bs} {count}".format(
-            input="if={}".format(input_file),
-            output="of={}".format(output_file),
+            input="if={}".format(escape_path(input_file)),
+            output="of={}".format(escape_path(output_file)),
             bs="bs={0}{1}".format(block_size, unit),
             count="count={}".format(count))
     return run_cmd(user, client, cmd, output=output, error=True)
@@ -233,24 +228,25 @@ def echo_to_file(client, text, file_path, new_line=False, escape=False,
             escape="-e" if escape else "",
             text=text,
             redirect=">" if overwrite else ">>",
-            file_path=file_path)
+            file_path=escape_path(file_path))
+
     return run_cmd(user, client, cmd, output=output)
 
 
 def cat(client, file_path, user="root", output=True):
-    cmd = "cat {file_path}".format(file_path=file_path)
+    cmd = "cat {file_path}".format(file_path=escape_path(file_path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def md5sum(client, file_path, user="root", output=True):
-    cmd = "md5sum {file_path}".format(file_path=file_path)
+    cmd = "md5sum {file_path}".format(file_path=escape_path(file_path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def mktemp(client, path=None, dir=False, user="root", output=True):
     cmd = "mktemp {dir} {path}".format(
             dir="--directory" if dir else "",
-            path="--tmpdir={}".format(path) if path else "")
+            path="--tmpdir={}".format(escape_path(path)) if path else "")
     return run_cmd(user, client, cmd, output).strip()
 
 
@@ -259,7 +255,7 @@ def replace_pattern(client, file_path, pattern, new_text, user='root',
     cmd = 'sed -i \'s/{pattern}/{new_text}/g\' {file_path}'.format(
             pattern=pattern,
             new_text=new_text,
-            file_path=file_path)
+            file_path=escape_path(file_path))
     return run_cmd(user, client, cmd, output=output)
 
 
@@ -269,7 +265,7 @@ def fusermount(client, path, user='root', unmount=False, lazy=False,
             unmount="-u" if unmount else "",
             lazy="-z" if lazy else "",
             quiet="-q" if quiet else "",
-            path=path
+            path=escape_path(path)
     )
     return run_cmd(user, client, cmd, output)
 

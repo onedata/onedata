@@ -35,12 +35,12 @@ def space_support_request(user, spaces, environment, context):
 
 @when(parsers.parse('{spaces} is supported for {user} with {size} MB'))
 @when(parsers.parse('{spaces} are supported for {user} with {size} MB'))
-def space_support(spaces, user, size, context):
+def space_support(spaces, user, size, environment, context):
     spaces = list_parser(spaces)
     user = context.get_user(user)
     for space in spaces:
         size = 1024 * 1024 * int(size)
-        support_space(user, space, size)
+        support_space(user, space, size, environment)
 
 
 @when(parsers.parse('{user1} invites {user2} to space {space}'))
@@ -65,8 +65,18 @@ def removing_user_from_space(user1, user2, space, context):
 
 
 @when(parsers.parse('{user} deletes space {space}'))
-def removing_user_from_space(user, space, context):
+def deleting_space(user, space, context):
+    print "USER: ", user, "deleting space: ", space
     user = context.get_user(user)
     delete_space(user, space)
+
+
+@given('environment is clean')
+def clean_env(context):
+    for user_name, user in context.users.items():
+        for space in user.spaces.keys():
+            if not space.endswith('\'s space'):
+                print "CLEANING SPACE: ", space, "for user:", user
+                delete_space(user, space)
 
 

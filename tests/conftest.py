@@ -75,7 +75,7 @@ def persistent_environment(request, test_type, env_description_file):
                       force=True,
                       volumes=True)
 
-    # request.addfinalizer(fin)
+    request.addfinalizer(fin)
     request.environment = env_desc
     return env_desc
 
