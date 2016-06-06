@@ -6,8 +6,9 @@ ARG RELEASE
 ARG VERSION=""
 ARG ONEPANEL_AUTOSTART=false
 
-# Get the image up to date
+# Get the image up to date and install utility tools
 RUN dnf -y upgrade && \
+    dnf -y install fping python net-tools traceroute vim && \
     dnf clean all
 
 # Install oneprovider package
@@ -29,8 +30,9 @@ ADD ca-bundle.pem /etc/ssl/cert.pem
 EXPOSE 53 5555 443 8443 80 8876 8877 9443
 
 # Add entrypoint script
-ADD run.sh /root/run.sh
+ADD run.py /root/run.py
 
-VOLUME ["/data"]
+RUN mkdir -p /volumes/persistency /volumes/storage
+VOLUME ["/volumes/persistency", "/volumes/storage"]
 
-CMD /root/run.sh
+CMD /root/run.py
