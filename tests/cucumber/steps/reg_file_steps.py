@@ -16,6 +16,7 @@ def write_rand_text(user, megabytes, file, context):
 
 
 @when(parsers.parse('{user} writes "{text}" to {file}'))
+@then(parsers.parse('{user} writes "{text}" to {file}'))
 def write_text(user, text, file, context):
     multi_reg_file_steps.write_text(user, text, file, "client1", context)
 

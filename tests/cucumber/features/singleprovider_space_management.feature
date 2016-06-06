@@ -1,4 +1,4 @@
-Feature: User management
+Feature: Space management with single provider
 
   Background:
   Given environment is up
@@ -18,10 +18,12 @@ Feature: User management
     When u1 sees [u1's space] in spaces on client1
     And  u1 can't list spaces/u1's space on client1
     And u1 asks for support of space [u1's space]
-    And [u1's space] is supported for u1 with 1 MB
+    And [u1's space] is supported for u1 by p1 with 1 MB
     And  u1 can list spaces/u1's space on client1
     And u1 creates regular files [file1] on client1
     Then u1 sees [file1] in spaces/u1's space on client1
+    And u1 writes "TEST TEXT ONEDATA" to spaces/u1's space/file1 on client1
+    Then u1 reads "TEST TEXT ONEDATA" from spaces/u1's space/file1 on client1
 
   Scenario: New space without support
     Given u1 starts oneclient in /home/u1/onedata using token on client1
@@ -35,8 +37,12 @@ Feature: User management
     And u1 creates spaces [s1]
     And u1 can't list spaces/s1 on client1
     And u1 asks for support of space [s1]
-    And [s1] is supported for u1 with 1 MB
-    Then  u1 can list spaces/s1 on client1
+    And [s1] is supported for u1 by p1 with 1 MB
+    And  u1 can list spaces/s1 on client1
+    When u1 creates regular files [spaces/s1/file1] on client1
+    Then u1 sees [file1] in spaces/s1 on client1
+    And u1 writes "TEST TEXT ONEDATA" to spaces/s1/file1 on client1
+    Then u1 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client1
 
   Scenario: Invite user to default space
     Given u2 starts oneclient in /home/u2/onedata using token on client1
@@ -46,10 +52,12 @@ Feature: User management
     And u2 sees [u1's space] in spaces on client1
     And u2 can't list spaces/s1 on client1
     And u1 asks for support of space [u1's space]
-    And [u1's space] is supported for u1 with 1 MB
+    And [u1's space] is supported for u1 by p1 with 1 MB
     And u2 can list spaces/u1's space on client1
     And u2 creates regular files [spaces/u1's space/file1] on client1
     Then u2 sees [file1] in spaces/u1's space on client1
+    And u2 writes "TEST TEXT ONEDATA" to spaces/u1's space/file1 on client1
+    Then u2 reads "TEST TEXT ONEDATA" from spaces/u1's space/file1 on client1
 
   Scenario: Invite user to non-default space
     Given u2 starts oneclient in /home/u2/onedata using token on client1
@@ -60,17 +68,19 @@ Feature: User management
     And u2 sees [s1] in spaces on client1
     And u2 can't list spaces/s1 on client1
     And u1 asks for support of space [s1]
-    And [s1] is supported for u1 with 1 MB
+    And [s1] is supported for u1 by p1 with 1 MB
     And u2 can list spaces/s1 on client1
     And u2 creates regular files [spaces/s1/file1] on client1
     Then u2 sees [file1] in spaces/s1 on client1
+    And u2 writes "TEST TEXT ONEDATA" to spaces/s1/file1 on client1
+    Then u2 reads "TEST TEXT ONEDATA" from spaces/s1/file1 on client1
 
   Scenario: Remove user from space
     Given u2 starts oneclient in /home/u2/onedata using token on client1
     When u1 invites u2 to space u1's space
     And u2 joins space u1's space
     And u1 asks for support of space [s1]
-    And [s1] is supported for u1 with 1 MB
+    And [s1] is supported for u1 by p1 with 1 MB
     And u2 can list spaces/u1's space on client1
     And u1 removes u2 from space u1's space
     Then u2 doesn't see [u1's space] in spaces on client1
@@ -78,7 +88,7 @@ Feature: User management
   Scenario: Delete supported default space
     Given u1 starts oneclient in /home/u1/onedata using token on client1
     When u1 asks for support of space [u1's space]
-    And [u1's space] is supported for u1 with 1 MB
+    And [u1's space] is supported for u1 by p1 with 1 MB
     And u1 can list spaces/u1's space on client1
     And u1 deletes space u1's space
     Then u1 can't list spaces/u1's space on client1
@@ -87,7 +97,7 @@ Feature: User management
     Given u2 starts oneclient in /home/u2/onedata using token on client1
     When u2 creates spaces [s2]
     And u2 asks for support of space [s2]
-    And [s2] is supported for u2 with 1 MB
+    And [s2] is supported for u2 by p1 with 1 MB
     And u2 can list spaces/s2 on client1
     And u2 deletes space s2
-    Then u2 doesn't see [s2] in space on client1
+    Then u2 doesn't see [s2] in spaces on client1

@@ -33,18 +33,19 @@ def space_support_request(user, spaces, environment, context):
         user.tokens['support'].update({space: token})
 
 
-@when(parsers.parse('{spaces} is supported for {user} with {size} MB'))
-@when(parsers.parse('{spaces} are supported for {user} with {size} MB'))
-def space_support(spaces, user, size, environment, context):
+@when(parsers.parse('{spaces} is supported for {user} by {provider} with {size} MB'))
+@when(parsers.parse('{spaces} are supported for {user} by {provider} with {size} MB'))
+def space_support(spaces, user, provider, size, env_description_file,
+                  environment,context):
     spaces = list_parser(spaces)
     user = context.get_user(user)
     for space in spaces:
         size = 1024 * 1024 * int(size)
-        support_space(user, space, size, environment)
+        support_space(user, space, provider, size, env_description_file)
 
 
 @when(parsers.parse('{user1} invites {user2} to space {space}'))
-def space_invitation(user1, user2, space, context):
+def space_invitation(user1, user2, space, context, environment):
     user1 = context.get_user(user1)
     user2 = context.get_user(user2)
     token = invite_to_space(user1, user2, space)
@@ -52,27 +53,27 @@ def space_invitation(user1, user2, space, context):
 
 
 @when(parsers.parse('{user} joins space {space}'))
-def space_join(user, space, context):
+def space_join(user, space, context, environment):
     user = context.get_user(user)
     join_space(user, space)
 
 
 @when(parsers.parse('{user1} removes {user2} from space {space}'))
-def removing_user_from_space(user1, user2, space, context):
+def removing_user_from_space(user1, user2, space, context, environment):
     user1 = context.get_user(user1)
     user2 = context.get_user(user2)
     remove_user(user1, user2, space)
 
 
 @when(parsers.parse('{user} deletes space {space}'))
-def deleting_space(user, space, context):
+def deleting_space(user, space, context, environment):
     print "USER: ", user, "deleting space: ", space
     user = context.get_user(user)
     delete_space(user, space)
 
 
 @given('environment is clean')
-def clean_env(context):
+def clean_env(context, environment):
     for user_name, user in context.users.items():
         for space in user.spaces.keys():
             if not space.endswith('\'s space'):

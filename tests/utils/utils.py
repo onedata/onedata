@@ -134,3 +134,9 @@ def get_cookie(config_path, name, domain, node_name=True):
     cm_config = config[domain][domain_name]['cluster_manager']
     key = cm_config.keys()[0]
     return str(cm_config[key]['vm.args']['setcookie'])
+
+
+def get_storages(config_path, provider_id):
+    config = parse_json_config_file(config_path)
+    cfg = config['provider_domains'][provider_id]['os_config']
+    return config['os_configs'][cfg]['storages']

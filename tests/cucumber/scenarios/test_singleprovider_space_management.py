@@ -11,12 +11,15 @@ from pytest_bdd import scenario
 from functools import partial
 import pytest
 
-scenario = partial(scenario, '../features/space_management.feature')
+from tests.utils.path_utils import env_file
+
+scenario = partial(scenario,
+                   '../features/singleprovider_space_management.feature')
 
 
-@pytest.fixture(scope="module", params=["auth.json"])
+@pytest.fixture(scope="module", params=["singleprovider_space_management.json"])
 def env_description_file(request):
-    return os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
+    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario('Default space without support')
@@ -56,13 +59,12 @@ def test_remove_user_from_space(env_description_file):
     pass
 
 
-#TODO nie dziala jak pusci sie wszystkie testy
+# TODO nie dziala jak pusci sie wszystkie testy
 @scenario('Delete supported default space')
 def test_delete_supported_default_space(env_description_file):
     pass
 
 
-# TODO nie dziala jak pusci sie wszystkie testy
 @scenario('Delete supported non-default space')
 def test_delete_supported_non_default_space(env_description_file):
     pass

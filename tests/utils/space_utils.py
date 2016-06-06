@@ -4,7 +4,7 @@ from tests.cucumber.steps import user_steps
 from tests.utils.docker_utils import run_cmd
 from tests.utils.net_utils import http_post, http_get, http_delete
 from tests.utils.string_utils import parse
-from tests.utils.utils import get_op_cookie
+from tests.utils.utils import get_op_cookie, get_storages
 
 from environment import docker
 import subprocess
@@ -44,7 +44,7 @@ def request_support(user, space_name):
     return json.loads(body)['token']
 
 
-def support_space(user, space_name, size, environment):
+def support_space(user, space_name, provider, size, env_description_file):
     data = {'token': user.tokens['support'][space_name],
             'size': str(size)}
 
@@ -59,7 +59,8 @@ def support_space(user, space_name, size, environment):
     # create storages mapping
     env_conf_input = {}
 
-    storage_name = environment['storages']['posix'].keys()[0]
+    # storage_name = environment['storages']['posix'].keys()[0]
+    storage_name = get_storages(env_description_file, provider)[0]['name']
     provider_conf = {
         user.provider_id: {
             'nodes': [user.op_node],
