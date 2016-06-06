@@ -14,9 +14,9 @@ Feature: Multi_directory_CRUD
     And u2 sees [dir1, dir2, dir3] in s1 on client2
 
   Scenario: Rename someone's directory without permission
-    When u1 creates directories [dir1] on client1
+    When u1 creates directories [s1/dir1] on client1
     And last operation by u1 succeeds
-    And u2 renames dir1 to dir2 on client2
+    And u2 renames s1/dir1 to s1/dir2 on client2
     Then last operation by u2 fails
 
   Scenario: Rename someone's directory with permission
@@ -60,7 +60,7 @@ Feature: Multi_directory_CRUD
     And u1 can't list s1/dir1/dir2 on client1
 
   Scenario: Create file in directory without write permission
-    When u2 creates directories [s1dir1] on client2
+    When u2 creates directories [s1/dir1] on client2
     And u2 changes s1/dir1 mode to 755 on client2
     And mode of u1's s1/dir1 is 755 on client1
     And u1 creates directories [s1/dir1/dir2] on client1
@@ -81,7 +81,7 @@ Feature: Multi_directory_CRUD
 
   Scenario: Delete file in directory with write permission
     When u2 creates directory and parents [s1/dir1/dir2] on client2
-    And u1 sees [s1/dir2] in dir1 on client1
+    And u1 sees [dir2] in s1/dir1 on client1
     And u1 deletes empty directories [s1/dir1/dir2] on client1
     Then u2 doesn't see [dir2] in s1/dir1 on client2
 

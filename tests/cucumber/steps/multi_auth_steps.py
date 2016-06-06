@@ -39,7 +39,6 @@ def check_spaces(spaces, user, client_nodes, context):
         def condition():
             try:
                 spaces_in_client = ls(client, path=client.mount_path, user=user)
-                spaces_in_client = spaces_in_client.split("\n")
                 for space in spaces:
                     if space not in spaces_in_client:
                         return False

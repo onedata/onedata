@@ -12,11 +12,11 @@ Feature: Multiprovider_replication
     Then u2 sees [file1, file2, file3] in s1 on client2
 
   Scenario: Create empty file and read it on external provider
-    When u1 creates regular files [file] on client1
-    Then u2 reads "" from file on client2
+    When u1 creates regular files [s1/file] on client1
+    Then u2 reads "" from s1/file on client2
 
   Scenario: Write to file and check size on remote provider
-    When u1 creates regular files [file] on client1
+    When u1 creates regular files [s1/file] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     Then size of u2's s1/file1 is 17 bytes on client2
 
@@ -43,8 +43,8 @@ Feature: Multiprovider_replication
     When u1 creates regular files [s1/file1] on client1
     And u1 writes "123456789" to s1/file1 on client1
     And u1 deletes files [s1/file1] on client1
-    Then u1 doesn't see [s1/file1] in . on client1
-    And u2 doesn't see [s1/file1] in . on client2
+    Then u1 doesn't see [file1] in s1 on client1
+    And u2 doesn't see [file1] in s1 on client2
 
   Scenario: Create nonempty file, append remotely, append locally and read both
     When u1 creates regular files [s1/file1] on client1

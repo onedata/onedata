@@ -53,7 +53,7 @@ Feature: Regular_file_stat
     Then modification time of u1's s1/file1 is equal to access time
 
   Scenario: Access time
-    When u1 writes "TEST TEXT ONEDATA" to file1
+    When u1 writes "TEST TEXT ONEDATA" to s1/file1
     And u1 sees file1 in s1
     And u1 waits 1 second
     # call sleep, to be sure that time of write and read is different
