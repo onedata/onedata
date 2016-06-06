@@ -59,8 +59,6 @@ def persistent_environment(request, test_type, env_description_file):
     """
     Sets up environment and returns environment description.
     """
-    # FIXME: blocking environment launch
-    raise Exception('someone tried to launch env')
 
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments',

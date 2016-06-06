@@ -17,7 +17,7 @@ Feature: Onezone login page
 
   Scenario: Rendering multiple login buttons
    When I go to the home/login page
-   Then I should see at least 6 login buttons
+   Then I should see at least 5 login buttons
 
 
   Scenario Outline: Rendering particular login buttons
