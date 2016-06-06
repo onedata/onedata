@@ -18,9 +18,9 @@ import subprocess
                      '{client_hosts} respectively,\n' +
                      'using {tokens}'))
 def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
-                request, environment, context, client_ids,
+                request, onedata_environment, context, client_ids,
                 env_description_file):
-    mount_users(request, environment, context, client_ids,
+    mount_users(request, onedata_environment, context, client_ids,
                 env_description_file, users=list_parser(users),
                 client_instances=list_parser(client_instances),
                 mount_paths=list_parser(mount_paths),

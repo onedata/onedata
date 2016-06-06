@@ -74,17 +74,17 @@ def persistent_environment(request, test_type, env_description_file):
     env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
 
     def fin():
-        docker.remove(request.environment['docker_ids'],
+        docker.remove(request.onedata_environment['docker_ids'],
                       force=True,
                       volumes=True)
 
     request.addfinalizer(fin)
-    request.environment = env_desc
+    request.onedata_environment = env_desc
     return env_desc
 
 
 @pytest.fixture()
-def environment(persistent_environment, request):
+def onedata_environment(persistent_environment, request):
 
     def fin():
         if 'posix' in persistent_environment['storages'].keys():

@@ -93,8 +93,8 @@ def setup_test(script_name):
 
 
 # # Clean up removing all dockers created in the test
-def teardown_testcase(environment):
-    docker.remove(environment['docker_ids'], force=True, volumes=True)
+def teardown_testcase(onedata_environment):
+    docker.remove(onedata_environment['docker_ids'], force=True, volumes=True)
 
 
 # # Test if the *_up.py script works as expected.

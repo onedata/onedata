@@ -33,15 +33,15 @@ class Client:
         self.timeout = timeout
 
 
-def mount_users(request, environment, context, client_ids, env_description_file,
+def mount_users(request, onedata_environment, context, client_ids, env_description_file,
                 users=[], client_instances=[], mount_paths=[],
                 client_hosts=[], tokens=[]):
     # current version is for environment with one OZ
-    oz_node = environment['oz_worker_nodes'][0]
+    oz_node = onedata_environment['oz_worker_nodes'][0]
 
-    set_dns(environment)
+    set_dns(onedata_environment)
 
-    client_data = environment['client_data']
+    client_data = onedata_environment['client_data']
     clients = create_clients(users, client_hosts, mount_paths, client_ids)
 
     def fin():

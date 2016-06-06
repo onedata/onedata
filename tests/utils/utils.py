@@ -94,9 +94,9 @@ def get_suite_description(mod):
     return mod.__doc__
 
 
-def set_dns(environment):
+def set_dns(onedata_environment):
     with open("/etc/resolv.conf", "w") as conf:
-        dns = environment['dns']
+        dns = onedata_environment['dns']
         conf.write("nameserver " + dns)
 
 
