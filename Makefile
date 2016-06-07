@@ -135,7 +135,7 @@ test_performance:
 	./test_run.py --test-type performance --test-dir tests/performance
 
 test_gui:
-    ./test_run.py --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
+	./test_run.py --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
 
 ##
 ## Clean
