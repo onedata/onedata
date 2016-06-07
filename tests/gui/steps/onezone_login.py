@@ -31,13 +31,11 @@ def title_matches(selenium, title):
 
 @then(parsers.parse('I should see at least {btn_count:d} login buttons'))
 def find_n_login_buttons(selenium, btn_count):
-    selenium.implicitly_wait(5)
     assert len(selenium.find_elements_by_css_selector('a.login-icon-box')) >= btn_count
 
 
 @then(parsers.parse('I should see a <provider_name> login button'))
 def find_provider_button(selenium, provider_name):
-    selenium.implicitly_wait(5)
     assert selenium.find_element_by_css_selector(
         'a.login-icon-box.{name}'.format(name=provider_name)
     )

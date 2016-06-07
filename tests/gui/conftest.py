@@ -7,31 +7,79 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests.utils.utils import set_dns
-from tests.utils.path_utils import env_file
+from tests.utils.path_utils import env_file, make_logdir, get_file_name
+from tests.conftest import map_test_type_to_logdir
 from pytest import fixture
+from selenium import webdriver
+import selenium
 import tests
 import pytest
 import re
 
 import sys
 
-is_base_url_provided = re.match(r'.*--base-url=.*', ' '.join(sys.argv))
+
+cmd_line = ' '.join(sys.argv)
+is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
+
+
+@pytest.fixture(scope='module', autouse=True)
+def _verify_url(request, base_url):
+    """Override original fixture to change scope to module (we can have different base_urls for each module)"""
+    from pytest_selenium.pytest_selenium import _verify_url as orig_verify_url
+    return orig_verify_url(request, base_url)
+
+
+@pytest.fixture(scope='module', autouse=True)
+def sensitive_url(request, base_url):
+    """Override original fixture to change scope to module (we can have different base_urls for each module)"""
+    from pytest_selenium.safety import sensitive_url as orig_sensitive_url
+    return orig_sensitive_url(request, base_url)
+
 
 if not is_base_url_provided:
-    # FIXME: blocking usage of environment fixture
-    raise Exception('do not want to use env yet')
     @fixture(scope='module')
-    def base_url(onedata_environment):
+    def base_url(persistent_environment):
         """
         When --base-url is not provided - set up an environment and get a OZ host.
         Assume, that protocol is always HTTPS, so return base_url: https://<oz_host>
         """
-        set_dns(onedata_environment)
-        oz_host = re.match(r'worker@node\d*\.(.*)', onedata_environment["oz_worker_nodes"][0]).groups(0)[0]
+        # set_dns(persistent_environment)
+        oz_host = re.match(r'worker@node\d*\.(.*)', persistent_environment["oz_worker_nodes"][0]).groups(0)[0]
         return "https://{oz_host}".format(oz_host=oz_host)
 
-# In GUI tests use Onedata environment defined for GUI
-@pytest.fixture(scope="module",
-                params=["single_oz_single_op_env"])
-def env_description_file(request):
-    return env_file(tests.GUI_ENV_DIR, request.param)
+
+def pytest_configure(config):
+    """Set default path for Selenium HTML report if explicit '--html=' not specified"""
+    htmlpath = config.option.htmlpath
+    if htmlpath is None:
+        import os
+        logdir = make_logdir(map_test_type_to_logdir('gui'), 'report')
+        config.option.htmlpath = os.path.join(logdir, 'report.html')
+
+
+@pytest.fixture
+def capabilities():
+    """Add --no-sandbox argument for Chrome headless"""
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--no-sandbox")
+    return chrome_options.to_capabilities()
+
+
+# TODO: configure different window sizes for responsiveness tests
+@pytest.fixture
+def selenium(selenium):
+    selenium.implicitly_wait(1)
+    selenium.set_window_size(1280, 1024)
+    # currenlty, we rather set window size
+    # selenium.maximize_window()
+    return selenium
+
+
+# TODO: does not work because of "env" error
+# TODO: maybe in other test modules we should choose environments to run
+# # In GUI tests use Onedata environment defined for GUI
+# @pytest.fixture(scope="module",
+#                 params=["single_oz_single_op_env"])
+# def env_description_file(request):
+#     return env_file(tests.GUI_ENV_DIR, request.param)

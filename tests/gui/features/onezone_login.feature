@@ -27,6 +27,8 @@ Feature: Onezone login page
    Examples:
    | provider_name |
    | plgrid        |
-   | dropbox       |
-   | github        |
-   | google        |
+  # # TODO: There is a problem or bug, because when using multiple examples, fixtures with scope module are invoked
+  # # multiple times
+#   | dropbox       |
+#   | github        |
+#   | google        |

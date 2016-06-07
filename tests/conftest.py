@@ -19,13 +19,13 @@ import pytest
 def pytest_addoption(parser):
     parser.addoption("--test-type", action="store", default=None,
                      help="type of test (cucumber, acceptance,"
-                          "performance, packaging)")
+                          "performance, packaging, gui)")
 
 
 def pytest_generate_tests(metafunc):
     if 'test_type' in metafunc.fixturenames:
         test_type = metafunc.config.option.test_type
-        if test_type in ['cucumber', 'performance']:
+        if test_type in ['cucumber', 'performance', 'gui']:
             envs = get_json_files(map_test_type_to_env_dir(test_type),
                                   relative=True)
             metafunc.parametrize(
@@ -149,14 +149,16 @@ def xfail_by_env(request, env_description_file):
 def map_test_type_to_env_dir(test_type):
     return {
         'cucumber': DEFAULT_CUCUMBER_ENV_DIR,
-        'performance': PERFORMANCE_ENV_DIR
+        'performance': PERFORMANCE_ENV_DIR,
+        'gui': GUI_ENV_DIR
     }[test_type]
 
 
 def map_test_type_to_logdir(test_type):
     return {
         'cucumber': CUCUMBER_LOGDIR,
-        'performance': PERFORMANCE_LOGDIR
+        'performance': PERFORMANCE_LOGDIR,
+        'gui': GUI_LOGDIR
     }.get(test_type, CUCUMBER_LOGDIR)
 
 
