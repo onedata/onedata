@@ -5,14 +5,11 @@ __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
-from tests import *
-from tests.cucumber.steps.env_steps import *
-from tests.cucumber.steps.cucumber_utils import *
-from tests.cucumber.steps.multi_auth_steps import *
-from tests.utils.path_utils import env_file
-
-from pytest_bdd import scenario
 import pytest
+from pytest_bdd import scenario
+
+from tests import *
+from tests.utils.path_utils import env_file
 
 
 @pytest.fixture(scope="module", params=["multiclient_authorization"])

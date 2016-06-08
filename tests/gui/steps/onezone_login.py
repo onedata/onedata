@@ -1,5 +1,7 @@
 """Steps for features of Onezone login page.
 """
+from tests.utils.cucumber_utils import list_parser
+
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -34,8 +36,9 @@ def find_n_login_buttons(selenium, btn_count):
     assert len(selenium.find_elements_by_css_selector('a.login-icon-box')) >= btn_count
 
 
-@then(parsers.parse('I should see a <provider_name> login button'))
-def find_provider_button(selenium, provider_name):
-    assert selenium.find_element_by_css_selector(
-        'a.login-icon-box.{name}'.format(name=provider_name)
-    )
+@then(parsers.parse('I should see login buttons for {provider_names}'))
+def find_provider_button(selenium, provider_names):
+    for name in list_parser(provider_names):
+        assert selenium.find_element_by_css_selector(
+            'a.login-icon-box.{name}'.format(name=name)
+        )

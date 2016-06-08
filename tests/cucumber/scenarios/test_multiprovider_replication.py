@@ -7,13 +7,6 @@ __license__ = "This software is released under the MIT license cited in " \
 import pytest
 from pytest_bdd import scenario
 
-from tests import *
-
-from tests.cucumber.steps.cucumber_utils import *
-from tests.cucumber.steps.env_steps import *
-from tests.cucumber.steps.multi_auth_steps import *
-from tests.cucumber.steps.multi_dir_steps import *
-from tests.cucumber.steps.multi_file_steps import *
 from tests.cucumber.steps.multi_reg_file_steps import *
 
 

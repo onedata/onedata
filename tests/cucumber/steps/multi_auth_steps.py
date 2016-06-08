@@ -5,12 +5,13 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.client_utils import (ls, mount_users, client_mount_path,
-                                      get_client)
-from cucumber_utils import *
+import subprocess
 
 from pytest_bdd import given
-import subprocess
+
+from tests.utils.client_utils import (ls, mount_users, client_mount_path,
+                                      get_client)
+from tests.utils.cucumber_utils import *
 
 
 @given(parsers.parse('{users} start oneclients {client_instances} in\n' +

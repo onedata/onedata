@@ -20,15 +20,6 @@ Feature: Onezone login page
    Then I should see at least 5 login buttons
 
 
-  Scenario Outline: Rendering particular login buttons
+  Scenario: Rendering particular login buttons
    When I go to the home/login page
-   Then I should see a <provider_name> login button
-
-   Examples:
-   | provider_name |
-   | plgrid        |
-  # # TODO: There is a problem or bug, because when using multiple examples, fixtures with scope module are invoked
-  # # multiple times
-#   | dropbox       |
-#   | github        |
-#   | google        |
+   Then I should see login buttons for [plgrid,dropbox,github,facebook,google]
