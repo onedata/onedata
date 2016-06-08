@@ -44,7 +44,7 @@ if not is_base_url_provided:
         When --base-url is not provided - set up an environment and get a OZ host.
         Assume, that protocol is always HTTPS, so return base_url: https://<oz_host>
         """
-        # set_dns(persistent_environment)
+        set_dns(persistent_environment)
         oz_host = re.match(r'worker@node\d*\.(.*)', persistent_environment["oz_worker_nodes"][0]).groups(0)[0]
         return "https://{oz_host}".format(oz_host=oz_host)
 
