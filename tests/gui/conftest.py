@@ -59,11 +59,18 @@ def pytest_configure(config):
 
 
 @pytest.fixture
-def capabilities():
-    """Add --no-sandbox argument for Chrome headless"""
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--no-sandbox")
-    return chrome_options.to_capabilities()
+def capabilities(request, capabilities):
+    """Add --no-sandbox argument for Chrome headless
+    Should be the same as adding capability: 'chromeOptions': {'args': ['--no-sandbox'], 'extensions': []}
+    """
+    if capabilities is not None and 'browserName' in capabilities and capabilities['browserName'] == 'chrome' or request.config.option.driver == 'Chrome':
+        chrome_options = webdriver.ChromeOptions()
+        # TODO: use --no-sandbox only in headless mode
+        chrome_options.add_argument("--no-sandbox")
+        capabilities.update(chrome_options.to_capabilities())
+    print "Current option:", request.config.option.driver
+    print "Current capabilities: ", capabilities
+    return capabilities
 
 
 # TODO: configure different window sizes for responsiveness tests
