@@ -24,6 +24,10 @@ def visit_onezone(base_url, selenium):
 def visit_login_page(selenium, page):
     selenium.get(selenium.current_url + '#' + page)
 
+@when('I click on the {provider_name} login button')
+def click_login_button(provider_name):
+    selenium.find_by
+
 
 @then('The page title should contain <title>')
 @then('The page title should contain {title}')
@@ -36,9 +40,34 @@ def find_n_login_buttons(selenium, btn_count):
     assert len(selenium.find_elements_by_css_selector('a.login-icon-box')) >= btn_count
 
 
+@given(parsers.parse('A login button for {provider_name}'))
+def login_button(provider_name, selenium):
+    return selenium.find_element_by_css_selector(
+        'a.login-icon-box.{name}'.format(name=provider_name)
+    )
+
+
 @then(parsers.parse('I should see login buttons for {provider_names}'))
-def find_provider_button(selenium, provider_names):
+def login_provider_buttons(selenium, provider_names):
     for name in list_parser(provider_names):
         assert selenium.find_element_by_css_selector(
             'a.login-icon-box.{name}'.format(name=name)
         )
+
+
+@when('I click on the login button')
+def click_login_provider_button(login_button):
+    login_button.click()
+
+
+# TODO: move to gui test utils
+@then(parsers.re('I should be redirected to (?P<page>.+) page'))
+def being_redirected_to_page(page, selenium):
+    assert re.match(r'https?://.*?(/#)?(/.*)', selenium.current_url).group(2) == page
+
+
+@then('I should see a development login page with at least 1 validate login link')
+def see_development_login_page(selenium):
+    assert re.match(r'.*/validate_dev_login.*',
+                    selenium.find_element_by_css_selector('a').get_attribute('href')
+                    )

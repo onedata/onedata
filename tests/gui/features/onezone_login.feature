@@ -16,10 +16,19 @@ Feature: Onezone login page
 
 
   Scenario: Rendering multiple login buttons
-   When I go to the home/login page
-   Then I should see at least 5 login buttons
+    When I go to the home/login page
+    Then I should see at least 5 login buttons
 
 
   Scenario: Rendering particular login buttons
-   When I go to the home/login page
-   Then I should see login buttons for [plgrid,dropbox,github,facebook,google]
+    When I go to the home/login page
+    Then I should see login buttons for [plgrid,dropbox,github,facebook,google]
+
+
+  # TODO: configure test to select the mode - currently all tests are in dev mode
+  Scenario: Showing the development login list
+    Given A login button for plgrid
+    When I click on the login button
+    Then I should be redirected to /dev_login page
+    And I should see a development login page with at least 1 validate login link
+
