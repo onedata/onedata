@@ -8,6 +8,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 from pytest_bdd import given, then
 from pytest_bdd import parsers
+from selenium.webdriver.support.ui import WebDriverWait as wait
 
 from pytest_bdd import given, when, then, parsers
 import re
@@ -23,10 +24,6 @@ def visit_onezone(base_url, selenium):
 @when(parsers.re(r'I go to the (?P<page>.+) page'))
 def visit_login_page(selenium, page):
     selenium.get(selenium.current_url + '#' + page)
-
-@when('I click on the {provider_name} login button')
-def click_login_button(provider_name):
-    selenium.find_by
 
 
 @then('The page title should contain <title>')
@@ -63,11 +60,10 @@ def click_login_provider_button(login_button):
 # TODO: move to gui test utils
 @then(parsers.re('I should be redirected to (?P<page>.+) page'))
 def being_redirected_to_page(page, selenium):
-    assert re.match(r'https?://.*?(/#)?(/.*)', selenium.current_url).group(2) == page
+    wait(selenium, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
 
 
 @then('I should see a development login page with at least 1 validate login link')
 def see_development_login_page(selenium):
     assert re.match(r'.*/validate_dev_login.*',
-                    selenium.find_element_by_css_selector('a').get_attribute('href')
-                    )
+                    selenium.find_element_by_css_selector('a').get_attribute('href'))

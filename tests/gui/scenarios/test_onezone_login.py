@@ -39,5 +39,6 @@ def test_oz_show_development_login():
     pass
 
 
+# Currently not used, because all tests are explicitly defined
 # import other scenarios - note, that nondestructive tests were imported with @scenario
-scenarios('../features/onezone_login.feature')
+# scenarios('../features/onezone_login.feature')
