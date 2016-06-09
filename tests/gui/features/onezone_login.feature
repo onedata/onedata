@@ -6,13 +6,9 @@ Feature: Onezone login page
 
 
   # TODO: move this test to generic onezone tests for checking titles?
-  Scenario Outline: Onezone page renders with proper title
-    When I go to the <page> page
-    Then The page title should contain <title>
-
-    Examples:
-    | page       | title |
-    | home/login | login |
+  Scenario: Onezone login page renders with proper title
+    When I go to the /#/home/login relative URL
+    Then The page title should contain "login"
 
 
   Scenario: Rendering multiple login buttons

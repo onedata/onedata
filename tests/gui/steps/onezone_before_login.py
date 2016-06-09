@@ -1,5 +1,8 @@
 """Steps for features of Onezone login page.
 """
+from selenium.common.exceptions import TimeoutException
+
+from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
 from tests.utils.cucumber_utils import list_parser
 
 __author__ = "Jakub Liput"
@@ -7,17 +10,30 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 import re
-from pytest_bdd import given, then
-from pytest_bdd import parsers
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from pytest_bdd import given, when, then, parsers
-from tests.gui.utils.generic import parse_url
+from tests.gui.utils.generic import parse_url, go_to_relative_url
 
 
 @given("I'm visiting Onezone site")
 def visit_onezone(base_url, selenium):
     oz_url = base_url
     selenium.get(oz_url)
+
+
+@given("I'm logged in to Onezone")
+def logged_in_to_onezone(base_url, selenium):
+    """Will check if going to / will redirect to onezone page (default when logged in)
+    If not - try to login with dev_login"""
+    go_to_relative_url(selenium, '/')
+    try:
+        wait(selenium, 2).\
+            until(lambda s: parse_url(s.current_url).group('method') == '/#/onezone')
+    except TimeoutException:
+        go_to_relative_url(selenium, '/dev_login')
+        selenium.find_element_by_css_selector('a').click()
+        wait(selenium, 4). \
+            until(lambda s: parse_url(s.current_url).group('method') == '/#/onezone')
 
 
 @when(parsers.re(r'I go to the (?P<page>.+) relative URL'))
@@ -29,12 +45,6 @@ def visit_relative(selenium, page):
 def click_first_dev_login(selenium):
     btn = selenium.find_element_by_css_selector('a')
     btn.click()
-
-
-@then('The page title should contain <title>')
-@then('The page title should contain {title}')
-def title_matches(selenium, title):
-    assert re.match(r'.*' + title + r'.*', selenium.title, re.IGNORECASE)
 
 
 @then(parsers.parse('I should see at least {btn_count:d} login buttons'))

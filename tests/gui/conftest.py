@@ -19,6 +19,12 @@ import re
 import sys
 
 
+SELENIUM_IMPLICIT_WAIT = 5
+
+# use this conts when using: wait(selenium, WAIT_BACKEND).until(lambda s: ...)
+WAIT_BACKEND = 10
+
+
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 
@@ -76,7 +82,7 @@ def capabilities(request, capabilities):
 # TODO: configure different window sizes for responsiveness tests
 @pytest.fixture
 def selenium(selenium):
-    selenium.implicitly_wait(1)
+    selenium.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
     selenium.set_window_size(1280, 1024)
     # currenlty, we rather set window size
     # selenium.maximize_window()

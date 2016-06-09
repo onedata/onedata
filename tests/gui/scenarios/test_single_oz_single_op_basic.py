@@ -5,15 +5,19 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.gui.steps.onezone_login import *
+from tests.gui.steps.common import *
+from tests.gui.steps.onezone_before_login import *
+from tests.gui.steps.onezone_logged_in_common import *
 
 import pytest
 from pytest_bdd import scenarios, scenario
 
 
+# --- FEATURES: onezone_login --- #
+
 @pytest.mark.nondestructive
 @scenario('../features/onezone_login.feature',
-          'Onezone page renders with proper title')
+          'Onezone login page renders with proper title')
 def test_oz_page_renders_title():
     pass
 
@@ -43,6 +47,15 @@ def test_oz_show_development_login():
 @scenario('../features/onezone_login.feature',
           'Logging in with development login')
 def test_login_with_first_development_login_button():
+    pass
+
+
+# --- FEATURES: onezone_gui --- #
+
+@pytest.mark.nondestructive
+@scenario('../features/onezone_gui.feature',
+          'User can change his alias using valid alias string')
+def test_change_alias():
     pass
 
 # Currently not used, because all tests are explicitly defined
