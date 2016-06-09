@@ -2,13 +2,13 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
-from tests.utils.path_utils import escape_path
-
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+from tests.utils.path_utils import escape_path
+from tests.utils.utils import set_dns, get_token, get_cookie
 from tests.utils.utils import set_dns, get_token, get_oz_cookie
 from tests.utils.docker_utils import run_cmd
 from tests.cucumber.steps.cucumber_utils import repeat_until
@@ -290,16 +290,16 @@ def clean_spaces_safe(user, client):
 
 
 def clean_spaces(user, client):
-    spaces = ls(client, user=user, path=client_mount_path('spaces', client))
+    spaces = ls(client, user=user, path=client.mount_path)
+    # clean spaces
     for space in spaces:
         rm(client, recursive=True, user=user, force=True,
-           path=client_mount_path(os.path.join('spaces', str(space), '*'),
+           path=client_mount_path(os.path.join(str(space), '*'),
                                   client))
 
 
 def clean_mount_path(user, client):
     try:
-        pass
         clean_spaces(user, client)
     except:
         pass

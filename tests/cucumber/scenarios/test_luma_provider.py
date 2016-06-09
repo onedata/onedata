@@ -21,6 +21,8 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
+@pytest.mark.skip_env(envs=['env_luma_provider'],
+                      reason="Luma cucumber test hangs sometimes")
 @scenario(
     '../features/luma_provider.feature',
     'Operations on POSIX storage'
@@ -29,6 +31,8 @@ def test_posix_storage_operations(env_description_file):
     pass
 
 
+@pytest.mark.skip_env(envs=['env_luma_provider'],
+                      reason="Luma cucumber test hangs sometimes")
 @scenario(
     '../features/luma_provider.feature',
     'Operations on CEPH storage'
@@ -37,6 +41,8 @@ def test_ceph_storage_operations(env_description_file):
     pass
 
 
+@pytest.mark.skip_env(envs=['env_luma_provider'],
+                      reason="Luma cucumber test hangs sometimes")
 @scenario(
     '../features/luma_provider.feature',
     'Operations on Amazon S3 storage'
