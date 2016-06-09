@@ -6,12 +6,12 @@ __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+import re
 from pytest_bdd import given, then
 from pytest_bdd import parsers
 from selenium.webdriver.support.ui import WebDriverWait as wait
-
 from pytest_bdd import given, when, then, parsers
-import re
+from tests.gui.utils.generic import parse_url
 
 
 @given("I'm visiting Onezone site")
@@ -20,10 +20,15 @@ def visit_onezone(base_url, selenium):
     selenium.get(oz_url)
 
 
-@when('I go to the <page> page')
-@when(parsers.re(r'I go to the (?P<page>.+) page'))
-def visit_login_page(selenium, page):
-    selenium.get(selenium.current_url + '#' + page)
+@when(parsers.re(r'I go to the (?P<page>.+) relative URL'))
+def visit_relative(selenium, page):
+    selenium.get(parse_url(selenium.current_url).group('base_url') + page)
+
+
+@when('I click on the first development login button')
+def click_first_dev_login(selenium):
+    btn = selenium.find_element_by_css_selector('a')
+    btn.click()
 
 
 @then('The page title should contain <title>')

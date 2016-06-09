@@ -39,6 +39,12 @@ def test_oz_show_development_login():
     pass
 
 
+@pytest.mark.nondestructive
+@scenario('../features/onezone_login.feature',
+          'Logging in with development login')
+def test_login_with_first_development_login_button():
+    pass
+
 # Currently not used, because all tests are explicitly defined
 # import other scenarios - note, that nondestructive tests were imported with @scenario
 # scenarios('../features/onezone_login.feature')

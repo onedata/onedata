@@ -20,3 +20,6 @@ oneprovider_meta/oneprovider.spec
 oneprovider_meta/oneprovider/DEBIAN/control
 
 .gitmodules
+
+# OSX
+.DS_Store
