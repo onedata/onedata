@@ -25,22 +25,6 @@ def test_create(env_description_file):
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
-    'Create directory in default space'
-)
-def test_create_default_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Create directory in non-default space'
-)
-def test_create_in_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
     'Rename someone\'s directory without permission'
 )
 def test_rename_someone_without_permission(env_description_file):
@@ -177,14 +161,6 @@ def test_duplication(env_description_file):
 
 @scenario(
     '../features/multi_directory_CRUD.feature',
-    'Duplication in spaces'
-)
-def test_duplication_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
     'Delete empty directory and parents'
 )
 def test_delete_parents(env_description_file):
@@ -236,60 +212,4 @@ def test_move_to_itself(env_description_file):
     'Move directory to its subtree'
 )
 def test_move_to_subtree(env_description_file):
-    pass
-
-
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="move fails")
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to itself in spaces'
-)
-def test_move_to_itself_spaces(env_description_file):
-    pass
-
-
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="move fails")
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to itself in default space'
-)
-def test_move_to_itself_default_space(env_description_file):
-    pass
-
-
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="move fails")
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to its subtree in spaces'
-)
-def test_move_to_subtree_spaces(env_description_file):
-    pass
-
-
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="move fails")
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to its subtree in default space'
-)
-def test_move_to_subtree_default_space(env_description_file):
     pass
