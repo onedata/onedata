@@ -77,13 +77,14 @@ Feature: Space management with single provider
 
   Scenario: Remove user from space
     Given u2 starts oneclient in /home/u2/onedata using token on client1
-    When u1 invites u2 to space u1's space
-    And u2 joins space u1's space
+    When u1 creates spaces [s1]
+    When u1 invites u2 to space s1
+    And u2 joins space s1
     And u1 asks for support of space [s1]
     And [s1] is supported for u1 by p1 with 1 MB
-    And u2 can list spaces/u1's space on client1
-    And u1 removes u2 from space u1's space
-    Then u2 doesn't see [u1's space] in spaces on client1
+    And u2 can list spaces/s1 on client1
+    And u1 removes u2 from space s1
+    Then u2 doesn't see [s1] in spaces on client1
 
   Scenario: Delete supported default space
     Given u1 starts oneclient in /home/u1/onedata using token on client1
@@ -94,10 +95,10 @@ Feature: Space management with single provider
     Then u1 can't list spaces/u1's space on client1
 
   Scenario: Delete supported non-default space
-    Given u2 starts oneclient in /home/u2/onedata using token on client1
-    When u2 creates spaces [s1]
-    And u2 asks for support of space [s1]
-    And [s1] is supported for u2 by p1 with 1 MB
-    And u2 can list spaces/s1 on client1
-    And u2 deletes space s1
-    Then u2 doesn't see [s1] in spaces on client1
+    Given u1 starts oneclient in /home/u1/onedata using token on client1
+    When u1 creates spaces [s1]
+    And u1 asks for support of space [s1]
+    And [s1] is supported for u1 by p1 with 1 MB
+    And u1 can list spaces/s1 on client1
+    And u1 deletes space s1
+    Then u1 doesn't see [s1] in spaces on client1
