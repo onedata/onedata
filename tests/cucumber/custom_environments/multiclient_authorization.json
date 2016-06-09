@@ -141,7 +141,8 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
+                    "token_for": "u1",
+                    "default_timeout": 2
                 },
                 "client2": {
                     "name": "client2",
@@ -150,7 +151,8 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata2",
-                    "token_for": "u1"
+                    "token_for": "u1",
+                    "default_timeout": 2
                 }
             }
         },
@@ -164,7 +166,8 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
+                    "token_for": "u1",
+                    "default_timeout": 2
                 },
                 "client2": {
                     "name": "client2",
@@ -173,7 +176,8 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u2/onedata",
-                    "token_for": "u2"
+                    "token_for": "u2",
+                    "default_timeout": 2
                 }
             }
         }
