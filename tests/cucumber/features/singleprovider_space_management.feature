@@ -89,15 +89,15 @@ Feature: Space management with single provider
     Given u1 starts oneclient in /home/u1/onedata using token on client1
     When u1 asks for support of space [u1's space]
     And [u1's space] is supported for u1 by p1 with 1 MB
-    And u1 can list spaces/u1's space on client1
+    When u1 can list spaces/u1's space on client1
     And u1 deletes space u1's space
     Then u1 can't list spaces/u1's space on client1
 
   Scenario: Delete supported non-default space
     Given u2 starts oneclient in /home/u2/onedata using token on client1
-    When u2 creates spaces [s2]
-    And u2 asks for support of space [s2]
-    And [s2] is supported for u2 by p1 with 1 MB
-    And u2 can list spaces/s2 on client1
-    And u2 deletes space s2
-    Then u2 doesn't see [s2] in spaces on client1
+    When u2 creates spaces [s1]
+    And u2 asks for support of space [s1]
+    And [s1] is supported for u2 by p1 with 1 MB
+    And u2 can list spaces/s1 on client1
+    And u2 deletes space s1
+    Then u2 doesn't see [s1] in spaces on client1

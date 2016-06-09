@@ -59,7 +59,9 @@ def test_remove_user_from_space(env_description_file):
     pass
 
 
-# TODO nie dziala jak pusci sie wszystkie testy
+# TODO
+@pytest.mark.xfail_env(envs=["singleprovider_space_management"],
+                       reason="Deleting default space returns 403")
 @scenario('Delete supported default space')
 def test_delete_supported_default_space(env_description_file):
     pass

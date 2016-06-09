@@ -16,6 +16,7 @@ from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
 @when(parsers.parse('{user} creates regular files {files} on {client_node}'))
+@then(parsers.parse('{user} creates regular files {files} on {client_node}'))
 def create_reg_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)
@@ -40,9 +41,7 @@ def ls_present(user, files, path, client_node, context):
     def condition():
 
         try:
-            #split with 2 spaces, because paths are separated
-            cmd_output = ls(client, user, path)#.split('  ')
-            print "ls: ", cmd_output
+            cmd_output = ls(client, user, path)
             for file in files:
                 if file not in cmd_output:
                     return False
@@ -62,8 +61,7 @@ def ls_absent(user, files, path, client_node, context):
 
     def condition():
         try:
-            cmd_output = ls(client, user, path)#.split('  ')
-            print "ls: ", cmd_output
+            cmd_output = ls(client, user, path)
             for file in files:
                 if file in cmd_output:
                     return False

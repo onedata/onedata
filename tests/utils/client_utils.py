@@ -135,9 +135,9 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
         rm(client, recursive=True, force=True, path=token_path)
 
-        # if check and token != 'bad_token':
-        #     if not clean_spaces_safe(user, client):
-        #         pytest.skip("Test skipped beacause of failing to clean spaces")
+        if check and token != 'bad_token':
+            if not clean_spaces_safe(user, client):
+                pytest.skip("Test skipped beacause of failing to clean spaces")
 
         save_op_code(context, user, ret)
 
@@ -145,9 +145,9 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 def ls(client, user="root", path=".", output=True):
     """CAUTION: this function returns list of paths not string"""
     cmd = "ls {path}".format(path=escape_path(path))
-    # sometimes paths are separated with 2 spaces, sometimes with '\n\
+    # sometimes paths are separated with 2 spaces, '\t' or '\n'
     return run_cmd(user, client, cmd, output=output).strip()\
-        .replace('  ', '\n').split('\n')
+        .replace('  ', '\n').replace('\t', '\n').split('\n')
 
 
 def mv(client, src, dest, user="root", output=False):

@@ -2,7 +2,7 @@
 """
 from tests.cucumber.steps import user_steps
 from tests.utils.docker_utils import run_cmd
-from tests.utils.net_utils import http_post, http_get, http_delete
+from tests.utils.net_utils import http_post, http_get, http_delete, http_put
 from tests.utils.string_utils import parse
 from tests.utils.utils import get_op_cookie, get_storages
 
@@ -146,3 +146,17 @@ def delete_space(user, space_name):
                                                     user.key_file))
     assert status_code == 202
     del user.spaces[space_name]
+
+
+def assign_privileges(user1, user2, privileges, space_name):
+    space_id = user1.spaces[space_name]
+    data = {'privileges': privileges}
+    status_code, _, _, = \
+        http_put(user1.oz_domain, REST_PORT,
+                 "/spaces/{sid}/users/{uid}/privileges"
+                 .format(sid=space_id, uid=user2.id),
+                 True, headers=user1.headers,
+                 cert=(user1.cert_file, user1.key_file),
+                 data=json.dumps(data))
+
+    assert status_code == 204

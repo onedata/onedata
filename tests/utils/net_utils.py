@@ -64,8 +64,19 @@ def http_delete(ip, port, path, use_ssl, headers=None, verify=False, cert=None):
     """
     protocol = 'https' if use_ssl else 'http'
     response = requests.delete('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
+                               verify=verify, headers=headers, timeout=10,
+                               cert=cert)
+    return response.status_code, response.headers, response.text
+
+
+def http_put(ip, port, path, use_ssl, data=None, headers=None, verify=False, cert=None):
+    """Helper function that perform a HTTP PUT request
+    Returns a tuple (Code, Headers, Body)
+    """
+    protocol = 'https' if use_ssl else 'http'
+    response = requests.put('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
                             verify=verify, headers=headers, timeout=10,
-                            cert=cert)
+                            cert=cert, data=data)
     return response.status_code, response.headers, response.text
 
 
