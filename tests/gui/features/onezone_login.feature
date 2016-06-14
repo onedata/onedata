@@ -7,17 +7,17 @@ Feature: Onezone login page
 
   # TODO: move this test to generic onezone tests for checking titles?
   Scenario: Onezone login page renders with proper title
-    When I go to the /#/home/login relative URL
+    When I go to the /home/login Ember path
     Then The page title should contain "Login"
 
 
   Scenario: Rendering multiple login buttons
-    When I go to the /#/home/login relative URL
+    When I go to the /home/login Ember path
     Then I should see at least 5 login buttons
 
 
   Scenario: Rendering particular login buttons
-    When I go to the /#/home/login relative URL
+    When I go to the /home/login Ember path
     Then I should see login buttons for [plgrid,dropbox,github,facebook,google]
 
 

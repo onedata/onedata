@@ -11,7 +11,7 @@ __license__ = "This software is released under the MIT license cited in " \
 from pytest_bdd import given, parsers
 
 
-@given(parsers.parse('I\'m logged into Oneprovider "{provider}" as development user "{user}"'))
+@given(parsers.parse('''I'm logged into Oneprovider "{provider}" as development user "{user}"'''))
 def logged_in_dev_to_oneprovider(selenium, base_url, user, provider):
     onezone_no_session.login_dev_onezone_with_url(selenium, base_url, user)
     onezone_session.uncollapse_main_accordion(selenium, 'providers')

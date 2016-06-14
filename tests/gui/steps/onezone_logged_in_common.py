@@ -44,5 +44,14 @@ def user_alias_equals(selenium, name):
 @when('I go to provider {provider}')
 def go_to_provider(selenium, provider):
     providers = selenium.find_elements_by_css_selector('.provider-header')
-    filter(lambda e: e.text == provider, providers)[0].click()
+    # print map(lambda p: p.text, providers)
+    def the_provider_is_present(s):
+        named_providers = [e for e in providers if e.text == provider]
+        # named_providers = filter(lambda e: e.text == provider, providers)
+        if len(named_providers) > 0:
+            return named_providers[0]
+        else:
+            return None
+    # all_providers_have_names = lambda: all(map(lambda p: p.text != '', providers))
+    Wait(selenium, WAIT_FRONTEND).until(the_provider_is_present).click()
     selenium.find_element_by_css_selector('.provider-place-drop a').click()
