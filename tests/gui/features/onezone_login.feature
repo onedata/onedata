@@ -8,7 +8,7 @@ Feature: Onezone login page
   # TODO: move this test to generic onezone tests for checking titles?
   Scenario: Onezone login page renders with proper title
     When I go to the /#/home/login relative URL
-    Then The page title should contain "login"
+    Then The page title should contain "Login"
 
 
   Scenario: Rendering multiple login buttons
@@ -32,4 +32,3 @@ Feature: Onezone login page
     When I go to the /dev_login relative URL
     And I click on the first development login button
     Then I should be redirected to /onezone page
-

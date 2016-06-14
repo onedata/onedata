@@ -21,7 +21,12 @@ import sys
 
 SELENIUM_IMPLICIT_WAIT = 5
 
-# use this conts when using: wait(selenium, WAIT_BACKEND).until(lambda s: ...)
+# use this conts when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
+# when waiting for frontend changes
+WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
+
+# use this conts when using: WebDriverWait(selenium, WAIT_BACKEND).until(lambda s: ...)
+# when waiting for backend changes
 WAIT_BACKEND = 10
 
 
