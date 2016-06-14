@@ -1,5 +1,7 @@
 """Common steps used in various GUI testing scenarios
 """
+from tests.gui.utils.generic import parse_url
+
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -9,6 +11,11 @@ import re
 
 from pytest_bdd import when, then, parsers
 from selenium.webdriver.common.keys import Keys
+
+
+@when(parsers.re(r'I go to the (?P<page>.+) relative URL'))
+def visit_relative(selenium, page):
+    selenium.get(parse_url(selenium.current_url).group('base_url') + page)
 
 
 @then('The page title should contain "<title>"')

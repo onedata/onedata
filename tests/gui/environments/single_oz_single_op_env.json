@@ -127,19 +127,20 @@
                 "default_space": "space2"
             },
             "user3": {
-                "default_space": "space1"
+                "default_space": "space3"
             }
         },
         "groups": {
             "group1": {
                 "users": [
                     "user1",
-                    "user3"
+                    "user2"
                 ]
             },
             "group2": {
                 "users": [
-                    "user2"
+                    "user2",
+                    "user3"
                 ]
             }
         },
@@ -164,7 +165,24 @@
             "space2": {
                 "displayed_name": "space2",
                 "users": [
+                    "user1",
                     "user2"
+                ],
+                "groups": [
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "space3": {
+                "displayed_name": "space3",
+                "users": [
+                    "user2",
+                    "user3"
                 ],
                 "groups": [
                     "group2"

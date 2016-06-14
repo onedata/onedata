@@ -58,6 +58,14 @@ def test_login_with_first_development_login_button():
 def test_change_alias():
     pass
 
+# --- FEATURES: oneprovider data --- #
+
+# @pytest.mark.nondestructive
+# @scenario('../features/oneprovider_data.feature',
+#           'After failed upload to broken space, file can be successfully uploaded to correct space')
+# def test_upload_fail_and_then_success():
+#     pass
+
 # Currently not used, because all tests are explicitly defined
 # import other scenarios - note, that nondestructive tests were imported with @scenario
 # scenarios('../features/onezone_login.feature')

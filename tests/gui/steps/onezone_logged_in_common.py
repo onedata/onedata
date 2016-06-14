@@ -38,3 +38,10 @@ def user_alias_equals(selenium, name):
     alias_header = selenium.find_element_by_css_selector('.alias-panel .space-header')
     wait(selenium, WAIT_BACKEND).until(lambda s: alias_header.text == name)
 
+
+# prerequisites: providers panel should be uncollapsed, maybe check it? TODO
+@when('I go to provider {provider}')
+def go_to_provider(selenium, provider):
+    providers = selenium.find_elements_by_css_selector('.provider-header')
+    filter(lambda e: e.text == provider, providers)[0].click()
+    selenium.find_element_by_css_selector('.provider-place-drop a').click()

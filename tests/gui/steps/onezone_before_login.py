@@ -36,11 +36,6 @@ def logged_in_to_onezone(base_url, selenium):
             until(lambda s: parse_url(s.current_url).group('method') == '/#/onezone')
 
 
-@when(parsers.re(r'I go to the (?P<page>.+) relative URL'))
-def visit_relative(selenium, page):
-    selenium.get(parse_url(selenium.current_url).group('base_url') + page)
-
-
 @when('I click on the first development login button')
 def click_first_dev_login(selenium):
     btn = selenium.find_element_by_css_selector('a')
@@ -82,3 +77,10 @@ def being_redirected_to_page(page, selenium):
 def see_development_login_page(selenium):
     assert re.match(r'.*/validate_dev_login.*',
                     selenium.find_element_by_css_selector('a').get_attribute('href'))
+
+
+@when('I login with development login link as "{user}"')
+def login_dev_onezone_with_url(selenium, base_url, user):
+    url = '{oz_url}/validate_dev_login?user={user}'.format(oz_url=base_url, user=user)
+    url.replace('//', '/')
+    selenium.get(url)
