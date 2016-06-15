@@ -7,6 +7,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 import re
+import os
+from tests import gui
 
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
 
@@ -45,8 +47,19 @@ def is_element_present_by_css(driver, css_selector):
         driver.find_elements_by_css_selector(css_selector),
         0) > 0
 
+
 # TODO: a oneprovider helper - move to another module
 def current_dir(driver):
     return RE_DATA_URL.match(
         parse_url(driver.current_url).group('method')
     ).group('dir')
+
+
+def upload_file_path(file_name):
+    """Resolve an absolute path for file with name file_name stored in upload_files dir
+    """
+    return os.path.join(
+        os.path.dirname(os.path.abspath(gui.__file__)),
+        'upload_files',
+        file_name
+    )

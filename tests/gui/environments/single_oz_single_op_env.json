@@ -63,14 +63,60 @@
                     },
                     "sys.config": {
                         "op_worker": {
+                            "soft_quota_limit_size": 0,
                             "cm_nodes": [
                                 "cm1"
                             ],
                             "db_nodes": [
                                 "dbnode1"
                             ],
-                            "oz_domain": "oz",
-                            "verify_oz_cert": false
+                            "verify_oz_cert": false,
+                            "oz_domain": "oz"
+                        }
+                    }
+                }
+            }
+        },
+        "p2": {
+            "gui_override": {
+                "mount_path": "/var/www/html",
+                "mount_from": {
+                    "host": "/Users/kliput/Onedata/op-gui-default/rel"
+                },
+                "livereload": true
+            },
+            "db_driver": "couchdb",
+            "os_config": "cfg1",
+            "cluster_manager": {
+                "cm1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "worker_num": 1
+                        }
+                    }
+                }
+            },
+            "op_worker": {
+                "worker1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "op_worker": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "db_nodes": [
+                                "dbnode1"
+                            ],
+                            "verify_oz_cert": false,
+                            "oz_domain": "oz"
                         }
                     }
                 }
@@ -191,6 +237,24 @@
                     "p1": {
                         "storage": "/mnt/st1",
                         "supported_size": 1000000000
+                    }
+                }
+            },
+            "small_space": {
+                "displayed_name": "Small space",
+                "users": [
+                    "user1",
+                    "user2",
+                    "user3"
+                ],
+                "groups": [
+                    "group1",
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
                     }
                 }
             }

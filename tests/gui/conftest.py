@@ -11,6 +11,8 @@ from tests.utils.path_utils import env_file, make_logdir, get_file_name
 from tests.conftest import map_test_type_to_logdir
 from pytest import fixture
 from selenium import webdriver
+from selenium.webdriver import Firefox, FirefoxProfile
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 import selenium
 import tests
 import pytest
@@ -74,13 +76,23 @@ def capabilities(request, capabilities):
     """Add --no-sandbox argument for Chrome headless
     Should be the same as adding capability: 'chromeOptions': {'args': ['--no-sandbox'], 'extensions': []}
     """
-    if capabilities is not None and 'browserName' in capabilities and capabilities['browserName'] == 'chrome' or request.config.option.driver == 'Chrome':
+    if capabilities is None:
+        capabilities = {}
+
+    if 'browserName' in capabilities and capabilities['browserName'] == 'chrome' or request.config.option.driver == 'Chrome':
         chrome_options = webdriver.ChromeOptions()
         # TODO: use --no-sandbox only in headless mode
         chrome_options.add_argument("--no-sandbox")
         capabilities.update(chrome_options.to_capabilities())
+    # elif 'browserName' in capabilities and capabilities['browserName'] == 'firefox' or request.config.option.driver == 'Firefox':
+    #     capabilities['marionette'] = True
+
+    # capabilities['acceptSslCerts'] = True
+
+    # TODO: debug remove
     print "Current option:", request.config.option.driver
     print "Current capabilities: ", capabilities
+
     return capabilities
 
 
@@ -92,6 +104,31 @@ def selenium(selenium):
     # currenlty, we rather set window size
     # selenium.maximize_window()
     return selenium
+
+
+# @pytest.fixture
+# def firefox_profile(firefox_profile):
+#     firefox_profile.accept_untrusted_certs = True
+#     firefox_profile.update_preferences()
+#     return firefox_profile
+
+
+# FIXME: remove
+# @pytest.fixture
+# def firefox_driver(request, capabilities, driver_path, firefox_profile):
+#     """Return a WebDriver using a Firefox instance"""
+#     firefox_profile.accept_untrusted_certs = True
+#     kwargs = {}
+#     if capabilities:
+#         kwargs['capabilities'] = capabilities
+#     if driver_path is not None:
+#         kwargs['executable_path'] = driver_path
+#     firefox_path = request.config.getoption('firefox_path')
+#     if firefox_path is not None:
+#         # get firefox binary from options until there's capabilities support
+#         kwargs['firefox_binary'] = FirefoxBinary(firefox_path)
+#     kwargs['firefox_profile'] = firefox_profile
+#     return Firefox(**kwargs)
 
 
 # TODO: does not work because of "env" error

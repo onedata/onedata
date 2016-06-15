@@ -5,12 +5,29 @@ Feature: Oneprovider Data view
     Given I'm logged into Oneprovider "p1" as development user "user1"
     And I am on the /data Ember path
 
-  Scenario: After failed upload to broken space, file can be successfully uploaded to correct space
-    When I change the space to "space2"
-    # special: will use REST API to set non-write privileges
-    And The current dir has no write permissions
-    And I try to upload file to root dir of current space
-    And The upload fails
-    And I change the space to "space1"
-    And I try to upload file to root dir of current space
-    Then The upload should succeed
+  Scenario: After failed upload to broken space, the same file can be successfully uploaded to correct space
+    When I change the space to "Small space" with select
+    And I upload "20B.txt" file to current dir
+    And The upload of file "20B.txt" fails
+    And I change the space to "space1" with select
+    And I upload "20B.txt" file to current dir
+    Then The upload of file "20B.txt" should succeed
+
+  Scenario: After failed upload some file to broken space, an other file can be successfully uploaded to correct space
+    When I change the space to "Small space" with select
+    And I upload "20B.txt" file to current dir
+    And The upload of file "20B.txt" fails
+    And I change the space to "space1" with select
+    And I upload "20B-2.txt" file to current dir
+    Then The upload of file "20B-2.txt" should succeed
+
+  Scenario: Uploading a file whose size exceeds the space quota should fail
+    When I change the space to "Small space" with select
+    And I upload "20B.txt" file to current dir
+    Then The upload of file "20B.txt" should fail
+
+  Scenario: Uploading a file to space should succeed
+    When I change the space to "space1" with select
+    And I upload "20B.txt" file to current dir
+    Then The upload of file "20B.txt" should succeed
+
