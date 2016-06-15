@@ -6,7 +6,7 @@
 %%% @end
 %%%-------------------------------------------------------------------
 %%% @doc
-%%% This is an example app description used by appmock.
+%%% This is appmock of openid server.
 %%% @end
 %%%-------------------------------------------------------------------
 -module(appmock_openid_server).
@@ -33,15 +33,11 @@
 % which in essence hold mappings {Port, Path} -> {Response}.
 % If a request is performed on certain port and certain path, the response will be returned.
 rest_mocks() -> [
-    %% TODODisplayName
     #rest_mock{port = 443, path = <<"/1/oauth2/authorize">>,
         response = fun(Req, State) ->
-            io:format("State~p~n", [State]),
             {RedirectionPoint, _} = cowboy_req:qs_val(<<"redirect_uri">>, Req, undefined),
             {ReqState, _} = cowboy_req:qs_val(<<"state">>, Req, undefined),
-            io:format("State~p~n", [State]),
             URL = <<RedirectionPoint/binary, "?code=mockcode&state=", ReqState/binary>>,
-            io:format("State~p~n", [State]),
             {#rest_response{code = 307, headers = [{<<"location">>, URL}]}, State + 1}
         end,
         initial_state = 1},
@@ -50,17 +46,7 @@ rest_mocks() -> [
     #rest_mock{port = 443, path = <<"/1/oauth2/token">>,
         response = fun(Req, State) ->
             Proplist = req:post_params(Req),
-            Code = proplists:get_value(<<"code">>, Proplist),
-            GrantType = proplists:get_value(<<"grant_type">>, Proplist),
             RedirectionPoint = proplists:get_value(<<"redirect_uri">>, Proplist),
-            Headers = req:headers(Req),
-            io:format("Your request contained:~n" ++
-                "Code:        ~p~n" ++
-                "GrantType: ~p~n" ++
-                "RedirectionPoint:  ~p~n" ++
-                "Headers:     ~p~n",
-                [Code, GrantType, RedirectionPoint, Headers]),
-
             #mocked_user{uid=UID} = maps:get(State, ?MOCKED_USERS),
             Body = json_utils:encode([
                 {<<"access_token">>, <<?MOCK_TOKEN/binary, (integer_to_binary(State))/binary >>},

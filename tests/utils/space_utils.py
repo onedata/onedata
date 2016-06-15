@@ -1,19 +1,16 @@
 """Module implements utility functions for managing spaces in onedata via REST.
 """
-from tests.cucumber.steps import user_steps
-from tests.utils.docker_utils import run_cmd
-from tests.utils.net_utils import http_post, http_get, http_delete, http_put
-from tests.utils.string_utils import parse
-from tests.utils.utils import get_op_cookie, get_storages
-
-from environment import docker
-import subprocess
-import json
-
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+from tests.utils.net_utils import http_post, http_get, http_delete, http_put
+from tests.utils.string_utils import parse
+from tests.utils.utils import get_op_cookie, get_storages
+from environment import docker
+import subprocess
+import json
 
 from tests import *
 
@@ -21,7 +18,7 @@ from tests import *
 def create_space(user, space_name):
     data = {'name': space_name}
     status_code, response_headers, body = \
-        http_post(user.oz_domain, REST_PORT, "/spaces", True,
+        http_post(user.oz_domain, REST_PORT, "/spaces",
                   data=json.dumps(data), headers=user.headers,
                   cert=(user.cert_file, user.key_file))
 
@@ -49,9 +46,9 @@ def support_space(user, space_name, provider, size, env_description_file):
             'size': str(size)}
 
     status_code, response_headers, body = \
-        http_post(user.oz_domain, REST_PORT,
-                  "/provider/spaces/support", True, headers=DEFAULT_HEADERS,
-                  data=json.dumps(data), cert=(user.cert_file, user.key_file))
+        http_post(user.oz_domain, REST_PORT, "/provider/spaces/support",
+                  data=json.dumps(data), headers=DEFAULT_HEADERS,
+                  cert=(user.cert_file, user.key_file))
 
     response_path = response_headers['location']
     space_id = parse(r'/provider/spaces/(.*)', response_path, 1)
@@ -104,11 +101,10 @@ def invite_to_space(user, user_to_invite, space_name):
 def join_space(user, space_name):
     data = {'token': user.tokens['space_invite'][space_name]}
     status_code, _, body, = http_post(user.oz_domain, REST_PORT,
-                                      "/user/spaces/join", True,
-                                      headers=user.headers,
+                                      "/user/spaces/join",
                                       data=json.dumps(data),
-                                      cert=(
-                                          user.cert_file, user.key_file))
+                                      headers=user.headers, cert=(
+            user.cert_file, user.key_file))
     assert status_code == 201
 
 

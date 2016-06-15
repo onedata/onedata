@@ -21,7 +21,7 @@ import subprocess
 class User:
     def __init__(self, client_node=None, client=None, headers=None, email=None,
                  id=None, provider_id=None, op_domain=None,
-                 oz_domain=None):
+                 oz_domain=None, password=None):
 
         if client_node:
             self.clients = {client_node: client}
@@ -37,6 +37,7 @@ class User:
         self.provider_id = provider_id
         self.op_domain = op_domain
         self.oz_domain = oz_domain
+        self.password = password
 
     def get_client(self, client_node):
         return self.clients.get(client_node, None)
@@ -57,6 +58,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
                 client_hosts=[], tokens=[], check=True):
 
     if not ids:
+        # when environment is started from env_up users's name is also his id
         ids = users
 
     # current version is for environment with one OZ

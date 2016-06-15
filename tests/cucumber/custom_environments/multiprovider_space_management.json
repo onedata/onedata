@@ -21,7 +21,7 @@
             "target_dir": "rel/test_cluster"
         },
         "onepanel": {
-            "input_dir": "rel_oneprovider/onepanel",
+            "input_dir": "rel/op_panel",
             "target_dir": "rel/test_cluster"
         }
     },
@@ -216,6 +216,28 @@
                             "grpcert_domain": {
                                 "string": "127.0.0.1"
                             },
+                            "onepanel_rest_url": "node1.p3",
+                            "openid_verify_cert": false,
+                            "dev_mode": true
+                        }
+                    }
+                },
+                "node2": {
+                    "vm.args": {
+                        "setcookie": "cookie4"
+                    },
+                    "sys.config": {
+                        "oz_worker": {
+                            "cm_nodes": [
+                                "cm"
+                            ],
+                            "db_nodes": [
+                                "127.0.0.1:49161"
+                            ],
+                            "grpcert_domain": {
+                                "string": "127.0.0.1"
+                            },
+                            "onepanel_rest_url": "node1.p3",
                             "openid_verify_cert": false,
                             "dev_mode": true
                         }
@@ -260,5 +282,20 @@
         "users": {},
         "groups": {},
         "spaces": {}
-    }
-}
+    },
+    "onepanel_domains": {
+        "p3": {
+           "app_name": "op_panel",
+            "onepanel": {
+                "node1": {
+                    "vm.args": {
+                        "setcookie": "cookie7"
+                    },
+                    "sys.config": {
+                        "onepanel": {
+                        }
+                    }
+                }
+            }
+        }
+    }}

@@ -27,31 +27,31 @@ def test_default_space(env_description_file):
     pass
 
 
-@scenario("Default space of other user supported by other provider")
-def test_default_space_supported_by_other_provider(env_description_file):
-    pass
-
-
-@scenario("Non-default space of other user supported by other provider")
-def test_non_default_space_supported_by_other_provider(env_description_file):
-    pass
-
-
-@scenario("Space supported by two providers")
-def test_space_supported_by_2_providers(env_description_file):
-    pass
-
-
-@scenario("Remove user from space")
-def test_remove_user(env_description_file):
-    pass
-
-
-@scenario('Delete supported default space')
-def test_delete_supported_default_space(env_description_file):
-    pass
-
-
-@scenario('Delete supported non-default space')
-def test_delete_supported_non_default_space(env_description_file):
-    pass
+# @scenario("Default space of other user supported by other provider")
+# def test_default_space_supported_by_other_provider(env_description_file):
+#     pass
+#
+#
+# @scenario("Non-default space of other user supported by other provider")
+# def test_non_default_space_supported_by_other_provider(env_description_file):
+#     pass
+#
+#
+# @scenario("Space supported by two providers")
+# def test_space_supported_by_2_providers(env_description_file):
+#     pass
+#
+#
+# @scenario("Remove user from space")
+# def test_remove_user(env_description_file):
+#     pass
+#
+#
+# @scenario('Delete supported default space')
+# def test_delete_supported_default_space(env_description_file):
+#     pass
+#
+#
+# @scenario('Delete supported non-default space')
+# def test_delete_supported_non_default_space(env_description_file):
+#     pass

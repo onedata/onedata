@@ -1,5 +1,7 @@
 import shutil
 
+import time
+
 from tests import *
 from tests.cucumber.steps import multi_auth_steps
 from tests.cucumber.steps.cucumber_utils import list_parser, make_arg_list
@@ -16,6 +18,7 @@ from pytest_bdd import given, when, then, parsers
 import tempfile
 
 
+# todo wywalic
 @given('openId server is started', scope="module")
 def open_id(persistent_environment, env_description_file):
     oz_nodes = persistent_environment['oz_worker_nodes']
@@ -55,6 +58,43 @@ def open_id(persistent_environment, env_description_file):
 
     os.remove(tmp_file)
     return open_id_ip
+
+
+@given(parsers.parse("users {users} register with passwords {passwords}"))
+def registered_users(users, passwords, context, environment, request):
+    print "STARTING REGISTRATION"
+    set_dns(environment)
+    print "DNS is set"
+    users = list_parser(users)
+    passwords = list_parser(passwords)
+    onepanel_domain = environment['onepanel_nodes'][0].split('@')[1]
+    if not hasattr(context, "users"):
+        context.users = {}
+
+    for user, password in zip(users, passwords):
+        context.users[user] = User(password=password)
+
+        data = {
+            "username": user,
+            "password": password,
+            "userRole": "admin"  #todo maybe userrole=user is enough ???
+        }
+        return_code, _, _ = http_post(onepanel_domain, 9443,
+                                      "/api/v3/onepanel/user",
+                                      data=json.dumps(data),
+                                      headers=DEFAULT_HEADERS,
+                                      auth=("admin", "password"))
+        assert return_code == 204
+
+
+    def fin():
+        for user in users:
+            # todo delete_user via rest
+            # todo przypilnowac usuwania space'ow zeby usunely sie przed uzytkownikami
+            del context.users[user]
+
+    request.addfinalizer(fin)
+    return users
 
 
 @given(parsers.parse('users {users} will authorize with {provider_ids} certs'))

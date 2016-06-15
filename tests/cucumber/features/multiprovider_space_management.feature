@@ -2,12 +2,13 @@ Feature: Space management with multiple providers
 
   Background:
     Given environment is up
-    Given openId server is started
-    And users [u1, u2] will log in with emails [u1@mail.com, u2@mail.com]
-    And users [u1, u2] will authorize with [p1, p2] certs
-    And users are logged in
-    And users are authorized
-    And environment is clean
+#    Given openId server is started
+    And users [u1, u2] register with passwords [password1, password2]
+#    And users [u1, u2] will log in with emails [u1@mail.com, u2@mail.com]
+#    And users [u1, u2] will authorize with [p1, p2] certs
+#    And users are logged in
+#    And users are authorized
+#    And environment is clean
 
   Scenario: Default space with support
     Given [u1, u2] start oneclients [client1, client2] in
@@ -54,7 +55,7 @@ Feature: Space management with multiple providers
     And u2 writes "TEST TEXT ONEDATA" to u1's space/file1 on client2
     Then u1 reads "TEST TEXT ONEDATA" from u1's space/file1 on client1
 
-  Scenario: Non-default space of other user supported by other provider
+  Scenario: Non-existing space of other user supported by other provider
     Given [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
