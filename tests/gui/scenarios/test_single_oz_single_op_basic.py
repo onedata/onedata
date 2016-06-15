@@ -54,10 +54,18 @@ def test_login_with_first_development_login_button():
 
 # --- FEATURES: onezone_gui --- #
 
-# @pytest.mark.nondestructive
-# @scenario('../features/onezone_gui.feature',
-#           'User can change his alias using valid alias string')
-# def test_change_alias():
+@pytest.mark.nondestructive
+@scenario('../features/onezone_gui.feature',
+          'User can change his alias using valid alias string')
+def test_change_alias():
+    pass
+
+# --- FEATURES: oneprovider_data --- #
+
+# # TODO: not done yet
+# @scenario('../features/oneprovider_data.feature',
+#           'After failed upload to broken space, file can be successfully uploaded to correct space')
+# def test_upload_fail_and_then_success():
 #     pass
 
 # Currently not used, because all tests are explicitly defined

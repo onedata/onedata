@@ -10,8 +10,8 @@ import re
 
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
 
-RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(?P<method>/.*)')
-
+RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(/#)?(?P<method>/.*)')
+RE_DATA_URL = re.compile(r'(?P<lang>/.*)?/data/(?P<space>.*)/(?P<dir>.*)')
 
 def parse_url(url):
     return RE_URL.match(url)
@@ -44,3 +44,9 @@ def is_element_present_by_css(driver, css_selector):
         driver,
         driver.find_elements_by_css_selector(css_selector),
         0) > 0
+
+# TODO: a oneprovider helper - move to another module
+def current_dir(driver):
+    return RE_DATA_URL.match(
+        parse_url(driver.current_url).group('method')
+    ).group('dir')

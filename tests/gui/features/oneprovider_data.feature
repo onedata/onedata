@@ -8,7 +8,7 @@ Feature: Oneprovider Data view
   Scenario: After failed upload to broken space, file can be successfully uploaded to correct space
     When I change the space to "space2"
     # special: will use REST API to set non-write privileges
-    And The root dir of current space has no write permissions
+    And The current dir has no write permissions
     And I try to upload file to root dir of current space
     And The upload fails
     And I change the space to "space1"
