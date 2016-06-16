@@ -1,3 +1,10 @@
+Important notes
+===============
+
+- Currently the highest supported version of Firefox is 46.0.x - v47 is not supported due to incompatibility
+with build-in selenium Firefox driver
+
+
 GUI acceptance/BDD tests
 ========================
 
@@ -63,21 +70,8 @@ Note, that ``--no-xvfb`` option is used to force to not use Xvfb even if it is i
 
 Example: (invoke from onedata repo root dir)
 ```
-py.test tests/gui --driver=Firefox --no-xvfb --base-url=https://veilfsdev.com
+py.test --test-type=gui tests/gui --driver=Firefox --no-xvfb --base-url=https://veilfsdev.com
 ```
-
-<!-- TODO Below not used - probably to remove from readme -->
-
-<!--### Non-headless with automatic environment set up-->
-
-<!--Similar to above, but without specifying ``--base-url`` option.-->
-
-<!--Note, that all requirements to start up Onedata in docker should be installed on local machine.-->
-
-<!--Example: (invoke from onedata repo root dir)-->
-<!--```-->
-<!--py.test tests/gui --driver=Firefox --no-xvfb-->
-<!--```-->
 
 
 Test reports
@@ -96,3 +90,18 @@ In steps of scenarios simply use:
 ```
 selenium.get_screenshot_as_file('/tmp/some-screenshot.png')
 ```
+
+Development
+===========
+
+Please read these section before you start writing or modifying GUI tests.
+
+Fixtures and pytest plugins overrides
+=====================================
+
+* The default configuration of ``pytest-selenium`` for sensitive URLs is inverted:
+all tests are considered *non-destructive by default*.
+You can add a ``@pytest.mark.destructive`` mark to test scenario to mark test as destructive.
+
+* The ``sensitive_url`` fixture has module scope, because we start new environment for each module
+(so it could have different ``base_url's``)

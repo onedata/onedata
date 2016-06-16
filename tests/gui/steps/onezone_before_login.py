@@ -22,18 +22,19 @@ def visit_onezone(base_url, selenium):
 
 
 @given("I'm logged in to Onezone")
-def logged_in_to_onezone(base_url, selenium):
+def logged_in_to_onezone(selenium):
     """Will check if going to / will redirect to onezone page (default when logged in)
     If not - try to login with dev_login"""
     go_to_relative_url(selenium, '/')
     try:
         wait(selenium, 2).\
-            until(lambda s: parse_url(s.current_url).group('method') == '/#/onezone')
+            until(lambda s: parse_url(s.current_url).group('method') == '/onezone')
     except TimeoutException:
         go_to_relative_url(selenium, '/dev_login')
         selenium.find_element_by_css_selector('a').click()
         wait(selenium, 4). \
-            until(lambda s: parse_url(s.current_url).group('method') == '/#/onezone')
+            until(lambda s: parse_url(s.current_url).group('method') == '/onezone',
+                  'Current URL method: {m}'.format(m=parse_url(selenium.current_url).group('method')))
 
 
 @when('I click on the first development login button')

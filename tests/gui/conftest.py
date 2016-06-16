@@ -71,6 +71,20 @@ def pytest_configure(config):
         config.option.htmlpath = os.path.join(logdir, 'report.html')
 
 
+@pytest.fixture(scope='function', autouse=True)
+def _skip_sensitive(request, sensitive_url):
+    """Invert the default sensitivity behaviour: consider the test as destructive
+    only if it has marker "destructive".
+    """
+    destructive = 'destructive' in request.node.keywords
+    if sensitive_url and destructive:
+        pytest.skip(
+            'This test is destructive and the target URL is '
+            'considered a sensitive environment. If this test is '
+            'not destructive, add the \'nondestructive\' marker to '
+            'it. Sensitive URL: {0}'.format(sensitive_url))
+
+
 @pytest.fixture
 def capabilities(request, capabilities):
     """Add --no-sandbox argument for Chrome headless
@@ -84,14 +98,17 @@ def capabilities(request, capabilities):
         # TODO: use --no-sandbox only in headless mode
         chrome_options.add_argument("--no-sandbox")
         capabilities.update(chrome_options.to_capabilities())
+    # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47
+    # but currently this driver is buggy...
     # elif 'browserName' in capabilities and capabilities['browserName'] == 'firefox' or request.config.option.driver == 'Firefox':
     #     capabilities['marionette'] = True
 
-    # capabilities['acceptSslCerts'] = True
+    # currently there are no problems with invalid SSL certs in built-in FF driver and Chrome
+    # but some drivers could need it
+    capabilities['acceptSslCerts'] = True
 
     # TODO: debug remove
-    print "Current option:", request.config.option.driver
-    print "Current capabilities: ", capabilities
+    # print "DEBUG: Current capabilities: ", capabilities
 
     return capabilities
 
