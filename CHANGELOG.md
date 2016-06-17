@@ -4,6 +4,15 @@
 CHANGELOG
 ---------
 
+### 3.0.0-beta6
+
+* Add prefetching
+* Add support for S3
+* Add quota implementation
+* Extend REST api
+
+
+
 ### 3.0.0-beta5
 
 * Metadata synchronization between providers improved.

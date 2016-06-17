@@ -29,23 +29,7 @@ def test_create(env_description_file):
 
 @scenario(
     '../features/directory_CRUD.feature',
-    'Create directory in default space'
-)
-def test_create_default_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Create directory in non-default space'
-)
-def test_create_in_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Create directory spaces'
+    'Create directory in spaces directory'
 )
 def test_create_spaces_dir(env_description_file):
     pass
@@ -72,14 +56,6 @@ def test_rename(env_description_file):
     'Delete empty directory'
 )
 def test_delete(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Delete directory spaces'
-)
-def test_delete_spaces_dir(env_description_file):
     pass
 
 
@@ -112,14 +88,6 @@ def test_children2(env_description_file):
     'Duplication'
 )
 def test_duplication(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Duplication in spaces'
-)
-def test_duplication_spaces(env_description_file):
     pass
 
 
@@ -176,39 +144,4 @@ def test_move_to_itself(env_description_file):
     'Move directory to its subtree'
 )
 def test_move_to_subtree(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to itself in spaces'
-)
-def test_move_to_itself_spaces(env_description_file):
-    pass
-
-
-@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
-                             "singleprovider_singleclient_proxy"],
-                       reason="Move fails")
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to itself in default space'
-)
-def test_move_to_itself_default_space(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to its subtree in spaces'
-)
-def test_move_to_subtree_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to its subtree in default space'
-)
-def test_move_to_subtree_default_space(env_description_file):
     pass

@@ -118,8 +118,11 @@ def mount_users(request, onedata_environment, context, client_ids, env_descripti
 
 
 def ls(client, user="root", path=".", output=True):
+    """CAUTION: this function returns list of paths not string"""
     cmd = "ls {path}".format(path=path)
-    return run_cmd(user, client, cmd, output=output)
+    # sometimes paths are separated with 2 spaces, sometimes with '\n\
+    return run_cmd(user, client, cmd, output=output).strip() \
+        .replace('  ', '\n').split('\n')
 
 
 def mv(client, src, dest, user="root", output=False):
@@ -263,12 +266,11 @@ def clean_spaces_safe(user, client):
 
 
 def clean_spaces(user, client):
-    spaces = ls(client, user=user, path=client_mount_path('spaces', client))
-    spaces = spaces.split("\n")
+    spaces = ls(client, user=user, path=client.mount_path)
     # clean spaces
     for space in spaces:
         rm(client, recursive=True, user=user, force=True,
-           path=client_mount_path(os.path.join('spaces', str(space), '*'),
+           path=client_mount_path(os.path.join(str(space), '*'),
                                   client))
 
 
