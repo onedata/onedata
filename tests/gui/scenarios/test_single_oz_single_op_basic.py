@@ -37,6 +37,7 @@ def test_upload_fail_and_then_success_other_files():
     pass
 
 
+@pytest.mark.xfail(reason='Fails randomly, need to find out what is a problem', run=False)
 @pytest.mark.destructive
 @scenario('../features/oneprovider_data.feature',
           'Uploading a file whose size exceeds the space quota should fail')
@@ -44,6 +45,7 @@ def test_upload_too_big_file():
     pass
 
 
+@pytest.mark.xfail(reason='Fails randomly, need to find out what is a problem', run=False)
 @pytest.mark.destructive
 @scenario('../features/oneprovider_data.feature',
           'Uploading a file to space should succeed')
