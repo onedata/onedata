@@ -1,5 +1,9 @@
 """Test suite for CRUD operations on regular files in onedata.
 """
+import os
+
+from tests import CUSTOM_CUCUMBER_ENV_DIR
+
 __author__ = "Tomasz Lichon"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -8,6 +12,7 @@ import pytest
 from pytest_bdd import scenario
 
 from tests.cucumber.steps.multi_reg_file_steps import *
+from tests.cucumber.steps.env_steps import *
 
 
 @pytest.fixture(scope="module", params=["multiprovider_directio_env.json",

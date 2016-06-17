@@ -10,6 +10,7 @@ from pytest_bdd import scenario
 
 from tests import *
 from tests.utils.path_utils import env_file
+from tests.cucumber.steps.env_steps import *
 
 
 @pytest.fixture(scope="module", params=["multiclient_authorization"])
