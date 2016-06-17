@@ -8,10 +8,10 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import subprocess
 
+from tests.utils.cucumber_utils import *
 from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
                                       client_mount_path, save_op_code,
                                       get_client)
-from tests.utils.cucumber_utils import *
 
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))

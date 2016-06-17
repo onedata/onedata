@@ -59,7 +59,6 @@ def persistent_environment(request, test_type, env_description_file):
     """
     Sets up environment and returns environment description.
     """
-
     curr_path = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(curr_path, '..', '..', 'environments',
                             env_description_file)

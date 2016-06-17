@@ -5,11 +5,11 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from pytest_bdd import given
-
 import multi_auth_steps
-from tests.utils.client_utils import mount_users
 from tests.utils.cucumber_utils import *
+from tests.utils.client_utils import mount_users
+
+from pytest_bdd import given
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))

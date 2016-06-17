@@ -5,11 +5,13 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+from tests import *
+
 import subprocess
 
+from test.utils.cucumber_utils import *
 from tests.utils.client_utils import cp, truncate, dd, echo_to_file, cat, \
     md5sum, replace_pattern, client_mount_path, save_op_code, get_client
-from tests.utils.cucumber_utils import *
 from tests.utils.docker_utils import run_cmd
 
 

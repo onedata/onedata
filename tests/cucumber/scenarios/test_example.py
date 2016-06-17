@@ -9,12 +9,13 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import pytest
-from pytest_bdd import scenario
-
 from tests import *
-from tests.utils.path_utils import env_file
+from pytest_bdd import scenario
+from tests.utils.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
+from tests.utils.path_utils import env_file
+
+import pytest
 
 
 @pytest.fixture(scope="module",

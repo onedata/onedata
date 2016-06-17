@@ -7,14 +7,13 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import os
-import subprocess
-
-import pytest
-
-from tests.utils.cucumber_utils import repeat_until
-from tests.utils.docker_utils import run_cmd
 from tests.utils.utils import set_dns, get_token, get_cookie
+from tests.utils.docker_utils import run_cmd
+from tests.utils.cucumber_utils import repeat_until
+
+import os
+import pytest
+import subprocess
 
 
 class User:
