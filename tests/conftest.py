@@ -75,7 +75,7 @@ def persistent_environment(request, test_type, env_description_file):
                       force=True,
                       volumes=True)
 
-    request.addfinalizer(fin)
+    # request.addfinalizer(fin)
     request.environment = env_desc
     return env_desc
 
@@ -178,6 +178,9 @@ class Context:
 
     def get_user(self, user):
         return self.users[user]
+
+    def get_users(self, user_names):
+        return [self.get_user(user_name) for user_name in user_names]
 
     def get_client(self, user, client_node):
         return self.users[user].get_client(client_node)

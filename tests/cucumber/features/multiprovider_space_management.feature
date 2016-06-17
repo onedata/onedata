@@ -2,12 +2,9 @@ Feature: Space management with multiple providers
 
   Background:
     Given environment is up
-#    Given openId server is started
     And users [u1, u2] register with passwords [password1, password2]
-#    And users [u1, u2] will log in with emails [u1@mail.com, u2@mail.com]
-#    And users [u1, u2] will authorize with [p1, p2] certs
-#    And users are logged in
-#    And users are authorized
+    And users [u1, u2] have authorization tokens
+    And users [u1, u2] authorize with [p1, p2] certs
 #    And environment is clean
 
   Scenario: Default space with support

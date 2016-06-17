@@ -5,7 +5,7 @@ __author__ = "Lukasz Opiola, Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
-
+from tests import *
 from tests.utils.utils import run_os_command
 
 import dns.resolver
@@ -13,7 +13,7 @@ import re
 import requests
 import time
 
-# requests.packages.urllib3.disable_warnings()
+requests.packages.urllib3.disable_warnings()
 
 
 def dns_lookup(host, dns_addr):
@@ -34,14 +34,15 @@ def ping(ip):
     return 0 == run_os_command(['ping', '-c 1', ip], output=False)
 
 
-def http_get(ip, port, path, use_ssl, headers = None, verify=False, cert=None):
+def http_get(ip, port, path, use_ssl=True, headers = None, verify=False,
+             cert=None, auth=None):
     """Helper function that perform a HTTP GET request
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
     response = requests.get('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
                             verify=verify, headers=headers, timeout=10,
-                            cert=cert)
+                            cert=cert, auth=auth)
     return response.status_code, response.headers, response.text
 
 
@@ -58,14 +59,14 @@ def http_post(ip, port, path, use_ssl=True, data=None, headers=None,
     return response.status_code, response.headers, response.text
 
 
-def http_delete(ip, port, path, use_ssl, headers=None, verify=False, cert=None):
+def http_delete(ip, port, path, use_ssl=True, headers=None, verify=False, cert=None, auth=None):
     """Helper function that perform a HTTP DELETE request
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
     response = requests.delete('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
                                verify=verify, headers=headers, timeout=10,
-                               cert=cert)
+                               cert=cert, auth=auth)
     return response.status_code, response.headers, response.text
 
 
@@ -94,3 +95,18 @@ def check_http_connectivity(ip, port, path, expected_code, use_ssl=True, number_
         except:
             time.sleep(1)
             return check_http_connectivity(ip, port, path, expected_code, use_ssl, number_of_retries - 1)
+
+
+def oz_rest_path(*args):
+    return rest_path(OZ_REST_PATH_PREFIX, *args)
+
+
+def panel_rest_path(*args):
+    return rest_path(PANEL_REST_PATH_PREFIX, *args)
+
+
+def rest_path(prefix, *args):
+    full_path = [prefix]
+    full_path.extend(args)
+    return "/".join(full_path)
+

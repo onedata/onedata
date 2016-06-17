@@ -2,13 +2,14 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
+from tests.utils.user_utils import User
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests.utils.path_utils import escape_path
-from tests.utils.utils import set_dns, get_token, get_cookie
 from tests.utils.utils import set_dns, get_token, get_oz_cookie
 from tests.utils.docker_utils import run_cmd
 from tests.cucumber.steps.cucumber_utils import repeat_until
@@ -16,31 +17,6 @@ from tests.cucumber.steps.cucumber_utils import repeat_until
 import os
 import pytest
 import subprocess
-
-
-class User:
-    def __init__(self, client_node=None, client=None, headers=None, email=None,
-                 id=None, provider_id=None, op_domain=None,
-                 oz_domain=None, password=None):
-
-        if client_node:
-            self.clients = {client_node: client}
-        self.last_op_ret_code = 0
-        self.files = {}
-        self.spaces = {}
-        self.headers = headers
-        self.email = email
-        self.id = id
-        self.tokens = {'support': {},
-                       'creation': {},
-                       'space_invite': {}}
-        self.provider_id = provider_id
-        self.op_domain = op_domain
-        self.oz_domain = oz_domain
-        self.password = password
-
-    def get_client(self, client_node):
-        return self.clients.get(client_node, None)
 
 
 class Client:

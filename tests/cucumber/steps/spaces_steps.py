@@ -1,20 +1,17 @@
-"""Module implements pytest-bdd steps for space management vie REST
+"""Module implements pytest-bdd steps for space management via REST
 """
-from tests.utils.space_utils import (create_space, support_space,
-                                     request_support, invite_to_space,
-                                     join_space, remove_user, delete_space,
-                                     assign_privileges)
-
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests import *
-import pytest
-from pytest_bdd import given, parsers, then, when
-
 from tests.cucumber.steps.cucumber_utils import list_parser
+from tests.utils.space_utils import (create_space, support_space,
+                                     request_support, invite_to_space,
+                                     join_space, remove_user, delete_space,
+                                     assign_privileges)
+
+from pytest_bdd import given, parsers, then, when
 
 
 @when(parsers.parse('{user} creates spaces {spaces}'))
