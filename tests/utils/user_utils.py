@@ -67,31 +67,31 @@ def create_user(user_name, password, onepanel):
         "password": password,
         "userRole": "regular"
     }
-    return_code, _, body = http_post(onepanel, PANEL_REST_PORT,
-                                  panel_rest_path("user"),
-                                  data=json.dumps(data),
-                                  headers=DEFAULT_HEADERS,
-                                  auth=("admin", "password"))
-    print "CREATED ", body  #TODO remove
-    assert return_code == 204
+    status_code, _, body = http_post(onepanel, PANEL_REST_PORT,
+                                     panel_rest_path("user"),
+                                     data=json.dumps(data),
+                                     headers=DEFAULT_HEADERS,
+                                     auth=("admin", "password"))
+    assert status_code == 204
     return User(user_name, password=password)
 
 
 def delete_user(user_name, onepanel):
 
-    return_code, _, _ = http_delete(onepanel, PANEL_REST_PORT,
+    status_code, _, _ = http_delete(onepanel, PANEL_REST_PORT,
                                     panel_rest_path("user", user_name),
                                     headers=DEFAULT_HEADERS,
                                     auth=("admin", "password"))
-    assert return_code == 204
+    assert status_code == 204
 
 
 def get_id(user):
-    return_code, _, body = http_get(user.oz_domain, OZ_REST_PORT,
-                                    oz_rest_path("user"),
-                                    headers=user.headers,
-                                    cert=(user.cert_file, user.key_file),
-                                    auth=(user.name, user.password))
-    print "GET ID: ", return_code, body #TODO remove
+    status_code, response_headers, body =\
+        http_get(user.oz_domain, OZ_REST_PORT,
+                 oz_rest_path("user"),
+                 headers=user.headers,
+                 cert=(user.cert_file, user.key_file),
+                 auth=(user.name, user.password))
+    assert status_code == 200
 
     return json.loads(body)['userId']

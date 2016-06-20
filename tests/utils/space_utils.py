@@ -180,5 +180,4 @@ def unsupport_space(provider, space):
                     oz_rest_path("provider", "spaces", space_id),
                     cert=(provider.cert_file, provider.key_file),
                     headers=DEFAULT_HEADERS)
-
-    print "UNSUPPORT SPACE: ", status_code, headers, body #TODO remove
+    assert status_code == 202

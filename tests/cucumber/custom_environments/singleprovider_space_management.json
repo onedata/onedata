@@ -144,6 +144,11 @@
                             "grpcert_domain": {
                                 "string": "127.0.0.1"
                             },
+                            "onepanel_rest_url": {
+                                "protocol": "https",
+                                "domain": "node1.p2",
+                                "port": 9443
+                            },
                             "openid_verify_cert": false,
                             "dev_mode": true
                         }
