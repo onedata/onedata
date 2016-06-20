@@ -2,17 +2,16 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
-from tests.utils.user_utils import User
-
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.path_utils import escape_path
-from tests.utils.utils import set_dns, get_token, get_oz_cookie
+from tests.utils.user_utils import User
 from tests.utils.docker_utils import run_cmd
+from tests.utils.path_utils import escape_path
 from tests.cucumber.steps.cucumber_utils import repeat_until
+from tests.utils.utils import set_dns, get_token, get_oz_cookie
 
 import os
 import pytest
@@ -30,12 +29,8 @@ class Client:
 
 
 def mount_users(request, environment, context, client_ids, env_description_file,
-                users=[], ids=[], client_instances=[], mount_paths=[],
+                users=[], client_instances=[], mount_paths=[],
                 client_hosts=[], tokens=[], check=True):
-
-    if not ids:
-        # when environment is started from env_up users's name is also his id
-        ids = users
 
     # current version is for environment with one OZ
     oz_node = environment['oz_worker_nodes'][0]
@@ -52,24 +47,29 @@ def mount_users(request, environment, context, client_ids, env_description_file,
 
     request.addfinalizer(fin)
 
-    parameters = zip(users, ids, clients, client_instances, mount_paths,
+    parameters = zip(users, clients, client_instances, mount_paths,
                      client_hosts, tokens)
-    for user, id, client, client_instance, mount_path, client_host, token_arg in parameters:
+    for user_name, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
 
         oz_domain = data['zone_domain']
-
         # get OZ cookie from env description file
         cookie = get_oz_cookie(env_description_file, oz_domain, node_name=False)
 
+        user = context.get_user(user_name)
+        if not user:
+            user = User(user_name,
+                        id=user_name,
+                        oz_domain=oz_domain)
+
         # get token for user
         if token_arg != 'bad_token':
-            token = get_token(token_arg, id, oz_node, cookie)
+            token = get_token(token_arg, user.id, oz_node, cookie)
 
         client.set_timeout(data.get('default_timeout', 0))
 
         print "User {user} mounts oneclient using token: {token}"\
-            .format(user=user, token=token)
+            .format(user=user_name, token=token)
 
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
@@ -83,29 +83,25 @@ def mount_users(request, environment, context, client_ids, env_description_file,
                ' && export X509_USER_KEY={user_key}'
                ' && echo {token} > {token_path}'
                ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
-               ).format(
-                mount_path=mount_path,
-                gr_domain=oz_domain,
-                op_domain=data['op_domain'],
-                user_cert=data['user_cert'],
-                user_key=data['user_key'],
-                user=user,
-                token=token,
-                token_path=token_path)
+               ).format(mount_path=mount_path,
+                        gr_domain=oz_domain,
+                        op_domain=data['op_domain'],
+                        user_cert=data['user_cert'],
+                        user_key=data['user_key'],
+                        user=user_name,
+                        token=token,
+                        token_path=token_path)
 
-        ret = run_cmd(user, client, cmd)
+        ret = run_cmd(user_name, client, cmd)
 
         if ret != 0 and check and token_arg != "bad token":
             # if token was different than "bad token" and mounting failed
-            clean_mount_path(user, client)
+            clean_mount_path(user_name, client)
             pytest.skip("Error mounting oneclient")
 
-        if user in context.users and hasattr(context.users[user], "clients"):
-            context.users[user].clients[client_instance] = client
-        elif user in context.users:
-            context.users[user].clients = {client_instance: client}
-        else:
-            context.users[user] = User(client_instance, client, id=id)
+        user.update_clients(client_instance, client)
+        if not context.has_user(user):
+            context.add_user(user)
 
         # remove accessToken to mount many clients on one docker
         rm(client, recursive=True, force=True,
@@ -114,10 +110,10 @@ def mount_users(request, environment, context, client_ids, env_description_file,
         rm(client, recursive=True, force=True, path=token_path)
 
         if check and token != 'bad_token':
-            if not clean_spaces_safe(user, client):
+            if not clean_spaces_safe(user_name, client):
                 pytest.skip("Test skipped beacause of failing to clean spaces")
 
-        save_op_code(context, user, ret)
+        save_op_code(context, user_name, ret)
 
 
 def ls(client, user="root", path=".", output=True):

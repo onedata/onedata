@@ -5,6 +5,7 @@ __author__ = "Lukasz Opiola, Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
 from tests import *
 from tests.utils.utils import run_os_command
 
@@ -52,14 +53,14 @@ def http_post(ip, port, path, use_ssl=True, data=None, headers=None,
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
-    print "POST: ", ip, port, path, data, headers, cert
     response = requests.post('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
                              data, verify=verify, headers=headers, timeout=10,
                              cert=cert, auth=auth)
     return response.status_code, response.headers, response.text
 
 
-def http_delete(ip, port, path, use_ssl=True, headers=None, verify=False, cert=None, auth=None):
+def http_delete(ip, port, path, use_ssl=True, headers=None, verify=False,
+                cert=None, auth=None):
     """Helper function that perform a HTTP DELETE request
     Returns a tuple (Code, Headers, Body)
     """
@@ -70,14 +71,15 @@ def http_delete(ip, port, path, use_ssl=True, headers=None, verify=False, cert=N
     return response.status_code, response.headers, response.text
 
 
-def http_put(ip, port, path, use_ssl, data=None, headers=None, verify=False, cert=None):
+def http_put(ip, port, path, use_ssl=True, data=None, headers=None,
+             verify=False, cert=None, auth=None):
     """Helper function that perform a HTTP PUT request
     Returns a tuple (Code, Headers, Body)
     """
     protocol = 'https' if use_ssl else 'http'
     response = requests.put('{0}://{1}:{2}{3}'.format(protocol, ip, port, path),
                             verify=verify, headers=headers, timeout=10,
-                            cert=cert, data=data)
+                            cert=cert, data=data, auth=auth)
     return response.status_code, response.headers, response.text
 
 

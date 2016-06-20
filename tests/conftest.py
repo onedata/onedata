@@ -8,12 +8,14 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from tests import *
 from tests.utils.path_utils import make_logdir, get_file_name, get_json_files
-from tests.utils.utils import run_env_up_script
+from tests.utils.utils import run_env_up_script, hostname, get_domain
 
 from environment import docker
 
-import os
 import pytest
+import os
+import tempfile
+import shutil
 
 
 def pytest_addoption(parser):
@@ -32,7 +34,6 @@ def pytest_generate_tests(metafunc):
                     ("test_type", 'env'),
                     [(test_type, env) for env in envs],
                     scope='module')
-            print metafunc.config.option.test_type
 
 
 @pytest.fixture(scope="module")
@@ -100,6 +101,29 @@ def client_ids(persistent_environment):
         client_name = client.split(".")[0]
         ids[client_name] = docker.inspect(client)['Id']
     return ids
+
+
+@pytest.fixture(scope="module")
+def providers(persistent_environment, request):
+    op_worker_nodes = persistent_environment['op_worker_nodes']
+    # current version is for one OZ
+    oz_domain = persistent_environment['oz_worker_nodes'][0].split(".", 1)[-1]
+    providers = {}
+    for op_worker_node in op_worker_nodes:
+        op_hostname = hostname(op_worker_node)
+        op_domain = get_domain(op_hostname)
+        provider_id = op_domain.split('.')[0]
+        if provider_id not in providers.keys():
+            new_provider = Provider(provider_id, op_domain, oz_domain)
+            new_provider.copy_certs_from_docker(op_hostname)
+            providers[provider_id] = new_provider
+
+    def fin():
+        for provider in providers.itervalues():
+            provider.delete_certs()
+
+    request.addfinalizer(fin)
+    return providers
 
 
 @pytest.fixture()
@@ -177,15 +201,39 @@ class Context:
         self.users = {}
 
     def get_user(self, user):
-        return self.users[user]
+        return self.users.get(user)
 
     def get_users(self, user_names):
         return [self.get_user(user_name) for user_name in user_names]
 
+    def has_user(self, user_name):
+        return user_name in self.users.keys()
+
     def get_client(self, user, client_node):
         return self.users[user].get_client(client_node)
+
+    def add_user(self, user):
+        self.users[user.name] = user
 
 
 @pytest.fixture(scope="module")
 def context(env_description_file):
     return Context()
+
+
+class Provider:
+    def __init__(self, id, domain, oz_domain):
+        self.id = id
+        self.domain = domain
+        self.cert_dir = tempfile.mkdtemp()
+        self.key_file = os.path.join(self.cert_dir, PROVIDER_KEY_FILE)
+        self.cert_file = os.path.join(self.cert_dir, PROVIDER_CERT_FILE)
+        self.spaces = {}
+        self.oz_domain = oz_domain
+
+    def copy_certs_from_docker(self, op_hostname):
+        docker.cp(op_hostname, PROVIDER_KEY_PATH, self.cert_dir, False)
+        docker.cp(op_hostname, PROVIDER_CERT_PATH, self.cert_dir, False)
+
+    def delete_certs(self):
+        shutil.rmtree(self.cert_dir)

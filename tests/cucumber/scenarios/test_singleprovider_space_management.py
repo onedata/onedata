@@ -1,17 +1,24 @@
-from tests import *
+"""Test suite for space management in onedata in singleprovider environment
+"""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from tests.cucumber.steps.spaces_steps import *
 from tests.cucumber.steps.env_steps import *
-# from tests.cucumber.steps.auth_steps import *
+from tests.cucumber.steps.auth_steps import *
+from tests.cucumber.steps.multi_auth_steps import *
 from tests.cucumber.steps.user_steps import *
 from tests.cucumber.steps.multi_file_steps import *
 from tests.cucumber.steps.multi_reg_file_steps import *
 from tests.cucumber.steps.multi_dir_steps import *
+from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
 from functools import partial
 import pytest
 
-from tests.utils.path_utils import env_file
 
 scenario = partial(scenario,
                    '../features/singleprovider_space_management.feature')
@@ -22,51 +29,26 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-@scenario('Default space without support')
-def test_default_space_without_support(env_description_file):
-    """CAUTION: this test must be first in the suite because we don't delete
-    user's default spaces in teardown so it won't pass after supporting it"""
+@scenario('Create space and don\'t support it')
+def test_create_space_no_support(env_description_file):
     pass
 
 
-@scenario('Default space with support')
-def test_default_space(env_description_file):
+@scenario('Create space and support it')
+def test_create_space_support(env_description_file):
     pass
 
 
-@scenario('New space with support')
-def test_support_space(env_description_file):
-    pass
-
-
-@scenario('New space without support')
-def test_new_space_without_support(env_description_file):
-    pass
-
-
-@scenario('Invite user to default space')
-def test_invite_to_default_space(env_description_file):
-    pass
-
-
-@scenario('Invite user to non-default space')
-def test_invite_to_non_default_space(env_description_file):
+@scenario('Invite user to unused space')
+def test_invite(env_description_file):
     pass
 
 
 @scenario('Remove user from space')
-def test_remove_user_from_space(env_description_file):
+def test_remove_user(env_description_file):
     pass
 
 
-# TODO
-@pytest.mark.xfail_env(envs=["singleprovider_space_management"],
-                       reason="Deleting default space returns 403")
-@scenario('Delete supported default space')
-def test_delete_supported_default_space(env_description_file):
-    pass
-
-
-@scenario('Delete supported non-default space')
-def test_delete_supported_non_default_space(env_description_file):
+@scenario('Delete supported space')
+def test_delete_space(env_description_file):
     pass

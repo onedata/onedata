@@ -5,13 +5,14 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+from tests.utils.space_utils import unsupport_space
 from tests.cucumber.steps.cucumber_utils import list_parser
 from tests.utils.space_utils import (create_space, support_space,
                                      request_support, invite_to_space,
                                      join_space, remove_user, delete_space,
                                      assign_privileges)
 
-from pytest_bdd import given, parsers, then, when
+from pytest_bdd import parsers, then, when
 
 
 @when(parsers.parse('{user} creates spaces {spaces}'))
@@ -21,10 +22,11 @@ def spaces_creation(user, spaces, environment, context):
     for space in spaces:
         space_id = create_space(user, space)
         user.spaces.update({space: space_id})
+        user.created_spaces.update({space: space_id})
 
 
-@when(parsers.parse('{user} asks for support of space {spaces}'))
-def space_support_request(user, spaces, environment, context):
+@when(parsers.parse('{user} gets token to support spaces {spaces}'))
+def request_spaces_support(user, spaces, environment, context):
     spaces = list_parser(spaces)
     user = context.get_user(user)
     for space in spaces:
@@ -32,15 +34,14 @@ def space_support_request(user, spaces, environment, context):
         user.tokens['support'].update({space: token})
 
 
-@when(parsers.parse('{spaces} is supported for {user} by {provider} with {size} MB'))
-@when(parsers.parse('{spaces} are supported for {user} by {provider} with {size} MB'))
-def space_support(spaces, user, provider, size, env_description_file,
-                  environment, context):
-    spaces = list_parser(spaces)
+@when(parsers.parse('{space} is supported with {size} MB for {user} by provider {provider_id}'))
+def support_spaces(space, user, provider_id, size, env_description_file,
+                   environment, context, providers):
     user = context.get_user(user)
-    for space in spaces:
-        size = 1024 * 1024 * int(size)
-        support_space(user, space, provider, size, env_description_file)
+    provider = providers[provider_id]
+    size = 1024 * 1024 * int(size)
+    space_id = support_space(user, space, provider, size, env_description_file, environment)
+    provider.spaces.update({space: space_id})
 
 
 @when(parsers.parse('{user1} invites {user2} to space {space}'))
@@ -69,14 +70,9 @@ def removing_user_from_space(user1, user2, space, context, environment):
 def deleting_space(user, space, context, environment):
     user = context.get_user(user)
     delete_space(user, space)
-
-
-@given('environment is clean')
-def clean_env(context, environment):
-    for user_name, user in context.users.items():
-        for space in user.spaces.keys():
-            if not space.endswith('\'s space'):
-                delete_space(user, space)
+    del user.spaces[space]
+    if space in user.created_spaces.keys():
+        del user.created_spaces[space]
 
 
 @when(parsers.parse('{user1} assigns {user2} privileges {privileges} for space {space}'))
@@ -86,3 +82,10 @@ def assigning_privileges(user1, user2, privileges, space, context):
     privileges = list_parser(privileges)
     assign_privileges(user1, user2, privileges, space)
 
+
+@when(parsers.parse('provider {provider_id} unsupports space {space}'))
+def stop_supporting_space(provider_id, space, providers, context):
+
+    provider = providers[provider_id]
+    unsupport_space(provider, space)
+    del provider.spaces[space]

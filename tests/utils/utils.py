@@ -1,4 +1,8 @@
 """This module contains utility functions to be used in acceptance tests."""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 from tests import *
 from tests.utils.path_utils import make_logdir, save_log_to_file
 
@@ -9,8 +13,6 @@ import re
 import subprocess
 import pytest
 import os
-
-__author__ = "Jakub Kudzia"
 
 
 def run_os_command(cmd, output=True):
@@ -140,3 +142,33 @@ def get_storages(config_path, provider_id):
     config = parse_json_config_file(config_path)
     cfg = config['provider_domains'][provider_id]['os_config']
     return config['os_configs'][cfg]['storages']
+
+
+def get_first_op_erl_node(domain, env):
+    return get_first_erl_node(domain, env, 'op_worker_nodes')
+
+
+def get_first_oz_erl_node(domain, env):
+    return get_first_erl_node(domain, env, 'oz_worker_nodes')
+
+
+def get_first_erl_node(domain, env, key):
+    return [node for node in env[key] if node.endswith(domain)][0]
+
+
+def get_first_op_worker(domain, env):
+    return hostname(get_first_op_erl_node(domain, env))
+
+
+def get_first_oz_worker(domain, env):
+    return hostname(get_first_oz_erl_node(domain, env))
+
+
+def hostname(erl_node):
+    return erl_node.split('@')[-1]
+
+
+def get_domain(node):
+    if '@' in node:
+        node = hostname(node)
+    return node.split('.', 1)[-1]
