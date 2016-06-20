@@ -65,7 +65,7 @@ Feature: Space management with single provider
     When u1 invites u2 to space s1
     And u2 joins space s1
     And u1 gets token to support spaces [s1]
-    And [s1] is supported for u1 by p1 with 1 MB
+    And s1 is supported with 1 MB for u1 by provider p1
     And u2 can list s1 on client2
     And u1 removes u2 from space s1
     Then u2 doesn't see [s1] in . on client2
@@ -77,7 +77,7 @@ Feature: Space management with single provider
       using [token, token]
     When u1 creates spaces [s1]
     And u1 gets token to support spaces [s1]
-    And [s1] is supported for u1 by p1 with 1 MB
+    And s1 is supported with 1 MB for u1 by provider p1
     And u1 can list s1 on client1
     And u1 deletes space s1
     Then u1 doesn't see [s1] in . on client1
