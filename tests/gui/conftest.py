@@ -7,14 +7,10 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests.utils.utils import set_dns
-from tests.utils.path_utils import env_file, make_logdir, get_file_name
+from tests.utils.path_utils import make_logdir
 from tests.conftest import map_test_type_to_logdir
 from pytest import fixture
 from selenium import webdriver
-from selenium.webdriver import Firefox, FirefoxProfile
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-import selenium
-import tests
 import pytest
 import re
 
@@ -23,11 +19,11 @@ import sys
 
 SELENIUM_IMPLICIT_WAIT = 5
 
-# use this conts when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
+# use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
 WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
 
-# use this conts when using: WebDriverWait(selenium, WAIT_BACKEND).until(lambda s: ...)
+# use this const when using: WebDriverWait(selenium, WAIT_BACKEND).until(lambda s: ...)
 # when waiting for backend changes
 WAIT_BACKEND = 10
 

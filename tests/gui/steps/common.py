@@ -1,6 +1,5 @@
 """Common steps used in various GUI testing scenarios
 """
-from tests.gui.utils.generic import parse_url
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -8,6 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import time
+from tests.gui.utils.generic import parse_url
 from tests.gui.conftest import WAIT_FRONTEND
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys

@@ -1,8 +1,5 @@
 """Steps for features of Onezone login page.
 """
-from selenium.common.exceptions import NoSuchElementException
-
-import tests
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -11,6 +8,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 import os
+import tests
+from selenium.common.exceptions import NoSuchElementException
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
 from pytest_bdd import when, then, parsers
