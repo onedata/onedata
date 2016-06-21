@@ -164,3 +164,8 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir3 on client2
     And u1 checks MD5 of s1/dir3/file1 on client1
     And u2 checks MD5 of s1/dir3/file1 on client2
+
+  Scenario: Opened file
+    When u1 creates regular files [s1/file1] on client1
+    And u1 sees [file1] in s1 on client1
+#    And u1 opens s1/file1 on client1

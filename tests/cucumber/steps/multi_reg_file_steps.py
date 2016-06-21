@@ -6,13 +6,12 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests import *
-
-import subprocess
-
-from cucumber_utils import *
-from tests.utils.client_utils import cp, truncate, dd, echo_to_file, cat, \
-    md5sum, replace_pattern, client_mount_path, save_op_code, get_client
 from tests.utils.docker_utils import run_cmd
+from cucumber_utils import *
+from tests.utils.client_utils import (cp, truncate, dd, echo_to_file, cat,
+                                      md5sum, replace_pattern, grep, get_client,
+                                      client_mount_path, save_op_code)
+import subprocess
 
 
 @when(parsers.parse('{user} writes "{data}" at offset {offset} to {file} on {client_node}'))
@@ -129,3 +128,25 @@ def do_truncate(user, file, new_size, client_node, context):
     file_path = client_mount_path(file, client)
     ret = truncate(client, file_path, new_size, user=user)
     save_op_code(context, user, ret)
+
+
+@when(parsers.parse('{user} opens {file} on {client_node}'))
+def open(user, file, client_node, context):
+    print "OPENING: ", file
+    client = get_client(client_node, user, context)
+    file_path = client_mount_path(file, client)
+    start_process_with_opened_file(client, file_path, user)
+    # tail(client, file_path, follow=True, detach=True, user=user)
+    GREP = grep(client, "python -c with open {}".format(file_path), user=user)
+    print "GREP: ", grep
+
+
+def start_process_with_opened_file(client, file_path, user):
+
+    cmd='''python -c "with open(\\"{file_path}\\", \\"r+b\\") as file:
+    while True:
+        pass"
+'''.format(file_path=file_path)
+
+    return run_cmd(user, client, cmd, detach=True, output=False)
+

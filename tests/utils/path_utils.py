@@ -82,7 +82,7 @@ def get_function(module, function_name):
 
 def ensure_json(file):
     """Ensures that file has .json extension."""
-    if os.path.splitext(file)[1] != ".json ":
+    if os.path.splitext(file)[1] != ".json":
         file = ".".join([file, "json"])
     return file
 

@@ -222,7 +222,7 @@ def mktemp(client, path=None, dir=False, user="root", output=True):
     cmd = "mktemp {dir} {path}".format(
             dir="--directory" if dir else "",
             path="--tmpdir={}".format(path) if path else "")
-    return run_cmd(user, client, cmd, output).strip()
+    return run_cmd(user, client, cmd, output=output).strip()
 
 
 def replace_pattern(client, file_path, pattern, new_text, user='root',
@@ -242,7 +242,15 @@ def fusermount(client, path, user='root', unmount=False, lazy=False,
             quiet="-q" if quiet else "",
             path=path
     )
-    return run_cmd(user, client, cmd, output)
+    return run_cmd(user, client, cmd, output=output)
+
+
+def grep(client, expression, user='root', no_grep=True, output=True):
+    cmd = "grep '{expression}' {no_grep}".format(
+        expression=expression,
+        no_grep="| grep -v grep" if no_grep else ""
+    )
+    return run_cmd(user, client, cmd, output=output)
 
 
 def create_clients(users, client_hosts, mount_paths, client_ids):
