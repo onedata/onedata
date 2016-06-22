@@ -9,8 +9,8 @@ from tests import *
 from tests.utils.docker_utils import run_cmd
 from cucumber_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, echo_to_file, cat,
-                                      md5sum, replace_pattern, grep, get_client,
-                                      client_mount_path, save_op_code)
+                                      md5sum, replace_pattern, get_client,
+                                      client_mount_path, save_op_code, kill)
 import subprocess
 
 
@@ -135,10 +135,20 @@ def open(user, file, client_node, context):
     print "OPENING: ", file
     client = get_client(client_node, user, context)
     file_path = client_mount_path(file, client)
-    start_process_with_opened_file(client, file_path, user)
+    print "Running open"
+    pid = start_process_with_opened_file(client, file_path, user)
+    context.opened_files.update({file: pid})
+    print "Bck from open"
     # tail(client, file_path, follow=True, detach=True, user=user)
-    GREP = grep(client, "python -c with open {}".format(file_path), user=user)
-    print "GREP: ", grep
+    # GREP = grep(client, "python -c with open {}".format(file_path), user=user)
+
+
+@when(parsers.parse('{user} closes {file} on {client_node}'))
+def close(user, file, client_node, context):
+    print "CLOSING"
+    client = get_client(client_node, user, context)
+    print "Running close"
+    kill(client, context.opened_files[file], user=user)
 
 
 def start_process_with_opened_file(client, file_path, user):
@@ -148,5 +158,13 @@ def start_process_with_opened_file(client, file_path, user):
         pass"
 '''.format(file_path=file_path)
 
-    return run_cmd(user, client, cmd, detach=True, output=False)
+    run_cmd(user, client, cmd, detach=True, output=False)
 
+    return get_pid(client, "python -c", user)
+
+
+def get_pid(client, command_pattern, user='root'):
+    cmd = "ps -C '{}' | tail -1 |awk '{{print $1}}'"\
+        .format(command_pattern)
+    print "CMD: ", cmd
+    return run_cmd(user, client, cmd, output=True)

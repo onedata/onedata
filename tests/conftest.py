@@ -93,7 +93,7 @@ def environment(persistent_environment, request):
 
 
 @pytest.fixture(scope="module")
-def client_ids(persistent_environment):
+def client_ids(persistent_environment, context):
     ids = {}
     for client in persistent_environment['client_nodes']:
         client = str(client)
@@ -175,6 +175,9 @@ def clear_storage(storage_path):
 class Context:
     def __init__(self):
         self.users = {}
+        self.rpyc_connections = {}  #opened connections to rpyc server per user on client docker
+        self.opened_files = {}  # maps files to pids of processes which
+                                # have these files opened
 
 
 @pytest.fixture(scope="module")

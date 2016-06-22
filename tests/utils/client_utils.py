@@ -2,6 +2,8 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
+import rpyc
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -103,6 +105,10 @@ def mount_users(request, environment, context, client_ids, env_description_file,
             context.users[user].clients[client_instance] = client
         else:
             context.users[user] = User(client_instance, client)
+
+        start_rpyc_server(context.users[user], client)
+
+        rpyc.connect(client_instance)
 
         # remove accessToken to mount many clients on one docker
         rm(client, recursive=True, force=True,
@@ -245,11 +251,8 @@ def fusermount(client, path, user='root', unmount=False, lazy=False,
     return run_cmd(user, client, cmd, output=output)
 
 
-def grep(client, expression, user='root', no_grep=True, output=True):
-    cmd = "grep '{expression}' {no_grep}".format(
-        expression=expression,
-        no_grep="| grep -v grep" if no_grep else ""
-    )
+def kill(client, pid, signal="KILL", user='root', output=False):
+    cmd = "kill -{signal} {pid}".format(signal=signal, pid=pid)
     return run_cmd(user, client, cmd, output=output)
 
 
@@ -298,7 +301,8 @@ def clean_mount_path(user, client):
 
         if pid != "":
             # kill oneclient process
-            run_cmd("root", client, "kill -KILL " + str(pid))
+            kill(client, pid)
+            # run_cmd("root", client, "kill -KILL " + str(pid))
 
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True)
@@ -320,3 +324,8 @@ def get_client(client_node, user, context):
 
 def user_home_dir(user="root"):
     return os.path.join("/home", user)
+
+
+def start_rpyc_server(user, client):
+    cmd = "/usr/local/bin/rpyc_classic.py"
+    run_cmd(user, client, cmd, detach=True, output=True)
