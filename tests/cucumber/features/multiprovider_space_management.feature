@@ -174,3 +174,40 @@ Feature: Space management with multiple providers
     And u1 writes "ANOTHER TEST TEXT ONEDATA" to s1/file3 on client1
     And u1 reads "ANOTHER TEST TEXT ONEDATA" from s1/file3 on client1
     And u2 reads "ANOTHER TEST TEXT ONEDATA" from s1/file3 on client2
+
+  Scenario: Exceed quota - test of proxy
+    Given [u2] start oneclients [client2] in
+      [/home/u2/onedata] on client_hosts
+      [client-host2] respectively,
+      using [token]
+    When u2 doesn't see [s1] in . on client2
+    And u1 creates spaces [s1]
+    And u1 gets token to support spaces [s1]
+    And s1 is supported with 1 MB for u1 by provider p1
+    And u1 invites u2 to space s1
+    And u2 joins space s1
+    And u2 can list s1 on client2
+    And u2 writes 2 MB of random characters to s1/file1 on client2 and saves MD5
+    And u2 waits 10 seconds
+    And u2 writes "TEST TEXT ONEDATA" to s1/file1 on client2
+    And last operations by u2 fails
+
+  Scenario: Exceed quota - test of dbsync
+    Given [u2] start oneclients [client2] in
+      [/home/u2/onedata] on client_hosts
+      [client-host2] respectively,
+      using [token]
+    When u2 doesn't see [s1] in . on client2
+    And u1 creates spaces [s1]
+    And u1 gets token to support spaces [s1]
+    And s1 is supported with 1 MB for u1 by provider p1
+    And u1 invites u2 to space s1
+    And u2 joins space s1
+    And u1 assigns u2 privileges [space_add_provider] for space s1
+    And u2 gets token to support spaces [s1]
+    And s1 is supported with 1 MB for u2 by provider p2
+    And u2 can list s1 on client2
+    And u2 writes 2 MB of random characters to s1/file1 on client2 and saves MD5
+    And u2 waits 10 seconds
+    And u2 writes "TEST TEXT ONEDATA" to s1/file1 on client2
+    And last operations by u2 fails
