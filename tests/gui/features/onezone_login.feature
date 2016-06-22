@@ -11,11 +11,6 @@ Feature: Onezone login page
     Then The page title should contain "Login"
 
 
-  Scenario: Rendering multiple login buttons
-    When I go to the /home/login Ember path
-    Then I should see at least 5 login buttons
-
-
   Scenario: Rendering particular login buttons
     When I go to the /home/login Ember path
     Then I should see login buttons for [plgrid,dropbox,github,facebook,google]
