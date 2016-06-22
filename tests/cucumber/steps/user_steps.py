@@ -52,7 +52,7 @@ def provider_certs(users, provider_ids, context, environment, providers, request
         user.get_certs_from_provider()
 
 
-@given(parsers.parse('users {users} know their ids'))
+@given(parsers.parse('users {users} get their ids from OZ via REST'))
 def user_ids(users, context):
     users = context.get_users(list_parser(users))
 

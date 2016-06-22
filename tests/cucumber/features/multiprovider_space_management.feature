@@ -4,9 +4,9 @@ Feature: Space management with multiple providers
     Given environment is up
     And users [u1, u2] register with passwords [password1, password2]
     And users [u1, u2] authorize with [p1, p2] certs
-    And users [u1, u2] know their ids
+    And users [u1, u2] get their ids from OZ via REST
 
-  Scenario: User joins unused space supported by not his provider
+  Scenario: User joins unused space - test of proxy
     Given [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
@@ -19,7 +19,7 @@ Feature: Space management with multiple providers
     And u1 can list s1 on client1
     And u1 invites u2 to space s1
     And u2 joins space s1
-    And  u2 can list s1 on client2
+    And u2 can list s1 on client2
     And u1 creates regular files [s1/file1] on client1
     Then u2 sees [file1] in s1 on client2
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
@@ -29,7 +29,7 @@ Feature: Space management with multiple providers
     And u2 writes "TEST TEXT ONEDATA" to s1/file2 on client2
     Then u1 reads "TEST TEXT ONEDATA" from s1/file2 on client1
 
-  Scenario: User joins already used space supported by not his provider
+  Scenario: User joins already used space - test of proxy
     Given [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
@@ -44,7 +44,7 @@ Feature: Space management with multiple providers
     And u1 reads "TEST TEXT ONEDATA" from s1/file1 on client1
     And u1 invites u2 to space s1
     And u2 joins space s1
-    And  u2 can list s1 on client2
+    And u2 can list s1 on client2
     Then u2 sees [file1] in s1 on client2
     Then u2 reads "TEST TEXT ONEDATA" from s1/file1 on client2
     And u1 writes "MODIFIED TEXT" to s1/file1 on client1
@@ -54,7 +54,7 @@ Feature: Space management with multiple providers
     And u2 writes "TEST TEXT ONEDATA" to s1/file2 on client2
     Then u1 reads "TEST TEXT ONEDATA" from s1/file2 on client1
 
-  Scenario: Unused space supported by second provider
+  Scenario: User joins unused space - test of dbsync
     Given [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
@@ -67,7 +67,7 @@ Feature: Space management with multiple providers
     And u1 can list s1 on client1
     And u1 invites u2 to space s1
     And u2 joins space s1
-    And  u2 can list s1 on client2
+    And u2 can list s1 on client2
     And u1 assigns u2 privileges [space_add_provider] for space s1
     And u2 gets token to support spaces [s1]
     And s1 is supported with 1 MB for u2 by provider p2
@@ -80,7 +80,7 @@ Feature: Space management with multiple providers
     And u2 writes "TEST TEXT ONEDATA" to s1/file2 on client2
     Then u1 reads "TEST TEXT ONEDATA" from s1/file2 on client1
 
-  Scenario: Used space supported by second provider
+  Scenario: User joins used space - test of dbsync
     Given [u1, u2] start oneclients [client1, client2] in
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
@@ -96,7 +96,7 @@ Feature: Space management with multiple providers
     And u1 reads "TEST TEXT ONEDATA" from s1/file1 on client1
     And u1 invites u2 to space s1
     And u2 joins space s1
-    And  u2 can list s1 on client2
+    And u2 can list s1 on client2
     And u1 assigns u2 privileges [space_add_provider] for space s1
     And u2 gets token to support spaces [s1]
     And s1 is supported with 1 MB for u2 by provider p2
@@ -106,6 +106,11 @@ Feature: Space management with multiple providers
     Then u1 sees [file2] in s1 on client1
     And u2 writes "TEST TEXT ONEDATA" to s1/file2 on client2
     Then u1 reads "TEST TEXT ONEDATA" from s1/file2 on client1
+    And u1 creates regular files [s1/file3] on client1
+    And u1 writes "ANOTHER TEST TEXT ONEDATA" to s1/file3 on client1
+    Then u1 reads "ANOTHER TEST TEXT ONEDATA" from s1/file3 on client1
+    Then u2 reads "ANOTHER TEST TEXT ONEDATA" from s1/file3 on client2
+
 
   Scenario: Remove user from space
     Given [u2] start oneclients [client2] in
@@ -151,7 +156,7 @@ Feature: Space management with multiple providers
     And u1 reads "TEST TEXT ONEDATA" from s1/file1 on client1
     And u1 invites u2 to space s1
     And u2 joins space s1
-    And  u2 can list s1 on client2
+    And u2 can list s1 on client2
     And u1 assigns u2 privileges [space_add_provider] for space s1
     And u2 gets token to support spaces [s1]
     And s1 is supported with 1 MB for u2 by provider p2
@@ -164,6 +169,7 @@ Feature: Space management with multiple providers
     And provider p1 unsupports space s1
     And u1 reads "TEST TEXT ONEDATA" from s1/file2 on client1
     And u2 reads "TEST TEXT ONEDATA" from s1/file2 on client2
+    And u2 reads "TEST TEXT ONEDATA" from s1/file1 on client2
     And u1 creates regular files [s1/file3] on client1
     And u1 writes "ANOTHER TEST TEXT ONEDATA" to s1/file3 on client1
     And u1 reads "ANOTHER TEST TEXT ONEDATA" from s1/file3 on client1

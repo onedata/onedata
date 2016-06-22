@@ -43,3 +43,9 @@ def copy_dir(user, dir1, dir2, context):
 @then(parsers.parse('{user} can\'t list {dir}'))
 def cannot_list_dir(user, dir, context):
     multi_dir_steps.cannot_list_dir(user, dir, "client1", context)
+
+
+@when(parsers.parse('{user} can list {dir}'))
+@then(parsers.parse('{user} can list {dir'))
+def list_dir(user, dir, context):
+    multi_dir_steps.list_dir(user, dir, "client1", context)

@@ -4,7 +4,7 @@ Feature: Space management with single provider
     Given environment is up
     And users [u1, u2] register with passwords [password1, password2]
     And users [u1, u2] authorize with [p1, p1] certs
-    And users [u1, u2] know their ids
+    And users [u1, u2] get their ids from OZ via REST
 
   Scenario: Create space and don't support it
     Given [u1, u2] start oneclients [client1, client2] in
@@ -27,7 +27,7 @@ Feature: Space management with single provider
     And u1 can't list s1 on client1
     And u1 gets token to support spaces [s1]
     And s1 is supported with 1 MB for u1 by provider p1
-    And  u1 can list s1 on client1
+    And u1 can list s1 on client1
     When u1 creates regular files [s1/file1] on client1
     Then u1 sees [file1] in s1 on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1

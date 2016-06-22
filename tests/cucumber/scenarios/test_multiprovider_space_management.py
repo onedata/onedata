@@ -28,22 +28,22 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-@scenario("User joins unused space supported by not his provider")
+@scenario("User joins unused space - test of proxy")
 def test_join_unused_space_supported_by_other_provider(env_description_file):
     pass
 
 
-@scenario("User joins already used space supported by not his provider")
+@scenario("User joins already used space - test of proxy")
 def test_join_used_space_supported_by_other_provider(env_description_file):
     pass
 
 
-@scenario("Unused space supported by second provider")
+@scenario("User joins unused space - test of dbsync")
 def test_unused_space_supported_by_second_provider(env_description_file):
     pass
 
 
-@scenario("Used space supported by second provider")
+@scenario("User joins used space - test of dbsync")
 def test_used_space_supported_by_second_provider(env_description_file):
     pass
 
