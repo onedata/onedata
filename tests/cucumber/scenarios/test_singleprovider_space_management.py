@@ -13,6 +13,7 @@ from tests.cucumber.steps.user_steps import *
 from tests.cucumber.steps.multi_file_steps import *
 from tests.cucumber.steps.multi_reg_file_steps import *
 from tests.cucumber.steps.multi_dir_steps import *
+from tests.cucumber.steps.cucumber_utils import *
 from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
@@ -51,4 +52,9 @@ def test_remove_user(env_description_file):
 
 @scenario('Delete supported space')
 def test_delete_space(env_description_file):
+    pass
+
+
+@scenario('Exceed quota')
+def test_exceed_quota(env_description_file):
     pass
