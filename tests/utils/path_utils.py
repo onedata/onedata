@@ -88,7 +88,11 @@ def ensure_json(file):
 
 
 def env_file(dir, file):
-    """Returns absolut path to environment file from dir. Ensures that file
+    """Returns absolute path to environment file from dir. Ensures that file
     has .json extension"""
     return os.path.join(dir, ensure_json(file))
 
+
+def escape_path(path):
+    """Returns path with escaped space and apostrophe"""
+    return path.replace("'", "\\'").replace(" ", "\ ")

@@ -21,6 +21,9 @@ def default_mount(user, mount_path, token, request, environment, context,
                 tokens=[token])
 
 
+@when(parsers.parse('{spaces} is mounted for {user}'))
+@then(parsers.parse('{spaces} is mounted for {user}'))
+@when(parsers.parse('{spaces} are mounted for {user}'))
 @then(parsers.parse('{spaces} are mounted for {user}'))
 def check_spaces(spaces, user, context):
     multi_auth_steps.check_spaces(spaces, user, make_arg_list("client1"),
