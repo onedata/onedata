@@ -91,10 +91,10 @@ def capabilities(request, capabilities):
 
     if 'browserName' in capabilities and capabilities['browserName'] == 'chrome' or request.config.option.driver == 'Chrome':
         chrome_options = webdriver.ChromeOptions()
-        # TODO: use --no-sandbox only in headless mode
+        # TODO: use --no-sandbox only in headless mode, support for Chrome in Docker and XVFB can be buggy now: https://jira.plgrid.pl/jira/browse/VFS-2204
         chrome_options.add_argument("--no-sandbox")
         capabilities.update(chrome_options.to_capabilities())
-    # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47
+    # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
     # but currently this driver is buggy...
     # elif 'browserName' in capabilities and capabilities['browserName'] == 'firefox' or request.config.option.driver == 'Firefox':
     #     capabilities['marionette'] = True
@@ -109,7 +109,7 @@ def capabilities(request, capabilities):
     return capabilities
 
 
-# TODO: configure different window sizes for responsiveness tests
+# TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
 @pytest.fixture
 def selenium(selenium):
     selenium.implicitly_wait(SELENIUM_IMPLICIT_WAIT)

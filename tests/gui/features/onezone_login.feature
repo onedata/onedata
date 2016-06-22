@@ -5,7 +5,6 @@ Feature: Onezone login page
     Given I'm visiting Onezone site
 
 
-  # TODO: move this test to generic onezone tests for checking titles?
   Scenario: Onezone login page renders with proper title
     When I go to the /home/login Ember path
     Then The page title should contain "Login"
@@ -16,7 +15,6 @@ Feature: Onezone login page
     Then I should see login buttons for [plgrid,dropbox,github,facebook,google]
 
 
-  # TODO: configure test to select the mode - currently all tests are in dev mode
   Scenario: Showing the development login list
     Given A login button for plgrid
     When I click on the login button

@@ -5,7 +5,7 @@ Feature: Onezone GUI elements
     Given I'm visiting Onezone site
     And I'm logged in to Onezone
 
-  # TODO: we assume, that current alias is not "hello_alias"
+  # We assume, that current alias is not "hello_alias"
   # the workaround is to use scenario outlines with at least two aliases
 
   Scenario Outline: User can change his alias using valid alias string
@@ -15,9 +15,7 @@ Feature: Onezone GUI elements
     And I press enter on active element
     Then User alias should be changed to "<name>"
 
-    # TODO: scenario outline does not work with persistent_environment scope...
+    # TODO: scenario outline currently does not work with persistent_environment scope: https://jira.plgrid.pl/jira/browse/VFS-2206
     Examples:
     | name       |
     | helloworld |
-
-  # TODO: scenarios with "after page reload"

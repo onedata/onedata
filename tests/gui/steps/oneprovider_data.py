@@ -7,18 +7,12 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import re
-import os
-import tests
-from selenium.common.exceptions import NoSuchElementException
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path
+from tests.gui.utils.generic import upload_file_path, notify_visible_with_text
 from pytest_bdd import when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-# from selenium.webdriver.common.keys import Keys
-# from pytest_bdd import given, when, then, parsers
-# from tests.gui.utils.generic import parse_url
 
 
 @when(parsers.re(r'I change the space to "(?P<space_name>.+)"'))
@@ -64,35 +58,16 @@ def upload_file_to_current_dir(selenium, file_name):
     selenium.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
 
-# TODO: generic
-def notify_visible(driver, notify_type, text_regexp):
-    try:
-        notifiers = driver.find_elements_by_css_selector(
-            '.ember-notify.ember-notify-show.{t} .message'.format(t=notify_type)
-        )
-        matching_elements = [e for e in notifiers if text_regexp.match(e.text)]
-        return len(matching_elements) > 0 and matching_elements or None
-        # TODO: catch elements not found
-    except NoSuchElementException:
-        return None
-
-
-# @when(parsers.parse('The upload of file "{file_name}" fails'))
-# def when_upload_fails(selenium, file_name):
-#     Wait(selenium, 2*WAIT_BACKEND).until(
-#         lambda s: notify_visible(s, 'error', re.compile(r'.*' + file_name + r'.*' + 'failed' + r'.*'))
-#     )
-
 @when(parsers.parse('The upload of file "{file_name}" fails'))
 @then(parsers.parse('The upload of file "{file_name}" should fail'))
 def upload_fails(selenium, file_name):
     Wait(selenium, 2*WAIT_BACKEND).until(
-        lambda s: notify_visible(s, 'error', re.compile(r'.*' + file_name + r'.*' + 'failed' + r'.*'))
+        lambda s: notify_visible_with_text(s, 'error', re.compile(r'.*' + file_name + r'.*' + 'failed' + r'.*'))
     )
 
 
 @then(parsers.parse('The upload of file "{file_name}" should succeed'))
 def upload_succeeds(selenium, file_name):
     Wait(selenium, 2*WAIT_BACKEND).until(
-        lambda s: notify_visible(s, 'info', re.compile(r'.*' + file_name + r'.*' + 'successfully' + r'.*'))
+        lambda s: notify_visible_with_text(s, 'info', re.compile(r'.*' + file_name + r'.*' + 'successfully' + r'.*'))
     )

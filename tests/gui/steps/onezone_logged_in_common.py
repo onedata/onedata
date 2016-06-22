@@ -35,23 +35,20 @@ def click_user_alias_edit(selenium):
 @then('User alias should be changed to "<name>"')
 @then(parsers.parse('User alias should be changed to "{name}"'))
 def user_alias_equals(selenium, name):
-    # TODO: change "space-header" class in op-gui to something more specific
     alias_header = selenium.find_element_by_css_selector('.alias-panel .space-header')
     Wait(selenium, WAIT_BACKEND).until(lambda s: alias_header.text == name)
 
 
-# prerequisites: providers panel should be uncollapsed, maybe check it? TODO
 @when('I go to provider {provider}')
 def go_to_provider(selenium, provider):
     providers = selenium.find_elements_by_css_selector('.provider-header')
-    # print map(lambda p: p.text, providers)
+
     def the_provider_is_present(s):
         named_providers = [e for e in providers if e.text == provider]
-        # named_providers = filter(lambda e: e.text == provider, providers)
         if len(named_providers) > 0:
             return named_providers[0]
         else:
             return None
-    # all_providers_have_names = lambda: all(map(lambda p: p.text != '', providers))
+
     Wait(selenium, WAIT_FRONTEND).until(the_provider_is_present).click()
     selenium.find_element_by_css_selector('.provider-place-drop a').click()

@@ -24,7 +24,7 @@ scenarios('../features/onezone_gui.feature')
 @pytest.mark.xfail(reason='Fails on Chrome due to VFS-2189', run=False)
 @pytest.mark.destructive
 @scenario('../features/oneprovider_data.feature',
-          'After failed upload to broken space, the same file can be successfully uploaded to correct space')
+          'After failed upload to space that rejects the file, the same file can be successfully uploaded to other space that accepts the file')
 def test_upload_fail_and_then_success_one_file():
     pass
 

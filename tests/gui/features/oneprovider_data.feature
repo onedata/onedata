@@ -5,7 +5,7 @@ Feature: Oneprovider Data view
     Given I'm logged into Oneprovider "p1" as development user "user1"
     And I am on the /data Ember path
 
-  Scenario: After failed upload to broken space, the same file can be successfully uploaded to correct space
+  Scenario: After failed upload to space that rejects the file, the same file can be successfully uploaded to other space that accepts the file
     When I change the space to "Small space" with select
     And I upload "20B-0.txt" file to current dir
     And The upload of file "20B-0.txt" fails
