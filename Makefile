@@ -33,10 +33,10 @@ MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
 
 make = $(1)/make.py -s $(1) -r .
 clean = $(call make, $(1)) clean
-make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i onedata/rpm_builder $(2)
+make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i rpm_builder:$(DISTRIBUTION) $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
 	mv $(1)/package/packages/*.x86_64.rpm package/$(DISTRIBUTION)/x86_64
-make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder $(2)
+make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i deb_builder:$(DISTRIBUTION) $(2)
 mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*.diff.gz package/$(DISTRIBUTION)/source || \
