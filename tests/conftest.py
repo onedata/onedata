@@ -94,12 +94,12 @@ def environment(persistent_environment, request):
 
 
 @pytest.fixture(scope="module")
-def client_ids(persistent_environment, context):
+def client_dockers(persistent_environment, context):
     ids = {}
     for client in persistent_environment['client_nodes']:
         client = str(client)
         client_name = client.split(".")[0]
-        ids[client_name] = docker.inspect(client)['Id']
+        ids[client_name] = client
     return ids
 
 

@@ -13,7 +13,7 @@ Feature: Multiprovider_replication
 
   Scenario: Create empty file and read it on external provider
     When u1 creates regular files [s1/file] on client1
-    Then u2 reads "" from s1/file on client2
+    Then u2 reads "" from file s1/file on client2
 
   Scenario: Write to file and check size on remote provider
     When u1 creates regular files [s1/file] on client1
@@ -23,7 +23,7 @@ Feature: Multiprovider_replication
   Scenario: Write to file and read on remote provider
     When u1 creates regular files [s1/file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    Then u2 reads "TEST TEXT ONEDATA" from s1/file1 on client2
+    Then u2 reads "TEST TEXT ONEDATA" from file s1/file1 on client2
 
   Scenario: Big file transfer with MD5 check
     When u1 creates regular files [s1/file1] on client1
@@ -37,7 +37,7 @@ Feature: Multiprovider_replication
     And u1 writes "123456789" to s1/file1 on client1
     And user waits 10 seconds
     And u2 writes "abcd" to s1/file1 on client2
-    And u1 reads "abcd" from s1/file1 on client1
+    And u1 reads "abcd" from file s1/file1 on client1
 
   Scenario: Create nonempty file and remove it on remote provider
     When u1 creates regular files [s1/file1] on client1
@@ -53,13 +53,13 @@ Feature: Multiprovider_replication
     And u2 appends "b" to s1/file1 on client2
     And u1 waits 10 seconds
     And u1 appends "c" to s1/file1 on client1
-    Then u1 reads "abc" from s1/file1 on client1
-    And u2 reads "abc" from s1/file1 on client2
+    Then u1 reads "abc" from file s1/file1 on client1
+    And u2 reads "abc" from file s1/file1 on client2
 
   Scenario: Concurrently write disjoint ranges and read the same on both providers
     When u1 creates regular files [s1/file1] on client1
     And u2 sees [file1] in s1 on client2
     And u2 writes "defg" at offset 3 to s1/file1 on client2
     And u1 writes "abc" at offset 0 to s1/file1 on client1
-    Then u1 reads "abcdefg" from s1/file1 on client1
-    And u2 reads "abcdefg" from s1/file1 on client2
+    Then u1 reads "abcdefg" from file s1/file1 on client1
+    And u2 reads "abcdefg" from file s1/file1 on client2

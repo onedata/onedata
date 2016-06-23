@@ -24,22 +24,22 @@ Feature: Regular_file_CRUD
   Scenario: Read and write to regular file
     When u1 creates regular files [s1/file1]
     And u1 writes "TEST TEXT ONEDATA" to s1/file1
-    Then u1 reads "TEST TEXT ONEDATA" from s1/file1
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1
     And size of u1's s1/file1 is 17 bytes
 
   Scenario: Append regular file
     When u1 creates regular files [s1/file1]
     And u1 writes "TEST TEXT ONEDATA" to s1/file1
-    Then u1 reads "TEST TEXT ONEDATA" from s1/file1
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1
     And u1 appends " APPENDED TEXT" to s1/file1
-    Then u1 reads "TEST TEXT ONEDATA APPENDED TEXT" from s1/file1
+    Then u1 reads "TEST TEXT ONEDATA APPENDED TEXT" from file s1/file1
     And size of u1's s1/file1 is 31 bytes
 
   Scenario: Replace word in file
     When u1 creates regular files [s1/file1]
     And u1 writes "TEST ONEDATA TEST ONEDATA2 TEST ONEDATA3" to s1/file1
     And u1 replaces "TEST" with "SYSTEM" in s1/file1
-    Then u1 reads "SYSTEM ONEDATA SYSTEM ONEDATA2 SYSTEM ONEDATA3" from s1/file1
+    Then u1 reads "SYSTEM ONEDATA SYSTEM ONEDATA2 SYSTEM ONEDATA3" from file s1/file1
     And size of u1's s1/file1 is 46 bytes
 
   Scenario: Move regular file and read
@@ -47,11 +47,11 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [s1/dir1/dir2/file1]
     And u1 sees [file1] in s1/dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/dir2/file1
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1
     Then u1 doesn't see [file1] in s1/dir1/dir2
     And u1 sees [file1] in s1/dir3
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir3/file1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir3/file1
     And size of u1's s1/dir3/file1 is 17 bytes
 
   Scenario: Move big regular file and check MD5
@@ -69,12 +69,12 @@ Feature: Regular_file_CRUD
     And u1 creates regular files [s1/dir1/dir2/file1]
     And u1 sees [file1] in s1/dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/dir2/file1
     And u1 copies regular file s1/dir1/dir2/file1 to s1/dir3
     Then u1 sees [dir1, dir3] in s1
     And u1 sees [file1] in s1/dir1/dir2
     And u1 sees [file1] in s1/dir3
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir3/file1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir3/file1
     And size of u1's s1/dir3/file1 is 17 bytes
 
 

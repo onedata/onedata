@@ -2,36 +2,48 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
+import time
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.utils import set_dns, get_token, get_cookie
-from tests.utils.docker_utils import run_cmd
 from tests.cucumber.steps.cucumber_utils import repeat_until
-
-import os
-import pytest
-import subprocess
-import rpyc
-
-from tests.utils.user_utils import User
+from tests.utils.docker_utils import run_cmd
 from tests.utils.path_utils import escape_path
+from tests.utils.user_utils import User
 from tests.utils.utils import set_dns, get_token, get_oz_cookie
 
+import os
+import subprocess
+
+import pytest
+import rpyc
+
+
 class Client:
-    def __init__(self, docker_id, mount_path):
+    def __init__(self, docker_name, mount_path):
         self.timeout = 0
-        self.docker_id = docker_id
+        self.docker_name = docker_name
         self.mount_path = mount_path
+        self.rpyc_connection = None
+        self.opened_files = {}
 
     def set_timeout(self, timeout):
         self.timeout = timeout
 
+    def start_rpyc(self, user):
+        self._start_rpyc_server(user)
+        time.sleep(1)   # wait for rpc server
+        self.rpyc_connection = rpyc.classic.connect(self.docker_name)
 
-def mount_users(request, environment, context, client_ids, env_description_file,
+    def _start_rpyc_server(self, user_name):    #start rpc server on client docker
+        cmd = "/usr/local/bin/rpyc_classic.py"
+        run_cmd(user_name, self, cmd, detach=True)
+
+
+def mount_users(request, environment, context, client_dockers, env_description_file,
                 users=[], client_instances=[], mount_paths=[],
                 client_hosts=[], tokens=[], check=True):
 
@@ -41,12 +53,13 @@ def mount_users(request, environment, context, client_ids, env_description_file,
     set_dns(environment)
 
     client_data = environment['client_data']
-    clients = create_clients(users, client_hosts, mount_paths, client_ids)
+    clients = create_clients(users, client_hosts, mount_paths, client_dockers)
 
     def fin():
         params = zip(users, clients)
         for user, client in params:
             clean_mount_path(user, client)
+        context.users.clear()
 
     request.addfinalizer(fin)
 
@@ -106,9 +119,7 @@ def mount_users(request, environment, context, client_ids, env_description_file,
         if not context.has_user(user):
             context.add_user(user)
 
-        start_rpyc_server(user, client)
-
-        rpyc.connect(client_instance)
+        client.start_rpyc(user.name)
 
         # remove accessToken to mount many clients on one docker
         rm(client, recursive=True, force=True,
@@ -256,11 +267,37 @@ def kill(client, pid, signal="KILL", user='root', output=False):
     return run_cmd(user, client, cmd, output=output)
 
 
-def create_clients(users, client_hosts, mount_paths, client_ids):
+def open_file(client, file, mode='w+'):
+
+    f = client.rpyc_connection.builtins.open(file, mode)
+    client.opened_files.update({file: f})
+    return f
+
+
+def close_file(client, file):
+    client.opened_files[file].close()
+    del client.opened_files[file]
+
+
+def write_to_opened_file(client, file, text):
+    client.opened_files[file].write(text)
+    client.opened_files[file].flush()
+
+
+def read_from_opened_file(client, file):
+    return client.opened_files[file].read()
+
+
+def read_from_offset(client, file, offset):
+    client.opened_files[file].seek(offset)
+    return read_from_opened_file(client, file)
+
+
+def create_clients(users, client_hosts, mount_paths, client_dockers):
     clients = []
     params = zip(users, client_hosts, mount_paths)
     for user, client_host, mount_path in params:
-        clients.append(Client(client_ids[client_host], mount_path))
+        clients.append(Client(client_dockers[client_host], mount_path))
     return clients
 
 
@@ -324,8 +361,3 @@ def get_client(client_node, user, context):
 
 def user_home_dir(user="root"):
     return os.path.join("/home", user)
-
-
-def start_rpyc_server(user, client):
-    cmd = "/usr/local/bin/rpyc_classic.py"
-    run_cmd(user, client, cmd, detach=True, output=True)

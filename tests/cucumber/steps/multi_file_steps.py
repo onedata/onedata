@@ -87,6 +87,7 @@ def rename(user, file1, file2, client_node, context):
 
 
 @when(parsers.parse('{user} deletes files {files} on {client_node}'))
+@then(parsers.parse('{user} deletes files {files} on {client_node}'))
 def delete_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)

@@ -10,7 +10,10 @@ from tests.utils.docker_utils import run_cmd
 from cucumber_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, echo_to_file, cat,
                                       md5sum, replace_pattern, get_client,
-                                      client_mount_path, save_op_code, kill)
+                                      client_mount_path, save_op_code,
+                                      open_file, close_file, read_from_offset,
+                                      write_to_opened_file,
+                                      read_from_opened_file)
 import subprocess
 
 
@@ -37,6 +40,14 @@ def write_rand_text(user, megabytes, file, client_node, context):
     save_op_code(context, user, ret)
 
 
+@when(parsers.parse('{user} writes "{text}" to previously opened {file} on {client_node}'))
+@then(parsers.parse('{user} writes "{text}" to previously opened {file} on {client_node}'))
+def write_opened(user, text, file, client_node, context):
+    client = get_client(client_node, user, context)
+    file_path = client_mount_path(file, client)
+    write_to_opened_file(client, file_path, text)
+
+
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 @then(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 def write_text(user, text, file, client_node, context):
@@ -46,9 +57,45 @@ def write_text(user, text, file, client_node, context):
     save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} reads "{text}" from {file} on {client_node}'))
-@then(parsers.parse('{user} reads "{text}" from {file} on {client_node}'))
-def read(user, text, file, client_node, context):
+@when(parsers.parse('{user} reads "{text}" from previously opened file {file} on {client_node}'))
+@then(parsers.parse('{user} reads "{text}" from previously opened file {file} on {client_node}'))
+def read_opened(user, text, file, client_node, context):
+    client = get_client(client_node, user, context)
+    text = text.decode('string_escape')
+
+    def condition():
+
+        try:
+            read_text = read_from_opened_file(client, client_mount_path(file, client))
+            return read_text == text
+        except:
+            return False
+
+    assert repeat_until(condition, client.timeout)
+
+
+@when(parsers.parse('{user} reads "{text}" from offset {offset} in file {file} on {client_node}'))
+@then(parsers.parse('{user} reads "{text}" from offset {offset} in file {file} on {client_node}'))
+def read_text(user, text, file, offset, client_node, context):
+    client = get_client(client_node, user, context)
+    text = text.decode('string_escape')
+
+    def condition():
+
+        try:
+            read_text = read_from_offset(client,
+                                         client_mount_path(file, client),
+                                         int(offset))
+            return read_text == text
+        except subprocess.CalledProcessError:
+            return False
+
+    assert repeat_until(condition, client.timeout)
+
+
+@when(parsers.parse('{user} reads "{text}" from file {file} on {client_node}'))
+@then(parsers.parse('{user} reads "{text}" from file {file} on {client_node}'))
+def read_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     text = text.decode('string_escape')
 
@@ -65,13 +112,14 @@ def read(user, text, file, client_node, context):
 
 @then(parsers.parse('{user} reads "" from {file} on {client_node}'))
 def read_empty(user, file, client_node, context):
-    read(user, '', file, client_node, context)
+    read_text(user, '', file, client_node, context)
 
 
 @then(parsers.parse('{user} cannot read from {file} on {client_node}'))
 def cannot_read(user, file, client_node, context):
     client = get_client(client_node, user, context)
-    return_code = cat(client, client_mount_path(file, client), user=user, output=False)
+    return_code = cat(client, client_mount_path(file, client), user=user,
+                      output=False)
     assert return_code != 0
 
 
@@ -131,41 +179,18 @@ def do_truncate(user, file, new_size, client_node, context):
     save_op_code(context, user, ret)
 
 
-@when(parsers.parse('{user} opens {file} on {client_node}'))
-def open(user, file, client_node, context):
-    print "OPENING: ", file
+@when(parsers.parse('{user} opens {file} with mode {mode} on {client_node}'))
+@then(parsers.parse('{user} opens {file} with mode {mode} on {client_node}'))
+def open(user, file, mode, client_node, context):
     client = get_client(client_node, user, context)
     file_path = client_mount_path(file, client)
-    print "Running open"
-    pid = start_process_with_opened_file(client, file_path, user)
-    context.opened_files.update({file: pid})
-    print "Bck from open"
-    # tail(client, file_path, follow=True, detach=True, user=user)
-    # GREP = grep(client, "python -c with open {}".format(file_path), user=user)
+    open_file(client, file_path, mode)
 
 
 @when(parsers.parse('{user} closes {file} on {client_node}'))
+@then(parsers.parse('{user} closes {file} on {client_node}'))
 def close(user, file, client_node, context):
-    print "CLOSING"
-    client = get_client(client_node, user, context)
-    print "Running close"
-    kill(client, context.opened_files[file], user=user)
+    client = context.get_client(user, client_node)
+    file_path = client_mount_path(file, client)
+    close_file(client, file_path)
 
-
-def start_process_with_opened_file(client, file_path, user):
-
-    cmd='''python -c "with open(\\"{file_path}\\", \\"r+b\\") as file:
-    while True:
-        pass"
-'''.format(file_path=file_path)
-
-    run_cmd(user, client, cmd, detach=True, output=False)
-
-    return get_pid(client, "python -c", user)
-
-
-def get_pid(client, command_pattern, user='root'):
-    cmd = "ps -C '{}' | tail -1 |awk '{{print $1}}'"\
-        .format(command_pattern)
-    print "CMD: ", cmd
-    return run_cmd(user, client, cmd, output=True)

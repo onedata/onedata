@@ -33,7 +33,7 @@ def run_cmd(user, client, cmd, detach=False, output=False, error=False):
     elif user != 'root' and isinstance(cmd, list):
         cmd = ["su", "-c"] + cmd + [str(user)]
 
-    return docker.exec_(container=client.docker_id, command=cmd, output=output,
+    return docker.exec_(container=client.docker_name, command=cmd, output=output,
                         tty=True, stderr=subprocess.STDOUT if error else None,
                         detach=detach)
 

@@ -59,10 +59,10 @@ class AbstractPerformanceTest:
         return report
 
     @pytest.fixture()
-    def clients(self, request, environment, context, client_ids,
+    def clients(self, request, environment, context, client_dockers,
                 env_description_file):
 
-        mount_users(request, environment, context, client_ids,
+        mount_users(request, environment, context, client_dockers,
                     env_description_file, **get_users(environment))
 
 

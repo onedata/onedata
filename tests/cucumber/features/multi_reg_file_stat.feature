@@ -96,7 +96,7 @@ Feature: Multi_regular_file_stat
     And u2 sees [file1] in s1 on client2
     And u1 waits 1 second
     # call sleep, to be sure that time of write and read is different
-    Then u1 reads "TEST TEXT ONEDATA" from s1/file1 on client1
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
     And access time of u2's s1/file1 is greater than modification time on client2
     And access time of u2's s1/file1 is greater than status-change time on client2
 

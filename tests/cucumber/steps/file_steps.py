@@ -35,6 +35,7 @@ def rename(user, file1, file2, context):
 
 
 @when(parsers.parse('{user} deletes files {files}'))
+@dhen(parsers.parse('{user} deletes files {files}'))
 def delete_file(user, files, context):
     multi_file_steps.delete_file(user, files, "client1", context)
 

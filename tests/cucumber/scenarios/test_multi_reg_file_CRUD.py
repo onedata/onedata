@@ -20,11 +20,6 @@ from pytest_bdd import scenario
 import pytest
 
 
-@pytest.fixture(scope="module",
-                params=["singleprovider_multiclient_directio.json"])
-def env_description_file(request):
-    return env_file(DEFAULT_CUCUMBER_ENV_DIR, request.param)
-
 scenario = partial(scenario, '../features/multi_reg_file_CRUD.feature')
 
 
@@ -117,6 +112,22 @@ def test_copy_big(env_description_file):
     pass
 
 
-@scenario('Opened file')
-def test_open(env_description_file):
+@pytest.mark.xfail_env(
+        envs=["singleprovider_multiclient_directio",
+              "singleprovider_multiclient_proxy",
+              "multiprovider_proxy",
+              "multiprovider_directio"],
+        reason="cannot read although file was opened before deletion")
+@scenario('Deleting file opened by other user for reading')
+def test_delete_file_opened_for_reading(env_description_file):
+    pass
+
+
+@scenario('Deleting file opened by other user for reading and writing')
+def test_delete_file_opened_for_rdwr(env_description_file):
+    pass
+
+
+@scenario('Deleting file without permission, file is opened by other user')
+def test_delete_opened_file_without_permission(env_description_file):
     pass

@@ -31,7 +31,7 @@ Feature: Space management with single provider
     When u1 creates regular files [s1/file1] on client1
     Then u1 sees [file1] in s1 on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    Then u1 reads "TEST TEXT ONEDATA" from s1/file1 on client1
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
 
   Scenario: Invite user to unused space
     Given [u1, u2] start oneclients [client1, client2] in
@@ -50,11 +50,11 @@ Feature: Space management with single provider
     And u2 creates regular files [s1/file1] on client2
     Then u2 sees [file1] in s1 on client2
     And u2 writes "TEST TEXT ONEDATA" to s1/file1 on client2
-    Then u2 reads "TEST TEXT ONEDATA" from s1/file1 on client2
-    And u1 reads "TEST TEXT ONEDATA" from s1/file1 on client1
+    Then u2 reads "TEST TEXT ONEDATA" from file s1/file1 on client2
+    And u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
     And u1 creates regular files [s1/file2] on client1
     And u1 writes "ANOTHER TEST TEXT ONEDATA" to s1/file2 on client1
-    Then u1 reads "ANOTHER TEST TEXT ONEDATA" from s1/file2 on client1
+    Then u1 reads "ANOTHER TEST TEXT ONEDATA" from file s1/file2 on client1
 
   Scenario: Remove user from space
     Given [u2] start oneclients [client2] in
