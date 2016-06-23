@@ -13,57 +13,54 @@ from pytest_bdd import given, when, then, parsers
 from tests.gui.utils.generic import parse_url, go_to_relative_url
 
 
-@given("I'm visiting Onezone site")
+@given("user opens a Onezone URL in a web browser")
 def visit_onezone(base_url, selenium):
     oz_url = base_url
     selenium.get(oz_url)
 
 
-@given("I'm logged in to Onezone")
-def logged_in_to_onezone(selenium):
-    """Will check if going to / will redirect to onezone page (default when logged in)
-    If not - try to login with dev_login"""
-    go_to_relative_url(selenium, '/')
-    try:
-        wait(selenium, 2).\
-            until(lambda s: parse_url(s.current_url).group('method') == '/onezone')
-    except TimeoutException:
-        go_to_relative_url(selenium, '/dev_login')
-        selenium.find_element_by_css_selector('a').click()
-        wait(selenium, 4). \
-            until(lambda s: parse_url(s.current_url).group('method') == '/onezone',
-                  'Current URL method: {m}'.format(m=parse_url(selenium.current_url).group('method')))
+# @given("I'm logged in to Onezone")
+# def logged_in_to_onezone(selenium):
+#     """Will check if going to / will redirect to onezone page (default when logged in)
+#     If not - try to login with dev_login"""
+#     go_to_relative_url(selenium, '/')
+#     try:
+#         wait(selenium, 2).\
+#             until(lambda s: parse_url(s.current_url).group('method') == '/onezone')
+#     except TimeoutException:
+#         go_to_relative_url(selenium, '/dev_login')
+#         selenium.find_element_by_css_selector('a').click()
+#         wait(selenium, 4). \
+#             until(lambda s: parse_url(s.current_url).group('method') == '/onezone',
+#                   'Current URL method: {m}'.format(m=parse_url(selenium.current_url).group('method')))
 
 
-@when('I click on the first development login button')
-def click_first_dev_login(selenium):
-    btn = selenium.find_element_by_css_selector('a')
-    btn.click()
-
-
-@then(parsers.parse('I should see at least {btn_count:d} login buttons'))
-def find_n_login_buttons(selenium, btn_count):
-    assert len(selenium.find_elements_by_css_selector('a.login-icon-box')) >= btn_count
-
-
-@given(parsers.parse('A login button for {provider_name}'))
-def login_button(provider_name, selenium):
-    return selenium.find_element_by_css_selector(
-        'a.login-icon-box.{name}'.format(name=provider_name)
-    )
-
-
-@then(parsers.parse('I should see login buttons for {provider_names}'))
+@then(parsers.parse('user should see login buttons for {provider_names}'))
 def login_provider_buttons(selenium, provider_names):
     for name in list_parser(provider_names):
         assert selenium.find_element_by_css_selector(
-            'a.login-icon-box.{name}'.format(name=name)
+            '.login-box a.login-icon-box.{name}'.format(name=name)
         )
 
 
-@when('I click on the login button')
-def click_login_provider_button(login_button):
-    login_button.click()
+def _click_login_provider_button(selenium, provider_name):
+    selenium.find_element_by_css_selector(
+        '.login-box a.login-icon-box.{name}'.format(name=provider_name)).click()
+
+
+@given(parsers.parse('user clicks on the "{provider_name}" login button'))
+def g_click_login_provider_button(selenium, provider_name):
+    _click_login_provider_button(selenium, provider_name)
+
+
+@when(parsers.parse('user clicks on the "{provider_name}" login button'))
+def w_click_login_provider_button(selenium, provider_name):
+    _click_login_provider_button(selenium, provider_name)
+
+
+
+
+
 
 
 @then(parsers.re('I should be redirected to (?P<page>.+) page'))
@@ -71,14 +68,8 @@ def being_redirected_to_page(page, selenium):
     wait(selenium, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
 
 
-@then('I should see a development login page with at least 1 validate login link')
-def see_development_login_page(selenium):
-    assert re.match(r'.*/validate_dev_login.*',
-                    selenium.find_element_by_css_selector('a').get_attribute('href'))
-
-
-@when('I login with development login link as "{user}"')
-def login_dev_onezone_with_url(selenium, base_url, user):
-    url = '{oz_url}/validate_dev_login?user={user}'.format(oz_url=base_url, user=user)
-    url.replace('//', '/')
-    selenium.get(url)
+# @when('I login with development login link as "{user}"')
+# def login_dev_onezone_with_url(selenium, base_url, user):
+#     url = '{oz_url}/validate_dev_login?user={user}'.format(oz_url=base_url, user=user)
+#     url.replace('//', '/')
+#     selenium.get(url)

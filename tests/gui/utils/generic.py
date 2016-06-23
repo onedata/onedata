@@ -49,14 +49,3 @@ def upload_file_path(file_name):
         'upload_files',
         file_name
     )
-
-
-def notify_visible_with_text(driver, notify_type, text_regexp):
-    try:
-        notifiers = driver.find_elements_by_css_selector(
-            '.ember-notify.ember-notify-show.{t} .message'.format(t=notify_type)
-        )
-        matching_elements = [e for e in notifiers if text_regexp.match(e.text)]
-        return len(matching_elements) > 0 and matching_elements or None
-    except NoSuchElementException:
-        return None

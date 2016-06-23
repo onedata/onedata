@@ -8,18 +8,17 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path, notify_visible_with_text
+from tests.gui.utils.generic import upload_file_path
 from pytest_bdd import when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 
-@when(parsers.re(r'I change the space to "(?P<space_name>.+)"'))
-@when(parsers.re(r'I change the space to "(?P<space_name>.+)" with select'))
+@when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
 def change_space(selenium, space_name):
     # HACK: because Firefox driver have buggy EC.element_to_be_clickable,
-    # we wait for loader to dissapear
+    # we wait for loader to disappear
     Wait(selenium, WAIT_FRONTEND).until(
         EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
     )
@@ -44,7 +43,7 @@ def change_space(selenium, space_name):
     Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
 
 
-@when(parsers.parse('I upload "{file_name}" file to current dir'))
+@when(parsers.parse('user uses upload button in toolbar to upload file "{file_name}" to current dir'))
 def upload_file_to_current_dir(selenium, file_name):
     """This interaction is very hacky, because uploading files with Selenium
     needs to use input element, but we do not use it directly in frontend.
@@ -58,16 +57,16 @@ def upload_file_to_current_dir(selenium, file_name):
     selenium.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
 
-@when(parsers.parse('The upload of file "{file_name}" fails'))
-@then(parsers.parse('The upload of file "{file_name}" should fail'))
-def upload_fails(selenium, file_name):
-    Wait(selenium, 2*WAIT_BACKEND).until(
-        lambda s: notify_visible_with_text(s, 'error', re.compile(r'.*' + file_name + r'.*' + 'failed' + r'.*'))
-    )
-
-
-@then(parsers.parse('The upload of file "{file_name}" should succeed'))
-def upload_succeeds(selenium, file_name):
-    Wait(selenium, 2*WAIT_BACKEND).until(
-        lambda s: notify_visible_with_text(s, 'info', re.compile(r'.*' + file_name + r'.*' + 'successfully' + r'.*'))
-    )
+# @when(parsers.parse('The upload of file "{file_name}" fails'))
+# @then(parsers.parse('The upload of file "{file_name}" should fail'))
+# def upload_fails(selenium, file_name):
+#     Wait(selenium, 2*WAIT_BACKEND).until(
+#         lambda s: notify_visible_with_text(s, 'error', re.compile(r'.*' + file_name + r'.*' + 'failed' + r'.*'))
+#     )
+#
+#
+# @then(parsers.parse('The upload of file "{file_name}" should succeed'))
+# def upload_succeeds(selenium, file_name):
+#     Wait(selenium, 2*WAIT_BACKEND).until(
+#         lambda s: notify_visible_with_text(s, 'info', re.compile(r'.*' + file_name + r'.*' + 'successfully' + r'.*'))
+#     )

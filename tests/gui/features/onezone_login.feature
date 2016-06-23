@@ -2,26 +2,21 @@ Feature: Onezone login page
   A site where you can login to Onezone.
 
   Background:
-    Given I'm visiting Onezone site
+    Given user opens a Onezone URL in a web browser
+    # not used in non-homepage tests
+#    And user clicks on the "login" link in Homepage main menu
 
 
   Scenario: Onezone login page renders with proper title
-    When I go to the /home/login Ember path
-    Then The page title should contain "Login"
+    Then user should see that a page title contains "Login"
 
 
-  Scenario: Rendering particular login buttons
-    When I go to the /home/login Ember path
-    Then I should see login buttons for [plgrid,dropbox,github,facebook,google]
+  Scenario: Login buttons of multiple providers are rendered on the login Homepage page
+    Then user should see login buttons for [plgrid,dropbox,github,facebook,google]
 
 
-  Scenario: Showing the development login list
-    Given A login button for plgrid
-    When I click on the login button
-    Then I should be redirected to /dev_login page
-    And I should see a development login page with at least 1 validate login link
+  Scenario: The development mode login page should show links to login
+    When user clicks on the "indigo" login button
+    Then user should see a page with "Developer mode login:" header
+    And user should see [user1,user2,user3] links
 
-  Scenario: Logging in with development login
-    When I go to the /dev_login relative URL
-    And I click on the first development login button
-    Then I should be redirected to /onezone page
