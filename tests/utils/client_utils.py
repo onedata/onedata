@@ -2,7 +2,7 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
-import time
+import shutil
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -15,11 +15,13 @@ from tests.utils.path_utils import escape_path
 from tests.utils.user_utils import User
 from tests.utils.utils import set_dns, get_token, get_oz_cookie
 
-import os
-import subprocess
 
 import pytest
+import os
+import subprocess
+import time
 import rpyc
+import stat as stat_lib
 
 
 class Client:
@@ -42,6 +44,22 @@ class Client:
         cmd = "/usr/local/bin/rpyc_classic.py"
         run_cmd(user_name, self, cmd, detach=True)
 
+    def perform(self, condition):
+        return self._repeat_until(condition, self.timeout)
+
+    @staticmethod
+    def _repeat_until(condition, timeout):
+        condition_satisfied = condition()
+        while not condition_satisfied and timeout >= 0:
+            print "TIMEOUT: ", timeout
+            time.sleep(1)
+            timeout -= 1
+            condition_satisfied = condition()
+        return timeout > 0 or condition_satisfied
+
+    def absolute_path(self, path):
+        return os.path.join(self.mount_path, str(path))
+
 
 def mount_users(request, environment, context, client_dockers, env_description_file,
                 users=[], client_instances=[], mount_paths=[],
@@ -54,14 +72,6 @@ def mount_users(request, environment, context, client_dockers, env_description_f
 
     client_data = environment['client_data']
     clients = create_clients(users, client_hosts, mount_paths, client_dockers)
-
-    def fin():
-        params = zip(users, clients)
-        for user, client in params:
-            clean_mount_path(user, client)
-        context.users.clear()
-
-    request.addfinalizer(fin)
 
     parameters = zip(users, clients, client_instances, mount_paths,
                      client_hosts, tokens)
@@ -110,22 +120,23 @@ def mount_users(request, environment, context, client_dockers, env_description_f
 
         ret = run_cmd(user_name, client, cmd)
 
-        if ret != 0 and check and token_arg != "bad token":
-            # if token was different than "bad token" and mounting failed
-            clean_mount_path(user_name, client)
-            pytest.skip("Error mounting oneclient")
-
         user.update_clients(client_instance, client)
         if not context.has_user(user):
             context.add_user(user)
 
         client.start_rpyc(user.name)
 
-        # remove accessToken to mount many clients on one docker
-        rm(client, recursive=True, force=True,
-           path=os.path.join(os.path.dirname(mount_path), ".local"))
+        if ret != 0 and check and token_arg != "bad token":
+            # if token was different than "bad token" and mounting failed
+            clean_mount_path(user_name, client)
+            pytest.skip("Error mounting oneclient")
 
-        rm(client, recursive=True, force=True, path=token_path)
+        # remove accessToken to mount many clients on one docker
+        rm(client, path=os.path.join(os.path.dirname(mount_path), ".local"),
+           recursive=True)
+
+        rm(client, path=token_path)
+        # rm(client, path=token_path, recursive=True, force=True)
 
         if check and token != 'bad_token':
             if not clean_spaces_safe(user_name, client):
@@ -133,38 +144,46 @@ def mount_users(request, environment, context, client_dockers, env_description_f
 
         save_op_code(context, user_name, ret)
 
+    def fin():
+        print "CLEARING"
+        # time.sleep(6000)
+        params = zip(users, clients)
+        for user, client in params:
+            clean_mount_path(user, client)
+        context.users.clear()
+        print "CLEARED"
 
-def ls(client, user="root", path=".", output=True):
-    """CAUTION: this function returns list of paths not string"""
-    cmd = "ls {path}".format(path=escape_path(path))
-    # sometimes paths are separated with 2 spaces, '\t' or '\n'
-    return run_cmd(user, client, cmd, output=output).strip()\
-        .replace('  ', '\n').replace('\t', '\n').split('\n')
-
-
-def mv(client, src, dest, user="root", output=False):
-    cmd = "mv {src} {dest}".format(src=escape_path(src), dest=escape_path(dest))
-    return run_cmd(user, client, cmd, output=output)
+    request.addfinalizer(fin)
 
 
-def chmod(client, mode, file, user="root", output=False):
-    cmd = "chmod {mode} {file}".format(mode=mode, file=escape_path(file))
-    return run_cmd(user, client, cmd, output=output)
+def ls(client, path="."):
+    return client.rpyc_connection.modules.os.listdir(path)
 
 
-def stat(client, path, format=None, user="root", output=True):
-    cmd = "stat {path} {format}".format(path=escape_path(path),
-                                        format="--format='{0}'"
-                                        .format(format) if format else "")
-    return run_cmd(user, client, cmd, output=output)
+def mv(client, src, dest):
+    client.rpyc_connection.modules.shutil.move(src, dest)
 
 
-def rm(client, path, recursive=False, force=False, user="root", output=False):
-    cmd = "rm {recursive} {force} {path}"\
-        .format(recursive="-r" if recursive else "",
-                force="-f" if force else "",
-                path=escape_path(path))
-    return run_cmd(user, client, cmd, output=output)
+def chmod(client, mode, file_path):
+    client.rpyc_connection.modules.os.chmod(file_path, int(mode, base=8))
+
+
+def stat(client, path):
+
+    return client.rpyc_connection.op.stat(path)
+    # cmd = "stat {path} {format}".format(path=escape_path(path),
+    #                                     format="--format='{0}'"
+    #                                     .format(format) if format else "")
+    # return run_cmd(user, client, cmd, output=output)
+
+
+def rm(client, path, recursive=False, force=False):
+    if recursive and force:
+        client.rpyc_connection.modules.shutil.rmtree(path, ignore_errors=True)
+    elif recursive:
+        client.rpyc_connection.modules.shutil.rmtree(path)
+    else:
+        client.rpyc_connection.modules.os.remove(path)
 
 
 def rmdir(client, dir_path, recursive=False, from_path=None, user="root",
@@ -181,6 +200,10 @@ def mkdir(client, dir_path, recursive=False, user="root", output=False):
     cmd = "mkdir {recursive} {path}".format(recursive="-p" if recursive else "",
                                             path=escape_path(dir_path))
     return run_cmd(user, client, cmd, output=output)
+
+
+def create_file(client, file_path, mode=0644):
+    client.rpyc_connection.modules.os.mknod(file_path, mode, stat_lib.S_IFREG)
 
 
 def touch(client, file_path, user="root", output=False):
@@ -302,32 +325,34 @@ def create_clients(users, client_hosts, mount_paths, client_dockers):
 
 
 def clean_spaces_safe(user, client):
+    print "CLEANING SPACES SAFE"
     def condition():
         try:
             clean_spaces(user, client)
             return True
-        except subprocess.CalledProcessError:
+        except:
             return False
 
     return repeat_until(condition, 5)
 
 
 def clean_spaces(user, client):
-    spaces = ls(client, user=user, path=client.mount_path)
+    print "CLEANING SPACES"
+    spaces = ls(client, path=client.mount_path)
     # clean spaces
     for space in spaces:
-        rm(client, recursive=True, user=user, force=True,
-           path=client_mount_path(os.path.join(str(space), '*'),
-                                  client))
+        rm(client, path=client_mount_path(space, client), recursive=True, force=True)
 
 
 def clean_mount_path(user, client):
     try:
         clean_spaces(user, client)
-    except:
-        pass
+    except Exception as e:
+        with open("LOG", 'a') as l:
+            l.write("FAILED CLEANING SPACES: " + str(e))
     finally:
         # get pid of running oneclient node
+        print "UNMOUNT"
         pid = run_cmd('root', client,
                       " | ".join(
                               ["ps aux",
@@ -335,6 +360,8 @@ def clean_mount_path(user, client):
                                "grep -v 'grep'",
                                "awk '{print $2}'"]),
                       output=True)
+
+        print "PID: ", pid
 
         if pid != "":
             # kill oneclient process
@@ -344,7 +371,7 @@ def clean_mount_path(user, client):
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True)
         # lazy=True)
-        rm(client, recursive=True, force=True, path=client.mount_path)
+        rm(client, path=client.mount_path, recursive=True, force=True)
 
 
 def client_mount_path(path, client):

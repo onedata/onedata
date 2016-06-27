@@ -74,12 +74,9 @@ class Testdd(AbstractPerformanceTest):
                                        block_size, block_size_unit, size,
                                        size_unit, "host system")
 
-        rm(client_directio, test_file_directio, recursive=True, force=True,
-           user=user_directio)
-        rm(client_proxy, test_file_proxy, recursive=True, force=True,
-           user=user_proxy)
-        rm(client_proxy, test_file_host, recursive=True, force=True,
-           user=user_proxy)
+        rm(client_directio, test_file_directio, recursive=True, force=True)
+        rm(client_proxy, test_file_proxy, recursive=True, force=True)
+        rm(client_proxy, test_file_host, recursive=True, force=True)
 
         return test_result1 + test_result2 + test_result3
 

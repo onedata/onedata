@@ -24,6 +24,7 @@ class User:
             self.clients = {client_node: client}
         else:
             self.clients = {}
+        self.last_operation_failed = False
         self.last_op_ret_code = 0
         self.files = {}
         self.spaces = {}
@@ -58,6 +59,12 @@ class User:
     def get_certs_from_provider(self):
         self.cert_file = self.provider.cert_file
         self.key_file = self.provider.key_file
+
+    def mark_last_operation_failed(self):
+        self.last_operation_failed = True
+
+    def mark_last_operation_succeeded(self):
+        self.last_operation_failed = False
 
 
 def create_user(user_name, password, onepanel):

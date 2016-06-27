@@ -95,12 +95,9 @@ class TestSysbench(AbstractPerformanceTest):
                                              files_number, mode,
                                              dir_path_host, "host system")
 
-        rm(client_directio, dir_path_directio, recursive=True, force=True,
-           user=user_directio)
-        rm(client_proxy, dir_path_proxy, recursive=True, force=True,
-            user=user_proxy)
-        rm(client_proxy, dir_path_host, recursive=True, force=True,
-            user=user_proxy)
+        rm(client_directio, dir_path_directio, recursive=True, force=True)
+        rm(client_proxy, dir_path_proxy, recursive=True, force=True)
+        rm(client_proxy, dir_path_host, recursive=True, force=True)
 
         return test_result1 + test_result2 + test_result3
 

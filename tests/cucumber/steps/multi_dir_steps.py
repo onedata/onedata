@@ -43,12 +43,23 @@ def delete_empty(user, dirs, client_node, context):
 
 @when(parsers.parse('{user} deletes non-empty directories {dirs} on {client_node}'))
 def delete_non_empty(user, dirs, client_node, context):
-    client = get_client(client_node, user, context)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     dirs = list_parser(dirs)
     for dir in dirs:
         path = client_mount_path(dir, client)
-        ret = rm(client, path, recursive=True, force=True, user=user)
-        save_op_code(context, user, ret)
+
+        def condition():
+
+            try:
+                rm(client, path)
+                user.mark_last_operation_succeeded()
+                return True
+            except:
+                user.mark_last_operation_failed()
+                return False
+
+        client.perform(condition())
 
 
 @when(parsers.parse('{user} deletes empty directory and parents {paths} on ' +
@@ -79,7 +90,7 @@ def cannot_list_dir(user, dir, client_node, context):
 
     def condition():
         try:
-            ls(client, user=user, path=path)
+            ls(client, path=path)
             return False
         except:
             return True
@@ -95,7 +106,7 @@ def list_dir(user, dir, client_node, context):
 
     def condition():
         try:
-            ls(client, user=user, path=path)
+            ls(client, path=path)
             return True
         except:
             return False

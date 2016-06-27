@@ -25,13 +25,13 @@ def user_wait_default(user, seconds):
 @when(parsers.parse('last operation by {user} succeeds'))
 @then(parsers.parse('last operation by {user} succeeds'))
 def success(user, context):
-    assert context.users[user].last_op_ret_code == 0
+    assert not context.get_user(user).last_operation_failed
 
 
 @when(parsers.parse('last operation by {user} fails'))
 @then(parsers.parse('last operation by {user} fails'))
 def failure(user, context):
-    assert context.users[user].last_op_ret_code != 0
+    assert context.get_user(user).last_operation_failed
 
 
 ###################### FUNCTIONS ######################
