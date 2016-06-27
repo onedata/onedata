@@ -15,6 +15,10 @@ from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
 import pytest
+from functools import partial
+
+
+scenario = partial(scenario, '../features/reg_file_stat.feature')
 
 
 @pytest.fixture(scope="module",
@@ -24,82 +28,52 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Check file type when empty'
-)
+@scenario('Check file type when empty')
 def test_type_empty(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Check file type when non-empty'
-)
+@scenario('Check file type when non-empty')
 def test_type(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Check default access permissions'
-)
+@scenario('Check default access permissions')
 def test_default_access(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Change access permissions'
-)
+@scenario('Change access permissions')
 def test_change_access(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Increase regular file size'
-)
+@scenario('Increase regular file size')
 def test_increase_size(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Decrease regular file size'
-)
+@scenario('Decrease regular file size')
 def test_decrease_size(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Timestamps at creation'
-)
+@scenario('Timestamps at creation')
 def test_timestamp(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Update timestamps'
-)
+@scenario('Update timestamps')
 def test_update_timestamp(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Access time'
-)
+@scenario('Access time')
 def test_access_time(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Modification time'
-)
+@scenario('Modification time')
 def test_modification_time(env_description_file):
     pass
 
@@ -109,17 +83,11 @@ def test_modification_time(env_description_file):
         envs=["singleprovider_singleclient_directio",
               "singleprovider_singleclient_proxy"],
         reason="status-change times is equal to access and modification")
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Status-change time when changing mode'
-)
+@scenario('Status-change time when changing mode')
 def test_stat_change_time_chmod(env_description_file):
     pass
 
 
-@scenario(
-    '../features/reg_file_stat.feature',
-    'Status-change time when renaming'
-)
+@scenario('Status-change time when renaming')
 def test_stat_change_time_mv(env_description_file):
     pass

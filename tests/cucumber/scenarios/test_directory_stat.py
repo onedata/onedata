@@ -14,6 +14,7 @@ from tests.cucumber.steps.file_steps import *
 from tests.cucumber.steps.reg_file_steps import *
 from tests.utils.path_utils import env_file
 
+from functools import partial
 from pytest_bdd import scenario
 import pytest
 
@@ -25,58 +26,40 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Check file type'
-)
+scenario = partial(scenario, '../features/directory_stat.feature')
+
+
+@scenario('Check file type')
 def test_type(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Check default access permissions'
-)
+@scenario('Check default access permissions')
 def test_default_access(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Change access permissions'
-)
+@scenario('Change access permissions')
 def test_change_access(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Timestamps at creation'
-)
+@scenario('Timestamps at creation')
 def test_timestamp(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Update timestamps'
-)
+@scenario('Update timestamps')
 def test_update_timestamp(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Access time'
-)
+@scenario('Access time')
 def test_access_time(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Modification time'
-)
+@scenario('Modification time')
 def test_modification_time(env_description_file):
     pass
 
@@ -86,17 +69,11 @@ def test_modification_time(env_description_file):
     envs=["singleprovider_singleclient_directio",
           "singleprovider_singleclient_proxy"],
     reason="status-change times is equal to access and modification")
-@scenario(
-    '../features/directory_stat.feature',
-    'Status-change time when changing mode'
-)
+@scenario('Status-change time when changing mode')
 def test_stat_change_time_chmod(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_stat.feature',
-    'Status-change time when renaming'
-)
+@scenario('Status-change time when renaming')
 def test_stat_change_time_mv(env_description_file):
     pass

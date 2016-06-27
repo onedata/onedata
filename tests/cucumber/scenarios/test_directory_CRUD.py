@@ -15,6 +15,7 @@ from tests.utils.path_utils import env_file
 
 import pytest
 from pytest_bdd import scenario
+from functools import partial
 
 
 @pytest.fixture(scope="module",
@@ -24,129 +25,84 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Create directory'
-)
+scenario = partial(scenario, '../features/directory_CRUD.feature')
+
+
+@scenario('Create directory')
 def test_create(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Create directory in spaces directory'
-)
+@scenario('Create directory in spaces directory')
 def test_create_spaces_dir(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Create space'
-)
+@scenario('Create space')
 def test_create_space(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Rename directory'
-)
+@scenario('Rename directory')
 def test_rename(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Delete empty directory'
-)
+@scenario('Delete empty directory')
 def test_delete(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Delete space'
-)
+@scenario('Delete space')
 def test_delete_space(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Child directories'
-)
+@scenario('Child directories')
 def test_children(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Child directories 2'
-)
+@scenario('Child directories 2')
 def test_children2(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Duplication'
-)
+@scenario('Duplication')
 def test_duplication(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Delete empty directory and parents'
-)
+@scenario('Delete empty directory and parents')
 def test_delete_parents(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Delete non-empty directory in wrong way'
-)
+@scenario('Delete non-empty directory in wrong way')
 def test_delete_non_empty_wrong(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Delete non-empty directory'
-)
+@scenario('Delete non-empty directory')
 def test_delete_non_empty(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory'
-)
+@scenario('Move directory')
 def test_move(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Copy directory'
-)
+@scenario('Copy directory')
 def test_copy(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to itself'
-)
+@scenario('Move directory to itself')
 def test_move_to_itself(env_description_file):
     pass
 
 
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to its subtree'
-)
+@scenario('Move directory to its subtree')
 def test_move_to_subtree(env_description_file):
     pass
