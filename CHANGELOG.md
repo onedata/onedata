@@ -4,6 +4,45 @@
 CHANGELOG
 ---------
 
+### 3.0.0-beta7
+
+* Improve GUI
+* Improve dbsync reliability and performance
+* Adjust to new client API
+
+
+### 3.0.0-beta6
+
+* Update op-worker ref
+* Update oz-worker ref
+* Update op-worker ref
+* Releasing new version 3.0.0-beta6
+* Deps update
+* VFS-2163 Update references
+* VFS-2124 - force luma tests to fail as the hang sometimes
+* update op_worker
+* VFS-2124-update failing tests
+* VFS-2125 - increase  default timeouts for clients in cucumber tests
+* VFS-2124-delete commented out line
+* VFS-2124-delete default space from reg_file_stat
+* VFS-2124-delete default space from reg_file_CRUD
+* VFS-2124-delete default space from multiprovider_replication
+* VFS-2124-delete default space from multi_reg_file_stat
+* VFS-2124-delete default space from multi_reg_file_CRUD
+* VFS-2124-delete default space from multi_directory_stat
+* VFS-2124-delete default space from multi_directory_CRUD
+* VFS-2071 Update references
+* VFS-2062 Refactor docker entrypoint script
+* VFS-2124-delete default space from luma_proxy
+* VFS-2124-delete default space from luma_provider
+* VFS-2124-delete default space from directory_stat
+* VFS-2124-delete default space from directory_CRUD
+* VFS-2124-delete 'spaces' directory from cleaning functions in cucumber tests
+* VFS-2062 Update docker entrypoint
+* Re-release 3.0.0-beta4.
+* Re-release 3.0.0-beta4.
+
+
 ### 3.0.0-beta6
 
 * Add prefetching
