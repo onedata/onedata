@@ -38,7 +38,7 @@ def failure(user, context):
 
 
 def list_parser(list):
-    return [el.strip() for el in list.strip("[]").split(',')]
+    return [el.strip() for el in list.strip("[]").split(',') if el != ""]
 
 
 def make_arg_list(arg):

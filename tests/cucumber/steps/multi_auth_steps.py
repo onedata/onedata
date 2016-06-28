@@ -34,7 +34,7 @@ def check_spaces(spaces, user, client_nodes, context):
     user = str(user)
     client_nodes = list_parser(client_nodes)
     for client_node in client_nodes:
-        client = get_client(client_node, user, context)
+        client = context.get_client(user, client_node)
 
         def condition():
             try:
@@ -43,7 +43,15 @@ def check_spaces(spaces, user, client_nodes, context):
                     if space not in spaces_in_client:
                         return False
                     return True
-            except subprocess.CalledProcessError:
+            except:
                 return False
 
-        assert repeat_until(condition, timeout=client.timeout)
+        assert client.perform(condition)
+
+
+@given(parsers.parse('{users} have mounted spaces {spaces} on {client_nodes}'))
+def check_spaces2(users, spaces, client_nodes, context):
+    users = list_parser(users)
+    client_nodes = list_parser(client_nodes)
+    for user, client_node in zip(users, client_nodes):
+        check_spaces(spaces, user, make_arg_list(client_node), context)

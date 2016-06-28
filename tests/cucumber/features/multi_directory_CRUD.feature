@@ -6,6 +6,7 @@ Feature: Multi_directory_CRUD
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
+    And [u1, u2] have mounted spaces [s1, s2] on [client1, client2]
 
   Scenario: Create directory
     When u1 creates directories [s1/dir1, s1/dir2, s1/dir3]
@@ -22,6 +23,7 @@ Feature: Multi_directory_CRUD
   Scenario: Rename someone's directory with permission
     When u1 creates directory and parents [s1/dir1/child1] on client1
     And u1 changes s1/dir1/child1 mode to 775 on client1
+    And mode of u2's s1/dir1/child1 is 775 on client2
     And u2 renames s1/dir1/child1 to s1/dir1/child2 on client2
     And last operation by u2 succeeds
     Then u1 sees [child2] in s1/dir1 on client1

@@ -12,6 +12,10 @@ Feature: Multi_regular_file_CRUD
     Then u1 sees [file1, file2, file3] in s1 on client1
     And u2 sees [file1, file2, file3] in s1 on client2
 
+  Scenario: Create many children
+    When u1 creates children files of s1 with names in range [1, 151) on client1
+    Then u2 lists children of s1 with names in range [1, 151) on client2
+
   Scenario: Rename regular file without permission
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1

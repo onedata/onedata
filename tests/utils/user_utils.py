@@ -26,7 +26,6 @@ class User:
             self.clients = {}
         self.last_operation_failed = False
         self.last_op_ret_code = 0
-        self.files = {}
         self.spaces = {}
         self.created_spaces = {}
         self.id = id

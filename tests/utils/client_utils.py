@@ -2,7 +2,6 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
-import shutil
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -18,10 +17,10 @@ from tests.utils.utils import set_dns, get_token, get_oz_cookie
 
 import pytest
 import os
-import subprocess
 import time
 import rpyc
 import stat as stat_lib
+import hashlib
 
 
 class Client:
@@ -165,19 +164,15 @@ def mv(client, src, dest):
 
 
 def chmod(client, mode, file_path):
-    client.rpyc_connection.modules.os.chmod(file_path, int(mode, base=8))
+    client.rpyc_connection.modules.os.chmod(file_path, mode)
 
 
 def stat(client, path):
-
-    return client.rpyc_connection.op.stat(path)
-    # cmd = "stat {path} {format}".format(path=escape_path(path),
-    #                                     format="--format='{0}'"
-    #                                     .format(format) if format else "")
-    # return run_cmd(user, client, cmd, output=output)
+    return client.rpyc_connection.modules.os.stat(path)
 
 
 def rm(client, path, recursive=False, force=False):
+
     if recursive and force:
         client.rpyc_connection.modules.shutil.rmtree(path, ignore_errors=True)
     elif recursive:
@@ -186,38 +181,36 @@ def rm(client, path, recursive=False, force=False):
         client.rpyc_connection.modules.os.remove(path)
 
 
-def rmdir(client, dir_path, recursive=False, from_path=None, user="root",
-          output=False):
-    cmd = ("{from_path}"
-           "rmdir {recursive} {path}").format(
-            from_path="cd {0} &&".format(escape_path(from_path)) if from_path else "",
-            recursive="-p" if recursive else "",
-            path=escape_path(dir_path))
-    return run_cmd(user, client, cmd, output=output)
+def rmdir(client, dir_path, recursive=False):
+
+    if recursive:
+        client.rpyc_connection.modules.os.removedirs(dir_path)
+    else:
+        client.rpyc_connection.modules.os.rmdir(dir_path)
 
 
-def mkdir(client, dir_path, recursive=False, user="root", output=False):
-    cmd = "mkdir {recursive} {path}".format(recursive="-p" if recursive else "",
-                                            path=escape_path(dir_path))
-    return run_cmd(user, client, cmd, output=output)
+def mkdir(client, dir_path, recursive=False):
+
+    if recursive:
+        client.rpyc_connection.modules.os.makedirs(dir_path)
+    else:
+        client.rpyc_connection.modules.os.mkdir(dir_path)
 
 
 def create_file(client, file_path, mode=0644):
     client.rpyc_connection.modules.os.mknod(file_path, mode, stat_lib.S_IFREG)
 
 
-def touch(client, file_path, user="root", output=False):
-    cmd = "touch {path}".format(path=escape_path(file_path))
-    return run_cmd(user, client, cmd, output=output)
+def touch(client, file_path):
+    client.rpyc_connection.os.utime(file_path, None)
 
 
-def cp(client, src, dest, recursive=False, user="root", output=False):
-    cmd = "cp {recursive} {src} {dest}"\
-        .format(
-            recursive="-r" if recursive else "",
-            src=escape_path(src),
-            dest=escape_path(dest))
-    return run_cmd(user, client, cmd, output=output)
+def cp(client, src, dest, recursive=False):
+
+    if recursive:
+        client.rpyc_connection.modules.shutil.copy(src, dest)
+    else:
+        client.rpyc_connection.modules.shutil.copytree(src, dest)
 
 
 def truncate(client, file_path, size, user="root", output=False):
@@ -236,16 +229,9 @@ def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
     return run_cmd(user, client, cmd, output=output, error=True)
 
 
-def echo_to_file(client, text, file_path, new_line=False, escape=False,
-                 user="root", overwrite=True, output=False):
-    cmd = "echo {newline} {escape} '{text}' {redirect} {file_path}".format(
-            newline="-n" if not new_line else "",
-            escape="-e" if escape else "",
-            text=text,
-            redirect=">" if overwrite else ">>",
-            file_path=escape_path(file_path))
-
-    return run_cmd(user, client, cmd, output=output)
+def write(client, text, file_path, mode='w'):
+    with client.rpyc_connection.builtins.open(file_path, mode) as f:
+        f.write(text)
 
 
 def cat(client, file_path, user="root", output=True):
@@ -253,9 +239,27 @@ def cat(client, file_path, user="root", output=True):
     return run_cmd(user, client, cmd, output=output)
 
 
-def md5sum(client, file_path, user="root", output=True):
-    cmd = "md5sum {file_path}".format(file_path=escape_path(file_path))
-    return run_cmd(user, client, cmd, output=output)
+def read(client, file_path, mode='r'):
+    with client.rpyc_connection.builtins.open(file_path, mode) as f:
+        read_text = f.read()
+    return read_text
+
+
+def execute(client, command, output=False):
+    if output:
+        return client.rpyc_connection.modules.subprocess.check_output(command)
+    else:
+        return client.rpyc_connection.modules.subprocess.call(command)
+
+
+def md5sum(client, file_path):
+    m = hashlib.md5()
+    with client.rpyc_connection.builtins.open(file_path, 'r') as f:
+        m.update(f.read())
+    return m.digest()
+
+    # cmd = "md5sum {file_path}".format(file_path=escape_path(file_path))
+    # return run_cmd(user, client, cmd, output=output)
 
 
 def mktemp(client, path=None, dir=False, user="root", output=True):
@@ -347,9 +351,8 @@ def clean_spaces(user, client):
 def clean_mount_path(user, client):
     try:
         clean_spaces(user, client)
-    except Exception as e:
-        with open("LOG", 'a') as l:
-            l.write("FAILED CLEANING SPACES: " + str(e))
+    except:
+        pass
     finally:
         # get pid of running oneclient node
         print "UNMOUNT"

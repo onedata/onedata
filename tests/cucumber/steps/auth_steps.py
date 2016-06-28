@@ -28,3 +28,9 @@ def default_mount(user, mount_path, token, request, environment, context,
 def check_spaces(spaces, user, context):
     multi_auth_steps.check_spaces(spaces, user, make_arg_list("client1"),
                                   context)
+
+
+@given(parsers.parse('{user} have mounted spaces {spaces}'))
+def check_spaces2(user, spaces, context):
+    multi_auth_steps.check_spaces2(make_arg_list(user), spaces,
+                                   make_arg_list("client1"), context)
