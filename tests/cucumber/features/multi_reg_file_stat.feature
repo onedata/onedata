@@ -63,8 +63,8 @@ Feature: Multi_regular_file_stat
 
   Scenario: Timestamps at creation
     When u1 creates regular files [s1/file1] on client1
-    And u1 sees [s1/file1] in s1 on client1
-    And u2 sees [s1/file1] in s1 on client2
+    And u1 sees [file1] in s1 on client1
+    And u2 sees [file1] in s1 on client2
     Then modification time of u2's s1/file1 is equal to access time on client2
     And status-change time of u2's s1/file1 is equal to access time on client2
 
@@ -129,6 +129,6 @@ Feature: Multi_regular_file_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/file1 to s1/file2 on client1
-    Then u2 sees [s1/file2] in s1 on client2
+    Then u2 sees [file2] in s1 on client2
     And status-change time of u2's s1/file2 is greater than modification time on client2
     And status-change time of u2's s1/file2 is greater than access time on client2
