@@ -18,3 +18,8 @@ Feature: LUMA proxy test
     When u1 creates regular files [s3/file1]
     And u1 writes "TEST TEXT ONEDATA S3" to s3/file1
     Then u1 reads "TEST TEXT ONEDATA S3" from s3/file1
+
+  Scenario: Operations on Openstack Swift storage  
+    When u1 creates regular files [swift/file1]
+    And u1 writes "TEST TEXT ONEDATA S3" to swift/file1
+    Then u1 reads "TEST TEXT ONEDATA S3" from swift/file1    
