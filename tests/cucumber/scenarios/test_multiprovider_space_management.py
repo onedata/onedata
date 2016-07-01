@@ -34,6 +34,8 @@ def test_join_unused_space_proxy(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["multiprovider_space_management"],
+                       reason="test hangs")
 @scenario("User joins already used space - test of proxy")
 def test_join_used_space_proxy(env_description_file):
     pass

@@ -55,6 +55,7 @@ Feature: Space management with single provider
     And u1 creates regular files [s1/file2] on client1
     And u1 writes "ANOTHER TEST TEXT ONEDATA" to s1/file2 on client1
     Then u1 reads "ANOTHER TEST TEXT ONEDATA" from s1/file2 on client1
+    And u2 reads "ANOTHER TEST TEXT ONEDATA" from s1/file2 on client1
 
   Scenario: Remove user from space
     Given [u2] start oneclients [client2] in
@@ -95,4 +96,4 @@ Feature: Space management with single provider
     And u1 writes 2 MB of random characters to s1/file1 on client1 and saves MD5
     And u1 waits 10 seconds
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    And last operations by u1 fails
+    And last operation by u1 fails

@@ -25,7 +25,7 @@ scenario = partial(scenario,
                    '../features/singleprovider_space_management.feature')
 
 
-@pytest.fixture(scope="module", params=["singleprovider_space_management.json"])
+@pytest.fixture(scope="module", params=["singleprovider_space_management"])
 def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
@@ -40,6 +40,8 @@ def test_create_space_support(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(envs=["singleprovider_space_management"],
+                       reason="space owner cannot read what invited user wrote to file")
 @scenario('Invite user to unused space')
 def test_invite(env_description_file):
     pass
