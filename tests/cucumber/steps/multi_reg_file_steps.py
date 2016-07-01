@@ -9,9 +9,8 @@ from tests.utils.docker_utils import run_cmd
 from cucumber_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, cat,
                                       md5sum, replace_pattern, get_client,
-                                      save_op_code,
-                                      open_file, close_file, read_from_offset,
-                                      write_to_opened_file,
+                                      save_op_code, open_file, close_file,
+                                      read_from_offset, write_to_opened_file,
                                       read_from_opened_file, write, read,
                                       execute)
 import subprocess
@@ -39,7 +38,6 @@ def write_rand_text(user_name, megabytes, file, client_node, context):
     try:
         context.md5 = md5sum(client, file_path)
         user.mark_last_operation_succeeded()
-        print "SAVING MD5: ", context.md5
     except:
         user.mark_last_operation_failed()
 
@@ -149,7 +147,7 @@ def replace(user, text1, text2, file, client_node, context):
     client = get_client(client_node, user, context)
     file_path = client.absolute_path(file)
     ret = replace_pattern(client, file_path, text1, text2, user)
-    save_op_code(context, user, ret)
+    save_op_code(context, user, ret) # todo remove get_client, and save_op_code
 
 
 @when(parsers.parse('{user} executes {script} on {client_node}'))
@@ -174,10 +172,8 @@ def check_md5(user, file, client_node, context):
     def condition():
         try:
             md5 = md5sum(client, client.absolute_path(file))
-            print "MD5", md5, context.md5
             return md5 == context.md5
         except:
-            print "MD5 failed"
             return False
 
     assert client.perform(condition)
@@ -199,10 +195,16 @@ def copy_reg_file(user, file, path, client_node, context):
 
 @when(parsers.parse('{user} changes {file} size to {new_size} bytes on {client_node}'))
 def do_truncate(user, file, new_size, client_node, context):
-    client = get_client(client_node, user, context)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     file_path = client.absolute_path(file)
-    ret = truncate(client, file_path, new_size, user=user)
-    save_op_code(context, user, ret)
+    try:
+        truncate(client, file_path, int(new_size))
+        print "FILE WAS TRUNCATED"
+        user.mark_last_operation_succeeded()
+    except Exception as e:
+        print "TRUNCATING FAILED", e
+        user.mark_last_operation_failed()
 
 
 @when(parsers.parse('{user} opens {file} with mode {mode} on {client_node}'))

@@ -7,13 +7,13 @@ Feature: Regular_file_stat
   Scenario: Check file type when empty
     When u1 creates regular files [s1/file1]
     And u1 sees file1 in s1
-    Then file type of u1's s1/file1 is regular empty file
+    Then u1 checks using shell stat if file type of s1/file1 is regular empty file
 
   Scenario: Check file type when non-empty
     When u1 creates regular files [s1/file1]
     And u1 sees file1 in s1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1
-    Then file type of u1's s1/file1 is regular file
+    Then file type of u1's s1/file1 is regular
 
   Scenario: Check default access permissions
     When u1 creates regular files [s1/file1]

@@ -11,6 +11,10 @@ from cucumber_utils import *
 
 
 @when(parsers.parse('{user} updates {files} timestamps'))
+def touch_file(user, files, context):
+    multi_file_steps.touch_file(user, files, "client1", context)
+
+
 @when(parsers.parse('{user} creates regular files {files}'))
 @then(parsers.parse('{user} creates regular files {files}'))
 def create_reg_file(user, files, context):
@@ -29,6 +33,11 @@ def ls_absent(user, files, path, context):
     multi_file_steps.ls_absent(user, files, path, "client1", context)
 
 
+@when(parsers.parse('{user} moves {file1} to {file2} using shell command'))
+def shell_move(user, file1, file2, context):
+    multi_file_steps.shell_move(user, file1, file2, "client1", context)
+
+
 @when(parsers.parse('{user} renames {file1} to {file2}'))
 def rename(user, file1, file2, context):
     multi_file_steps.rename(user, file1, file2, "client1", context)
@@ -43,6 +52,12 @@ def delete_file(user, files, context):
 @then(parsers.parse('file type of {user}\'s {file} is {fileType}'))
 def check_type(user, file, fileType, context):
     multi_file_steps.check_type(user, file, fileType, "client1", context)
+
+
+@then(parsers.parse('{user} checks using shell stat if file type of {file} is '
+                    '{file_type}'))
+def shell_check_type(user, file, file_type, context):
+    multi_file_steps.shell_check_type(user, file, file_type, "client1", context)
 
 
 @then(parsers.parse('mode of {user}\'s {file} is {mode}'))

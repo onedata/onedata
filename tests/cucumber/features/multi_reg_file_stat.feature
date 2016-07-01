@@ -11,20 +11,20 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    Then file type of u2's s1/file1 is regular empty file on client2
+    Then u2 checks using shell stat if file type of s1/file1 is regular empty file on client2
 
   Scenario: Check file type when non-empty
     When u2 creates regular files [s1/file1] on client2
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
     And u2 writes "TEST TEXT ONEDATA" to s1/file1 on client2
-    Then file type of u1's s1/file1 is regular file on client1
+    Then file type of u1's s1/file1 is regular on client1
 
   Scenario: Check default access permissions
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    Then mode of u2's s1/file1 is 664 on client2
+    Then mode of u2's s1/file1 is 644 on client2
 
   Scenario: Change access permissions
     When u1 creates regular files [s1/file1] on client1

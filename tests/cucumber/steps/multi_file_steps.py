@@ -9,9 +9,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from cucumber_utils import *
 from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
-                                      client_mount_path, save_op_code,
-                                      get_client, create_file)
-import subprocess
+                                      create_file)
+from tests.utils.docker_utils import run_cmd
 import os
 import stat as stat_lib
 
@@ -29,11 +28,12 @@ def touch_file(user, files, client_node, context):
                 touch(client, file_path)
                 user.mark_last_operation_succeeded()
                 return True
-            except:
+            except Exception as e:
+                print "TOUCH FAILED: ", e
                 user.mark_last_operation_failed()
                 return False
 
-        assert client.perform(condition)
+        client.perform(condition)
 
 
 @when(parsers.parse('{user} creates regular files {files} on {client_node}'))
@@ -51,7 +51,8 @@ def create_reg_file(user, files, client_node, context):
                 create_file(client, file_path)
                 user.mark_last_operation_succeeded()
                 return True
-            except:
+            except Exception as e:
+                print "create_reg_file failed", e
                 user.mark_last_operation_failed()
                 return False
 
@@ -63,7 +64,7 @@ def create_reg_file(user, files, client_node, context):
 @then(parsers.parse('{user} creates children files of {parent_dir} with names '
                     'in range [{lower:d}, {upper:d}) on {client_node}'))
 def create_many(user, lower, upper, parent_dir, client_node, context):
-    client = context.get_client(user, client_node)
+    client = user.get_client(user, client_node)
     print lower.__class__
     files = ""
     for i in range(lower, upper):
@@ -71,8 +72,6 @@ def create_many(user, lower, upper, parent_dir, client_node, context):
 
     create_reg_file(user, make_arg_list(files), client_node, context)
 
-    # print "CREATED: "
-    # time.sleep(6000)
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 @then(parsers.parse('{user} sees {files} in {path} on {client_node}'))
@@ -84,8 +83,11 @@ def ls_present(user, files, path, client_node, context):
     def condition():
 
         try:
+            print "TRYING TO LIST FILES"        #todo check if length is ok
             listed_files = ls(client, path)
+            print "LISTED FILES: ", listed_files
             for file in files:
+                print "LOOKING FOR", file
                 if file not in listed_files:
                     return False
             return True
@@ -127,6 +129,28 @@ def ls_absent(user, files, path, client_node, context):
             return False
 
     assert client.perform(condition)
+
+
+@when(parsers.parse('{user} moves {file1} to {file2} using shell command on {client_node}'))
+def shell_move(user, file1, file2, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    src = client.absolute_path(file1)
+    dest = client.absolute_path(file2)
+
+    def condition():
+
+        mv(client, src, dest)
+        cmd = "mv {0} {1}".format(src, dest)
+        ret = run_cmd(user.name, client, cmd)
+        if ret == 0:
+            user.mark_last_operation_succeeded()
+        else:
+            user.mark_last_operation_failed()
+
+        return ret == 0
+
+    client.perform(condition)
 
 
 @when(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
@@ -185,10 +209,11 @@ def change_mode(user, file, mode, client_node, context):
             user.mark_last_operation_succeeded()
             return True
         except Exception as e:
+            print "chmod failed", e
             user.mark_last_operation_failed()
             return False
 
-    assert client.perform(condition)
+    client.perform(condition)
 
 
 @then(parsers.parse('file type of {user}\'s {file} is {file_type} on {client_node}'))
@@ -205,13 +230,35 @@ def check_type(user, file, file_type, client_node, context):
     def condition():
         try:
             stat_result = stat(client, file_path)
-            return getattr(stat, stat_method)(stat_result.st_mode)
-        except:
+            print stat_result
+            return getattr(stat_lib, stat_method)(stat_result.st_mode)
+        except Exception as e:
+            print "CHECKIG FAILED ", e
             return False
 
     assert client.perform(condition)
 
-    # check_using_stat(user, client, file_path, 'file type', file_type)
+
+@then(parsers.parse('{user} checks using shell stat if file type of {file} is '
+                    '{file_type} on {client_node}'))
+def shell_check_type(user, file, file_type, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+
+        cmd = "stat --format=%F {}".format(file_path)
+
+        try:
+            stat_file_type = run_cmd(user.name, client, cmd, output=True)
+            print stat_file_type
+            return stat_file_type == file_type
+        except Exception as e:
+            print "CHECKIG FAILED ", e
+            return False
+
+    assert client.perform(condition)
 
 
 @when(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
@@ -225,38 +272,39 @@ def check_mode(user, file, mode, client_node, context):
     def condition():
         try:
             stat_result = stat(client, file_path)
+            print "MODE: ",stat_lib.S_IMODE(stat_result.st_mode), mode
             return stat_lib.S_IMODE(stat_result.st_mode) == mode
         except:
             return False
 
     assert client.perform(condition)
 
-    # check_using_stat(user, client, file_path, 'mode', mode)
-
 
 @when(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
 @then(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
 def check_size(user, file, size, client_node, context):
-    client = context.get_client(user, client_node)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     file_path = client.absolute_path(file)
     size = int(size)
 
     def condition():
         try:
             stat_result = stat(client, file_path)
+            print "SIZE: ", stat_result.st_size, size
             return stat_result.st_size == size
-        except:
+        except Exception as e:
+            print "CHECKING SIZE FAILED", e
             return False
 
     assert client.perform(condition)
-
-    # check_using_stat(user, client, file_path, 'size', size)
 
 
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} to {time2} time on {client_node}'))
 @then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} than {time2} time on {client_node}'))
 def check_time(user, time1, time2, comparator, file, client_node, context):
-    client = context.get_client(user, client_node)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     attr1 = time_attr(time1)
     attr2 = time_attr(time2)
     file_path = client.absolute_path(file)
@@ -267,8 +315,10 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
             stat_result = stat(client, file_path)
             t1 = getattr(stat_result, attr1)
             t2 = getattr(stat_result, attr2)
+            print "TIME: ", t1, t2
             return compare(t1, t2, comparator)
-        except:
+        except Exception as e:
+            print "check_time failed", e
             return False
 
     assert client.perform(condition)
@@ -276,51 +326,13 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
 
 ################################################################################
 
-# def is_regular_file(stat_result):
-#     return stat_lib.S_ISREG(stat_result.st_mode)
-#
-#
-# def is_directory(stat_result):
-#     return stat_lib.S_ISDIR(stat_result.st_mode)
-#
-#
-# def access_mode(stat_result):
-#     return stat_lib.S_IMODE(stat_result.st_mode)
-#
-#
-# def check_using_stat(client, file_path, parameter, expected_value):
-#
-#     # opt = time_attr(parameter)
-#
-#     def condition():
-#         try:
-#             stat_result = stat(client, file_path)
-#             return stat_result == expected_value
-#         except subprocess.CalledProcessError:
-#             return False
-#
-#     assert repeat_until(condition, client.timeout)
-#
-#
-# def get_timestamp(user, file, client, time_type):
-#     # opt = time_attr(time_type)
-#     file_path = client.absolute_path(file)
-#     return stat(client, file_path)
-
-
 def time_attr(parameter):
 
     return{
-        'access': 'ST_ATIME',
-        'modification': 'ST_MTIME',
-        'status-change': 'ST_CTIME'
+        'access': 'st_atime',
+        'modification': 'st_mtime',
+        'status-change': 'st_ctime'
     }[parameter]
-
-#
-# def get_stat_attr(parameter):
-#     return {
-#         'file type':
-#     }[parameter]
 
 
 def compare(val1, val2, comparator):

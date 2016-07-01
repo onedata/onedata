@@ -64,11 +64,6 @@ def test_modification_time(env_description_file):
     pass
 
 
-# TODO VFS-1821
-@pytest.mark.xfail_env(
-    envs=["singleprovider_singleclient_directio",
-          "singleprovider_singleclient_proxy"],
-    reason="status-change times is equal to access and modification")
 @scenario('Status-change time when changing mode')
 def test_stat_change_time_chmod(env_description_file):
     pass

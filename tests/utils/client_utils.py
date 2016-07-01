@@ -2,6 +2,7 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
+import shutil
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -141,11 +142,13 @@ def mount_users(request, environment, context, client_dockers, env_description_f
             if not clean_spaces_safe(user_name, client):
                 pytest.skip("Test skipped beacause of failing to clean spaces")
 
-        save_op_code(context, user_name, ret)
+        if ret == 0:
+            user.mark_last_operation_succeeded()
+        else:
+            user.mark_last_operation_failed()
 
     def fin():
         print "CLEARING"
-        # time.sleep(6000)
         params = zip(users, clients)
         for user, client in params:
             clean_mount_path(user, client)
@@ -202,21 +205,25 @@ def create_file(client, file_path, mode=0644):
 
 
 def touch(client, file_path):
-    client.rpyc_connection.os.utime(file_path, None)
+    client.rpyc_connection.modules.os.utime(file_path, None)
 
 
 def cp(client, src, dest, recursive=False):
-
     if recursive:
-        client.rpyc_connection.modules.shutil.copy(src, dest)
+        if client.rpyc_connection.modules.os.path.isdir(dest):
+            # shutil.copytree fails if dest is an existing directory
+            dest = os.path.join(dest, os.path.basename(os.path.normpath(src)))
+            client.rpyc_connection.modules.shutil.copytree(src, dest)
+        else:
+            client.rpyc_connection.modules.shutil.copytree(src, dest)
     else:
-        client.rpyc_connection.modules.shutil.copytree(src, dest)
+        client.rpyc_connection.modules.shutil.copy(src, dest)
 
 
-def truncate(client, file_path, size, user="root", output=False):
-    cmd = "truncate --size={size} {file_path}".format(size=size,
-                                                      file_path=escape_path(file_path))
-    return run_cmd(user, client, cmd, output=output)
+def truncate(client, file_path, size):
+    with client.rpyc_connection.builtins.open(file_path, 'w') as f:
+        print "TRUNCATING FILE: ", f, f.name
+        f.truncate(size)
 
 
 def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
@@ -257,9 +264,6 @@ def md5sum(client, file_path):
     with client.rpyc_connection.builtins.open(file_path, 'r') as f:
         m.update(f.read())
     return m.digest()
-
-    # cmd = "md5sum {file_path}".format(file_path=escape_path(file_path))
-    # return run_cmd(user, client, cmd, output=output)
 
 
 def mktemp(client, path=None, dir=False, user="root", output=True):
@@ -307,9 +311,14 @@ def close_file(client, file):
 
 
 def write_to_opened_file(client, file, text):
+    print "WRITING TO OPENED FILE", file, client.opened_files.keys()
+    print client.opened_files[file]
     client.opened_files[file].write(text)
-    client.opened_files[file].flush()
-
+    print client.opened_files[file]
+    try:
+        client.opened_files[file].flush()
+    except:
+        pass
 
 def read_from_opened_file(client, file):
     return client.opened_files[file].read()
@@ -330,11 +339,13 @@ def create_clients(users, client_hosts, mount_paths, client_dockers):
 
 def clean_spaces_safe(user, client):
     print "CLEANING SPACES SAFE"
+
     def condition():
         try:
             clean_spaces(user, client)
             return True
-        except:
+        except Exception as e:
+            print "FAILED TO CLEAN SPACES", e
             return False
 
     return repeat_until(condition, 5)
@@ -345,14 +356,14 @@ def clean_spaces(user, client):
     spaces = ls(client, path=client.mount_path)
     # clean spaces
     for space in spaces:
-        rm(client, path=client_mount_path(space, client), recursive=True, force=True)
+        rm(client, path=client.absolute_path(space), recursive=True, force=True)
 
 
 def clean_mount_path(user, client):
     try:
         clean_spaces(user, client)
-    except:
-        pass
+    except Exception as e:
+        print "FAILED TO CLEAN MOUNT PATH", e
     finally:
         # get pid of running oneclient node
         print "UNMOUNT"
@@ -375,10 +386,6 @@ def clean_mount_path(user, client):
         fusermount(client, client.mount_path, user=user, unmount=True)
         # lazy=True)
         rm(client, path=client.mount_path, recursive=True, force=True)
-
-
-def client_mount_path(path, client):
-    return os.path.join(client.mount_path, str(path))
 
 
 def save_op_code(context, user, op_code):
