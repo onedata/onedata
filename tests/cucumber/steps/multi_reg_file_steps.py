@@ -39,6 +39,7 @@ def write_rand_text(user, megabytes, file, client_node, context):
 
 
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
+@then(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
 def write_text(user, text, file, client_node, context):
     client = get_client(client_node, user, context)
     file_path = client_mount_path(file, client)

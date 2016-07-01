@@ -17,12 +17,12 @@
             "target_dir": "rel/test_cluster"
         },
         "onepanel": {
-            "input_dir": "rel_oneprovider/onepanel",
+            "input_dir": "rel/op_panel",
             "target_dir": "rel/test_cluster"
         }
     },
     "os_configs": {
-        "cfg1": {
+        "cfg0": {
             "storages": [
                 {
                     "type": "posix",
@@ -47,16 +47,37 @@
                     "u2"
                 ]
             }
+        },
+        "cfg1": {
+            "storages": [],
+            "users": [
+                "u1",
+                "u2"
+            ],
+            "groups": {
+                "s1": [
+                    "u1",
+                    "u2"
+                ],
+                "s2": [
+                    "u1",
+                    "u2"
+                ],
+                "fuse": [
+                    "u1",
+                    "u2"
+                ]
+            }
         }
     },
     "provider_domains": {
         "p1": {
             "db_driver": "couchdb",
-            "os_config": "cfg1",
+            "os_config": "cfg0",
             "cluster_manager": {
                 "cm1": {
                     "vm.args": {
-                        "setcookie": "cookie2"
+                        "setcookie": "cookie1"
                     },
                     "sys.config": {
                         "cluster_manager": {
@@ -71,7 +92,7 @@
             "op_worker": {
                 "worker1": {
                     "vm.args": {
-                        "setcookie": "cookie2"
+                        "setcookie": "cookie1"
                     },
                     "sys.config": {
                         "op_worker": {
@@ -95,7 +116,7 @@
             "cluster_manager": {
                 "cm": {
                     "vm.args": {
-                        "setcookie": "cookie3"
+                        "setcookie": "cookie2"
                     },
                     "sys.config": {
                         "cluster_manager": {
@@ -110,7 +131,7 @@
             "oz_worker": {
                 "node1": {
                     "vm.args": {
-                        "setcookie": "cookie3"
+                        "setcookie": "cookie2"
                     },
                     "sys.config": {
                         "oz_worker": {
@@ -123,6 +144,12 @@
                             "grpcert_domain": {
                                 "string": "127.0.0.1"
                             },
+                            "onepanel_rest_url": {
+                                "protocol": "https",
+                                "domain": "node1.p2",
+                                "port": 9443
+                            },
+                            "openid_verify_cert": false,
                             "dev_mode": true
                         }
                     }
@@ -142,32 +169,13 @@
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
                     "token_for": "u1",
-                    "default_timeout": 2
-                },
-                "client2": {
-                    "name": "client2",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata2",
-                    "token_for": "u1",
-                    "default_timeout": 2
+                    "default_timeout": 10
                 }
             }
         },
         "client-host2": {
             "os_config": "cfg1",
             "clients": {
-                "client12": {
-                    "name": "client12",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
-                },
                 "client2": {
                     "name": "client2",
                     "op_domain": "p1",
@@ -175,61 +183,32 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u2/onedata",
-                    "token_for": "u2"
+                    "token_for": "u2",
+                    "default_timeout": 10
                 }
             }
         }
     },
     "global_setup": {
-        "users": {
-            "u1": {
-                "default_space": "s1"
-            },
-            "u2": {
-                "default_space": "s1"
-            }
-        },
-        "groups": {
-            "g1": {
-                "users": [
-                    "u1",
-                    "u2"
-                ]
-            }
-        },
-        "spaces": {
-            "s1": {
-                "displayed_name": "s1",
-                "users": [
-                    "u1",
-                    "u2"
-                ],
-                "groups": [
-                    "g1"
-                ],
-                "providers": {
-                    "p1": {
-                        "storage": "/mnt/st1",
-                        "supported_size": 1000000000
-                    }
-                }
-            },
-            "s2": {
-                "displayed_name": "s2",
-                "users": [
-                    "u1",
-                    "u2"
-                ],
-                "groups": [
-                    "g1"
-                ],
-                "providers": {
-                    "p1": {
-                        "storage": "/mnt/st1",
-                        "supported_size": 1000000000
+        "users": {},
+        "groups": {},
+        "spaces": {}
+    },
+    "onepanel_domains": {
+        "p2": {
+            "app_name": "op_panel",
+            "onepanel": {
+                "node1": {
+                    "vm.args": {
+                        "setcookie": "cookie3"
+                    },
+                    "sys.config": {
+                        "onepanel": {
+                        }
                     }
                 }
             }
         }
     }
+
 }

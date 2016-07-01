@@ -12,6 +12,7 @@ from tests.utils.cucumber_utils import *
 
 @when(parsers.parse('{user} updates {files} timestamps'))
 @when(parsers.parse('{user} creates regular files {files}'))
+@then(parsers.parse('{user} creates regular files {files}'))
 def create_reg_file(user, files, context):
     multi_file_steps.create_reg_file(user, files, "client1", context)
 

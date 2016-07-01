@@ -7,6 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import multi_reg_file_steps
 from tests.utils.cucumber_utils import *
+from pytest_bdd import when, then, parsers
 
 
 @when(parsers.parse('{user} writes {megabytes} MB of random characters to {file} and saves MD5'))
@@ -15,6 +16,7 @@ def write_rand_text(user, megabytes, file, context):
 
 
 @when(parsers.parse('{user} writes "{text}" to {file}'))
+@then(parsers.parse('{user} writes "{text}" to {file}'))
 def write_text(user, text, file, context):
     multi_reg_file_steps.write_text(user, text, file, "client1", context)
 

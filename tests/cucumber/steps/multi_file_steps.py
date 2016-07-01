@@ -16,6 +16,7 @@ from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
 
 @when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
 @when(parsers.parse('{user} creates regular files {files} on {client_node}'))
+@then(parsers.parse('{user} creates regular files {files} on {client_node}'))
 def create_reg_file(user, files, client_node, context):
     client = get_client(client_node, user, context)
     files = list_parser(files)

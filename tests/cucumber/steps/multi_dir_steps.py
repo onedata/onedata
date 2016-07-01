@@ -73,7 +73,7 @@ def copy_dir(user, dir1, dir2, client_node, context):
 
 @when(parsers.parse('{user} can\'t list {dir} on {client_node}'))
 @then(parsers.parse('{user} can\'t list {dir} on {client_node}'))
-def list_dir(user, dir, client_node, context):
+def cannot_list_dir(user, dir, client_node, context):
     client = get_client(client_node, user, context)
     path = client_mount_path(dir, client)
 
@@ -83,5 +83,21 @@ def list_dir(user, dir, client_node, context):
             return False
         except:
             return True
+
+    assert repeat_until(condition, client.timeout)
+
+
+@when(parsers.parse('{user} can list {dir} on {client_node}'))
+@then(parsers.parse('{user} can list {dir} on {client_node}'))
+def list_dir(user, dir, client_node, context):
+    client = get_client(client_node, user, context)
+    path = client_mount_path(dir, client)
+
+    def condition():
+        try:
+            ls(client, user=user, path=path)
+            return True
+        except:
+            return False
 
     assert repeat_until(condition, client.timeout)

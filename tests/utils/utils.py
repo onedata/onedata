@@ -1,4 +1,8 @@
 """This module contains utility functions to be used in acceptance tests."""
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 from tests import *
 from tests.utils.path_utils import make_logdir, save_log_to_file
 
@@ -8,8 +12,7 @@ import ast
 import re
 import subprocess
 import pytest
-
-__author__ = "Jakub Kudzia"
+import os
 
 
 def run_os_command(cmd, output=True):
@@ -110,8 +113,62 @@ def get_token(token, user, oz_node, cookie):
     return token
 
 
-def get_cookie(config_path, oz_node):
+def get_oz_cookie(config_path, oz_name, node_name=True):
+    return get_cookie(config_path, oz_name, 'zone_domains', node_name)
+
+
+def get_op_cookie(config_path, op_name, node_name=True):
+    return get_cookie(config_path, op_name, 'provider_domains', node_name)
+
+
+def get_cookie(config_path, name, domain, node_name=True):
+    """Reads erlang cookie from file at config path.
+    node_name = True means that argument name is a node name, otherwise
+    it is a domain name.
+    """
+    if '@' in name:
+        _, _, name = name.partition('@')
+    if node_name:
+        domain_name = name.split(".")[1]
+    else:
+        domain_name = name.split(".")[0]
     config = parse_json_config_file(config_path)
-    oz_domain = config['zone_domains'].keys()[0]
-    cm = config['zone_domains'][oz_domain]['cluster_manager'].keys()[0]
-    return str(config['zone_domains'][oz_domain]['cluster_manager'][cm]['vm.args']['setcookie'])
+    cm_config = config[domain][domain_name]['cluster_manager']
+    key = cm_config.keys()[0]
+    return str(cm_config[key]['vm.args']['setcookie'])
+
+
+def get_storages(config_path, provider_id):
+    config = parse_json_config_file(config_path)
+    cfg = config['provider_domains'][provider_id]['os_config']
+    return config['os_configs'][cfg]['storages']
+
+
+def get_first_op_erl_node(domain, env):
+    return get_first_erl_node(domain, env, 'op_worker_nodes')
+
+
+def get_first_oz_erl_node(domain, env):
+    return get_first_erl_node(domain, env, 'oz_worker_nodes')
+
+
+def get_first_erl_node(domain, env, key):
+    return [node for node in env[key] if node.endswith(domain)][0]
+
+
+def get_first_op_worker(domain, env):
+    return hostname(get_first_op_erl_node(domain, env))
+
+
+def get_first_oz_worker(domain, env):
+    return hostname(get_first_oz_erl_node(domain, env))
+
+
+def hostname(erl_node):
+    return erl_node.split('@')[-1]
+
+
+def get_domain(node):
+    if '@' in node:
+        node = hostname(node)
+    return node.split('.', 1)[-1]
