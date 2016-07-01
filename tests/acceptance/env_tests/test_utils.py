@@ -76,7 +76,6 @@ def check_cluster_worker_up(env, dockers_num):
 
 def check_zone_up(env, dockers_num):
     key = 'oz_worker_nodes'
-    print "ENV: ", env
     assert dockers_num == len(env[key])
     dns = env['dns']
     # Will throw if the dns address is not legal

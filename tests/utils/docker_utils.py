@@ -33,3 +33,7 @@ def run_cmd(user, client, cmd, output=False, error=False):
 
     return docker.exec_(container=client.docker_id, command=cmd, output=output,
                         tty=True, stderr=subprocess.STDOUT if error else None)
+
+
+def docker_ip(container):
+    return docker.inspect(container)['NetworkSettings']['IPAddress']
