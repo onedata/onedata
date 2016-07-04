@@ -38,6 +38,11 @@
                   "name": "s3",
                   "bucket": "onedata",
                   "disable_iam_mock": true
+                },
+                {
+                  "type": "swift",
+                  "name": "swift",
+                  "container": "swift"
                 }
             ],
             "users": [
@@ -213,6 +218,21 @@
                 "providers": {
                     "p1": {
                         "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "swift": {
+                "displayed_name": "swift",
+                "users": [
+                    "u1"
+                ],
+                "groups": [
+                    "g1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "swift",
                         "supported_size": 1000000000
                     }
                 }
