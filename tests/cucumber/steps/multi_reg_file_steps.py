@@ -9,7 +9,7 @@ from tests import *
 
 import subprocess
 
-from cucumber_utils import *
+from tests.utils.cucumber_utils import *
 from tests.utils.client_utils import cp, truncate, dd, echo_to_file, cat, \
     md5sum, replace_pattern, client_mount_path, save_op_code, get_client
 from tests.utils.docker_utils import run_cmd

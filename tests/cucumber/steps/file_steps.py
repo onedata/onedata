@@ -7,7 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import multi_file_steps
-from cucumber_utils import *
+from tests.utils.cucumber_utils import *
 
 
 @when(parsers.parse('{user} updates {files} timestamps'))

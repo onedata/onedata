@@ -59,15 +59,15 @@ class AbstractPerformanceTest:
         return report
 
     @pytest.fixture()
-    def clients(self, request, environment, context, client_ids,
+    def clients(self, request, onedata_environment, context, client_ids,
                 env_description_file):
 
-        mount_users(request, environment, context, client_ids,
-                    env_description_file, **get_users(environment))
+        mount_users(request, onedata_environment, context, client_ids,
+                    env_description_file, **get_users(onedata_environment))
 
 
-def get_users(environment):
-    data = environment['client_data']
+def get_users(onedata_environment):
+    data = onedata_environment['client_data']
     users = []
     client_instances = []
     mount_paths = []

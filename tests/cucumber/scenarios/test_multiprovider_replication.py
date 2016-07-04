@@ -4,12 +4,13 @@ __author__ = "Tomasz Lichon"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
 import pytest
 from pytest_bdd import scenario
 
 from tests import *
 
-from tests.cucumber.steps.cucumber_utils import *
+from tests.utils.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.multi_auth_steps import *
 from tests.cucumber.steps.multi_dir_steps import *

@@ -6,7 +6,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import multi_dir_steps
-from cucumber_utils import *
+from tests.utils.cucumber_utils import *
 
 
 @when(parsers.parse('{user} creates directories {dirs}'))

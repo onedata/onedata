@@ -9,13 +9,13 @@ from pytest_bdd import parsers
 
 
 @given("environment is up")
-def environment_up(environment):
-    return environment
+def environment_up(onedata_environment):
+    return onedata_environment
 
 
 @then(parsers.parse('{number:d} nodes are up'))
-def check_nodes(environment, number):
+def check_nodes(onedata_environment, number):
     """
     Checks whether environment consists of 'number' nodes.
     """
-    assert number == len(environment['docker_ids'])
+    assert number == len(onedata_environment['docker_ids'])
