@@ -52,7 +52,7 @@ def click_on_provider_in_sidebar(selenium, name):
 @given(parsers.parse('user clicks on the "Go to your files" button in provider popup'))
 def click_on_go_to_files_provider(selenium):
     def go_to_files_button(s):
-        links = s.find_elements_by_css_selector('.provider-place-drop a')
+        links = s.find_elements_by_css_selector('.provider-place-drop a, .provider-place-drop button')
         for e in links:
             if e.text == 'Go to your files':
                 return e
