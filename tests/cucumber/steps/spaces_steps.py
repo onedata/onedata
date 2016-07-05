@@ -6,7 +6,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests.utils.space_utils import unsupport_space
-from tests.cucumber.steps.cucumber_utils import list_parser
+from tests.utils.cucumber_utils import list_parser
 from tests.utils.space_utils import (create_space, support_space,
                                      request_support, invite_to_space,
                                      join_space, remove_user, delete_space,

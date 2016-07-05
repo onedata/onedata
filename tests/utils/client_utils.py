@@ -10,7 +10,7 @@ __license__ = "This software is released under the MIT license cited in " \
 from tests.utils.user_utils import User
 from tests.utils.docker_utils import run_cmd
 from tests.utils.path_utils import escape_path
-from tests.cucumber.cucumber_utils import repeat_until
+from tests.utils.cucumber_utils import repeat_until
 from tests.utils.utils import set_dns, get_token, get_oz_cookie
 
 import os

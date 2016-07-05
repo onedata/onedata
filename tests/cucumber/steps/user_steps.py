@@ -4,7 +4,7 @@ __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
-from tests.cucumber.steps.cucumber_utils import list_parser
+from tests.utils.cucumber_utils import list_parser
 from tests.utils.utils import set_dns
 from tests.utils.user_utils import create_user, delete_user, get_id
 from tests.utils.space_utils import delete_space
