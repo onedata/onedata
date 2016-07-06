@@ -3,6 +3,7 @@ Feature: Directory_stat
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
+    And u1 have mounted spaces [s1, s2]
 
   Scenario: Check file type
     When u1 creates directories [s1/dir1]

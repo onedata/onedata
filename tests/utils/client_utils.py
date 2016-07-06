@@ -2,19 +2,16 @@
 tests. Client is started in docker during acceptance, cucumber and performance
 tests.
 """
-import shutil
-
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.cucumber.steps.cucumber_utils import repeat_until
 from tests.utils.docker_utils import run_cmd
 from tests.utils.path_utils import escape_path
 from tests.utils.user_utils import User
-from tests.utils.utils import set_dns, get_token, get_oz_cookie
-
+from tests.utils.utils import (set_dns, get_token, get_oz_cookie,
+                               get_function_name, handle_exception)
 
 import pytest
 import os
@@ -31,6 +28,7 @@ class Client:
         self.mount_path = mount_path
         self.rpyc_connection = None
         self.opened_files = {}
+        self.rpyc_server_pid = None
 
     def set_timeout(self, timeout):
         self.timeout = timeout
@@ -40,12 +38,28 @@ class Client:
         time.sleep(1)   # wait for rpc server
         self.rpyc_connection = rpyc.classic.connect(self.docker_name)
 
+    def stop_rpyc_server(self):
+        if self.rpyc_server_pid:
+            kill(self, self.rpyc_server_pid)
+            self.rpyc_server_pid = None
+
+    def perform(self, condition, timeout=None):
+        if not timeout:
+            timeout = self.timeout
+        return self._repeat_until(condition, timeout)
+
     def _start_rpyc_server(self, user_name):    #start rpc server on client docker
         cmd = "/usr/local/bin/rpyc_classic.py"
         run_cmd(user_name, self, cmd, detach=True)
+        pid = run_cmd(user_name,
+                      self,
+                      " | ".join(["ps -u {}".format(user_name),
+                                  "grep 'rpyc_classic.py'",
+                                  "grep -v 'grep'",
+                                  "awk '{print $1}'"]),
+                      output=True)
 
-    def perform(self, condition):
-        return self._repeat_until(condition, self.timeout)
+        self.rpyc_server_pid = pid
 
     @staticmethod
     def _repeat_until(condition, timeout):
@@ -62,7 +76,7 @@ class Client:
 
 
 def mount_users(request, environment, context, client_dockers, env_description_file,
-                users=[], client_instances=[], mount_paths=[],
+                user_names=[], client_instances=[], mount_paths=[],
                 client_hosts=[], tokens=[], check=True):
 
     # current version is for environment with one OZ
@@ -71,9 +85,9 @@ def mount_users(request, environment, context, client_dockers, env_description_f
     set_dns(environment)
 
     client_data = environment['client_data']
-    clients = create_clients(users, client_hosts, mount_paths, client_dockers)
+    clients = create_clients(user_names, client_hosts, mount_paths, client_dockers)
 
-    parameters = zip(users, clients, client_instances, mount_paths,
+    parameters = zip(user_names, clients, client_instances, mount_paths,
                      client_hosts, tokens)
     for user_name, client, client_instance, mount_path, client_host, token_arg in parameters:
         data = client_data[client_host][client_instance]
@@ -133,10 +147,12 @@ def mount_users(request, environment, context, client_dockers, env_description_f
 
         # remove accessToken to mount many clients on one docker
         rm(client, path=os.path.join(os.path.dirname(mount_path), ".local"),
-           recursive=True)
+           recursive=True, force=True)
 
         rm(client, path=token_path)
-        # rm(client, path=token_path, recursive=True, force=True)
+
+        # todo without this sleep protocol error occurs more often during cleaning spaces
+        time.sleep(3)
 
         if check and token != 'bad_token':
             if not clean_spaces_safe(user_name, client):
@@ -148,12 +164,14 @@ def mount_users(request, environment, context, client_dockers, env_description_f
             user.mark_last_operation_failed()
 
     def fin():
-        print "CLEARING"
-        params = zip(users, clients)
-        for user, client in params:
-            clean_mount_path(user, client)
-        context.users.clear()
-        print "CLEARED"
+        params = zip(user_names, clients)
+        for user_name, client in params:
+            clean_mount_path(user_name, client)
+        for user_name in user_names:
+            user = context.get_user(user_name)
+            for client in user.clients.values():
+                client.stop_rpyc_server()
+            user.clients.clear()
 
     request.addfinalizer(fin)
 
@@ -222,18 +240,7 @@ def cp(client, src, dest, recursive=False):
 
 def truncate(client, file_path, size):
     with client.rpyc_connection.builtins.open(file_path, 'w') as f:
-        print "TRUNCATING FILE: ", f, f.name
         f.truncate(size)
-
-
-def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
-       user="root", output=False, error=False):
-    cmd = "dd {input} {output} {bs} {count}".format(
-            input="if={}".format(escape_path(input_file)),
-            output="of={}".format(escape_path(output_file)),
-            bs="bs={0}{1}".format(block_size, unit),
-            count="count={}".format(count))
-    return run_cmd(user, client, cmd, output=output, error=True)
 
 
 def write(client, text, file_path, mode='w'):
@@ -241,15 +248,31 @@ def write(client, text, file_path, mode='w'):
         f.write(text)
 
 
-def cat(client, file_path, user="root", output=True):
-    cmd = "cat {file_path}".format(file_path=escape_path(file_path))
-    return run_cmd(user, client, cmd, output=output)
-
-
 def read(client, file_path, mode='r'):
     with client.rpyc_connection.builtins.open(file_path, mode) as f:
         read_text = f.read()
     return read_text
+
+
+def open_file(client, file, mode='w+'):
+    return client.rpyc_connection.builtins.open(file, mode)
+
+
+def close_file(client, file):
+    client.opened_files[file].close()
+
+
+def write_to_opened_file(client, file, text):
+    client.opened_files[file].write(text)
+    client.opened_files[file].flush()
+
+
+def read_from_opened_file(client, file):
+    return client.opened_files[file].read()
+
+
+def seek(client, file, offset):
+    client.opened_files[file].seek(offset)
 
 
 def execute(client, command, output=False):
@@ -266,67 +289,48 @@ def md5sum(client, file_path):
     return m.digest()
 
 
-def mktemp(client, path=None, dir=False, user="root", output=True):
-    cmd = "mktemp {dir} {path}".format(
-            dir="--directory" if dir else "",
-            path="--tmpdir={}".format(escape_path(path)) if path else "")
-    return run_cmd(user, client, cmd, output).strip()
+def mkstemp(client, dir=None):
+
+    _handle, abs_path = client.rpyc_connection.modules.tempfile.mkstemp(dir=dir)
+    return abs_path
+
+
+def mkdtemp(client, dir=None):
+    return client.rpyc_connection.modules.tempfile.mkdtemp(dir=dir)
 
 
 def replace_pattern(client, file_path, pattern, new_text, user='root',
                     output=False):
-    cmd = 'sed -i \'s/{pattern}/{new_text}/g\' {file_path}'.format(
-            pattern=pattern,
-            new_text=new_text,
-            file_path=escape_path(file_path))
+    cmd = 'sed -i \'s/{pattern}/{new_text}/g\' {file_path}'\
+        .format(pattern=pattern,
+                new_text=new_text,
+                file_path=escape_path(file_path))
     return run_cmd(user, client, cmd, output=output)
+
+
+def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
+       user="root", output=False, error=False):
+    cmd = "dd {input} {output} {bs} {count}"\
+        .format(input="if={}".format(escape_path(input_file)),
+                output="of={}".format(escape_path(output_file)),
+                bs="bs={0}{1}".format(block_size, unit),
+                count="count={}".format(count))
+    return run_cmd(user, client, cmd, output=output, error=True)
 
 
 def fusermount(client, path, user='root', unmount=False, lazy=False,
                quiet=False, output=False):
-    cmd = "fusermount {unmount} {lazy} {quiet} {path}".format(
-            unmount="-u" if unmount else "",
-            lazy="-z" if lazy else "",
-            quiet="-q" if quiet else "",
-            path=escape_path(path)
-    )
+    cmd = "fusermount {unmount} {lazy} {quiet} {path}"\
+        .format(unmount="-u" if unmount else "",
+                lazy="-z" if lazy else "",
+                quiet="-q" if quiet else "",
+                path=escape_path(path))
     return run_cmd(user, client, cmd, output=output)
 
 
 def kill(client, pid, signal="KILL", user='root', output=False):
     cmd = "kill -{signal} {pid}".format(signal=signal, pid=pid)
     return run_cmd(user, client, cmd, output=output)
-
-
-def open_file(client, file, mode='w+'):
-
-    f = client.rpyc_connection.builtins.open(file, mode)
-    client.opened_files.update({file: f})
-    return f
-
-
-def close_file(client, file):
-    client.opened_files[file].close()
-    del client.opened_files[file]
-
-
-def write_to_opened_file(client, file, text):
-    print "WRITING TO OPENED FILE", file, client.opened_files.keys()
-    print client.opened_files[file]
-    client.opened_files[file].write(text)
-    print client.opened_files[file]
-    try:
-        client.opened_files[file].flush()
-    except:
-        pass
-
-def read_from_opened_file(client, file):
-    return client.opened_files[file].read()
-
-
-def read_from_offset(client, file, offset):
-    client.opened_files[file].seek(offset)
-    return read_from_opened_file(client, file)
 
 
 def create_clients(users, client_hosts, mount_paths, client_dockers):
@@ -338,21 +342,21 @@ def create_clients(users, client_hosts, mount_paths, client_dockers):
 
 
 def clean_spaces_safe(user, client):
-    print "CLEANING SPACES SAFE"
+
+    function_name = get_function_name()
 
     def condition():
         try:
             clean_spaces(user, client)
             return True
         except Exception as e:
-            print "FAILED TO CLEAN SPACES", e
+            handle_exception(e, function_name)
             return False
 
-    return repeat_until(condition, 5)
+    return client.perform(condition, 5)
 
 
 def clean_spaces(user, client):
-    print "CLEANING SPACES"
     spaces = ls(client, path=client.mount_path)
     # clean spaces
     for space in spaces:
@@ -360,13 +364,14 @@ def clean_spaces(user, client):
 
 
 def clean_mount_path(user, client):
+    function_name = get_function_name()
+
     try:
         clean_spaces(user, client)
     except Exception as e:
-        print "FAILED TO CLEAN MOUNT PATH", e
+        handle_exception(e, function_name)
     finally:
         # get pid of running oneclient node
-        print "UNMOUNT"
         pid = run_cmd('root', client,
                       " | ".join(
                               ["ps aux",
@@ -374,8 +379,6 @@ def clean_mount_path(user, client):
                                "grep -v 'grep'",
                                "awk '{print $2}'"]),
                       output=True)
-
-        print "PID: ", pid
 
         if pid != "":
             # kill oneclient process
@@ -386,14 +389,6 @@ def clean_mount_path(user, client):
         fusermount(client, client.mount_path, user=user, unmount=True)
         # lazy=True)
         rm(client, path=client.mount_path, recursive=True, force=True)
-
-
-def save_op_code(context, user, op_code):
-    context.users[user].last_op_ret_code = op_code
-
-
-def get_client(client_node, user, context):
-    return context.users[user].clients[client_node]
 
 
 def user_home_dir(user="root"):

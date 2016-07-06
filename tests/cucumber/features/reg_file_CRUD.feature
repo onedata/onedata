@@ -3,10 +3,15 @@ Feature: Regular_file_CRUD
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
+    And u1 have mounted spaces [s1, s2]
 
   Scenario: Create regular file
     When u1 creates regular files [s1/file1, s1/file2, s1/file3]
     Then u1 sees [file1, file2, file3] in s1
+
+  Scenario: Create many children
+    When u1 creates children files of s1 with names in range [1, 127)
+    Then u1 lists only children of s1 with names in range [1, 127)
 
   Scenario: Rename regular file
     When u1 creates regular files [s1/file1]

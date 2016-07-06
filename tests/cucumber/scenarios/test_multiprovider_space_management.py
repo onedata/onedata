@@ -1,9 +1,12 @@
 """Test suite for space management in onedata in multiprovider environment
 """
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+from tests import CUSTOM_CUCUMBER_ENV_DIR
 from tests.cucumber.steps.spaces_steps import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.auth_steps import *

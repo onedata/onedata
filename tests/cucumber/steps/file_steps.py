@@ -27,6 +27,15 @@ def ls_present(user, files, path, context):
     multi_file_steps.ls_present(user, files, path, "client1", context)
 
 
+@when(parsers.parse('{user} lists only children of {parent_dir} with names in '
+                    'range [{lower:d}, {upper:d})'))
+@then(parsers.parse('{user} lists only children of {parent_dir} with names in '
+                    'range [{lower:d}, {upper:d})'))
+def ls_children(user, parent_dir, lower, upper, context):
+    multi_file_steps.ls_children(user, parent_dir, lower, upper, "client1",
+                                 context)
+
+
 @when(parsers.parse('{user} doesn\'t see {files} in {path}'))
 @then(parsers.parse('{user} doesn\'t see {files} in {path}'))
 def ls_absent(user, files, path, context):

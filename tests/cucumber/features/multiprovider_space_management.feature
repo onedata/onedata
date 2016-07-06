@@ -190,7 +190,7 @@ Feature: Space management with multiple providers
     And u2 writes 2 MB of random characters to s1/file1 on client2 and saves MD5
     And u2 waits 10 seconds
     And u2 writes "TEST TEXT ONEDATA" to s1/file1 on client2
-    And last operations by u2 fails
+    And last operation by u2 fails
 
   Scenario: Exceed quota - test of dbsync
     Given [u2] start oneclients [client2] in
@@ -210,4 +210,4 @@ Feature: Space management with multiple providers
     And u2 writes 2 MB of random characters to s1/file1 on client2 and saves MD5
     And u2 waits 10 seconds
     And u2 writes "TEST TEXT ONEDATA" to s1/file1 on client2
-    And last operations by u2 fails
+    And last operation by u2 fails

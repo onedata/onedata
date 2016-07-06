@@ -81,7 +81,7 @@ def get_users(environment):
             mount_paths.append(d['mounting_path'])
             client_hosts.append(client_host)
             tokens.append('token')
-    return {"users": users,
+    return {"user_names": users,
             "client_instances": client_instances,
             "mount_paths": mount_paths,
             "client_hosts": client_hosts,

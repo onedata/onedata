@@ -44,14 +44,3 @@ def list_parser(list):
 def make_arg_list(arg):
     return "[" + arg + "]"
 
-
-def repeat_until(condition, timeout=0):
-    condition_satisfied = condition()
-    while not condition_satisfied and timeout >= 0:
-        print "TIMEOUT: ", timeout
-        time.sleep(1)
-        timeout -= 1
-        condition_satisfied = condition()
-    return timeout > 0 or condition_satisfied
-
-

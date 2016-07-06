@@ -63,18 +63,11 @@ def test_remote_file_removal(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["multiprovider_directio_env.json",
-                               "multiprovider_env.json"],
-                       reason="environement synchronization")
 @scenario('Create nonempty file, append remotely, append locally and read both')
 def test_sequential_appends(env_description_file):
     pass
 
 
-# todo fix environement synchronization
-@pytest.mark.xfail_env(envs=["multiprovider_directio_env.json",
-                               "multiprovider_env.json"],
-                       reason="environement synchronization")
 @scenario('Concurrently write disjoint ranges and read the same on both providers')
 def test_conflict_on_disjoint_blocks(env_description_file):
     pass

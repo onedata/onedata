@@ -199,9 +199,6 @@ def clear_storage(storage_path):
 class Context:
     def __init__(self):
         self.users = {}
-        self.rpyc_connections = {}  #opened connections to rpyc server per user on client docker
-        self.opened_files = {}  # maps files to pids of processes which
-                                # have these files opened
 
     def get_user(self, user):
         return self.users.get(user)

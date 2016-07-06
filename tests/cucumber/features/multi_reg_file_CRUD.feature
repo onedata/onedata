@@ -6,6 +6,7 @@ Feature: Multi_regular_file_CRUD
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
+    And [u1, u2] have mounted spaces [s1, s2] on [client1, client2]
 
   Scenario: Create regular file
     When u1 creates regular files [s1/file1, s1/file2, s1/file3] on client1
@@ -13,8 +14,8 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1, file2, file3] in s1 on client2
 
   Scenario: Create many children
-    When u1 creates children files of s1 with names in range [1, 151) on client1
-    Then u2 lists children of s1 with names in range [1, 151) on client2
+    When u1 creates children files of s1 with names in range [1, 127) on client1
+    Then u2 lists only children of s1 with names in range [1, 127) on client2
 
   Scenario: Rename regular file without permission
     When u1 creates regular files [s1/file1] on client1
@@ -195,7 +196,8 @@ Feature: Multi_regular_file_CRUD
     And u1 opens s1/dir1/file1 with mode r+ on client1
     And u2 deletes files [s1/dir1/file1] on client2
     And u1 writes "TEST TEXT ONEDATA" to previously opened s1/dir1/file1 on client1
-    And u1 reads "TEST TEXT ONEDATA" from offset 0 in file s1/dir1/file1 on client1
+    And u1 sets current file position in s1/dir1/file1 at offset 0 on client1
+    And u1 reads "TEST TEXT ONEDATA" from previously opened file s1/dir1/file1 on client1
     And u1 closes s1/dir1/file1 on client1
     And u1 doesn't see [file1] in s1/dir1 on client1
 

@@ -3,6 +3,7 @@ Feature: Regular_file_stat
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
+    And u1 have mounted spaces [s1, s2]
 
   Scenario: Check file type when empty
     When u1 creates regular files [s1/file1]

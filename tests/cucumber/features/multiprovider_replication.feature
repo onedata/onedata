@@ -6,6 +6,7 @@ Feature: Multiprovider_replication
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
+    And [u1, u2] have mounted spaces [s1, s2] on [client1, client2]
 
   Scenario: Create files and see them on external provider
     When u1 creates regular files [s1/file1, s1/file2, s1/file3] on client1
@@ -34,6 +35,9 @@ Feature: Multiprovider_replication
 
   Scenario: Create nonempty file and override its contents on remote provider
     When u1 creates regular files [s1/file1] on client1
+    And u2 sees [file1] in s1 on client2
+    And u1 changes s1/file1 mode to 666 on client1
+    And mode of u2's s1/file1 is 666 on client2
     And u1 writes "123456789" to s1/file1 on client1
     And user waits 10 seconds
     And u2 writes "abcd" to s1/file1 on client2
@@ -41,6 +45,7 @@ Feature: Multiprovider_replication
 
   Scenario: Create nonempty file and remove it on remote provider
     When u1 creates regular files [s1/file1] on client1
+    And u2 sees [file1] in s1 on client2
     And u1 writes "123456789" to s1/file1 on client1
     And u1 deletes files [s1/file1] on client1
     Then u1 doesn't see [file1] in s1 on client1
@@ -49,6 +54,8 @@ Feature: Multiprovider_replication
   Scenario: Create nonempty file, append remotely, append locally and read both
     When u1 creates regular files [s1/file1] on client1
     And u1 writes "a" to s1/file1 on client1
+    And u1 changes s1/file1 mode to 666 on client1
+    And mode of u2's s1/file1 is 666 on client2
     And u1 waits 10 seconds
     And u2 appends "b" to s1/file1 on client2
     And u1 waits 10 seconds
@@ -59,6 +66,8 @@ Feature: Multiprovider_replication
   Scenario: Concurrently write disjoint ranges and read the same on both providers
     When u1 creates regular files [s1/file1] on client1
     And u2 sees [file1] in s1 on client2
+    And u1 changes s1/file1 mode to 666 on client1
+    And mode of u2's s1/file1 is 666 on client2
     And u2 writes "defg" at offset 3 to s1/file1 on client2
     And u1 writes "abc" at offset 0 to s1/file1 on client1
     Then u1 reads "abcdefg" from file s1/file1 on client1

@@ -33,6 +33,11 @@ def test_create(env_description_file):
     pass
 
 
+@scenario('Create many children')
+def test_create(env_description_file):
+    pass
+
+
 @scenario('Rename regular file')
 def test_rename(env_description_file):
     pass
@@ -53,25 +58,20 @@ def test_append(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
-                             "singleprovider_singleclient_proxy"],
-                       reason="File disappears after replace")
+@pytest.mark.xfail_env(
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_singleclient_proxy"],
+    reason="File disappears after replace")
 @scenario('Replace word in file')
 def test_replace(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
-                             "singleprovider_singleclient_proxy"],
-                       reason="Move fails")
 @scenario('Move regular file and read')
 def test_move(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
-                             "singleprovider_singleclient_proxy"],
-                       reason="Move fails")
 @scenario('Move big regular file and check MD5')
 def test_move_big(env_description_file):
     pass

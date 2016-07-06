@@ -1,6 +1,7 @@
 """Module implements common steps for operation on files (both regular files
 and directories)in multi-client environment.
 """
+from tests.utils.utils import handle_exception, get_function_name
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
@@ -20,6 +21,8 @@ def touch_file(user, files, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     files = list_parser(files)
+    function_name = get_function_name()
+
     for file in files:
         file_path = client.absolute_path(file)
 
@@ -29,7 +32,7 @@ def touch_file(user, files, client_node, context):
                 user.mark_last_operation_succeeded()
                 return True
             except Exception as e:
-                print "TOUCH FAILED: ", e
+                handle_exception(e, function_name)
                 user.mark_last_operation_failed()
                 return False
 
@@ -42,6 +45,8 @@ def create_reg_file(user, files, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     files = list_parser(files)
+    function_name = get_function_name()
+
     for file in files:
         file_path = client.absolute_path(file)
 
@@ -52,7 +57,7 @@ def create_reg_file(user, files, client_node, context):
                 user.mark_last_operation_succeeded()
                 return True
             except Exception as e:
-                print "create_reg_file failed", e
+                handle_exception(e, function_name)
                 user.mark_last_operation_failed()
                 return False
 
@@ -64,13 +69,9 @@ def create_reg_file(user, files, client_node, context):
 @then(parsers.parse('{user} creates children files of {parent_dir} with names '
                     'in range [{lower:d}, {upper:d}) on {client_node}'))
 def create_many(user, lower, upper, parent_dir, client_node, context):
-    client = user.get_client(user, client_node)
-    print lower.__class__
-    files = ""
     for i in range(lower, upper):
-        files += ", {}".format(client.absolute_path(os.path.join(parent_dir, str(i))))
-
-    create_reg_file(user, make_arg_list(files), client_node, context)
+        new_file = os.path.join(parent_dir, str(i))
+        create_reg_file(user, make_arg_list(new_file), client_node, context)
 
 
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
@@ -79,36 +80,49 @@ def ls_present(user, files, path, client_node, context):
     client = context.get_client(user, client_node)
     path = client.absolute_path(path)
     files = list_parser(files)
+    function_name = get_function_name()
 
     def condition():
 
         try:
-            print "TRYING TO LIST FILES"        #todo check if length is ok
             listed_files = ls(client, path)
-            print "LISTED FILES: ", listed_files
             for file in files:
-                print "LOOKING FOR", file
                 if file not in listed_files:
                     return False
             return True
-        except:
+        except Exception as e:
+            handle_exception(e, function_name)
             return False
 
     assert client.perform(condition)
 
 
-@when(parsers.parse('{user} lists children of {parent_dir} with names in range '
-                    '[{lower:d}, {upper:d}) on {client_node}'))
-@then(parsers.parse('{user} lists children of {parent_dir} with names in range '
-                    '[{lower:d}, {upper:d}) on {client_node}'))
-def ls_present_many(user, parent_dir, lower, upper, client_node, context):
-    files = ""
-    for i in range(lower, upper):
-        files += ", " + str(i)
+@when(parsers.parse('{user} lists only children of {parent_dir} with names in '
+                    'range [{lower:d}, {upper:d}) on {client_node}'))
+@then(parsers.parse('{user} lists only children of {parent_dir} with names in '
+                    'range [{lower:d}, {upper:d}) on {client_node}'))
+def ls_children(user, parent_dir, lower, upper, client_node, context):
 
-    print "GENERATED: ", make_arg_list(files)
+    client = context.get_client(user, client_node)
+    function_name = get_function_name()
+    path = client.absolute_path(parent_dir)
+    files_num = upper - lower
 
-    ls_present(user, make_arg_list(files), parent_dir, client_node, context)
+    def condition():
+
+        try:
+            listed_files = ls(client, path)
+            if len(listed_files) != files_num:
+                return False
+            for i in range(lower, upper):
+                if str(i) not in listed_files:
+                    return False
+            return True
+        except Exception as e:
+            handle_exception(e, function_name)
+            return False
+
+    assert client.perform(condition)
 
 
 @when(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
@@ -117,6 +131,7 @@ def ls_absent(user, files, path, client_node, context):
     client = context.get_client(user, client_node)
     path = client.absolute_path(path)
     files = list_parser(files)
+    function_name = get_function_name()
 
     def condition():
         try:
@@ -125,7 +140,8 @@ def ls_absent(user, files, path, client_node, context):
                 if file in listed_files:
                     return False
             return True
-        except:
+        except Exception as e:
+            handle_exception(e, function_name)
             return False
 
     assert client.perform(condition)
@@ -159,6 +175,7 @@ def rename(user, file1, file2, client_node, context):
     client = user.get_client(client_node)
     src = client.absolute_path(file1)
     dest = client.absolute_path(file2)
+    function_name = get_function_name()
 
     def condition():
 
@@ -166,7 +183,8 @@ def rename(user, file1, file2, client_node, context):
             mv(client, src, dest)
             user.mark_last_operation_succeeded()
             return True
-        except:
+        except Exception as e:
+            handle_exception(e, function_name)
             user.mark_last_operation_failed()
             return False
 
@@ -179,6 +197,8 @@ def delete_file(user, files, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     files = list_parser(files)
+    function_name = get_function_name()
+
     for file in files:
         path = client.absolute_path(file)
 
@@ -187,7 +207,8 @@ def delete_file(user, files, client_node, context):
                 rm(client, path)
                 user.mark_last_operation_succeeded()
                 return True
-            except:
+            except Exception as e:
+                handle_exception(e, function_name)
                 user.mark_last_operation_failed()
                 return False
 
@@ -201,6 +222,7 @@ def change_mode(user, file, mode, client_node, context):
     client = user.get_client(client_node)
     mode = int(mode, 8)
     file_path = client.absolute_path(file)
+    function_name = get_function_name()
 
     def condition():
 
@@ -209,7 +231,7 @@ def change_mode(user, file, mode, client_node, context):
             user.mark_last_operation_succeeded()
             return True
         except Exception as e:
-            print "chmod failed", e
+            handle_exception(e, function_name)
             user.mark_last_operation_failed()
             return False
 
@@ -221,6 +243,7 @@ def check_type(user, file, file_type, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     file_path = client.absolute_path(file)
+    function_name = get_function_name()
 
     if file_type == "regular":
         stat_method = "S_ISREG"
@@ -230,10 +253,9 @@ def check_type(user, file, file_type, client_node, context):
     def condition():
         try:
             stat_result = stat(client, file_path)
-            print stat_result
             return getattr(stat_lib, stat_method)(stat_result.st_mode)
         except Exception as e:
-            print "CHECKIG FAILED ", e
+            handle_exception(e, function_name)
             return False
 
     assert client.perform(condition)
@@ -245,6 +267,7 @@ def shell_check_type(user, file, file_type, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     file_path = client.absolute_path(file)
+    function_name = get_function_name()
 
     def condition():
 
@@ -252,10 +275,9 @@ def shell_check_type(user, file, file_type, client_node, context):
 
         try:
             stat_file_type = run_cmd(user.name, client, cmd, output=True)
-            print stat_file_type
             return stat_file_type == file_type
         except Exception as e:
-            print "CHECKIG FAILED ", e
+            handle_exception(e, function_name)
             return False
 
     assert client.perform(condition)
@@ -267,14 +289,15 @@ def check_mode(user, file, mode, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     file_path = client.absolute_path(file)
+    function_name = get_function_name()
     mode = int(mode, 8)
 
     def condition():
         try:
             stat_result = stat(client, file_path)
-            print "MODE: ",stat_lib.S_IMODE(stat_result.st_mode), mode
             return stat_lib.S_IMODE(stat_result.st_mode) == mode
-        except:
+        except Exception as e:
+            handle_exception(e, function_name)
             return False
 
     assert client.perform(condition)
@@ -286,15 +309,15 @@ def check_size(user, file, size, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     file_path = client.absolute_path(file)
+    function_name = get_function_name()
     size = int(size)
 
     def condition():
         try:
             stat_result = stat(client, file_path)
-            print "SIZE: ", stat_result.st_size, size
             return stat_result.st_size == size
         except Exception as e:
-            print "CHECKING SIZE FAILED", e
+            handle_exception(e, function_name)
             return False
 
     assert client.perform(condition)
@@ -308,6 +331,7 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
     attr1 = time_attr(time1)
     attr2 = time_attr(time2)
     file_path = client.absolute_path(file)
+    function_name = get_function_name()
 
     def condition():
 
@@ -315,10 +339,9 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
             stat_result = stat(client, file_path)
             t1 = getattr(stat_result, attr1)
             t2 = getattr(stat_result, attr2)
-            print "TIME: ", t1, t2
             return compare(t1, t2, comparator)
         except Exception as e:
-            print "check_time failed", e
+            handle_exception(e, function_name)
             return False
 
     assert client.perform(condition)

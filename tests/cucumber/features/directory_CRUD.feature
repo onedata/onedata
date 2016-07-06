@@ -3,6 +3,7 @@ Feature: Directory_CRUD
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
+    And u1 have mounted spaces [s1, s2]
 
   Scenario: Create directory
     When u1 creates directories [s1/dir1, s1/dir2, s1/dir3]
