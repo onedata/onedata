@@ -21,6 +21,15 @@ def create_reg_file(user, files, context):
     multi_file_steps.create_reg_file(user, files, "client1", context)
 
 
+@when(parsers.parse('{user} creates children files of {parent_dir} with names '
+                    'in range [{lower:d}, {upper:d})'))
+@then(parsers.parse('{user} creates children files of {parent_dir} with names '
+                    'in range [{lower:d}, {upper:d})'))
+def create_many(user, lower, upper, parent_dir, context):
+    multi_file_steps.create_many(user, lower, upper, parent_dir, "client1",
+                                 context)
+
+
 @when(parsers.parse('{user} sees {files} in {path}'))
 @then(parsers.parse('{user} sees {files} in {path}'))
 def ls_present(user, files, path, context):
