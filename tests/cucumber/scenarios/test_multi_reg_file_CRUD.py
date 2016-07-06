@@ -8,7 +8,6 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests import DEFAULT_CUCUMBER_ENV_DIR
-from tests.cucumber.steps.cucumber_utils import *
 from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.multi_auth_steps import *
 from tests.cucumber.steps.multi_dir_steps import *

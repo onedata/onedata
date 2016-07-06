@@ -7,8 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests.utils.utils import get_function_name, handle_exception
-from tests.utils.docker_utils import run_cmd
-from test.utils.cucumber_utils import *
+from tests.utils.cucumber_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, md5sum, write, read,
                                       replace_pattern, open_file, execute,
                                       close_file, write_to_opened_file,
@@ -37,15 +36,6 @@ def write_at_offset(user_name, data, offset, file, client_node, context):
             return False
 
     client.perform(condition)
-        #
-    # write_command = '''python -c "with open(\\"{path}\\", \\"r+b\\") as file:
-    # file.seek({offset})
-    # file.write(\\"{data}\\")"
-# '''.format(path=path, offset=offset, data=data)
-#     ret = run_cmd(user, client, write_command)
-
-    # if ret == 0:
-    # else:
 
 
 @when(parsers.parse('{user_name} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))

@@ -383,11 +383,10 @@ def clean_mount_path(user, client):
         if pid != "":
             # kill oneclient process
             kill(client, pid)
-            # run_cmd("root", client, "kill -KILL " + str(pid))
 
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True)
-        # lazy=True)
+
         rm(client, path=client.mount_path, recursive=True, force=True)
 
 
