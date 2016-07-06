@@ -1,7 +1,6 @@
 """Module implements common steps for operation on files (both regular files
 and directories)in multi-client environment.
 """
-from tests.utils.utils import handle_exception, get_function_name
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
@@ -9,6 +8,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from cucumber_utils import *
+from tests.utils.utils import handle_exception, get_function_name
 from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
                                       create_file)
 from tests.utils.docker_utils import run_cmd

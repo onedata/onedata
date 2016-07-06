@@ -1,0 +1,263 @@
+{
+    "dirs_config": {
+        "cluster_manager": {
+            "input_dir": "rel/cluster_manager",
+            "target_dir": "rel/test_cluster"
+        },
+        "op_worker": {
+            "input_dir": "rel/op_worker",
+            "target_dir": "rel/test_cluster"
+        },
+        "oz_worker": {
+            "input_dir": "rel/oz_worker",
+            "target_dir": "rel/test_cluster"
+        }
+    },
+    "os_configs": {
+        "cfg1": {
+            "storages": [
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                }
+            ],
+            "users": [
+                "user1",
+                "user2",
+                "user3"
+            ],
+            "groups": {
+                "group1": [
+                    "user1",
+                    "user3"
+                ],
+                "group2": [
+                    "user1"
+                ]
+            }
+        }
+    },
+    "provider_domains": {
+        "p1": {
+            "db_driver": "couchdb",
+            "os_config": "cfg1",
+            "cluster_manager": {
+                "cm1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "worker_num": 1
+                        }
+                    }
+                }
+            },
+            "op_worker": {
+                "worker1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "op_worker": {
+                            "soft_quota_limit_size": 0,
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "db_nodes": [
+                                "dbnode1"
+                            ],
+                            "verify_oz_cert": false,
+                            "oz_domain": "oz"
+                        }
+                    }
+                }
+            }
+        },
+        "p2": {
+            "gui_override": {
+                "mount_path": "/var/www/html",
+                "mount_from": {
+                    "host": "/Users/kliput/Onedata/op-gui-default/rel"
+                },
+                "livereload": true
+            },
+            "db_driver": "couchdb",
+            "os_config": "cfg1",
+            "cluster_manager": {
+                "cm1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "worker_num": 1
+                        }
+                    }
+                }
+            },
+            "op_worker": {
+                "worker1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "op_worker": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "db_nodes": [
+                                "dbnode1"
+                            ],
+                            "verify_oz_cert": false,
+                            "oz_domain": "oz"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "zone_domains": {
+        "oz": {
+            "db_driver": "couchdb",
+            "cluster_manager": {
+                "cm": {
+                    "vm.args": {
+                        "setcookie": "cookie3"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm"
+                            ],
+                            "worker_num": 1
+                        }
+                    }
+                }
+            },
+            "oz_worker": {
+                "node1": {
+                    "vm.args": {
+                        "setcookie": "cookie3"
+                    },
+                    "sys.config": {
+                        "oz_worker": {
+                            "cm_nodes": [
+                                "cm"
+                            ],
+                            "db_nodes": [
+                                "127.0.0.1:49161"
+                            ],
+                            "http_domain": {
+                                "string": "127.0.0.1"
+                            },
+                            "dev_mode": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "global_setup": {
+        "users": {
+            "user1": {
+                "default_space": "space1"
+            },
+            "user2": {
+                "default_space": "space2"
+            },
+            "user3": {
+                "default_space": "space3"
+            }
+        },
+        "groups": {
+            "group1": {
+                "users": [
+                    "user1",
+                    "user2"
+                ]
+            },
+            "group2": {
+                "users": [
+                    "user2",
+                    "user3"
+                ]
+            }
+        },
+        "spaces": {
+            "space1": {
+                "displayed_name": "space1",
+                "users": [
+                    "user1",
+                    "user2",
+                    "user3"
+                ],
+                "groups": [
+                    "group1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "space2": {
+                "displayed_name": "space2",
+                "users": [
+                    "user1",
+                    "user2"
+                ],
+                "groups": [
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "space3": {
+                "displayed_name": "space3",
+                "users": [
+                    "user2",
+                    "user3"
+                ],
+                "groups": [
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "small_space": {
+                "displayed_name": "Small space",
+                "users": [
+                    "user1",
+                    "user2",
+                    "user3"
+                ],
+                "groups": [
+                    "group1",
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
+                    }
+                }
+            }
+        }
+    }
+}

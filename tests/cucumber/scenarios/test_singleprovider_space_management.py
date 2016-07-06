@@ -13,7 +13,7 @@ from tests.cucumber.steps.user_steps import *
 from tests.cucumber.steps.multi_file_steps import *
 from tests.cucumber.steps.multi_reg_file_steps import *
 from tests.cucumber.steps.multi_dir_steps import *
-from tests.cucumber.steps.cucumber_utils import *
+from tests.utils.cucumber_utils import *
 from tests.utils.path_utils import env_file
 from tests import CUSTOM_CUCUMBER_ENV_DIR
 
@@ -26,7 +26,7 @@ scenario = partial(scenario,
                    '../features/singleprovider_space_management.feature')
 
 
-@pytest.fixture(scope="module", params=["singleprovider_space_management.json"])
+@pytest.fixture(scope="module", params=["singleprovider_space_management"])
 def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 

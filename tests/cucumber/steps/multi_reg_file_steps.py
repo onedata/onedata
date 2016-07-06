@@ -1,14 +1,14 @@
 """Module implements pytest-bdd steps for operations on regular files.
 """
-from tests.utils.utils import get_function_name, handle_exception
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+from tests.utils.utils import get_function_name, handle_exception
 from tests.utils.docker_utils import run_cmd
-from cucumber_utils import *
+from test.utils.cucumber_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, md5sum, write, read,
                                       replace_pattern, open_file, execute,
                                       close_file, write_to_opened_file,

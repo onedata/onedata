@@ -8,6 +8,7 @@ test-reports/*
 tests/acceptance/logs
 tests/cucumber/logs
 tests/performance/logs
+tests/gui/logs
 tests/**/.cache
 
 
@@ -20,3 +21,5 @@ oneprovider_meta/oneprovider/DEBIAN/control
 
 .gitmodules
 
+# OSX
+.DS_Store

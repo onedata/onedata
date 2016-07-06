@@ -54,7 +54,8 @@ Feature: Space management with single provider
     And u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
     And u1 creates regular files [s1/file2] on client1
     And u1 writes "ANOTHER TEST TEXT ONEDATA" to s1/file2 on client1
-    Then u1 reads "ANOTHER TEST TEXT ONEDATA" from file s1/file2 on client1
+    Then u1 reads "ANOTHER TEST TEXT ONEDATA" from s1/file2 on client1
+    And u2 reads "ANOTHER TEST TEXT ONEDATA" from s1/file2 on client1
 
   Scenario: Remove user from space
     Given [u2] start oneclients [client2] in
