@@ -15,18 +15,18 @@ from pytest_bdd import given, parsers
 
 
 @given(parsers.parse("users {users} register with passwords {passwords}"))
-def register_users(users, passwords, context, environment, request):
-    set_dns(environment)
+def register_users(users, passwords, context, onedata_environment, request):
+    set_dns(onedata_environment)
     users = list_parser(users)
     passwords = list_parser(passwords)
-    onepanel = environment['onepanel_nodes'][0].split('@')[1]
+    onepanel = onedata_environment['onepanel_nodes'][0].split('@')[1]
 
     if not hasattr(context, "users"):
         context.users = {}
 
     for user_name, password in zip(users, passwords):
         user = create_user(user_name, password, onepanel)
-        user.set_oz_domain(environment)
+        user.set_oz_domain(onedata_environment)
         context.users[user_name] = user
 
     def fin():
@@ -42,7 +42,7 @@ def register_users(users, passwords, context, environment, request):
 
 
 @given(parsers.parse('users {users} authorize with {provider_ids} certs'))
-def provider_certs(users, provider_ids, context, environment, providers, request):
+def provider_certs(users, provider_ids, context, providers):
 
     users = context.get_users(list_parser(users))
     provider_ids = list_parser(provider_ids)

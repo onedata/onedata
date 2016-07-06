@@ -80,9 +80,9 @@ def mount_users(request, environment, context, client_dockers, env_description_f
                 client_hosts=[], tokens=[], check=True):
 
     # current version is for environment with one OZ
-    oz_node = onedata_environment['oz_worker_nodes'][0]
+    oz_node = environment['oz_worker_nodes'][0]
 
-    set_dns(onedata_environment)
+    set_dns(environment)
 
     client_data = environment['client_data']
     clients = create_clients(user_names, client_hosts, mount_paths, client_dockers)
