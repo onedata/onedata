@@ -45,11 +45,9 @@ def test_ceph_storage_operations(env_description_file):
 def test_s3_storage_operations(env_description_file):
     pass
 
+
 @pytest.mark.skip_env(envs=['env_luma_provider'],
                       reason="Luma cucumber test hangs sometimes")
-@scenario(
-    '../features/luma_provider.feature',
-    'Operations on Openstack Swift storage'
-)
+@scenario('Operations on Openstack Swift storage')
 def test_swift_storage_operations(env_description_file):
     pass    
