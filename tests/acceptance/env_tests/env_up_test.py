@@ -1,19 +1,25 @@
-from tests.test_common import *
-import os
-import subprocess
-from env_test_utils import *
-import ast
+"""This module contains acceptance test of env_up script.
+"""
+__author__ = "Lukasz Opiola, Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-from environment import docker, env
+from tests import *
+from tests.utils.utils import run_env_up_script
+from tests.utils.path_utils import config_file, get_file_name, make_logdir
+from test_utils import *
+
+from environment import docker
 
 
 class TestEnvUp:
     @classmethod
     # Run the env_up.py script, capture and parse the output
     def setup_class(cls):
-        logdir = make_logdir(acceptance_logdir, get_test_name(__file__))
+        logdir = make_logdir(ACCEPTANCE_LOGDIR, get_file_name(__file__))
         result = run_env_up_script("env_up.py",
-                                   config=test_utils.test_file('env.json'),
+                                   config=config_file('env.json'),
                                    logdir=logdir)
         cls.result = result
 

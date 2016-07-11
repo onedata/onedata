@@ -1,19 +1,18 @@
-"""
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
-
-Test suite for CRUD operations on directories in onedata,
+"""Test suite for CRUD operations on directories in onedata,
 in multi-client environment.
 """
+__author__ = "Jakub Kudzia"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+from tests.cucumber.steps.env_steps import *
+from tests.utils.cucumber_utils import *
+from tests.cucumber.steps.multi_auth_steps import *
+from tests.cucumber.steps.multi_dir_steps import *
+from tests.cucumber.steps.multi_file_steps import *
 
 from pytest_bdd import scenario
-
-from steps.env_steps import *
-from steps.auth_steps import *
-from steps.multi_dir_steps import *
-from steps.multi_file_steps import *
-from steps.common import *
+import pytest
 
 
 @scenario(
@@ -21,22 +20,6 @@ from steps.common import *
     'Create directory'
 )
 def test_create(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Create directory in default space'
-)
-def test_create_default_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Create directory in non-default space'
-)
-def test_create_in_spaces(env_description_file):
     pass
 
 
@@ -135,13 +118,21 @@ def test_rename_subfile_without_permission(env_description_file):
 def test_rename_subfile_with_permission(env_description_file):
     pass
 
+
 # TODO VFS-1824
-# @scenario(
-#     '../features/multi_directory_CRUD.feature',
-#     'Recreate directory deleted by other user'
-# )
-# def test_recreate(env_description_file):
-#     pass
+@pytest.mark.xfail_env(
+    envs=["singleprovider_multiclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
+          "multiprovider_directio"],
+    reason="u2 is unable to create direcory with the same name "
+           "although first one was deleted")
+@scenario(
+    '../features/multi_directory_CRUD.feature',
+    'Recreate directory deleted by other user'
+)
+def test_recreate(env_description_file):
+    pass
 
 
 @scenario(
@@ -165,14 +156,6 @@ def test_children2(env_description_file):
     'Duplication'
 )
 def test_duplication(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Duplication in spaces'
-)
-def test_duplication_spaces(env_description_file):
     pass
 
 
@@ -229,36 +212,4 @@ def test_move_to_itself(env_description_file):
     'Move directory to its subtree'
 )
 def test_move_to_subtree(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to itself in spaces'
-)
-def test_move_to_itself_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to itself in default space'
-)
-def test_move_to_itself_default_space(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to its subtree in spaces'
-)
-def test_move_to_subtree_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/multi_directory_CRUD.feature',
-    'Move directory to its subtree in default space'
-)
-def test_move_to_subtree_default_space(env_description_file):
     pass

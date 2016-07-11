@@ -1,19 +1,28 @@
-from tests.test_common import *
-from tests import test_utils
-import os
+"""This module contains tests of appmock mocking rest endpoints.
+"""
+__author__ = "Lukasz Opiola"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+from environment import docker, appmock, common
 
 from appmock import appmock_client
-from environment import docker, appmock, common
+from tests import *
+from tests.utils import net_utils
+from tests.utils.path_utils import config_file, get_file_name, make_logdir
 
 
 class TestAppmockRestExample:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
-        logdir = make_logdir(acceptance_logdir, get_test_name(__file__))
-        cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
-                                dns_server='none', uid=common.generate_uid(),
-                                config_path=os.path.join(test_utils.test_file('env.json')),
+        logdir = make_logdir(ACCEPTANCE_LOGDIR, get_file_name(__file__))
+        cls.result = appmock.up(image='onedata/builder',
+                                bindir=APPMOCK_DIR,
+                                dns_server='none',
+                                uid=common.generate_uid(),
+                                config_path=os.path.join(config_file('env.json')),
                                 logdir=logdir)
 
     @classmethod
@@ -59,15 +68,15 @@ class TestAppmockRestExample:
 def some_rest_using_function(appmock_ip):
     # Lets assume we are testing a code that needs to call
     # mocked component several times
-    test_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
-    test_utils.http_get(appmock_ip, 8080, "/test1/abc", True)
-    test_utils.http_get(appmock_ip, 8080, "/test2", True)
-    test_utils.http_get(appmock_ip, 8080, "/test2", True)
-    test_utils.http_get(appmock_ip, 8080, "/test2", True)
-    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    test_utils.http_get(appmock_ip, 9090, "/test_with_state", True)
-    test_utils.http_get(appmock_ip, 8080, "/test3", True)
-    test_utils.http_get(appmock_ip, 443, "/some/path", True)
+    net_utils.http_get(appmock_ip, 8080, "/test1/abc")
+    net_utils.http_get(appmock_ip, 8080, "/test1/abc")
+    net_utils.http_get(appmock_ip, 8080, "/test2")
+    net_utils.http_get(appmock_ip, 8080, "/test2")
+    net_utils.http_get(appmock_ip, 8080, "/test2")
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state")
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state")
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state")
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state")
+    net_utils.http_get(appmock_ip, 9090, "/test_with_state")
+    net_utils.http_get(appmock_ip, 8080, "/test3")
+    net_utils.http_get(appmock_ip, 443, "/some/path")

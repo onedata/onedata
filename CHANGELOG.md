@@ -4,6 +4,41 @@
 CHANGELOG
 ---------
 
+### 3.0.0-beta8
+
+* Additional GUI model relations
+* Update ACL and protocol
+* Change error on sync fail
+* Add file redirection to rename
+
+
+### 3.0.0-beta7
+
+* Improve GUI
+* Improve dbsync reliability and performance
+* Adjust to new client API
+
+
+### 3.0.0-beta6
+
+* Add prefetching
+* Add support for S3
+* Add quota implementation
+* Extend REST api
+
+
+
+### 3.0.0-beta5
+
+* Metadata synchronization between providers improved.
+* Support for nested groups.
+
+
+### 3.0.0-beta4
+
+* Rename redeisgned.
+
+
 ### 3.0.0-beta3
 
 * GUI update

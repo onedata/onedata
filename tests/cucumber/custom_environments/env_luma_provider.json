@@ -37,6 +37,11 @@
                   "type": "s3",
                   "name": "s3",
                   "bucket": "onedata"
+                },
+                {
+                  "type": "swift",
+                  "name": "swift",
+                  "container": "swift"
                 }
             ],
             "users": [
@@ -92,12 +97,6 @@
                             ],
                             "oz_domain": "oz1",
                             "verify_oz_cert": false
-                        }
-                    },
-                    "storage": {
-                        "storage1": {
-                            "volume_path": "/media/storage",
-                            "host_path": "/tmp/blah"
                         }
                     }
                 }
@@ -156,7 +155,8 @@
                     "user_cert": "./cert.pem",
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
+                    "token_for": "u1",
+                    "default_timeout": 5
                 }
             }
         }
@@ -216,6 +216,21 @@
                 "providers": {
                     "p1": {
                         "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "swift": {
+                "displayed_name": "swift",
+                "users": [
+                    "u1"
+                ],
+                "groups": [
+                    "g1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "swift",
                         "supported_size": 1000000000
                     }
                 }

@@ -1,19 +1,27 @@
+"""Test suite for CRUD operations on directories in onedata.
 """
-Author: Piotr Ociepka
-Author: Jakub Kudzia
-Copyright (C) 2015 ACK CYFRONET AGH
-This software is released under the MIT license cited in 'LICENSE.txt'
+__author__ = "Jakub Kudzia, Piotr Ociepka"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
-Test suite for CRUD operations on directories in onedata.
-"""
+from tests import *
+from tests.cucumber.steps.env_steps import *
+from tests.cucumber.steps.auth_steps import *
+from tests.utils.cucumber_utils import *
+from tests.cucumber.steps.dir_steps import *
+from tests.cucumber.steps.file_steps import *
+from tests.utils.path_utils import env_file
 
+import pytest
 from pytest_bdd import scenario
 
-from steps.env_steps import *
-from steps.auth_steps import *
-from steps.dir_steps import *
-from steps.file_steps import *
-from steps.common import *
+
+@pytest.fixture(scope="module",
+                params=["singleprovider_singleclient_directio",
+                        "singleprovider_singleclient_proxy"])
+def env_description_file(request):
+    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
 @scenario(
@@ -26,23 +34,7 @@ def test_create(env_description_file):
 
 @scenario(
     '../features/directory_CRUD.feature',
-    'Create directory in default space'
-)
-def test_create_default_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Create directory in non-default space'
-)
-def test_create_in_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Create directory spaces'
+    'Create directory in spaces directory'
 )
 def test_create_spaces_dir(env_description_file):
     pass
@@ -69,14 +61,6 @@ def test_rename(env_description_file):
     'Delete empty directory'
 )
 def test_delete(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Delete directory spaces'
-)
-def test_delete_spaces_dir(env_description_file):
     pass
 
 
@@ -109,14 +93,6 @@ def test_children2(env_description_file):
     'Duplication'
 )
 def test_duplication(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Duplication in spaces'
-)
-def test_duplication_spaces(env_description_file):
     pass
 
 
@@ -173,36 +149,4 @@ def test_move_to_itself(env_description_file):
     'Move directory to its subtree'
 )
 def test_move_to_subtree(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to itself in spaces'
-)
-def test_move_to_itself_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to itself in default space'
-)
-def test_move_to_itself_default_space(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to its subtree in spaces'
-)
-def test_move_to_subtree_spaces(env_description_file):
-    pass
-
-
-@scenario(
-    '../features/directory_CRUD.feature',
-    'Move directory to its subtree in default space'
-)
-def test_move_to_subtree_default_space(env_description_file):
     pass

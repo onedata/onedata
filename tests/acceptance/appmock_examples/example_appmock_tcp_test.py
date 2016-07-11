@@ -1,22 +1,28 @@
-from tests.test_common import *
-from tests import test_utils
-import time
-import ssl
-import socket
-import os
+"""This module contains tests of appmock mocking tcp server.
+"""
+__author__ = "Lukasz Opiola"
+__copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+from tests import *
+from tests.utils.path_utils import config_file, get_file_name, make_logdir
 
-from appmock import appmock_client
 from environment import docker, appmock, common
+from appmock import appmock_client
+
+import socket
+import ssl
+import time
 
 
 class TestAppmockTCPExample:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
-        logdir = make_logdir(acceptance_logdir, get_test_name(__file__))
-        cls.result = appmock.up(image='onedata/builder', bindir=appmock_dir,
+        logdir = make_logdir(ACCEPTANCE_LOGDIR, get_file_name(__file__))
+        cls.result = appmock.up(image='onedata/builder', bindir=APPMOCK_DIR,
                                 dns_server='none', uid=common.generate_uid(),
-                                config_path=os.path.join(test_utils.test_file('env.json')),
+                                config_path=os.path.join(config_file('env.json')),
                                 logdir=logdir)
 
     @classmethod

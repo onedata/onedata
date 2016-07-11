@@ -7,7 +7,10 @@ test-reports/*
 
 tests/acceptance/logs
 tests/cucumber/logs
-tests/tmp
+tests/performance/logs
+tests/gui/logs
+tests/**/.cache
+
 
 package
 docker-build-list.json
@@ -15,3 +18,8 @@ docker-build-report.txt
 oneprovider_meta/package
 oneprovider_meta/oneprovider.spec
 oneprovider_meta/oneprovider/DEBIAN/control
+
+.gitmodules
+
+# OSX
+.DS_Store
