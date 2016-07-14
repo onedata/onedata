@@ -76,7 +76,7 @@ def persistent_environment(request, test_type, env_description_file):
                       force=True,
                       volumes=True)
 
-    request.addfinalizer(fin)
+    # request.addfinalizer(fin)
     request.onedata_environment = env_desc
     return env_desc
 
@@ -89,7 +89,7 @@ def onedata_environment(persistent_environment, request):
             for storage_name, storage in persistent_environment['storages']['posix'].items():
                 clear_storage(storage['host_path'])
 
-    request.addfinalizer(fin)
+    # request.addfinalizer(fin)
     return persistent_environment
 
 
@@ -122,7 +122,7 @@ def providers(persistent_environment, request):
         for provider in providers.itervalues():
             provider.delete_certs()
 
-    request.addfinalizer(fin)
+    # request.addfinalizer(fin)
     return providers
 
 

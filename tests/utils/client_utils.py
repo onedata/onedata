@@ -173,7 +173,7 @@ def mount_users(request, environment, context, client_dockers, env_description_f
                 client.stop_rpyc_server()
             user.clients.clear()
 
-    request.addfinalizer(fin)
+    # request.addfinalizer(fin)
 
 
 def ls(client, path="."):

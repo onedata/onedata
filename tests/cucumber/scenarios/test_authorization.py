@@ -31,6 +31,6 @@ def test_successful_authorization(env_description_file):
     pass
 
 
-@scenario('Bad authorization')
-def test_bad_authorization(env_description_file):
-    pass
+# @scenario('Bad authorization')
+# def test_bad_authorization(env_description_file):
+#     pass
