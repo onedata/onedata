@@ -32,15 +32,30 @@ sorted_pids = sorted(pids, key=itemgetter(1), reverse=True)
 
 cmd_skeleton = "{cwd}/{escript}".format(cwd=os.getcwd(), escript=ESCRIPT_NAME)
 
-print "Listed processes number: ", len(sorted_pids)
-
+print "Parsing", PROFILE_LOG
+print "No. of processes", len(sorted_pids)
 with open(OUTPUT, 'a') as out:
+    out.write("Listed processes number:{}\n".format(len(sorted_pids)))
     i = 1
+    undefined_num = 0
+    undefined_percentage_sum = 0
     for pid, percentage in sorted_pids:
+        sys.stdout.write(str(i) + " ")
+        sys.stdout.flush()
+
         cmd = [cmd_skeleton]
         cmd.extend([OP_NODE, pid])
-        registered_name = subprocess.check_output(cmd)
-        # print "REGISTERED NAME", registered_name, registered_name.__class__, pid
-        out.write("{0}: Process {1} with pid {2} took {3}% of time\n"\
-            .format(i, registered_name, pid, percentage))
+        process_info = subprocess.check_output(cmd)
+        if process_info == "undefined":
+            undefined_num += 1
+            undefined_percentage_sum += percentage
+        out.write("######################################################################################\n"
+                  "{0}: Process {1} took {2}% of time\n"
+                  "--------------------------------------------------------------------------------------\n"
+                  "{3}\n"
+                  .format(i, pid, percentage, process_info))
         i += 1
+    out.write("######################################################################################\n"
+              "Number of undefined processes: {0}\n"
+              "Undefined processes took {1}% of time in total\n"
+              .format(undefined_num, undefined_percentage_sum))

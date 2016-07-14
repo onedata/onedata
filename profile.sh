@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
-TIMESTAMP=$(date +"%T")
-PROFILE_LOG=profiling_logs.${TIMESTAMP}
-PROFILING_SUMMARY=summary.${TIMESTAMP}
-PROFILE_LOG_PATH=/root/bin/node/${PROFILE_LOG}
+LOG_DIR=profiling
 TEST_DOCKER=profiler
 PYTHON_PARSER_SCRIPT=parse.py
-#SETUP_SCRIPT=setup.py
-#TEARDOWN_SCRIPT=teardown.py
+SETUP_SCRIPT=setup.py
+TEARDOWN_SCRIPT=teardown.py
 TESTED_SCRIPT=profiled_test.py
+START_EPROF=start_eprof.escript
 
+mkdir -p ${LOG_DIR}
 
 function docker_name {
     docker ps --filter "name=$1" --format "{{.Names}}" | head -1
@@ -25,18 +24,33 @@ function wait_key {
 
 op_docker=$(docker_name worker)
 client_docker=$(docker_name client-host1)
+oz_docker=$(docker_name node1)
 client_ip=$(docker_ip ${client_docker})
 op_node=worker@${op_docker}
 
-docker exec -it ${TEST_DOCKER} ./start_eprof.escript ${op_node} \
-    ${PROFILE_LOG} $(pwd)/${TESTED_SCRIPT} ${client_ip}
 
-docker cp ${op_docker}:${PROFILE_LOG_PATH} .
+TIMESTAMP=$(date +"%T")
 
-docker exec -it ${TEST_DOCKER} ./parse.py ${op_node} ${PROFILE_LOG} ${PROFILING_SUMMARY}
+for range in 1 10 50 100 150 200 500 1000
+do
+echo "Starting profiling for ${range}"
 
-#echo $out
-#
-#./find_name.escript < parsed_output
+./${SETUP_SCRIPT} ${client_ip} ${range}
 
-#
+CASE_LOG_DIR=${LOG_DIR}/dirs_${range}
+mkdir -p ${CASE_LOG_DIR}
+PROFILE_LOG_NAME=eprof_log.${TIMESTAMP}
+PROFILE_LOG_PATH_DOCKER=/root/bin/node/${PROFILE_LOG_NAME}
+PROFILE_LOG=${CASE_LOG_DIR}/${PROFILE_LOG_NAME}
+PROFILE_SUMMARY=${CASE_LOG_DIR}/summary.${TIMESTAMP}
+
+echo "Finished setup for ${range}"
+docker exec -it ${TEST_DOCKER} ./${START_EPROF} ${op_node} \
+    ${PROFILE_LOG_NAME} $(pwd)/${TESTED_SCRIPT} ${client_ip} ${range} ${client_docker} ${op_docker} ${oz_docker}
+
+docker cp ${op_docker}:${PROFILE_LOG_PATH_DOCKER} ${CASE_LOG_DIR}
+docker exec -it ${TEST_DOCKER} ./${PYTHON_PARSER_SCRIPT} ${op_node} ${PROFILE_LOG} ${PROFILE_SUMMARY}
+
+./${TEARDOWN_SCRIPT} ${client_ip}
+echo "Finished profiling for ${range}"
+done
