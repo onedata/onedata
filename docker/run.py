@@ -78,7 +78,7 @@ def start_services():
     start_service('cluster_manager')
     time.sleep(5)
     start_service('op_worker')
-    log('\nCongratulations! onezone has been successfully started.')
+    log('\nCongratulations! oneprovider has been successfully started.')
 
 def is_configured():
     return 'undefined' not in sp.check_output(['op_panel_admin', '--config'])
