@@ -6,7 +6,6 @@ Feature: Multi_directory_CRUD
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
-    And [u1, u2] have mounted spaces [s1, s2] on [client1, client2]
 
   Scenario: Create directory
     When u1 creates directories [s1/dir1, s1/dir2, s1/dir3]

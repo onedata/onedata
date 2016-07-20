@@ -6,7 +6,6 @@ Feature: Multiprovider_replication
       [/home/u1/onedata, /home/u2/onedata] on client_hosts
       [client-host1, client-host2] respectively,
       using [token, token]
-    And [u1, u2] have mounted spaces [s1, s2] on [client1, client2]
 
   Scenario: Create files and see them on external provider
     When u1 creates regular files [s1/file1, s1/file2, s1/file3] on client1
