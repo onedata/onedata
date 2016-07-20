@@ -7,13 +7,13 @@ Feature: Regular_file_stat
   Scenario: Check file type when empty
     When u1 creates regular files [s1/file1]
     And u1 sees file1 in s1
-    Then file type of u1's s1/file1 is regular empty file
+    Then u1 checks using shell stat if file type of s1/file1 is regular empty file
 
   Scenario: Check file type when non-empty
     When u1 creates regular files [s1/file1]
     And u1 sees file1 in s1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1
-    Then file type of u1's s1/file1 is regular file
+    Then file type of u1's s1/file1 is regular
 
   Scenario: Check default access permissions
     When u1 creates regular files [s1/file1]
@@ -57,7 +57,7 @@ Feature: Regular_file_stat
     And u1 sees file1 in s1
     And u1 waits 1 second
     # call sleep, to be sure that time of write and read is different
-    Then u1 reads "TEST TEXT ONEDATA" from s1/file1
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1
     And access time of u1's s1/file1 is greater than modification time
     And access time of u1's s1/file1 is greater than status-change time
 

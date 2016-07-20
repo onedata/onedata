@@ -30,7 +30,8 @@ Feature: Directory_CRUD
 
   Scenario: Delete space
     When u1 deletes non-empty directories [s1]
-    Then last operation by u1 fails
+    # space directory cannot be deleted
+    Then u1 can list s1
 
   Scenario: Child directories
     When u1 creates directory and parents [s1/dir1/child1, s1/dir1/child2, s1/dir1/child3]
@@ -102,7 +103,7 @@ Feature: Directory_CRUD
   Scenario: Move directory to itself
     When u1 creates directories [s1/dir1]
     And u1 sees [dir1] in s1
-    And u1 renames s1/dir1 to s1/dir1
+    And u1 moves s1/dir1 to s1/dir1 using shell command
     Then last operation by u1 fails
     And u1 sees [dir1] in s1
 

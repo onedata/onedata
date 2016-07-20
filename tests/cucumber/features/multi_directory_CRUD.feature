@@ -22,6 +22,7 @@ Feature: Multi_directory_CRUD
   Scenario: Rename someone's directory with permission
     When u1 creates directory and parents [s1/dir1/child1] on client1
     And u1 changes s1/dir1/child1 mode to 775 on client1
+    And mode of u2's s1/dir1/child1 is 775 on client2
     And u2 renames s1/dir1/child1 to s1/dir1/child2 on client2
     And last operation by u2 succeeds
     Then u1 sees [child2] in s1/dir1 on client1
@@ -139,7 +140,6 @@ Feature: Multi_directory_CRUD
     And u1 sees [dir3] in s1/dir1/dir2 on client1
     And u2 sees [dir3] in s1/dir1/dir2 on client2
     And u2 deletes empty directory and parents [s1/dir1/dir2/dir3] on client2
-    Then last operation by u2 fails
     # u2 can't delete dir1 because sticky bit is set for onedata dir
     And u1 sees [dir1] in s1 on client1
     And u1 doesn't see [dir2] in s1/dir1 on client1
@@ -213,7 +213,7 @@ Feature: Multi_directory_CRUD
     When u1 creates directories [s1/dir1] on client1
     And u1 sees [dir1] in s1 on client1
     And u2 sees [dir1] in s1 on client2
-    And u1 renames s1/dir1 to s1/dir1 on client1
+    And u1 moves s1/dir1 to s1/dir1 using shell command on client1
     Then last operation by u1 fails
     And u1 sees [dir1] in s1 on client1
     And u2 sees [dir1] in s1 on client2

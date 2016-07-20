@@ -25,33 +25,22 @@ def user_wait_default(user, seconds):
 @when(parsers.parse('last operation by {user} succeeds'))
 @then(parsers.parse('last operation by {user} succeeds'))
 def success(user, context):
-    assert context.users[user].last_op_ret_code == 0
+    assert not context.get_user(user).last_operation_failed
 
 
 @when(parsers.parse('last operation by {user} fails'))
 @then(parsers.parse('last operation by {user} fails'))
 def failure(user, context):
-    assert context.users[user].last_op_ret_code != 0
+    assert context.get_user(user).last_operation_failed
 
 
 ###################### FUNCTIONS ######################
 
 
 def list_parser(list):
-    return [el.strip() for el in list.strip("[]").split(',')]
+    return [el.strip() for el in list.strip("[]").split(',') if el != ""]
 
 
 def make_arg_list(arg):
     return "[" + arg + "]"
-
-
-def repeat_until(condition, timeout=0):
-    condition_satisfied = condition()
-    while not condition_satisfied and timeout >= 0:
-        print "TIMEOUT: ", timeout
-        time.sleep(1)
-        timeout -= 1
-        condition_satisfied = condition()
-    return timeout > 0 or condition_satisfied
-
 

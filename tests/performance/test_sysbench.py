@@ -10,7 +10,7 @@ import re
 from tests.utils.docker_utils import run_cmd
 from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import (Result, generate_configs, performance)
-from tests.utils.client_utils import mktemp,  user_home_dir, rm, get_client
+from tests.utils.client_utils import user_home_dir, rm, mkdtemp
 
 REPEATS = 1
 SUCCESS_RATE = 95
@@ -59,26 +59,19 @@ class TestSysbench(AbstractPerformanceTest):
     def test_sysbench(self, context, clients, params):
         user_directio = "u1"
         user_proxy = "u2"
-        client_directio = get_client("client-directio", user_directio, context)
-        client_proxy = get_client("client-proxy", user_proxy, context)
+        client_directio = context.get_client(user_directio, "client-directio")
+        client_proxy = context.get_client(user_proxy, "client-proxy")
         threads_number = params['threads_number']['value']
         files_number = params['files_number']['value']
         total_size = params['total_size']['value']
         mode = params['mode']['value']
 
-        dir_path_directio = mktemp(client_directio,
-                                   path=client_directio.mount_path,
-                                   dir=True,
-                                   user=user_directio)
+        dir_path_directio = mkdtemp(client_directio,
+                                    dir=client_directio.absolute_path("s1"))
 
-        dir_path_proxy = mktemp(client_proxy,
-                                path=client_proxy.mount_path,
-                                dir=True,
-                                user=user_proxy)
-        dir_path_host = mktemp(client_proxy,
-                               path=user_home_dir(user_proxy),
-                               dir=True,
-                               user=user_proxy)
+        dir_path_proxy = mkdtemp(client_proxy,
+                                 dir=client_proxy.absolute_path("s1"))
+        dir_path_host = mkdtemp(client_proxy, dir=user_home_dir(user_proxy))
 
         test_result1 = execute_sysbench_test(client_directio, user_directio,
                                              threads_number, total_size,
@@ -95,12 +88,9 @@ class TestSysbench(AbstractPerformanceTest):
                                              files_number, mode,
                                              dir_path_host, "host system")
 
-        rm(client_directio, dir_path_directio, recursive=True, force=True,
-           user=user_directio)
-        rm(client_proxy, dir_path_proxy, recursive=True, force=True,
-            user=user_proxy)
-        rm(client_proxy, dir_path_host, recursive=True, force=True,
-            user=user_proxy)
+        rm(client_directio, dir_path_directio, recursive=True, force=True)
+        rm(client_proxy, dir_path_proxy, recursive=True, force=True)
+        rm(client_proxy, dir_path_host, recursive=True, force=True)
 
         return test_result1 + test_result2 + test_result3
 

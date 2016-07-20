@@ -12,6 +12,10 @@ Feature: Multi_regular_file_CRUD
     Then u1 sees [file1, file2, file3] in s1 on client1
     And u2 sees [file1, file2, file3] in s1 on client2
 
+  Scenario: Create many children
+    When u1 creates children files of s1 with names in range [1, 127) on client1
+    Then u2 lists only children of s1 with names in range [1, 127) on client2
+
   Scenario: Rename regular file without permission
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
@@ -53,8 +57,8 @@ Feature: Multi_regular_file_CRUD
   Scenario: Read and write to regular file
     When u1 creates regular files [s1/file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    Then u1 reads "TEST TEXT ONEDATA" from s1/file1 on client1
-    And u2 reads "TEST TEXT ONEDATA" from s1/file1 on client2
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
+    And u2 reads "TEST TEXT ONEDATA" from file s1/file1 on client2
     And size of u1's s1/file1 is 17 bytes on client1
     And size of u2's s1/file1 is 17 bytes on client2
 
@@ -62,9 +66,9 @@ Feature: Multi_regular_file_CRUD
     When u1 creates directories [s1/dir1] on client1
     And u1 creates regular files [s1/dir1/file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client1
-    Then u2 reads "TEST TEXT ONEDATA" from s1/dir1/file1 on client2
+    Then u2 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client2
     And u1 changes s1/dir1/file1 mode to 620 on client1
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir1/file1 on client1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
     And mode of u2's s1/dir1/file1 is 620 on client2
     And u2 cannot read from s1/dir1/file1 on client2
     And size of u1's s1/dir1/file1 is 17 bytes on client1
@@ -75,8 +79,8 @@ Feature: Multi_regular_file_CRUD
     And u1 changes s1/dir1/file1 mode to 660 on client1
     And mode of u2's s1/dir1/file1 is 660 on client2
     And u2 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client2
-    Then u2 reads "TEST TEXT ONEDATA" from s1/dir1/file1 on client2
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir1/file1 on client1
+    Then u2 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client2
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
     And size of u1's s1/dir1/file1 is 17 bytes on client1
     And size of u2's s1/dir1/file1 is 17 bytes on client2
 
@@ -95,7 +99,7 @@ Feature: Multi_regular_file_CRUD
     And u1 changes s1/dir1/script.sh mode to 654 on client1
     And mode of u2's s1/dir1/script.sh is 654 on client2
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
-    And u2 reads "#!/usr/bin/env bash\n\necho TEST" from s1/dir1/script.sh on client2
+    And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
     And u2 executes s1/dir1/script.sh on client2
     Then last operation by u2 succeeds
 
@@ -103,7 +107,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates directories [s1/dir1] on client1
     And u1 creates regular files [s1/dir1/script.sh] on client1
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
-    And u2 reads "#!/usr/bin/env bash\n\necho TEST" from s1/dir1/script.sh on client2
+    And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
     And u2 executes s1/dir1/script.sh on client2
     Then last operation by u2 fails
 
@@ -120,8 +124,8 @@ Feature: Multi_regular_file_CRUD
     And u2 doesn't see [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
     And u2 sees [file1] in s1/dir3 on client2
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir3/file1 on client1
-    And u2 reads "TEST TEXT ONEDATA" from s1/dir3/file1 on client2
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir3/file1 on client1
+    And u2 reads "TEST TEXT ONEDATA" from file s1/dir3/file1 on client2
 
   Scenario: Move big regular file and check MD5
     When u1 creates directory and parents [s1/dir1/dir2, s1/dir3] on client1
@@ -148,8 +152,8 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
     And u2 sees [file1] in s1/dir3 on client2
-    And u1 reads "TEST TEXT ONEDATA" from s1/dir3/file1 on client1
-    And u2 reads "TEST TEXT ONEDATA" from s1/dir3/file1 on client2
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir3/file1 on client1
+    And u2 reads "TEST TEXT ONEDATA" from file s1/dir3/file1 on client2
 
   Scenario: Copy big regular file and check MD5
     When u1 creates directory and parents [s1/dir1/dir2, s1/dir3] on client1
@@ -164,3 +168,47 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir3 on client2
     And u1 checks MD5 of s1/dir3/file1 on client1
     And u2 checks MD5 of s1/dir3/file1 on client2
+
+  Scenario: Deleting file opened by other user for reading
+    When u1 creates directories [s1/dir1] on client1
+    And u1 creates regular files [s1/dir1/file1] on client1
+    And u1 sees [file1] in s1/dir1 on client1
+    And u2 sees [file1] in s1/dir1 on client2
+    And u1 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
+    And u1 changes s1/dir1 mode to 777 on client1
+    Then mode of u2's s1/dir1 is 777 on client2
+    And u1 opens s1/dir1/file1 with mode r on client1
+    And u2 deletes files [s1/dir1/file1] on client2
+    And u2 doesn't see [file1] in s1/dir1 on client2
+    And u1 doesn't see [file1] in s1/dir1 on client1
+    And u1 reads "TEST TEXT ONEDATA" from previously opened file s1/dir1/file1 on client1
+    And u1 closes s1/dir1/file1 on client1
+
+  Scenario: Deleting file opened by other user for reading and writing
+    When u1 creates directories [s1/dir1] on client1
+    And u1 creates regular files [s1/dir1/file1] on client1
+    And u1 sees [file1] in s1/dir1 on client1
+    And u2 sees [file1] in s1/dir1 on client2
+    And u1 changes s1/dir1 mode to 777 on client1
+    Then mode of u2's s1/dir1 is 777 on client2
+    And u1 opens s1/dir1/file1 with mode r+ on client1
+    And u2 deletes files [s1/dir1/file1] on client2
+    And u1 writes "TEST TEXT ONEDATA" to previously opened s1/dir1/file1 on client1
+    And u1 sets current file position in s1/dir1/file1 at offset 0 on client1
+    And u1 reads "TEST TEXT ONEDATA" from previously opened file s1/dir1/file1 on client1
+    And u1 closes s1/dir1/file1 on client1
+    And u1 doesn't see [file1] in s1/dir1 on client1
+
+  Scenario: Deleting file without permission, file is opened by other user
+    When u1 creates regular files [s1/file1] on client1
+    And u1 sees [file1] in s1 on client1
+    And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
+    And u1 opens s1/file1 with mode r+ on client1
+    And u2 deletes files [s1/file1] on client2
+    And last operation by u2 fails
+    # because u2 has no write permission to file1
+    And u1 closes s1/file1 on client1
+    And u1 sees [file1] in s1 on client1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
+

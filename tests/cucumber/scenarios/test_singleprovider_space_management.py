@@ -15,6 +15,7 @@ from tests.cucumber.steps.multi_reg_file_steps import *
 from tests.cucumber.steps.multi_dir_steps import *
 from tests.utils.cucumber_utils import *
 from tests.utils.path_utils import env_file
+from tests import CUSTOM_CUCUMBER_ENV_DIR
 
 from pytest_bdd import scenario
 from functools import partial
@@ -40,8 +41,9 @@ def test_create_space_support(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(envs=["singleprovider_space_management"],
-                       reason="space owner cannot read what invited user wrote to file")
+@pytest.mark.xfail_env(
+    envs=["singleprovider_space_management"],
+    reason="Invited user gets 'Protocol error' after space is supported")
 @scenario('Invite user to unused space')
 def test_invite(env_description_file):
     pass

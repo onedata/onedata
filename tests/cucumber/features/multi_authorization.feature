@@ -19,7 +19,6 @@ Feature: Multi_authorization
       [client-host1, client-host1] respectively,
       using [token, token]
     Then last operation by u1 succeeds
-    And last operation by u1 succeeds
     And [s1, s2] are mounted for u1 on [client1, client2]
 
   Scenario: Successful authorization - 2 clients of one user on different hosts
@@ -28,7 +27,6 @@ Feature: Multi_authorization
       [client-host1, client-host2] respectively,
       using [token, token]
     Then last operation by u1 succeeds
-    And last operation by u1 succeeds
     And [s1, s2] are mounted for u1 on [client1, client12]
 
   Scenario: Bad and good authorization

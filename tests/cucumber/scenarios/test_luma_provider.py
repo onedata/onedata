@@ -14,6 +14,10 @@ from tests.cucumber.steps.auth_steps import *
 
 from pytest_bdd import scenario
 import pytest
+from functools import partial
+
+
+scenario = partial(scenario, '../features/luma_provider.feature')
 
 
 @pytest.fixture(scope="module", params=["env_luma_provider"])
@@ -23,38 +27,27 @@ def env_description_file(request):
 
 @pytest.mark.skip_env(envs=['env_luma_provider'],
                       reason="Luma cucumber test hangs sometimes")
-@scenario(
-    '../features/luma_provider.feature',
-    'Operations on POSIX storage'
-)
+@scenario('Operations on POSIX storage')
 def test_posix_storage_operations(env_description_file):
     pass
 
 
 @pytest.mark.skip_env(envs=['env_luma_provider'],
                       reason="Luma cucumber test hangs sometimes")
-@scenario(
-    '../features/luma_provider.feature',
-    'Operations on CEPH storage'
-)
+@scenario('Operations on CEPH storage')
 def test_ceph_storage_operations(env_description_file):
     pass
 
 
 @pytest.mark.skip_env(envs=['env_luma_provider'],
                       reason="Luma cucumber test hangs sometimes")
-@scenario(
-    '../features/luma_provider.feature',
-    'Operations on Amazon S3 storage'
-)
+@scenario('Operations on Amazon S3 storage')
 def test_s3_storage_operations(env_description_file):
     pass
 
+
 @pytest.mark.skip_env(envs=['env_luma_provider'],
                       reason="Luma cucumber test hangs sometimes")
-@scenario(
-    '../features/luma_provider.feature',
-    'Operations on Openstack Swift storage'
-)
+@scenario('Operations on Openstack Swift storage')
 def test_swift_storage_operations(env_description_file):
     pass    

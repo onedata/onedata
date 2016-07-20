@@ -1,103 +1,189 @@
 """Module implements pytest-bdd steps for operations on directories in multiclient environment.
 """
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+from tests.utils.utils import get_function_name, handle_exception
 from tests.utils.cucumber_utils import *
-from tests.utils.client_utils import ls, rm, rmdir, mkdir, cp, client_mount_path, \
-    save_op_code, get_client
+from tests.utils.client_utils import ls, rm, rmdir, mkdir, cp
 
 
 @when(parsers.parse('{user} creates directories {dirs} on {client_node}'))
 @when(parsers.parse('{user} creates directories {dirs}\non {client_node}'))
 def create(user, dirs, client_node, context):
     dirs = list_parser(dirs)
-    client = get_client(client_node, user, context)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    function_name = get_function_name()
+
     for dir in dirs:
-        path = client_mount_path(dir, client)
-        return_code = mkdir(client, path, user=user)
-        save_op_code(context, user, return_code)
+        path = client.absolute_path(dir)
+
+        def condition():
+
+            try:
+                mkdir(client, path)
+                user.mark_last_operation_succeeded()
+                return True
+            except Exception as e:
+                handle_exception(e, function_name)
+                user.mark_last_operation_failed()
+                return False
+
+        client.perform(condition)
 
 
 @when(parsers.parse('{user} creates directory and parents {paths} on {client_node}'))
 @when(parsers.parse('{user} creates directory and parents {paths}\non {client_node}'))
 def create_parents(user, paths, client_node, context):
-    client = get_client(client_node, user, context)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     paths = list_parser(paths)
+    function_name = get_function_name()
+
     for path in paths:
-        return_code = mkdir(client, client_mount_path(path, client), recursive=True, user=user)
-        save_op_code(context, user, return_code)
+        dir_path = client.absolute_path(path)
+
+        def condition():
+
+            try:
+                mkdir(client, dir_path, recursive=True)
+                user.mark_last_operation_succeeded()
+                return True
+            except Exception as e:
+                handle_exception(e, function_name)
+                user.mark_last_operation_failed()
+                return False
+
+        client.perform(condition)
 
 
 @when(parsers.parse('{user} deletes empty directories {dirs} on {client_node}'))
 def delete_empty(user, dirs, client_node, context):
-    client = get_client(client_node, user, context)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     dirs = list_parser(dirs)
+    function_name = get_function_name()
+
     for dir in dirs:
-        path = client_mount_path(dir, client)
-        ret = rmdir(client, path, user=user)
-        save_op_code(context, user, ret)
+        path = client.absolute_path(dir)
+
+        def condition():
+
+            try:
+                rmdir(client, path)
+                user.mark_last_operation_succeeded()
+                return True
+            except Exception as e:
+                handle_exception(e, function_name)
+                user.mark_last_operation_failed()
+                return False
+
+        client.perform(condition)
 
 
 @when(parsers.parse('{user} deletes non-empty directories {dirs} on {client_node}'))
 def delete_non_empty(user, dirs, client_node, context):
-    client = get_client(client_node, user, context)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     dirs = list_parser(dirs)
+    function_name = get_function_name()
+
     for dir in dirs:
-        path = client_mount_path(dir, client)
-        ret = rm(client, path, recursive=True, force=True, user=user)
-        save_op_code(context, user, ret)
+        path = client.absolute_path(dir)
+
+        def condition():
+            try:
+                rm(client, path, recursive=True, force=True)
+                user.mark_last_operation_succeeded()
+                return True
+            except Exception as e:
+                handle_exception(e, function_name)
+                user.mark_last_operation_failed()
+                return False
+
+        client.perform(condition)
 
 
 @when(parsers.parse('{user} deletes empty directory and parents {paths} on ' +
                     '{client_node}'))
 def delete_parents(user, paths, client_node, context):
-    client = get_client(client_node, user, context)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
     paths = list_parser(paths)
+    function_name = get_function_name()
+
     for path in paths:
-        ret = rmdir(client, str(path), recursive=True,
-                    from_path=client.mount_path, user=user)
-        save_op_code(context, user, ret)
+        dir_path = client.absolute_path(path)
+
+        def condition():
+
+            try:
+                rmdir(client, dir_path, recursive=True)
+                user.mark_last_operation_succeeded()
+                return True
+            except Exception as e:
+                handle_exception(e, function_name)
+                user.mark_last_operation_failed()
+                return False
+
+        client.perform(condition)
 
 
 @when(parsers.parse('{user} copies directory {dir1} to {dir2} on {client_node}'))
 def copy_dir(user, dir1, dir2, client_node, context):
-    client = get_client(client_node, user, context)
-    src_path = client_mount_path(dir1, client)
-    dest_path = client_mount_path(dir2, client)
-    ret = cp(client, src_path, dest_path, recursive=True, user=user)
-    save_op_code(context, user, ret)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    src_path = client.absolute_path(dir1)
+    dest_path = client.absolute_path(dir2)
+    function_name = get_function_name()
+
+    def condition():
+
+        try:
+            cp(client, src_path, dest_path, recursive=True)
+            user.mark_last_operation_failed()
+        except Exception as e:
+            handle_exception(e, function_name)
+            user.mark_last_operation_succeeded()
+
+    client.perform(condition)
 
 
 @when(parsers.parse('{user} can\'t list {dir} on {client_node}'))
 @then(parsers.parse('{user} can\'t list {dir} on {client_node}'))
 def cannot_list_dir(user, dir, client_node, context):
-    client = get_client(client_node, user, context)
-    path = client_mount_path(dir, client)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    path = client.absolute_path(dir)
 
     def condition():
         try:
-            ls(client, user=user, path=path)
+            ls(client, path=path)
             return False
         except:
             return True
 
-    assert repeat_until(condition, client.timeout)
+    assert client.perform(condition)
 
 
 @when(parsers.parse('{user} can list {dir} on {client_node}'))
 @then(parsers.parse('{user} can list {dir} on {client_node}'))
 def list_dir(user, dir, client_node, context):
-    client = get_client(client_node, user, context)
-    path = client_mount_path(dir, client)
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    path = client.absolute_path(dir)
+    function_name = get_function_name()
 
     def condition():
         try:
-            ls(client, user=user, path=path)
+            ls(client, path=path)
             return True
-        except:
+        except Exception as e:
+            handle_exception(e, function_name)
             return False
 
-    assert repeat_until(condition, client.timeout)
+    assert client.perform(condition)

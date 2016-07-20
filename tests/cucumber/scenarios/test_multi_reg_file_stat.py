@@ -1,6 +1,7 @@
 """Test suite for reading/changing  metadata of regular files in onedata,
 in multi-client environment.
 """
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in "\
@@ -14,132 +15,77 @@ from tests.cucumber.steps.multi_file_steps import *
 from tests.cucumber.steps.multi_reg_file_steps import *
 
 from pytest_bdd import scenario
-import pytest
+from functools import partial
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Check file type when empty'
-)
+scenario = partial(scenario, '../features/multi_reg_file_stat.feature')
+
+
+@scenario('Check file type when empty')
 def test_type_empty(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Check file type when non-empty'
-)
+@scenario('Check file type when non-empty')
 def test_type(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Check default access permissions'
-)
+@scenario('Check default access permissions')
 def test_default_access(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Change access permissions'
-)
+@scenario('Change access permissions')
 def test_change_access(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Increase regular file size'
-)
+@scenario('Increase regular file size')
 def test_increase_size(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Decrease regular file size'
-)
+@scenario('Decrease regular file size')
 def test_decrease_size(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Truncate regular file without write permission'
-)
+@scenario('Truncate regular file without write permission')
 def test_truncate_without_permission(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Timestamps at creation'
-)
+@scenario('Timestamps at creation')
 def test_timestamp(env_description_file):
     pass
 
 
-# # TODO VFS-1506
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="touch on file without write permission should fail, "
-           "it will be checked in VFS-1506")
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Update timestamps without write permission',
-)
+@scenario('Update timestamps without write permission',)
 def test_update_timestamp_without_permission(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Update timestamps with write permission'
-)
+@scenario('Update timestamps with write permission')
 def test_update_timestamp_with_permission(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Access time'
-)
+@scenario('Access time')
 def test_access_time(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Modification time'
-)
+@scenario('Modification time')
 def test_modification_time(env_description_file):
     pass
 
 
-# TODO VFS-1821
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="status-change times is equal to access and modification, "
-           "it will be checked VFS-1821")
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Status-change time when changing mode'
-)
+@scenario('Status-change time when changing mode')
 def test_stat_change_time_chmod(env_description_file):
     pass
 
 
-@scenario(
-    '../features/multi_reg_file_stat.feature',
-    'Status-change time when renaming'
-)
+@scenario('Status-change time when renaming')
 def test_stat_change_time_mv(env_description_file):
     pass

@@ -14,6 +14,7 @@ from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
 import pytest
+from functools import partial
 
 
 @pytest.fixture(scope="module",
@@ -22,17 +23,14 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-@scenario(
-    '../features/authorization.feature',
-    'Successful authorization'
-)
+scenario = partial(scenario, '../features/authorization.feature')
+
+
+@scenario('Successful authorization')
 def test_successful_authorization(env_description_file):
     pass
 
 
-@scenario(
-    '../features/authorization.feature',
-    'Bad authorization'
-)
+@scenario('Bad authorization')
 def test_bad_authorization(env_description_file):
     pass
