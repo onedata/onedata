@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-echo REMOUNTING >> dupa
-echo REMOUNTING
 docker exec $1 su -c \
     "fusermount -u /home/u1/onedata;
     export PROVIDER_HOSTNAME=$2;

@@ -8,18 +8,13 @@ main([OpNodeStr, ProfilingLog, Command | Args]) ->
     Eprof = fun F() ->
         receive
             start_eprof ->
-                {ok, _} = eprof:start(),
-                RegisteredWithEprof = erlang:registered(),
-                Registered = [Name || Name <- RegisteredWithEprof, Name =/= eprof],
-                profiling = eprof:start_profiling(Registered),
+                ok = fprof:trace([start, verbose, {procs, all}]),
                 Self ! started,
                 F();
             stop_eprof ->
-                timer:sleep(timer:seconds(1)),
-                profiling_stopped = eprof:stop_profiling(),
-                ok = eprof:log(ProfilingLog),
-                ok = eprof:analyze(procs),
-                stopped = eprof:stop(),
+                ok = fprof:trace([stop]),
+                ok = fprof:profile(),
+                ok = fprof:analyse({dest, [ProfilingLog]}),
                 Self ! stopped
         end
     end,
@@ -34,6 +29,8 @@ main([OpNodeStr, ProfilingLog, Command | Args]) ->
     end,
 
     os:cmd(FullCommand),
+
+    timer:sleep(timer:seconds(15)),
 
     {profiler, OpNode} ! stop_eprof,
     receive

@@ -75,7 +75,7 @@ class Client:
         return os.path.join(self.mount_path, str(path))
 
 
-def mount_users(request, environment, context, client_dockers, env_description_file,
+def mount_users(request, environment, context, client_dockers, env_description_file, test_type,
                 user_names=[], client_instances=[], mount_paths=[],
                 client_hosts=[], tokens=[], check=True):
 
@@ -149,7 +149,8 @@ def mount_users(request, environment, context, client_dockers, env_description_f
         rm(client, path=os.path.join(os.path.dirname(mount_path), ".local"),
            recursive=True, force=True)
 
-        # rm(client, path=token_path)
+        if test_type != 'profiling':
+            rm(client, path=token_path)
 
         # todo without this sleep protocol error occurs more often during cleaning spaces
         time.sleep(3)
@@ -173,7 +174,8 @@ def mount_users(request, environment, context, client_dockers, env_description_f
                 client.stop_rpyc_server()
             user.clients.clear()
 
-    # request.addfinalizer(fin)
+    if test_type != 'profiling':
+        request.addfinalizer(fin)
 
 
 def ls(client, path="."):
@@ -325,7 +327,7 @@ def fusermount(client, path, user='root', unmount=False, lazy=False,
                 lazy="-z" if lazy else "",
                 quiet="-q" if quiet else "",
                 path=escape_path(path))
-    return run_cmd('root', client, cmd, output=output)
+    return run_cmd(user, client, cmd, output=output)
 
 
 def kill(client, pid, signal="KILL", user='root', output=False):

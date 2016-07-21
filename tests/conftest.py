@@ -21,13 +21,13 @@ import shutil
 def pytest_addoption(parser):
     parser.addoption("--test-type", action="store", default=None,
                      help="type of test (cucumber, acceptance,"
-                          "performance, packaging, gui)")
+                          "performance, packaging, gui, profiling)")
 
 
 def pytest_generate_tests(metafunc):
     if 'test_type' in metafunc.fixturenames:
         test_type = metafunc.config.option.test_type
-        if test_type in ['cucumber', 'performance', 'gui']:
+        if test_type in ['cucumber', 'performance', 'gui', 'profiling']:
             envs = get_json_files(map_test_type_to_env_dir(test_type),
                                   relative=True)
             metafunc.parametrize(
@@ -76,7 +76,8 @@ def persistent_environment(request, test_type, env_description_file):
                       force=True,
                       volumes=True)
 
-    # request.addfinalizer(fin)
+    if test_type != 'profiling':
+        request.addfinalizer(fin)
     request.onedata_environment = env_desc
     return env_desc
 
@@ -89,7 +90,8 @@ def onedata_environment(persistent_environment, request):
             for storage_name, storage in persistent_environment['storages']['posix'].items():
                 clear_storage(storage['host_path'])
 
-    # request.addfinalizer(fin)
+    if test_type != 'profiling':
+        request.addfinalizer(fin)
     return persistent_environment
 
 
@@ -122,7 +124,8 @@ def providers(persistent_environment, request):
         for provider in providers.itervalues():
             provider.delete_certs()
 
-    # request.addfinalizer(fin)
+    if test_type != 'profiling':
+        request.addfinalizer(fin)
     return providers
 
 
@@ -173,7 +176,8 @@ def map_test_type_to_env_dir(test_type):
     return {
         'cucumber': DEFAULT_CUCUMBER_ENV_DIR,
         'performance': PERFORMANCE_ENV_DIR,
-        'gui': GUI_ENV_DIR
+        'gui': GUI_ENV_DIR,
+        'profiling': DEFAULT_CUCUMBER_ENV_DIR
     }[test_type]
 
 

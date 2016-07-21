@@ -23,14 +23,14 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-scenario = partial(scenario, '../features/authorization.feature')
+@pytest.fixture(scope='module')
+def test_type():
+    return "profiling"
 
 
-@scenario('Successful authorization')
-def test_successful_authorization(env_description_file):
-    pass
+scenario = partial(scenario, '../features/profiling.feature')
 
 
-@scenario('Bad authorization')
-def test_bad_authorization(env_description_file):
+@scenario('Start oneclient')
+def test_start_oneclient(env_description_file):
     pass
