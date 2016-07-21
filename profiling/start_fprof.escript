@@ -28,7 +28,7 @@ main([OpNodeStr, ProfilingLog, Command | Args]) ->
         started -> ok
     end,
 
-    os:cmd(FullCommand),
+    io:format("~p~n", [os:cmd(FullCommand)]),
 
     timer:sleep(timer:seconds(15)),
 

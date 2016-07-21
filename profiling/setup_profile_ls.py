@@ -2,11 +2,12 @@
 
 import rpyc
 import sys
+import os
 
 CLIENT_IP = sys.argv[1]
-PATH = "/home/u1/onedata/s1/0"
-
+PATH = "/home/u1/onedata/s1"
 
 conn = rpyc.classic.connect(CLIENT_IP)
-conn.modules.shutil.rmtree(PATH, ignore_errors=True)
+for i in range(10):
+    conn.modules.os.mkdir(os.path.join(PATH, str(i)))
 conn.close()
