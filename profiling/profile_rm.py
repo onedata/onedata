@@ -1,6 +1,6 @@
 #! /usr/bin/env python
+import os
 import subprocess
-
 import rpyc
 import sys
 
@@ -13,5 +13,5 @@ REMOUNT_SCRIPT = "./profiling/remount_client.sh"
 
 conn = rpyc.classic.connect(CLIENT_IP)
 subprocess.check_output([REMOUNT_SCRIPT, CLIENT, OP, OZ])
-conn.modules.shutil.rmtree(PATH, ignore_errors=True)
+conn.modules.shutil.rmtree(os.path.join(PATH, 'dir'), ignore_errors=True)
 conn.close()
