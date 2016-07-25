@@ -4,6 +4,18 @@
 CHANGELOG
 ---------
 
+### 3.0.0-RC1
+
+* Tests refactoring
+* Several op_worker stability improvements
+* Extend op_worker system monitoring
+* Update session management
+* VFS-2316 Update etls.
+* Improve client stability
+* VFS-1963 Improve automatic storage discovery
+* VFS-2270 Print out the hostname of client's provider.
+
+
 ### 3.0.0-beta8
 
 * Additional GUI model relations
