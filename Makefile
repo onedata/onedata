@@ -24,7 +24,7 @@ all: build
 ## Macros
 ##
 
-NO_CACHE :=  $(if [ "${NO_CACHE}" != "" ]; then echo "--no-cache"; fi)
+NO_CACHE :=  $(shell if [ "${NO_CACHE}" != "" ]; then echo "--no-cache"; fi)
 
 MAKE_APPMOCK := appmock/make.py -s appmock -r . $(NO_CACHE)
 MAKE_ONEPANEL := onepanel/make.py -s onepanel -r . $(NO_CACHE)
