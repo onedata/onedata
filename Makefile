@@ -24,14 +24,17 @@ all: build
 ## Macros
 ##
 
-MAKE_APPMOCK := appmock/make.py -s appmock -r .
-MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
-MAKE_OZ_WORKER := oz_worker/make.py -s oz_worker -r .
-MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
-MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
-MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
+NO_CACHE :=  $(if [ "${NO_CACHE}" != "" ]; then echo "--no-cache"; fi)
 
-make = $(1)/make.py -s $(1) -r .
+MAKE_APPMOCK := appmock/make.py -s appmock -r . $(NO_CACHE)
+MAKE_ONEPANEL := onepanel/make.py -s onepanel -r . $(NO_CACHE)
+MAKE_OZ_WORKER := oz_worker/make.py -s oz_worker -r . $(NO_CACHE)
+MAKE_ONECLIENT := oneclient/make.py -s oneclient -r . $(NO_CACHE)
+MAKE_OP_WORKER := op_worker/make.py -s op_worker -r . $(NO_CACHE)
+MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r . $(NO_CACHE)
+
+
+make = $(1)/make.py -s $(1) -r . $(NO_CACHE)
 clean = $(call make, $(1)) clean
 make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i rpm_builder:$(DISTRIBUTION) $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
