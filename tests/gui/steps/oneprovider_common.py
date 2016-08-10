@@ -185,22 +185,6 @@ def wait_invite_group_token_is_active(selenium):
     Wait(selenium, WAIT_FRONTEND).until(_is_active)
 
 
-@when('user should see, that new file name input box is active')
-def wait_new_file_name_input_box_is_active(selenium):
-
-    def _is_active(selenium):
-        elem = selenium.find_elements_by_css_selector(
-            '.ember-view input.form-control')
-        if elem:
-            elem = elem[0]
-            return elem == selenium.switch_to.active_element
-        else:
-            return False
-
-    Wait(selenium, WAIT_FRONTEND).until(_is_active)
-
-
-
 @when(parsers.parse('user clicks "{space_name}" button'))
 def space_name_click(selenium, space_name, curr_url):
     curr_url = selenium.current_url
@@ -214,13 +198,6 @@ def space_name_click(selenium, space_name, curr_url):
 
     Wait(selenium, WAIT_BACKEND).until(get_space_to_click)
 
-
-@when('user clicks "Create file" button')
-def click_create_new_file_button(selenium):
-    new_file_button = Wait(selenium, WAIT_BACKEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-file-tool'))
-    )
-    new_file_button.click()
 
 @then(parsers.parse('user should see new space "{name}"'))
 def space_name_equals(selenium, name):
@@ -296,6 +273,7 @@ def is_error_message_display(selenium):
 def check_if_url_changed(selenium, curr_url):
     assert selenium.current_url != 'https://172.17.0.8/#/spaces/space1/users'
 
+
 @then('user should see space menu for "{space_name}"')
 def check_space_menu_display(selenium, space_name):
 
@@ -309,14 +287,3 @@ def check_space_menu_display(selenium, space_name):
     Wait(selenium, WAIT_BACKEND).until()
 
 
-@then(parsers.parse('user should see {file_name} file'))
-def check_new_file(selenium, file_name):
-
-    def find_added_file(s):
-        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in files:
-            if elem.text == file_name:
-                return elem
-    return None
-
-    Wait(selenium, WAIT_FRONTEND).until(find_added_file())

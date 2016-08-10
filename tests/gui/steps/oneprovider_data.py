@@ -15,6 +15,79 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 
+
+@when('user should see, that new file name input box is active')
+def wait_new_file_name_input_box_is_active(selenium):
+
+    def _is_active(selenium):
+        elem = selenium.find_elements_by_css_selector(
+            '#create-file-modal .ember-view input.form-control')
+        if elem:
+            elem = elem[0]
+            return elem == selenium.switch_to.active_element
+        else:
+            return False
+
+    Wait(selenium, WAIT_FRONTEND).until(_is_active)
+
+
+@when('user should see, that new directory name input box is active')
+def wait_new_directory_name_input_box_is_active(selenium):
+
+    def _is_active(selenium):
+        elem = selenium.find_elements_by_css_selector(
+            '#create-dir-modal .ember-view input.form-control')
+        if elem:
+            elem = elem[0]
+            return elem == selenium.switch_to.active_element
+        else:
+            return False
+
+    Wait(selenium, WAIT_FRONTEND).until(_is_active)
+
+
+@when('user clicks "Create file" button')
+def click_create_new_file_button(selenium):
+    new_file_button = Wait(selenium, WAIT_BACKEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-file-tool'))
+    )
+    new_file_button.click()
+
+
+@when('user clicks "Create directory" button')
+def click_create_new_directory_button(selenium):
+    new_directory_button = Wait(selenium, WAIT_BACKEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-dir-tool'))
+    )
+    new_directory_button.click()
+
+
+@then(parsers.parse('user should see "{file_name}" file'))
+def check_new_file(selenium, file_name):
+
+    def find_added_file(s):
+        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in files:
+            if elem.text == file_name:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(find_added_file)
+
+
+@then(parsers.parse('user should see "{dir_name}" directory'))
+def check_new_directory(selenium, dir_name):
+
+    def find_added_directory(s):
+        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in files:
+            if elem.text == dir_name:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(find_added_directory)
+
+
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
 def change_space(selenium, space_name):
     # HACK: because Firefox driver have buggy EC.element_to_be_clickable,

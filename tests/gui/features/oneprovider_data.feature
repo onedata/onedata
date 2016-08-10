@@ -30,10 +30,21 @@ Feature: Oneprovider Data view
     #Then user should see new url
 #    Then user should see space menu for "space2"
 
+  #Next two scenarios assuming that file/directory with the same name
+  #does not exists.
   Scenario: Create new file
     When user clicks "Create file" button
     And user should see, that new file name input box is active
     And user types "file1" on keyboard
     And user presses enter on keyboard
     Then user should see "file1" file
+
+
+  Scenario: Create new directory
+    When user clicks "Create directory" button
+    And user should see, that new directory name input box is active
+    And user types "directory1" on keyboard
+    And user presses enter on keyboard
+    Then user should see "directory1" directory
+
 
