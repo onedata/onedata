@@ -29,8 +29,8 @@ def curr_url(selenium):
 
 
 
-@given('existing space name')
-def existing_space_name():
+@given(parsers.parse('existing {space_name}'))
+def existing_space_name(space_name):
     return 'space1'
 
 
@@ -263,6 +263,7 @@ def is_invite_user_token_visible(selenium):
     )
     text = input_box.get_attribute('value')
     assert len(text) > 0
+
 
 @then('user should see invite group token')
 def is_invite_group_token_visible(selenium):
