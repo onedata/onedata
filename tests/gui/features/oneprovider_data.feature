@@ -24,18 +24,18 @@ Feature: Oneprovider Data view
 
   Scenario: Create new file
     When user clicks "Create file" button
-    And user should see, that new file name input box is active
+    And user should see, that input box for file name is active
     And user types "file1" on keyboard
     And user presses enter on keyboard
-    Then user should see "file1" file
+    Then user should see new file named "file1"
 
 
   Scenario: Create new directory
     When user clicks "Create directory" button
-    And user should see, that new directory name input box is active
+    And user should see, that input box for directory name is active
     And user types "directory1" on keyboard
     And user presses enter on keyboard
-    Then user should see "directory1" directory
+    Then user should see new directory named "directory1"
 
 
    #In this test i assumed that file with name "file" already exists

@@ -15,118 +15,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 
-@when('user clicks "OK" button')
-def click_ok_button(selenium):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '#remove-files-modal button.btn-primary'))
-    ).click()
-
-
-@when('user clicks "Remove element" button')
-def click_remove_button(selenium):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '#navbar-collapse ul.nav a#remove-file-tool'))
-    ).click()
-
-
-@when(parsers.parse('user selects "{file_name}"'))
-def select_file(selenium, file_name):
-
-    def find_file(s):
-        files = s.find_elements_by_css_selector('.files-list table.files-table td.file-list-col-file')
-        for elem in files:
-            if elem.text == file_name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_FRONTEND).until(find_file).click()
-
-
-@when('user should see, that new file name input box is active')
-def wait_new_file_name_input_box_is_active(selenium):
-
-    def _is_active(selenium):
-        elem = selenium.find_elements_by_css_selector(
-            '#create-file-modal .ember-view input.form-control')
-        if elem:
-            elem = elem[0]
-            return elem == selenium.switch_to.active_element
-        else:
-            return False
-
-    Wait(selenium, WAIT_FRONTEND).until(_is_active)
-
-
-@when('user should see, that new directory name input box is active')
-def wait_new_directory_name_input_box_is_active(selenium):
-
-    def _is_active(selenium):
-        elem = selenium.find_elements_by_css_selector(
-            '#create-dir-modal .ember-view input.form-control')
-        if elem:
-            elem = elem[0]
-            return elem == selenium.switch_to.active_element
-        else:
-            return False
-
-    Wait(selenium, WAIT_FRONTEND).until(_is_active)
-
-
-@when('user clicks "Create file" button')
-def click_create_new_file_button(selenium):
-    new_file_button = Wait(selenium, WAIT_BACKEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-file-tool'))
-    )
-    new_file_button.click()
-
-
-@when('user clicks "Create directory" button')
-def click_create_new_directory_button(selenium):
-    new_directory_button = Wait(selenium, WAIT_BACKEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-dir-tool'))
-    )
-    new_directory_button.click()
-
-
-@then(parsers.parse('user should see "{file_name}" file'))
-def check_new_file(selenium, file_name):
-
-    def find_added_file(s):
-        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in files:
-            if elem.text == file_name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_FRONTEND).until(find_added_file)
-
-
-@then(parsers.parse('user should see "{dir_name}" directory'))
-def check_new_directory(selenium, dir_name):
-
-    def find_added_directory(s):
-        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in files:
-            if elem.text == dir_name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_FRONTEND).until(find_added_directory)
-
-
-@then(parsers.parse('user should not see "{file_name}"'))
-def check_new_file(selenium, file_name):
-
-    def try_find_deleted_file(s):
-        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in files:
-            if elem.text == file_name:
-                return elem
-        return None
-
-    assert try_find_deleted_file(selenium) is None
-
-
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
 def change_space(selenium, space_name):
     # HACK: because Firefox driver have buggy EC.element_to_be_clickable,
@@ -148,12 +36,6 @@ def change_space(selenium, space_name):
 
     Wait(selenium, WAIT_FRONTEND).until(space_by_name).click()
 
-    def file_browser_ready(driver):
-        files_table = driver.find_element_by_css_selector('.files-table')
-        return not re.match(r'.*is-loading.*', files_table.get_attribute('class'))
-
-    Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
-
 
 @when(parsers.parse('user uses upload button in toolbar to upload file "{file_name}" to current dir'))
 def upload_file_to_current_dir(selenium, file_name):
@@ -167,6 +49,126 @@ def upload_file_to_current_dir(selenium, file_name):
         upload_file_path(file_name)
     )
     selenium.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
+
+    def file_browser_ready(driver):
+        files_table = driver.find_element_by_css_selector('.files-table')
+        return not re.match(r'.*is-loading.*', files_table.get_attribute('class'))
+
+    Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
+
+
+@when('user clicks "Create file" button')
+def click_create_new_file_button(selenium):
+    new_file_button = Wait(selenium, WAIT_BACKEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-file-tool'))
+    )
+    new_file_button.click()
+
+
+@when('user should see, that input box for file name is active')
+def wait_input_box_for_file_name_is_active(selenium):
+
+    def _is_active(selenium):
+        elem = selenium.find_elements_by_css_selector(
+            '#create-file-modal .ember-view input.form-control')
+        if elem:
+            elem = elem[0]
+            return elem == selenium.switch_to.active_element
+        else:
+            return False
+
+    Wait(selenium, WAIT_FRONTEND).until(_is_active)
+
+
+@then(parsers.parse('user should see new file named "{file_name}"'))
+def check_existence_of_new_file(selenium, file_name):
+
+    def find_added_file(s):
+        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in files:
+            if elem.text == file_name:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(find_added_file)
+
+
+@when('user clicks "Create directory" button')
+def click_create_new_directory_button(selenium):
+    new_directory_button = Wait(selenium, WAIT_BACKEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-dir-tool'))
+    )
+    new_directory_button.click()
+
+
+@when('user should see, that input box for directory name is active')
+def wait_input_box_for_directory_name_is_active(selenium):
+
+    def _is_active(selenium):
+        elem = selenium.find_elements_by_css_selector(
+            '#create-dir-modal .ember-view input.form-control')
+        if elem:
+            elem = elem[0]
+            return elem == selenium.switch_to.active_element
+        else:
+            return False
+
+    Wait(selenium, WAIT_FRONTEND).until(_is_active)
+
+
+@then(parsers.parse('user should see new directory named "{dir_name}"'))
+def check_existence_of_new_directory(selenium, dir_name):
+
+    def find_added_directory(s):
+        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in files:
+            if elem.text == dir_name:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(find_added_directory)
+
+
+@when(parsers.parse('user selects "{file_name}"'))
+def select_file(selenium, file_name):
+
+    def find_file(s):
+        files = s.find_elements_by_css_selector('.files-list table.files-table td.file-list-col-file')
+        for elem in files:
+            if elem.text == file_name:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(find_file).click()
+
+
+@when('user clicks "Remove element" button')
+def click_remove_button(selenium):
+    remove_button = Wait(selenium, WAIT_FRONTEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, '#navbar-collapse ul.nav a#remove-file-tool'))
+    )
+    remove_button.click()
+
+
+@when('user clicks "OK" button')
+def click_ok_button(selenium):
+    ok_button = Wait(selenium, WAIT_FRONTEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, '#remove-files-modal button.btn-primary'))
+    )
+    ok_button.click()
+
+
+@then(parsers.parse('user should not see "{file_name}"'))
+def check_absence_deleted_file(selenium, file_name):
+
+    def try_find_deleted_file(s):
+        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in files:
+            if elem.text == file_name:
+                return elem
+        return None
+
+    assert try_find_deleted_file(selenium) is None
 
 
 # @when(parsers.parse('The upload of file "{file_name}" fails'))
