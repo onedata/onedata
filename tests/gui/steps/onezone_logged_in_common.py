@@ -12,6 +12,25 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, when, then, parsers
+from selenium.webdriver.common.keys import Keys
+
+
+@when(parsers.parse('user expands the "{name}" Onezone sidebar panel'))
+def uncollapse_oz_panel(selenium, name):
+    re_lc_name = re.compile(name, re.I)
+
+    def sidebar_group_by_name(s):
+        groups = s.find_elements_by_css_selector('.main-accordion-group')
+        for g in groups:
+            t = g.find_element_by_css_selector('a.main-accordion-toggle')
+            if re_lc_name.match(t.text):
+                return g, t
+        return None
+
+    sgroup, toggle = Wait(selenium, WAIT_FRONTEND).until(sidebar_group_by_name)
+    aria_expanded = sgroup.get_attribute('aria-expanded')
+    if aria_expanded is None or aria_expanded == 'false':
+        toggle.click()
 
 
 @given(parsers.parse('user expands the "{name}" Onezone sidebar panel'))
@@ -30,6 +49,157 @@ def uncollapse_oz_panel(selenium, name):
     aria_expanded = sgroup.get_attribute('aria-expanded')
     if aria_expanded is None or aria_expanded == 'false':
         toggle.click()
+
+
+@given('user has new name for group')
+@given('user has name for new group')
+@given('user has name for new space')
+def random_name():
+    import random
+    chars = 'qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+    return ''.join(random.sample(chars, 6))
+
+
+@when(parsers.parse('user types group name on keyboard'))
+@when(parsers.parse('user types space name on keyboard'))
+def type_string_into_active_element(selenium, random_name):
+    selenium.switch_to.active_element.send_keys(random_name)
+
+
+@when('user types new group name on keyboard')
+def clear_and_type_string_into_active_element(selenium, random_name):
+    selenium.switch_to.active_element.clear()
+    selenium.switch_to.active_element.send_keys(random_name)
+
+
+@when(parsers.parse('user clicks on the "{name}"'))
+def click_on_button(selenium, name):
+    def go_to_button(s):
+        links = s.find_elements_by_css_selector('div.secondary-header')
+        for e in links:
+            if e.text == name:
+                return e
+
+    Wait(selenium, WAIT_FRONTEND).until(go_to_button).click()
+
+
+@then(parsers.parse('user should see, that the new space appear on the list'))
+def page_with_header(selenium, random_name):
+
+    def header_with_text_presence(s):
+        headers = s.find_elements_by_css_selector('div.secondary-header')
+        return any(h.text == random_name for h in headers)
+
+    Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
+
+
+@when(parsers.parse('user clicks on the "groups" provider in Oneprovider providers sidebar panel'))
+def click_on_button(selenium):
+    name = 'Groups'
+
+    def go_to_button(s):
+        links = s.find_elements_by_css_selector('a#main-groups')
+        for e in links:
+            if e.text == name:
+                return e
+
+    Wait(selenium, WAIT_FRONTEND).until(go_to_button).click()
+
+
+@when(parsers.parse('user clicks on the "{name}" button'))
+def click_on_button(selenium, name):
+    def go_to_button(s):
+        links = s.find_elements_by_css_selector('figure.icon')
+        for e in links:
+            if e.text == name:
+                return e
+
+    Wait(selenium, WAIT_FRONTEND).until(go_to_button).click()
+
+
+@when('user should see that name input box is active')
+def wait_for_input_box(selenium):
+    def _active_input_box(s):
+        tmp = s.find_elements_by_css_selector('#create-group-modal input')
+        if tmp:
+            tmp = tmp[0]
+            return tmp == s.switch_to.active_element
+        else:
+            return False
+    Wait(selenium, WAIT_FRONTEND).until(_active_input_box)
+
+
+@when('user should see that rename input box is active')
+def wait_for_rename_input_box(selenium):
+    def _active_input_box(s):
+        tmp = s.find_elements_by_css_selector('#rename-group-modal input')
+        if tmp:
+            tmp = tmp[0]
+            return tmp == s.switch_to.active_element
+        else:
+            return False
+    Wait(selenium, WAIT_FRONTEND).until(_active_input_box)
+
+
+@then(parsers.parse('user should see, that the new group appear on the list'))
+def page_with_header(selenium, random_name):
+
+    def header_with_text_presence(s):
+        headers = s.find_elements_by_css_selector('.groups-list .secondary-sidebar-item .item-label .truncate')
+        return any(h.text == random_name for h in headers)
+
+    Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
+
+
+@when(parsers.parse('user clicks on the settings button for "{name}"'))
+def click_on_settings_button_in_group_panel(selenium, name):
+    def _locate_settings_button(s):
+        groups = s.find_elements_by_css_selector('.groups-list '
+                                                 '.secondary-sidebar-item')
+        for group in groups:
+            elem_name = group.find_element_by_css_selector('.item-label '
+                                                           '.truncate').text
+            if name == elem_name:
+                return group.find_element_by_css_selector('.dropdown'
+                                                          '.settings-dropdown')
+
+    Wait(selenium, WAIT_FRONTEND).until(_locate_settings_button).click()
+
+
+@when(parsers.parse('user clicks on the "{elem}" element'))
+def click_on_elem(selenium, elem):
+    def go_to_button(s):
+        elems = s.find_elements_by_css_selector('.settings-dropdown '
+                                                '.dropdown-menu-settings '
+                                                '.clickable')
+        for e in elems:
+            if elem == e.text:
+                return e
+
+    Wait(selenium, WAIT_FRONTEND).until(go_to_button).click()
+
+
+@then('user should see popup with information about name change')
+def check_confirmation_after_rename(selenium):
+    Wait(selenium, WAIT_FRONTEND).until(EC.presence_of_element_located(
+        (By.CSS_SELECTOR, '.onedata-notify span.message')))
+
+
+@then(parsers.parse('user should see, that the new name replaced old one on the list'))
+def renamed_group(selenium, name, random_name):
+
+    def header_with_text_presence(s):
+        headers = s.find_elements_by_css_selector('.groups-list .secondary-sidebar-item .item-label .truncate')
+        return all(h.text != name for h in headers) and any(h.text == random_name for h in headers)
+
+    Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
+
+    # restore previous name
+    click_on_settings_button_in_group_panel(selenium, random_name)
+    click_on_elem(selenium, "RENAME")
+    wait_for_rename_input_box(selenium)
+    clear_and_type_string_into_active_element(selenium, name)
+    selenium.switch_to.active_element.send_keys(Keys.RETURN)
 
 
 @given(parsers.parse('user clicks on the "{name}" provider in Onezone providers sidebar panel'))
@@ -60,11 +230,7 @@ def click_on_go_to_files_provider(selenium):
     Wait(selenium, WAIT_FRONTEND).until(go_to_files_button).click()
 
 
-
-
-
-
-@when('I click on the user alias edit element')
+@when('user clicks on the user alias')
 def click_user_alias_edit(selenium):
     alias_edit = Wait(selenium, WAIT_FRONTEND).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, '.alias-panel a .space-header'))
@@ -75,8 +241,7 @@ def click_user_alias_edit(selenium):
     selenium.execute_script('$(".alias-panel a input").select()')
 
 
-@then('User alias should be changed to "<name>"')
-@then(parsers.parse('User alias should be changed to "{name}"'))
+@then(parsers.parse('user should see, that the alias changed to "helloworld"'))
 def user_alias_equals(selenium, name):
     alias_header = selenium.find_element_by_css_selector('.alias-panel .space-header')
     Wait(selenium, WAIT_BACKEND).until(lambda s: alias_header.text == name)
