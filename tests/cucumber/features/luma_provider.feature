@@ -3,7 +3,6 @@ Feature: LUMA provider test
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
-    And u1 have mounted spaces [s1, s2]
 
   Scenario: Operations on POSIX storage
     When u1 creates regular files [posix/file1]

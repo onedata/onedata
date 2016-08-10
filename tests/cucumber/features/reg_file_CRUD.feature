@@ -3,7 +3,6 @@ Feature: Regular_file_CRUD
   Background:
     Given environment is up
     And u1 starts oneclient in /home/u1/onedata using token
-    And u1 have mounted spaces [s1, s2]
 
   Scenario: Create regular file
     When u1 creates regular files [s1/file1, s1/file2, s1/file3]

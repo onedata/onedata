@@ -49,11 +49,3 @@ def check_spaces(spaces, user, client_nodes, context):
                 return False
 
         assert client.perform(condition)
-
-
-@given(parsers.parse('{users} have mounted spaces {spaces} on {client_nodes}'))
-def check_spaces2(users, spaces, client_nodes, context):
-    users = list_parser(users)
-    client_nodes = list_parser(client_nodes)
-    for user, client_node in zip(users, client_nodes):
-        check_spaces(spaces, user, make_arg_list(client_node), context)
