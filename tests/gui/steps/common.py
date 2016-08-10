@@ -16,6 +16,13 @@ from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
+from random import choice
+from string import ascii_uppercase, ascii_lowercase, digits
+
+
+@given('valid name string')
+def name_string():
+    return ''.join(choice(ascii_uppercase + ascii_lowercase + digits) for i in range(6))
 
 
 @then(parsers.parse('user should see that a page title contains "{text}"'))
@@ -23,14 +30,27 @@ def title_contains(selenium, text):
     Wait(selenium, WAIT_FRONTEND).until(EC.title_contains(text))
 
 
+@when('user types valid name on keyboard')
+def type_valid_name_string_into_active_element(selenium, name_string):
+    selenium.switch_to.active_element.send_keys(name_string)
+
+
+@then(parsers.parse('user types "{text}" on keyboard'))
 @when(parsers.parse('user types "{text}" on keyboard'))
 def type_string_into_active_element(selenium, text):
     selenium.switch_to.active_element.send_keys(text)
 
 
+@then(parsers.parse('user presses enter on keyboard'))
 @when(parsers.parse('user presses enter on keyboard'))
 def press_enter_on_active_element(selenium):
     selenium.switch_to.active_element.send_keys(Keys.RETURN)
+
+
+@then(parsers.parse('user presses backspace on keyboard'))
+@when(parsers.parse('user presses backspace on keyboard'))
+def press_enter_on_active_element(selenium):
+    selenium.switch_to.active_element.send_keys(Keys.BACKSPACE)
 
 
 @then(parsers.parse('user should see {links_names} links'))

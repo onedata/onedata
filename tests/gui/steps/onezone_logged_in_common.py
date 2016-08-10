@@ -14,6 +14,24 @@ from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, when, then, parsers
 
 
+@when(parsers.parse('user expands the "{name}" Onezone sidebar panel'))
+def uncollapse_oz_panel(selenium, name):
+    re_lc_name = re.compile(name, re.I)
+
+    def sidebar_group_by_name(s):
+        groups = s.find_elements_by_css_selector('.main-accordion-group')
+        for g in groups:
+            t = g.find_element_by_css_selector('a.main-accordion-toggle')
+            if re_lc_name.match(t.text):
+                return g, t
+        return None
+
+    sgroup, toggle = Wait(selenium, WAIT_FRONTEND).until(sidebar_group_by_name)
+    aria_expanded = sgroup.get_attribute('aria-expanded')
+    if aria_expanded is None or aria_expanded == 'false':
+        toggle.click()
+
+
 @given(parsers.parse('user expands the "{name}" Onezone sidebar panel'))
 def uncollapse_oz_panel(selenium, name):
     re_lc_name = re.compile(name, re.I)
@@ -60,11 +78,7 @@ def click_on_go_to_files_provider(selenium):
     Wait(selenium, WAIT_FRONTEND).until(go_to_files_button).click()
 
 
-
-
-
-
-@when('I click on the user alias edit element')
+@when('user clicks on the user alias')
 def click_user_alias_edit(selenium):
     alias_edit = Wait(selenium, WAIT_FRONTEND).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, '.alias-panel a .space-header'))
@@ -75,11 +89,36 @@ def click_user_alias_edit(selenium):
     selenium.execute_script('$(".alias-panel a input").select()')
 
 
-@then('User alias should be changed to "<name>"')
-@then(parsers.parse('User alias should be changed to "{name}"'))
+@when('user clicks on the "Create new space" button')
+def click_create_new_space_button(selenium):
+
+    def find_create_new_space_button(s):
+        links = selenium.find_elements_by_css_selector('.secondary-header')
+        for elem in links:
+             if elem.text == "Create new space":
+                return elem
+        return None
+
+    create_button = Wait(selenium, WAIT_BACKEND).until(find_create_new_space_button)
+    create_button.click()
+
+@then(parsers.parse('user should see, that the alias changed to "{name}"'))
 def user_alias_equals(selenium, name):
     alias_header = selenium.find_element_by_css_selector('.alias-panel .space-header')
     Wait(selenium, WAIT_BACKEND).until(lambda s: alias_header.text == name)
+
+
+@then(parsers.parse('user should see new space with "{name}" name'))
+def space_name_equals(selenium, name):
+
+    def find_created_space(s):
+        links = selenium.find_elements_by_css_selector('.secondary-header')
+        for elem in links:
+             if elem.text == name:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_BACKEND).until(lambda s: find_created_space(selenium).text == name)
 
 
 # @when('I go to provider {provider}')

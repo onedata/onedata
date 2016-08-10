@@ -17,7 +17,7 @@ import re
 import sys
 
 
-SELENIUM_IMPLICIT_WAIT = 5
+SELENIUM_IMPLICIT_WAIT = 10
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes

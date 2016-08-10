@@ -58,11 +58,6 @@ def w_click_login_provider_button(selenium, provider_name):
     _click_login_provider_button(selenium, provider_name)
 
 
-
-
-
-
-
 @then(parsers.re('I should be redirected to (?P<page>.+) page'))
 def being_redirected_to_page(page, selenium):
     wait(selenium, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
