@@ -15,6 +15,32 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 
+@when('user clicks "OK" button')
+def click_ok_button(selenium):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, '#remove-files-modal button.btn-primary'))
+    ).click()
+
+
+@when('user clicks "Remove element" button')
+def click_remove_button(selenium):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, '#navbar-collapse ul.nav a#remove-file-tool'))
+    ).click()
+
+
+@when(parsers.parse('user selects "{file_name}"'))
+def select_file(selenium, file_name):
+
+    def find_file(s):
+        files = s.find_elements_by_css_selector('.files-list table.files-table td.file-list-col-file')
+        for elem in files:
+            if elem.text == file_name:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(find_file).click()
+
 
 @when('user should see, that new file name input box is active')
 def wait_new_file_name_input_box_is_active(selenium):
@@ -86,6 +112,19 @@ def check_new_directory(selenium, dir_name):
         return None
 
     Wait(selenium, WAIT_FRONTEND).until(find_added_directory)
+
+
+@then(parsers.parse('user should not see "{file_name}"'))
+def check_new_file(selenium, file_name):
+
+    def try_find_deleted_file(s):
+        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in files:
+            if elem.text == file_name:
+                return elem
+        return None
+
+    assert try_find_deleted_file(selenium) is None
 
 
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))

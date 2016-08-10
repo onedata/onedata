@@ -28,7 +28,6 @@ def curr_url(selenium):
     return [selenium.current_url]
 
 
-
 @given(parsers.parse('existing {space_name}'))
 def existing_space_name(space_name):
     return 'space1'
@@ -186,8 +185,7 @@ def wait_invite_group_token_is_active(selenium):
 
 
 @when(parsers.parse('user clicks "{space_name}" button'))
-def space_name_click(selenium, space_name, curr_url):
-    curr_url = selenium.current_url
+def space_name_click(selenium, space_name):
 
     def get_space_to_click(s):
         spaces = s.find_elements_by_css_selector('ul.spaces-list .secondary-sidebar-item')
@@ -196,7 +194,7 @@ def space_name_click(selenium, space_name, curr_url):
                 return elem
         return None
 
-    Wait(selenium, WAIT_BACKEND).until(get_space_to_click)
+    Wait(selenium, WAIT_BACKEND).until(get_space_to_click).click()
 
 
 @then(parsers.parse('user should see new space "{name}"'))
@@ -262,28 +260,21 @@ def is_invite_group_token_visible(selenium):
     assert len(text) > 0
 
 
-@then('user should see error message')
-def is_error_message_display(selenium):
-    notify = Wait(selenium, WAIT_FRONTEND).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '.ember-notify span.message')))
-    assert notify.text == 'Cannot join space: "Invalid token value."'
-
-
 @then('user should see new url')
 def check_if_url_changed(selenium, curr_url):
-    assert selenium.current_url != 'https://172.17.0.8/#/spaces/space1/users'
+    assert selenium.current_url != curr_url
 
 
-@then('user should see space menu for "{space_name}"')
+@then(parsers.parse('user should see space menu for "{space_name}"'))
 def check_space_menu_display(selenium, space_name):
 
     def get_space_menu(s):
-        spaces = s.find_elements_by_css_selector('ul.space-list .secondary-sidebar-item')
+        spaces = s.find_elements_by_css_selector('li.active .secondary-sidebar-item .truncate')
         for elem in spaces:
             if elem.text == space_name:
                 return elem
         return None
 
-    Wait(selenium, WAIT_BACKEND).until()
+    Wait(selenium, WAIT_BACKEND).until(get_space_menu)
 
 

@@ -76,6 +76,7 @@
     Then user should see space creation token
     And user can click "Copy" button
 
+
   Scenario: Trying join to space with invalid token
     #I assumed here that we already have existing space with name 'space1'
     Given existing "space1"
@@ -85,3 +86,14 @@
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*Invalid.*token.*
+
+
+    #I assumed here that we already have existing space with name "space2"
+    #and that starting url is not adress to "space2"
+  Scenario: Switching between spaces
+    When user clicks "Spaces" button
+    And user moves cursor on the "space2"
+    And user sees current url
+    And user clicks "space2" button
+    Then user should see space menu for "space2"
+    And user should see new url

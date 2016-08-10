@@ -22,16 +22,6 @@ Feature: Oneprovider Data view
     Then user sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
 
 
-#  Scenario: Switching between spaces
-#    When user clicks "Spaces" button
-    #And user sees current url
-#    And user moves cursor on the "space2"
-#    And user clicks "space2" button
-    #Then user should see new url
-#    Then user should see space menu for "space2"
-
-  #Next two scenarios assuming that file/directory with the same name
-  #does not exists.
   Scenario: Create new file
     When user clicks "Create file" button
     And user should see, that new file name input box is active
@@ -46,5 +36,14 @@ Feature: Oneprovider Data view
     And user types "directory1" on keyboard
     And user presses enter on keyboard
     Then user should see "directory1" directory
+
+
+   #In this test i assumed that file with name "file" already exists
+  Scenario: Remove existing file
+    When user selects "file"
+    And user clicks "Remove element" button
+    And user clicks "OK" button
+    Then user sees an success notify with text matching to: .*removed.*
+    And user should not see "file"
 
 
