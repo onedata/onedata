@@ -8,11 +8,27 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path
-from pytest_bdd import when, then, parsers
+from tests.gui.utils.generic import upload_file_path, find_element
+from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from pytest import fixture
+
+
+@fixture
+def get_provider_name(provider_name):
+    return provider_name
+
+
+@given(parsers.parse('existing provider "{provider_name}" supporting our space named "{space_name}"'))
+def existing_provider_supporting_space(provider_name, space_name):
+    return provider_name
+
+
+@given(parsers.parse('existing file name "{file_name}"'))
+def existing_file(file_name):
+    return file_name
 
 
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
@@ -57,7 +73,7 @@ def upload_file_to_current_dir(selenium, file_name):
     Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
 
 
-@when('user clicks "Create file" button')
+@when('user clicks "Create file" button from top menu bar')
 def click_create_new_file_button(selenium):
     new_file_button = Wait(selenium, WAIT_BACKEND).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-file-tool'))
@@ -80,20 +96,20 @@ def wait_input_box_for_file_name_is_active(selenium):
     Wait(selenium, WAIT_FRONTEND).until(_is_active)
 
 
-@then(parsers.parse('user should see new file named "{file_name}"'))
+@then('user should not see input box for file name')
+def check_if_input_box_for_file_name_disappeared(selenium):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, '#create-file-modal .ember-view input.form-control'))
+    )
+
+
+@then(parsers.parse('user should see new file named "{file_name}" in files list'))
 def check_existence_of_new_file(selenium, file_name):
-
-    def find_added_file(s):
-        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in files:
-            if elem.text == file_name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_FRONTEND).until(find_added_file)
+    added_file = find_element(selenium, 'table.table td.file-list-col-file', file_name)
+    Wait(selenium, WAIT_FRONTEND).until(lambda s: added_file is not None)
 
 
-@when('user clicks "Create directory" button')
+@when('user clicks "Create directory" button from top menu bar')
 def click_create_new_directory_button(selenium):
     new_directory_button = Wait(selenium, WAIT_BACKEND).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-dir-tool'))
@@ -116,20 +132,20 @@ def wait_input_box_for_directory_name_is_active(selenium):
     Wait(selenium, WAIT_FRONTEND).until(_is_active)
 
 
-@then(parsers.parse('user should see new directory named "{dir_name}"'))
+@then('user should not see input box for directory name')
+def check_if_input_box_for_directory_name_disappeared(selenium):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, '#create-dir-modal .ember-view input.form-control'))
+    )
+
+
+@then(parsers.parse('user should see new directory named "{dir_name}" in files list'))
 def check_existence_of_new_directory(selenium, dir_name):
-
-    def find_added_directory(s):
-        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in files:
-            if elem.text == dir_name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_FRONTEND).until(find_added_directory)
+    added_dir = find_element(selenium, 'table.table td.file-list-col-file', dir_name)
+    Wait(selenium, WAIT_FRONTEND).until(lambda s: added_dir is not None)
 
 
-@when(parsers.parse('user selects "{file_name}"'))
+@when(parsers.parse('user selects "{file_name}" from files list'))
 def select_file(selenium, file_name):
 
     def find_file(s):
@@ -142,7 +158,7 @@ def select_file(selenium, file_name):
     Wait(selenium, WAIT_FRONTEND).until(find_file).click()
 
 
-@when('user clicks "Remove element" button')
+@when('user clicks "Remove element" button from top menu bar')
 def click_remove_button(selenium):
     remove_button = Wait(selenium, WAIT_FRONTEND).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, '#navbar-collapse ul.nav a#remove-file-tool'))
@@ -158,19 +174,36 @@ def click_ok_button(selenium):
     ok_button.click()
 
 
-@then(parsers.parse('user should not see "{file_name}"'))
+@then(parsers.parse('user should not see file named "{file_name}" in files list'))
 def check_absence_deleted_file(selenium, file_name):
+    deleted_file = find_element(selenium, 'table.table td.file-list-col-file', file_name)
+    assert deleted_file is None
 
-    def try_find_deleted_file(s):
-        files = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in files:
-            if elem.text == file_name:
+
+@when('user clicks "Show file distribution" button from top menu bar')
+def click_show_file_distribution_button(selenium):
+
+    show_file_distribution_button = Wait(selenium, WAIT_BACKEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, '#navbar-collapse ul.nav a#file-chunks-tool'))
+    )
+    show_file_distribution_button.click()
+
+
+@then(parsers.parse('user should see provider name "{provider_name}" in providers column'))
+def check_if_provider_name_in_table(selenium, provider_name):
+
+    def _find_provider(s):
+        providers = s.find_elements_by_css_selector(
+            '#file-chunks-modal .container-fluid table.file-blocks-table td.provider-name')
+        for elem in providers:
+            if elem.text == provider_name:
                 return elem
         return None
 
-    assert try_find_deleted_file(selenium) is None
+    Wait(selenium, WAIT_FRONTEND).until(_find_provider)
 
 
+###############################################################################################################
 # @when(parsers.parse('The upload of file "{file_name}" fails'))
 # @then(parsers.parse('The upload of file "{file_name}" should fail'))
 # def upload_fails(selenium, file_name):

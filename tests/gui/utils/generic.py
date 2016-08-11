@@ -10,8 +10,12 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import os
 from tests import gui
-
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from selenium.webdriver.support.ui import WebDriverWait as Wait
+from selenium.webdriver.support import expected_conditions as EC
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
+from selenium.webdriver.common.by import By
+
 
 RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(/#)?(?P<method>/.*)')
 
@@ -49,3 +53,21 @@ def upload_file_path(file_name):
         'upload_files',
         file_name
     )
+
+
+def find_element(selenium, selector, text):
+    """finds element on site by css selector and element's text"""
+    elements_list = selenium.find_elements_by_css_selector(selector)
+    for elem in elements_list:
+        if elem.text == text:
+            return elem
+    return None
+
+
+def get_text_from_input_box(selenium):
+    input_box = Wait(selenium, WAIT_FRONTEND).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR,
+                                          '.input-with-button input#invite-form-token-userJoinSpace-field'))
+    )
+    text = input_box.get_attribute('value')
+    return text

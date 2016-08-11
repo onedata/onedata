@@ -23,27 +23,40 @@ Feature: Oneprovider Data view
 
 
   Scenario: Create new file
-    When user clicks "Create file" button
+    When user clicks "Create file" button from top menu bar
     And user should see, that input box for file name is active
     And user types "file1" on keyboard
     And user presses enter on keyboard
-    Then user should see new file named "file1"
+    Then user should not see input box for file name
+    And user should see new file named "file1" in files list
 
 
   Scenario: Create new directory
-    When user clicks "Create directory" button
+    When user clicks "Create directory" button from top menu bar
     And user should see, that input box for directory name is active
     And user types "directory1" on keyboard
     And user presses enter on keyboard
-    Then user should see new directory named "directory1"
+    Then user should not see input box for directory name
+    And user should see new directory named "directory1" in files list
 
 
    #In this test i assumed that file with name "file" already exists
   Scenario: Remove existing file
-    When user selects "file"
-    And user clicks "Remove element" button
+    Given existing file named "file"
+    When user selects "file" from files list
+    And user clicks "Remove element" button from top menu bar
     And user clicks "OK" button
     Then user sees an success notify with text matching to: .*removed.*
-    And user should not see "file"
+    And user should not see file named "file" in files list
+
+
+   Scenario: Check if provider name is displayed in the chunk
+    #I assumed here that we have space named "space1" is supported by provider named "p1"
+    Given existing provider "p1" supporting our space named "space1"
+    #I assumed here that we already have file name "file1"
+    And existing file named "file2"
+    When user selects "file2" from files list
+    And user clicks "Show file distribution" button from top menu bar
+    Then user should see provider name "p1" in providers column
 
 

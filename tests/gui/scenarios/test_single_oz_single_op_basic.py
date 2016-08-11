@@ -17,7 +17,7 @@ from pytest_bdd import scenarios, scenario
 # --- FEATURES: all non-destructive (does not change state) ---
 #scenarios('../features/onezone_login.feature')
 #scenarios('../features/onezone_gui.feature')
-#scenarios('../features/oneprovider_data.feature')
+scenarios('../features/oneprovider_data.feature')
 scenarios('../features/oneprovider_gui.feature')
 #
 #

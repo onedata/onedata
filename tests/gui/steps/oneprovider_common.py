@@ -5,6 +5,7 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+from tests.gui.utils.generic import find_element
 from tests.gui.steps import onezone_logged_in_common as onezone_session
 from tests.gui.steps import onezone_before_login as onezone_no_session
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
@@ -25,7 +26,7 @@ import selenium
 
 
 @fixture
-def curr_url(selenium):
+def get_url(selenium):
     return [selenium.current_url]
 
 
@@ -34,17 +35,23 @@ def existing_space_name(space_name):
     return space_name
 
 
-@when('user clicks "Spaces" button')
-def click_spaces_button(selenium):
-    spaces_button = Wait(selenium, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'a#main-spaces')))
-    spaces_button.click()
+@when(parsers.parse('user clicks "{button_name}" button from sidebar panel'))
+def click_spaces_button_in_sidebar_panel(selenium, button_name):
+    button = find_element(selenium, 'a#main-spaces', button_name)
+    button.click()
 
 
-@when('user clicks "Create" button')
-def click_create_button(selenium):
+@when('user should see changed main content')
+def check_if_main_content_changed(selenium):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
+    )
+
+
+@when('user clicks "Create" button from spaces menu')
+def click_create_button_in_spaces_menu(selenium):
     create_button = Wait(selenium, WAIT_BACKEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'span.oneicon-space-add')))
+        EC.visibility_of_element_located((By.CSS_SELECTOR, 'span.oneicon-space-add')))
     create_button.click()
 
 
@@ -62,46 +69,27 @@ def wait_input_box_for_space_name_is_active(selenium):
     Wait(selenium, WAIT_FRONTEND).until(_is_active)
 
 
-@then(parsers.parse('user should see space named "{name}"'))
-@then(parsers.parse('user should see new space named "{name}"'))
-def new_space_existance(selenium, name):
-
-    def find_created_space(s):
-        links = s.find_elements_by_css_selector('ul.spaces-list .secondary-sidebar-item .truncate')
-        for elem in links:
-             if elem.text == name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_BACKEND).until(lambda s: find_created_space(selenium).text == name)
+@then(parsers.parse('user should see space named "{space_name}" in spaces list'))
+@then(parsers.parse('user should see new space named "{space_name}" in spaces list'))
+def check_new_space_existence(selenium, space_name):
+    space = find_element(selenium,
+                         'ul.spaces-list .secondary-sidebar-item .truncate', space_name)
+    Wait(selenium, WAIT_BACKEND).until(lambda s: space is not None)
 
 
-@then(parsers.parse('click "Settings" icon in "{space}"'))
-@when(parsers.parse('click "Settings" icon in "{space}"'))
-def click_settings_icon_in_space(selenium, space):
-
-    def find_space(s):
-        links = s.find_elements_by_css_selector('ul.spaces-list .secondary-sidebar-item')
-        for elem in links:
-             if elem.text == space:
-                return elem.find_element_by_css_selector('span.oneicon-settings')
-        return None
-
-    find_space(selenium).click()
+@then(parsers.parse('user clicks "Settings" icon displayed on space named "{space_name}"'))
+@when(parsers.parse('user clicks "Settings" icon displayed on space named "{space_name}"'))
+def click_settings_icon_on_space(selenium, space_name):
+    space = find_element(selenium, 'ul.spaces-list .secondary-sidebar-item', space_name)
+    settings_icon = space.find_element_by_css_selector('span.oneicon-settings')
+    settings_icon.click()
 
 
-@then(parsers.parse('user clicks "{option}" option'))
-@when(parsers.parse('user clicks "{option}" option'))
-def click_rename_option(selenium, option):
-
-    def find_option_button(selenium):
-        links = selenium.find_elements_by_css_selector('ul.spaces-list .dropdown .dropdown-menu li.clickable')
-        for elem in links:
-            if elem.text == option:
-                return elem
-        return None
-
-    rename_button = Wait(selenium, WAIT_FRONTEND).until(find_option_button)
+@then(parsers.parse('user clicks "{option}" option from drop down menu for spaces'))
+@when(parsers.parse('user clicks "{option}" option from drop down menu for spaces'))
+def click_option_from_drop_down_menu_for_spaces(selenium, option):
+    rename_button = find_element(selenium,
+                                 'ul.spaces-list .dropdown .dropdown-menu li.clickable', option)
     rename_button.click()
 
 
@@ -122,10 +110,12 @@ def wait_input_box_for_new_name_is_active(selenium):
 
 @then('user should not see input box for new name')
 def wait_to_hide_input_box(selenium):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'div#rename-space-modal input')))
-    Wait(selenium, WAIT_FRONTEND).until(
+    Wait(selenium, WAIT_BACKEND).until(
         EC.invisibility_of_element_located((By.CSS_SELECTOR, '#rename-space-backdrop')))
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
+    )
+
 
 
 @when('user should see, that invite user token box is active')
@@ -145,7 +135,8 @@ def wait_invite_user_token_input_box_is_active(selenium):
 @then('user should see invite user token')
 def check_existence_of_invite_user_token(selenium):
     input_box = Wait(selenium, WAIT_FRONTEND).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, '.input-with-button input#invite-form-token-userJoinSpace-field'))
+        EC.visibility_of_element_located((By.CSS_SELECTOR,
+                                          '.input-with-button input#invite-form-token-userJoinSpace-field'))
     )
     text = input_box.get_attribute('value')
     assert len(text) > 0
@@ -200,7 +191,7 @@ def check_exitence_of_get_support_token(selenium):
     assert len(text) > 0
 
 
-@when('user clicks "Join" button')
+@when('user clicks "Join" button from spaces menu')
 def click_join_button(selenium):
     join_button = Wait(selenium, WAIT_BACKEND).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR,'.secondary-sidebar-header figure.icon span.oneicon-join'))
@@ -208,53 +199,53 @@ def click_join_button(selenium):
     join_button.click()
 
 
-@when('user sees current url')
-def set_current_url(selenium, curr_url):
-    curr_url[0] = selenium.current_url
+@when('user should see, that token input box is active')
+def wait_get_input_box_is_active(selenium):
+
+    def _is_active(selenium):
+        elem = selenium.find_elements_by_css_selector('#join-space-modal input.form-control')
+        if elem:
+            elem = elem[0]
+            return elem == selenium.switch_to.active_element
+        else:
+            return False
+
+    Wait(selenium, WAIT_FRONTEND).until(_is_active)
 
 
-@when(parsers.parse('user clicks "{space_name}"'))
+@when('user can see current url')
+def set_current_url(selenium, get_url):
+    get_url[0] = selenium.current_url
+
+
+@when(parsers.parse('user clicks space named "{space_name}" from spaces list'))
 def click_space_name(selenium, space_name):
-
-    def find_space_to_click(s):
-        spaces = s.find_elements_by_css_selector('ul.spaces-list .secondary-sidebar-item')
-        for elem in spaces:
-            if elem.text == space_name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_BACKEND).until(find_space_to_click).click()
+    space_to_click = find_element(selenium, 'ul.spaces-list .secondary-sidebar-item', space_name)
+    space_to_click.click()
 
 
-@then(parsers.parse('user should see space menu for "{space_name}"'))
+@then(parsers.parse('user should see submenu for space named "{space_name}"'))
 def check_if_displayed_space_menu(selenium, space_name):
-
-    def find_space_menu(s):
-        spaces = s.find_elements_by_css_selector('li.active .secondary-sidebar-item .truncate')
-        for elem in spaces:
-            if elem.text == space_name:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_BACKEND).until(find_space_menu)
+    space_menu = find_element(selenium, 'li.active .secondary-sidebar-item .truncate', space_name)
+    Wait(selenium, WAIT_BACKEND).until(lambda s: space_menu is not None)
 
 
-@then('user should see new url')
-def check_if_url_changed(selenium, curr_url):
-    assert selenium.current_url != curr_url
+@then('user should see that url has changed')
+def check_if_url_changed(selenium, get_url):
+    assert selenium.current_url != get_url
 
 
 @then(parsers.parse('user should see home space icon next to "{space_name}"'))
 def check_if_home_space_icon_next_to_spaces(selenium, space_name):
 
-    def find_home_space_icon(s):
+    def _find_home_space_icon(s):
         spaces = s.find_elements_by_css_selector('.ember-view ul.spaces-list .secondary-sidebar-item')
         for elem in spaces:
             if elem.find_element_by_css_selector('span.oneicon-space-home'):
                 return elem
         return None
 
-    assert find_home_space_icon(selenium).text == space_name
+    assert _find_home_space_icon(selenium).text == space_name
 
 
 @when('user clicks "YES" button')
@@ -270,41 +261,21 @@ def refresh_site(selenium):
     selenium.refresh()
 
 
-@then(parsers.parse('user should not see space named "{space_name}"'))
+@then(parsers.parse('user should not see space named "{space_name}" in spaces list'))
 def check_existance_of_space(selenium, space_name):
+    find_space = find_element(selenium, 'ul.spaces-list .secondary-sidebar-item .truncate', space_name)
+    assert find_space is None
 
-    def try_find_space(s):
-        links = s.find_elements_by_css_selector('ul.spaces-list .secondary-sidebar-item .truncate')
-        for elem in links:
-             if elem.text == space_name:
-                return elem
-        return None
 
-    assert try_find_space(selenium) is None
-
-####################################################################################################################
-@then('user sees settings dropdown panel')
-@when('user sees settings dropdown panel')
+@then('user should see settings drop down menu for spaces')
+@when('user should see settings drop down menu for spaces')
 def wait_for_settings_panel(selenium):
     Wait(selenium, WAIT_BACKEND).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, '.settings-dropdown ul.dropdown-menu-list span.item-label'))
     )
 
 
-@when('user should see, that token input box is active')
-def wait_token_input_box_is_active(selenium):
-
-    def _is_active(selenium):
-        elem = selenium.find_elements_by_css_selector('.form-group input.form-control')
-        if elem:
-            elem = elem[0]
-            return elem == selenium.switch_to.active_element
-        else:
-            return False
-
-    Wait(selenium, WAIT_FRONTEND).until(_is_active)
-
-
+####################################################################################################################
 
 
 #@when('user should see, that name was changed successfully')
