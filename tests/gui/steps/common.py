@@ -8,6 +8,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 import time
+import random
+
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from tests.utils.cucumber_utils import list_parser
 from tests.gui.utils.generic import parse_url
@@ -122,3 +124,17 @@ def check_if_element_is_active(selector):
         else:
             return False
     return _is_active
+
+
+@when(parsers.parse('user types group name on keyboard'))
+@when(parsers.parse('user types space name on keyboard'))
+def type_string_into_active_element(selenium, random_name):
+    selenium.switch_to.active_element.send_keys(random_name)
+
+
+@given('user has new name for group')
+@given('user has name for new group')
+@given('user has name for new space')
+def random_name():
+    chars = 'qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+    return ''.join(random.sample(chars, 6))

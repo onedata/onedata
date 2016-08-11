@@ -10,13 +10,58 @@ Feature: Oneprovider Group functionality
     And user clicks on the "Go to your files" button in provider popup
     And user clicks on the "groups" Oneprovider's sidebar panel
 
-  Scenario: Add new group
-    Given user has name for new group
-    When user clicks on the "Create" button
-    And user should see that name input box is active
-    And user types group name on keyboard
-    And user presses enter on keyboard
-    Then user should see, that the new group appear on the list
+#  Scenario: Add new group
+#    Given user has name for new group
+#    When user clicks on the "Create" button
+#    And user should see that name input box is active
+#    And user types group name on keyboard
+#    And user presses enter on keyboard
+#    Then user should see, that the new group appear on the list
+#
+#
+#  Scenario: Invite user
+#    When user clicks on the settings button for "group1"
+#    And user clicks on the "INVITE USER" button in setting panel
+#    And user should see that invite input box is active
+#    Then user can copy visible invite-user token
+#
+#
+#  Scenario: Invite group
+#    When user clicks on the settings button for "group1"
+#    And user clicks on the "INVITE GROUP" button in setting panel
+#    And user should see that invite input box is active
+#    Then user can copy visible invite-group token
+#
+#
+#  Scenario: Request space creation
+#    When user clicks on the settings button for "group1"
+#    And user clicks on the "REQUEST SPACE CREATION" button in setting panel
+#    And user should see that request input box is active
+#    Then user can copy visible request token
+#
+#
+#  Scenario: Try to join space with incorrect token
+#    When user clicks on the settings button for "group1"
+#    And user clicks on the "JOIN SPACE" button in setting panel
+#    And user should see that join space input box is active
+#    And user types "helloworld" on keyboard
+#    And user presses enter on keyboard
+#    Then user sees an error notify with text matching to: .*join.*group1.*space.*
+#
+#  Scenario: Try to join group with incorrect token
+#    When user clicks on the settings button for "group1"
+#    And user clicks on the "JOIN AS SUBGROUP" button in setting panel
+#    And user should see that join as subgroup input box is active
+#    And user types "helloworld" on keyboard
+#    And user presses enter on keyboard
+#    Then user sees an error notify with text matching to: .*join.*group1.*subgroup.*
+#
+#  Scenario: Try join to group with incorrect token
+#    When user clicks on the "Join" button
+#    And user should see that join group input box is active
+#    And user types "helloworld" on keyboard
+#    And user presses enter on keyboard
+#    Then user sees an error notify with text matching to: .*Failed.*join.*group.*
 
 
 #  Scenario: Rename group
@@ -30,50 +75,3 @@ Feature: Oneprovider Group functionality
 #    And user presses enter on keyboard
 #    Then user should see popup with information about name change
 #    And user should see, that the new name replaced old one on the list
-#
-#    Scenario: Invite user
-#      When user clicks on the "groups" provider in Oneprovider providers sidebar panel
-#      And user clicks on the settings button for "group1"
-#      And user clicks on the "INVITE USER" element
-#      And user should see that invite input box is active
-#      Then user can copy visible invite-user token
-#
-#    Scenario: Invite group
-#      When user clicks on the "groups" provider in Oneprovider providers sidebar panel
-#      And user clicks on the settings button for "group1"
-#      And user clicks on the "INVITE GROUP" element
-#      And user should see that invite input box is active
-#      Then user can copy visible invite-group token
-#
-#    Scenario: Request space creation
-#      When user clicks on the "groups" provider in Oneprovider providers sidebar panel
-#      And user clicks on the settings button for "group1"
-#      And user clicks on the "REQUEST SPACE CREATION" element
-#      And user should see that request input box is active
-#      Then user can copy visible request token
-#
-#    Scenario: Try to join space with incorrect token
-#      When user clicks on the "groups" provider in Oneprovider providers sidebar panel
-#      And user clicks on the settings button for "group1"
-#      And user clicks on the "JOIN SPACE" element
-#      And user should see that join space input box is active
-#      And user types "helloworld" on keyboard
-#      And user presses enter on keyboard
-#      Then user sees an error notify with text matching to: .*join.*group1.*space.*
-#
-#    Scenario: Try to join group with incorrect token
-#      When user clicks on the "groups" provider in Oneprovider providers sidebar panel
-#      And user clicks on the settings button for "group1"
-#      And user clicks on the "JOIN AS SUBGROUP" element
-#      And user should see that join as subgroup input box is active
-#      And user types "helloworld" on keyboard
-#      And user presses enter on keyboard
-#      Then user sees an error notify with text matching to: .*join.*group1.*subgroup.*
-#
-#    Scenario: Try join to group with incorrect token
-#      When user clicks on the "groups" provider in Oneprovider providers sidebar panel
-#      And user clicks on the "Join" button
-#      And user should see that join group input box is active
-#      And user types "helloworld" on keyboard
-#      And user presses enter on keyboard
-#      Then user sees an error notify with text matching to: .*Failed.*join.*group.*
