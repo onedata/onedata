@@ -50,7 +50,7 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*space.*
 
-  Scenario: Try to join group with incorrect token
+  Scenario: Try to join as subgroup with incorrect token
     # assuming there is group1
     When user clicks on the settings button for "group1" in current sidebar
     And user clicks on the "JOIN AS SUBGROUP" button in current settings dropdown
