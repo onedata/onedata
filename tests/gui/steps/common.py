@@ -103,3 +103,22 @@ def notify_visible_with_text(selenium, notify_type, text_regexp):
 @when(parsers.re(r'user changes application path to (?P<path>.+)'))
 def on_ember_path(selenium, path):
     selenium.get(parse_url(selenium.current_url).group('base_url') + '/#' + path)
+
+
+def select_button_from_buttons_by_name(name, buttons_selector):
+    def _go_to_button(s):
+        buttons = s.find_elements_by_css_selector(buttons_selector)
+        for button in buttons:
+            if button.text.lower() == name.lower():
+                return button
+    return _go_to_button
+
+
+def check_if_element_is_active(selector):
+    def _is_active(s):
+        tmp = s.find_element_by_css_selector(selector)
+        if tmp:
+            return tmp == s.switch_to.active_element
+        else:
+            return False
+    return _is_active
