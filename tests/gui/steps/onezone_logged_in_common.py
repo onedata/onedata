@@ -44,13 +44,6 @@ def w_uncollapse_oz_panel(selenium, name):
     _uncollapse_oz_panel(selenium, name)
 
 
-@given(parsers.parse('user clicks on the "{name}" Oneprovider\'s sidebar panel'))
-def open_op_panel(selenium, name):
-    css_selector = '.primary-sidebar a#main-' + name
-    find_button = select_button_from_buttons_by_name(name, css_selector)
-    Wait(selenium, WAIT_FRONTEND).until(find_button).click()
-
-
 @when(parsers.parse('user clicks on the "{name}" in sidebar panel'))
 def click_on_button_in_uncollapsed_oz_panel(selenium, name):
     selector = '.spaces-accordion .secondary-header'

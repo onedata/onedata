@@ -116,10 +116,10 @@ def select_button_from_buttons_by_name(name, buttons_selector):
     return _go_to_button
 
 
-def check_if_element_is_active(selector):
+def check_if_element_is_active(selector='', web_elem=None):
     def _is_active(s):
-        tmp = s.find_element_by_css_selector(selector)
-        if tmp:
+        tmp = web_elem if web_elem else s.find_element_by_css_selector(selector)
+        if tmp is not None:
             return tmp == s.switch_to.active_element
         else:
             return False
@@ -128,7 +128,7 @@ def check_if_element_is_active(selector):
 
 @when(parsers.parse('user types group name on keyboard'))
 @when(parsers.parse('user types space name on keyboard'))
-def type_string_into_active_element(selenium, random_name):
+def type_given_string_into_active_element(selenium, random_name):
     selenium.switch_to.active_element.send_keys(random_name)
 
 
