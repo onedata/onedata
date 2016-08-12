@@ -56,7 +56,7 @@ This repository combines these components into one source package, which can be 
 | Submodule | URL      | Description |
 |-----------|----------|--------------|
 | **Appmock** | https://github.com/onedata/appmock |  Appmock is used during testing to mock any service which exposes REST API. |
-| **Bamboo scripts** | https://github.com/onedata/bamboos | Bamboos is used for automating test deployments in (bamboo)[https://www.atlassian.com/software/bamboo] during Onedata integration tests. |
+| **Bamboo scripts** | https://github.com/onedata/bamboos | Bamboos is used for automating test deployments in [bamboo](https://www.atlassian.com/software/bamboo) during Onedata integration tests. |
 | **Tests** | https://github.com/onedata/tests | Main Onedata tests repository |
 
 >In order to initialize all submodules please use:
