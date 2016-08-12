@@ -80,7 +80,7 @@ The build process itself is fully based on Docker containers, so no other prereq
 
 ## Support
 
-Please use GitHub issues mechanism as the main channel for reporting bugs and requesting support or new features.
+Please use [GitHub issues](https://github.com/onedata/onedata/issues) mechanism as the main channel for reporting bugs and requesting support or new features.
 
 For more detailed support and discussions online please contact as at our public [HipChat channel](https://www.hipchat.com/g3ST0Aaci), however our availability at this channel is a on a *best effort* basis.
 
