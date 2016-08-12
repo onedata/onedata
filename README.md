@@ -38,6 +38,13 @@ This repository combines these components into one source package, which can be 
 |-----------|----------|--------------|
 | **Oneclient** | https://github.com/onedata/oneclient | Oneclient command line tool implementation. |
 
+## Onepanel
+
+| Submodule | URL      | Description |
+|-----------|----------|--------------|
+| **Onepanel** | https://github.com/onedata/onepanel | Onepanel administration service implementation. |
+
+
 ## LUMA
 
 | Submodule | URL      | Description |
