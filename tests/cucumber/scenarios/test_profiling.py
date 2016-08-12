@@ -29,12 +29,36 @@ def env_description_file(request):
 scenario = partial(scenario, '../features/profiling.feature')
 
 
-# @scenario('Profile ls')
-# def test_profile_ls(env_description_file):
-#     pass
+@scenario('Profile ls')
+def test_profile_ls(env_description_file):
+    pass
 
 
 @scenario('Profile ls nested')
 def test_profile_ls_nested(env_description_file):
     pass
 
+
+@scenario('Profile mkdir')
+def test_profile_mkdir(env_description_file):
+    pass
+
+
+@scenario('Profile rm')
+def test_profile_rm(env_description_file):
+    pass
+
+
+@scenario('Profile touch')
+def test_profile_touch(env_description_file):
+    pass
+
+
+@scenario('Profile write')
+def test_profile_write(env_description_file):
+    pass
+
+
+@scenario('Profile read')
+def test_profile_read(env_description_file):
+    pass
