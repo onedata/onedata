@@ -67,11 +67,15 @@ In order to try deploying Onedata, or specific components we have prepared a set
 
 ## Building
 
-This repository can be used to build entire Onedata system by simply invoking:
+The best way to use Onedata is to use our Docker images available at [Docker Hub](https://hub.docker.com/u/onedata/) or the binary packages available [here](). CUurrently the binary packages are only available for **Oneclient** component.
+
+This repository can be also used to build entire Onedata system by invoking:
 
 ```bash
 make
 ```
+
+The build process itself is fully based on Docker containers, so no other prerequisites other than Docker should be necessary. In case of problems with Docker cache, please set `NO_CACHE=1` environment variable.
 
 ## Support
 
