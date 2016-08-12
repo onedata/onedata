@@ -1,3 +1,6 @@
+
+![Onedata logo](https://onedata.org/docs/doc/img/heading.png)
+
 # Onedata
 
 This is the main repository of [Onedata](http://onedata.org) - a global data management system, providing easy access to distributed storage resources, supporting wide range of use cases from personal data management to data-intensive scientific computations.
@@ -81,13 +84,11 @@ The build process itself is fully based on Docker containers, so no other prereq
 
 Please use GitHub issues mechanism as the main channel for reporting bugs and requesting support or new features.
 
-For more detailed support and discussions online please contact as at our public [HipChat channel](https://www.hipchat.com/g3ST0Aaci), however our availability at this channel is a on *best effort* basis.
+For more detailed support and discussions online please contact as at our public [HipChat channel](https://www.hipchat.com/g3ST0Aaci), however our availability at this channel is a on a *best effort* basis.
 
 More information about support can be found [here](https://onedata.org/support).
 
 ## Copyright and license
-
-Copyright 2016 Academic Computer Centre CYFRONET-AGH, Krakow, Poland
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
