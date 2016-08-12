@@ -18,9 +18,10 @@ from pytest_bdd import given
                      'using {tokens}'))
 def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
                 request, onedata_environment, context, client_dockers,
-                env_description_file, test_type):
+                env_description_file, test_type, providers):
     mount_users(request, onedata_environment, context, client_dockers,
-                env_description_file, test_type, user_names=list_parser(users),
+                env_description_file, test_type, providers,
+                user_names=list_parser(users),
                 client_instances=list_parser(client_instances),
                 mount_paths=list_parser(mount_paths),
                 client_hosts=list_parser(client_hosts),
@@ -49,3 +50,11 @@ def check_spaces(spaces, user, client_nodes, context):
                 return False
 
         assert client.perform(condition)
+
+
+@when(parsers.parse('{user} remounts oneclient {client_node}'))
+@then(parsers.parse('{user} remounts oneclient {client_node}'))
+def remount_client(user, client_node, onedata_environment, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    assert client.remount(user) == 0
