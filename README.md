@@ -3,12 +3,11 @@
 This is the main repository of [Onedata](http://onedata.org) - a global data management system, providing easy access to distributed storage resources, supporting wide range of use cases from personal data management to data-intensive scientific computations.
 
 Onedata is composed of several components:
-* [Onezone](https://onedata.org/docs/doc/administering_onedata/onezone_overview.html) - allows to connect multiple storage providers into a larger distributed domain and provides users with Graphical User Interface for data management,
-* [Oneprovider](https://onedata.org/docs/doc/administering_onedata/provider_overview.html) - the main data management component of Onedata, deployed at each storage provider site, is responsible for unifying and controlling access to data over low level storage resources of the provider,
-* [Oneclient](https://onedata.org/docs/doc/using_onedata/oneclient.html) - command line tool which enables transparent access to users data spaces through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem,
-* [Onepanel](https://onedata.org/docs/doc/administering_onedata/onepanel_overview.html) - administration and configuration interface for **Onezone** and **Oneprovider** components,
-* [LUMA]() - service which allows mapping of between Onedata user accounts and local storage ID's.
-
+  * [Onezone](https://onedata.org/docs/doc/administering_onedata/onezone_overview.html) - allows to connect multiple storage providers into a larger distributed domain and provides users with Graphical User Interface for data management,
+  * [Oneprovider](https://onedata.org/docs/doc/administering_onedata/provider_overview.html) - the main data management component of Onedata, deployed at each storage provider site, is responsible for unifying and controlling access to data over low level storage resources of the provider,
+  * [Oneclient](https://onedata.org/docs/doc/using_onedata/oneclient.html) - command line tool which enables transparent access to users data spaces through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem,
+  * [Onepanel](https://onedata.org/docs/doc/administering_onedata/onepanel_overview.html) - administration and configuration interface for **Onezone** and **Oneprovider** components,
+  * [LUMA](https://onedata.org/docs/doc/administering_onedata/luma.html) - service which allows mapping of between Onedata user accounts and local storage ID's.
 
 This repository combines these components into one source package, which can be build and tested using single build script. Each of the components consists of the following submodules of this repository
 
@@ -51,17 +50,25 @@ This repository combines these components into one source package, which can be 
 | **Bamboo scripts** | https://github.com/onedata/bamboos | Bamboos is used for automating test deployments in (bamboo)[https://www.atlassian.com/software/bamboo] during Onedata integration tests. |
 | **Tests** | https://github.com/onedata/tests | Main Onedata tests repository |
 
-In order to initialize all submodules please use:
-```bash
-make submodules
-```
-instead of directly invoking Git `submodule` commands.
+>In order to initialize all submodules please use:
+>```bash
+>make submodules
+>```
+>instead of directly invoking Git `submodule` commands.
 
 ## Getting Started
 
 The easiest way to get started with using or deploying Onedata is to start with our official [documentation](https://onedata.org/docs/index.html).
 
 In order to try deploying Onedata, or specific components we have prepared a set of [example configurations and scenarios](https://github.com/onedata/getting-started).
+
+## Building
+
+This repository can be used to build entire Onedata system by simply invoking:
+
+```bash
+make
+```
 
 ## Support
 
