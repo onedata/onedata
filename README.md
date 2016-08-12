@@ -10,7 +10,7 @@ Onedata is composed of several components:
   * [Onepanel](https://onedata.org/docs/doc/administering_onedata/onepanel_overview.html) - administration and configuration interface for **Onezone** and **Oneprovider** components,
   * [LUMA](https://onedata.org/docs/doc/administering_onedata/luma.html) - service which allows mapping of between Onedata user accounts and local storage ID's.
 
-This repository combines these components into one source package, which can be build and tested using single build script. Each of the components consists of the following submodules of this repository
+This repository combines these components into one source package, which can be build and tested together. Each of the components consists of the following submodules of this repository.
 
 ## Common components
 
@@ -67,7 +67,7 @@ In order to try deploying Onedata, or specific components we have prepared a set
 
 ## Building
 
-The best way to use Onedata is to use our Docker images available at [Docker Hub](https://hub.docker.com/u/onedata/) or the binary packages available [here](). CUurrently the binary packages are only available for **Oneclient** component.
+The best way to use Onedata is to use our Docker images available at [Docker Hub](https://hub.docker.com/u/onedata/) or the binary packages available [here](https://get.onedata.org/). Currently the binary packages are only available for **Oneclient** component.
 
 This repository can be also used to build entire Onedata system by invoking:
 
@@ -83,3 +83,18 @@ For support and discussion please contact as at our public [HipChat channel](htt
 
 More information about support can be found [here](https://onedata.org/support).
 
+## Copyright and license
+
+Copyright 2016 Academic Computer Centre CYFRONET-AGH, Krakow, Poland
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
