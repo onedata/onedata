@@ -30,6 +30,7 @@ def stop_profiling(op_worker, context, onedata_environment, request, providers):
     logdir = make_logdir(PROFILING_LOGDIR, request.function.func_name)
     erl_node = get_matching_op_erl_node(op_worker, onedata_environment)
     docker_name = erl_node.split('@')[1]
+    time.sleep(15)
     stop_fprof(erl_node)
     copy_fprof_data(docker_name, logdir)
     convert_fprof_data(os.path.join(logdir, FPROF_DATA_FILE))

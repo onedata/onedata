@@ -1,5 +1,6 @@
 """Module implements pytest-bdd steps for operations on directories in multiclient environment.
 """
+import os
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
@@ -34,6 +35,33 @@ def create(user, dirs, client_node, context):
                 return False
 
         client.perform(condition)
+
+
+@when(parsers.parse('{user} creates structure of {number} nested directories in'
+                    ' {root_dir} on {client_node}'))
+@then(parsers.parse('{user} creates structure of {number} nested directories in'
+                    ' {root_dir} on {client_node}'))
+def create_nested_dirs(user, number, root_dir, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    function_name = get_function_name()
+
+    dir_path = client.absolute_path(root_dir)
+    for i in range(int(number)):
+        dir_path = os.path.join(dir_path, str(i))
+
+    def condition():
+
+        try:
+            mkdir(client, dir_path, recursive=True)
+            user.mark_last_operation_succeeded()
+            return True
+        except Exception as e:
+            handle_exception(e, function_name)
+            user.mark_last_operation_failed()
+            return False
+
+    client.perform(condition)
 
 
 @when(parsers.parse('{user} creates directory and parents {paths} on {client_node}'))
@@ -170,6 +198,8 @@ def cannot_list_dir(user, dir, client_node, context):
     assert client.perform(condition)
 
 
+@when(parsers.parse('{user} lists {dir} on {client_node}'))
+@then(parsers.parse('{user} lists {dir} on {client_node}'))
 @when(parsers.parse('{user} can list {dir} on {client_node}'))
 @then(parsers.parse('{user} can list {dir} on {client_node}'))
 def list_dir(user, dir, client_node, context):
@@ -187,3 +217,29 @@ def list_dir(user, dir, client_node, context):
             return False
 
     assert client.perform(condition)
+
+
+@when(parsers.parse('{user} lists directory nested on level {level} in'
+                    ' {root_dir} on {client_node}'))
+@when(parsers.parse('{user} lists directory nested on level {level} in'
+                    ' {root_dir} on {client_node}'))
+def list_nested_dir(user, level, root_dir, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    dir_path = client.absolute_path(root_dir)
+    function_name = get_function_name()
+
+    for i in range(int(level)):
+        dir_path = os.path.join(dir_path, str(i))
+
+    def condition():
+        try:
+            ls(client, path=dir_path)
+            return True
+        except Exception as e:
+            handle_exception(e, function_name)
+            return False
+
+    assert client.perform(condition, timeout=0)
+
+
