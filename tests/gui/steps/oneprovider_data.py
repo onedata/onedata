@@ -8,7 +8,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path, find_element
+from tests.gui.utils.generic import upload_file_path
+from tests.gui.steps.common import find_element
 from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC

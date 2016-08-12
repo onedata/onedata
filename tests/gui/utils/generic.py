@@ -54,20 +54,3 @@ def upload_file_path(file_name):
         file_name
     )
 
-
-def find_element(selenium, selector, text):
-    """finds element on site by css selector and element's text"""
-    elements_list = selenium.find_elements_by_css_selector(selector)
-    for elem in elements_list:
-        if elem.text == text:
-            return elem
-    return None
-
-
-def get_text_from_input_box(selenium):
-    input_box = Wait(selenium, WAIT_FRONTEND).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR,
-                                          '.input-with-button input#invite-form-token-userJoinSpace-field'))
-    )
-    text = input_box.get_attribute('value')
-    return text

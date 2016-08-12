@@ -25,7 +25,7 @@ Feature: Oneprovider Data view
   Scenario: Create new file
     #In this test i assumed that file named "file1" does not exists
     When user clicks "Create file" button from top menu bar
-    And user should see, that input box for file name is active
+    And user should see that "New file" input box on Oneprovider page is active
     And user types "file1" on keyboard
     And user presses enter on keyboard
     Then user should not see input box for file name
@@ -36,7 +36,7 @@ Feature: Oneprovider Data view
   Scenario: Create new directory
     #In this test i assumed that directory named "directory1" does not exists
     When user clicks "Create directory" button from top menu bar
-    And user should see, that input box for directory name is active
+    And user should see that "New directory" input box on Oneprovider page is active
     And user types "directory1" on keyboard
     And user presses enter on keyboard
     Then user should not see input box for directory name
@@ -55,7 +55,7 @@ Feature: Oneprovider Data view
     And user should wait for files list to load
     And user should not see file named "file" in files list
     And user clicks "Create file" button from top menu bar
-    And user should see, that input box for file name is active
+    And user should see that "New file" input box on Oneprovider page is active
     And user types "file" on keyboard
     And user presses enter on keyboard
     And user should wait for files list to load

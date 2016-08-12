@@ -12,10 +12,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, when, then, parsers
-from tests.gui.utils.generic import find_element
+from selenium.webdriver.common.keys import Keys
+from tests.gui.steps.common import find_element
+from common import select_button_from_buttons_by_name
 
-@when(parsers.parse('user expands the "{name}" Onezone sidebar panel'))
-def uncollapse_oz_panel(selenium, name):
+
+def _uncollapse_oz_panel(selenium, name):
     re_lc_name = re.compile(name, re.I)
 
     def sidebar_group_by_name(s):
@@ -33,25 +35,34 @@ def uncollapse_oz_panel(selenium, name):
 
 
 @given(parsers.parse('user expands the "{name}" Onezone sidebar panel'))
-def uncollapse_oz_panel(selenium, name):
-    re_lc_name = re.compile(name, re.I)
+def g_uncollapse_oz_panel(selenium, name):
+    _uncollapse_oz_panel(selenium, name)
 
-    def sidebar_group_by_name(s):
-        groups = s.find_elements_by_css_selector('.main-accordion-group')
-        for g in groups:
-            t = g.find_element_by_css_selector('a.main-accordion-toggle')
-            if re_lc_name.match(t.text):
-                return g, t
-        return None
 
-    sgroup, toggle = Wait(selenium, WAIT_FRONTEND).until(sidebar_group_by_name)
-    aria_expanded = sgroup.get_attribute('aria-expanded')
-    if aria_expanded is None or aria_expanded == 'false':
-        toggle.click()
+@when(parsers.parse('user expands the "{name}" Onezone sidebar panel'))
+def w_uncollapse_oz_panel(selenium, name):
+    _uncollapse_oz_panel(selenium, name)
+
+
+@when(parsers.parse('user clicks on the "{name}" in sidebar panel'))
+def click_on_button_in_uncollapsed_oz_panel(selenium, name):
+    selector = '.spaces-accordion .secondary-header'
+    find_button = select_button_from_buttons_by_name(name, selector)
+    Wait(selenium, WAIT_FRONTEND).until(find_button).click()
+
+
+@then(parsers.parse('user should see, that the new space appear on the collapsed list in Onezone sidebar panel'))
+def check_spaces_names_headers_whether_new_space_appeared(selenium, random_name):
+
+    def header_with_text_presence(s):
+        headers = s.find_elements_by_css_selector('.spaces-accordion .secondary-header')
+        return any(h.text == random_name for h in headers)
+
+    Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
 
 @given(parsers.parse('user clicks on the "{name}" provider in Onezone providers sidebar panel'))
-def click_on_provider_in_sidebar(selenium, name, get_provider_name):
+def click_on_provider_in_sidebar(selenium, name):
     collapse_providers = selenium.find_element_by_css_selector('#collapse-providers')
 
     Wait(selenium, WAIT_FRONTEND).until(lambda s: collapse_providers.get_attribute('aria-expanded') == 'true')
@@ -64,7 +75,6 @@ def click_on_provider_in_sidebar(selenium, name, get_provider_name):
         else:
             return None
 
-    get_provider_name = name
     Wait(selenium, WAIT_FRONTEND).until(the_provider_is_present).click()
 
 
@@ -90,24 +100,17 @@ def click_user_alias_edit(selenium):
     selenium.execute_script('$(".alias-panel a input").select()')
 
 
-@when(parsers.parse('user clicks on the "{button_name}" button from Onezone sidebar panel'))
-def click_create_new_space_button(selenium, button_name):
-    create_button = find_element(selenium, '.secondary-header', button_name)
-    Wait(selenium, WAIT_FRONTEND).until(lambda s: create_button is not None)
-    create_button.click()
-
-
 @then(parsers.parse('user should see, that the alias changed to "{name}"'))
 def user_alias_equals(selenium, name):
     alias_header = selenium.find_element_by_css_selector('.alias-panel .space-header')
     Wait(selenium, WAIT_BACKEND).until(lambda s: alias_header.text == name)
 
 
-@then(parsers.parse('user should see new space named "{space_name}" in Onezone sidebar panel'))
-def space_name_equals(selenium, space_name):
-    space = find_element(selenium, '.secondary-header', space_name)
-    Wait(selenium, WAIT_BACKEND).until(lambda s: space is not None)
-
+@when(parsers.parse('user clicks on the "{button_name}" button from Onezone sidebar panel'))
+def click_create_new_space_button(selenium, button_name):
+    create_button = find_element(selenium, '.secondary-header', button_name)
+    Wait(selenium, WAIT_FRONTEND).until(lambda s: create_button is not None)
+    create_button.click()
 
 # @when('I go to provider {provider}')
 # def go_to_provider(selenium, provider):

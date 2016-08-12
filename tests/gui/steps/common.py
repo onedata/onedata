@@ -8,6 +8,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 import time
+import random
+
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from tests.utils.cucumber_utils import list_parser
 from tests.gui.utils.generic import parse_url
@@ -18,6 +20,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from random import choice
 from string import ascii_uppercase, ascii_lowercase, digits
+from selenium.webdriver.common.by import By
+
+
+@given('user has new name for group')
+@given('user has name for new group')
+@given('user has name for new space')
+def random_name():
+    chars = 'qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+    return ''.join(random.sample(chars, 6))
 
 
 @given('valid name string')
@@ -35,20 +46,20 @@ def type_valid_name_string_into_active_element(selenium, name_string):
     selenium.switch_to.active_element.send_keys(name_string)
 
 
-@then(parsers.parse('user types "{text}" on keyboard'))
 @when(parsers.parse('user types "{text}" on keyboard'))
+@then(parsers.parse('user types "{text}" on keyboard'))
 def type_string_into_active_element(selenium, text):
     selenium.switch_to.active_element.send_keys(text)
 
 
-@then(parsers.parse('user presses enter on keyboard'))
 @when(parsers.parse('user presses enter on keyboard'))
+@then(parsers.parse('user presses enter on keyboard'))
 def press_enter_on_active_element(selenium):
     selenium.switch_to.active_element.send_keys(Keys.RETURN)
 
 
-@then(parsers.parse('user presses backspace on keyboard'))
 @when(parsers.parse('user presses backspace on keyboard'))
+@then(parsers.parse('user presses backspace on keyboard'))
 def press_enter_on_active_element(selenium):
     selenium.switch_to.active_element.send_keys(Keys.BACKSPACE)
 
@@ -117,6 +128,49 @@ def notify_visible_with_text(selenium, notify_type, text_regexp):
     Wait(selenium, 2*WAIT_BACKEND).until(notify_with_text_present)
 
 
+@when(parsers.parse('user types group name on keyboard'))
+@when(parsers.parse('user types space name on keyboard'))
+def type_given_string_into_active_element(selenium, random_name):
+    selenium.switch_to.active_element.send_keys(random_name)
+
+
+def select_button_from_buttons_by_name(name, buttons_selector):
+    def _go_to_button(s):
+        buttons = s.find_elements_by_css_selector(buttons_selector)
+        for button in buttons:
+            if button.text.lower() == name.lower():
+                return button
+    return _go_to_button
+
+
+def check_if_element_is_active(selector='', web_elem=None):
+    def _is_active(s):
+        tmp = web_elem if web_elem else s.find_element_by_css_selector(selector)
+        if tmp is not None:
+            return tmp == s.switch_to.active_element
+        else:
+            return False
+    return _is_active
+
+
+def find_element(selenium, selector, text):
+    """finds element on site by css selector and element's text"""
+    elements_list = selenium.find_elements_by_css_selector(selector)
+    for elem in elements_list:
+        if elem.text == text:
+            return elem
+    return None
+
+
+def get_text_from_input_box(selenium):
+    input_box = Wait(selenium, WAIT_FRONTEND).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR,
+                                          '.input-with-button input#invite-form-token-userJoinSpace-field'))
+    )
+    text = input_box.get_attribute('value')
+    return text
+
+
 # Below functions are currently unused and should not be used,
 # because it involves a knowledge about internals...
 
@@ -124,3 +178,9 @@ def notify_visible_with_text(selenium, notify_type, text_regexp):
 @when(parsers.re(r'user changes application path to (?P<path>.+)'))
 def on_ember_path(selenium, path):
     selenium.get(parse_url(selenium.current_url).group('base_url') + '/#' + path)
+
+
+
+
+
+
