@@ -150,6 +150,9 @@ test_performance:
 test_gui:
 	./test_run.py --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
 
+test_profiling:
+	./test_run.py --test-type cucumber --test-dir tests/cucumber/profiling
+
 ##
 ## Clean
 ##

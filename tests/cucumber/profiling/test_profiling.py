@@ -13,6 +13,7 @@ from tests.cucumber.steps.env_steps import *
 from tests.cucumber.steps.profiling_steps import *
 from tests.cucumber.steps.dir_steps import *
 from tests.cucumber.steps.file_steps import *
+from tests.cucumber.steps.reg_file_steps import *
 from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
@@ -26,7 +27,7 @@ def env_description_file(request):
     return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
 
 
-scenario = partial(scenario, '../features/profiling.feature')
+scenario = partial(scenario, 'profiling.feature')
 
 
 @scenario('Profile ls')
