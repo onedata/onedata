@@ -4,7 +4,7 @@ This is the main repository of [Onedata](http://onedata.org) - a global data man
 
 Onedata is composed of several components:
 
-  * [Onezone](https://onedata.org/docs/doc/administering_onedata/onezone_overview.html) - allows to connect multiple storage providers into a larger distributed domain and provides users with Graphical User Interface for data management,
+  * [Onezone](https://onedata.org/docs/doc/administering_onedata/onezone_overview.html) - allows to connect multiple storage providers into a larger distributed domain and provides users with Graphical User Interface for typical data management tasks,
   * [Oneprovider](https://onedata.org/docs/doc/administering_onedata/provider_overview.html) - the main data management component of Onedata, deployed at each storage provider site, is responsible for unifying and controlling access to data over low level storage resources of the provider,
   * [Oneclient](https://onedata.org/docs/doc/using_onedata/oneclient.html) - command line tool which enables transparent access to users data spaces through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem,
   * [Onepanel](https://onedata.org/docs/doc/administering_onedata/onepanel_overview.html) - administration and configuration interface for **Onezone** and **Oneprovider** components,
@@ -52,9 +52,11 @@ This repository combines these components into one source package, which can be 
 | **Tests** | https://github.com/onedata/tests | Main Onedata tests repository |
 
 >In order to initialize all submodules please use:
+
 >```bash
 >make submodules
 >```
+
 >instead of directly invoking Git `submodule` commands.
 
 ## Getting Started
