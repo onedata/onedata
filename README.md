@@ -10,7 +10,7 @@ Onedata is composed of several components:
   * [Onepanel](https://onedata.org/docs/doc/administering_onedata/onepanel_overview.html) - administration and configuration interface for **Onezone** and **Oneprovider** components,
   * [LUMA](https://onedata.org/docs/doc/administering_onedata/luma.html) - service which allows mapping of between Onedata user accounts and local storage ID's.
 
-This repository combines these components into one source package, which can be build and tested together. Each of the components consists of the following submodules of this repository.
+This repository combines these components into one source package, which can be used to build and test complete Onedata platform. Each of the components consists of the following submodules of this repository.
 
 ## Common components
 
@@ -79,7 +79,9 @@ The build process itself is fully based on Docker containers, so no other prereq
 
 ## Support
 
-For support and discussion please contact as at our public [HipChat channel](https://www.hipchat.com/g3ST0Aaci), or for specific bug reports or feature requests post GitHub issues.
+Please use GitHub issues mechanism as the main channel for reporting bugs and requesting support or new features.
+
+For more detailed support and discussions online please contact as at our public [HipChat channel](https://www.hipchat.com/g3ST0Aaci), however our availability at this channel is a on *best effort* basis.
 
 More information about support can be found [here](https://onedata.org/support).
 
