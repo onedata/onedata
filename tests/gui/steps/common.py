@@ -8,7 +8,6 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 import time
-import random
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from tests.utils.cucumber_utils import list_parser
@@ -29,17 +28,9 @@ def get_url(selenium):
     return selenium.current_url
 
 
-@given('user has new name for group')
-@given('user has name for new group')
-@given('user has name for new space')
-def random_name():
-    chars = 'qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
-    return ''.join(random.sample(chars, 6))
-
-
 @given('valid name string')
 def name_string():
-    return ''.join(choice(ascii_uppercase + ascii_lowercase + digits) for i in range(6))
+    return ''.join(choice(ascii_uppercase + ascii_lowercase + digits) for _ in range(6))
 
 
 @then(parsers.parse('user should see that the page title contains "{text}"'))
@@ -47,7 +38,7 @@ def title_contains(selenium, text):
     Wait(selenium, WAIT_FRONTEND).until(EC.title_contains(text))
 
 
-@when('user types valid name on keyboard')
+@when('user types given name on keyboard')
 def type_valid_name_string_into_active_element(selenium, name_string):
     selenium.switch_to.active_element.send_keys(name_string)
 
@@ -178,13 +169,12 @@ def check_if_element_is_active(selector='', web_elem=None):
     return _is_active
 
 
-
 def find_element_by_css_selector_and_text(selector, text):
     """finds element on site by css selector and element's text"""
     def _find_element(s):
         elements_list = s.find_elements_by_css_selector(selector)
         for elem in elements_list:
-            if elem.text == text:
+            if elem.text.lower() == text.lower():
                 return elem
     return _find_element
 
