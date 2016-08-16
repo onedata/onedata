@@ -22,48 +22,47 @@ Feature: Oneprovider Data view
     Then user sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
 
 
-  # In this test i assumed that file named "file1" does not exists
+  # assuming there is not file1
   Scenario: Create new file
     When user clicks the button from top menu bar with tooltip "Create file"
-    And user should see that "New file" input box on Oneprovider page is active
+    And user should see that "New file" input box is active
     And user types "file1" on keyboard
     And user presses enter on keyboard
     Then user should not see modal with title "New file"
     And user should see new file named "file1" in files list
 
 
-  # In this test i assumed that directory named "directory1" does not exists
+  # assuming there is not directory1
   Scenario: Create new directory
     When user clicks the button from top menu bar with tooltip "Create directory"
-    And user should see that "New directory" input box on Oneprovider page is active
+    And user should see that "New directory" input box is active
     And user types "directory1" on keyboard
     And user presses enter on keyboard
     Then user should not see modal with title "New directory"
     And user should see new directory named "directory1" in files list
 
 
-   # In this test i assumed that file with name "file" already exists
+  # assuming there is file2
   Scenario: Remove existing file and then create file with the same name
-    Given existing file named "file"
-    When user selects "file" from files list
+    Given existing file named "file2"
+    When user selects "file2" from files list
     And user clicks the button from top menu bar with tooltip "Remove element"
     And user clicks "OK" confirmation button in displayed modal
     Then user sees an success notify with text matching to: .*removed.*
-    And user should not see file named "file" in files list
+    And user should not see file named "file2" in files list
     And user clicks the button from top menu bar with tooltip "Create file"
-    And user should see that "New file" input box on Oneprovider page is active
-    And user types "file" on keyboard
+    And user should see that "New file" input box is active
+    And user types "file2" on keyboard
     And user presses enter on keyboard
     And user should not see modal with title "New file"
-    And user should see new file named "file" in files list
+    And user should see new file named "file2" in files list
 
 
-  # I assumed here that we have space named "space1" which is supported by provider named "p1"
-  # I also assumed here that we already have file name "file1"
+  # assuming there is file1 in space1 supported by p1
   Scenario: Check if provider name is displayed in the file distribution panel
-    Given existing provider "p1" supporting our space named "space1"
-    And existing file named "file"
-    When user selects "file" from files list
+    Given existing provider "p1" supporting space named "space1"
+    And existing file named "file1"
+    When user selects "file1" from files list
     And user clicks the button from top menu bar with tooltip "Show file distribution"
     Then user should see modal with provider's name "p1" in providers column
 
