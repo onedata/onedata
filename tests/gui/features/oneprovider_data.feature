@@ -24,7 +24,7 @@ Feature: Oneprovider Data view
 
   # In this test i assumed that file named "file1" does not exists
   Scenario: Create new file
-    When user clicks "Create file" tooltip from top menu bar
+    When user clicks the button from top menu bar with tooltip "Create file"
     And user should see that "New file" input box on Oneprovider page is active
     And user types "file1" on keyboard
     And user presses enter on keyboard
@@ -34,7 +34,7 @@ Feature: Oneprovider Data view
 
   # In this test i assumed that directory named "directory1" does not exists
   Scenario: Create new directory
-    When user clicks "Create directory" tooltip from top menu bar
+    When user clicks the button from top menu bar with tooltip "Create directory"
     And user should see that "New directory" input box on Oneprovider page is active
     And user types "directory1" on keyboard
     And user presses enter on keyboard
@@ -46,11 +46,11 @@ Feature: Oneprovider Data view
   Scenario: Remove existing file and then create file with the same name
     Given existing file named "file"
     When user selects "file" from files list
-    And user clicks "Remove element" tooltip from top menu bar
+    And user clicks the button from top menu bar with tooltip "Remove element"
     And user clicks "OK" confirmation button in displayed modal
     Then user sees an success notify with text matching to: .*removed.*
     And user should not see file named "file" in files list
-    And user clicks "Create file" tooltip from top menu bar
+    And user clicks the button from top menu bar with tooltip "Create file"
     And user should see that "New file" input box on Oneprovider page is active
     And user types "file" on keyboard
     And user presses enter on keyboard
@@ -64,7 +64,7 @@ Feature: Oneprovider Data view
     Given existing provider "p1" supporting our space named "space1"
     And existing file named "file"
     When user selects "file" from files list
-    And user clicks "Show file distribution" tooltip from top menu bar
+    And user clicks the button from top menu bar with tooltip "Show file distribution"
     Then user should see modal with provider's name "p1" in providers column
 
 

@@ -75,8 +75,8 @@ def upload_file_to_current_dir(selenium, file_name):
     Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
 
 
-@then(parsers.parse('user clicks "{tooltip_name}" tooltip from top menu bar'))
-@when(parsers.parse('user clicks "{tooltip_name}" tooltip from top menu bar'))
+@then(parsers.parse('user clicks the button from top menu bar with tooltip "{tooltip_name}"'))
+@when(parsers.parse('user clicks the button from top menu bar with tooltip "{tooltip_name}"'))
 def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
 
     def _find_tooltip_with_given_name(s):
@@ -90,8 +90,12 @@ def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
     tooltip.click()
 
 
-@then(parsers.parse('user should see new {element} named "{elem_name}" in files list'))
-def op_check_if_new_element_appeared(selenium, elem_name, element):
+@then(parsers.parse('user should see new directory named "{elem_name}" in files list'))
+@then(parsers.parse('user should see new file named "{elem_name}" in files list'))
+def op_check_if_new_element_appeared(selenium, elem_name):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
+    )
     new_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
                                                      elem_name)
     Wait(selenium, WAIT_FRONTEND).until(new_elem)
@@ -99,13 +103,17 @@ def op_check_if_new_element_appeared(selenium, elem_name, element):
 
 @when(parsers.parse('user selects "{elem_name}" from files list'))
 def op_select_elem(selenium, elem_name):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
+    )
     elem = select_button_from_buttons_by_name(elem_name,
                                               '.files-list table.files-table td.file-list-col-file')
     Wait(selenium, WAIT_FRONTEND).until(elem).click()
 
 
-@then(parsers.parse('user should not see {element} named "{elem_name}" in files list'))
-def check_absence_deleted_element(selenium, element, elem_name):
+@then(parsers.parse('user should not see directory named "{elem_name}" in files list'))
+@then(parsers.parse('user should not see file named "{elem_name}" in files list'))
+def check_absence_deleted_element(selenium, elem_name):
 
     def _try_find_deleted_element(s):
         elems = s.find_elements_by_css_selector('table.table td.file-list-col-file')
@@ -114,6 +122,9 @@ def check_absence_deleted_element(selenium, element, elem_name):
                 return elem
         return None
 
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
+    )
     assert _try_find_deleted_element(selenium) is None
 
 
@@ -131,7 +142,7 @@ def op_check_if_provider_name_is_in_tab(selenium, provider_name):
     Wait(selenium, WAIT_FRONTEND).until(_find_provider)
 
 
-###############################################################################################################
+# TODO ask if we need this functions
 # @when(parsers.parse('The upload of file "{file_name}" fails'))
 # @then(parsers.parse('The upload of file "{file_name}" should fail'))
 # def upload_fails(selenium, file_name):

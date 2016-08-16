@@ -51,7 +51,8 @@ def click_on_button_in_uncollapsed_oz_panel(selenium, name):
     Wait(selenium, WAIT_FRONTEND).until(find_button).click()
 
 
-@then(parsers.parse('user should see, that the new space appear on the collapsed list in Onezone sidebar panel'))
+@then(parsers.parse('user should see that the new space has appeared on the '
+                    'collapsed list in Onezone sidebar panel'))
 def check_spaces_names_headers_whether_new_space_appeared(selenium, random_name):
 
     def header_with_text_presence(s):
@@ -100,7 +101,7 @@ def click_user_alias_edit(selenium):
     selenium.execute_script('$(".alias-panel a input").select()')
 
 
-@then(parsers.parse('user should see, that the alias changed to "{name}"'))
+@then(parsers.parse('user should see that the alias has changed to "{name}"'))
 def user_alias_equals(selenium, name):
     alias_header = selenium.find_element_by_css_selector('.alias-panel .space-header')
     Wait(selenium, WAIT_BACKEND).until(lambda s: alias_header.text == name)
@@ -112,6 +113,7 @@ def click_create_new_space_button(selenium, button_name):
     Wait(selenium, WAIT_FRONTEND).until(lambda s: create_button is not None)
     create_button.click()
 
+# TODO ask if we need this function
 # @when('I go to provider {provider}')
 # def go_to_provider(selenium, provider):
 #     providers = selenium.find_elements_by_css_selector('.provider-header')

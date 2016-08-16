@@ -101,7 +101,7 @@ def op_wait_for_active_box_with_given_title_on_op_page(selenium, box_title, moda
     Wait(selenium, wait).until(is_active)
 
 
-@then(parsers.parse('user should see that the "{elem}" appears on the list'))
+@then(parsers.parse('user should see that the "{elem}" has appeared on the list'))
 def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selenium,
                                                                            elem):
 
@@ -114,7 +114,7 @@ def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selen
     Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
 
-@then(parsers.parse('user should see that the new {elem} appears on the list'))
+@then(parsers.parse('user should see that the new {elem} has appeared on the list'))
 def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selenium,
                                                                            elem,
                                                                            random_name):
@@ -158,13 +158,6 @@ def op_wait_for_settings_dropdown_menu(selenium):
     Wait(selenium, WAIT_FRONTEND).until(lambda s: _find_expanded_menu is not None)
 
 
-#@then(parsers.parse('user clicks settings icon displayed on name in current sidebar'))
-#def click_settings_icon_on_element(selenium, name_string):
-#    element = find_element_by_css_selector_and_text('.secondary-sidebar-item', name_string)
-#    settings_icon = space.find_element_by_css_selector('span.oneicon-settings')
-#    settings_icon.click()
-
-
 @when(parsers.parse('user clicks "{button_name}" confirmation button in displayed modal'))
 def op_click_confirmation_button(selenium, button_name):
     confirmation_button = select_button_from_buttons_by_name(button_name,
@@ -172,8 +165,9 @@ def op_click_confirmation_button(selenium, button_name):
     Wait(selenium, WAIT_FRONTEND).until(confirmation_button).click()
 
 
-#@given('user should see that main content has been reloaded')
-#def op_check_if_main_content_has_been_reloaded(selenium):
-#    Wait(selenium, WAIT_FRONTEND).until(
-#        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
-#    )
+# TODO not sure we need this function
+# @given('user should see that main content has been reloaded')
+# def op_check_if_main_content_has_been_reloaded(selenium):
+#     Wait(selenium, WAIT_FRONTEND).until(
+#         EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
+#     )

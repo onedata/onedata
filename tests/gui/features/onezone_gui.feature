@@ -17,12 +17,12 @@ Feature: Onezone GUI elements
     And user clicks on the user alias
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
-    Then user should see, that the alias changed to "helloworld"
+    Then user should see that the alias has changed to "helloworld"
 
   Scenario: User can create space using valid name string
     Given valid name string
     When user expands the "data space management" Onezone sidebar panel
     And user clicks on the "Create new space" in sidebar panel
-    And user types space name on keyboard
+    And user types the space name on keyboard
     And user presses enter on keyboard
-    Then user should see, that the new space appear on the collapsed list in Onezone sidebar panel
+    Then user should see that the new space has appeared on the collapsed list in Onezone sidebar panel

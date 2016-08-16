@@ -18,7 +18,7 @@ Feature: Oneprovider Group functionality
     And user should see that "Create a new group" input box on Oneprovider page is active
     And user types the group name on keyboard
     And user presses enter on keyboard
-    Then user should see that the new group appears on the list
+    Then user should see that the new group has appeared on the list
 
   # assuming there is group1
   Scenario: Invite user

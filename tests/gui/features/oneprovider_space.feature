@@ -18,7 +18,7 @@
     And user should see that "Create a new space" input box on Oneprovider page is active
     And user types the space name on keyboard
     And user presses enter on keyboard
-    Then user should see that the new space appears on the list
+    Then user should see that the new space has appeared on the list
 
 
   # I assumed here that we already have existing space with name "space1"
@@ -31,7 +31,7 @@
     And user types "NewNameSpace" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
-    Then user should see that the "NewNameSpace" appears on the list
+    Then user should see that the "NewNameSpace" has appeared on the list
     And user should not see modal with title "Rename a space"
     And user clicks settings icon displayed on "NewNameSpace" in current sidebar
     And user should see settings drop down menu for spaces
@@ -121,4 +121,4 @@
     And user should see that "Create a new space" input box on Oneprovider page is active
     And user types "space2" on keyboard
     And user presses enter on keyboard
-    And user should see that the "space2" appears on the list
+    And user should see that the "space2" has appeared on the list
