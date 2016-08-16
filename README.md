@@ -6,12 +6,12 @@ This is the main code repository of [Onedata](http://onedata.org) - a global dat
 **Onedata** is composed of several components:
 
   * [Onezone](https://onedata.org/docs/doc/administering_onedata/onezone_overview.html) - allows to connect multiple storage providers into a larger distributed domain and provides users with Graphical User Interface for typical data management tasks,
-  * [Oneprovider](https://onedata.org/docs/doc/administering_onedata/provider_overview.html) - the main data management component of Onedata, deployed at each storage provider site, is responsible for unifying and controlling access to data over low level storage resources of the provider,
+  * [Oneprovider](https://onedata.org/docs/doc/administering_onedata/provider_overview.html) - the main data management component of Onedata, deployed at each storage provider site, responsible for unifying and controlling access to data over low level storage resources of the provider,
   * [Oneclient](https://onedata.org/docs/doc/using_onedata/oneclient.html) - command line tool which enables transparent access to users data spaces through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem,
   * [Onepanel](https://onedata.org/docs/doc/administering_onedata/onepanel_overview.html) - administration and configuration interface for **Onezone** and **Oneprovider** components,
   * [LUMA](https://onedata.org/docs/doc/administering_onedata/luma.html) - service which allows mapping of between Onedata user accounts and local storage ID's, here we provide an example implementation of this service.
 
-This repository combines these components into one source package, which can be used to build and test complete Onedata platform. Each of the components consists of the following submodules of this repository.
+This repository combines these components into one source package, which can be used to build and test complete Onedata platform. Each of the components consists of the following submodules of this repository:
 
 ## Common components
 
@@ -57,7 +57,7 @@ This repository combines these components into one source package, which can be 
 |-----------|----------|--------------|
 | **Appmock** | https://github.com/onedata/appmock |  Appmock is used during testing to mock any service which exposes REST API. |
 | **Bamboo scripts** | https://github.com/onedata/bamboos | Bamboos is used for automating test deployments in [bamboo](https://www.atlassian.com/software/bamboo) during Onedata integration tests. |
-| **Tests** | https://github.com/onedata/tests | Main Onedata tests repository |
+| **Tests** | https://github.com/onedata/tests | Main Onedata tests repository. |
 
 >In order to initialize all submodules please use:
 
