@@ -21,6 +21,9 @@ import stat as stat_lib
 import hashlib
 
 
+TOKEN_PATH = '/tmp/token'
+
+
 class Client:
     def __init__(self, docker_name, mount_path):
         self.timeout = 0
@@ -29,9 +32,28 @@ class Client:
         self.rpyc_connection = None
         self.opened_files = {}
         self.rpyc_server_pid = None
+        self.user_cert = None
+        self.user_key = None
+        self.token = None
 
     def set_timeout(self, timeout):
         self.timeout = timeout
+
+    def mount(self, user):
+
+        ret = oneclient(user.name, self.mount_path, user.oz_domain,
+                        user.provider.domain, self.user_cert, self.user_key,
+                        self, TOKEN_PATH, token=self.token)
+
+        rm(self, TOKEN_PATH, force=True)
+        # remove accessToken to mount many clients on one docker
+        rm(self, path=os.path.join(os.path.dirname(self.mount_path), ".local"),
+           recursive=True, force=True)
+        return ret
+
+    def remount(self, user):
+        fusermount(self, self.mount_path, user.name, unmount=True)
+        return self.mount(user)
 
     def start_rpyc(self, user):
         self._start_rpyc_server(user)
@@ -76,8 +98,8 @@ class Client:
 
 
 def mount_users(request, environment, context, client_dockers, env_description_file,
-                user_names=[], client_instances=[], mount_paths=[],
-                client_hosts=[], tokens=[], check=True):
+                test_type, providers, user_names=[], client_instances=[],
+                mount_paths=[], client_hosts=[], tokens=[], check=True):
 
     # current version is for environment with one OZ
     oz_node = environment['oz_worker_nodes'][0]
@@ -98,9 +120,11 @@ def mount_users(request, environment, context, client_dockers, env_description_f
 
         user = context.get_user(user_name)
         if not user:
+            provider_id = data['op_domain'].split('.')[0]
             user = User(user_name,
                         id=user_name,
-                        oz_domain=oz_domain)
+                        oz_domain=oz_domain,
+                        provider=providers[provider_id])
 
         # get token for user
         if token_arg != 'bad_token':
@@ -114,42 +138,20 @@ def mount_users(request, environment, context, client_dockers, env_description_f
         # /root has to be accessible for gdb to access /root/bin/oneclient
         assert run_cmd('root', client, 'chmod +x /root') == 0
 
-        token_path = "/tmp/token"
-
-        cmd = ('mkdir -p {mount_path}'
-               ' && export GLOBAL_REGISTRY_URL={gr_domain}'
-               ' && export PROVIDER_HOSTNAME={op_domain}'
-               ' && export X509_USER_CERT={user_cert}'
-               ' && export X509_USER_KEY={user_key}'
-               ' && echo {token} > {token_path}'
-               ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
-               ).format(mount_path=mount_path,
-                        gr_domain=oz_domain,
-                        op_domain=data['op_domain'],
-                        user_cert=data['user_cert'],
-                        user_key=data['user_key'],
-                        user=user_name,
-                        token=token,
-                        token_path=token_path)
-
-        ret = run_cmd(user_name, client, cmd)
+        client.start_rpyc(user.name)
+        client.token = token
+        client.user_cert = data['user_cert']
+        client.user_key = data['user_key']
+        ret = client.mount(user)
 
         user.update_clients(client_instance, client)
         if not context.has_user(user):
             context.add_user(user)
 
-        client.start_rpyc(user.name)
-
         if ret != 0 and check and token_arg != "bad token":
             # if token was different than "bad token" and mounting failed
             clean_mount_path(user_name, client)
             pytest.skip("Error mounting oneclient")
-
-        # remove accessToken to mount many clients on one docker
-        rm(client, path=os.path.join(os.path.dirname(mount_path), ".local"),
-           recursive=True, force=True)
-
-        rm(client, path=token_path)
 
         # todo without this sleep protocol error occurs more often during cleaning spaces
         time.sleep(3)
@@ -174,6 +176,27 @@ def mount_users(request, environment, context, client_dockers, env_description_f
             user.clients.clear()
 
     request.addfinalizer(fin)
+
+
+def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
+              client, token_path, token):
+
+    cmd = ('mkdir -p {mount_path}'
+           ' && export GLOBAL_REGISTRY_URL={gr_domain}'
+           ' && export PROVIDER_HOSTNAME={op_domain}'
+           ' && export X509_USER_CERT={user_cert}'
+           ' && export X509_USER_KEY={user_key}'
+           ' && echo {token} > {token_path}'
+           ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+           ).format(mount_path=mount_path,
+                    gr_domain=oz_domain,
+                    op_domain=op_domain,
+                    user_cert=user_cert,
+                    user_key=user_key,
+                    token=token,
+                    token_path=token_path)
+
+    return run_cmd(user_name, client, cmd)
 
 
 def ls(client, path="."):

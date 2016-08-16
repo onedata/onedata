@@ -47,6 +47,27 @@
                     "u2"
                 ]
             }
+        },
+        "cfg2": {
+            "storages": [],
+            "users": [
+                "u1",
+                "u2"
+            ],
+            "groups": {
+                "s1": [
+                    "u1",
+                    "u2"
+                ],
+                "s2": [
+                    "u1",
+                    "u2"
+                ],
+                "fuse": [
+                    "u1",
+                    "u2"
+                ]
+            }
         }
     },
     "provider_domains": {
@@ -132,7 +153,7 @@
     },
     "oneclient": {
         "client-host1": {
-            "os_config": "cfg1",
+            "os_config": "cfg2",
             "clients": {
                 "client1": {
                     "name": "client1",
@@ -153,29 +174,6 @@
                     "mounting_path": "/home/u1/onedata2",
                     "token_for": "u1",
                     "default_timeout": 2
-                }
-            }
-        },
-        "client-host2": {
-            "os_config": "cfg1",
-            "clients": {
-                "client12": {
-                    "name": "client12",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u1/onedata",
-                    "token_for": "u1"
-                },
-                "client2": {
-                    "name": "client2",
-                    "op_domain": "p1",
-                    "zone_domain": "oz1",
-                    "user_cert": "./cert.pem",
-                    "user_key": "./cert.pem",
-                    "mounting_path": "/home/u2/onedata",
-                    "token_for": "u2"
                 }
             }
         }
