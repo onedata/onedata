@@ -76,15 +76,38 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*Failed.*join.*group.*
 
+  # I assumed here that we already have existing group with name "group1"
+  Scenario: User can rename existing group and then rename it back
+    Given there is a "group1" item on a sidebar list
+    When user clicks a settings icon displayed for "group1" list item
+    And user should see a settings dropdown menu for "group1" list item
+    And user clicks on the "rename" item in current settings dropdown
+    And user should see that "Rename a group" input box is active
+    And user types "NewNameGroup" on keyboard
+    And user presses enter on keyboard
+    And user sees an info notify with text matching to: .*group1.*renamed.*NewNameGroup.*
+    Then user should see that the group "NewNameGroup" appears on the list
+    And user should not see modal with title "Rename a group"
+    And user clicks a settings icon displayed for "NewNameGroup" list item
+    And user should see a settings dropdown menu for "NewNameGroup" list item
+    And user clicks on the "rename" item in current settings dropdown
+    And user should see that "Rename a group" input box is active
+    And user types "group1" on keyboard
+    And user presses enter on keyboard
+    And user sees an info notify with text matching to: .*NewNameGroup.*renamed.*group1.*
 
-#  Scenario: Rename group
-#    Given user has new name for group
-#    When user clicks on the "groups" provider in Oneprovider providers sidebar panel
-#    # group1 is defined in json
-#    And user clicks on the settings button for "group1"
-#    And user clicks on the "RENAME" in current settings dropdown
-#    And user should see that rename input box is active
-#    And user types new group name on keyboard
-#    And user presses enter on keyboard
-#    Then user should see popup with information about name change
-#    And user should see, that the new name replaced old one on the list
+  # I assumed here that we already have existing group named "group1"
+  Scenario: User can leave existing group and then create group with the same name
+    Given there is a "group1" item on a sidebar list
+    When user clicks a settings icon displayed for "group1" list item
+    And user should see a settings dropdown menu for "group1" list item
+    And user clicks on the "leave this group" item in current settings dropdown
+    And user clicks "YES" confirmation button in displayed modal
+    Then user sees an info notify with text matching to: .*group1.*left
+    And user should not see modal with title "Leave the group"
+    And user clicks on the "hroups" tab in main menu
+    And user clicks on the "Create" button in sidebar panel
+    And user should see that "Create a new group" input box is active
+    And user types "group1" on keyboard
+    And user presses enter on keyboard
+    And user should see that the group "group1" appears on the list
