@@ -125,12 +125,6 @@ def notify_visible_with_text(selenium, notify_type, text_regexp):
     Wait(selenium, 2*WAIT_BACKEND).until(notify_with_text_present)
 
 
-@when(parsers.parse('user types the group name on keyboard'))
-@when(parsers.parse('user types the space name on keyboard'))
-def type_given_string_into_active_element(selenium, random_name):
-    selenium.switch_to.active_element.send_keys(random_name)
-
-
 @when('user can see current url')
 def get_current_url(selenium, get_url):
     get_url = selenium.current_url
