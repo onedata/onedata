@@ -10,11 +10,7 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import os
 from tests import gui
-from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
-from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support import expected_conditions as EC
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
-from selenium.webdriver.common.by import By
 
 
 RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(/#)?(?P<method>/.*)')

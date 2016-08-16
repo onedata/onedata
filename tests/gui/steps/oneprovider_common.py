@@ -48,7 +48,7 @@ def op_click_on_button_in_current_sidebar(selenium, option_name):
     Wait(selenium, WAIT_FRONTEND).until(find_button).click()
 
 
-@then('user should see non-empty token in active window on Oneprovider page')
+@then('user should see non-empty token in active modal on Oneprovider page')
 def op_can_see_non_empty_token_in_active_window_on_op_page(selenium):
     assert Wait(selenium, WAIT_BACKEND).until(
         lambda s: s.find_element_by_css_selector(
@@ -58,11 +58,11 @@ def op_can_see_non_empty_token_in_active_window_on_op_page(selenium):
     ).get_attribute('value')
 
 
-@when(parsers.parse('user clicks on the "{button}" button in current settings dropdown'))
-@then(parsers.parse('user clicks on the "{button}" button in current settings dropdown'))
-def op_click_on_button_in_current_settings_dropdown(selenium, button):
+@when(parsers.parse('user clicks on the "{item_name}" item in current settings dropdown'))
+@then(parsers.parse('user clicks on the "{item_name}" item in current settings dropdown'))
+def op_click_on_button_in_current_settings_dropdown(selenium, item_name):
     selector = '.settings-dropdown .dropdown-menu-settings .clickable'
-    find_button = select_button_from_buttons_by_name(button, selector)
+    find_button = select_button_from_buttons_by_name(item_name, selector)
     Wait(selenium, WAIT_FRONTEND).until(find_button).click()
 
 
@@ -133,7 +133,7 @@ def op_wait_for_active_box_with_given_title_on_op_page(selenium, modal_title, mo
     Wait(selenium, wait).until(is_active)
 
 
-@then(parsers.parse('user should see that the "{elem}" has appeared on the list'))
+@then(parsers.parse('user should see that the "{elem}" appeared on the list'))
 def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selenium,
                                                                            elem):
 
@@ -146,7 +146,7 @@ def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selen
     Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
 
-@then(parsers.parse('user should see that the new {elem} has appeared on the list'))
+@then(parsers.parse('user should see that the new {elem} appeared on the list'))
 def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selenium,
                                                                            elem,
                                                                            name_string):
@@ -190,13 +190,6 @@ def op_wait_for_settings_dropdown_menu(selenium):
     Wait(selenium, WAIT_FRONTEND).until(lambda s: _find_expanded_menu is not None)
 
 
-#@then(parsers.parse('user clicks settings icon displayed on name in current sidebar'))
-#def click_settings_icon_on_element(selenium, name_string):
-#    element = find_element_by_css_selector_and_text('.secondary-sidebar-item', name_string)
-#    settings_icon = space.find_element_by_css_selector('span.oneicon-settings')
-#    settings_icon.click()
-
-
 @when(parsers.parse('user clicks "{button_name}" confirmation button in displayed modal'))
 def op_click_confirmation_button(selenium, button_name):
     confirmation_button = select_button_from_buttons_by_name(button_name,
@@ -204,9 +197,8 @@ def op_click_confirmation_button(selenium, button_name):
     Wait(selenium, WAIT_FRONTEND).until(confirmation_button).click()
 
 
-# TODO not sure we need this function
-# @given('user should see that main content has been reloaded')
-# def op_check_if_main_content_has_been_reloaded(selenium):
-#     Wait(selenium, WAIT_FRONTEND).until(
-#         EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
-#     )
+@given('user should see that main content reloaded')
+def op_check_if_main_content_has_been_reloaded(selenium):
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
+    )

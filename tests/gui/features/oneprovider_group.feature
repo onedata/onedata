@@ -1,6 +1,9 @@
 Feature: Oneprovider Group functionality
   Various operations on groups
 
+
+  # assuming there is user1
+  # assuming there is p1
   Background:
     Given user opens a Onezone URL in a web browser
     And user clicks on the "indigo" login button
@@ -18,41 +21,41 @@ Feature: Oneprovider Group functionality
     And user should see that "Create a new group" input box is active
     And user types given name on keyboard
     And user presses enter on keyboard
-    Then user should see that the new group appears on the list
+    Then user should see that the new group appeared on the list
 
   # assuming there is group1
   Scenario: User can invite other user
     Given there is "group1" on list in current sidebar
     When user clicks settings icon displayed for given element
     And user should see settings drop down menu for given element
-    And user clicks on the "INVITE USER" button in current settings dropdown
-    And user should see that "Invite user to the group" token box on Oneprovider page is active
-    Then user should see non-empty token in active window on Oneprovider page
+    And user clicks on the "Invite user" item in current settings dropdown
+    And user should see that "Invite user to the group" token box is active
+    Then user should see non-empty token in active modal on Oneprovider page
 
   # assuming there is group1
   Scenario: User can invite group
     Given there is "group1" on list in current sidebar
     When user clicks settings icon displayed for given element
     And user should see settings drop down menu for given element
-    And user clicks on the "INVITE GROUP" button in current settings dropdown
-    And user should see that "Invite group to the group" token box on Oneprovider page is active
-    Then user should see non-empty token in active window on Oneprovider page
+    And user clicks on the "Invite group" item in current settings dropdown
+    And user should see that "Invite group to the group" token box is active
+    Then user should see non-empty token in active modal on Oneprovider page
 
   # assuming there is group1
   Scenario: User can request space creation
     Given there is "group1" on list in current sidebar
     When user clicks settings icon displayed for given element
     And user should see settings drop down menu for given element
-    And user clicks on the "REQUEST SPACE CREATION" button in current settings dropdown
-    And user should see that "Request space creation for the group" token box on Oneprovider page is active
-    Then user should see non-empty token in active window on Oneprovider page
+    And user clicks on the "Request space creation" item in current settings dropdown
+    And user should see that "Request space creation for the group" token box is active
+    Then user should see non-empty token in active modal on Oneprovider page
 
   # assuming there is group1
   Scenario: User can try to join space with incorrect token
     Given there is "group1" on list in current sidebar
     When user clicks settings icon displayed for given element
     And user should see settings drop down menu for given element
-    And user clicks on the "JOIN SPACE" button in current settings dropdown
+    And user clicks on the "Join space" item in current settings dropdown
     And user should see that "Join a space" input box is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
@@ -63,7 +66,7 @@ Feature: Oneprovider Group functionality
     Given there is "group1" on list in current sidebar
     When user clicks settings icon displayed for given element
     And user should see settings drop down menu for given element
-    And user clicks on the "JOIN AS SUBGROUP" button in current settings dropdown
+    And user clicks on the "Join as subgroup" item in current settings dropdown
     And user should see that "Join a group to group" input box is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
@@ -71,7 +74,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: Try join to group with incorrect token
     When user clicks on the "Join" button in current sidebar
-    And user should see that "Join a group" input box on Oneprovider page is active
+    And user should see that "Join a group" input box is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*Failed.*join.*group.*

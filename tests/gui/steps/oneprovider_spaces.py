@@ -25,7 +25,8 @@ def click_space_name(selenium, space_name):
     Wait(selenium, WAIT_FRONTEND).until(space_to_click).click()
 
 
-@then(parsers.parse('user should see home space icon next to "{space_name}"'))
+@then(parsers.parse('user should see home space icon next to displayed name of space'
+                    ' "{space_name}" in spaces list'))
 def check_if_home_space_icon_next_to_spaces(selenium, space_name):
 
     def _find_home_space_icon(s):
