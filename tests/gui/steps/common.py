@@ -188,6 +188,15 @@ def get_text_from_input_box(selenium):
     return text
 
 
+def select_element_from_list_by_name(name, list_selector):
+    def _find_elem_in_list(s):
+        elements = s.find_elements_by_css_selector(list_selector)
+        for elem in elements:
+            if elem.text == name:
+                return elem
+    return _find_elem_in_list
+
+
 # Below functions are currently unused and should not be used,
 # because it involves a knowledge about internals...
 

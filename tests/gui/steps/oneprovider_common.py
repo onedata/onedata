@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
-from common import select_button_from_buttons_by_name, check_if_element_is_active
+from common import select_button_from_buttons_by_name, check_if_element_is_active, select_element_from_list_by_name
 
 
 def _click_tab_in_main_menu(selenium, op_elem):
@@ -47,35 +47,55 @@ def op_click_on_button_in_current_settings_dropdown(selenium, button):
     Wait(selenium, WAIT_FRONTEND).until(find_button).click()
 
 
+def _make_sure_thre_is_elem_on_list_with_given_name(selenium, name):
+    list_selector = '.secondary-sidebar-item'
+    find_elem = select_element_from_list_by_name(name, list_selector)
+    Wait(selenium, WAIT_FRONTEND).until(find_elem)
+
+
+@then(parsers.parse('user should see "{elem_name}" on list in current sidebar'))
+def op_check_if_element_of_typed_name_is_on_the_list(selenium, elem_name):
+    _make_sure_thre_is_elem_on_list_with_given_name(selenium, elem_name)
+
+
+@then(parsers.parse('user should see element of given name on list in current sidebar'))
+def op_check_if_element_of_given_name_is_on_the_list(selenium, name_string):
+    _make_sure_thre_is_elem_on_list_with_given_name(selenium, name_string)
+
+
 @given(parsers.parse('there is "{li}" on list in current sidebar'))
-def list_item(selenium, li):
-    def _find_elem_in_list(s):
-        elements = s.find_elements_by_css_selector('.secondary-sidebar-item')
-        for elem in elements:
-            if elem.text == li:
-                return elem
-
-    return Wait(selenium, WAIT_FRONTEND).until(_find_elem_in_list)
+def op_g_check_if_element_of_typed_name_is_on_the_list(selenium, li):
+    list_selector = '.secondary-sidebar-item'
+    find_elem = select_element_from_list_by_name(li, list_selector)
+    Wait(selenium, WAIT_FRONTEND).until(find_elem)
 
 
-@when(parsers.parse('user clicks settings icon displayed for given element'))
-@then(parsers.parse('user clicks settings icon displayed for given element'))
-def op_click_settings_icon_on_element(list_item):
+@when(parsers.parse('user clicks settings icon displayed for "{elem_name}"'))
+@then(parsers.parse('user clicks settings icon displayed for "{elem_name}"'))
+def op_click_settings_icon_on_element(selenium, elem_name):
 
-    def _find_settings_icon_and_check_if_clickable(li):
-        settings_icon = li.find_element_by_css_selector('span.oneicon-settings')
+    def _find_settings_icon_and_check_if_clickable(elem):
+        settings_icon = elem.find_element_by_css_selector('span.oneicon-settings')
         return settings_icon if settings_icon.is_enabled() else None
+
+    list_selector = '.secondary-sidebar-item'
+    find_elem = select_element_from_list_by_name(elem_name, list_selector)
+    list_item = Wait(selenium, WAIT_FRONTEND).until(find_elem)
 
     Wait(list_item, WAIT_FRONTEND).until(_find_settings_icon_and_check_if_clickable).click()
 
 
-@when('user should see settings drop down menu for given element')
-@then('user should see settings drop down menu for given element')
-def op_wait_for_settings_dropdown_menu(list_item):
+@when(parsers.parse('user should see settings drop down menu for "{elem_name}"'))
+@then(parsers.parse('user should see settings drop down menu for "{elem_name}"'))
+def op_wait_for_settings_dropdown_menu(selenium, elem_name):
 
     def _find_expanded_menu(li):
         elem = li.find_element_by_css_selector('.dropdown-toggle')
         return elem if elem.get_attribute('aria-expanded') == 'true' else None
+
+    list_selector = '.secondary-sidebar-item'
+    find_elem = select_element_from_list_by_name(elem_name, list_selector)
+    list_item = Wait(selenium, WAIT_FRONTEND).until(find_elem)
 
     Wait(list_item, WAIT_FRONTEND).until(_find_expanded_menu)
 
@@ -134,12 +154,6 @@ def op_click_on_button_in_current_sidebar(selenium, option_name):
     selector = '.secondary-sidebar-header figure.icon'
     find_button = select_button_from_buttons_by_name(option_name, selector)
     Wait(selenium, WAIT_FRONTEND).until(find_button).click()
-
-
-
-@given(parsers.parse('existing {space_name}'))
-def existing_space_name(space_name):
-    return space_name
 
 
 @when(parsers.parse('user clicks "{button_name}" confirmation button in displayed modal'))
