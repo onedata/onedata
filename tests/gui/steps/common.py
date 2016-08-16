@@ -107,7 +107,7 @@ def page_with_header(selenium, text):
 @when(parsers.parse('user sees an {notify_type} notify with text matching to: {text_regexp}'))
 @then(parsers.parse('user sees an {notify_type} notify with text matching to: {text_regexp}'))
 def notify_visible_with_text(selenium, notify_type, text_regexp):
-    text_regexp = re.compile(text_regexp)
+    text_regexp = re.compile(text_regexp, re.IGNORECASE)
 
     def notify_with_text_present(s):
         try:

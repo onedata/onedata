@@ -8,7 +8,7 @@ Feature: Oneprovider space functionality
     And user expands the "go to your files" Onezone sidebar panel
     And user clicks on the "p1" provider in Onezone providers sidebar panel
     And user clicks on the "Go to your files" button in provider popup
-    And user clicks on the "spaces" tab in main menu
+    And user clicks on the "spaces" tab in main menu sidebar
     And user should see that main content reloaded
 
 
