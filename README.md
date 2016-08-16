@@ -59,13 +59,11 @@ This repository combines these components into one source package, which can be 
 | **Bamboo scripts** | https://github.com/onedata/bamboos | Bamboos is used for automating test deployments in [bamboo](https://www.atlassian.com/software/bamboo) during Onedata integration tests. |
 | **Tests** | https://github.com/onedata/tests | Main Onedata tests repository. |
 
->In order to initialize all submodules please use:
-
->```bash
->make submodules
->```
-
->instead of directly invoking Git `submodule` commands.
+In order to initialize all submodules please use:
+```bash
+make submodules
+```
+instead of directly invoking Git `submodule` commands.
 
 ## Getting Started
 
