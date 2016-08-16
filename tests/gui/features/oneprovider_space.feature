@@ -1,4 +1,4 @@
-  Feature: Oneprovider space functionality
+Feature: Oneprovider space functionality
   Various operations on spaces
 
   Background:

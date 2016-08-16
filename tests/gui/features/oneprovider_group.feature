@@ -12,59 +12,69 @@ Feature: Oneprovider Group functionality
     And user clicks on the "Go to your files" button in provider popup
     And user clicks on the "groups" tab in main menu
 
-  Scenario: Add new group
-    Given user has name for new group
+  Scenario: User can add new group
+    Given valid name string
     When user clicks on the "Create" button in current sidebar
-    And user should see that "Create a new group" input box on Oneprovider page is active
-    And user types the group name on keyboard
+    And user should see that "Create a new group" input box is active
+    And user types given name on keyboard
     And user presses enter on keyboard
-    Then user should see that the new group appears on the list
+    Then user should see that the new group of given name appears on the list
+
+  Scenario: User can try join to group with incorrect token
+    When user clicks on the "Join" button in current sidebar
+    And user should see that "Join a group" input box is active
+    And user types "helloworld" on keyboard
+    And user presses enter on keyboard
+    Then user sees an error notify with text matching to: .*Failed.*join.*group.*
 
   # assuming there is group1
-  Scenario: Invite user
-    When user clicks settings icon displayed on "group1" in current sidebar
+  Scenario: User can invite other user
+    Given there is "group1" on list in current sidebar
+    When user clicks settings icon displayed for given element
+    And user should see settings drop down menu for given element
     And user clicks on the "INVITE USER" button in current settings dropdown
-    And user should see that "Invite user to the group" token box on Oneprovider page is active
-    Then user should see non-empty token in active window on Oneprovider page
+    And user should see that "Invite user to the group" token box is active
+    Then user should see non-empty token in active window
 
   # assuming there is group1
-  Scenario: Invite group
-    When user clicks settings icon displayed on "group1" in current sidebar
+  Scenario: User can invite group
+    Given there is "group1" on list in current sidebar
+    When user clicks settings icon displayed for given element
+    And user should see settings drop down menu for given element
     And user clicks on the "INVITE GROUP" button in current settings dropdown
-    And user should see that "Invite group to the group" token box on Oneprovider page is active
-    Then user should see non-empty token in active window on Oneprovider page
+    And user should see that "Invite group to the group" token box is active
+    Then user should see non-empty token in active window
 
   # assuming there is group1
-  Scenario: Request space creation
-    When user clicks settings icon displayed on "group1" in current sidebar
+  Scenario: User can request space creation
+    Given there is "group1" on list in current sidebar
+    When user clicks settings icon displayed for given element
+    And user should see settings drop down menu for given element
     And user clicks on the "REQUEST SPACE CREATION" button in current settings dropdown
-    And user should see that "Request space creation for the group" token box on Oneprovider page is active
-    Then user should see non-empty token in active window on Oneprovider page
+    And user should see that "Request space creation for the group" token box is active
+    Then user should see non-empty token in active window
 
   # assuming there is group1
-  Scenario: Try to join space with incorrect token
-    When user clicks settings icon displayed on "group1" in current sidebar
+  Scenario: User can try to join space with incorrect token
+    Given there is "group1" on list in current sidebar
+    When user clicks settings icon displayed for given element
+    And user should see settings drop down menu for given element
     And user clicks on the "JOIN SPACE" button in current settings dropdown
-    And user should see that "Join a space" input box on Oneprovider page is active
+    And user should see that "Join a space" input box is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*space.*
 
   # assuming there is group1
-  Scenario: Try to join as subgroup with incorrect token
-    When user clicks settings icon displayed on "group1" in current sidebar
+  Scenario: User can try to join as subgroup with incorrect token
+    Given there is "group1" on list in current sidebar
+    When user clicks settings icon displayed for given element
+    And user should see settings drop down menu for given element
     And user clicks on the "JOIN AS SUBGROUP" button in current settings dropdown
-    And user should see that "Join a group to group" input box on Oneprovider page is active
+    And user should see that "Join a group to group" input box is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*subgroup.*
-
-  Scenario: Try join to group with incorrect token
-    When user clicks on the "Join" button in current sidebar
-    And user should see that "Join a group" input box on Oneprovider page is active
-    And user types "helloworld" on keyboard
-    And user presses enter on keyboard
-    Then user sees an error notify with text matching to: .*Failed.*join.*group.*
 
 
 #  Scenario: Rename group

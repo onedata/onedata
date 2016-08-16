@@ -12,7 +12,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, when, then, parsers
-from selenium.webdriver.common.keys import Keys
 from tests.gui.steps.common import find_element_by_css_selector_and_text
 from common import select_button_from_buttons_by_name
 
@@ -44,19 +43,19 @@ def w_uncollapse_oz_panel(selenium, name):
     _uncollapse_oz_panel(selenium, name)
 
 
-@when(parsers.parse('user clicks on the "{name}" in sidebar panel'))
+@when(parsers.parse('user clicks on the "{name}" in uncollapsed panel'))
 def click_on_button_in_uncollapsed_oz_panel(selenium, name):
-    selector = '.spaces-accordion .secondary-header'
+    selector = '.accordion .secondary-header'
     find_button = select_button_from_buttons_by_name(name, selector)
     Wait(selenium, WAIT_FRONTEND).until(find_button).click()
 
 
-@then(parsers.parse('user should see, that the new space appear on the collapsed list in Onezone sidebar panel'))
-def check_spaces_names_headers_whether_new_space_appeared(selenium, random_name):
+@then(parsers.parse('user should see that the new space appear on the list in uncollapsed panel'))
+def check_spaces_names_headers_whether_new_space_appeared(selenium, name_string):
 
     def header_with_text_presence(s):
-        headers = s.find_elements_by_css_selector('.spaces-accordion .secondary-header')
-        return any(h.text == random_name for h in headers)
+        headers = s.find_elements_by_css_selector('.accordion .secondary-header')
+        return any(h.text == name_string for h in headers)
 
     Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
@@ -100,9 +99,9 @@ def click_user_alias_edit(selenium):
     selenium.execute_script('$(".alias-panel a input").select()')
 
 
-@then(parsers.parse('user should see, that the alias changed to "{name}"'))
+@then(parsers.parse('user should see that the alias changed to "{name}"'))
 def user_alias_equals(selenium, name):
-    alias_header = selenium.find_element_by_css_selector('.alias-panel .space-header')
+    alias_header = selenium.find_element_by_css_selector('.accordion .secondary-header')
     Wait(selenium, WAIT_BACKEND).until(lambda s: alias_header.text == name)
 
 
