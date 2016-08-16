@@ -193,7 +193,6 @@ def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
                     op_domain=op_domain,
                     user_cert=user_cert,
                     user_key=user_key,
-                    user=user_name,
                     token=token,
                     token_path=token_path)
 
