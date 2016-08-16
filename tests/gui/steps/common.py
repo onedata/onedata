@@ -130,7 +130,7 @@ def get_current_url(selenium, get_url):
     get_url = selenium.current_url
 
 
-@then('user should see that url changed')
+@then('user should see that url has changed')
 def check_if_url_changed(selenium, get_url):
     assert selenium.current_url != get_url
 

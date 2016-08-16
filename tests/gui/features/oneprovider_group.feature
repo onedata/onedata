@@ -79,9 +79,9 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*Failed.*join.*group.*
 
-  # I assumed here that we already have existing group with name "group1"
+  # assuming there is group1
   Scenario: User can rename existing group and then rename it back
-    Given there is a "group1" item on a sidebar list
+    Given there is "group1" on list in current sidebar
     When user clicks a settings icon displayed for "group1" list item
     And user should see a settings dropdown menu for "group1" list item
     And user clicks on the "rename" item in current settings dropdown
@@ -99,9 +99,9 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameGroup.*renamed.*group1.*
 
-  # I assumed here that we already have existing group named "group1"
+  # assuming there is group1
   Scenario: User can leave existing group and then create group with the same name
-    Given there is a "group1" item on a sidebar list
+    Given there is "group1" on list in current sidebar
     When user clicks a settings icon displayed for "group1" list item
     And user should see a settings dropdown menu for "group1" list item
     And user clicks on the "leave this group" item in current settings dropdown
