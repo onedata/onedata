@@ -35,8 +35,18 @@ def test_profile_ls(env_description_file):
     pass
 
 
+@scenario('Profile ls without remounting')
+def test_profile_ls_no_remounting(env_description_file):
+    pass
+
+
 @scenario('Profile ls nested')
 def test_profile_ls_nested(env_description_file):
+    pass
+
+
+@scenario('Profile ls nested without remounting')
+def test_profile_ls_nested_no_remounting(env_description_file):
     pass
 
 
