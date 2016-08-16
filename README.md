@@ -1,5 +1,5 @@
 
-![Onedata](https://onedata.org/docs/doc/img/heading.png)
+![Onedata](resources/logo.png)
 
 This is the main code repository of [Onedata](http://onedata.org) - a global data management system, providing easy access to distributed storage resources, supporting wide range of use cases from personal data management to data-intensive scientific computations.
 
