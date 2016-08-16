@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
-from tests.gui.steps.common import find_element
+from tests.gui.steps.common import find_element_by_css_selector_and_text
 from common import select_button_from_buttons_by_name
 
 
@@ -108,7 +108,7 @@ def user_alias_equals(selenium, name):
 
 @when(parsers.parse('user clicks on the "{button_name}" button from Onezone sidebar panel'))
 def click_create_new_space_button(selenium, button_name):
-    create_button = find_element(selenium, '.secondary-header', button_name)
+    create_button = find_element_by_css_selector_and_text(selenium, '.secondary-header', button_name)
     Wait(selenium, WAIT_FRONTEND).until(lambda s: create_button is not None)
     create_button.click()
 

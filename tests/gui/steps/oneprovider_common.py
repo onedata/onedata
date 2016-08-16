@@ -5,7 +5,7 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.gui.steps.common import find_element
+from tests.gui.steps.common import find_element_by_css_selector_and_text
 from tests.gui.steps import onezone_logged_in_common as onezone_session
 from tests.gui.steps import onezone_before_login as onezone_no_session
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
@@ -19,37 +19,25 @@ import selenium
 from common import select_button_from_buttons_by_name, check_if_element_is_active
 
 
-@fixture
-def get_url(selenium):
-    return [selenium.current_url]
-
-
 @given(parsers.parse('existing {space_name}'))
 def existing_space_name(space_name):
     return space_name
 
 
-@when(parsers.parse('user clicks on the "{op_elem}" Oneprovider\'s sidebar panel'))
-@then(parsers.parse('user clicks on the "{op_elem}" Oneprovider\'s sidebar panel'))
-def op_open_op_panel(selenium, op_elem):
+def _click_tab_in_main_menu(selenium, op_elem):
     css_selector = '.primary-sidebar a#main-' + op_elem
-    find_button = select_button_from_buttons_by_name(op_elem, css_selector)
-    Wait(selenium, WAIT_FRONTEND).until(find_button).click()
+    find_tab = select_button_from_buttons_by_name(op_elem, css_selector)
+    Wait(selenium, WAIT_FRONTEND).until(find_tab).click()
 
 
-@given(parsers.parse('user clicks on the "{op_elem}" Oneprovider\'s sidebar panel'))
-def op_open_op_panel(selenium, op_elem):
-    css_selector = '.primary-sidebar a#main-' + op_elem
-    find_button = select_button_from_buttons_by_name(op_elem, css_selector)
-    Wait(selenium, WAIT_FRONTEND).until(find_button).click()
+@then(parsers.parse('user clicks on the "{op_elem}" tab in main menu'))
+def t_op_open_op_panel(selenium, op_elem):
+    _click_tab_in_main_menu(selenium, op_elem)
 
 
-@when('user should see, that main content has been reloaded')
-@then('user should see, that main content has been reloaded')
-def check_if_main_content_changed(selenium):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
-    )
+@given(parsers.parse('user clicks on the "{op_elem}" tab in main menu'))
+def g_op_open_op_panel(selenium, op_elem):
+    _click_tab_in_main_menu(selenium, op_elem)
 
 
 @when(parsers.parse('user clicks on the "{option_name}" button in current sidebar'))
@@ -86,6 +74,16 @@ def _find_modal_by_title(title, modals):
     return None
 
 
+@then(parsers.parse('user should not see modal with title "{modal_title}"'))
+def op_check_if_modal_with_input_box_disappeared(selenium, modal_title):
+    modals = selenium.find_elements_by_css_selector('.ember-view.modal')
+    Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: _find_modal_by_title(modal_title, modals) is None)
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.modal-backdrop-fade'))
+    )
+
+
 @when(parsers.parse('user should see that "{box_title}" {modal_type} box on Oneprovider page is active'))
 @then(parsers.parse('user should see that "{box_title}" {modal_type} box on Oneprovider page is active'))
 def op_wait_for_active_box_with_given_title_on_op_page(selenium, box_title, modal_type):
@@ -103,8 +101,7 @@ def op_wait_for_active_box_with_given_title_on_op_page(selenium, box_title, moda
     Wait(selenium, wait).until(is_active)
 
 
-#TODO
-@then(parsers.parse('user should see, that the "{elem}" appear on the list'))
+@then(parsers.parse('user should see that the "{elem}" appears on the list'))
 def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selenium,
                                                                            elem):
 
@@ -117,7 +114,7 @@ def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selen
     Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
 
-@then(parsers.parse('user should see, that the new {elem} appear on the list'))
+@then(parsers.parse('user should see that the new {elem} appears on the list'))
 def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selenium,
                                                                            elem,
                                                                            random_name):
@@ -131,17 +128,25 @@ def op_check_if_new_item_appeared_in_list_of_given_type_in_current_sidebar(selen
     Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
 
-@when(parsers.parse('user clicks "Settings" icon displayed on "{name}" in current sidebar'))
-@then(parsers.parse('user clicks "Settings" icon displayed on "{name}" in current sidebar'))
-def click_settings_icon_on_space(selenium, name):
-    space = find_element(selenium, '.secondary-sidebar-item', name)
-    settings_icon = space.find_element_by_css_selector('span.oneicon-settings')
-    settings_icon.click()
+@when(parsers.parse('user clicks settings icon displayed on "{name}" in current sidebar'))
+@then(parsers.parse('user clicks settings icon displayed on "{name}" in current sidebar'))
+def op_click_settings_icon_on_element(selenium, name):
+
+    def _find_settings_icon_and_check_if_clickable(s):
+        elems = s.find_elements_by_css_selector('.secondary-sidebar-item')
+        for elem in elems:
+            if elem.text == name:
+                settings_icon = elem.find_element_by_css_selector('span.oneicon-settings')
+                if settings_icon.is_enabled():
+                    return settings_icon
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(_find_settings_icon_and_check_if_clickable).click()
 
 
 @when('user should see settings drop down menu for spaces')
 @then('user should see settings drop down menu for spaces')
-def wait_for_settings_panel(selenium):
+def op_wait_for_settings_dropdown_menu(selenium):
 
     def _find_expanded_menu(s):
         elems = s.find_elements_by_css_selector('.dropdown-toggle')
@@ -153,36 +158,22 @@ def wait_for_settings_panel(selenium):
     Wait(selenium, WAIT_FRONTEND).until(lambda s: _find_expanded_menu is not None)
 
 
-@when('user can see current url')
-def set_current_url(selenium, get_url):
-    get_url[0] = selenium.current_url
+#@then(parsers.parse('user clicks settings icon displayed on name in current sidebar'))
+#def click_settings_icon_on_element(selenium, name_string):
+#    element = find_element_by_css_selector_and_text('.secondary-sidebar-item', name_string)
+#    settings_icon = space.find_element_by_css_selector('span.oneicon-settings')
+#    settings_icon.click()
 
 
-@then('user should see that url has changed')
-def check_if_url_changed(selenium, get_url):
-    assert selenium.current_url != get_url
-
-@then('user refreshes site')
-def refresh_site(selenium):
-    selenium.refresh()
+@when(parsers.parse('user clicks "{button_name}" confirmation button in displayed modal'))
+def op_click_confirmation_button(selenium, button_name):
+    confirmation_button = select_button_from_buttons_by_name(button_name,
+                                                             '.modal-content button.btn-primary')
+    Wait(selenium, WAIT_FRONTEND).until(confirmation_button).click()
 
 
-#@then(parsers.parse('user should not see space named "{space_name}" in spaces list'))
-#def check_existance_of_space(selenium, space_name):
-#    find_space = find_element(selenium, 'ul.spaces-list .secondary-sidebar-item .truncate', space_name)
- #   assert find_space is None
-
-
-@then(parsers.parse('user clicks "Settings" icon displayed on name in current sidebar'))
-def click_settings_icon_on_space(selenium, name_string):
-    space = find_element(selenium, '.secondary-sidebar-item', name_string)
-    settings_icon = space.find_element_by_css_selector('span.oneicon-settings')
-    settings_icon.click()
-
-
-# @given(parsers.parse('''I'm logged into Oneprovider "{provider}" as development user "{user}"'''))
-# def logged_in_dev_to_oneprovider(selenium, base_url, user, provider):
-#     onezone_no_session.login_dev_onezone_with_url(selenium, base_url, user)
-#     onezone_session.uncollapse_main_accordion(selenium, 'providers')
-#     onezone_session.go_to_provider(selenium, provider)
-#     pass
+#@given('user should see that main content has been reloaded')
+#def op_check_if_main_content_has_been_reloaded(selenium):
+#    Wait(selenium, WAIT_FRONTEND).until(
+#        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
+#    )

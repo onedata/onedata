@@ -9,7 +9,8 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
-from tests.gui.steps.common import find_element
+from tests.gui.steps.common import find_element_by_css_selector_and_text,\
+    select_button_from_buttons_by_name
 from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -74,147 +75,50 @@ def upload_file_to_current_dir(selenium, file_name):
     Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
 
 
-@then('user clicks "Create file" button from top menu bar')
-@when('user clicks "Create file" button from top menu bar')
-def click_create_new_file_button(selenium):
-    new_file_button = Wait(selenium, WAIT_BACKEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-file-tool'))
-    )
-    new_file_button.click()
+@then(parsers.parse('user clicks "{tooltip_name}" tooltip from top menu bar'))
+@when(parsers.parse('user clicks "{tooltip_name}" tooltip from top menu bar'))
+def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
+
+    def _find_tooltip_with_given_name(s):
+        tooltips = s.find_elements_by_css_selector('ul.toolbar-group a')
+        for tooltip in tooltips:
+            if tooltip.get_attribute('data-original-title') == tooltip_name:
+                return tooltip
+        return None
+
+    tooltip = Wait(selenium, WAIT_BACKEND).until(_find_tooltip_with_given_name)
+    tooltip.click()
 
 
-@then('user should see, that input box for file name is active')
-@when('user should see, that input box for file name is active')
-def wait_input_box_for_file_name_is_active(selenium):
-
-    def _is_active(selenium):
-        elem = selenium.find_elements_by_css_selector(
-            '#create-file-modal .ember-view input.form-control')
-        if elem:
-            elem = elem[0]
-            return elem == selenium.switch_to.active_element
-        else:
-            return False
-
-    Wait(selenium, WAIT_FRONTEND).until(_is_active)
-
-#TODO try to make this in one fun
-@then('user should not see input box for file name')
-def check_if_input_box_for_file_name_disappeared(selenium):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR,
-                                            '#create-file-modal .ember-view input.form-control'))
-    )
+@then(parsers.parse('user should see new {element} named "{elem_name}" in files list'))
+def op_check_if_new_element_appeared(selenium, elem_name, element):
+    new_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
+                                                     elem_name)
+    Wait(selenium, WAIT_FRONTEND).until(new_elem)
 
 
-@then(parsers.parse('user should see new file named "{file_name}" in files list'))
-def check_existence_of_new_file(selenium, file_name):
-    Wait(selenium, WAIT_FRONTEND).\
-        until(lambda s: find_element(selenium,
-                                     'table.table td.file-list-col-file',
-                                     file_name) is not None)
+@when(parsers.parse('user selects "{elem_name}" from files list'))
+def op_select_elem(selenium, elem_name):
+    elem = select_button_from_buttons_by_name(elem_name,
+                                              '.files-list table.files-table td.file-list-col-file')
+    Wait(selenium, WAIT_FRONTEND).until(elem).click()
 
 
-@when('user should wait for files list to load')
-@then('user should wait for files list to load')
-def wait_to_load_file_list(selenium):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
-    )
+@then(parsers.parse('user should not see {element} named "{elem_name}" in files list'))
+def check_absence_deleted_element(selenium, element, elem_name):
 
-
-@when('user clicks "Create directory" button from top menu bar')
-def click_create_new_directory_button(selenium):
-    new_directory_button = Wait(selenium, WAIT_BACKEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'ul.navbar-nav a#create-dir-tool'))
-    )
-    new_directory_button.click()
-
-
-@when('user should see, that input box for directory name is active')
-def wait_input_box_for_directory_name_is_active(selenium):
-
-    def _is_active(selenium):
-        elem = selenium.find_elements_by_css_selector(
-            '#create-dir-modal .ember-view input.form-control')
-        if elem:
-            elem = elem[0]
-            return elem == selenium.switch_to.active_element
-        else:
-            return False
-
-    Wait(selenium, WAIT_FRONTEND).until(_is_active)
-
-
-@then('user should not see input box for directory name')
-def check_if_input_box_for_directory_name_disappeared(selenium):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR,
-                                            '#create-dir-modal .ember-view input.form-control'))
-    )
-
-
-@then(parsers.parse('user should see new directory named "{dir_name}" in files list'))
-def check_existence_of_new_directory(selenium, dir_name):
-    Wait(selenium, WAIT_FRONTEND).\
-        until(lambda s: find_element(selenium,
-                                     'table.table td.file-list-col-file',
-                                     dir_name) is not None)
-
-
-#TODO
-@when(parsers.parse('user selects "{file_name}" from files list'))
-def select_file(selenium, file_name):
-
-    def find_file(s):
-        files = s.find_elements_by_css_selector('.files-list table.files-table td.file-list-col-file')
-        for elem in files:
-            if elem.text == file_name:
+    def _try_find_deleted_element(s):
+        elems = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in elems:
+            if elem.text == elem_name:
                 return elem
         return None
 
-    Wait(selenium, WAIT_FRONTEND).\
-        until(lambda s: find_element(selenium,
-                                     '.files-list table.files-table td.file-list-col-file',
-                                     file_name) is not None)
-    find_element(selenium,
-                 '.files-list table.files-table td.file-list-col-file',
-                 file_name).click()
+    assert _try_find_deleted_element(selenium) is None
 
 
-@when('user clicks "Remove element" button from top menu bar')
-def click_remove_button(selenium):
-    remove_button = Wait(selenium, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '#navbar-collapse ul.nav a#remove-file-tool'))
-    )
-    remove_button.click()
-
-
-@when('user clicks "OK" button in popup window asking if he is sure')
-def click_ok_button(selenium):
-    ok_button = Wait(selenium, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '#remove-files-modal button.btn-primary'))
-    )
-    ok_button.click()
-
-
-@then(parsers.parse('user should not see file named "{file_name}" in files list'))
-def check_absence_deleted_file(selenium, file_name):
-    deleted_file = find_element(selenium, 'table.table td.file-list-col-file', file_name)
-    assert deleted_file is None
-
-
-@when('user clicks "Show file distribution" button from top menu bar')
-def click_show_file_distribution_button(selenium):
-
-    show_file_distribution_button = Wait(selenium, WAIT_BACKEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '#navbar-collapse ul.nav a#file-chunks-tool'))
-    )
-    show_file_distribution_button.click()
-
-
-@then(parsers.parse('user should see provider name "{provider_name}" in providers column'))
-def check_if_provider_name_in_table(selenium, provider_name):
+@then(parsers.parse('user should see modal with provider\'s name "{provider_name}" in providers column'))
+def op_check_if_provider_name_is_in_tab(selenium, provider_name):
 
     def _find_provider(s):
         providers = s.find_elements_by_css_selector(
@@ -241,3 +145,4 @@ def check_if_provider_name_in_table(selenium, provider_name):
 #     Wait(selenium, 2*WAIT_BACKEND).until(
 #         lambda s: notify_visible_with_text(s, 'info', re.compile(r'.*' + file_name + r'.*' + 'successfully' + r'.*'))
 #     )
+

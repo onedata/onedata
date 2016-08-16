@@ -22,7 +22,7 @@ scenarios('../features/oneprovider_group.feature')
 scenarios('../features/onezone_login.feature')
 scenarios('../features/onezone_gui.feature')
 scenarios('../features/oneprovider_data.feature')
-scenarios('../features/oneprovider_gui.feature')
+scenarios('../features/oneprovider_space.feature')
 #
 #
 # # --- FEATURES: oneprovider_data --- #

@@ -4,7 +4,7 @@ Feature: Onezone login page
   Background:
     Given user opens a Onezone URL in a web browser
     # not used in non-homepage tests
-#    And user clicks on the "login" link in Homepage main menu
+    # And user clicks on the "login" link in Homepage main menu
 
 
   Scenario: Onezone login page renders with proper title

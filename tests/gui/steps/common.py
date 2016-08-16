@@ -21,6 +21,12 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from random import choice
 from string import ascii_uppercase, ascii_lowercase, digits
 from selenium.webdriver.common.by import By
+from pytest import fixture
+
+
+@fixture
+def get_url(selenium):
+    return selenium.current_url
 
 
 @given('user has new name for group')
@@ -128,10 +134,25 @@ def notify_visible_with_text(selenium, notify_type, text_regexp):
     Wait(selenium, 2*WAIT_BACKEND).until(notify_with_text_present)
 
 
-@when(parsers.parse('user types group name on keyboard'))
-@when(parsers.parse('user types space name on keyboard'))
+@when(parsers.parse('user types the group name on keyboard'))
+@when(parsers.parse('user types the space name on keyboard'))
 def type_given_string_into_active_element(selenium, random_name):
     selenium.switch_to.active_element.send_keys(random_name)
+
+
+@when('user can see current url')
+def get_current_url(selenium, get_url):
+    get_url = selenium.current_url
+
+
+@then('user should see that url has changed')
+def check_if_url_changed(selenium, get_url):
+    assert selenium.current_url != get_url
+
+
+@then('user refreshes site')
+def refresh_site(selenium):
+    selenium.refresh()
 
 
 def select_button_from_buttons_by_name(name, buttons_selector):
@@ -139,7 +160,11 @@ def select_button_from_buttons_by_name(name, buttons_selector):
         buttons = s.find_elements_by_css_selector(buttons_selector)
         for button in buttons:
             if button.text.lower() == name.lower():
-                return button
+                Wait(s, WAIT_FRONTEND).until(
+                    EC.visibility_of(button)
+                )
+                if button.is_enabled():
+                    return button
     return _go_to_button
 
 
@@ -153,13 +178,15 @@ def check_if_element_is_active(selector='', web_elem=None):
     return _is_active
 
 
-def find_element(selenium, selector, text):
+
+def find_element_by_css_selector_and_text(selector, text):
     """finds element on site by css selector and element's text"""
-    elements_list = selenium.find_elements_by_css_selector(selector)
-    for elem in elements_list:
-        if elem.text == text:
-            return elem
-    return None
+    def _find_element(s):
+        elements_list = s.find_elements_by_css_selector(selector)
+        for elem in elements_list:
+            if elem.text == text:
+                return elem
+    return _find_element
 
 
 def get_text_from_input_box(selenium):
