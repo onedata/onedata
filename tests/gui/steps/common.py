@@ -33,7 +33,7 @@ def name_string():
     return ''.join(choice(ascii_uppercase + ascii_lowercase + digits) for _ in range(6))
 
 
-@then(parsers.parse('user should see that a page title contains "{text}"'))
+@then(parsers.parse('user should see that the page title contains "{text}"'))
 def title_contains(selenium, text):
     Wait(selenium, WAIT_FRONTEND).until(EC.title_contains(text))
 
@@ -125,12 +125,6 @@ def notify_visible_with_text(selenium, notify_type, text_regexp):
     Wait(selenium, 2*WAIT_BACKEND).until(notify_with_text_present)
 
 
-@when(parsers.parse('user types the group name on keyboard'))
-@when(parsers.parse('user types the space name on keyboard'))
-def type_given_string_into_active_element(selenium, random_name):
-    selenium.switch_to.active_element.send_keys(random_name)
-
-
 @when('user can see current url')
 def get_current_url(selenium, get_url):
     get_url = selenium.current_url
@@ -177,24 +171,6 @@ def find_element_by_css_selector_and_text(selector, text):
             if elem.text.lower() == text.lower():
                 return elem
     return _find_element
-
-
-def get_text_from_input_box(selenium):
-    input_box = Wait(selenium, WAIT_FRONTEND).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR,
-                                          '.input-with-button input#invite-form-token-userJoinSpace-field'))
-    )
-    text = input_box.get_attribute('value')
-    return text
-
-
-def select_element_from_list_by_name(name, list_selector):
-    def _find_elem_in_list(s):
-        elements = s.find_elements_by_css_selector(list_selector)
-        for elem in elements:
-            if elem.text == name:
-                return elem
-    return _find_elem_in_list
 
 
 # Below functions are currently unused and should not be used,

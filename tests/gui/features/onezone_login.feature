@@ -8,7 +8,7 @@ Feature: Onezone login page
 
 
   Scenario: Onezone login page renders with proper title
-    Then user should see that a page title contains "Login"
+    Then user should see that the page title contains "Login"
 
 
   Scenario: Login buttons of multiple providers are rendered on the login Homepage page

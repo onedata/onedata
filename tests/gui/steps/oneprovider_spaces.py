@@ -1,8 +1,21 @@
+"""Steps for features of Oneprovider's spaces.
+"""
+
+__author__ = "Michal Cwiertnia"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+
+import selenium
+
 from pytest_bdd import given, parsers, when, then
 from tests.gui.steps.common import find_element_by_css_selector_and_text, \
     select_button_from_buttons_by_name
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 
 @when(parsers.parse('user clicks space named "{space_name}" from spaces list'))

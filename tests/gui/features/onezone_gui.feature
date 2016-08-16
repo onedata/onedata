@@ -17,7 +17,7 @@ Feature: Onezone GUI elements
     And user clicks on the user alias
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
-    Then user should see that the alias changed to "helloworld"
+    Then user should see that the alias has changed to "helloworld"
 
   Scenario: User can create space using valid name string
     Given valid name string
@@ -25,4 +25,4 @@ Feature: Onezone GUI elements
     And user clicks on the "Create new space" in uncollapsed panel
     And user types given name on keyboard
     And user presses enter on keyboard
-    Then user should see that the new space appear on the list in uncollapsed panel
+    Then user should see that the new space has appeared on the collapsed list in Onezone sidebar panel
