@@ -170,6 +170,7 @@ def op_click_settings_icon_on_element(selenium, name):
             if elem.text == name:
                 settings_icon = elem.find_element_by_css_selector('span.oneicon-settings')
                 if settings_icon.is_enabled():
+                    selenium.execute_script('arguments[0].scrollIntoView();', settings_icon)
                     return settings_icon
         return None
 

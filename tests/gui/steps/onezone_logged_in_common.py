@@ -58,7 +58,7 @@ def check_spaces_names_headers_whether_new_space_appeared(selenium, name_string,
 
     def header_with_text_presence(s):
         headers = s.find_elements_by_css_selector('.accordion #collapse-spaces .secondary-header')
-        return any(h.text == name_string for h in headers)
+        return any(h.text.lower() == name_string.lower() for h in headers)
 
     Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
