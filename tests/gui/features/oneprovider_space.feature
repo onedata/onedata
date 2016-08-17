@@ -31,10 +31,9 @@ Feature: Oneprovider space functionality
     And user types "NewNameSpace" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
+    And user sees that "Rename a space" modal has vanished
     Then user sees that the "space1" has vanished from the spaces list
     And user sees that the "NewNameSpace" has appeared on the spaces list
-    
-    And user should not see modal with title "Rename a space"
     And user clicks a settings icon displayed for "NewNameSpace" item on the spaces list
     And user sees a settings dropdown menu for "NewNameSpace" item on the spaces list
     And user clicks on the "RENAME" item in current settings dropdown
@@ -42,6 +41,9 @@ Feature: Oneprovider space functionality
     And user types "space1" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameSpace.*renamed.*space1.*
+    And user sees that "Rename a space" modal has vanished
+    And user sees that the "NewNameSpace" has vanished from the spaces list
+    And user sees that the "space1" has appeared on the spaces list
 
 
   # assuming there is space1
@@ -88,7 +90,7 @@ Feature: Oneprovider space functionality
   Scenario: Switching between spaces
     When user can see current url
     And user clicks space named "space2" from spaces list
-    Then user should see that submenu for space named "space2" has appeared
+    Then user sees that submenu for space named "space2" has appeared
     And user sees that url has changed
 
 
@@ -99,12 +101,12 @@ Feature: Oneprovider space functionality
     And user sees a settings dropdown menu for "space2" item on the spaces list
     And user clicks on the "SET AS HOME" item in current settings dropdown
     Then user sees an info notify with text matching to: .*space2.*home.*
-    And user should see that home space icon has appeared next to displayed name of space "space2" in spaces list
+    And user sees that home space icon has appeared next to displayed name of space "space2" in spaces list
     And user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
     And user clicks on the "SET AS HOME" item in current settings dropdown
     And user sees an info notify with text matching to: .*space1.*home.*
-    And user should see that home space icon has appeared next to displayed name of space "space1" in spaces list
+    And user sees that home space icon has appeared next to displayed name of space "space1" in spaces list
 
 
   # assuming there is space2
@@ -115,10 +117,11 @@ Feature: Oneprovider space functionality
     And user clicks on the "LEAVE SPACE" item in current settings dropdown
     And user clicks "YES" confirmation button in displayed modal
     Then user sees an info notify with text matching to: .*space2.*left
-    And user should not see modal with title "Leave a space"
-    And user refreshes site
+    And user sees that "Leave a space" modal has vanished
+    And user sees that the "space2" has vanished from the spaces list
     And user clicks on the "Create" button in spaces sidebar
     And user sees that input box in "Create a new space" modal is active
     And user types "space2" on keyboard
     And user presses enter on keyboard
+    And user sees that "Create a new space" modal has vanished
     And user sees that the "space2" has appeared on the spaces list
