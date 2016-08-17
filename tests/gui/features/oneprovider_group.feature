@@ -111,4 +111,4 @@ Feature: Oneprovider Group functionality
     And user should see that "Create a new group" input box is active
     And user types "group1" on keyboard
     And user presses enter on keyboard
-    And user should see that the "group1" appears on the groups list
+    And user should see that the "group1" has appeared on the groups list
