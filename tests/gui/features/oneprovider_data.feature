@@ -12,6 +12,7 @@ Feature: Oneprovider Data view
     And user expands the "go to your files" Onezone sidebar panel
     And user clicks on the "p1" provider in Onezone providers sidebar panel
     And user clicks on the "Go to your files" button in provider popup
+    And user sees that main content reloaded
     # data is default, so it is unnecessary
     # And user clicks on the "data" menu item in Oneprovider main menu
 
@@ -62,11 +63,11 @@ Feature: Oneprovider Data view
     Given there is provider "p1" supporting space named "space1"
     When user clicks the button from top menu bar with tooltip "Create file"
     And user sees that input box in "New file" modal is active
-    And user types "file2" on keyboard
+    And user types "file3" on keyboard
     And user presses enter on keyboard
     And user should not see modal with title "New file"
-    And user sees new file named "file2" in files list
-    And user selects "file2" from files list
+    And user sees new file named "file3" in files list
+    And user selects "file3" from files list
     And user clicks the button from top menu bar with tooltip "Show file distribution"
     Then user sees modal with provider's name "p1" in providers column
 

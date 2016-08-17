@@ -87,7 +87,7 @@ Feature: Oneprovider space functionality
     When user can see current url
     And user clicks space named "space2" from spaces list
     Then user should see that submenu for space named "space2" has appeared
-    And user should see that url has changed
+    And user sees that url has changed
 
 
   # assuming there is space1 and space2
