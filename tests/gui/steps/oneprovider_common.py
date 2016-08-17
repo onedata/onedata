@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
 from common import select_button_from_buttons_by_name, check_if_element_is_active, refresh_site
 from selenium.common.exceptions import NoSuchElementException
+import re
 
 
 def _click_given_tab_in_main_menu_sidebar(selenium, main_menu_tab):
@@ -56,7 +57,7 @@ def op_click_on_button_in_main_menu_tab_sidebar(selenium, option_name,
 
 
 def _check_for_item_in_given_list(selenium, name, elem_type):
-    refresh_site(selenium)
+    #refresh_site(selenium)
     list_items = selenium.find_elements_by_css_selector('.' + elem_type + '-list '
                                                         '.secondary-sidebar-item '
                                                         '.item-label .truncate')
@@ -96,7 +97,7 @@ def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                                  name):
 
     def _check_for_lack_of_item_in_given_list(s):
-        refresh_site(selenium)
+        #refresh_site(selenium)
         list_items = s.find_elements_by_css_selector('.' + elem_type + '-list '
                                                      '.secondary-sidebar-item '
                                                      '.item-label .truncate')
@@ -191,9 +192,10 @@ def _find_modal_by_title(title, modals):
 @when(parsers.parse('user should not see modal with title "{modal_title}"'))
 @then(parsers.parse('user should not see modal with title "{modal_title}"'))
 def op_check_if_modal_with_input_box_disappeared(selenium, modal_title):
-    modals = selenium.find_elements_by_css_selector('.ember-view.modal')
     Wait(selenium, WAIT_FRONTEND).until(
-        lambda s: _find_modal_by_title(modal_title, modals) is None)
+        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.ember-view.modal .modal-title'))
+    )
+    selenium.refresh()
 
 
 @when(parsers.parse('user sees that {modal_type} box in "{modal_title}" modal is active'))

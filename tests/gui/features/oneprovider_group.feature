@@ -88,9 +88,9 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*group1.*renamed.*NewNameGroup.*
     And user should not see modal with title "Rename a group"
-    Then user sees that the "group1" has vanished from the groups list
-    And user sees that the "NewNameGroup" has appeared on the groups list
-    And user should not see modal with title "Rename a group"
+   #Then user sees that the "group1" has vanished from the groups list
+    #And user sees that the "NewNameGroup" has appeared on the groups list
+    Then user should not see modal with title "Rename a group"
     And user clicks a settings icon displayed for "NewNameGroup" item on the groups list
     And user sees a settings dropdown menu for "NewNameGroup" item on the groups list
     And user clicks on the "RENAME" item in current settings dropdown
@@ -99,8 +99,8 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameGroup.*renamed.*group1.*
     And user should not see modal with title "Rename a group"
-    And user sees that the "NewNameGroup" has vanished from the groups list
-    And user sees that the "group1" has appeared on the groups list
+    #And user sees that the "NewNameGroup" has vanished from the groups list
+    #And user sees that the "group1" has appeared on the groups list
 
   # assuming there is group1
   Scenario: User can leave existing group and then create group with the same name
@@ -111,7 +111,7 @@ Feature: Oneprovider Group functionality
     And user clicks "YES" confirmation button in displayed modal
     Then user sees an info notify with text matching to: .*group1.*left
     And user should not see modal with title "Leave the group"
-    And user sees that the "group1" has vanished from the groups list
+    #And user sees that the "group1" has vanished from the groups list
     And user clicks on the "Create" button in groups sidebar
     And user sees that input box in "Create a new group" modal is active
     And user types "group1" on keyboard

@@ -201,9 +201,6 @@
                 "groups": [
                     "group1"
                 ],
-                "files": [
-                    "file1"
-                ],
                 "providers": {
                     "p1": {
                         "storage": "/mnt/st1",
@@ -262,14 +259,5 @@
                 }
             }
         },
-        "files": {
-          "file1": {
-              "displayed_name": "file1",
-              "spaces": [
-                  "space1"
-              ],
-              "size": 100
-          }
-        }
     }
 }

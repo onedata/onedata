@@ -31,10 +31,9 @@ Feature: Oneprovider space functionality
     And user types "NewNameSpace" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
-    Then user sees that the "space1" has vanished from the spaces list
-    And user sees that the "NewNameSpace" has appeared on the spaces list
-    
-    And user should not see modal with title "Rename a space"
+    #Then user sees that the "space1" has vanished from the spaces list
+    #Then user sees that the "NewNameSpace" has appeared on the spaces list
+    Then user should not see modal with title "Rename a space"
     And user clicks a settings icon displayed for "NewNameSpace" item on the spaces list
     And user sees a settings dropdown menu for "NewNameSpace" item on the spaces list
     And user clicks on the "RENAME" item in current settings dropdown
@@ -42,7 +41,7 @@ Feature: Oneprovider space functionality
     And user types "space1" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameSpace.*renamed.*space1.*
-
+    And user sees that the "space1" has appeared on the spaces list
 
   # assuming there is space1
   Scenario: Check if "invite user" token box is not empty
