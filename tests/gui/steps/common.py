@@ -136,6 +136,7 @@ def check_if_url_changed(selenium, get_url):
     assert selenium.current_url != get_url
 
 
+@when('user refreshes site')
 @then('user refreshes site')
 def refresh_site(selenium):
     selenium.refresh()

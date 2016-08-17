@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
-from common import select_button_from_buttons_by_name, check_if_element_is_active
+from common import select_button_from_buttons_by_name, check_if_element_is_active, refresh_site
 from selenium.common.exceptions import NoSuchElementException
 
 
@@ -56,6 +56,7 @@ def op_click_on_button_in_main_menu_tab_sidebar(selenium, option_name,
 
 
 def _check_for_item_in_given_list(selenium, name, elem_type):
+    refresh_site(selenium)
     list_items = selenium.find_elements_by_css_selector('.' + elem_type + '-list '
                                                         '.secondary-sidebar-item '
                                                         '.item-label .truncate')
@@ -73,7 +74,7 @@ def op_check_if_there_is_given_item_on_the_list_of_given_type(selenium, name, el
                     'on the {elem_type} list'))
 def op_check_if_new_item_appears_in_list_of_given_type(selenium, elem_type,
                                                        name_string):
-    Wait(selenium, WAIT_BACKEND).until(
+    Wait(selenium, 3*WAIT_BACKEND).until(
         lambda s: _check_for_item_in_given_list(s, name_string, elem_type)
     )
 
@@ -83,9 +84,25 @@ def op_check_if_new_item_appears_in_list_of_given_type(selenium, elem_type,
 def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                                  elem_type,
                                                                  name):
-    Wait(selenium, WAIT_BACKEND).until(
+    Wait(selenium, 3*WAIT_BACKEND).until(
         lambda s: _check_for_item_in_given_list(s, name, elem_type)
     )
+
+
+@then(parsers.parse('user sees that the "{name}" '
+                    'has vanished from the {elem_type} list'))
+def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
+                                                                 elem_type,
+                                                                 name):
+
+    def _check_for_lack_of_item_in_given_list(s):
+        refresh_site(selenium)
+        list_items = s.find_elements_by_css_selector('.' + elem_type + '-list '
+                                                     '.secondary-sidebar-item '
+                                                     '.item-label .truncate')
+        return all(li.text != name for li in list_items)
+
+    Wait(selenium, 3*WAIT_BACKEND).until(_check_for_lack_of_item_in_given_list)
 
 
 def _find_item_in_given_sidebar_list(selenium, name, elem_type):

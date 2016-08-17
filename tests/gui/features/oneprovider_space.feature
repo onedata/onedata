@@ -31,7 +31,9 @@ Feature: Oneprovider space functionality
     And user types "NewNameSpace" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
-    Then user sees that the "NewNameSpace" has appeared on the spaces list
+    Then user sees that the "space1" has vanished from the spaces list
+    And user sees that the "NewNameSpace" has appeared on the spaces list
+    
     And user should not see modal with title "Rename a space"
     And user clicks a settings icon displayed for "NewNameSpace" item on the spaces list
     And user sees a settings dropdown menu for "NewNameSpace" item on the spaces list
@@ -87,7 +89,7 @@ Feature: Oneprovider space functionality
     When user can see current url
     And user clicks space named "space2" from spaces list
     Then user should see that submenu for space named "space2" has appeared
-    And user should see that url has changed
+    And user sees that url has changed
 
 
   # assuming there is space1 and space2
