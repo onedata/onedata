@@ -64,7 +64,8 @@ def check_spaces_names_headers_whether_new_space_appeared(selenium, name_string,
 
 
 @given(parsers.parse('user clicks on the "{name}" provider in Onezone providers sidebar panel'))
-def click_on_provider_in_sidebar(selenium, name):
+def click_on_provider_in_sidebar(selenium, name, supporting_provider):
+    supporting_provider['name'] = name
     collapse_providers = selenium.find_element_by_css_selector('#collapse-providers')
 
     Wait(selenium, WAIT_FRONTEND).until(lambda s: collapse_providers.get_attribute('aria-expanded') == 'true')

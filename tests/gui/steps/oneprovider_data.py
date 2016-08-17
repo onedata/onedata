@@ -19,8 +19,8 @@ from pytest import fixture
 
 
 @given(parsers.parse('there is provider "{provider_name}" supporting space named "{space_name}"'))
-def existing_provider_supporting_space(provider_name, space_name):
-    return provider_name
+def supporting_provider():
+    return dict()
 
 
 def _check_for_item_in_files_list(selenium, name):
@@ -36,6 +36,7 @@ def existing_file(selenium, file_name):
     Wait(selenium, WAIT_FRONTEND).until(
         lambda s: _check_for_item_in_files_list(selenium, file_name)
     )
+
 
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
 def change_space(selenium, space_name):
@@ -133,13 +134,13 @@ def check_absence_deleted_element(selenium, file_list_element):
 
 
 @then(parsers.parse('user should see modal with provider\'s name "{provider_name}" in providers column'))
-def op_check_if_provider_name_is_in_tab(selenium, provider_name):
+def op_check_if_provider_name_is_in_tab(selenium, supporting_provider):
 
     def _find_provider(s):
         providers = s.find_elements_by_css_selector(
             '#file-chunks-modal .container-fluid table.file-blocks-table td.provider-name')
         for elem in providers:
-            if elem.text == provider_name:
+            if elem.text == supporting_provider['name']:
                 return elem
         return None
 
