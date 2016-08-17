@@ -60,10 +60,11 @@ class AbstractPerformanceTest:
 
     @pytest.fixture()
     def clients(self, request, environment, context, client_dockers,
-                env_description_file):
+                env_description_file, test_type, providers):
 
         mount_users(request, environment, context, client_dockers,
-                    env_description_file, **get_users(environment))
+                    env_description_file, test_type, providers,
+                    **get_users(environment))
 
 
 def get_users(environment):
