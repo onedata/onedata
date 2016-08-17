@@ -25,7 +25,7 @@ def click_space_name(selenium, space_name):
     Wait(selenium, WAIT_FRONTEND).until(space_to_click).click()
 
 
-@then(parsers.parse('user should see home space icon next to displayed name of space'
+@then(parsers.parse('user sees home space icon next to displayed name of space'
                     ' "{space_name}" in spaces list'))
 def check_if_home_space_icon_next_to_spaces(selenium, space_name):
 
@@ -39,7 +39,7 @@ def check_if_home_space_icon_next_to_spaces(selenium, space_name):
     assert _find_home_space_icon(selenium).text == space_name
 
 
-@then(parsers.parse('user should see submenu for space named "{space_name}"'))
+@then(parsers.parse('user sees submenu for space named "{space_name}"'))
 def check_if_displayed_space_menu(selenium, space_name):
     space = find_element_by_css_selector_and_text('li.active .secondary-sidebar-item .truncate',
                                                   space_name)
