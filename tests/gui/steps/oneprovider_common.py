@@ -32,7 +32,7 @@ def t_op_click_on_the_given_main_menu_tab(selenium, main_menu_tab):
     _click_given_tab_in_main_menu_sidebar(selenium, main_menu_tab)
 
 
-@then('user should see non-empty token in active modal')
+@then('user sees non-empty token in active modal')
 def op_check_for_non_empty_token_in_active_modal_on_op_page(selenium):
     assert Wait(selenium, WAIT_BACKEND).until(
         lambda s: s.find_element_by_css_selector(
@@ -69,7 +69,7 @@ def op_check_if_there_is_given_item_on_the_list_of_given_type(selenium, name, el
     )
 
 
-@then(parsers.parse('user should see that the new item has appeared '
+@then(parsers.parse('user sees that the new item has appeared '
                     'on the {elem_type} list'))
 def op_check_if_new_item_appears_in_list_of_given_type(selenium, elem_type,
                                                        name_string):
@@ -78,7 +78,7 @@ def op_check_if_new_item_appears_in_list_of_given_type(selenium, elem_type,
     )
 
 
-@then(parsers.parse('user should see that the "{name}" '
+@then(parsers.parse('user sees that the "{name}" '
                     'has appeared on the {elem_type} list'))
 def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                                  elem_type,
@@ -120,9 +120,9 @@ def op_click_settings_icon_for_given_list_item(selenium, name, elem_type):
     ).click()
 
 
-@when(parsers.parse('user should see a settings dropdown menu for '
+@when(parsers.parse('user sees a settings dropdown menu for '
                     '"{name}" item on the {elem_type} list'))
-@then(parsers.parse('user should see a settings dropdown menu for '
+@then(parsers.parse('user sees a settings dropdown menu for '
                     '"{name}" item on the {elem_type} list'))
 def op_wait_for_settings_dropdown_menu(selenium, name, elem_type):
 
@@ -155,7 +155,7 @@ def op_click_confirmation_button(selenium, button_name):
     ).click()
 
 
-@given('user should see that main content reloaded')
+@given('user sees that main content reloaded')
 def op_check_if_main_content_has_been_reloaded(selenium):
     Wait(selenium, WAIT_FRONTEND).until(
         EC.invisibility_of_element_located((By.CSS_SELECTOR,
@@ -179,8 +179,8 @@ def op_check_if_modal_with_input_box_disappeared(selenium, modal_title):
         lambda s: _find_modal_by_title(modal_title, modals) is None)
 
 
-@when(parsers.parse('user should see that "{modal_title}" {modal_type} box is active'))
-@then(parsers.parse('user should see that "{modal_title}" {modal_type} box is active'))
+@when(parsers.parse('user sees that {modal_type} box in "{modal_title}" modal is active'))
+@then(parsers.parse('user sees that {modal_type} box in "{modal_title}" modal is active'))
 def op_wait_for_active_box_with_given_title_on_op_page(selenium, modal_title, modal_type):
     if modal_type == 'input':
         wait = WAIT_FRONTEND
