@@ -69,8 +69,6 @@ def op_check_if_there_is_given_item_on_the_list_of_given_type(selenium, name, el
     )
 
 
-@then(parsers.parse('user should see that the "{name_string}" '
-                    'has appeared on the {elem_type} list'))
 @then(parsers.parse('user should see that the new item has appeared '
                     'on the {elem_type} list'))
 def op_check_if_new_item_appears_in_list_of_given_type(selenium, elem_type,
@@ -80,16 +78,27 @@ def op_check_if_new_item_appears_in_list_of_given_type(selenium, elem_type,
     )
 
 
+@then(parsers.parse('user should see that the "{name}" '
+                    'has appeared on the {elem_type} list'))
+def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
+                                                                 elem_type,
+                                                                 name):
+    Wait(selenium, WAIT_BACKEND).until(
+        lambda s: _check_for_item_in_given_list(s, name, elem_type)
+    )
+
+
 def _find_item_in_given_list(selenium, name, elem_type):
     list_items = selenium.find_elements_by_css_selector('.' + elem_type + '-list '
                                                         '.secondary-sidebar-item')
     for list_item in list_items:
-        try:
-            item_name = list_item.find_element_by_css_selector('.item-label '
-                                                               '.truncate')
-        except NoSuchElementException:
-            continue
-        if item_name.text == name:
+        # try:
+        #     item_name = list_item.find_element_by_css_selector('.item-label '
+        #                                                        '.truncate')
+        # except NoSuchElementException:
+        #     continue
+        item_name = list_item.text.split()[0]
+        if item_name == name:
             return list_item
 
 
@@ -103,6 +112,7 @@ def op_click_settings_icon_for_given_list_item(selenium, name, elem_type):
         list_item = _find_item_in_given_list(s, name, elem_type)
         settings_icon = list_item.find_element_by_css_selector('.oneicon-settings')
         if settings_icon.is_enabled():
+            selenium.execute_script('arguments[0].scrollIntoView();', settings_icon)
             return settings_icon
 
     Wait(selenium, WAIT_FRONTEND).until(

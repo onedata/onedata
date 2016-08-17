@@ -106,7 +106,7 @@ Feature: Oneprovider Group functionality
     And user clicks "YES" confirmation button in displayed modal
     Then user sees an info notify with text matching to: .*group1.*left
     And user should not see modal with title "Leave the group"
-    And user clicks on the "groups" tab in main menu
+    And user refreshes site
     And user clicks on the "Create" button in groups sidebar
     And user should see that "Create a new group" input box is active
     And user types "group1" on keyboard
