@@ -88,18 +88,18 @@ def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
     )
 
 
-def _find_item_in_given_list(selenium, name, elem_type):
-    list_items = selenium.find_elements_by_css_selector('.' + elem_type + '-list '
-                                                        '.secondary-sidebar-item')
-    for list_item in list_items:
+def _find_item_in_given_sidebar_list(selenium, name, elem_type):
+    item_list = selenium.find_elements_by_css_selector('.' + elem_type + '-list '
+                                                       '.secondary-sidebar-item')
+    for item in item_list:
         # try:
-        #     item_name = list_item.find_element_by_css_selector('.item-label '
-        #                                                        '.truncate')
+        #     item_name = item.find_element_by_css_selector('.item-label '
+        #                                                   '.truncate')
         # except NoSuchElementException:
         #     continue
-        item_name = list_item.text.split()[0]
+        item_name = item.text.split('\n')[0]
         if item_name == name:
-            return list_item
+            return item
 
 
 @when(parsers.parse('user clicks a settings icon displayed for '
@@ -109,7 +109,7 @@ def _find_item_in_given_list(selenium, name, elem_type):
 def op_click_settings_icon_for_given_list_item(selenium, name, elem_type):
 
     def _find_settings_icon_and_check_if_clickable(s):
-        list_item = _find_item_in_given_list(s, name, elem_type)
+        list_item = _find_item_in_given_sidebar_list(s, name, elem_type)
         settings_icon = list_item.find_element_by_css_selector('.oneicon-settings')
         if settings_icon.is_enabled():
             selenium.execute_script('arguments[0].scrollIntoView();', settings_icon)
@@ -127,7 +127,7 @@ def op_click_settings_icon_for_given_list_item(selenium, name, elem_type):
 def op_wait_for_settings_dropdown_menu(selenium, name, elem_type):
 
     def _find_expanded_menu(s):
-        list_item = _find_item_in_given_list(s, name, elem_type)
+        list_item = _find_item_in_given_sidebar_list(s, name, elem_type)
         toggle = list_item.find_element_by_css_selector('.dropdown-toggle')
         return toggle.get_attribute('aria-expanded') == 'true'
 
