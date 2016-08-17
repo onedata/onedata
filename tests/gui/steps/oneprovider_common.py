@@ -181,8 +181,8 @@ def op_check_if_modal_with_input_box_disappeared(selenium, modal_title):
     )
 
 
-@when(parsers.parse('user sees that "{modal_title}" {modal_type} box is active'))
-@then(parsers.parse('user sees that "{modal_title}" {modal_type} box is active'))
+@when(parsers.parse('user sees that {modal_type} box in "{modal_title}" modal is active'))
+@then(parsers.parse('user sees that {modal_type} box in "{modal_title}" modal is active'))
 def op_wait_for_active_box_with_given_title_on_op_page(selenium, modal_title, modal_type):
     if modal_type == 'input':
         wait = WAIT_FRONTEND

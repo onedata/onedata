@@ -16,7 +16,7 @@ Feature: Oneprovider Group functionality
   Scenario: User can add new group
     Given valid name string
     When user clicks on the "Create" button in groups sidebar
-    And user sees that "Create a new group" input box is active
+    And user sees that input box in "Create a new group" modal is active
     And user types given name on keyboard
     And user presses enter on keyboard
     Then user sees that the new item has appeared on the groups list
@@ -27,7 +27,7 @@ Feature: Oneprovider Group functionality
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "INVITE USER" item in current settings dropdown
-    And user sees that "Invite user to the group" token box is active
+    And user sees that token box in "Invite user to the group" modal is active
     Then user sees non-empty token in active modal
 
   # assuming there is group1
@@ -36,7 +36,7 @@ Feature: Oneprovider Group functionality
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "INVITE GROUP" item in current settings dropdown
-    And user sees that "Invite group to the group" token box is active
+    And user sees that token box in "Invite group to the group" modal is active
     Then user sees non-empty token in active modal
 
   # assuming there is group1
@@ -45,7 +45,7 @@ Feature: Oneprovider Group functionality
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "REQUEST SPACE CREATION" item in current settings dropdown
-    And user sees that "Request space creation for the group" token box is active
+    And user sees that token box in "Request space creation for the group" modal is active
     Then user sees non-empty token in active modal
 
   # assuming there is group1
@@ -54,7 +54,7 @@ Feature: Oneprovider Group functionality
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "JOIN SPACE" item in current settings dropdown
-    And user sees that "Join a space" input box is active
+    And user sees that input box in "Join a space" modal is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*space.*
@@ -65,14 +65,14 @@ Feature: Oneprovider Group functionality
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "JOIN AS SUBGROUP" item in current settings dropdown
-    And user sees that "Join a group to group" input box is active
+    And user sees that input box in "Join a group to group" modal is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*subgroup.*
 
   Scenario: Try join to group with incorrect token
     When user clicks on the "Join" button in groups sidebar
-    And user sees that "Join a group" input box is active
+    And user sees that input box in "Join a group" modal is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*failed.*join.*group.*
@@ -83,7 +83,7 @@ Feature: Oneprovider Group functionality
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "RENAME" item in current settings dropdown
-    And user sees that "Rename a group" input box is active
+    And user sees that input box in "Rename a group" modal is active
     And user types "NewNameGroup" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*group1.*renamed.*NewNameGroup.*
@@ -92,7 +92,7 @@ Feature: Oneprovider Group functionality
     And user clicks a settings icon displayed for "NewNameGroup" item on the groups list
     And user sees a settings dropdown menu for "NewNameGroup" item on the groups list
     And user clicks on the "RENAME" item in current settings dropdown
-    And user sees that "Rename a group" input box is active
+    And user sees that input box in "Rename a group" modal is active
     And user types "group1" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameGroup.*renamed.*group1.*
@@ -108,7 +108,7 @@ Feature: Oneprovider Group functionality
     And user should not see modal with title "Leave the group"
     And user refreshes site
     And user clicks on the "Create" button in groups sidebar
-    And user sees that "Create a new group" input box is active
+    And user sees that input box in "Create a new group" modal is active
     And user types "group1" on keyboard
     And user presses enter on keyboard
     And user sees that the "group1" has appeared on the groups list

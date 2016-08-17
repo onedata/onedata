@@ -15,7 +15,7 @@ Feature: Oneprovider space functionality
     Scenario: Create new space with specified name
     Given valid name string
     When user clicks on the "Create" button in spaces sidebar
-    And user sees that "Create a new space" input box is active
+    And user sees that input box in "Create a new space" modal is active
     And user types given name on keyboard
     And user presses enter on keyboard
     Then user sees that the new item has appeared on the spaces list
@@ -27,7 +27,7 @@ Feature: Oneprovider space functionality
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
     And user clicks on the "RENAME" item in current settings dropdown
-    And user sees that "Rename a space" input box is active
+    And user sees that input box in "Rename a space" modal is active
     And user types "NewNameSpace" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
@@ -36,7 +36,7 @@ Feature: Oneprovider space functionality
     And user clicks a settings icon displayed for "NewNameSpace" item on the spaces list
     And user sees a settings dropdown menu for "NewNameSpace" item on the spaces list
     And user clicks on the "RENAME" item in current settings dropdown
-    And user sees that "Rename a space" input box is active
+    And user sees that input box in "Rename a space" modal is active
     And user types "space1" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameSpace.*renamed.*space1.*
@@ -48,7 +48,7 @@ Feature: Oneprovider space functionality
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
     And user clicks on the "INVITE USER" item in current settings dropdown
-    And user sees that "Invite user to the space" token box is active
+    And user sees that token box in "Invite user to the space" modal is active
     Then user sees non-empty token in active modal
 
 
@@ -58,7 +58,7 @@ Feature: Oneprovider space functionality
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
     And user clicks on the "INVITE GROUP" item in current settings dropdown
-    And user sees that "Invite group to the space" token box is active
+    And user sees that token box in "Invite group to the space" modal is active
     Then user sees non-empty token in active modal
 
 
@@ -68,7 +68,7 @@ Feature: Oneprovider space functionality
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
     And user clicks on the "GET SUPPORT" item in current settings dropdown
-    And user sees that "Get support for the space" token box is active
+    And user sees that token box in "Get support for the space" modal is active
     Then user sees non-empty token in active modal
 
 
@@ -76,7 +76,7 @@ Feature: Oneprovider space functionality
   Scenario: Try join to space with invalid token
     Given there is a "space1" item on the spaces list
     When user clicks on the "Join" button in spaces sidebar
-    And user sees that "Join a space" token box is active
+    And user sees that input box in "Join a space" modal is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*invalid.*token.*
@@ -116,7 +116,7 @@ Feature: Oneprovider space functionality
     And user should not see modal with title "Leave a space"
     And user refreshes site
     And user clicks on the "Create" button in spaces sidebar
-    And user sees that "Create a new space" input box is active
+    And user sees that input box in "Create a new space" modal is active
     And user types "space2" on keyboard
     And user presses enter on keyboard
     And user sees that the "space2" has appeared on the spaces list
