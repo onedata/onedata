@@ -44,7 +44,7 @@ def w_uncollapse_oz_panel(selenium, name):
     _uncollapse_oz_panel(selenium, name)
 
 
-@when(parsers.parse('user clicks on the "{name}" in "{panel_name}" panel'))
+@when(parsers.parse('user clicks on the "{name}" in "{panel_name}" sidebar panel'))
 def click_on_button_in_uncollapsed_oz_panel(selenium, name, panel_name):
     if panel_name.lower() == 'data space management':
         selector = '#collapse-spaces .secondary-header'
@@ -53,7 +53,7 @@ def click_on_button_in_uncollapsed_oz_panel(selenium, name, panel_name):
 
 
 @then(parsers.parse('user should see that the new space has appeared on the '
-                    'spaces list in Onezone sidebar panel'))
+                    'spaces list in "{panel_name}" sidebar panel'))
 def check_spaces_names_headers_whether_new_space_appeared(selenium, name_string, panel_name):
 
     def header_with_text_presence(s):
@@ -64,7 +64,8 @@ def check_spaces_names_headers_whether_new_space_appeared(selenium, name_string,
 
 
 @given(parsers.parse('user clicks on the "{name}" provider in Onezone providers sidebar panel'))
-def click_on_provider_in_sidebar(selenium, name):
+def click_on_provider_in_sidebar(selenium, name, supporting_provider):
+    supporting_provider['name'] = name
     collapse_providers = selenium.find_element_by_css_selector('#collapse-providers')
 
     Wait(selenium, WAIT_FRONTEND).until(lambda s: collapse_providers.get_attribute('aria-expanded') == 'true')
