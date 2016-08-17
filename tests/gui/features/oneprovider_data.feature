@@ -44,7 +44,7 @@ Feature: Oneprovider Data view
 
   # assuming there is file2
   Scenario: Remove existing file and then create file with the same name
-    Given existing file named "file2"
+    Given there is a "file2" file on the files list
     When user selects "file2" from files list
     And user clicks the button from top menu bar with tooltip "Remove element"
     And user clicks "OK" confirmation button in displayed modal
@@ -60,8 +60,8 @@ Feature: Oneprovider Data view
 
   # assuming there is file1 in space1 supported by p1
   Scenario: Check if provider name is displayed in the file distribution panel
-    Given existing provider "p1" supporting space named "space1"
-    And existing file named "file1"
+    Given there is provider "p1" supporting space named "space1"
+    And there is a "file1" file on the files list
     When user selects "file1" from files list
     And user clicks the button from top menu bar with tooltip "Show file distribution"
     Then user should see modal with provider's name "p1" in providers column

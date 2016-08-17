@@ -86,7 +86,7 @@ Feature: Oneprovider space functionality
   Scenario: Switching between spaces
     When user can see current url
     And user clicks space named "space2" from spaces list
-    Then user should see submenu for space named "space2"
+    Then user should see that submenu for space named "space2" has appeared
     And user should see that url has changed
 
 
@@ -97,12 +97,12 @@ Feature: Oneprovider space functionality
     And user should see a settings dropdown menu for "space2" item on the spaces list
     And user clicks on the "SET AS HOME" item in current settings dropdown
     Then user sees an info notify with text matching to: .*space2.*home.*
-    And user should see home space icon next to displayed name of space "space2" in spaces list
+    And user should see that home space icon has appeared next to displayed name of space "space2" in spaces list
     And user clicks a settings icon displayed for "space1" item on the spaces list
     And user should see a settings dropdown menu for "space1" item on the spaces list
     And user clicks on the "SET AS HOME" item in current settings dropdown
     And user sees an info notify with text matching to: .*space1.*home.*
-    And user should see home space icon next to displayed name of space "space1" in spaces list
+    And user should see that home space icon has appeared next to displayed name of space "space1" in spaces list
 
 
   # assuming there is space2

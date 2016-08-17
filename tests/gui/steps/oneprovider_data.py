@@ -18,15 +18,24 @@ from selenium.webdriver.common.by import By
 from pytest import fixture
 
 
-@given(parsers.parse('existing provider "{provider_name}" supporting space named "{space_name}"'))
+@given(parsers.parse('there is provider "{provider_name}" supporting space named "{space_name}"'))
 def existing_provider_supporting_space(provider_name, space_name):
     return provider_name
 
 
-@given(parsers.parse('existing file name "{file_name}"'))
-def existing_file(file_name):
-    return file_name
+def _check_for_item_in_files_list(selenium, name):
+    list_items = selenium.find_elements_by_css_selector('.files-list td')
+    for item in list_items:
+        if item.text == name:
+            return  True
+    return False
 
+
+@given(parsers.parse('there is a "{file_name}" file on the files list'))
+def existing_file(selenium, file_name):
+    Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: _check_for_item_in_files_list(selenium, file_name)
+    )
 
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
 def change_space(selenium, space_name):
