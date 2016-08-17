@@ -95,9 +95,9 @@ def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
     tooltip.click()
 
 
-@when(parsers.parse('user should see new file named "{file_list_element}" in files list'))
-@then(parsers.parse('user should see new directory named "{file_list_element}" in files list'))
-@then(parsers.parse('user should see new file named "{file_list_element}" in files list'))
+@when(parsers.parse('user sees new file named "{file_list_element}" in files list'))
+@then(parsers.parse('user sees new directory named "{file_list_element}" in files list'))
+@then(parsers.parse('user sees new file named "{file_list_element}" in files list'))
 def op_check_if_new_element_appeared(selenium, file_list_element):
     new_file_list_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
                                                                file_list_element)
@@ -125,7 +125,7 @@ def check_absence_deleted_element(selenium, file_list_element):
     assert _try_find_deleted_element(selenium) is None
 
 
-@then(parsers.parse('user should see modal with provider\'s name "{provider_name}" in providers column'))
+@then(parsers.parse('user sees modal with provider\'s name "{provider_name}" in providers column'))
 def op_check_if_provider_name_is_in_tab(selenium, supporting_provider):
 
     def _find_provider(s):
