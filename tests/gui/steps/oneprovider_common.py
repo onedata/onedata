@@ -171,14 +171,12 @@ def _find_modal_by_title(title, modals):
     return None
 
 
+@when(parsers.parse('user should not see modal with title "{modal_title}"'))
 @then(parsers.parse('user should not see modal with title "{modal_title}"'))
 def op_check_if_modal_with_input_box_disappeared(selenium, modal_title):
     modals = selenium.find_elements_by_css_selector('.ember-view.modal')
     Wait(selenium, WAIT_FRONTEND).until(
         lambda s: _find_modal_by_title(modal_title, modals) is None)
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.modal-backdrop-fade'))
-    )
 
 
 @when(parsers.parse('user should see that "{modal_title}" {modal_type} box is active'))

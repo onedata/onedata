@@ -95,22 +95,17 @@ def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
     tooltip.click()
 
 
+@when(parsers.parse('user should see new file named "{file_list_element}" in files list'))
 @then(parsers.parse('user should see new directory named "{file_list_element}" in files list'))
 @then(parsers.parse('user should see new file named "{file_list_element}" in files list'))
 def op_check_if_new_element_appeared(selenium, file_list_element):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
-    )
     new_file_list_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
-                                                     file_list_element)
+                                                               file_list_element)
     Wait(selenium, WAIT_FRONTEND).until(new_file_list_elem)
 
 
 @when(parsers.parse('user selects "{file_list_element}" from files list'))
 def op_select_elem(selenium, file_list_element):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
-    )
     file_list_elem_to_select = select_button_from_buttons_by_name(file_list_element,
                                                                   '.files-list table.files-table td.file-list-col-file')
     Wait(selenium, WAIT_FRONTEND).until(file_list_elem_to_select).click()
@@ -127,9 +122,6 @@ def check_absence_deleted_element(selenium, file_list_element):
                 return elem
         return None
 
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
-    )
     assert _try_find_deleted_element(selenium) is None
 
 
