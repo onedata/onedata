@@ -22,7 +22,7 @@ Feature: Onezone GUI elements
   Scenario: User can create space using valid name string
     Given valid name string
     When user expands the "data space management" Onezone sidebar panel
-    And user clicks on the "Create new space" in uncollapsed spaces panel
+    And user clicks on the "Create new space" in "Data space management" panel
     And user types given name on keyboard
     And user presses enter on keyboard
-    Then user should see that the new space appeared on the spaces list in Onezone sidebar panel
+    Then user should see that the new space has appeared on the spaces list in Onezone sidebar panel

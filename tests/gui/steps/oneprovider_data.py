@@ -18,11 +18,6 @@ from selenium.webdriver.common.by import By
 from pytest import fixture
 
 
-@fixture
-def get_provider_name(provider_name):
-    return provider_name
-
-
 @given(parsers.parse('existing provider "{provider_name}" supporting space named "{space_name}"'))
 def existing_provider_supporting_space(provider_name, space_name):
     return provider_name
@@ -96,9 +91,9 @@ def op_check_if_new_element_appeared(selenium, file_list_element):
     Wait(selenium, WAIT_FRONTEND).until(
         EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
     )
-    new_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
+    new_file_list_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
                                                      file_list_element)
-    Wait(selenium, WAIT_FRONTEND).until(new_elem)
+    Wait(selenium, WAIT_FRONTEND).until(new_file_list_elem)
 
 
 @when(parsers.parse('user selects "{file_list_element}" from files list'))
@@ -106,9 +101,9 @@ def op_select_elem(selenium, file_list_element):
     Wait(selenium, WAIT_FRONTEND).until(
         EC.invisibility_of_element_located((By.CSS_SELECTOR, 'table.is-loading'))
     )
-    elem = select_button_from_buttons_by_name(file_list_element,
-                                              '.files-list table.files-table td.file-list-col-file')
-    Wait(selenium, WAIT_FRONTEND).until(elem).click()
+    file_list_elem_to_select = select_button_from_buttons_by_name(file_list_element,
+                                                                  '.files-list table.files-table td.file-list-col-file')
+    Wait(selenium, WAIT_FRONTEND).until(file_list_elem_to_select).click()
 
 
 @then(parsers.parse('user should not see directory named "{file_list_element}" in files list'))

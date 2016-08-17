@@ -46,24 +46,3 @@ def w_click_login_provider_button(selenium, provider_name):
 def being_redirected_to_page(page, selenium):
     wait(selenium, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
 
-
-# TODO ask if we need that functions
-# @given("I'm logged in to Onezone")
-# def logged_in_to_onezone(selenium):
-#     """Will check if going to / will redirect to onezone page (default when logged in)
-#     If not - try to login with dev_login"""
-#     go_to_relative_url(selenium, '/')
-#     try:
-#         wait(selenium, 2).\
-#             until(lambda s: parse_url(s.current_url).group('method') == '/onezone')
-#     except TimeoutException:
-#         go_to_relative_url(selenium, '/dev_login')
-#         selenium.find_element_by_css_selector('a').click()
-#         wait(selenium, 4). \
-#             until(lambda s: parse_url(s.current_url).group('method') == '/onezone',
-#                   'Current URL method: {m}'.format(m=parse_url(selenium.current_url).group('method')))
-# @when('I login with development login link as "{user}"')
-# def login_dev_onezone_with_url(selenium, base_url, user):
-#     url = '{oz_url}/validate_dev_login?user={user}'.format(oz_url=base_url, user=user)
-#     url.replace('//', '/')
-#     selenium.get(url)

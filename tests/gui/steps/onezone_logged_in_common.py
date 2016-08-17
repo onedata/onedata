@@ -44,20 +44,21 @@ def w_uncollapse_oz_panel(selenium, name):
     _uncollapse_oz_panel(selenium, name)
 
 
-@when(parsers.parse('user clicks on the "{name}" in uncollapsed {panel_name} panel'))
+@when(parsers.parse('user clicks on the "{name}" in "{panel_name}" panel'))
 def click_on_button_in_uncollapsed_oz_panel(selenium, name, panel_name):
-    selector = '#collapse-' + panel_name + ' .secondary-header'
+    if panel_name.lower() == 'data space management':
+        selector = '#collapse-spaces .secondary-header'
     find_button = select_button_from_buttons_by_name(name, selector)
     Wait(selenium, WAIT_FRONTEND).until(find_button).click()
 
 
-@then(parsers.parse('user should see that the new space appeared on the '
-                    '{panel_name} list in Onezone sidebar panel'))
+@then(parsers.parse('user should see that the new space has appeared on the '
+                    'spaces list in Onezone sidebar panel'))
 def check_spaces_names_headers_whether_new_space_appeared(selenium, name_string, panel_name):
 
     def header_with_text_presence(s):
-        headers = s.find_elements_by_css_selector('.accordion #collapse-' + panel_name + ' .secondary-header')
-        return any(h.text == name_string for h in headers)
+        headers = s.find_elements_by_css_selector('.accordion #collapse-spaces .secondary-header')
+        return any(h.text.lower() == name_string.lower() for h in headers)
 
     Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
 
