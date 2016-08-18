@@ -142,7 +142,7 @@ test_packaging:
 	./test_run.py --test-type packaging --test-dir tests/packaging -s
 
 test_cucumber:
-	./test_run.py --test-type cucumber --test-dir tests/cucumber
+	./test_run.py --test-type cucumber --test-dir tests/cucumber/scenarios
 
 test_performance:
 	./test_run.py --test-type performance --test-dir tests/performance
