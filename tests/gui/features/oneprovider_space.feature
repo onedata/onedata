@@ -9,11 +9,11 @@ Feature: Oneprovider space functionality
     And user clicks on the "p1" provider in Onezone providers sidebar panel
     And user clicks on the "Go to your files" button in provider popup
     And user clicks on the "spaces" tab in main menu sidebar
-    And user sees that main content reloaded
+    And user sees that main content has ended loading
 
 
     Scenario: Create new space with specified name
-    Given valid name string
+    Given user generates valid name string
     When user clicks on the "Create" button in spaces sidebar
     And user sees that input box in "Create a new space" modal is active
     And user types given name on keyboard
@@ -77,7 +77,7 @@ Feature: Oneprovider space functionality
 
 
   # 'space1' defined in env.json
-  Scenario: Try join to space with invalid token
+  Scenario: User fails to join to space using invalid token
     Given there is a "space1" item on the spaces list
     When user clicks on the "Join" button in spaces sidebar
     And user sees that input box in "Join a space" modal is active

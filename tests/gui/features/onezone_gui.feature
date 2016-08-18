@@ -19,7 +19,7 @@ Feature: Onezone GUI elements
     Then user should see that the alias changed to "helloworld"
 
   Scenario: User can create space using valid name string
-    Given valid name string
+    Given user generates valid name string
     When user expands the "data space management" Onezone sidebar panel
     And user clicks on the "Create new space" in "Data space management" sidebar panel
     And user clicks on new space name input box

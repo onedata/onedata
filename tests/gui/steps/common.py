@@ -27,7 +27,7 @@ def get_url(selenium):
     return selenium.current_url
 
 
-@given('valid name string')
+@given('user generates valid name string')
 def name_string():
     return ''.join(choice(ascii_uppercase + ascii_lowercase + digits) for _ in range(6))
 

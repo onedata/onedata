@@ -9,6 +9,7 @@ tests/acceptance/logs
 tests/cucumber/logs
 tests/performance/logs
 tests/gui/logs
+tests/gui/.cache
 tests/**/.cache
 
 

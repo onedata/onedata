@@ -13,7 +13,7 @@ Feature: Oneprovider Group functionality
     And user clicks on the "groups" tab in main menu sidebar
 
   Scenario: User can add new group
-    Given valid name string
+    Given user generates valid name string
     When user clicks on the "Create" button in groups sidebar
     And user sees that input box in "Create a new group" modal is active
     And user types given name on keyboard
