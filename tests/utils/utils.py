@@ -145,6 +145,10 @@ def get_storages(config_path, provider_id):
     return config['os_configs'][cfg]['storages']
 
 
+def get_matching_op_erl_node(name, env):
+    return [w for w in env['op_worker_nodes'] if name in w][0]
+
+
 def get_first_op_erl_node(domain, env):
     return get_first_erl_node(domain, env, 'op_worker_nodes')
 

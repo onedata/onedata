@@ -14,6 +14,12 @@ def create(user, dirs, context):
     multi_dir_steps.create(user, dirs, "client1", context)
 
 
+@when(parsers.parse('{user} creates structure of {number} nested directories in {root_dir}'))
+@then(parsers.parse('{user} creates structure of {number} nested directories in {root_dir}'))
+def create_nested_dirs(user, number, root_dir, context):
+    multi_dir_steps.create_nested_dirs(user, number, root_dir, 'client1', context)
+
+
 @when(parsers.parse('{user} creates directory and parents {paths}'))
 def create_parents(user, paths, context):
     multi_dir_steps.create_parents(user, paths, "client1", context)
@@ -45,7 +51,17 @@ def cannot_list_dir(user, dir, context):
     multi_dir_steps.cannot_list_dir(user, dir, "client1", context)
 
 
+@when(parsers.parse('{user} lists {dir}'))
+@then(parsers.parse('{user} lists {dir}'))
 @when(parsers.parse('{user} can list {dir}'))
 @then(parsers.parse('{user} can list {dir}'))
 def list_dir(user, dir, context):
     multi_dir_steps.list_dir(user, dir, "client1", context)
+
+
+@when(parsers.parse('{user} lists directory nested on level {level} in'
+                    ' {root_dir}'))
+@when(parsers.parse('{user} lists directory nested on level {level} in'
+                    ' {root_dir}'))
+def list_nested_dir(user, level, root_dir, context):
+    multi_dir_steps.list_nested_dir(user, level, root_dir, 'client1', context)
