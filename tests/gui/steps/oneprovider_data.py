@@ -9,10 +9,48 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
-from pytest_bdd import when, then, parsers
+from tests.gui.steps.common import find_element_by_css_selector_and_text,\
+    select_button_from_buttons_by_name
+from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
+from pytest import fixture
+
+
+@given(parsers.parse('there is no file named "{file_list_elem}" in files list'))
+@given(parsers.parse('there is no directory named "{file_list_elem}" in files list'))
+def check_if_element_not_exist(selenium, file_list_elem):
+
+    def _find_file(s):
+        files = s.find_elements_by_css_selector('.files-list td')
+        for f in files:
+            if f.text == file_list_elem:
+                return f
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until_not(_find_file)
+
+
+@fixture
+def supporting_provider():
+    return dict()
+
+
+def _check_for_item_in_files_list(selenium, name):
+    list_items = selenium.find_elements_by_css_selector('.files-list td')
+    for item in list_items:
+        if item.text == name:
+            return True
+    return False
+
+
+@given(parsers.parse('there is a "{file_name}" file on the files list'))
+def existing_file(selenium, file_name):
+    Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: _check_for_item_in_files_list(selenium, file_name)
+    )
 
 
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
@@ -36,12 +74,6 @@ def change_space(selenium, space_name):
 
     Wait(selenium, WAIT_FRONTEND).until(space_by_name).click()
 
-    def file_browser_ready(driver):
-        files_table = driver.find_element_by_css_selector('.files-table')
-        return not re.match(r'.*is-loading.*', files_table.get_attribute('class'))
-
-    Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
-
 
 @when(parsers.parse('user uses upload button in toolbar to upload file "{file_name}" to current dir'))
 def upload_file_to_current_dir(selenium, file_name):
@@ -56,17 +88,69 @@ def upload_file_to_current_dir(selenium, file_name):
     )
     selenium.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
+    def file_browser_ready(driver):
+        files_table = driver.find_element_by_css_selector('.files-table')
+        return not re.match(r'.*is-loading.*', files_table.get_attribute('class'))
 
-# @when(parsers.parse('The upload of file "{file_name}" fails'))
-# @then(parsers.parse('The upload of file "{file_name}" should fail'))
-# def upload_fails(selenium, file_name):
-#     Wait(selenium, 2*WAIT_BACKEND).until(
-#         lambda s: notify_visible_with_text(s, 'error', re.compile(r'.*' + file_name + r'.*' + 'failed' + r'.*'))
-#     )
-#
-#
-# @then(parsers.parse('The upload of file "{file_name}" should succeed'))
-# def upload_succeeds(selenium, file_name):
-#     Wait(selenium, 2*WAIT_BACKEND).until(
-#         lambda s: notify_visible_with_text(s, 'info', re.compile(r'.*' + file_name + r'.*' + 'successfully' + r'.*'))
-#     )
+    Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
+
+
+@then(parsers.parse('user clicks the button from top menu bar with tooltip "{tooltip_name}"'))
+@when(parsers.parse('user clicks the button from top menu bar with tooltip "{tooltip_name}"'))
+def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
+
+    def _find_tooltip_with_given_name(s):
+        tooltips = s.find_elements_by_css_selector('ul.toolbar-group a')
+        for tooltip in tooltips:
+            if tooltip.get_attribute('data-original-title') == tooltip_name:
+                return tooltip
+        return None
+
+    tooltip = Wait(selenium, WAIT_BACKEND).until(_find_tooltip_with_given_name)
+    tooltip.click()
+
+
+@when(parsers.parse('user sees new file named "{file_list_element}" in files list'))
+@then(parsers.parse('user sees new directory named "{file_list_element}" in files list'))
+@then(parsers.parse('user sees new file named "{file_list_element}" in files list'))
+def op_check_if_new_element_appeared(selenium, file_list_element):
+    new_file_list_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
+                                                               file_list_element)
+    Wait(selenium, WAIT_FRONTEND).until(new_file_list_elem)
+
+
+@then(parsers.parse('user selects "{file_list_element}" from files list'))
+@when(parsers.parse('user selects "{file_list_element}" from files list'))
+def op_select_elem(selenium, file_list_element):
+    file_list_elem_to_select = select_button_from_buttons_by_name(file_list_element,
+                                                                  '.files-list table.files-table td.file-list-col-file')
+    Wait(selenium, WAIT_FRONTEND).until(file_list_elem_to_select).click()
+
+
+@then(parsers.parse('user should not see directory named "{file_list_element}" in files list'))
+@then(parsers.parse('user should not see file named "{file_list_element}" in files list'))
+def check_absence_deleted_element(selenium, file_list_element):
+
+    def _try_find_deleted_element(s):
+        elems = s.find_elements_by_css_selector('table.table td.file-list-col-file')
+        for elem in elems:
+            if elem.text == file_list_element:
+                return elem
+        return None
+
+    assert _try_find_deleted_element(selenium) is None
+
+
+@then(parsers.parse('user sees modal with name of provider supporting '
+                    'space in providers column'))
+def op_check_if_provider_name_is_in_tab(selenium, supporting_provider):
+
+    def _find_provider(s):
+        providers = s.find_elements_by_css_selector(
+            '#file-chunks-modal .container-fluid table.file-blocks-table td.provider-name')
+        for elem in providers:
+            if elem.text == supporting_provider['name']:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(_find_provider)

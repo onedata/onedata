@@ -10,8 +10,8 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import os
 from tests import gui
-
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
+
 
 RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(/#)?(?P<method>/.*)')
 
@@ -49,3 +49,4 @@ def upload_file_path(file_name):
         'upload_files',
         file_name
     )
+
