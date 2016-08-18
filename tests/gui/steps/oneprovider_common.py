@@ -10,9 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
-from common import select_button_from_buttons_by_name, check_if_element_is_active, refresh_site
-from selenium.common.exceptions import NoSuchElementException
-import re
+from common import select_button_from_buttons_by_name, check_if_element_is_active, refresh_and_call
 
 
 def _click_given_tab_in_main_menu_sidebar(selenium, main_menu_tab):
@@ -57,7 +55,6 @@ def op_click_on_button_in_main_menu_tab_sidebar(selenium, option_name,
 
 
 def _check_for_item_in_given_list(selenium, name, elem_type):
-    #refresh_site(selenium)
     list_items = selenium.find_elements_by_css_selector('.' + elem_type + '-list '
                                                         '.secondary-sidebar-item '
                                                         '.item-label .truncate')
@@ -66,8 +63,9 @@ def _check_for_item_in_given_list(selenium, name, elem_type):
 
 @given(parsers.parse('there is a "{name}" item on the {elem_type} list'))
 def op_check_if_there_is_given_item_on_the_list_of_given_type(selenium, name, elem_type):
-    Wait(selenium, WAIT_FRONTEND).until(
-        lambda s: _check_for_item_in_given_list(s, name, elem_type)
+    Wait(selenium, 3*WAIT_BACKEND).until(
+        lambda s: refresh_and_call(s, _check_for_item_in_given_list,
+                                   name, elem_type)
     )
 
 
@@ -76,7 +74,8 @@ def op_check_if_there_is_given_item_on_the_list_of_given_type(selenium, name, el
 def op_check_if_new_item_appears_in_list_of_given_type(selenium, elem_type,
                                                        name_string):
     Wait(selenium, 3*WAIT_BACKEND).until(
-        lambda s: _check_for_item_in_given_list(s, name_string, elem_type)
+        lambda s: refresh_and_call(s, _check_for_item_in_given_list,
+                                   name_string, elem_type)
     )
 
 
@@ -86,7 +85,8 @@ def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                                  elem_type,
                                                                  name):
     Wait(selenium, 3*WAIT_BACKEND).until(
-        lambda s: _check_for_item_in_given_list(s, name, elem_type)
+        lambda s: refresh_and_call(s, _check_for_item_in_given_list,
+                                   name, elem_type)
     )
 
 
@@ -95,27 +95,24 @@ def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
 def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                                  elem_type,
                                                                  name):
-
     def _check_for_lack_of_item_in_given_list(s):
-        #refresh_site(selenium)
-        list_items = s.find_elements_by_css_selector('.' + elem_type + '-list '
+        items_list = s.find_elements_by_css_selector('.' + elem_type + '-list '
                                                      '.secondary-sidebar-item '
                                                      '.item-label .truncate')
-        return all(li.text != name for li in list_items)
+        return all(li.text != name for li in items_list)
 
-    Wait(selenium, 3*WAIT_BACKEND).until(_check_for_lack_of_item_in_given_list)
+    Wait(selenium, 3*WAIT_BACKEND).until(
+        lambda s: refresh_and_call(s, _check_for_lack_of_item_in_given_list)
+    )
 
 
 def _find_item_in_given_sidebar_list(selenium, name, elem_type):
     item_list = selenium.find_elements_by_css_selector('.' + elem_type + '-list '
                                                        '.secondary-sidebar-item')
     for item in item_list:
-        # try:
-        #     item_name = item.find_element_by_css_selector('.item-label '
-        #                                                   '.truncate')
-        # except NoSuchElementException:
-        #     continue
-        item_name = item.text.split('\n')[0]
+        # if settings dropdown menu is expanded text looks like: name\noption1\noption2\n...
+        # so splitting text on nl and getting 0 element
+        item_name = item.text.split('\n')[0]  # TODO better way to check if it is the item we seek
         if item_name == name:
             return item
 
@@ -181,34 +178,41 @@ def op_check_if_main_content_has_been_reloaded(selenium):
     )
 
 
-def _find_modal_by_title(title, modals):
-    for modal in modals:
-        modal_name = modal.find_element_by_css_selector('.modal-title').text
-        if modal_name.lower() == title.lower():
-            return modal
-    return None
-
-
-@when(parsers.parse('user should not see modal with title "{modal_title}"'))
-@then(parsers.parse('user should not see modal with title "{modal_title}"'))
-def op_check_if_modal_with_input_box_disappeared(selenium, modal_title):
-    Wait(selenium, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.ember-view.modal .modal-title'))
-    )
-    selenium.refresh()
-
-
-@when(parsers.parse('user sees that {modal_type} box in "{modal_title}" modal is active'))
-@then(parsers.parse('user sees that {modal_type} box in "{modal_title}" modal is active'))
-def op_wait_for_active_box_with_given_title_on_op_page(selenium, modal_title, modal_type):
-    if modal_type == 'input':
-        wait = WAIT_FRONTEND
-    elif modal_type == 'token':
-        wait = WAIT_BACKEND
-    else:
-        raise AttributeError
+def _chech_if_modal_of_given_name_is_displayed(selenium, modal_name):
+    modal_name = modal_name.lower()
     modals = selenium.find_elements_by_css_selector('.ember-view.modal')
-    modal = Wait(selenium, WAIT_FRONTEND).until(lambda _: _find_modal_by_title(modal_title, modals))
-    is_active = check_if_element_is_active(
-        web_elem=modal.find_element_by_css_selector('input'))
-    Wait(selenium, wait).until(is_active)
+    for modal in modals:
+        name = modal.find_element_by_css_selector('.modal-title').text
+        if modal_name == name.lower() and modal.is_displayed():
+            return modal
+
+
+@when(parsers.parse('user sees that input box in "{modal_name}" modal is active'))
+@then(parsers.parse('user sees that input box in "{modal_name}" modal is active'))
+def op_wait_for_active_input_box_in_modal_with_given_name(selenium, modal_name):
+    modal = Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: _chech_if_modal_of_given_name_is_displayed(s, modal_name)
+    )
+    modal_input = modal.find_element_by_css_selector('input')
+    Wait(selenium, WAIT_FRONTEND).until(
+        check_if_element_is_active(web_elem=modal_input)
+    )
+
+
+@when(parsers.parse('user sees that token box in "{modal_name}" modal is active'))
+@then(parsers.parse('user sees that token box in "{modal_name}" modal is active'))
+def op_wait_for_token_box_in_modal_with_given_name(selenium, modal_name):
+    modal = Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: _chech_if_modal_of_given_name_is_displayed(s, modal_name)
+    )
+    Wait(selenium, WAIT_BACKEND).until(
+        EC.visibility_of(modal.find_element_by_css_selector('input'))
+    )
+
+
+@when(parsers.parse('user sees that "{modal_name}" modal has vanished'))
+@then(parsers.parse('user sees that "{modal_name}" modal has vanished'))
+def op_check_if_modal_with_input_box_disappeared(selenium, modal_name):
+    Wait(selenium, WAIT_FRONTEND).until_not(
+        lambda s: _chech_if_modal_of_given_name_is_displayed(selenium, modal_name)
+    )

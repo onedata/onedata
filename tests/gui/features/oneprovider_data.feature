@@ -29,7 +29,7 @@ Feature: Oneprovider Data view
     And user sees that input box in "New file" modal is active
     And user types "file1" on keyboard
     And user presses enter on keyboard
-    Then user should not see modal with title "New file"
+    Then user sees that "New file" modal has vanished
     And user sees new file named "file1" in files list
 
 
@@ -39,7 +39,7 @@ Feature: Oneprovider Data view
     And user sees that input box in "New directory" modal is active
     And user types "directory1" on keyboard
     And user presses enter on keyboard
-    Then user should not see modal with title "New directory"
+    Then user sees that "New directory" modal has vanished
     And user sees new directory named "directory1" in files list
 
 
@@ -49,7 +49,7 @@ Feature: Oneprovider Data view
     And user sees that input box in "New file" modal is active
     And user types "file2" on keyboard
     And user presses enter on keyboard
-    And user should not see modal with title "New file"
+    And user sees that "New file" modal has vanished
     And user sees new file named "file2" in files list
     And user selects "file2" from files list
     And user clicks the button from top menu bar with tooltip "Remove element"
@@ -65,7 +65,7 @@ Feature: Oneprovider Data view
     And user sees that input box in "New file" modal is active
     And user types "file3" on keyboard
     And user presses enter on keyboard
-    And user should not see modal with title "New file"
+    And user sees that "New file" modal has vanished
     And user sees new file named "file3" in files list
     And user selects "file3" from files list
     And user clicks the button from top menu bar with tooltip "Show file distribution"

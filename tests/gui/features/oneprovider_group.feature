@@ -18,10 +18,10 @@ Feature: Oneprovider Group functionality
     And user sees that input box in "Create a new group" modal is active
     And user types given name on keyboard
     And user presses enter on keyboard
-    And user should not see modal with title "Create a new group"
+    And user sees that "Create a new group" modal has vanished
     Then user sees that the new item has appeared on the groups list
 
-  # assuming there is group1
+  # assuming there is group named 'group1'
   Scenario: User can invite other user
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
@@ -30,7 +30,7 @@ Feature: Oneprovider Group functionality
     And user sees that token box in "Invite user to the group" modal is active
     Then user sees non-empty token in active modal
 
-  # assuming there is group1
+  # assuming there is group named 'group1'
   Scenario: User can invite group
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
@@ -39,7 +39,7 @@ Feature: Oneprovider Group functionality
     And user sees that token box in "Invite group to the group" modal is active
     Then user sees non-empty token in active modal
 
-  # assuming there is group1
+  # assuming there is group named 'group1'
   Scenario: User can request space creation
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
@@ -48,7 +48,7 @@ Feature: Oneprovider Group functionality
     And user sees that token box in "Request space creation for the group" modal is active
     Then user sees non-empty token in active modal
 
-  # assuming there is group1
+  # assuming there is group named 'group1'
   Scenario: User can try to join space with incorrect token
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
@@ -59,7 +59,7 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*space.*
 
-  # assuming there is group1
+  # assuming there is group named 'group1'
   Scenario: User can try to join as subgroup with incorrect token
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
@@ -77,7 +77,7 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*failed.*join.*group.*
 
-  # assuming there is group1
+  # assuming there is group named 'group1'
   Scenario: User can rename existing group and then rename it back
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
@@ -87,10 +87,10 @@ Feature: Oneprovider Group functionality
     And user types "NewNameGroup" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*group1.*renamed.*NewNameGroup.*
-    And user should not see modal with title "Rename a group"
-   #Then user sees that the "group1" has vanished from the groups list
-    #And user sees that the "NewNameGroup" has appeared on the groups list
-    Then user should not see modal with title "Rename a group"
+    And user sees that "Rename a group" modal has vanished
+    Then user sees that the "group1" has vanished from the groups list
+    And user sees that the "NewNameGroup" has appeared on the groups list
+    And user sees that "Rename a group" modal has vanished
     And user clicks a settings icon displayed for "NewNameGroup" item on the groups list
     And user sees a settings dropdown menu for "NewNameGroup" item on the groups list
     And user clicks on the "RENAME" item in current settings dropdown
@@ -98,11 +98,11 @@ Feature: Oneprovider Group functionality
     And user types "group1" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameGroup.*renamed.*group1.*
-    And user should not see modal with title "Rename a group"
-    #And user sees that the "NewNameGroup" has vanished from the groups list
-    #And user sees that the "group1" has appeared on the groups list
+    And user sees that "Rename a group" modal has vanished
+    And user sees that the "NewNameGroup" has vanished from the groups list
+    And user sees that the "group1" has appeared on the groups list
 
-  # assuming there is group1
+  # assuming there is group named 'group1'
   Scenario: User can leave existing group and then create group with the same name
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
@@ -110,11 +110,11 @@ Feature: Oneprovider Group functionality
     And user clicks on the "LEAVE THIS GROUP" item in current settings dropdown
     And user clicks "YES" confirmation button in displayed modal
     Then user sees an info notify with text matching to: .*group1.*left
-    And user should not see modal with title "Leave the group"
-    #And user sees that the "group1" has vanished from the groups list
+    And user sees that "Leave the group" modal has vanished
+    And user sees that the "group1" has vanished from the groups list
     And user clicks on the "Create" button in groups sidebar
     And user sees that input box in "Create a new group" modal is active
     And user types "group1" on keyboard
     And user presses enter on keyboard
-    And user should not see modal with title "Create a new group"
+    And user sees that "Create a new group" modal has vanished
     And user sees that the "group1" has appeared on the groups list
