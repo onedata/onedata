@@ -57,8 +57,17 @@ class Client:
 
     def start_rpyc(self, user):
         self._start_rpyc_server(user)
-        time.sleep(1)   # wait for rpc server
-        self.rpyc_connection = rpyc.classic.connect(self.docker_name)
+        started = False
+        timeout = 30
+        while not started and timeout >= 0:
+            try:
+                self.rpyc_connection = rpyc.classic.connect(self.docker_name)
+                started = True
+            except:
+                time.sleep(1)
+                timeout -= 1
+        if not started:
+            pytest.skip("rpc connection couldn't be established")
 
     def stop_rpyc_server(self):
         if self.rpyc_server_pid:
