@@ -1,8 +1,8 @@
 Feature: Oneprovider Group functionality
   Various operations on groups
 
-  # assuming there is user1
-  # assuming there is p1
+  # user 'user1' defined in env.json
+  # provider 'p1' defined in env.json
   Background:
     Given user opens a Onezone URL in a web browser
     And user clicks on the "indigo" login button
@@ -21,8 +21,8 @@ Feature: Oneprovider Group functionality
     And user sees that "Create a new group" modal has vanished
     Then user sees that the new item has appeared on the groups list
 
-  # assuming there is group named 'group1'
   Scenario: User can invite other user
+    # group 'group1' defined in env.json
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
@@ -30,8 +30,8 @@ Feature: Oneprovider Group functionality
     And user sees that token box in "Invite user to the group" modal is active
     Then user sees non-empty token in active modal
 
-  # assuming there is group named 'group1'
   Scenario: User can invite group
+    # group 'group1' defined in env.json
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
@@ -39,8 +39,8 @@ Feature: Oneprovider Group functionality
     And user sees that token box in "Invite group to the group" modal is active
     Then user sees non-empty token in active modal
 
-  # assuming there is group named 'group1'
   Scenario: User can request space creation
+    # group 'group1' defined in env.json
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
@@ -48,8 +48,8 @@ Feature: Oneprovider Group functionality
     And user sees that token box in "Request space creation for the group" modal is active
     Then user sees non-empty token in active modal
 
-  # assuming there is group named 'group1'
-  Scenario: User can try to join space with incorrect token
+  Scenario: User fails to join space using incorrect token
+    # group 'group1' defined in env.json
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
@@ -59,8 +59,8 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*space.*
 
-  # assuming there is group named 'group1'
-  Scenario: User can try to join as subgroup with incorrect token
+  Scenario: User fails to join as subgroup using incorrect token
+    # group 'group1' defined in env.json
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
@@ -70,15 +70,15 @@ Feature: Oneprovider Group functionality
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*join.*group1.*subgroup.*
 
-  Scenario: Try join to group with incorrect token
+  Scenario: User fails to join to group using incorrect token
     When user clicks on the "Join" button in groups sidebar
     And user sees that input box in "Join a group" modal is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
     Then user sees an error notify with text matching to: .*failed.*join.*group.*
 
-  # assuming there is group named 'group1'
   Scenario: User can rename existing group and then rename it back
+    # group 'group1' defined in env.json
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list
@@ -102,8 +102,8 @@ Feature: Oneprovider Group functionality
     And user sees that the "NewNameGroup" has vanished from the groups list
     And user sees that the "group1" has appeared on the groups list
 
-  # assuming there is group named 'group1'
   Scenario: User can leave existing group and then create group with the same name
+    # group 'group1' defined in env.json
     Given there is a "group1" item on the groups list
     When user clicks a settings icon displayed for "group1" item on the groups list
     And user sees a settings dropdown menu for "group1" item on the groups list

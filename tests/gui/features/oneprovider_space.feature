@@ -9,7 +9,7 @@ Feature: Oneprovider space functionality
     And user clicks on the "p1" provider in Onezone providers sidebar panel
     And user clicks on the "Go to your files" button in provider popup
     And user clicks on the "spaces" tab in main menu sidebar
-    And user sees that main content has ended loading
+    And user sees that main content reloaded
 
 
     Scenario: Create new space with specified name

@@ -27,6 +27,8 @@ WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
 # when waiting for backend changes
 WAIT_BACKEND = 15
 
+# waiting for backend to load after refresh
+WAIT_REFRESH = 2 * WAIT_BACKEND
 
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
