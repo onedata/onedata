@@ -12,7 +12,7 @@ import time
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from tests.utils.cucumber_utils import list_parser
 from tests.gui.utils.generic import parse_url
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, WAIT_REFRESH
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -176,7 +176,7 @@ def find_element_by_css_selector_and_text(selector, text):
 def refresh_and_call(selenium, callback, *args, **kwargs):
     selenium.refresh()
     try:
-        result = Wait(selenium, WAIT_FRONTEND).until(
+        result = Wait(selenium, WAIT_REFRESH).until(
             lambda s: callback(s, *args, **kwargs)
         )
     except TimeoutException:
