@@ -21,8 +21,8 @@ Feature: Oneprovider space functionality
     Then user sees that the new item has appeared on the spaces list
 
 
-  # assuming there is space1
   Scenario: Rename existing space and then rename it back
+    # 'space1' defined in env.json
     Given there is a "space1" item on the spaces list
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
@@ -46,8 +46,8 @@ Feature: Oneprovider space functionality
     And user sees that the "space1" has appeared on the spaces list
 
 
-  # assuming there is space1
   Scenario: Check if "invite user" token box is not empty
+    # 'space1' defined in env.json
     Given there is a "space1" item on the spaces list
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
@@ -56,8 +56,8 @@ Feature: Oneprovider space functionality
     Then user sees non-empty token in active modal
 
 
-  # assuming there is space1
   Scenario: Check if "invite group" token box is not empty
+    # 'space1' defined in env.json
     Given there is a "space1" item on the spaces list
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
@@ -66,8 +66,8 @@ Feature: Oneprovider space functionality
     Then user sees non-empty token in active modal
 
 
-  # assuming there is space1
   Scenario: Check if "get support" token box is not empty
+    # 'space1' defined in env.json
     Given there is a "space1" item on the spaces list
     When user clicks a settings icon displayed for "space1" item on the spaces list
     And user sees a settings dropdown menu for "space1" item on the spaces list
@@ -76,8 +76,8 @@ Feature: Oneprovider space functionality
     Then user sees non-empty token in active modal
 
 
-  # assuming there is space1
-  Scenario: Try join to space with invalid token
+  Scenario: User fails to join to space using invalid token
+    # 'space1' defined in env.json
     Given there is a "space1" item on the spaces list
     When user clicks on the "Join" button in spaces sidebar
     And user sees that input box in "Join a space" modal is active
@@ -86,16 +86,17 @@ Feature: Oneprovider space functionality
     Then user sees an error notify with text matching to: .*invalid.*token.*
 
 
-  # assuming there is space2 and starting url is not address to space2
+  # starting url is not address to space2
   Scenario: Switching between spaces
+    # 'space2' defined in env.json
     When user can see current url
     And user clicks space named "space2" from spaces list
     Then user sees that submenu for space named "space2" has appeared
     And user sees that url has changed
 
 
-  # assuming there is space1 and space2
   Scenario: Set given space as home and than set previous space as home
+    # 'space1' and 'space2' defined in env.json
     Given there is a "space2" item on the spaces list
     When user clicks a settings icon displayed for "space2" item on the spaces list
     And user sees a settings dropdown menu for "space2" item on the spaces list
@@ -109,8 +110,8 @@ Feature: Oneprovider space functionality
     And user sees that home space icon has appeared next to displayed name of space "space1" in spaces list
 
 
-  # assuming there is space2
   Scenario: Leave existing space and then create space with the same name
+    # 'space2' defined in env.json
     Given there is a "space2" item on the spaces list
     When user clicks a settings icon displayed for "space2" item on the spaces list
     And user sees a settings dropdown menu for "space2" item on the spaces list
