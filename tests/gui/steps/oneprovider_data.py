@@ -15,10 +15,25 @@ from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
 from pytest import fixture
 
 
-@given(parsers.parse('there is provider "{provider_name}" supporting space named "{space_name}"'))
+@given(parsers.parse('there is no file named "{file_list_elem}" in files list'))
+@given(parsers.parse('there is no directory named "{file_list_elem}" in files list'))
+def check_if_element_not_exist(selenium, file_list_elem):
+
+    def _find_file(s):
+        files = s.find_elements_by_css_selector('.files-list td')
+        for f in files:
+            if f.text == file_list_elem:
+                return f
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until_not(_find_file)
+
+
+@fixture
 def supporting_provider():
     return dict()
 
@@ -27,7 +42,7 @@ def _check_for_item_in_files_list(selenium, name):
     list_items = selenium.find_elements_by_css_selector('.files-list td')
     for item in list_items:
         if item.text == name:
-            return  True
+            return True
     return False
 
 
@@ -104,6 +119,7 @@ def op_check_if_new_element_appeared(selenium, file_list_element):
     Wait(selenium, WAIT_FRONTEND).until(new_file_list_elem)
 
 
+@then(parsers.parse('user selects "{file_list_element}" from files list'))
 @when(parsers.parse('user selects "{file_list_element}" from files list'))
 def op_select_elem(selenium, file_list_element):
     file_list_elem_to_select = select_button_from_buttons_by_name(file_list_element,
@@ -125,7 +141,8 @@ def check_absence_deleted_element(selenium, file_list_element):
     assert _try_find_deleted_element(selenium) is None
 
 
-@then(parsers.parse('user sees modal with provider\'s name "{provider_name}" in providers column'))
+@then(parsers.parse('user sees modal with name of provider supporting '
+                    'space in providers column'))
 def op_check_if_provider_name_is_in_tab(selenium, supporting_provider):
 
     def _find_provider(s):

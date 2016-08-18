@@ -160,7 +160,8 @@ def op_click_on_given_item_in_current_settings_dropdown(selenium, item_name):
                                                       '.clickable')
     ).click()
 
-
+@then(parsers.parse('user clicks "{button_name}" '
+                    'confirmation button in displayed modal'))
 @when(parsers.parse('user clicks "{button_name}" '
                     'confirmation button in displayed modal'))
 def op_click_confirmation_button(selenium, button_name):
@@ -170,7 +171,7 @@ def op_click_confirmation_button(selenium, button_name):
     ).click()
 
 
-@given('user sees that main content reloaded')
+@given('user sees that main content has ended loading')
 def op_check_if_main_content_has_been_reloaded(selenium):
     Wait(selenium, WAIT_FRONTEND).until(
         EC.invisibility_of_element_located((By.CSS_SELECTOR,
