@@ -4,6 +4,18 @@
 CHANGELOG
 ---------
 
+### 3.0.0-RC2
+
+* Turn off HSTS by default, allow configuration via app.config
+* Update file consistency management
+* Enable metadata caching
+* Extend support for user-defined metadata
+* Update Web_GUI and REST API
+* added NO_CACHE option to makefile
+* Enable Symmetric Multiprocessing
+* Use environment variables for packages build
+
+
 ### 3.0.0-RC1
 
 * Tests refactoring

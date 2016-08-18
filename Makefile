@@ -142,13 +142,16 @@ test_packaging:
 	./test_run.py --test-type packaging --test-dir tests/packaging -s
 
 test_cucumber:
-	./test_run.py --test-type cucumber --test-dir tests/cucumber
+	./test_run.py --test-type cucumber --test-dir tests/cucumber/scenarios
 
 test_performance:
 	./test_run.py --test-type performance --test-dir tests/performance
 
 test_gui:
 	./test_run.py --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
+
+test_profiling:
+	./test_run.py --test-type cucumber --test-dir tests/cucumber/profiling
 
 ##
 ## Clean
