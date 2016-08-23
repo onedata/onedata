@@ -84,7 +84,7 @@ def _skip_sensitive(request, sensitive_url):
 
 
 @pytest.fixture
-def capabilities(request, capabilities):
+def capabilities(request, capabilities, tmpdir):
     """Add --no-sandbox argument for Chrome headless
     Should be the same as adding capability: 'chromeOptions': {'args': ['--no-sandbox'], 'extensions': []}
     """
@@ -95,6 +95,8 @@ def capabilities(request, capabilities):
         chrome_options = webdriver.ChromeOptions()
         # TODO: use --no-sandbox only in headless mode, support for Chrome in Docker and XVFB can be buggy now: https://jira.plgrid.pl/jira/browse/VFS-2204
         chrome_options.add_argument("--no-sandbox")
+        prefs = {"download.default_directory": str(tmpdir)}
+        chrome_options.add_experimental_option("prefs", prefs)
         capabilities.update(chrome_options.to_capabilities())
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
     # but currently this driver is buggy...
@@ -113,7 +115,18 @@ def capabilities(request, capabilities):
 
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
 @pytest.fixture
-def selenium(selenium):
+def selenium(selenium, tmpdir):
+    # profile = webdriver.FirefoxProfile()
+    # # custom location
+    # profile.set_preference('browser.download.folderList', 2)
+    # profile.set_preference('browser.download.manager.showWhenStarting',
+    #                        False)
+    # profile.set_preference('browser.helperApps.alwaysAsk.force', False)
+    # profile.set_preference('browser.download.dir', str(tmpdir))
+    # profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
+    #                        'text/anytext, text/plain, text/html')
+    # selenium = webdriver.Firefox(profile)
+
     selenium.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
     selenium.set_window_size(1280, 1024)
     # currenlty, we rather set window size

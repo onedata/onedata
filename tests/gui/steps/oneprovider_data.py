@@ -7,6 +7,9 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import re
+import os
+import time
+
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
 from tests.gui.steps.common import find_element_by_css_selector_and_text,\
@@ -15,8 +18,11 @@ from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.action_chains import ActionChains
+
 from pytest import fixture
+
+from selector import selector, find_item_with_given_properties
 
 
 @given(parsers.parse('there is no file named "{file_list_elem}" in files list'))
@@ -154,3 +160,34 @@ def op_check_if_provider_name_is_in_tab(selenium, supporting_provider):
         return None
 
     Wait(selenium, WAIT_FRONTEND).until(_find_provider)
+
+
+@then(parsers.parse('user double clicks on file "{file_item}" from files list'))
+@when(parsers.parse('user double clicks on file "{file_item}" from files list'))
+def op_select_elem(selenium, file_item):
+    check_properties = selector(selenium, text=file_item,
+                                check_visibility=True)
+    css_path = '.files-list table.files-table td.file-list-col-file'
+
+    list_item = Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: find_item_with_given_properties(s, css_path,
+                                                  check_properties)
+    )
+    ActionChains(selenium).double_click(list_item).perform()
+
+
+@then(parsers.parse('user sees that downloaded file "{file_name}" '
+                    'contains "{content}"'))
+def check_if_downloaded_file_contains_given_content(tmpdir, file_name,
+                                                    content):
+    tmpdir_path = str(tmpdir)
+    file_path = os.path.join(tmpdir_path, file_name)
+
+    # sleep waiting for file to finish downloading
+    for sleep_time in range(10):
+        if not os.listdir(tmpdir_path):
+            time.sleep(sleep_time)
+
+    with open(file_path, 'r') as f:
+        file_content = ''.join(f.readlines())
+        assert content == file_content
