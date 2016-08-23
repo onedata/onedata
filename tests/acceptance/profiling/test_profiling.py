@@ -6,14 +6,14 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests import *
-from tests.cucumber.steps.auth_steps import *
-from tests.cucumber.steps.multi_auth_steps import *
+from tests.acceptance.steps.auth_steps import *
+from tests.acceptance.steps.multi_auth_steps import *
 from tests.utils.cucumber_utils import *
-from tests.cucumber.steps.env_steps import *
-from tests.cucumber.steps.profiling_steps import *
-from tests.cucumber.steps.dir_steps import *
-from tests.cucumber.steps.file_steps import *
-from tests.cucumber.steps.reg_file_steps import *
+from tests.acceptance.steps.env_steps import *
+from tests.acceptance.steps.profiling_steps import *
+from tests.acceptance.steps.dir_steps import *
+from tests.acceptance.steps.file_steps import *
+from tests.acceptance.steps.reg_file_steps import *
 from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario
@@ -24,7 +24,7 @@ from functools import partial
 @pytest.fixture(scope="module",
                 params=["singleclient_authorization"])
 def env_description_file(request):
-    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
+    return env_file(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
 
 
 scenario = partial(scenario, 'profiling.feature')

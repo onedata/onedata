@@ -8,11 +8,11 @@ __license__ = "This software is released under the MIT license cited in "\
               "LICENSE.txt"
 
 from tests.utils.cucumber_utils import *
-from tests.cucumber.steps.env_steps import *
-from tests.cucumber.steps.multi_auth_steps import *
-from tests.cucumber.steps.multi_dir_steps import *
-from tests.cucumber.steps.multi_file_steps import *
-from tests.cucumber.steps.multi_reg_file_steps import *
+from tests.acceptance.steps.env_steps import *
+from tests.acceptance.steps.multi_auth_steps import *
+from tests.acceptance.steps.multi_dir_steps import *
+from tests.acceptance.steps.multi_file_steps import *
+from tests.acceptance.steps.multi_reg_file_steps import *
 
 from pytest_bdd import scenario
 from functools import partial

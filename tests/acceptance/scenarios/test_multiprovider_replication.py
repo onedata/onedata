@@ -11,11 +11,11 @@ from pytest_bdd import scenario
 from tests import *
 
 from tests.utils.cucumber_utils import *
-from tests.cucumber.steps.env_steps import *
-from tests.cucumber.steps.multi_auth_steps import *
-from tests.cucumber.steps.multi_dir_steps import *
-from tests.cucumber.steps.multi_file_steps import *
-from tests.cucumber.steps.multi_reg_file_steps import *
+from tests.acceptance.steps.env_steps import *
+from tests.acceptance.steps.multi_auth_steps import *
+from tests.acceptance.steps.multi_dir_steps import *
+from tests.acceptance.steps.multi_file_steps import *
+from tests.acceptance.steps.multi_reg_file_steps import *
 from functools import partial
 
 
@@ -25,7 +25,7 @@ scenario = partial(scenario, '../features/multiprovider_replication.feature')
 @pytest.fixture(scope="module", params=["multiprovider_directio_env.json",
                                         "multiprovider_env.json"])
 def env_description_file(request):
-    absolute_path = os.path.join(CUSTOM_CUCUMBER_ENV_DIR, request.param)
+    absolute_path = os.path.join(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
     return absolute_path
 
 

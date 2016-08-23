@@ -6,15 +6,15 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests import CUSTOM_CUCUMBER_ENV_DIR
-from tests.cucumber.steps.spaces_steps import *
-from tests.cucumber.steps.env_steps import *
-from tests.cucumber.steps.auth_steps import *
-from tests.cucumber.steps.multi_auth_steps import *
-from tests.cucumber.steps.user_steps import *
-from tests.cucumber.steps.multi_file_steps import *
-from tests.cucumber.steps.multi_reg_file_steps import *
-from tests.cucumber.steps.multi_dir_steps import *
+from tests import CUSTOM_ACCEPTANCE_ENV_DIR
+from tests.acceptance.steps.spaces_steps import *
+from tests.acceptance.steps.env_steps import *
+from tests.acceptance.steps.auth_steps import *
+from tests.acceptance.steps.multi_auth_steps import *
+from tests.acceptance.steps.user_steps import *
+from tests.acceptance.steps.multi_file_steps import *
+from tests.acceptance.steps.multi_reg_file_steps import *
+from tests.acceptance.steps.multi_dir_steps import *
 from tests.utils.cucumber_utils import *
 from tests.utils.path_utils import env_file
 
@@ -29,7 +29,7 @@ scenario = partial(scenario,
 
 @pytest.fixture(scope="module", params=["multiprovider_space_management"])
 def env_description_file(request):
-    return env_file(CUSTOM_CUCUMBER_ENV_DIR, request.param)
+    return env_file(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
 
 
 @scenario("User joins unused space - test of proxy")

@@ -1,5 +1,5 @@
 """This package contains python test files to run cucumber-like tests of
-onedata. Files contains mapping to .feature files from tests/cucumber/features
+onedata. Files contains mapping to .feature files from tests/acceptance/features
 that define tests scenarios.
 """
 __author__ = "Jakub Kudzia"
