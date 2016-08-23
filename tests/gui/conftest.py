@@ -95,12 +95,25 @@ def capabilities(request, capabilities, tmpdir):
         chrome_options = webdriver.ChromeOptions()
         # TODO: use --no-sandbox only in headless mode, support for Chrome in Docker and XVFB can be buggy now: https://jira.plgrid.pl/jira/browse/VFS-2204
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("enable-popup-blocking")
         prefs = {"download.default_directory": str(tmpdir)}
         chrome_options.add_experimental_option("prefs", prefs)
         capabilities.update(chrome_options.to_capabilities())
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
     # but currently this driver is buggy...
     # elif 'browserName' in capabilities and capabilities['browserName'] == 'firefox' or request.config.option.driver == 'Firefox':
+    #     profile = webdriver.FirefoxProfile()
+    #     # custom location
+    #     profile.set_preference('browser.download.folderList', 2)
+    #     profile.set_preference('browser.download.manager.showWhenStarting',
+    #                            False)
+    #     profile.set_preference('browser.helperApps.alwaysAsk.force', False)
+    #     profile.set_preference('browser.download.dir', str(tmpdir))
+    #     profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
+    #                            'text/anytext, text/plain, text/html')
+    #     profile.update_preferences()
+    #
+    #     capabilities['firefox_profile'] = profile.encoded
     #     capabilities['marionette'] = True
 
     # currently there are no problems with invalid SSL certs in built-in FF driver and Chrome
@@ -113,20 +126,22 @@ def capabilities(request, capabilities, tmpdir):
     return capabilities
 
 
+@pytest.fixture
+def firefox_profile(firefox_profile, tmpdir):
+    firefox_profile.set_preference('browser.download.folderList', 2)
+    firefox_profile.set_preference('browser.download.manager.showWhenStarting',
+                                   False)
+    firefox_profile.set_preference('browser.helperApps.alwaysAsk.force', False)
+    firefox_profile.set_preference('browser.download.dir', str(tmpdir))
+    firefox_profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
+                                   'text/anytext, text/plain, text/html')
+    firefox_profile.update_preferences()
+    return firefox_profile
+
+
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
 @pytest.fixture
-def selenium(selenium, tmpdir):
-    # profile = webdriver.FirefoxProfile()
-    # # custom location
-    # profile.set_preference('browser.download.folderList', 2)
-    # profile.set_preference('browser.download.manager.showWhenStarting',
-    #                        False)
-    # profile.set_preference('browser.helperApps.alwaysAsk.force', False)
-    # profile.set_preference('browser.download.dir', str(tmpdir))
-    # profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
-    #                        'text/anytext, text/plain, text/html')
-    # selenium = webdriver.Firefox(profile)
-
+def selenium(selenium):
     selenium.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
     selenium.set_window_size(1280, 1024)
     # currenlty, we rather set window size
