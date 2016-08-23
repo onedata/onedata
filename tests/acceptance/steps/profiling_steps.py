@@ -12,7 +12,7 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from pytest_bdd import when
 from tests.utils.profiling_utils import start_fprof, stop_fprof, copy_fprof_data, \
     FPROF_DATA_FILE, convert_fprof_data

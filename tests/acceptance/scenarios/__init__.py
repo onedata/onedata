@@ -1,4 +1,4 @@
-"""This package contains python test files to run cucumber-like tests of
+"""This package contains python test files to run acceptance tests of
 onedata. Files contains mapping to .feature files from tests/acceptance/features
 that define tests scenarios.
 """

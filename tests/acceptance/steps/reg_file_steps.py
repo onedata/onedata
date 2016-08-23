@@ -6,7 +6,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import multi_reg_file_steps
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from pytest_bdd import when, then, parsers
 
 

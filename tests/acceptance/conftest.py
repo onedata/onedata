@@ -1,4 +1,4 @@
-"""This module contains definitions of fixtures used in cucumber-like tests
+"""This module contains definitions of fixtures used in acceptance tests
 of onedata.
 """
 __author__ = "Jakub Kudzia"

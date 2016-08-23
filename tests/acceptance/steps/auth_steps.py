@@ -6,7 +6,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import multi_auth_steps
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from tests.utils.client_utils import mount_users
 
 from pytest_bdd import given

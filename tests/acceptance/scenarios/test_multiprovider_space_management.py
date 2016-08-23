@@ -15,7 +15,7 @@ from tests.acceptance.steps.user_steps import *
 from tests.acceptance.steps.multi_file_steps import *
 from tests.acceptance.steps.multi_reg_file_steps import *
 from tests.acceptance.steps.multi_dir_steps import *
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from tests.utils.path_utils import env_file
 
 from pytest_bdd import scenario

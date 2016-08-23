@@ -1,4 +1,4 @@
-"""Example test suite for cucumber-like tests with pytest-bdd.
+"""Example test suite for acceptance tests with pytest-bdd.
 Test scenario is defined in tests/acceptance/features/example.feature file in
 Gherkin language. This file represents one test suite - we have to declare all
 scenarios from .feature file.
@@ -11,7 +11,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from tests import *
 from pytest_bdd import scenario
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from tests.acceptance.steps.env_steps import *
 from tests.utils.path_utils import env_file
 

@@ -7,7 +7,7 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from tests.utils.utils import handle_exception, get_function_name
 from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
                                       create_file)

@@ -10,7 +10,7 @@ from pytest_bdd import scenario
 
 from tests import *
 
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.multi_auth_steps import *
 from tests.acceptance.steps.multi_dir_steps import *

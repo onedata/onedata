@@ -7,7 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests.utils.utils import get_function_name, handle_exception
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, md5sum, write, read,
                                       replace_pattern, open_file, execute,
                                       close_file, write_to_opened_file,

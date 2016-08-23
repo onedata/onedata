@@ -1,5 +1,5 @@
 """This module implements some common basic functions and functionality for
-cucumber-like tests of onedata.
+acceptance tests of onedata.
 """
 __author__ = "Jakub Kudzia, Piotr Ociepka"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"

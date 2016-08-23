@@ -7,7 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from tests.utils.utils import get_function_name, handle_exception
 from tests.utils.client_utils import ls, mount_users
-from tests.utils.cucumber_utils import *
+from tests.utils.acceptance_utils import *
 
 from pytest_bdd import given
 

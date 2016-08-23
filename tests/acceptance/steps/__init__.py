@@ -1,4 +1,4 @@
-"""This package contains implementations of steps for cucumber-like tests of
+"""This package contains implementations of steps for acceptance tests of
 onedata
 """
 __author__ = "Jakub Kudzia"
