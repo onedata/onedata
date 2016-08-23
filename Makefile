@@ -64,11 +64,11 @@ unpack = tar xzf $(1).tar.gz
 
 branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
-	./onedata_submodules.sh init
+	./onedata_submodules.sh init ${submodule}
 ifeq ($(branch),develop)
-	./onedata_submodules.sh update --remote
+	./onedata_submodules.sh update --remote ${submodule}
 else
-	./onedata_submodules.sh update
+	./onedata_submodules.sh update ${submodule}
 endif
 
 ##
@@ -135,14 +135,14 @@ artifact_onepanel:
 ## Test
 ##
 
-test:
-	./test_run.py --test-type acceptance --test-dir tests/acceptance
+test_env_up:
+	./test_run.py --test-type env_up --test-dir tests/env_up
 
 test_packaging:
 	./test_run.py --test-type packaging --test-dir tests/packaging -s
 
-test_cucumber:
-	./test_run.py --test-type cucumber --test-dir tests/cucumber/scenarios
+test:
+	./test_run.py --test-type acceptance --test-dir tests/acceptance/scenarios/${suite}
 
 test_performance:
 	./test_run.py --test-type performance --test-dir tests/performance
@@ -151,7 +151,7 @@ test_gui:
 	./test_run.py --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
 
 test_profiling:
-	./test_run.py --test-type cucumber --test-dir tests/cucumber/profiling
+	./test_run.py --test-type acceptance --test-dir tests/acceptance/profiling
 
 ##
 ## Clean

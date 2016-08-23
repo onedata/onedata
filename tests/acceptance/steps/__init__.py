@@ -1,4 +1,5 @@
-"""Package with acceptance tests of onedata.
+"""This package contains implementations of steps for acceptance tests of
+onedata
 """
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"

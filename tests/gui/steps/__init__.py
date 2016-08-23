@@ -1,5 +1,5 @@
 """
-Implementation of Gherkin (cucumber-like) steps for GUI BDD tests
+Implementation of Gherkin (acceptance) steps for GUI BDD tests
 """
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"

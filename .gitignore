@@ -5,8 +5,8 @@
 
 test-reports/*
 
+tests/env_up/logs
 tests/acceptance/logs
-tests/cucumber/logs
 tests/performance/logs
 tests/gui/logs
 .cache

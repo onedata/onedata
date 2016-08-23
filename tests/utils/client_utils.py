@@ -1,5 +1,5 @@
 """This module contains utility functions for using client instances under
-tests. Client is started in docker during acceptance, cucumber and performance
+tests. Client is started in docker during env_up, acceptance and performance
 tests.
 """
 __author__ = "Jakub Kudzia"
