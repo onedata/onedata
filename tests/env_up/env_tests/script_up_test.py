@@ -59,11 +59,11 @@ def test_s3_up():
     assert ping(output['host_name'].split(":")[0])
     teardown_testcase(output)
 
-# TODO Uncomment this test after integrating with VFS-1599
-# def test_ceph_up():
-#     output = run_env_up_script("ceph_up.py")
-#     assert test_utils.ping(output['host_name'])
-#     teardown_testcase(output)
+
+def test_ceph_up():
+    output = run_env_up_script("ceph_up.py")
+    assert ping(output['host_name'])
+    teardown_testcase(output)
 
 
 # Run the env_up script, capture and parse the output
