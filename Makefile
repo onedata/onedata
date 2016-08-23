@@ -64,11 +64,11 @@ unpack = tar xzf $(1).tar.gz
 
 branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
-	./onedata_submodules.sh init
+	./onedata_submodules.sh init ${submodule}
 ifeq ($(branch),develop)
-	./onedata_submodules.sh update --remote
+	./onedata_submodules.sh update --remote ${submodule}
 else
-	./onedata_submodules.sh update
+	./onedata_submodules.sh update ${submodule}
 endif
 
 ##
@@ -142,7 +142,7 @@ test_packaging:
 	./test_run.py --test-type packaging --test-dir tests/packaging -s
 
 test:
-	./test_run.py --test-type acceptance --test-dir tests/acceptance/scenarios
+	./test_run.py --test-type acceptance --test-dir tests/acceptance/scenarios/${suite}
 
 test_performance:
 	./test_run.py --test-type performance --test-dir tests/performance
