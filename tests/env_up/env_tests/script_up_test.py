@@ -41,7 +41,7 @@ def test_component_up(script_name, dockers_num):
     "env", get_json_files(EXAMPLE_ENV_DIR)
 )
 def test_example_envs(env):
-    logdir = make_logdir(ACCEPTANCE_LOGDIR,
+    logdir = make_logdir(ENV_UP_LOGDIR,
                          os.path.join(get_file_name(__file__),
                                       env.split(os.path.sep)[-1]))
     output = run_env_up_script("env_up.py", config=env, logdir=logdir)
@@ -80,7 +80,7 @@ def setup_test(script_name):
 
     args = prepare_args(script_name, uid, dns_server)
 
-    logdir = make_logdir(ACCEPTANCE_LOGDIR,
+    logdir = make_logdir(ENV_UP_LOGDIR,
                          os.path.join(get_file_name(__file__), script_name))
 
     output = run_env_up_script(up_script(script_name),

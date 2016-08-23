@@ -1,5 +1,5 @@
 """
-Definitions of fixtures used in acceptance, cucumber and performance tests.
+Definitions of fixtures used in env_up, cucumber and performance tests.
 """
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -20,7 +20,7 @@ import shutil
 
 def pytest_addoption(parser):
     parser.addoption("--test-type", action="store", default=None,
-                     help="type of test (cucumber, acceptance,"
+                     help="type of test (cucumber, env_up,"
                           "performance, packaging, gui)")
 
 

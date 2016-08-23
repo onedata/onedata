@@ -135,8 +135,8 @@ artifact_onepanel:
 ## Test
 ##
 
-test:
-	./test_run.py --test-type acceptance --test-dir tests/acceptance
+test_env_up:
+	./test_run.py --test-type env_up --test-dir tests/env_up
 
 test_packaging:
 	./test_run.py --test-type packaging --test-dir tests/packaging -s

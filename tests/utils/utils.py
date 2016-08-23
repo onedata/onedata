@@ -58,7 +58,7 @@ def run_env_up_script(script, config=None, logdir=None, args=[]):
         if not logdir:
             # even if script doesn't have logdir option we want logs from
             # executing this script
-            logdir = make_logdir(ACCEPTANCE_DIR, script)
+            logdir = make_logdir(ENV_UP_DIR, script)
         logfile_error_path = os.path.join(logdir, PREPARE_ENV_ERROR_LOG_FILE)
         save_log_to_file(logfile_error_path, err_msg)
         pytest.skip("{script} script failed because of {reason}".format(

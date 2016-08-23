@@ -17,7 +17,7 @@ class TestAppmockRestExample:
     @classmethod
     # Run the evn_up.py script, capture and parse the output
     def setup_class(cls):
-        logdir = make_logdir(ACCEPTANCE_LOGDIR, get_file_name(__file__))
+        logdir = make_logdir(ENV_UP_LOGDIR, get_file_name(__file__))
         cls.result = appmock.up(image='onedata/builder',
                                 bindir=APPMOCK_DIR,
                                 dns_server='none',
