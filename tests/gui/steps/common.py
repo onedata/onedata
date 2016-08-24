@@ -10,7 +10,7 @@ import re
 import time
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
-from tests.utils.cucumber_utils import list_parser
+from tests.utils.acceptance_utils import list_parser
 from tests.gui.utils.generic import parse_url
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, WAIT_REFRESH
 from pytest_bdd import given, when, then, parsers

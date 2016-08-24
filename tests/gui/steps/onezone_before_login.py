@@ -7,7 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 from selenium.common.exceptions import TimeoutException
-from tests.utils.cucumber_utils import list_parser
+from tests.utils.acceptance_utils import list_parser
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from pytest_bdd import given, when, then, parsers
 from tests.gui.utils.generic import parse_url, go_to_relative_url

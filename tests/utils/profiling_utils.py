@@ -1,5 +1,5 @@
 """This file contains utility functions for profiling of op-worker during
-cucumber-like tests of onedata.
+acceptance tests of onedata.
 """
 from tests import UTILS_DIR
 
