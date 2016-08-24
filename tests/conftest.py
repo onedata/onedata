@@ -69,7 +69,7 @@ def persistent_environment(request, test_type, env_description_file):
     feature_name = request.module.__name__.split('.')[-1]
     logdir = make_logdir(logdir_path, os.path
                          .join(get_file_name(env_description_file), feature_name))
-    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
+    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir, skip=False)
 
     def fin():
         docker.remove(request.onedata_environment['docker_ids'],

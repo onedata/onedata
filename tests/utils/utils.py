@@ -34,10 +34,10 @@ def run_os_command(cmd, output=True):
             return subprocess.call(cmd, stdout=devnull, stderr=devnull)
 
 
-def run_env_up_script(script, config=None, logdir=None, args=[]):
+def run_env_up_script(script, config=None, logdir=None, args=[], skip=True):
     """Runs given script to bring up test environment.
     Script must be located in docker_dir directory (see test_common.py)
-    If script fails, functions skips test.
+    If script fails, functions skips test (if skip=True).
     """
     cmd = [os.path.join(DOCKER_DIR, script)]
 
@@ -61,10 +61,14 @@ def run_env_up_script(script, config=None, logdir=None, args=[]):
             logdir = make_logdir(ENV_UP_DIR, script)
         logfile_error_path = os.path.join(logdir, PREPARE_ENV_ERROR_LOG_FILE)
         save_log_to_file(logfile_error_path, err_msg)
-        pytest.skip("{script} script failed because of {reason}".format(
-            script=script,
-            reason=err_msg
-        ))
+        if skip:
+            pytest.skip("{script} script failed because of {reason}".format(
+                script=script,
+                reason=err_msg
+            ))
+        else:
+            pytest.fail("{script} script failed because of {reason}".format(
+                    script=script, reason=err_msg))
 
     stripped_output = strip_output_logs(output)
 

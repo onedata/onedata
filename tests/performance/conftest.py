@@ -61,7 +61,6 @@ class AbstractPerformanceTest:
     @pytest.fixture()
     def clients(self, request, onedata_environment, context, client_dockers,
                 env_description_file, test_type, providers):
-
         mount_users(request, onedata_environment, context, client_dockers,
                     env_description_file, test_type, providers,
                     **get_users(onedata_environment))

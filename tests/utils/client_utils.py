@@ -106,9 +106,10 @@ class Client:
         return os.path.join(self.mount_path, str(path))
 
 
-def mount_users(request, environment, context, client_dockers, env_description_file,
-                test_type, providers, user_names=[], client_instances=[],
-                mount_paths=[], client_hosts=[], tokens=[], check=True):
+def mount_users(request, environment, context, client_dockers,
+                env_description_file, test_type, providers, user_names=[],
+                client_instances=[], mount_paths=[], client_hosts=[],
+                tokens=[]):
 
     # current version is for environment with one OZ
     oz_node = environment['oz_worker_nodes'][0]
@@ -157,17 +158,17 @@ def mount_users(request, environment, context, client_dockers, env_description_f
         if not context.has_user(user):
             context.add_user(user)
 
-        if ret != 0 and check and token_arg != "bad token":
+        if ret != 0 and token_arg != "bad token":
             # if token was different than "bad token" and mounting failed
             clean_mount_path(user_name, client)
-            pytest.skip("Error mounting oneclient")
+            pytest.fail("Error mounting oneclient")
 
         # todo without this sleep protocol error occurs more often during cleaning spaces
         time.sleep(3)
 
-        if check and token != 'bad_token':
+        if token != 'bad_token':
             if not clean_spaces_safe(user_name, client):
-                pytest.skip("Test skipped beacause of failing to clean spaces")
+                pytest.fail("Failed to clean spaces")
 
         if ret == 0:
             user.mark_last_operation_succeeded()
