@@ -102,18 +102,6 @@ def capabilities(request, capabilities, tmpdir):
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
     # but currently this driver is buggy...
     # elif 'browserName' in capabilities and capabilities['browserName'] == 'firefox' or request.config.option.driver == 'Firefox':
-    #     profile = webdriver.FirefoxProfile()
-    #     # custom location
-    #     profile.set_preference('browser.download.folderList', 2)
-    #     profile.set_preference('browser.download.manager.showWhenStarting',
-    #                            False)
-    #     profile.set_preference('browser.helperApps.alwaysAsk.force', False)
-    #     profile.set_preference('browser.download.dir', str(tmpdir))
-    #     profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
-    #                            'text/anytext, text/plain, text/html')
-    #     profile.update_preferences()
-    #
-    #     capabilities['firefox_profile'] = profile.encoded
     #     capabilities['marionette'] = True
 
     # currently there are no problems with invalid SSL certs in built-in FF driver and Chrome
