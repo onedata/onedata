@@ -1,4 +1,4 @@
-"""This package contains modules with utility functions for acceptance, cucumber
+"""This package contains modules with utility functions for acceptance, acceptance
 and performance tests.
 """
 __author__ = "Jakub Kudzia"
