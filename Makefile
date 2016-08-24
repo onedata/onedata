@@ -139,7 +139,7 @@ test_packaging:
 	./test_run.py --test-type packaging --test-dir tests/packaging -s
 
 test:
-	./test_run.py --test-type acceptance --test-dir tests/acceptance/scenarios/${suite}
+	./test_run.py --test-type acceptance --test-dir tests/acceptance/scenarios/${suite}  --runxfail
 
 test_performance:
 	./test_run.py --test-type performance --test-dir tests/performance
