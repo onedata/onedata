@@ -3,17 +3,20 @@
 
 import json
 import os
-import time
 import re
+import requests
 import shutil
-import socket
 import subprocess as sp
 import sys
+import time
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 ROOT = '/volumes/persistency'
 DIRS = ['/etc/op_panel', '/etc/op_worker', '/etc/cluster_manager',
     '/etc/rc.d/init.d', '/var/lib/op_panel', '/var/lib/op_worker',
-    '/var/lib/cluster_manager', '/usr/lib64/op_panel',
+    '/var/lib/cluster_manager', '/usr/lib64/cluster_manager',
     '/opt/couchbase/var/lib/couchbase', '/var/log/op_panel',
     '/var/log/op_worker', '/var/log/cluster_manager']
 
@@ -58,30 +61,78 @@ def link_dirs():
             os.symlink(source_path, dest_path)
 
 def set_node_name(file_path):
-    hostname = socket.getfqdn()
+    hostname = sp.check_output(['hostname', '-f']).rstrip('\n')
     replace(file_path, r'-name .*', '-name onepanel@{0}'.format(hostname))
 
-def set_multicast_address(file_path, multicast_address):
-    replace(file_path, r'{multicast_address, .*}',
-        '{{multicast_address, "{0}"}}'.format(multicast_address))
+def set_advertise_address(file_path, advertise_address):
+    replace(file_path, r'{advertise_address, .*}',
+            '{{advertise_address, "{0}"}}'.format(advertise_address))
 
 def start_service(service_name, stdout=None):
     with open(os.devnull, 'w') as stderr:
         sp.check_call(['service', service_name, 'start'], stdout=stdout,
-            stderr=stderr)
+                      stderr=stderr)
 
 def start_services():
-    log('Starting couchbase-server: ', '')
+    log('Starting couchbase_server: ', '')
     with open(os.devnull, 'w') as stdout:
         start_service('couchbase-server', stdout)
     log('[  OK  ]')
     start_service('cluster_manager')
     time.sleep(5)
     start_service('op_worker')
-    log('\nCongratulations! oneprovider has been successfully started.')
 
 def is_configured():
-    return 'undefined' not in sp.check_output(['op_panel_admin', '--config'])
+    r = requests.get('https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+                     verify=False)
+    return r.status_code != 404
+
+def format_step(step):
+    service, action = step.split(':')
+    return '* {0}: {1}'.format(service, action)
+
+def configure(config):
+    r = requests.post(
+        'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+        headers={'content-type': 'application/x-yaml'},
+        data=config,
+        verify=False)
+
+    if r.status_code != 201:
+        log('\nFailed to start configuration process\n{0}'.format(r.text))
+        return
+
+    loc = r.headers['location']
+    status = 'running'
+    steps = []
+    resp = {}
+
+    log('\nConfiguring oneprovider:')
+    while status == 'running':
+        r = requests.get('https://127.0.0.1:9443' + loc,
+                         verify=False)
+        if r.status_code != 200:
+            log('Unexpected configuration error\n{0}'.format(r.text))
+            return
+        else:
+            resp = json.loads(r.text)
+            status = resp['status']
+            for step in resp.get('steps', []):
+                if steps and step == steps[0]:
+                    steps = steps[1:]
+                else:
+                    log(format_step(step))
+            steps = resp['steps']
+            time.sleep(1)
+
+    if status != 'ok':
+        log('Error: {0}'.format(resp.get('error', 'unknown')))
+        log('Description: {0}'.format(resp.get('description', '-')))
+        log('Module: {0}'.format(resp.get('module', '-')))
+        log('Function: {0}'.format(resp.get('function', '-')))
+        log('Hosts: {0}'.format(', '.join(resp.get('hosts', []))))
+        log('For more information please check the logs.')
+        sys.exit(1)
 
 def get_container_id():
     with open('/proc/self/cgroup', 'r') as f:
@@ -90,8 +141,8 @@ def get_container_id():
 def inspect_container(container_id):
     try:
         result = sp.check_output(['curl', '-s', '--unix-socket',
-            '/var/run/docker.sock', 'http:/containers/{0}/json'.
-            format(container_id)])
+                                  '/var/run/docker.sock', 'http:/containers/{0}/json'.
+                                 format(container_id)])
         return json.loads(result)
     except Exception:
         return {}
@@ -130,7 +181,7 @@ def show_details():
 
 def infinite_loop():
     while True:
-        time.sleep(1)
+        time.sleep(60)
 
 if __name__ == '__main__':
     copy_missing_files()
@@ -139,9 +190,9 @@ if __name__ == '__main__':
 
     set_node_name('/etc/op_panel/vm.args')
 
-    multicast_address = os.environ.get('ONEPANEL_MULTICAST_ADDRESS')
-    if multicast_address:
-        set_multicast_address('/etc/op_panel/app.config', multicast_address)
+    advertise_address = os.environ.get('$ONEPANEL_ADVERTISE_ADDRESS')
+    if advertise_address:
+        set_advertise_address('/etc/oz_panel/app.config', advertise_address)
 
     start_service('op_panel')
 
@@ -149,9 +200,10 @@ if __name__ == '__main__':
         start_services()
     else:
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE')
-        batch_cofig = os.environ.get('ONEPANEL_BATCH_MODE_CONFIG', '')
+        batch_cofig = os.environ.get('ONEPROVIDER_CONFIG', '')
         if batch_mode and batch_mode.lower() == 'true':
-            sp.check_call(['op_panel_admin', '--install', batch_cofig])
+            configure(batch_cofig)
 
     show_details()
+    log('\nCongratulations! oneprovider has been successfully started.')
     infinite_loop()
