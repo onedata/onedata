@@ -16,7 +16,7 @@ Feature: Onezone login page
 
 
   Scenario: The development mode login page should show links to login
-    When user clicks on the "indigo" login button
+    When user clicks on the "plgrid" login button
     Then user should see a page with "Developer mode login:" header
     And user should see [user1,user2,user3] links
 

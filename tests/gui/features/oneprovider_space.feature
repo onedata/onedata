@@ -3,7 +3,7 @@ Feature: Oneprovider space functionality
 
   Background:
     Given user opens a Onezone URL in a web browser
-    And user clicks on the "indigo" login button
+    And user clicks on the "plgrid" login button
     And user clicks on the "user1" link
     And user expands the "go to your files" Onezone sidebar panel
     And user clicks on the "p1" provider in Onezone providers sidebar panel
