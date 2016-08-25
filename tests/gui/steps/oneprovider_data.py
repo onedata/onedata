@@ -22,7 +22,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from pytest import fixture
 
-from selector import selector, find_item_with_given_properties
+from ..utils.inspect import selector
+from ..utils.generic import find_item_with_given_properties
 
 
 @given(parsers.parse('there is no file named "{file_list_elem}" in files list'))
@@ -164,7 +165,7 @@ def op_check_if_provider_name_is_in_tab(selenium, supporting_provider):
 
 @then(parsers.parse('user double clicks on file "{file_item}" from files list'))
 @when(parsers.parse('user double clicks on file "{file_item}" from files list'))
-def op_select_elem(selenium, file_item):
+def op_select_file_from_file_list(selenium, file_item):
     check_properties = selector(selenium, text=file_item,
                                 check_visibility=True)
     css_path = '.files-list table.files-table td.file-list-col-file'

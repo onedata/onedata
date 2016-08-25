@@ -1,4 +1,4 @@
-"""Common steps used in various GUI testing scenarios
+"""Helper functions inspecting if given web element fulfil some criterion
 """
 
 __author__ = "Bartosz Walkowicz"
@@ -15,6 +15,8 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 
 
 def is_active(browser, web_element):
+    """Check if given web element is the active one in given browser.
+    """
     try:
         Wait(browser, WAIT_FRONTEND).until(
             lambda s: web_element == s.switch_to.active_element
@@ -26,6 +28,8 @@ def is_active(browser, web_element):
 
 
 def is_visible(browser, web_element):
+    """Check if given web element is visible in given browser.
+    """
     try:
         Wait(browser, WAIT_FRONTEND).until(EC.visibility_of(web_element))
     except TimeoutException:
@@ -35,16 +39,21 @@ def is_visible(browser, web_element):
 
 
 def is_enabled(web_element):
+    """Check if given web element is enabled in given browser.
+    """
     return web_element.is_enabled()
 
 
 def contains_text_of_given_pattern(web_element, pattern):
+    """Check if given web element contains given pattern.
+    """
     return re.match(pattern, web_element.text)
 
 
 def selector(browser, text='', ignore_case=False, check_visibility=False,
              check_if_enabled=False, check_if_active=False):
-
+    """Chain criterion checking and return function that will conduct check.
+    """
     conditions = []
     if text:
         text_regexp = re.compile(text, re.I if ignore_case else 0)
@@ -62,11 +71,3 @@ def selector(browser, text='', ignore_case=False, check_visibility=False,
         return all(condition(item) for condition in conditions)
 
     return _select
-
-
-def find_item_with_given_properties(browser, css_path, check_properties):
-    items = browser.find_elements_by_css_selector(css_path)
-    for item in items:
-        if check_properties(item):
-            return item
-    return None

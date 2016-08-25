@@ -16,7 +16,7 @@ Feature: Oneprovider Data view
     # data is default, so it is unnecessary
     # And user clicks on the "data" menu item in Oneprovider main menu
 
-  Scenario: Download file and then remove it
+  Scenario: User downloads file
     When user uses spaces select to change data space to "space1"
     And user uses upload button in toolbar to upload file "20B-1.txt" to current dir
     And user double clicks on file "20B-1.txt" from files list

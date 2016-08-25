@@ -10,8 +10,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
-from common import select_button_from_buttons_by_name, refresh_and_call
-from selector import is_active
+from common import select_button_from_buttons_by_name
+
+from ..utils.inspect import is_active
+from ..utils.generic import refresh_and_call
 
 
 def _click_given_tab_in_main_menu_sidebar(selenium, main_menu_tab):

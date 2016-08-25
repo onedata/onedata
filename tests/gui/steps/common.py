@@ -9,10 +9,10 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import time
 
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from tests.utils.acceptance_utils import list_parser
 from tests.gui.utils.generic import parse_url
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, WAIT_REFRESH
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -161,18 +161,6 @@ def find_element_by_css_selector_and_text(selector, text):
             if elem.text.lower() == text.lower():
                 return elem
     return _find_element
-
-
-def refresh_and_call(browser, callback, *args, **kwargs):
-    browser.refresh()
-    try:
-        result = Wait(browser, WAIT_REFRESH).until(
-            lambda s: callback(s, *args, **kwargs)
-        )
-    except TimeoutException:
-        return None
-    else:
-        return result
 
 
 # Below functions are currently unused and should not be used,
