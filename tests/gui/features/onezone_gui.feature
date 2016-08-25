@@ -7,7 +7,7 @@ Feature: Onezone GUI elements
     # in future: Given [u1, u2] open [http://a.com, http://b.com] in [Firefox, Chrome]
     Given user opens a Onezone URL in a web browser
     # not used in non-homepage tests
-    And user clicks on the "indigo" login button
+    And user clicks on the "plgrid" login button
     And user clicks on the "user1" link
 
 

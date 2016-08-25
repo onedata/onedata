@@ -44,24 +44,25 @@ def test_example_envs(env):
     logdir = make_logdir(ENV_UP_LOGDIR,
                          os.path.join(get_file_name(__file__),
                                       env.split(os.path.sep)[-1]))
-    output = run_env_up_script("env_up.py", config=env, logdir=logdir)
+    output = run_env_up_script("env_up.py", config=env, logdir=logdir,
+                               skip=False)
     teardown_testcase(output)
 
 
 def test_dns_up():
-    output = run_env_up_script("dns_up.py")
+    output = run_env_up_script("dns_up.py", skip=False)
     assert ping(output['dns'])
     teardown_testcase(output)
 
 
 def test_s3_up():
-    output = run_env_up_script("s3_up.py")
+    output = run_env_up_script("s3_up.py", skip=False)
     assert ping(output['host_name'].split(":")[0])
     teardown_testcase(output)
 
 
 def test_ceph_up():
-    output = run_env_up_script("ceph_up.py")
+    output = run_env_up_script("ceph_up.py", skip=False)
     assert ping(output['host_name'])
     teardown_testcase(output)
 
@@ -86,7 +87,7 @@ def setup_test(script_name):
     output = run_env_up_script(up_script(script_name),
                                config=config_path,
                                logdir=logdir if not is_no_logdir_script(script_name) else None,
-                               args=args)
+                               args=args, skip=False)
     common.merge(environment, output)
 
     return environment
