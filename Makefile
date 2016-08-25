@@ -29,6 +29,12 @@ ONECLIENT_VERSION       := $(shell echo ${ONECLIENT_VERSION} | tr - .)
 
 ONEPROVIDER_BUILD       ?= 1
 
+ifdef IGNORE_XFAIL
+TEST_RUN := ./test_run.py --ignore-xfail
+else
+TEST_RUN := ./test_run.py
+endif
+
 GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
 GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
 ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
@@ -133,22 +139,22 @@ artifact_onepanel:
 ##
 
 test_env_up:
-	./test_run.py --test-type env_up --test-dir tests/env_up
+	${TEST_RUN} --test-type env_up --test-dir tests/env_up
 
 test_packaging:
-	./test_run.py --test-type packaging --test-dir tests/packaging -s
+	${TEST_RUN} --test-type packaging --test-dir tests/packaging -s
 
 test:
-	./test_run.py --test-type acceptance --test-dir tests/acceptance/scenarios/${suite}  --runxfail
+	${TEST_RUN} --test-type acceptance --test-dir tests/acceptance/scenarios/${suite}
 
 test_performance:
-	./test_run.py --test-type performance --test-dir tests/performance
+	${TEST_RUN} --test-type performance --test-dir tests/performance
 
 test_gui:
-	./test_run.py --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
+	${TEST_RUN} --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
 
 test_profiling:
-	./test_run.py --test-type acceptance --test-dir tests/acceptance/profiling
+	${TEST_RUN} --test-type acceptance --test-dir tests/acceptance/profiling
 
 ##
 ## Clean

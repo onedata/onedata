@@ -61,14 +61,9 @@ def run_env_up_script(script, config=None, logdir=None, args=[], skip=True):
             logdir = make_logdir(ENV_UP_DIR, script)
         logfile_error_path = os.path.join(logdir, PREPARE_ENV_ERROR_LOG_FILE)
         save_log_to_file(logfile_error_path, err_msg)
-        if skip:
-            pytest.skip("{script} script failed because of {reason}".format(
-                script=script,
-                reason=err_msg
-            ))
-        else:
-            pytest.fail("{script} script failed because of {reason}".format(
-                    script=script, reason=err_msg))
+        msg = "{script} script failed because of {reason}"\
+            .format(script=script, reason=err_msg)
+        pytest.skip(msg) if skip else pytest.fail(msg)
 
     stripped_output = strip_output_logs(output)
 

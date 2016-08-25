@@ -22,6 +22,9 @@ def pytest_addoption(parser):
     parser.addoption("--test-type", action="store", default=None,
                      help="type of test (acceptance, env_up,"
                           "performance, packaging, gui)")
+    parser.addoption("--ignore-xfail", action="store_true",
+                     help="Causes test cases marked with xfail not to be"
+                          "marked as skipped in JUnit report")
 
 
 def pytest_generate_tests(metafunc):
@@ -157,16 +160,19 @@ def xfail_by_env(request, env_description_file):
     global variable in that module named pytestmark in
     the following way:
     pytestmark = pytest.mark.xfail_env(*envs)
-    Running tests with --runxfail causes tests marked as xfail to run
+    Running tests with --skip-xfailed causes tests marked as xfail to be
+    marked as skipped in JUnit report.
     """
     if request.node.get_marker('xfail_env'):
         env = get_file_name(env_description_file)
         args = request.node.get_marker('xfail_env').kwargs
         reason = args['reason']
         arg_envs = [get_file_name(e) for e in args['envs']]
-        if env in arg_envs:
-            pytest.xfail('xfailed on env: {env} with reason: {reason}'
-                         .format(env=env, reason=reason))
+        ignore = request.config.getoption("--ignore-xfail")
+        if env in arg_envs and not ignore:
+            request.node.add_marker(pytest.mark.xfail(
+                    reason='xfailed on env: {env} with reason: {reason}'
+                        .format(env=env, reason=reason)))
 
 
 def map_test_type_to_env_dir(test_type):
