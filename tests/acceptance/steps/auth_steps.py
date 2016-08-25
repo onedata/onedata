@@ -15,10 +15,10 @@ from pytest_bdd import given
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
 def default_mount(user, mount_path, token, request, onedata_environment, context,
                   client_dockers, env_description_file, test_type, providers):
-    mount_users(request, onedata_environment, context, client_dockers, env_description_file,
-                test_type, providers, user_names=[user], client_instances=["client1"],
-                mount_paths=[mount_path], client_hosts=['client-host1'],
-                tokens=[token])
+    mount_users(request, onedata_environment, context, client_dockers,
+                env_description_file, test_type, providers, user_names=[user],
+                client_instances=["client1"], mount_paths=[mount_path],
+                client_hosts=['client-host1'], tokens=[token])
 
 
 @when(parsers.parse('{spaces} is mounted for {user}'))
