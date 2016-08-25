@@ -19,11 +19,10 @@ def visit_onezone(base_url, selenium):
     selenium.get(oz_url)
 
 
-@then(parsers.parse('user should see login buttons for {provider_names}'))
-def login_provider_buttons(selenium, provider_names):
-    for name in list_parser(provider_names):
+@then(parsers.parse('user should see login button for {provider_name}'))
+def login_provider_buttons(selenium, provider_name):
         assert selenium.find_element_by_css_selector(
-            '.login-box a.login-icon-box.{name}'.format(name=name)
+            '.login-box a.login-icon-box.{name}'.format(name=provider_name)
         )
 
 

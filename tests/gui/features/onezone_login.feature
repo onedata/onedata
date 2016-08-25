@@ -11,8 +11,8 @@ Feature: Onezone login page
     Then user should see that the page title contains "Login"
 
 
-  Scenario: Login buttons of multiple providers are rendered on the login Homepage page
-    Then user should see login buttons for [plgrid,dropbox,github,facebook,google]
+  Scenario: Login button of provider is rendered on the login Homepage page
+    Then user should see login button for plgrid
 
 
   Scenario: The development mode login page should show links to login
