@@ -8,7 +8,9 @@ ARG ONEPANEL_AUTOSTART=false
 
 # Get the image up to date and install utility tools
 RUN dnf -y upgrade && \
-    dnf -y install fping python net-tools traceroute vim && \
+    dnf -y install fping ca-certificates python python-setuptools net-tools \
+                   traceroute vim && \
+    easy_install requests && \
     dnf clean all
 
 # Install oneprovider package
@@ -32,7 +34,7 @@ EXPOSE 53 5555 443 8443 80 8876 8877 9443
 # Add entrypoint script
 ADD run.py /root/run.py
 
-RUN mkdir -p /volumes/persistency /volumes/storage
-VOLUME ["/volumes/persistency", "/volumes/storage"]
+RUN mkdir -p /volumes/persistence
+VOLUME ["/volumes/persistence"]
 
 CMD /root/run.py

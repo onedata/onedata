@@ -1,32 +1,37 @@
 # Sample installation config file
-
 cluster:
-  domain_name: "localhost.local"
+  domainName: "localhost.local"
+  autoDeploy: true
   nodes:
-    node:
+    n1:
       hostname: "devel"
-
-  manager:
-    default_node: "node"
+  managers:
+    mainNode: "n1"
     nodes:
-      - "node"
-  worker:
+      - "n1"
+  workers:
     nodes:
-      - "node"
-  database:
+      - "n1"
+  databases:
     nodes:
-      - "node"
-
-  storage:
-    NFS:
-      type: "POSIX"
-      mount_point: "/mnt"
-
-  settings:
-    open_files_limit: 65535
-    processes_limit: 65535
-
+      - "n1"
+  storages:
+    "NFS":
+      type: "posix"
+      mountPoint: "/mnt"
 oneprovider:
   register: true
-  name: "provider"
-  redirection_point: "https://devel.localhost.local"
+  name: "Provider"
+  redirectionPoint: "https://devel.localhost.local"
+  geoLatitude: 10.0
+  geoLongitude: 20.0
+onezone:
+  domainName: "onedata.org"
+onepanel:
+  users:
+    "admin1":
+      password: "Password1"
+      userRole: "admin"
+    "user1":
+      password: "Password2"
+      userRole: "regular"
