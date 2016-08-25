@@ -23,8 +23,7 @@ def pytest_addoption(parser):
                      help="type of test (acceptance, env_up,"
                           "performance, packaging, gui)")
     parser.addoption("--ignore-xfail", action="store_true",
-                     help="Causes test cases marked with xfail not to be"
-                          "marked as skipped in JUnit report")
+                     help="Ignores xfail mark")
 
 
 def pytest_generate_tests(metafunc):
@@ -160,8 +159,7 @@ def xfail_by_env(request, env_description_file):
     global variable in that module named pytestmark in
     the following way:
     pytestmark = pytest.mark.xfail_env(*envs)
-    Running tests with --skip-xfailed causes tests marked as xfail to be
-    marked as skipped in JUnit report.
+    Running tests with --ignore-xfail causes xfail marks to be ignored.
     """
     if request.node.get_marker('xfail_env'):
         env = get_file_name(env_description_file)
