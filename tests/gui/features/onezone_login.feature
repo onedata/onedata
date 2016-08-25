@@ -11,12 +11,12 @@ Feature: Onezone login page
     Then user should see that the page title contains "Login"
 
 
-  Scenario: Login buttons of multiple providers are rendered on the login Homepage page
-    Then user should see login buttons for [plgrid,dropbox,github,facebook,google]
+  Scenario: Login button of provider is rendered on the login Homepage page
+    Then user should see login button for plgrid
 
 
   Scenario: The development mode login page should show links to login
-    When user clicks on the "indigo" login button
+    When user clicks on the "plgrid" login button
     Then user should see a page with "Developer mode login:" header
     And user should see [user1,user2,user3] links
 

@@ -7,7 +7,7 @@ Feature: Oneprovider Data view
     Given user opens a Onezone URL in a web browser
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
-    And user clicks on the "indigo" login button
+    And user clicks on the "plgrid" login button
     And user clicks on the "user1" link
     And user expands the "go to your files" Onezone sidebar panel
     And user clicks on the "p1" provider in Onezone providers sidebar panel
