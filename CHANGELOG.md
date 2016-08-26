@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc4
+
+* Add ONEPANEL_DEBUG_MODE env variable to release docker entrypoint
+
+
 ### 3.0.0-RC3
 
 * VFS-2156 Update release docker
