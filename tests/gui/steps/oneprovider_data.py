@@ -12,52 +12,15 @@ import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
-from tests.gui.steps.common import find_element_by_css_selector_and_text,\
-    select_button_from_buttons_by_name
 from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 
-from pytest import fixture
-
 from ..utils.inspect import selector
-from ..utils.generic import find_item_with_given_properties
-
-
-@given(parsers.parse('there is no file named "{file_list_elem}" in files list'))
-@given(parsers.parse('there is no directory named "{file_list_elem}" in files list'))
-def check_if_element_not_exist(selenium, file_list_elem):
-
-    def _find_file(s):
-        files = s.find_elements_by_css_selector('.files-list td')
-        for f in files:
-            if f.text == file_list_elem:
-                return f
-        return None
-
-    Wait(selenium, WAIT_FRONTEND).until_not(_find_file)
-
-
-@fixture
-def supporting_provider():
-    return dict()
-
-
-def _check_for_item_in_files_list(selenium, name):
-    list_items = selenium.find_elements_by_css_selector('.files-list td')
-    for item in list_items:
-        if item.text == name:
-            return True
-    return False
-
-
-@given(parsers.parse('there is a "{file_name}" file on the files list'))
-def existing_file(selenium, file_name):
-    Wait(selenium, WAIT_FRONTEND).until(
-        lambda s: _check_for_item_in_files_list(selenium, file_name)
-    )
+from ..utils.generic import find_item_with_given_properties, refresh_and_call, \
+    click_on_given_clickable_element
 
 
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
@@ -102,77 +65,17 @@ def upload_file_to_current_dir(selenium, file_name):
     Wait(selenium, WAIT_BACKEND).until(file_browser_ready)
 
 
-@then(parsers.parse('user clicks the button from top menu bar with tooltip "{tooltip_name}"'))
-@when(parsers.parse('user clicks the button from top menu bar with tooltip "{tooltip_name}"'))
-def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
-
-    def _find_tooltip_with_given_name(s):
-        tooltips = s.find_elements_by_css_selector('ul.toolbar-group a')
-        for tooltip in tooltips:
-            if tooltip.get_attribute('data-original-title') == tooltip_name:
-                return tooltip
-        return None
-
-    tooltip = Wait(selenium, WAIT_BACKEND).until(_find_tooltip_with_given_name)
-    tooltip.click()
-
-
-@when(parsers.parse('user sees new file named "{file_list_element}" in files list'))
-@then(parsers.parse('user sees new directory named "{file_list_element}" in files list'))
-@then(parsers.parse('user sees new file named "{file_list_element}" in files list'))
-def op_check_if_new_element_appeared(selenium, file_list_element):
-    new_file_list_elem = find_element_by_css_selector_and_text('table.table td.file-list-col-file',
-                                                               file_list_element)
-    Wait(selenium, WAIT_FRONTEND).until(new_file_list_elem)
-
-
-@then(parsers.parse('user selects "{file_list_element}" from files list'))
-@when(parsers.parse('user selects "{file_list_element}" from files list'))
-def op_select_elem(selenium, file_list_element):
-    file_list_elem_to_select = select_button_from_buttons_by_name(file_list_element,
-                                                                  '.files-list table.files-table td.file-list-col-file')
-    Wait(selenium, WAIT_FRONTEND).until(file_list_elem_to_select).click()
-
-
-@then(parsers.parse('user should not see directory named "{file_list_element}" in files list'))
-@then(parsers.parse('user should not see file named "{file_list_element}" in files list'))
-def check_absence_deleted_element(selenium, file_list_element):
-
-    def _try_find_deleted_element(s):
-        elems = s.find_elements_by_css_selector('table.table td.file-list-col-file')
-        for elem in elems:
-            if elem.text == file_list_element:
-                return elem
-        return None
-
-    assert _try_find_deleted_element(selenium) is None
-
-
-@then(parsers.parse('user sees modal with name of provider supporting '
-                    'space in providers column'))
-def op_check_if_provider_name_is_in_tab(selenium, supporting_provider):
-
-    def _find_provider(s):
-        providers = s.find_elements_by_css_selector(
-            '#file-chunks-modal .container-fluid table.file-blocks-table td.provider-name')
-        for elem in providers:
-            if elem.text == supporting_provider['name']:
-                return elem
-        return None
-
-    Wait(selenium, WAIT_FRONTEND).until(_find_provider)
-
-
-@then(parsers.parse('user double clicks on file "{file_item}" from files list'))
-@when(parsers.parse('user double clicks on file "{file_item}" from files list'))
-def op_select_file_from_file_list(selenium, file_item):
-    check_properties = selector(selenium, text=file_item,
+@then(parsers.parse('user double clicks on file "{file_name}" from files list'))
+@when(parsers.parse('user double clicks on file "{file_name}" from files list'))
+def op_select_file_from_file_list(selenium, file_name):
+    check_properties = selector(selenium, text=file_name,
                                 check_visibility=True)
     css_path = '.files-list table.files-table td.file-list-col-file'
 
     list_item = Wait(selenium, WAIT_FRONTEND).until(
         lambda s: find_item_with_given_properties(s, css_path,
-                                                  check_properties)
+                                                  check_properties),
+        message='searching for {s} in file list'.format(s=file_name)
     )
     ActionChains(selenium).double_click(list_item).perform()
 
@@ -192,3 +95,102 @@ def check_if_downloaded_file_contains_given_content(tmpdir, file_name,
     with open(file_path, 'r') as f:
         file_content = ''.join(f.readlines())
         assert content == file_content
+
+
+def _check_for_lack_of_file_in_given_table(selenium, file_name):
+    def _find_file(s, name):
+        files = s.find_elements_by_css_selector('.files-list td')
+        return all(li.text != name for li in files)
+
+    Wait(selenium, 3*WAIT_BACKEND).until(
+        lambda s: refresh_and_call(s, _find_file,
+                                   file_name),
+        message='searching for lack of {file} '
+                'on file list'.format(file=file_name)
+    )
+
+
+@given(parsers.parse('there is no file named "{file_list_elem}" in files list'))
+@given(parsers.parse('there is no directory named "{file_list_elem}" in files list'))
+def check_if_element_not_exist(selenium, file_list_elem):
+    _check_for_lack_of_file_in_given_table(selenium, file_list_elem)
+
+
+@then(parsers.parse('user should not see directory named '
+                    '"{file_list_elem}" in files list'))
+@then(parsers.parse('user should not see file named '
+                    '"{file_list_elem}" in files list'))
+def check_absence_deleted_element(selenium, file_list_elem):
+    _check_for_lack_of_file_in_given_table(selenium, file_list_elem)
+
+
+def _check_for_file_in_given_table(selenium, file_name):
+    def _find_file(s, name):
+        files = s.find_elements_by_css_selector('.files-list td')
+        return sum(1 for li in files if li.text == name) == 1
+
+    Wait(selenium, 3*WAIT_BACKEND).until(
+        lambda s: refresh_and_call(s, _find_file,
+                                   file_name),
+        message='searching for exactly one {file} '
+                'on file list'.format(file=file_name)
+    )
+
+
+@given(parsers.parse('there is a "{file_name}" file on the files list'))
+def existing_file(selenium, file_name):
+    _check_for_file_in_given_table(selenium, file_name)
+
+
+@when(parsers.parse('user sees new file named "{file_list_element}" '
+                    'in files list'))
+@then(parsers.parse('user sees new directory named "{file_list_element}" '
+                    'in files list'))
+@then(parsers.parse('user sees new file named "{file_list_element}" '
+                    'in files list'))
+def op_check_if_new_element_appeared(selenium, file_list_element):
+    _check_for_file_in_given_table(selenium, file_list_element)
+
+
+@then(parsers.parse('user clicks the button from top menu bar '
+                    'with tooltip "{tooltip_name}"'))
+@when(parsers.parse('user clicks the button from top menu bar '
+                    'with tooltip "{tooltip_name}"'))
+def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
+
+    def _find_tooltip_with_given_name(s):
+        tooltips = s.find_elements_by_css_selector('ul.toolbar-group a')
+        for tooltip in tooltips:
+            if tooltip.get_attribute('data-original-title') == tooltip_name:
+                return tooltip
+
+    Wait(selenium, WAIT_BACKEND).until(
+        _find_tooltip_with_given_name,
+        message='clicking on {tooltip} '
+                'from top menu bar'.format(tooltip=tooltip_name)
+    ).click()
+
+
+@then(parsers.parse('user selects "{file_list_element}" from files list'))
+@when(parsers.parse('user selects "{file_list_element}" from files list'))
+def op_select_elem(selenium, file_list_element):
+    click_on_given_clickable_element(selenium, item_name=file_list_element,
+                                     css_path='.files-list td',
+                                     msg='clicking on {file} in file '
+                                         'list'.format(file=file_list_element))
+
+
+@then(parsers.parse('user sees modal with name of provider supporting '
+                    'space in providers column'))
+def op_check_if_provider_name_is_in_tab(selenium, clipboard):
+
+    def _find_provider(s):
+        providers = s.find_elements_by_css_selector(
+            '#file-chunks-modal .container-fluid '
+            'table.file-blocks-table td.provider-name')
+        for elem in providers:
+            if elem.text == clipboard['supporting_provider']:
+                return elem
+        return None
+
+    Wait(selenium, WAIT_FRONTEND).until(_find_provider)

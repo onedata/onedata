@@ -34,6 +34,11 @@ cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 
 
+@pytest.fixture
+def clipboard():
+    return {}
+
+
 @pytest.fixture(scope='module', autouse=True)
 def _verify_url(request, base_url):
     """Override original fixture to change scope to module (we can have different base_urls for each module)"""

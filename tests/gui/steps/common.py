@@ -8,6 +8,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 import time
+import random
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from tests.utils.acceptance_utils import list_parser
@@ -17,8 +18,6 @@ from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
-from random import choice
-from string import ascii_uppercase, ascii_lowercase, digits
 from pytest import fixture
 
 
@@ -29,7 +28,8 @@ def get_url(selenium):
 
 @given('user generates valid name string')
 def name_string():
-    return ''.join(choice(ascii_uppercase + ascii_lowercase + digits) for _ in range(6))
+    chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
+    return ''.join(random.sample(chars, 6))
 
 
 @then(parsers.parse('user should see that the page title contains "{text}"'))
@@ -37,15 +37,28 @@ def title_contains(selenium, text):
     Wait(selenium, WAIT_FRONTEND).until(EC.title_contains(text))
 
 
+def _enter_text(selenium, text):
+    input_box = selenium.switch_to.active_element
+    input_box.clear()
+    input_box.send_keys(text)
+    return True if input_box.get_attribute('value') == text else False
+
+
 @when('user types given name on keyboard')
 def type_valid_name_string_into_active_element(selenium, name_string):
-    selenium.switch_to.active_element.send_keys(name_string)
+    Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: _enter_text(s, name_string),
+        message='entering {val} to input box'.format(val=name_string)
+    )
 
 
 @when(parsers.parse('user types "{text}" on keyboard'))
 @then(parsers.parse('user types "{text}" on keyboard'))
 def type_string_into_active_element(selenium, text):
-    selenium.switch_to.active_element.send_keys(text)
+    Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: _enter_text(s, name_string),
+        message='entering {val} to input box'.format(val=text)
+    )
 
 
 @when(parsers.parse('user presses enter on keyboard'))

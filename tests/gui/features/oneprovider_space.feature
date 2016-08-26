@@ -18,6 +18,7 @@ Feature: Oneprovider space functionality
     And user sees that input box in "Create a new space" modal is active
     And user types given name on keyboard
     And user presses enter on keyboard
+    And user sees that "Create a new space" modal has vanished
     Then user sees that the new item has appeared on the spaces list
 
 
