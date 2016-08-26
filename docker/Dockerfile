@@ -34,7 +34,7 @@ EXPOSE 53 5555 443 8443 80 8876 8877 9443
 # Add entrypoint script
 ADD run.py /root/run.py
 
-RUN mkdir -p /volumes/persistence
-VOLUME ["/volumes/persistence"]
+RUN mkdir -p /volumes/persistence /volumes/storage
+VOLUME ["/volumes/persistence", "/volumes/storage"]
 
 CMD /root/run.py

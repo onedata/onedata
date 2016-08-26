@@ -13,7 +13,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-ROOT = '/volumes/persistence'
+ROOT = '/volumes/persistency'
 DIRS = ['/etc/op_panel', '/etc/op_worker', '/etc/cluster_manager',
     '/etc/rc.d/init.d', '/var/lib/op_panel', '/var/lib/op_worker',
     '/var/lib/cluster_manager', '/usr/lib64/cluster_manager',
@@ -100,7 +100,7 @@ def configure(config):
 
     if r.status_code != 201:
         log('\nFailed to start configuration process\n{0}'.format(r.text))
-        return
+        return False
 
     loc = r.headers['location']
     status = 'running'
@@ -113,7 +113,7 @@ def configure(config):
                          verify=False)
         if r.status_code != 200:
             log('Unexpected configuration error\n{0}'.format(r.text))
-            return
+            return False
         else:
             resp = json.loads(r.text)
             status = resp['status']
@@ -132,7 +132,9 @@ def configure(config):
         log('Function: {0}'.format(resp.get('function', '-')))
         log('Hosts: {0}'.format(', '.join(resp.get('hosts', []))))
         log('For more information please check the logs.')
-        sys.exit(1)
+        return False
+
+    return True
 
 def get_container_id():
     with open('/proc/self/cgroup', 'r') as f:
@@ -190,20 +192,25 @@ if __name__ == '__main__':
 
     set_node_name('/etc/op_panel/vm.args')
 
-    advertise_address = os.environ.get('$ONEPANEL_ADVERTISE_ADDRESS')
+    advertise_address = os.environ.get('ONEPANEL_ADVERTISE_ADDRESS')
     if advertise_address:
         set_advertise_address('/etc/oz_panel/app.config', advertise_address)
 
     start_service('op_panel')
+    configured = is_configured()
 
-    if is_configured():
+    if configured:
         start_services()
     else:
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE')
         batch_cofig = os.environ.get('ONEPROVIDER_CONFIG', '')
         if batch_mode and batch_mode.lower() == 'true':
-            configure(batch_cofig)
+            configured = configure(batch_cofig)
 
     show_details()
-    log('\nCongratulations! oneprovider has been successfully started.')
-    infinite_loop()
+
+    if configured:
+        log('\nCongratulations! oneprovider has been successfully started.')
+
+    if configured or os.environ.get('ONEPANEL_DEBUG_MODE'):
+        infinite_loop()
