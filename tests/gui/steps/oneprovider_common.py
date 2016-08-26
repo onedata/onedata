@@ -10,7 +10,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
-from common import select_button_from_buttons_by_name, check_if_element_is_active, refresh_and_call
+from common import select_button_from_buttons_by_name
+
+from ..utils.inspect import is_active
+from ..utils.generic import refresh_and_call
 
 
 def _click_given_tab_in_main_menu_sidebar(selenium, main_menu_tab):
@@ -160,6 +163,7 @@ def op_click_on_given_item_in_current_settings_dropdown(selenium, item_name):
                                                       '.clickable')
     ).click()
 
+
 @then(parsers.parse('user clicks "{button_name}" '
                     'confirmation button in displayed modal'))
 @when(parsers.parse('user clicks "{button_name}" '
@@ -196,7 +200,7 @@ def op_wait_for_active_input_box_in_modal_with_given_name(selenium, modal_name):
     )
     modal_input = modal.find_element_by_css_selector('input')
     Wait(selenium, WAIT_FRONTEND).until(
-        check_if_element_is_active(web_elem=modal_input)
+        lambda s: is_active(s, modal_input)
     )
 
 
