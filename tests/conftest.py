@@ -22,6 +22,8 @@ def pytest_addoption(parser):
     parser.addoption("--test-type", action="store", default=None,
                      help="type of test (acceptance, env_up,"
                           "performance, packaging, gui)")
+    parser.addoption("--ignore-xfail", action="store_true",
+                     help="Ignores xfail mark")
 
 
 def pytest_generate_tests(metafunc):
@@ -69,7 +71,7 @@ def persistent_environment(request, test_type, env_description_file):
     feature_name = request.module.__name__.split('.')[-1]
     logdir = make_logdir(logdir_path, os.path
                          .join(get_file_name(env_description_file), feature_name))
-    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
+    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir, skip=False)
 
     def fin():
         docker.remove(request.onedata_environment['docker_ids'],
@@ -157,16 +159,18 @@ def xfail_by_env(request, env_description_file):
     global variable in that module named pytestmark in
     the following way:
     pytestmark = pytest.mark.xfail_env(*envs)
-    Running tests with --runxfail causes tests marked as xfail to run
+    Running tests with --ignore-xfail causes xfail marks to be ignored.
     """
     if request.node.get_marker('xfail_env'):
         env = get_file_name(env_description_file)
         args = request.node.get_marker('xfail_env').kwargs
         reason = args['reason']
         arg_envs = [get_file_name(e) for e in args['envs']]
-        if env in arg_envs:
-            pytest.xfail('xfailed on env: {env} with reason: {reason}'
-                         .format(env=env, reason=reason))
+        ignore = request.config.getoption("--ignore-xfail")
+        if env in arg_envs and not ignore:
+            request.node.add_marker(pytest.mark.xfail(
+                    reason='xfailed on env: {env} with reason: {reason}'
+                        .format(env=env, reason=reason)))
 
 
 def map_test_type_to_env_dir(test_type):

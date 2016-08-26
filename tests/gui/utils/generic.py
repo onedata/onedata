@@ -1,6 +1,5 @@
 """Generic GUI testing utils - mainly helpers and extensions for Selenium.
 """
-from selenium.common.exceptions import NoSuchElementException
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -10,7 +9,9 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import os
 from tests import gui
-from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
+from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH
+from selenium.webdriver.support.wait import WebDriverWait as Wait
+from selenium.common.exceptions import TimeoutException
 
 
 RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(/#)?(?P<method>/.*)')
@@ -50,3 +51,28 @@ def upload_file_path(file_name):
         file_name
     )
 
+
+def refresh_and_call(browser, callback, *args, **kwargs):
+    """Refresh browser and keep calling callback with given args
+    until achieve expected result or timeout.
+    """
+    browser.refresh()
+    try:
+        result = Wait(browser, WAIT_REFRESH).until(
+            lambda s: callback(s, *args, **kwargs)
+        )
+    except TimeoutException:
+        return None
+    else:
+        return result
+
+
+def find_item_with_given_properties(browser, css_path, check_properties):
+    """Find elements with given css selector and return first one fulfilling
+    given properties.
+    """
+    items = browser.find_elements_by_css_selector(css_path)
+    for item in items:
+        if check_properties(item):
+            return item
+    return None

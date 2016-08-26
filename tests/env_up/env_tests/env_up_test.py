@@ -20,7 +20,7 @@ class TestEnvUp:
         logdir = make_logdir(ENV_UP_LOGDIR, get_file_name(__file__))
         result = run_env_up_script("env_up.py",
                                    config=config_file('env.json'),
-                                   logdir=logdir)
+                                   logdir=logdir, skip=False)
         cls.result = result
 
     @classmethod
