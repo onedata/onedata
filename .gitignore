@@ -11,7 +11,7 @@ tests/performance/logs
 tests/gui/logs
 .cache
 tests/**/.cache
-
+tests/acceptance/profiling_data/
 
 package
 docker-build-list.json
