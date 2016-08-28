@@ -56,7 +56,7 @@ def type_valid_name_string_into_active_element(selenium, name_string):
 @then(parsers.parse('user types "{text}" on keyboard'))
 def type_string_into_active_element(selenium, text):
     Wait(selenium, WAIT_FRONTEND).until(
-        lambda s: _enter_text(s, name_string),
+        lambda s: _enter_text(s, text),
         message='entering {val} to input box'.format(val=text)
     )
 
