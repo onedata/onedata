@@ -9,10 +9,10 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import time
 
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from tests.utils.acceptance_utils import list_parser
 from tests.gui.utils.generic import parse_url
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, WAIT_REFRESH
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -153,16 +153,6 @@ def select_button_from_buttons_by_name(name, buttons_selector):
     return _go_to_button
 
 
-def check_if_element_is_active(selector='', web_elem=None):
-    def _is_active(s):
-        tmp = web_elem if web_elem else s.find_element_by_css_selector(selector)
-        if tmp is not None:
-            return tmp == s.switch_to.active_element
-        else:
-            return False
-    return _is_active
-
-
 def find_element_by_css_selector_and_text(selector, text):
     """finds element on site by css selector and element's text"""
     def _find_element(s):
@@ -173,18 +163,6 @@ def find_element_by_css_selector_and_text(selector, text):
     return _find_element
 
 
-def refresh_and_call(selenium, callback, *args, **kwargs):
-    selenium.refresh()
-    try:
-        result = Wait(selenium, WAIT_REFRESH).until(
-            lambda s: callback(s, *args, **kwargs)
-        )
-    except TimeoutException:
-        return None
-    else:
-        return result
-
-
 # Below functions are currently unused and should not be used,
 # because it involves a knowledge about internals...
 
@@ -192,9 +170,3 @@ def refresh_and_call(selenium, callback, *args, **kwargs):
 @when(parsers.re(r'user changes application path to (?P<path>.+)'))
 def on_ember_path(selenium, path):
     selenium.get(parse_url(selenium.current_url).group('base_url') + '/#' + path)
-
-
-
-
-
-

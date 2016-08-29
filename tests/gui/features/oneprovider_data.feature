@@ -7,7 +7,7 @@ Feature: Oneprovider Data view
     Given user opens a Onezone URL in a web browser
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
-    And user clicks on the "indigo" login button
+    And user clicks on the "plgrid" login button
     And user clicks on the "user1" link
     And user expands the "go to your files" Onezone sidebar panel
     And user clicks on the "p1" provider in Onezone providers sidebar panel
@@ -15,6 +15,12 @@ Feature: Oneprovider Data view
     And user sees that main content has ended loading
     # data is default, so it is unnecessary
     # And user clicks on the "data" menu item in Oneprovider main menu
+
+  Scenario: User downloads file
+    When user uses spaces select to change data space to "space1"
+    And user uses upload button in toolbar to upload file "20B-1.txt" to current dir
+    And user double clicks on file "20B-1.txt" from files list
+    Then user sees that downloaded file "20B-1.txt" contains "11111111111111111111"
 
 
   Scenario: Uploading a small file to space that accepts large files should succeed
@@ -78,5 +84,3 @@ Feature: Oneprovider Data view
     And user selects "file3" from files list
     And user clicks the button from top menu bar with tooltip "Show file distribution"
     Then user sees modal with name of provider supporting space in providers column
-
-

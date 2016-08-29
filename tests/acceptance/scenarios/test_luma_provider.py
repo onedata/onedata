@@ -25,28 +25,28 @@ def env_description_file(request):
     return env_file(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
 
 
-@pytest.mark.skip_env(envs=['env_luma_provider'],
+@pytest.mark.xfail_env(envs=['env_luma_provider'],
                       reason="Luma acceptance test hangs sometimes")
 @scenario('Operations on POSIX storage')
 def test_posix_storage_operations(env_description_file):
     pass
 
 
-@pytest.mark.skip_env(envs=['env_luma_provider'],
+@pytest.mark.xfail_env(envs=['env_luma_provider'],
                       reason="Luma acceptance test hangs sometimes")
 @scenario('Operations on CEPH storage')
 def test_ceph_storage_operations(env_description_file):
     pass
 
 
-@pytest.mark.skip_env(envs=['env_luma_provider'],
+@pytest.mark.xfail_env(envs=['env_luma_provider'],
                       reason="Luma acceptance test hangs sometimes")
 @scenario('Operations on Amazon S3 storage')
 def test_s3_storage_operations(env_description_file):
     pass
 
 
-@pytest.mark.skip_env(envs=['env_luma_provider'],
+@pytest.mark.xfail_env(envs=['env_luma_provider'],
                       reason="Luma acceptance test hangs sometimes")
 @scenario('Operations on Openstack Swift storage')
 def test_swift_storage_operations(env_description_file):
