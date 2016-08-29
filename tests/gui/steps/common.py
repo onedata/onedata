@@ -18,12 +18,8 @@ from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
-from pytest import fixture
 
-
-@fixture
-def get_url(selenium):
-    return selenium.current_url
+from ..utils.generic import enter_text
 
 
 @given('user generates valid name string')
@@ -32,23 +28,21 @@ def name_string():
     return ''.join(random.sample(chars, 6))
 
 
+@when(parsers.parse('user should see that the page title contains "{text}"'))
 @then(parsers.parse('user should see that the page title contains "{text}"'))
 def title_contains(selenium, text):
-    Wait(selenium, WAIT_FRONTEND).until(EC.title_contains(text))
-
-
-def _enter_text(selenium, text):
-    input_box = selenium.switch_to.active_element
-    input_box.clear()
-    input_box.send_keys(text)
-    return True if input_box.get_attribute('value') == text else False
+    Wait(selenium, WAIT_FRONTEND).until(
+        EC.title_contains(text),
+        message='seeing that page contains {:s}'.format(text)
+    )
 
 
 @when('user types given name on keyboard')
+@then('user types given name on keyboard')
 def type_valid_name_string_into_active_element(selenium, name_string):
     Wait(selenium, WAIT_FRONTEND).until(
-        lambda s: _enter_text(s, name_string),
-        message='entering {val} to input box'.format(val=name_string)
+        lambda s: enter_text(s.switch_to.active_element, name_string),
+        message='entering {:s} to input box'.format(name_string)
     )
 
 
@@ -56,8 +50,8 @@ def type_valid_name_string_into_active_element(selenium, name_string):
 @then(parsers.parse('user types "{text}" on keyboard'))
 def type_string_into_active_element(selenium, text):
     Wait(selenium, WAIT_FRONTEND).until(
-        lambda s: _enter_text(s, text),
-        message='entering {val} to input box'.format(val=text)
+        lambda s: enter_text(s.switch_to.active_element, text),
+        message='entering {:s} to input box'.format(text)
     )
 
 
@@ -119,7 +113,7 @@ def page_with_header(selenium, text):
 @when(parsers.parse('user sees an {notify_type} notify with text matching to: {text_regexp}'))
 @then(parsers.parse('user sees an {notify_type} notify with text matching to: {text_regexp}'))
 def notify_visible_with_text(selenium, notify_type, text_regexp):
-    text_regexp = re.compile(text_regexp, re.IGNORECASE)
+    text_regexp = re.compile(text_regexp)
 
     def notify_with_text_present(s):
         try:

@@ -35,6 +35,11 @@ is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 
 
 @pytest.fixture
+def get_url(selenium):
+    return selenium.current_url
+
+
+@pytest.fixture
 def clipboard():
     return {}
 

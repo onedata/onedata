@@ -75,7 +75,7 @@ Feature: Oneprovider Group functionality
     And user sees that input box in "Join a group" modal is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
-    Then user sees an error notify with text matching to: .*failed.*join.*group.*
+    Then user sees an error notify with text matching to: .*[Ff]ailed.*join.*group.*
 
   Scenario: User can rename existing group and then rename it back
     # group 'group1' defined in env.json

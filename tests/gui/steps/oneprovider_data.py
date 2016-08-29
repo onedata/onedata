@@ -75,7 +75,7 @@ def op_select_file_from_file_list(selenium, file_name):
     list_item = Wait(selenium, WAIT_FRONTEND).until(
         lambda s: find_item_with_given_properties(s, css_path,
                                                   check_properties),
-        message='searching for {s} in file list'.format(s=file_name)
+        message='searching for {:s} in file list'.format(file_name)
     )
     ActionChains(selenium).double_click(list_item).perform()
 
@@ -105,8 +105,7 @@ def _check_for_lack_of_file_in_given_table(selenium, file_name):
     Wait(selenium, 3*WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _find_file,
                                    file_name),
-        message='searching for lack of {file} '
-                'on file list'.format(file=file_name)
+        message='searching for lack of {:s} ''on file list'.format(file_name)
     )
 
 
@@ -132,8 +131,7 @@ def _check_for_file_in_given_table(selenium, file_name):
     Wait(selenium, 3*WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _find_file,
                                    file_name),
-        message='searching for exactly one {file} '
-                'on file list'.format(file=file_name)
+        message='searching for exactly one {:s} on file list'.format(file_name)
     )
 
 
@@ -166,8 +164,7 @@ def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
 
     Wait(selenium, WAIT_BACKEND).until(
         _find_tooltip_with_given_name,
-        message='clicking on {tooltip} '
-                'from top menu bar'.format(tooltip=tooltip_name)
+        message='clicking on {:s} from top menu bar'.format(tooltip_name)
     ).click()
 
 
@@ -176,8 +173,9 @@ def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
 def op_select_elem(selenium, file_list_element):
     click_on_given_clickable_element(selenium, item_name=file_list_element,
                                      css_path='.files-list td',
-                                     msg='clicking on {file} in file '
-                                         'list'.format(file=file_list_element))
+                                     ignore_case=False,
+                                     msg='clicking on {:s} in file '
+                                         'list'.format(file_list_element))
 
 
 @then(parsers.parse('user sees modal with name of provider supporting '
@@ -193,4 +191,8 @@ def op_check_if_provider_name_is_in_tab(selenium, clipboard):
                 return elem
         return None
 
-    Wait(selenium, WAIT_FRONTEND).until(_find_provider)
+    Wait(selenium, WAIT_FRONTEND).until(
+        _find_provider,
+        message='check file distribution, focusing on {:s} provide'
+                ''.format(clipboard['supporting_provider'])
+    )

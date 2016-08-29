@@ -84,7 +84,7 @@ Feature: Oneprovider space functionality
     And user sees that input box in "Join a space" modal is active
     And user types "helloworld" on keyboard
     And user presses enter on keyboard
-    Then user sees an error notify with text matching to: .*invalid.*token.*
+    Then user sees an error notify with text matching to: .*[Ii]nvalid.*token.*
 
 
   # 'space2' defined in env.json

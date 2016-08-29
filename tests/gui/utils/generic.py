@@ -80,15 +80,24 @@ def find_item_with_given_properties(browser, css_path, check_properties):
     return None
 
 
-def click_on_given_clickable_element(browser, css_path, item_name, msg):
+def click_on_given_clickable_element(browser, css_path, item_name,
+                                     msg, ignore_case=True,
+                                     wait=WAIT_FRONTEND):
     """Check if elem is visible and enable, if so click on it.
     """
     properties = selector(browser, text=item_name,
-                          ignore_case=True, check_visibility=True,
+                          ignore_case=ignore_case,
+                          check_visibility=True,
                           check_if_enabled=True)
 
-    Wait(browser, WAIT_FRONTEND).until(
+    Wait(browser, wait).until(
         lambda s: find_item_with_given_properties(s, css_path,
                                                   properties),
         message=msg.format(item_name)
     ).click()
+
+
+def enter_text(input_box, text):
+    input_box.clear()
+    input_box.send_keys(text)
+    return True if input_box.get_attribute('value') == text else False

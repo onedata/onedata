@@ -18,8 +18,8 @@ from ..utils.generic import refresh_and_call, click_on_given_clickable_element
 def _click_given_tab_in_main_menu_sidebar(selenium, main_menu_tab):
     click_on_given_clickable_element(selenium, item_name=main_menu_tab,
                                      css_path='.primary-sidebar a#main-'
-                                              '{tab}'.format(tab=main_menu_tab),
-                                     msg='clicking on {} tab in main menu')
+                                              '{:s}'.format(main_menu_tab),
+                                     msg='clicking on {:s} tab in main menu')
 
 
 @given(parsers.parse('user clicks on the "{main_menu_tab}" '
@@ -57,19 +57,19 @@ def op_click_on_button_in_main_menu_tab_sidebar(selenium, button_name,
     click_on_given_clickable_element(selenium, item_name=button_name,
                                      css_path='.secondary-sidebar '
                                               'figure.icon',
-                                     msg='clicking on {} in ' + main_menu_tab)
+                                     msg='clicking on {{:s}} '
+                                         'in {tab}'.format(tab=main_menu_tab))
 
 
 def _check_for_item_in_given_list(selenium, name, elem_type):
-    def _find_elem(s, item_name, item_type):
-        items = s.find_elements_by_css_selector('.{type}-list .secondary-'
+    def _find_item(s, item_name, item_type):
+        items = s.find_elements_by_css_selector('.{:s}-list .secondary-'
                                                 'sidebar-item .item-label '
-                                                '.truncate'
-                                                ''.format(type=item_type))
+                                                '.truncate'.format(item_type))
         return sum(1 for li in items if li.text == item_name) == 1
 
     Wait(selenium, 3*WAIT_BACKEND).until(
-        lambda s: refresh_and_call(s, _find_elem,
+        lambda s: refresh_and_call(s, _find_item,
                                    name, elem_type),
         message='searching for exactly one {item} '
                 'on {list} list'.format(item=name, list=elem_type)
@@ -108,16 +108,15 @@ def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                                  item_type,
                                                                  item_name):
     def _check_for_lack_of_item_in_given_list(s):
-        items = s.find_elements_by_css_selector('.{type}-list .secondary-'
+        items = s.find_elements_by_css_selector('.{:s}-list .secondary-'
                                                 'sidebar-item .item-label '
-                                                '.truncate'
-                                                ''.format(type=item_type))
-        return all(x.text != item_name for x in items)
+                                                '.truncate'.format(item_type))
+        return all(item.text != item_name for item in items)
 
     Wait(selenium, 3*WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _check_for_lack_of_item_in_given_list),
         message='waiting for {item} to disappear from '
-                '{type} list'.format(item=item_name, type=item_type)
+                '{list} list'.format(item=item_name, list=item_type)
     )
 
 
@@ -177,7 +176,7 @@ def op_click_on_given_item_in_current_settings_dropdown(selenium, item_name):
                                      css_path='.settings-dropdown '
                                               '.dropdown-menu-settings '
                                               '.clickable',
-                                     msg='clicking on {} in current '
+                                     msg='clicking on {:s} in current '
                                          'settings dropdown')
 
 
@@ -188,8 +187,8 @@ def op_click_on_given_item_in_current_settings_dropdown(selenium, item_name):
 def op_click_confirmation_button(selenium, button_name):
     click_on_given_clickable_element(selenium, item_name=button_name,
                                      css_path='.modal-content button',
-                                     msg='clicking on {} in '
-                                         'dicplayed modal')
+                                     msg='clicking on {:s} in '
+                                         'displayed modal')
 
 
 @given('user sees that main content has ended loading')
@@ -217,7 +216,7 @@ def _chech_if_modal_of_given_name_is_displayed(selenium, modal_name):
 def op_wait_for_active_input_box_in_modal_with_given_name(selenium, modal_name):
     modal = Wait(selenium, WAIT_FRONTEND).until(
         lambda s: _chech_if_modal_of_given_name_is_displayed(s, modal_name),
-        message='waiting for {modal} modal to appear'.format(modal=modal_name)
+        message='waiting for {:s} modal to appear'.format(modal_name)
     )
     modal_input = modal.find_element_by_css_selector('input')
     Wait(selenium, WAIT_FRONTEND).until(
@@ -233,7 +232,7 @@ def op_wait_for_active_input_box_in_modal_with_given_name(selenium, modal_name):
 def op_wait_for_token_box_in_modal_with_given_name(selenium, modal_name):
     modal = Wait(selenium, WAIT_FRONTEND).until(
         lambda s: _chech_if_modal_of_given_name_is_displayed(s, modal_name),
-        message='waiting for {modal} modal to appear'.format(modal=modal_name)
+        message='waiting for {:s} modal to appear'.format(modal_name)
     )
     Wait(selenium, WAIT_BACKEND).until(
         EC.visibility_of(modal.find_element_by_css_selector('input')),
@@ -247,5 +246,5 @@ def op_check_if_modal_with_input_box_disappeared(selenium, modal_name):
     Wait(selenium, WAIT_FRONTEND).until_not(
         lambda s: _chech_if_modal_of_given_name_is_displayed(selenium,
                                                              modal_name),
-        message='waiting for {modal} modal to vanish'.format(modal=modal_name)
+        message='waiting for {:s} modal to vanish'.format(modal_name)
     )
