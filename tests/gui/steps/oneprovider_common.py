@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
+from selenium.webdriver.common.keys import Keys
 
 from ..utils.inspect import is_active
 from ..utils.generic import refresh_and_call, click_on_given_clickable_element
@@ -219,6 +220,8 @@ def op_wait_for_active_input_box_in_modal_with_given_name(selenium, modal_name):
         message='waiting for {:s} modal to appear'.format(modal_name)
     )
     modal_input = modal.find_element_by_css_selector('input')
+    modal_input.send_keys(Keys.NULL)
+
     Wait(selenium, WAIT_FRONTEND).until(
         lambda s: is_active(s, modal_input),
         message='waiting for input box to become active'

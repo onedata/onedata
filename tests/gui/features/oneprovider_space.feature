@@ -12,7 +12,7 @@ Feature: Oneprovider space functionality
     And user sees that main content has ended loading
 
 
-    Scenario: Create new space with specified name
+  Scenario: Create new space with specified name
     Given user generates valid name string
     When user clicks on the "Create" button in spaces sidebar
     And user sees that input box in "Create a new space" modal is active
@@ -117,6 +117,7 @@ Feature: Oneprovider space functionality
     And user sees a settings dropdown menu for "space2" item on the spaces list
     And user clicks on the "LEAVE SPACE" item in current settings dropdown
     And user clicks "YES" confirmation button in displayed modal
+    And user sees that "Leave a space" modal has vanished
     Then user sees an info notify with text matching to: .*space2.*left
     And user sees that "Leave a space" modal has vanished
     And user sees that the "space2" has vanished from the spaces list

@@ -109,6 +109,7 @@ Feature: Oneprovider Group functionality
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "LEAVE THIS GROUP" item in current settings dropdown
     And user clicks "YES" confirmation button in displayed modal
+    And user sees that "Leave the group" modal has vanished
     Then user sees an info notify with text matching to: .*group1.*left
     And user sees that "Leave the group" modal has vanished
     And user sees that the "group1" has vanished from the groups list

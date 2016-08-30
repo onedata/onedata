@@ -93,7 +93,7 @@ def click_on_given_clickable_element(browser, css_path, item_name,
     Wait(browser, wait).until(
         lambda s: find_item_with_given_properties(s, css_path,
                                                   properties),
-        message=msg.format(item_name)
+        message=msg.format(item_name) if item_name else msg
     ).click()
 
 

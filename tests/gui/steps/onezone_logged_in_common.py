@@ -92,15 +92,21 @@ def click_on_go_to_files_provider(selenium):
     Wait(selenium, WAIT_FRONTEND).until(go_to_files_button).click()
 
 
+from ..utils.generic import click_on_given_clickable_element
+
+
 @when('user clicks on the user alias')
 def click_user_alias_edit(selenium):
-    alias_edit = Wait(selenium, WAIT_FRONTEND).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, '.alias-panel a .space-header'))
-    )
-    alias_edit.click()
+    click_on_given_clickable_element(selenium, item_name='',
+                                     css_path='.alias-panel a .space-header',
+                                     msg='clicking on user alias in main menu')
+
+    Wait(selenium, WAIT_FRONTEND).until(
+        lambda s: s.find_element_by_css_selector('.alias-panel a input')
+    ).send_keys(Keys.NULL)
     # selenium.find_element_by_css_selector('.alias-panel a .space-header').click()
     # additional - select all text in active input
-    selenium.execute_script('$(".alias-panel a input").select()')
+    # selenium.execute_script('$(".alias-panel a input").select()')
 
 
 @when('user clicks on new space name input box')
