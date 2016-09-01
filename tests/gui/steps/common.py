@@ -22,6 +22,17 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from ..utils.generic import enter_text
 
 
+@given(parsers.parse('other users logged in {browsers}'))
+def get_new_instance_of_web_driver(selenium, browsers, driver_factory):
+
+    for browser in list_parser(browsers):
+        if browser in selenium:
+            raise AttributeError('{:s} already in use'.format(browser))
+
+        driver = driver_factory()
+        selenium[browser] = driver
+
+
 @given('user generates valid name string')
 def name_string():
     chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'

@@ -10,6 +10,18 @@ from selenium.webdriver.support.ui import WebDriverWait as wait
 from pytest_bdd import given, when, then, parsers
 
 
+@given(parsers.parse("user of {browser} opens a Onezone URL in a web browser"))
+def visit_onezone_mkIIc(base_url, selenium, browser):
+    oz_url = base_url
+    selenium[browser].get(oz_url)
+
+
+@when(parsers.parse("user of {browser} opens a Onezone URL in a web browser"))
+def visit_onezone_mkIIb(base_url, selenium, browser):
+    oz_url = base_url
+    selenium[browser].get(oz_url)
+
+
 @given("user opens a Onezone URL in a web browser")
 def visit_onezone(base_url, selenium):
     oz_url = base_url
