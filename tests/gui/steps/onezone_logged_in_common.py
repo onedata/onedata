@@ -92,15 +92,16 @@ def click_on_go_to_files_provider(selenium):
     Wait(selenium, WAIT_FRONTEND).until(go_to_files_button).click()
 
 
-from ..utils.generic import click_on_given_clickable_element
+from ..utils.generic import click_on_element
 
 
 @when('user clicks on the user alias')
 def click_user_alias_edit(selenium):
-    click_on_given_clickable_element(selenium, item_name='',
-                                     css_path='.alias-panel a .space-header',
-                                     msg='clicking on user alias in main menu')
+    click_on_element(selenium, item_name='',
+                     css_path='.alias-panel a .space-header',
+                     msg='clicking on user alias in main menu')
 
+    # activate input box
     Wait(selenium, WAIT_FRONTEND).until(
         lambda s: s.find_element_by_css_selector('.alias-panel a input')
     ).send_keys(Keys.NULL)

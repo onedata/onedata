@@ -33,7 +33,7 @@ def name_string():
 def title_contains(selenium, text):
     Wait(selenium, WAIT_FRONTEND).until(
         EC.title_contains(text),
-        message='seeing that page contains {:s}'.format(text)
+        message='seeing that page title contains {:s}'.format(text)
     )
 
 

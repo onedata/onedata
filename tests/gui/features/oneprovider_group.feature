@@ -18,7 +18,7 @@ Feature: Oneprovider Group functionality
     And user sees that input box in "Create a new group" modal is active
     And user types given name on keyboard
     And user presses enter on keyboard
-    And user sees that "Create a new group" modal has vanished
+    And user sees that "Create a new group" modal has disappeared
     Then user sees that the new item has appeared on the groups list
 
   Scenario: User can invite other user
@@ -87,10 +87,10 @@ Feature: Oneprovider Group functionality
     And user types "NewNameGroup" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*group1.*renamed.*NewNameGroup.*
-    And user sees that "Rename a group" modal has vanished
-    Then user sees that the "group1" has vanished from the groups list
+    And user sees that "Rename a group" modal has disappeared
+    Then user sees that the "group1" has disappeared from the groups list
     And user sees that the "NewNameGroup" has appeared on the groups list
-    And user sees that "Rename a group" modal has vanished
+    And user sees that "Rename a group" modal has disappeared
     And user clicks a settings icon displayed for "NewNameGroup" item on the groups list
     And user sees a settings dropdown menu for "NewNameGroup" item on the groups list
     And user clicks on the "RENAME" item in current settings dropdown
@@ -98,8 +98,8 @@ Feature: Oneprovider Group functionality
     And user types "group1" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameGroup.*renamed.*group1.*
-    And user sees that "Rename a group" modal has vanished
-    And user sees that the "NewNameGroup" has vanished from the groups list
+    And user sees that "Rename a group" modal has disappeared
+    And user sees that the "NewNameGroup" has disappeared from the groups list
     And user sees that the "group1" has appeared on the groups list
 
   Scenario: User can leave existing group and then create group with the same name
@@ -109,13 +109,13 @@ Feature: Oneprovider Group functionality
     And user sees a settings dropdown menu for "group1" item on the groups list
     And user clicks on the "LEAVE THIS GROUP" item in current settings dropdown
     And user clicks "YES" confirmation button in displayed modal
-    And user sees that "Leave the group" modal has vanished
+    And user sees that "Leave the group" modal has disappeared
     Then user sees an info notify with text matching to: .*group1.*left
-    And user sees that "Leave the group" modal has vanished
-    And user sees that the "group1" has vanished from the groups list
+    And user sees that "Leave the group" modal has disappeared
+    And user sees that the "group1" has disappeared from the groups list
     And user clicks on the "Create" button in groups sidebar
     And user sees that input box in "Create a new group" modal is active
     And user types "group1" on keyboard
     And user presses enter on keyboard
-    And user sees that "Create a new group" modal has vanished
+    And user sees that "Create a new group" modal has disappeared
     And user sees that the "group1" has appeared on the groups list

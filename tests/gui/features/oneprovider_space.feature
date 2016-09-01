@@ -17,7 +17,7 @@ Feature: Oneprovider space functionality
     And user sees that input box in "Create a new space" modal is active
     And user types given name on keyboard
     And user presses enter on keyboard
-    And user sees that "Create a new space" modal has vanished
+    And user sees that "Create a new space" modal has disappeared
     Then user sees that the new item has appeared on the spaces list
 
 
@@ -31,8 +31,8 @@ Feature: Oneprovider space functionality
     And user types "NewNameSpace" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
-    And user sees that "Rename a space" modal has vanished
-    Then user sees that the "space1" has vanished from the spaces list
+    And user sees that "Rename a space" modal has disappeared
+    Then user sees that the "space1" has disappeared from the spaces list
     And user sees that the "NewNameSpace" has appeared on the spaces list
     And user clicks a settings icon displayed for "NewNameSpace" item on the spaces list
     And user sees a settings dropdown menu for "NewNameSpace" item on the spaces list
@@ -41,8 +41,8 @@ Feature: Oneprovider space functionality
     And user types "space1" on keyboard
     And user presses enter on keyboard
     And user sees an info notify with text matching to: .*NewNameSpace.*renamed.*space1.*
-    And user sees that "Rename a space" modal has vanished
-    And user sees that the "NewNameSpace" has vanished from the spaces list
+    And user sees that "Rename a space" modal has disappeared
+    And user sees that the "NewNameSpace" has disappeared from the spaces list
     And user sees that the "space1" has appeared on the spaces list
 
 
@@ -116,13 +116,13 @@ Feature: Oneprovider space functionality
     And user sees a settings dropdown menu for "space2" item on the spaces list
     And user clicks on the "LEAVE SPACE" item in current settings dropdown
     And user clicks "YES" confirmation button in displayed modal
-    And user sees that "Leave a space" modal has vanished
+    And user sees that "Leave a space" modal has disappeared
     Then user sees an info notify with text matching to: .*space2.*left
-    And user sees that "Leave a space" modal has vanished
-    And user sees that the "space2" has vanished from the spaces list
+    And user sees that "Leave a space" modal has disappeared
+    And user sees that the "space2" has disappeared from the spaces list
     And user clicks on the "Create" button in spaces sidebar
     And user sees that input box in "Create a new space" modal is active
     And user types "space2" on keyboard
     And user presses enter on keyboard
-    And user sees that "Create a new space" modal has vanished
+    And user sees that "Create a new space" modal has disappeared
     And user sees that the "space2" has appeared on the spaces list

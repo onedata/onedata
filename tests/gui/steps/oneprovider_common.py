@@ -13,14 +13,14 @@ from pytest_bdd import given, parsers, when, then
 from selenium.webdriver.common.keys import Keys
 
 from ..utils.inspect import is_active
-from ..utils.generic import refresh_and_call, click_on_given_clickable_element
+from ..utils.generic import refresh_and_call, click_on_element
 
 
 def _click_given_tab_in_main_menu_sidebar(selenium, main_menu_tab):
-    click_on_given_clickable_element(selenium, item_name=main_menu_tab,
-                                     css_path='.primary-sidebar a#main-'
+    click_on_element(selenium, item_name=main_menu_tab,
+                     css_path='.primary-sidebar a#main-'
                                               '{:s}'.format(main_menu_tab),
-                                     msg='clicking on {:s} tab in main menu')
+                     msg='clicking on {:s} tab in main menu')
 
 
 @given(parsers.parse('user clicks on the "{main_menu_tab}" '
@@ -55,10 +55,10 @@ def op_click_on_button_in_main_menu_tab_sidebar(selenium, button_name,
                                                 main_menu_tab):
     assert main_menu_tab in ('spaces', 'groups')
 
-    click_on_given_clickable_element(selenium, item_name=button_name,
-                                     css_path='.secondary-sidebar '
+    click_on_element(selenium, item_name=button_name,
+                     css_path='.secondary-sidebar '
                                               'figure.icon',
-                                     msg='clicking on {{:s}} '
+                     msg='clicking on {{:s}} '
                                          'in {tab}'.format(tab=main_menu_tab))
 
 
@@ -77,6 +77,7 @@ def _check_for_item_in_given_list(selenium, name, elem_type):
     )
 
 
+@given(parsers.parse('there is an "{item_name}" item on the {item_type} list'))
 @given(parsers.parse('there is a "{item_name}" item on the {item_type} list'))
 def op_check_if_there_is_given_item_on_the_list_of_given_type(selenium,
                                                               item_name,
@@ -104,7 +105,7 @@ def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
 
 
 @then(parsers.parse('user sees that the "{item_name}" '
-                    'has vanished from the {item_type} list'))
+                    'has disappeared from the {item_type} list'))
 def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                                  item_type,
                                                                  item_name):
@@ -173,11 +174,11 @@ def op_wait_for_settings_dropdown_menu(selenium, name, elem_type):
 @then(parsers.parse('user clicks on the "{item_name}" item '
                     'in current settings dropdown'))
 def op_click_on_given_item_in_current_settings_dropdown(selenium, item_name):
-    click_on_given_clickable_element(selenium, item_name=item_name,
-                                     css_path='.settings-dropdown '
+    click_on_element(selenium, item_name=item_name,
+                     css_path='.settings-dropdown '
                                               '.dropdown-menu-settings '
                                               '.clickable',
-                                     msg='clicking on {:s} in current '
+                     msg='clicking on {:s} in current '
                                          'settings dropdown')
 
 
@@ -186,9 +187,9 @@ def op_click_on_given_item_in_current_settings_dropdown(selenium, item_name):
 @when(parsers.parse('user clicks "{button_name}" '
                     'confirmation button in displayed modal'))
 def op_click_confirmation_button(selenium, button_name):
-    click_on_given_clickable_element(selenium, item_name=button_name,
-                                     css_path='.modal-content button',
-                                     msg='clicking on {:s} in '
+    click_on_element(selenium, item_name=button_name,
+                     css_path='.modal-content button',
+                     msg='clicking on {:s} in '
                                          'displayed modal')
 
 
@@ -243,11 +244,11 @@ def op_wait_for_token_box_in_modal_with_given_name(selenium, modal_name):
     )
 
 
-@when(parsers.parse('user sees that "{modal_name}" modal has vanished'))
-@then(parsers.parse('user sees that "{modal_name}" modal has vanished'))
+@when(parsers.parse('user sees that "{modal_name}" modal has disappeared'))
+@then(parsers.parse('user sees that "{modal_name}" modal has disappeared'))
 def op_check_if_modal_with_input_box_disappeared(selenium, modal_name):
     Wait(selenium, WAIT_FRONTEND).until_not(
         lambda s: _chech_if_modal_of_given_name_is_displayed(selenium,
                                                              modal_name),
-        message='waiting for {:s} modal to vanish'.format(modal_name)
+        message='waiting for {:s} modal to disappear'.format(modal_name)
     )

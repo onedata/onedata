@@ -20,7 +20,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from ..utils.inspect import selector
 from ..utils.generic import find_item_with_given_properties, refresh_and_call, \
-    click_on_given_clickable_element
+    click_on_element
 
 
 @when(parsers.re(r'user uses spaces select to change data space to "(?P<space_name>.+)"'))
@@ -97,7 +97,7 @@ def check_if_downloaded_file_contains_given_content(tmpdir, file_name,
         assert content == file_content
 
 
-def _check_for_lack_of_file_in_given_table(selenium, file_name):
+def _check_for_lack_of_file_in_file_list(selenium, file_name):
     def _find_file(s, name):
         files = s.find_elements_by_css_selector('.files-list td')
         return all(li.text != name for li in files)
@@ -111,19 +111,19 @@ def _check_for_lack_of_file_in_given_table(selenium, file_name):
 
 @given(parsers.parse('there is no file named "{file_list_elem}" in files list'))
 @given(parsers.parse('there is no directory named "{file_list_elem}" in files list'))
-def check_if_element_not_exist(selenium, file_list_elem):
-    _check_for_lack_of_file_in_given_table(selenium, file_list_elem)
+def check_if_file_not_exist(selenium, file_list_elem):
+    _check_for_lack_of_file_in_file_list(selenium, file_list_elem)
 
 
 @then(parsers.parse('user should not see directory named '
                     '"{file_list_elem}" in files list'))
 @then(parsers.parse('user should not see file named '
                     '"{file_list_elem}" in files list'))
-def check_absence_deleted_element(selenium, file_list_elem):
-    _check_for_lack_of_file_in_given_table(selenium, file_list_elem)
+def check_absence_deleted_file(selenium, file_list_elem):
+    _check_for_lack_of_file_in_file_list(selenium, file_list_elem)
 
 
-def _check_for_file_in_given_table(selenium, file_name):
+def _check_for_file_in_file_list(selenium, file_name):
     def _find_file(s, name):
         files = s.find_elements_by_css_selector('.files-list td')
         return sum(1 for li in files if li.text == name) == 1
@@ -137,7 +137,7 @@ def _check_for_file_in_given_table(selenium, file_name):
 
 @given(parsers.parse('there is a "{file_name}" file on the files list'))
 def existing_file(selenium, file_name):
-    _check_for_file_in_given_table(selenium, file_name)
+    _check_for_file_in_file_list(selenium, file_name)
 
 
 @when(parsers.parse('user sees new file named "{file_list_element}" '
@@ -146,8 +146,8 @@ def existing_file(selenium, file_name):
                     'in files list'))
 @then(parsers.parse('user sees new file named "{file_list_element}" '
                     'in files list'))
-def op_check_if_new_element_appeared(selenium, file_list_element):
-    _check_for_file_in_given_table(selenium, file_list_element)
+def op_check_if_new_file_appeared(selenium, file_list_element):
+    _check_for_file_in_file_list(selenium, file_list_element)
 
 
 @then(parsers.parse('user clicks the button from top menu bar '
@@ -170,11 +170,11 @@ def op_click_tooltip_from_top_menu_bar(selenium, tooltip_name):
 
 @then(parsers.parse('user selects "{file_list_element}" from files list'))
 @when(parsers.parse('user selects "{file_list_element}" from files list'))
-def op_select_elem(selenium, file_list_element):
-    click_on_given_clickable_element(selenium, item_name=file_list_element,
-                                     css_path='.files-list td',
-                                     ignore_case=False,
-                                     msg='clicking on {:s} in file '
+def op_select_file(selenium, file_list_element):
+    click_on_element(selenium, item_name=file_list_element,
+                     css_path='.files-list td',
+                     ignore_case=False,
+                     msg='clicking on {:s} in file '
                                          'list'.format(file_list_element))
 
 
