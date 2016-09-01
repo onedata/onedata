@@ -29,7 +29,7 @@ WAIT_BACKEND = 15
 
 # waiting for backend to load after refresh
 WAIT_REFRESH = WAIT_BACKEND
-MAX_REFRESH_COUNT = 4
+MAX_REFRESH_COUNT = 6
 
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
