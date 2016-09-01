@@ -5,7 +5,7 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -69,7 +69,7 @@ def _check_for_item_in_given_list(selenium, name, elem_type):
                                                 '.truncate'.format(item_type))
         return sum(1 for li in items if li.text == item_name) == 1
 
-    Wait(selenium, 3*WAIT_BACKEND).until(
+    Wait(selenium, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _find_item,
                                    name, elem_type),
         message='searching for exactly one {item} '
@@ -114,7 +114,7 @@ def op_check_if_item_of_given_name_appears_in_list_of_given_type(selenium,
                                                 '.truncate'.format(item_type))
         return all(item.text != item_name for item in items)
 
-    Wait(selenium, 3*WAIT_BACKEND).until(
+    Wait(selenium, MAX_REFRESH_COUNT*WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _check_for_lack_of_item_in_given_list),
         message='waiting for {item} to disappear from '
                 '{list} list'.format(item=item_name, list=item_type)

@@ -10,7 +10,7 @@ import re
 import os
 import time
 
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, MAX_REFRESH_COUNT
 from tests.gui.utils.generic import upload_file_path
 from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
@@ -102,7 +102,7 @@ def _check_for_lack_of_file_in_given_table(selenium, file_name):
         files = s.find_elements_by_css_selector('.files-list td')
         return all(li.text != name for li in files)
 
-    Wait(selenium, 3*WAIT_BACKEND).until(
+    Wait(selenium, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _find_file,
                                    file_name),
         message='searching for lack of {:s} ''on file list'.format(file_name)
@@ -128,7 +128,7 @@ def _check_for_file_in_given_table(selenium, file_name):
         files = s.find_elements_by_css_selector('.files-list td')
         return sum(1 for li in files if li.text == name) == 1
 
-    Wait(selenium, 3*WAIT_BACKEND).until(
+    Wait(selenium, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _find_file,
                                    file_name),
         message='searching for exactly one {:s} on file list'.format(file_name)

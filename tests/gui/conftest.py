@@ -17,7 +17,7 @@ import re
 import sys
 
 
-SELENIUM_IMPLICIT_WAIT = 15
+SELENIUM_IMPLICIT_WAIT = 8
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
@@ -28,7 +28,8 @@ WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
 WAIT_BACKEND = 15
 
 # waiting for backend to load after refresh
-WAIT_REFRESH = 2 * WAIT_BACKEND
+WAIT_REFRESH = WAIT_BACKEND
+MAX_REFRESH_COUNT = 4
 
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
