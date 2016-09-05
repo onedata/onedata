@@ -5,6 +5,8 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import re
+
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
@@ -18,10 +20,30 @@ from ..conftest import select_browser
 
 
 def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
-    click_on_element(driver, item_name=main_menu_tab,
-                     css_path='.primary-sidebar a#main-'
-                              '{:s}'.format(main_menu_tab),
-                     msg='clicking on {:s} tab in main menu')
+    def _load_main_menu_tab_page():
+        def _check_url():
+            try:
+                found = re.search('https?://[^/]*/#/([^/]*)/?', driver.current_url).group(1)
+            except AttributeError:
+                return False
+            else:
+                return main_menu_tab.lower() == found.lower()
+
+        click_on_element(driver, item_name=main_menu_tab,
+                         css_path='.primary-sidebar a#main-'
+                                  '{:s}'.format(main_menu_tab),
+                         msg='clicking on {:s} tab in main menu')
+
+        return Wait(driver, WAIT_FRONTEND).until(
+            lambda _: _check_url(),
+            message='waiting for url to change'
+        )
+
+    Wait(driver, WAIT_BACKEND).until(
+        lambda _: _load_main_menu_tab_page(),
+        message='waiting for {:s} main menu tab page to load'
+                ''.format(main_menu_tab)
+    )
 
 
 @given(parsers.parse('user of {browser_id} clicks on the "{main_menu_tab}" '
