@@ -20,96 +20,98 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 
 from ..utils.generic import enter_text
+from ..conftest import select_browser
 
 
-@given(parsers.parse('other users logged in {browsers}'))
-def get_new_instance_of_web_driver(selenium, browsers, driver_factory):
-
-    for browser in list_parser(browsers):
-        if browser in selenium:
-            raise AttributeError('{:s} already in use'.format(browser))
-
-        driver = driver_factory()
-        selenium[browser] = driver
-
-
-@given('user generates valid name string')
+@given(parsers.parse('user of {browser_id} generates valid name string'))
 def name_string():
     chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
     return ''.join(random.sample(chars, 6))
 
 
-@when(parsers.parse('user should see that the page title contains "{text}"'))
-@then(parsers.parse('user should see that the page title contains "{text}"'))
-def title_contains(selenium, text):
-    Wait(selenium, WAIT_FRONTEND).until(
+@when(parsers.parse('user of {browser_id} should see that the page title '
+                    'contains "{text}"'))
+@then(parsers.parse('user of {browser_id} should see that the page title '
+                    'contains "{text}"'))
+def title_contains(selenium, browser_id, text):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_FRONTEND).until(
         EC.title_contains(text),
-        message='seeing that page contains {:s}'.format(text)
+        message='seeing that page title contains {:s}'.format(text)
     )
 
 
-@when('user types given name on keyboard')
-@then('user types given name on keyboard')
-def type_valid_name_string_into_active_element(selenium, name_string):
-    Wait(selenium, WAIT_FRONTEND).until(
+@when(parsers.parse('user of {browser_id} types given name on keyboard'))
+@then(parsers.parse('user of {browser_id} types given name on keyboard'))
+def type_valid_name_string_into_active_element(selenium, browser_id,
+                                               name_string):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_FRONTEND).until(
         lambda s: enter_text(s.switch_to.active_element, name_string),
         message='entering {:s} to input box'.format(name_string)
     )
 
 
-@when(parsers.parse('user types "{text}" on keyboard'))
-@then(parsers.parse('user types "{text}" on keyboard'))
-def type_string_into_active_element(selenium, text):
-    Wait(selenium, WAIT_FRONTEND).until(
+@when(parsers.parse('user of {browser_id} types "{text}" on keyboard'))
+@then(parsers.parse('user of {browser_id} types "{text}" on keyboard'))
+def type_string_into_active_element(selenium, browser_id, text):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_FRONTEND).until(
         lambda s: enter_text(s.switch_to.active_element, text),
         message='entering {:s} to input box'.format(text)
     )
 
 
-@when(parsers.parse('user presses enter on keyboard'))
-@then(parsers.parse('user presses enter on keyboard'))
-def press_enter_on_active_element(selenium):
-    selenium.switch_to.active_element.send_keys(Keys.RETURN)
+@when(parsers.parse('user of {browser_id} presses enter on keyboard'))
+@then(parsers.parse('user of {browser_id} presses enter on keyboard'))
+def press_enter_on_active_element(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    driver.switch_to.active_element.send_keys(Keys.RETURN)
 
 
-@when(parsers.parse('user presses backspace on keyboard'))
-@then(parsers.parse('user presses backspace on keyboard'))
-def press_enter_on_active_element(selenium):
-    selenium.switch_to.active_element.send_keys(Keys.BACKSPACE)
+@when(parsers.parse('user of {browser_id} presses backspace on keyboard'))
+@then(parsers.parse('user of {browser_id} presses backspace on keyboard'))
+def press_enter_on_active_element(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    driver.switch_to.active_element.send_keys(Keys.BACKSPACE)
 
 
-@then(parsers.parse('user should see {links_names} links'))
-def link_with_text_present(selenium, links_names):
+@then(parsers.parse('user of {browser_id} should see {links_names} links'))
+def link_with_text_present(selenium, browser_id, links_names):
+    driver = select_browser(selenium, browser_id)
     for name in list_parser(links_names):
-        assert selenium.find_element_by_link_text(name)
+        assert driver.find_element_by_link_text(name)
 
 
-def _click_on_link_with_text(selenium, link_name):
-    selenium.find_element_by_link_text(link_name).click()
+def _click_on_link_with_text(driver, link_name):
+    driver.find_element_by_link_text(link_name).click()
 
 
-@given(parsers.parse('user clicks on the "{link_name}" link'))
-def g_click_on_link_with_text(selenium, link_name):
-    _click_on_link_with_text(selenium, link_name)
+@given(parsers.parse('user of {browser_id} clicks on the "{link_name}" link'))
+def g_click_on_link_with_text(selenium, browser_id, link_name):
+    driver = select_browser(selenium, browser_id)
+    _click_on_link_with_text(driver, link_name)
 
 
-@when(parsers.parse('user clicks on the "{link_name}" link'))
-def w_click_on_link_with_text(selenium, link_name):
-    _click_on_link_with_text(selenium, link_name)
+@when(parsers.parse('user of {browser_id} clicks on the "{link_name}" link'))
+def w_click_on_link_with_text(selenium, browser_id, link_name):
+    driver = select_browser(selenium, browser_id)
+    _click_on_link_with_text(driver, link_name)
 
 
-@when(parsers.parse('user is idle for {seconds:d} seconds'))
-def wait_n_seconds(seconds):
+@when(parsers.parse('user of {browser_id} is idle for {seconds:d} seconds'))
+def wait_n_seconds(seconds, browser_id):
     time.sleep(seconds)
 
 
-@when(parsers.re(r'user changes the relative URL to (?P<path>.+)'))
-def visit_relative(selenium, path):
-    selenium.get(parse_url(selenium.current_url).group('base_url') + path)
+@when(parsers.re(r'user of (?P<browser_id>.+) changes the relative URL to (?P<path>.+)'))
+def visit_relative(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    driver.get(parse_url(driver.current_url).group('base_url') + path)
 
 
-@then(parsers.parse('user should see a page with "{text}" header'))
-def page_with_header(selenium, text):
+@then(parsers.parse('user of {browser_id} should see a page with "{text}" header'))
+def page_with_header(selenium, browser_id, text):
 
     def header_with_text_presence(s):
         headers = s.find_elements_by_css_selector('h1, h2, h3, h4, h5')
@@ -118,12 +120,15 @@ def page_with_header(selenium, text):
         except StaleElementReferenceException:
             return False
 
-    Wait(selenium, WAIT_BACKEND).until(header_with_text_presence)
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_BACKEND).until(header_with_text_presence)
 
 
-@when(parsers.parse('user sees an {notify_type} notify with text matching to: {text_regexp}'))
-@then(parsers.parse('user sees an {notify_type} notify with text matching to: {text_regexp}'))
-def notify_visible_with_text(selenium, notify_type, text_regexp):
+@when(parsers.parse('user of {browser_id} sees an {notify_type} notify '
+                    'with text matching to: {text_regexp}'))
+@then(parsers.parse('user of {browser_id} sees an {notify_type} notify '
+                    'with text matching to: {text_regexp}'))
+def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
     text_regexp = re.compile(text_regexp)
 
     def notify_with_text_present(s):
@@ -139,23 +144,31 @@ def notify_visible_with_text(selenium, notify_type, text_regexp):
         except NoSuchElementException:
             return None
 
-    Wait(selenium, 2*WAIT_BACKEND).until(notify_with_text_present)
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, 2*WAIT_BACKEND).until(notify_with_text_present)
 
 
-@when('user can see current url')
-def get_current_url(selenium, get_url):
-    get_url = selenium.current_url
+@when(parsers.parse('user of {browser_id} can see current url'))
+def get_current_url(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    url = driver.current_url
+    if browser_id in tmp_memory:
+        tmp_memory[browser_id]['url'] = url
+    else:
+        tmp_memory[browser_id] = {'url': driver.current_url}
 
 
-@then('user sees that url has changed')
-def check_if_url_changed(selenium, get_url):
-    assert selenium.current_url != get_url
+@then(parsers.parse('user of {browser_id} sees that url has changed'))
+def check_if_url_changed(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    assert driver.current_url != tmp_memory[browser_id]['url']
 
 
-@when('user refreshes site')
-@then('user refreshes site')
-def refresh_site(selenium):
-    selenium.refresh()
+@when('user of {browser_id} refreshes site')
+@then('user of {browser_id} refreshes site')
+def refresh_site(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    driver.refresh()
 
 
 def select_button_from_buttons_by_name(name, buttons_selector):

@@ -80,10 +80,10 @@ def find_item_with_given_properties(browser, css_path, check_properties):
     return None
 
 
-def click_on_given_clickable_element(browser, css_path, item_name,
-                                     msg, ignore_case=True,
-                                     wait=WAIT_FRONTEND):
-    """Check if elem is visible and enable, if so click on it.
+def click_on_element(browser, css_path, item_name,
+                     msg, ignore_case=True,
+                     wait=WAIT_FRONTEND):
+    """Check if elem is visible and enabled, if so click on it.
     """
     properties = selector(browser, text=item_name,
                           ignore_case=ignore_case,
