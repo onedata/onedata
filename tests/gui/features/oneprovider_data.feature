@@ -30,7 +30,7 @@ Feature: Oneprovider Data view
 
 
   Scenario: Create new file and then remove it
-    Given in browser there is no file named "file1" in files list
+    Given that in browser there is no file named "file1" in files list
     When user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that input box in "New file" modal is active
     And user of browser types "file1" on keyboard
@@ -45,7 +45,7 @@ Feature: Oneprovider Data view
 
 
   Scenario: Create new directory and then remove it
-    Given in browser there is no directory named "directory1" in files list
+    Given that in browser there is no directory named "directory1" in files list
     When user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that input box in "New directory" modal is active
     And user of browser types "directory1" on keyboard

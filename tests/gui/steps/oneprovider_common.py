@@ -19,15 +19,22 @@ from ..utils.generic import refresh_and_call, click_on_element
 from ..conftest import select_browser
 
 
+main_menu_tab_to_url = {'spaces': 'spaces',
+                        'groups': 'groups',
+                        'data': 'data',
+                        'shared': 'shares'}
+
+
 def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
     def _load_main_menu_tab_page():
         def _check_url():
             try:
-                found = re.search('https?://[^/]*/#/([^/]*)/?', driver.current_url).group(1)
+                found = re.search('https?://[^/]*/#/([^/]*)/?',
+                                  driver.current_url).group(1).lower()
             except AttributeError:
                 return False
             else:
-                return main_menu_tab.lower() == found.lower()
+                return main_menu_tab_to_url[main_menu_tab].lower() == found
 
         click_on_element(driver, item_name=main_menu_tab,
                          css_path='.primary-sidebar a#main-'
@@ -105,14 +112,16 @@ def _check_for_item_in_given_list(driver, name, elem_type):
     )
 
 
-@given(parsers.parse('in {browser_id} there is an "{item_name}" item on the {item_type} list'))
+@given(parsers.parse('that in {browser_id} there is an "{item_name}" '
+                     'item on the {item_type} list'))
 def op_check_if_there_is_an_item_on_the_list(selenium, browser_id,
                                              item_name, item_type):
     driver = select_browser(selenium, browser_id)
     _check_for_item_in_given_list(driver, item_name, item_type)
 
 
-@given(parsers.parse('in {browser_id} there is a "{item_name}" item on the {item_type} list'))
+@given(parsers.parse('that in {browser_id} there is a "{item_name}" '
+                     'item on the {item_type} list'))
 def op_check_if_there_is_a_item_on_the_list(selenium, browser_id,
                                             item_name, item_type):
     driver = select_browser(selenium, browser_id)

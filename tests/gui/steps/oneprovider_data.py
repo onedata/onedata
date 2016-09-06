@@ -117,9 +117,9 @@ def _check_for_lack_of_file_in_file_list(driver, file_name):
     )
 
 
-@given(parsers.parse('in {browser_id} there is no file named '
+@given(parsers.parse('that in {browser_id} there is no file named '
                      '"{file_list_elem}" in files list'))
-@given(parsers.parse('in {browser_id} there is no directory named '
+@given(parsers.parse('that in {browser_id} there is no directory named '
                      '"{file_list_elem}" in files list'))
 def check_if_file_not_exist(selenium, browser_id, file_list_elem):
     driver = select_browser(selenium, browser_id)
@@ -147,7 +147,7 @@ def _check_for_file_in_file_list(driver, file_name):
     )
 
 
-@given(parsers.parse('in {browser_id} there is a "{file_name}" file '
+@given(parsers.parse('that in {browser_id} there is a "{file_name}" file '
                      'on the files list'))
 def existing_file(selenium, browser_id, file_name):
     driver = select_browser(selenium, browser_id)

@@ -23,7 +23,7 @@ Feature: Oneprovider space functionality
 
   # 'space1' defined in env.json
   Scenario: Rename existing space and then rename it back
-    Given in browser there is a "space1" item on the spaces list
+    Given that in browser there is a "space1" item on the spaces list
     When user of browser clicks a settings icon displayed for "space1" item on the spaces list
     And user of browser sees a settings dropdown menu for "space1" item on the spaces list
     And user of browser clicks on the "RENAME" item in current settings dropdown
@@ -48,7 +48,7 @@ Feature: Oneprovider space functionality
 
   # 'space1' defined in env.json
   Scenario: Check if "invite user" token box is not empty
-    Given in browser there is a "space1" item on the spaces list
+    Given that in browser there is a "space1" item on the spaces list
     When user of browser clicks a settings icon displayed for "space1" item on the spaces list
     And user of browser sees a settings dropdown menu for "space1" item on the spaces list
     And user of browser clicks on the "INVITE USER" item in current settings dropdown
@@ -58,7 +58,7 @@ Feature: Oneprovider space functionality
 
   # 'space1' defined in env.json
   Scenario: Check if "invite group" token box is not empty
-    Given in browser there is a "space1" item on the spaces list
+    Given that in browser there is a "space1" item on the spaces list
     When user of browser clicks a settings icon displayed for "space1" item on the spaces list
     And user of browser sees a settings dropdown menu for "space1" item on the spaces list
     And user of browser clicks on the "INVITE GROUP" item in current settings dropdown
@@ -68,7 +68,7 @@ Feature: Oneprovider space functionality
 
   # 'space1' defined in env.json
   Scenario: Check if "get support" token box is not empty
-    Given in browser there is a "space1" item on the spaces list
+    Given that in browser there is a "space1" item on the spaces list
     When user of browser clicks a settings icon displayed for "space1" item on the spaces list
     And user of browser sees a settings dropdown menu for "space1" item on the spaces list
     And user of browser clicks on the "GET SUPPORT" item in current settings dropdown
@@ -78,7 +78,7 @@ Feature: Oneprovider space functionality
 
   # 'space1' defined in env.json
   Scenario: User fails to join to space using invalid token
-    Given in browser there is a "space1" item on the spaces list
+    Given that in browser there is a "space1" item on the spaces list
     When user of browser clicks on the "Join" button in spaces sidebar
     And user of browser sees that input box in "Join a space" modal is active
     And user of browser types "helloworld" on keyboard
@@ -96,7 +96,7 @@ Feature: Oneprovider space functionality
 
   # 'space1' and 'space2' defined in env.json
   Scenario: Set given space as home and than set previous space as home
-    Given in browser there is a "space2" item on the spaces list
+    Given that in browser there is a "space2" item on the spaces list
     When user of browser clicks a settings icon displayed for "space2" item on the spaces list
     And user of browser sees a settings dropdown menu for "space2" item on the spaces list
     And user of browser clicks on the "SET AS HOME" item in current settings dropdown
@@ -111,7 +111,7 @@ Feature: Oneprovider space functionality
 
   # 'space2' defined in env.json
   Scenario: Leave existing space and then create space with the same name
-    Given in browser there is a "space2" item on the spaces list
+    Given that in browser there is a "space2" item on the spaces list
     When user of browser clicks a settings icon displayed for "space2" item on the spaces list
     And user of browser sees a settings dropdown menu for "space2" item on the spaces list
     And user of browser clicks on the "LEAVE SPACE" item in current settings dropdown

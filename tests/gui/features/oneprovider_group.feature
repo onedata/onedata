@@ -23,7 +23,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: User can invite other user
     # group 'group1' defined in env.json
-    Given in browser there is a "group1" item on the groups list
+    Given that in browser there is a "group1" item on the groups list
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "INVITE USER" item in current settings dropdown
@@ -32,7 +32,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: User can invite group
     # group 'group1' defined in env.json
-    Given in browser there is a "group1" item on the groups list
+    Given that in browser there is a "group1" item on the groups list
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "INVITE GROUP" item in current settings dropdown
@@ -41,7 +41,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: User can request space creation
     # group 'group1' defined in env.json
-    Given in browser there is a "group1" item on the groups list
+    Given that in browser there is a "group1" item on the groups list
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "REQUEST SPACE CREATION" item in current settings dropdown
@@ -50,7 +50,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: User fails to join space using incorrect token
     # group 'group1' defined in env.json
-    Given in browser there is a "group1" item on the groups list
+    Given that in browser there is a "group1" item on the groups list
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "JOIN SPACE" item in current settings dropdown
@@ -61,7 +61,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: User fails to join as subgroup using incorrect token
     # group 'group1' defined in env.json
-    Given in browser there is a "group1" item on the groups list
+    Given that in browser there is a "group1" item on the groups list
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "JOIN AS SUBGROUP" item in current settings dropdown
@@ -79,7 +79,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: User can rename existing group and then rename it back
     # group 'group1' defined in env.json
-    Given in browser there is a "group1" item on the groups list
+    Given that in browser there is a "group1" item on the groups list
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "RENAME" item in current settings dropdown
@@ -104,7 +104,7 @@ Feature: Oneprovider Group functionality
 
   Scenario: User can leave existing group and then create group with the same name
     # group 'group1' defined in env.json
-    Given in browser there is a "group1" item on the groups list
+    Given that in browser there is a "group1" item on the groups list
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "LEAVE THIS GROUP" item in current settings dropdown
