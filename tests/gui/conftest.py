@@ -44,17 +44,14 @@ def tmp_memory():
 @pytest.fixture(scope='module', autouse=True)
 def _verify_url(request, base_url):
     """Override original fixture to change scope to module (we can have different base_urls for each module)"""
-    if pkg_resources.get_distribution("pytest-selenium").version == '1.3.1':
-        from pytest_base_url.plugin import _verify_url as orig_verify_url
-    else:
-        from pytest_selenium.pytest_selenium import _verify_url as orig_verify_url
+    from pytest_base_url.plugin import _verify_url as orig_verify_url
     return orig_verify_url(request, base_url)
 
 
 @pytest.fixture(scope='module', autouse=True)
 def sensitive_url(request, base_url):
     """Override original fixture to change scope to module (we can have different base_urls for each module)"""
-    from pytest_selenium.safety import sensitive_url as orig_sensitive_url
+    from pytest_selenium_multi.safety import sensitive_url as orig_sensitive_url
     return orig_sensitive_url(request, base_url)
 
 
@@ -124,28 +121,33 @@ def capabilities(request, capabilities, tmpdir):
     return capabilities
 
 
+from pytest_selenium_multi.drivers.utils import factory
+
+
 @pytest.fixture
 def firefox_profile(firefox_profile, tmpdir):
-    firefox_profile.set_preference('browser.download.folderList', 2)
-    firefox_profile.set_preference('browser.download.manager.showWhenStarting',
-                                   False)
-    firefox_profile.set_preference('browser.helperApps.alwaysAsk.force', False)
-    firefox_profile.set_preference('browser.download.dir', str(tmpdir))
-    firefox_profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
-                                   'text/anytext, text/plain, text/html')
-    firefox_profile.update_preferences()
-    return firefox_profile
+    @factory
+    def _get_instance():
+        profile = firefox_profile.get_instance()
+        profile.set_preference('browser.download.folderList', 2)
+        profile.set_preference('browser.download.manager.showWhenStarting',
+                               False)
+        profile.set_preference('browser.helperApps.alwaysAsk.force', False)
+        profile.set_preference('browser.download.dir', str(tmpdir))
+        profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
+                               'text/anytext, text/plain, text/html')
+        profile.update_preferences()
+        return profile
+    return _get_instance
 
 
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
 @pytest.fixture
 def selenium(selenium):
-    selenium.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
-    selenium.set_window_size(1280, 1024)
+    for browser in selenium.keys():
+        if browser != 'request':
+            selenium[browser].implicitly_wait(SELENIUM_IMPLICIT_WAIT)
+            selenium[browser].set_window_size(1280, 1024)
     # currenlty, we rather set window size
     # selenium.maximize_window()
-    return {'browser': selenium}
-
-
-def select_browser(selenium, browser_id):
-    return selenium[browser_id]
+    return selenium

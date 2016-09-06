@@ -21,7 +21,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from ..utils.inspect import selector
 from ..utils.generic import find_item_with_given_properties, refresh_and_call, \
     click_on_element
-from ..conftest import select_browser
+from pytest_selenium_multi import select_browser
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '

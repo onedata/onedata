@@ -13,7 +13,7 @@ from tests.gui.steps.common import find_element_by_css_selector_and_text, \
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from tests.gui.conftest import WAIT_FRONTEND
 
-from ..conftest import select_browser
+from pytest_selenium_multi import select_browser
 
 
 @when(parsers.parse('user of {browser_id} clicks space named "{space_name}" '
