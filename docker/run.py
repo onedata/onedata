@@ -13,12 +13,14 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-ROOT = '/volumes/persistency'
+ROOT = '/volumes/persistence'
 DIRS = ['/etc/op_panel', '/etc/op_worker', '/etc/cluster_manager',
     '/etc/rc.d/init.d', '/var/lib/op_panel', '/var/lib/op_worker',
     '/var/lib/cluster_manager', '/usr/lib64/cluster_manager',
     '/opt/couchbase/var/lib/couchbase', '/var/log/op_panel',
     '/var/log/op_worker', '/var/log/cluster_manager']
+ADMIN = os.environ.get('ONEPANEL_ADMIN_USERNAME', 'admin')
+PASSWORD = os.environ.get('ONEPANEL_ADMIN_PASSWORD', 'password')
 
 def log(message, end='\n'):
     sys.stdout.write(message + end)
@@ -84,7 +86,9 @@ def start_services():
 
 def is_configured():
     r = requests.get('https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+                     auth=(ADMIN, PASSWORD),
                      verify=False)
+
     return r.status_code != 404
 
 def format_step(step):
@@ -94,13 +98,14 @@ def format_step(step):
 def configure(config):
     r = requests.post(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+        auth=(ADMIN, PASSWORD),
         headers={'content-type': 'application/x-yaml'},
         data=config,
         verify=False)
 
     if r.status_code != 201:
         log('\nFailed to start configuration process\n{0}'.format(r.text))
-        return
+        return False
 
     loc = r.headers['location']
     status = 'running'
@@ -110,10 +115,11 @@ def configure(config):
     log('\nConfiguring oneprovider:')
     while status == 'running':
         r = requests.get('https://127.0.0.1:9443' + loc,
+                         auth=(ADMIN, PASSWORD),
                          verify=False)
         if r.status_code != 200:
             log('Unexpected configuration error\n{0}'.format(r.text))
-            return
+            return False
         else:
             resp = json.loads(r.text)
             status = resp['status']
@@ -132,7 +138,9 @@ def configure(config):
         log('Function: {0}'.format(resp.get('function', '-')))
         log('Hosts: {0}'.format(', '.join(resp.get('hosts', []))))
         log('For more information please check the logs.')
-        sys.exit(1)
+        return False
+
+    return True
 
 def get_container_id():
     with open('/proc/self/cgroup', 'r') as f:
@@ -190,20 +198,30 @@ if __name__ == '__main__':
 
     set_node_name('/etc/op_panel/vm.args')
 
-    advertise_address = os.environ.get('$ONEPANEL_ADVERTISE_ADDRESS')
+    advertise_address = os.environ.get('ONEPANEL_ADVERTISE_ADDRESS')
     if advertise_address:
         set_advertise_address('/etc/oz_panel/app.config', advertise_address)
 
     start_service('op_panel')
 
+    keep_alive = os.environ.get('ONEPANEL_DEBUG_MODE',
+                                'false').lower() == 'true'
+
     if is_configured():
         start_services()
+        keep_alive = True
     else:
-        batch_mode = os.environ.get('ONEPANEL_BATCH_MODE')
-        batch_cofig = os.environ.get('ONEPROVIDER_CONFIG', '')
-        if batch_mode and batch_mode.lower() == 'true':
-            configure(batch_cofig)
+        batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
+        batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
+        if batch_mode.lower() == 'true':
+            keep_alive = configure(batch_config) or keep_alive
+        else:
+            keep_alive = True
 
     show_details()
-    log('\nCongratulations! oneprovider has been successfully started.')
-    infinite_loop()
+
+    if is_configured():
+        log('\nCongratulations! oneprovider has been successfully started.')
+
+    if keep_alive:
+        infinite_loop()

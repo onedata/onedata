@@ -4,6 +4,21 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc4
+
+* Add ONEPANEL_DEBUG_MODE env variable to release docker entrypoint
+
+
+### 3.0.0-RC3
+
+* VFS-2156 Update release docker
+* VFS-2156 Update packages tests
+* VFS-2395 Fix given step for checking provider's name in file distribution
+* VFS-2395 Fix given for data spaces and renamed some steps for spaces tests
+* VFS-2395 Added scrolling to element when clicking settings icon.
+* VFS-2395 Refactorize functions for creating space in onezone
+
+
 ### 3.0.0-RC2
 
 * Turn off HSTS by default, allow configuration via app.config
