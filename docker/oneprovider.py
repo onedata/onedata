@@ -23,8 +23,9 @@ ADMIN = os.environ.get('ONEPANEL_ADMIN_USERNAME', 'admin')
 PASSWORD = os.environ.get('ONEPANEL_ADMIN_PASSWORD', 'password')
 
 def log(message, end='\n'):
-    sys.stdout.write(message + end)
-    sys.stdout.flush()
+    with open('/proc/1/fd/1', 'w') as f:
+        f.write(message + end)
+        f.flush()
 
 def replace(file_path, pattern, value):
     with open(file_path, 'rw+') as f:
@@ -71,24 +72,21 @@ def set_advertise_address(file_path, advertise_address):
             '{{advertise_address, "{0}"}}'.format(advertise_address))
 
 def start_service(service_name, stdout=None):
-    with open(os.devnull, 'w') as stderr:
-        sp.check_call(['service', service_name, 'start'], stdout=stdout,
-                      stderr=stderr)
+    try:
+        sp.check_call(['service', service_name, 'start'])
+        log('Starting {0}: [  OK  ]'.format(service_name))
+    except Exception:
+        pass
 
 def start_services():
-    log('Starting couchbase_server: ', '')
-    with open(os.devnull, 'w') as stdout:
-        start_service('couchbase-server', stdout)
-    log('[  OK  ]')
+    start_service('couchbase-server')
     start_service('cluster_manager')
-    time.sleep(5)
     start_service('op_worker')
 
 def is_configured():
     r = requests.get('https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
                      auth=(ADMIN, PASSWORD),
                      verify=False)
-
     return r.status_code != 404
 
 def format_step(step):
@@ -122,13 +120,13 @@ def configure(config):
             return False
         else:
             resp = json.loads(r.text)
-            status = resp['status']
+            status = resp.get('status', 'error')
             for step in resp.get('steps', []):
                 if steps and step == steps[0]:
                     steps = steps[1:]
                 else:
                     log(format_step(step))
-            steps = resp['steps']
+            steps = resp.get('steps', [])
             time.sleep(1)
 
     if status != 'ok':
@@ -200,28 +198,19 @@ if __name__ == '__main__':
 
     advertise_address = os.environ.get('ONEPANEL_ADVERTISE_ADDRESS')
     if advertise_address:
-        set_advertise_address('/etc/oz_panel/app.config', advertise_address)
+        set_advertise_address('/etc/op_panel/app.config', advertise_address)
 
     start_service('op_panel')
 
-    keep_alive = os.environ.get('ONEPANEL_DEBUG_MODE',
-                                'false').lower() == 'true'
-
     if is_configured():
         start_services()
-        keep_alive = True
     else:
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
         batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
         if batch_mode.lower() == 'true':
-            keep_alive = configure(batch_config) or keep_alive
-        else:
-            keep_alive = True
+            configure(batch_config)
 
     show_details()
 
     if is_configured():
         log('\nCongratulations! oneprovider has been successfully started.')
-
-    if keep_alive:
-        infinite_loop()
