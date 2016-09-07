@@ -19,6 +19,8 @@ DIRS = ['/etc/op_panel', '/etc/op_worker', '/etc/cluster_manager',
     '/var/lib/cluster_manager', '/usr/lib64/cluster_manager',
     '/opt/couchbase/var/lib/couchbase', '/var/log/op_panel',
     '/var/log/op_worker', '/var/log/cluster_manager']
+ADMIN = os.environ.get('ONEPANEL_ADMIN_USERNAME', 'admin')
+PASSWORD = os.environ.get('ONEPANEL_ADMIN_PASSWORD', 'password')
 
 def log(message, end='\n'):
     sys.stdout.write(message + end)
@@ -84,7 +86,9 @@ def start_services():
 
 def is_configured():
     r = requests.get('https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+                     auth=(ADMIN, PASSWORD),
                      verify=False)
+
     return r.status_code != 404
 
 def format_step(step):
@@ -94,6 +98,7 @@ def format_step(step):
 def configure(config):
     r = requests.post(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+        auth=(ADMIN, PASSWORD),
         headers={'content-type': 'application/x-yaml'},
         data=config,
         verify=False)
@@ -110,6 +115,7 @@ def configure(config):
     log('\nConfiguring oneprovider:')
     while status == 'running':
         r = requests.get('https://127.0.0.1:9443' + loc,
+                         auth=(ADMIN, PASSWORD),
                          verify=False)
         if r.status_code != 200:
             log('Unexpected configuration error\n{0}'.format(r.text))
