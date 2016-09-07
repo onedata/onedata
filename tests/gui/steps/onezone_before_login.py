@@ -12,12 +12,21 @@ from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi import select_browser
 
 
-@given(parsers.parse("user of {browser_id} opens a Onezone URL "
-                     "in a web browser"))
-def visit_onezone(base_url, selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
+def _open_onezone_url(driver, base_url):
     oz_url = base_url
     driver.get(oz_url)
+
+
+@given(parsers.parse("user of {browser_id} opens a Onezone URL"))
+def g_visit_onezone(base_url, selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _open_onezone_url(driver, base_url)
+
+
+@when(parsers.parse("user of {browser_id} opens a Onezone URL"))
+def w_visit_onezone(base_url, selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _open_onezone_url(driver, base_url)
 
 
 @then(parsers.parse('user of {browser_id} should see login button '
@@ -31,7 +40,7 @@ def login_provider_buttons(selenium, browser_id, provider_name):
 
 def _click_login_provider_button(driver, provider_name):
     driver.find_element_by_css_selector(
-        '.login-box a.login-icon-box.{name}'.format(name=provider_name)).click()
+        '.login-box a.login-icon-box.{:s}'.format(provider_name)).click()
 
 
 @given(parsers.parse('user of {browser_id} clicks on the "{provider_name}" '

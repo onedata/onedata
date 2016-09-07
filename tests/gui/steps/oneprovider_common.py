@@ -6,7 +6,9 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import re
+import pyperclip
 
+from tests.utils.acceptance_utils import list_parser
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
@@ -69,15 +71,47 @@ def wt_op_click_on_the_given_main_menu_tab(selenium, browser_id, main_menu_tab):
     _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
 
 
-@then(parsers.parse('user of {browser_id} sees non-empty token in active modal'))
-def op_check_for_non_empty_token_in_active_modal(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    assert Wait(driver, WAIT_BACKEND).until(
+def _get_visible_token_from_active_modal(driver):
+    return Wait(driver, WAIT_BACKEND).until(
         lambda s: s.find_element_by_css_selector(
             '.input-with-button '
             'div[id*=form-token] '
             'input')
     ).get_attribute('value')
+
+
+@when(parsers.parse('user of {browser_id} sees non-empty token in active modal'))
+@then(parsers.parse('user of {browser_id} sees non-empty token in active modal'))
+def op_check_for_non_empty_token_in_active_modal(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    assert _get_visible_token_from_active_modal(driver)
+
+
+@when(parsers.parse('user of {browser_id} clicks on copy button next to '
+                    'input box to copy visible token'))
+@then(parsers.parse('user of {browser_id} clicks on copy button next to '
+                    'input box to copy visible token'))
+def op_copy_visible_token_to_clipboard(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_FRONTEND).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, '.input-with-button '
+                                                     'button.copy-btn'))
+    ).click()
+
+
+@when(parsers.parse('user of {browser_id} sends copied token '
+                    'to users of {browser_list}'))
+@then(parsers.parse('user of {browser_id} sends copied token '
+                    'to users of {browser_list}'))
+def op_send_visible_token_to_other_users(selenium, browser_id,
+                                         browser_list, tmp_memory):
+    select_browser(selenium, browser_id)
+    token = pyperclip.paste()
+    for browser in list_parser(browser_list):
+        if browser in tmp_memory:
+            tmp_memory[browser]['token'] = token
+        else:
+            tmp_memory[browser] = {'token': token}
 
 
 @when(parsers.parse('user of {browser_id} clicks on the "{button_name}" '

@@ -31,7 +31,10 @@ def _uncollapse_oz_panel(driver, name):
                 return g, t
         return None
 
-    sgroup, toggle = Wait(driver, WAIT_FRONTEND).until(sidebar_group_by_name)
+    sgroup, toggle = Wait(driver, WAIT_FRONTEND).until(
+        sidebar_group_by_name,
+        message='searching for {:s} toggle'.format(name)
+    )
     aria_expanded = sgroup.get_attribute('aria-expanded')
     if aria_expanded is None or aria_expanded == 'false':
         toggle.click()
@@ -76,14 +79,18 @@ def check_spaces_names_headers_whether_new_space_appeared(selenium, browser_id,
     Wait(driver, WAIT_BACKEND).until(header_with_text_presence)
 
 
-@given(parsers.parse('user of {browser_id} clicks on the "{name}" provider '
-                     'in Onezone providers sidebar panel'))
-def click_on_provider_in_sidebar(selenium, browser_id, name, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    tmp_memory['supporting_provider'] = name
+def _click_on_provider(driver, browser_id, name, tmp_memory):
+    if browser_id in tmp_memory:
+        tmp_memory[browser_id]['supporting_provider'] = name
+    else:
+        tmp_memory[browser_id] = {'supporting_provider': name}
+
     collapse_providers = driver.find_element_by_css_selector('#collapse-providers')
 
-    Wait(driver, WAIT_FRONTEND).until(lambda s: collapse_providers.get_attribute('aria-expanded') == 'true')
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda s: collapse_providers.get_attribute('aria-expanded') == 'true',
+        message='waiting for list of providers to appear'
+    )
 
     def the_provider_is_present(s):
         providers = s.find_elements_by_css_selector('.provider-header')
@@ -93,20 +100,52 @@ def click_on_provider_in_sidebar(selenium, browser_id, name, tmp_memory):
         else:
             return None
 
-    Wait(driver, WAIT_FRONTEND).until(the_provider_is_present).click()
+    Wait(driver, WAIT_FRONTEND).until(
+        the_provider_is_present,
+        message='waiting for provider {:s} to appear on the list'.format(name)
+    ).click()
+
+
+@given(parsers.parse('user of {browser_id} clicks on the "{name}" provider '
+                     'in Onezone providers sidebar panel'))
+def g_click_on_provider_in_sidebar(selenium, browser_id, name, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _click_on_provider(driver, browser_id, name, tmp_memory)
+
+
+@when(parsers.parse('user of {browser_id} clicks on the "{name}" provider '
+                    'in Onezone providers sidebar panel'))
+def w_click_on_provider_in_sidebar(selenium, browser_id, name, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _click_on_provider(driver, browser_id, name, tmp_memory)
+
+
+def _click_on_button_in_provider_popup(driver, name):
+    def go_to_files_button(s):
+        links = s.find_elements_by_css_selector('.provider-place-drop a, '
+                                                '.provider-place-drop button')
+        for e in links:
+            if e.text == name:
+                return e
+
+    Wait(driver, WAIT_FRONTEND).until(
+        go_to_files_button,
+        message='clicking on "{:s}" button in providers popup'.format(name)
+    ).click()
 
 
 @given(parsers.parse('user of {browser_id} clicks on the "Go to your files" '
                      'button in provider popup'))
-def click_on_go_to_files_provider(selenium, browser_id):
-    def go_to_files_button(s):
-        links = s.find_elements_by_css_selector('.provider-place-drop a, .provider-place-drop button')
-        for e in links:
-            if e.text == 'Go to your files':
-                return e
-
+def g_click_on_go_to_files_provider(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(go_to_files_button).click()
+    _click_on_button_in_provider_popup(driver, 'Go to your files')
+
+
+@when(parsers.parse('user of {browser_id} clicks on the "Go to your files" '
+                    'button in provider popup'))
+def w_click_on_go_to_files_provider(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _click_on_button_in_provider_popup(driver, 'Go to your files')
 
 
 @when(parsers.parse('user of {browser_id} clicks on the user alias'))

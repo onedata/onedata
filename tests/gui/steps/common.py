@@ -23,6 +23,16 @@ from ..utils.generic import enter_text
 from pytest_selenium_multi import select_browser
 
 
+@given(parsers.parse('other users logged in {browser_id_list}'))
+def create_more_instances_of_webdriver(selenium, driver,
+                                       config_driver, browser_id_list):
+    for browser_id in list_parser(browser_id_list):
+        if browser_id in selenium:
+            raise AttributeError('{:s} already in use'.format(browser_id))
+        else:
+            selenium[browser_id] = config_driver(driver.get_instance())
+
+
 @given(parsers.parse('user of {browser_id} generates valid name string'))
 def name_string():
     chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
@@ -59,6 +69,17 @@ def type_string_into_active_element(selenium, browser_id, text):
     Wait(driver, WAIT_FRONTEND).until(
         lambda s: enter_text(s.switch_to.active_element, text),
         message='entering {:s} to input box'.format(text)
+    )
+
+
+@when(parsers.parse('user of {browser_id} types given token on keyboard'))
+@then(parsers.parse('user of {browser_id} types given token on keyboard'))
+def type_string_into_active_element(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    token = tmp_memory[browser_id]['token']
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda s: enter_text(s.switch_to.active_element, token),
+        message='entering {:s} to input box'.format(token)
     )
 
 

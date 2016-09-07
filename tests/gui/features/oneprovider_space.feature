@@ -2,7 +2,7 @@ Feature: Oneprovider space functionality
   Various operations on spaces
 
   Background:
-    Given user of browser opens a Onezone URL in a web browser
+    Given user of browser opens a Onezone URL
     And user of browser clicks on the "plgrid" login button
     And user of browser clicks on the "user1" link
     And user of browser expands the "go to your files" Onezone sidebar panel

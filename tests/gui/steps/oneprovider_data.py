@@ -206,7 +206,7 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
             '#file-chunks-modal .container-fluid '
             'table.file-blocks-table td.provider-name')
         for elem in providers:
-            if elem.text == tmp_memory['supporting_provider']:
+            if elem.text == tmp_memory[browser_id]['supporting_provider']:
                 return elem
         return None
 

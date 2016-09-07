@@ -143,11 +143,12 @@ def firefox_profile(firefox_profile, tmpdir):
 
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
 @pytest.fixture
-def selenium(selenium):
-    for browser in selenium.keys():
-        if browser != 'request':
-            selenium[browser].implicitly_wait(SELENIUM_IMPLICIT_WAIT)
-            selenium[browser].set_window_size(1280, 1024)
-    # currenlty, we rather set window size
-    # selenium.maximize_window()
-    return selenium
+def config_driver(config_driver):
+    def _configure(driver):
+        driver = config_driver(driver)
+        driver.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
+        driver.set_window_size(1280, 1024)
+        # currenlty, we rather set window size
+        # selenium.maximize_window()
+        return driver
+    return _configure
