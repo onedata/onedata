@@ -80,6 +80,29 @@ def _get_visible_token_from_active_modal(driver):
     ).get_attribute('value')
 
 
+@when(parsers.parse('user of {browser_id} refreshes Oneprovider site'))
+@then(parsers.parse('user of {browser_id} refreshes Oneprovider site'))
+def op_refresh_op_site_by_rm_hashtag(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    op_url = re.search('(https?://.*?)(/#)?(/.*)',
+                       driver.current_url).group(1)
+    driver.get(op_url)
+
+
+@when(parsers.parse('user of {browser_id} selects "{item_name}" '
+                    'from {item_type} list'))
+@then(parsers.parse('user of {browser_id} selects "{item_name}" '
+                    'from {item_type} list'))
+def op_select_item_from_list(selenium, browser_id, item_name, item_type):
+    driver = select_browser(selenium, browser_id)
+    click_on_element(driver, item_name=item_name,
+                     ignore_case=False,
+                     css_path='ul.{:s}-list '
+                              '.secondary-sidebar-item'.format(item_type),
+                     msg='clicking on {{:s}} item in {type} '
+                         'list'.format(type=item_type))
+
+
 @when(parsers.parse('user of {browser_id} sees non-empty token in active modal'))
 @then(parsers.parse('user of {browser_id} sees non-empty token in active modal'))
 def op_check_for_non_empty_token_in_active_modal(selenium, browser_id):
@@ -197,6 +220,33 @@ def op_check_if_item_of_name_disappeared_from_list(selenium, browser_id,
         lambda s: refresh_and_call(s, _check_for_lack_of_item_in_list),
         message='waiting for {item} to disappear from '
                 '{list} list'.format(item=item_name, list=item_type)
+    )
+
+
+def _check_for_presence_of_item_in_table(driver, name, caption):
+    table_elems = driver.find_elements_by_css_selector('table thead, '
+                                                       'table tbody')
+    for thead, tbody in zip(table_elems[::], table_elems[1::]):
+        th = thead.find_element_by_css_selector('th .item-label')
+        if th.text.lower() == caption.lower():
+            items = tbody.find_elements_by_css_selector('.permissions-'
+                                                        'table-row '
+                                                        '.truncate')
+            return any(item.text == name for item in items)
+
+
+@when(parsers.parse('user of {browser_id} sees that "{name}" item has appeared '
+                    'on current {caption} permissions table'))
+@then(parsers.parse('user of {browser_id} sees that "{name}" item has appeared '
+                    'on current {caption} permissions table'))
+def op_check_if_row_of_name_appeared_in_table(selenium, browser_id,
+                                              name, caption):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
+        lambda s: refresh_and_call(s, _check_for_presence_of_item_in_table,
+                                   name, caption),
+        message='searching for exactly one {:s} '
+                'on {:s} list in table'.format(name, caption)
     )
 
 

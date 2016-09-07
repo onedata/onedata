@@ -7,22 +7,12 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from pytest_bdd import parsers, when, then
-from tests.gui.steps.common import find_element_by_css_selector_and_text, \
-    select_button_from_buttons_by_name
+from pytest_bdd import parsers, then
+from tests.gui.steps.common import find_element_by_css_selector_and_text
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from tests.gui.conftest import WAIT_FRONTEND
 
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
-
-
-@when(parsers.parse('user of {browser_id} clicks space named "{space_name}" '
-                    'from spaces list'))
-def click_space_name(selenium, browser_id, space_name):
-    driver = select_browser(selenium, browser_id)
-    space_to_click = select_button_from_buttons_by_name(space_name,
-                                                        'ul.spaces-list .secondary-sidebar-item')
-    Wait(driver, WAIT_FRONTEND).until(space_to_click).click()
 
 
 @then(parsers.parse('user of {browser_id} sees that home space icon '

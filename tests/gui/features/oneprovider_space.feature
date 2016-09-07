@@ -89,7 +89,7 @@ Feature: Oneprovider space functionality
   # 'space2' defined in env.json
   Scenario: Switching between spaces
     When user of browser can see current url
-    And user of browser clicks space named "space2" from spaces list
+    And user of browser selects "space2" from spaces list
     Then user of browser sees that submenu for space named "space2" has appeared
     And user of browser sees that url has changed
 
@@ -118,7 +118,6 @@ Feature: Oneprovider space functionality
     And user of browser clicks "YES" confirmation button in displayed modal
     And user of browser sees that "Leave a space" modal has disappeared
     Then user of browser sees an info notify with text matching to: .*space2.*left
-    And user of browser sees that "Leave a space" modal has disappeared
     And user of browser sees that the "space2" has disappeared from the spaces list
     And user of browser clicks on the "Create" button in spaces sidebar
     And user of browser sees that input box in "Create a new space" modal is active

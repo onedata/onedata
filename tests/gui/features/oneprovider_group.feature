@@ -32,6 +32,8 @@ Feature: Oneprovider Group functionality
     And user of browser sees non-empty token in active modal
     And user of browser clicks on copy button next to input box to copy visible token
     And user of browser sends copied token to users of [browser2]
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees that "Invite user to the group" modal has disappeared
     And user of browser2 opens a Onezone URL
     And user of browser2 clicks on the "plgrid" login button
     And user of browser2 clicks on the "user3" link
@@ -45,6 +47,18 @@ Feature: Oneprovider Group functionality
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that "Join a group" modal has disappeared
     Then user of browser2 sees that the "group1" has appeared on the groups list
+    And user of browser2 selects "group1" from groups list
+    And user of browser2 sees that "user3" item has appeared on current users permissions table
+    And user of browser sees that "user3" item has appeared on current users permissions table
+    And user of browser2 clicks a settings icon displayed for "group1" item on the groups list
+    And user of browser2 sees a settings dropdown menu for "group1" item on the groups list
+    And user of browser2 clicks on the "LEAVE THIS GROUP" item in current settings dropdown
+    And user of browser2 clicks "YES" confirmation button in displayed modal
+    And user of browser2 sees that "Leave the group" modal has disappeared
+    And user of browser2 sees an info notify with text matching to: .*group1.*left
+    And user of browser2 refreshes Oneprovider site
+    And user of browser2 clicks on the "groups" tab in main menu sidebar
+    And user of browser2 sees that the "group1" has disappeared from the groups list
 
   Scenario: User can invite group
     # group 'group1' defined in env.json
@@ -127,7 +141,8 @@ Feature: Oneprovider Group functionality
     And user of browser clicks "YES" confirmation button in displayed modal
     And user of browser sees that "Leave the group" modal has disappeared
     Then user of browser sees an info notify with text matching to: .*group1.*left
-    And user of browser sees that "Leave the group" modal has disappeared
+    And user of browser refreshes Oneprovider site
+    And user of browser clicks on the "groups" tab in main menu sidebar
     And user of browser sees that the "group1" has disappeared from the groups list
     And user of browser clicks on the "Create" button in groups sidebar
     And user of browser sees that input box in "Create a new group" modal is active
