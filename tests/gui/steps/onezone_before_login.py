@@ -9,7 +9,7 @@ import re
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from pytest_bdd import given, when, then, parsers
 
-from pytest_selenium_multi import select_browser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 def _open_onezone_url(driver, base_url):

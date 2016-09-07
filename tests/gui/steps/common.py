@@ -20,7 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 
 from ..utils.generic import enter_text
-from pytest_selenium_multi import select_browser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 @given(parsers.parse('other users logged in {browser_id_list}'))

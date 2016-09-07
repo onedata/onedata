@@ -17,7 +17,7 @@ from tests.gui.steps.common import find_element_by_css_selector_and_text
 from common import select_button_from_buttons_by_name
 
 from ..utils.generic import click_on_element
-from pytest_selenium_multi import select_browser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 def _uncollapse_oz_panel(driver, name):

@@ -18,7 +18,7 @@ from selenium.webdriver.common.keys import Keys
 
 from ..utils.inspect import is_active
 from ..utils.generic import refresh_and_call, click_on_element
-from pytest_selenium_multi import select_browser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 main_menu_tab_to_url = {'spaces': 'spaces',

@@ -21,7 +21,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from ..utils.inspect import selector
 from ..utils.generic import find_item_with_given_properties, refresh_and_call, \
     click_on_element
-from pytest_selenium_multi import select_browser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
@@ -214,5 +214,5 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
     Wait(driver, WAIT_FRONTEND).until(
         _find_provider,
         message='check file distribution, focusing on {:s} provide'
-                ''.format(tmp_memory['supporting_provider'])
+                ''.format(tmp_memory[browser_id]['supporting_provider'])
     )
