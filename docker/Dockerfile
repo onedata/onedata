@@ -32,9 +32,14 @@ ADD ca-bundle.pem /etc/ssl/cert.pem
 EXPOSE 53 5555 443 8443 80 8876 8877 9443
 
 # Add entrypoint script
-ADD run.py /root/run.py
+ADD oneprovider.py /root/oneprovider.py
+
+# Configure oneprovider service
+ADD oneprovider.sh /etc/init.d/oneprovider
+RUN chkconfig --add oneprovider
+RUN chkconfig --level 2345 oneprovider on
 
 RUN mkdir -p /volumes/persistence /volumes/storage
-VOLUME ["/volumes/persistence", "/volumes/storage"]
+VOLUME ["/sys/fs/cgroup", "/volumes/persistence", "/volumes/storage"]
 
-CMD /root/run.py
+CMD ["/usr/sbin/init"]
