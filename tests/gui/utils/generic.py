@@ -9,9 +9,11 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import os
 from tests import gui
-from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH
+from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH, WAIT_FRONTEND
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.common.exceptions import TimeoutException
+
+from inspect import selector
 
 
 RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(/#)?(?P<method>/.*)')
@@ -76,3 +78,26 @@ def find_item_with_given_properties(browser, css_path, check_properties):
         if check_properties(item):
             return item
     return None
+
+
+def click_on_element(browser, css_path, item_name,
+                     msg, ignore_case=True,
+                     wait=WAIT_FRONTEND):
+    """Check if elem is visible and enabled, if so click on it.
+    """
+    properties = selector(browser, text=item_name,
+                          ignore_case=ignore_case,
+                          check_visibility=True,
+                          check_if_enabled=True)
+
+    Wait(browser, wait).until(
+        lambda s: find_item_with_given_properties(s, css_path,
+                                                  properties),
+        message=msg.format(item_name) if item_name else msg
+    ).click()
+
+
+def enter_text(input_box, text):
+    input_box.clear()
+    input_box.send_keys(text)
+    return True if input_box.get_attribute('value') == text else False

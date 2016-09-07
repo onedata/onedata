@@ -48,6 +48,18 @@ Feature: Authorization
     When u1 creates regular files [s1/file1]
     Then profiling is stopped on worker1.p1
 
+  Scenario: Profile write sysbench
+    When profiling is started on worker1.p1
+    And u1 performs command "sysbench --test=fileio --file-total-size=5MB --file-num=5 --file-test-mode=rndrw --init-rng=on prepare" in s1 directory
+    Then u1 lists s1
+    Then profiling is stopped on worker1.p1
+
+  Scenario: Profile dd
+    When profiling is started on worker1.p1
+    And u1 performs command "dd if=/dev/zero of=test.dd bs=1M count=10" in s1 directory
+    And u1 performs command "dd if=test.dd of=/dev/null" in s1 directory
+    Then profiling is stopped on worker1.p1
+
   Scenario: Profile write
     When u1 creates regular files [s1/file1]
     When u1 remounts oneclient

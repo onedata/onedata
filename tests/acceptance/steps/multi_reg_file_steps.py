@@ -11,7 +11,7 @@ from tests.utils.acceptance_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, md5sum, write, read,
                                       replace_pattern, open_file, execute,
                                       close_file, write_to_opened_file,
-                                      read_from_opened_file, seek)
+                                      read_from_opened_file, seek, run_cmd, escape_path)
 
 
 @when(parsers.parse('{user_name} writes "{data}" at offset {offset} to {file} on {client_node}'))
@@ -228,6 +228,24 @@ def do_truncate(user, file, new_size, client_node, context):
         user.mark_last_operation_succeeded()
     except Exception as e:
         handle_exception(e)
+        user.mark_last_operation_failed()
+
+
+@when(parsers.parse('{user} performs command "{command}" in {path} directory on {client_node}'))
+@then(parsers.parse('{user} performs command "{command}" in {path} directory on {client_node}'))
+def run_cmd_in_directory(user, command, path, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    abs_path = client.absolute_path(path)
+    cmd = 'cd {path} && {command}'.format(
+        path=escape_path(abs_path),
+        command=command
+    )
+    ret = run_cmd(user.name, client, cmd, output=True)
+
+    if ret == 0:
+        user.mark_last_operation_succeeded()
+    else:
         user.mark_last_operation_failed()
 
 
