@@ -21,10 +21,11 @@ Feature: Oneprovider Group functionality
     And user of browser sees that "Create a new group" modal has disappeared
     Then user of browser sees that the new item has appeared on the groups list
 
+  # TODO rm leave from group at the end of test
   Scenario: User invites other user to join his group
     # group 'group1' defined in env.json
     Given that in browser there is a "group1" item on the groups list
-    And other users logged in [browser2]
+    And other users are logged in [browser2]
     When user of browser clicks a settings icon displayed for "group1" item on the groups list
     And user of browser sees a settings dropdown menu for "group1" item on the groups list
     And user of browser clicks on the "INVITE USER" item in current settings dropdown
@@ -49,6 +50,7 @@ Feature: Oneprovider Group functionality
     Then user of browser2 sees that the "group1" has appeared on the groups list
     And user of browser2 selects "group1" from groups list
     And user of browser2 sees that "user3" item has appeared on current users permissions table
+    And user of browser selects "group1" from groups list
     And user of browser sees that "user3" item has appeared on current users permissions table
     And user of browser2 clicks a settings icon displayed for "group1" item on the groups list
     And user of browser2 sees a settings dropdown menu for "group1" item on the groups list

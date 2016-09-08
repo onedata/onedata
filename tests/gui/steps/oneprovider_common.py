@@ -87,6 +87,7 @@ def op_refresh_op_site_by_rm_hashtag(selenium, browser_id):
     op_url = re.search('(https?://.*?)(/#)?(/.*)',
                        driver.current_url).group(1)
     driver.get(op_url)
+    driver.refresh()
 
 
 @when(parsers.parse('user of {browser_id} selects "{item_name}" '
@@ -226,7 +227,7 @@ def op_check_if_item_of_name_disappeared_from_list(selenium, browser_id,
 def _check_for_presence_of_item_in_table(driver, name, caption):
     table_elems = driver.find_elements_by_css_selector('table thead, '
                                                        'table tbody')
-    for thead, tbody in zip(table_elems[::], table_elems[1::]):
+    for thead, tbody in zip(table_elems[::2], table_elems[1::2]):
         th = thead.find_element_by_css_selector('th .item-label')
         if th.text.lower() == caption.lower():
             items = tbody.find_elements_by_css_selector('.permissions-'

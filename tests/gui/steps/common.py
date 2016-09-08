@@ -23,7 +23,7 @@ from ..utils.generic import enter_text
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-@given(parsers.parse('other users logged in {browser_id_list}'))
+@given(parsers.parse('other users are logged in {browser_id_list}'))
 def create_more_instances_of_webdriver(selenium, driver,
                                        config_driver, browser_id_list):
     for browser_id in list_parser(browser_id_list):
