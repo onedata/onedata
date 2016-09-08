@@ -13,12 +13,21 @@ Feature: Oneprovider Group functionality
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "groups" tab in main menu sidebar
 
-  Scenario: User can add new group
+  Scenario: User creates new group (click ENTER after entering group name)
     Given user of browser generates valid name string
     When user of browser clicks on the "Create" button in groups sidebar
     And user of browser sees that input box in "Create a new group" modal is active
     And user of browser types given name on keyboard
     And user of browser presses enter on keyboard
+    And user of browser sees that "Create a new group" modal has disappeared
+    Then user of browser sees that the new item has appeared on the groups list
+
+  Scenario: User creates new group (click CREATE confirmation button after entering group name)
+    Given user of browser generates valid name string
+    When user of browser clicks on the "Create" button in groups sidebar
+    And user of browser sees that input box in "Create a new group" modal is active
+    And user of browser types given name on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that "Create a new group" modal has disappeared
     Then user of browser sees that the new item has appeared on the groups list
 
