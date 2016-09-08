@@ -5,7 +5,8 @@ Feature: Onezone GUI elements
   Background:
     # in future: Given [u1, u2] open a Onezone URL in their web browsers
     # in future: Given [u1, u2] open [http://a.com, http://b.com] in [Firefox, Chrome]
-    Given user of browser opens a Onezone URL
+    Given user opened browser window for browser
+    And user of browser opens a Onezone URL
     # not used in non-homepage tests
     And user of browser clicks on the "plgrid" login button
     And user of browser clicks on the "user1" link

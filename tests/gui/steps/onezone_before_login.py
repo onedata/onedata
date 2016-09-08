@@ -8,25 +8,16 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from pytest_bdd import given, when, then, parsers
-
+from tests.utils.acceptance_utils import list_parser
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-def _open_onezone_url(driver, base_url):
-    oz_url = base_url
-    driver.get(oz_url)
-
-
-@given(parsers.parse("user of {browser_id} opens a Onezone URL"))
-def g_visit_onezone(base_url, selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    _open_onezone_url(driver, base_url)
-
-
-@when(parsers.parse("user of {browser_id} opens a Onezone URL"))
-def w_visit_onezone(base_url, selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    _open_onezone_url(driver, base_url)
+@given(parsers.re("users? of (?P<browser_id_list>.*) opens a Onezone URL"))
+def g_visit_onezone(base_url, selenium, browser_id_list):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        oz_url = base_url
+        driver.get(oz_url)
 
 
 @then(parsers.parse('user of {browser_id} should see login button '
@@ -40,21 +31,24 @@ def login_provider_buttons(selenium, browser_id, provider_name):
 
 def _click_login_provider_button(driver, provider_name):
     driver.find_element_by_css_selector(
-        '.login-box a.login-icon-box.{:s}'.format(provider_name)).click()
+        '.login-box a.login-icon-box.{:s}'.format(provider_name)
+    ).click()
 
 
-@given(parsers.parse('user of {browser_id} clicks on the "{provider_name}" '
-                     'login button'))
-def g_click_login_provider_button(selenium, browser_id, provider_name):
-    driver = select_browser(selenium, browser_id)
-    _click_login_provider_button(driver, provider_name)
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+                  '"(?P<provider_name>.*)" login button'))
+def g_click_login_provider_button(selenium, browser_id_list, provider_name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _click_login_provider_button(driver, provider_name)
 
 
-@when(parsers.parse('user of {browser_id} clicks on the "{provider_name}" '
-                    'login button'))
-def w_click_login_provider_button(selenium, browser_id, provider_name):
-    driver = select_browser(selenium, browser_id)
-    _click_login_provider_button(driver, provider_name)
+@when(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+                 '"(?P<provider_name>.*)" login button'))
+def w_click_login_provider_button(selenium, browser_id_list, provider_name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _click_login_provider_button(driver, provider_name)
 
 
 @then(parsers.re('user of (?P<browser_id>.+) should be '
@@ -63,3 +57,12 @@ def being_redirected_to_page(page, selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     wait(driver, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
 
+
+@given(parsers.re('users? of (?P<browser_id_list>.*) logs '
+                  'as (?P<user_id_list>.*)'))
+def log_to_user_in_each_browser(selenium, browser_id_list,
+                                user_id_list):
+    for browser_id, user_id in zip(list_parser(browser_id_list),
+                                   list_parser(user_id_list)):
+        driver = select_browser(selenium, browser_id)
+        driver.find_element_by_link_text(user_id).click()

@@ -4,7 +4,8 @@ Feature: Oneprovider Group functionality
   # user 'user1' defined in env.json
   # provider 'p1' defined in env.json
   Background:
-    Given user of browser opens a Onezone URL
+    Given user opened browser window for browser
+    And user of browser opens a Onezone URL
     And user of browser clicks on the "plgrid" login button
     And user of browser clicks on the "user1" link
     And user of browser expands the "go to your files" Onezone sidebar panel
@@ -20,47 +21,6 @@ Feature: Oneprovider Group functionality
     And user of browser presses enter on keyboard
     And user of browser sees that "Create a new group" modal has disappeared
     Then user of browser sees that the new item has appeared on the groups list
-
-  # TODO rm leave from group at the end of test
-  Scenario: User invites other user to join his group
-    # group 'group1' defined in env.json
-    Given that in browser there is a "group1" item on the groups list
-    And other users are logged in [browser2]
-    When user of browser clicks a settings icon displayed for "group1" item on the groups list
-    And user of browser sees a settings dropdown menu for "group1" item on the groups list
-    And user of browser clicks on the "INVITE USER" item in current settings dropdown
-    And user of browser sees that token box in "Invite user to the group" modal is active
-    And user of browser sees non-empty token in active modal
-    And user of browser clicks on copy button next to input box to copy visible token
-    And user of browser sends copied token to users of [browser2]
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees that "Invite user to the group" modal has disappeared
-    And user of browser2 opens a Onezone URL
-    And user of browser2 clicks on the "plgrid" login button
-    And user of browser2 clicks on the "user3" link
-    And user of browser2 expands the "go to your files" Onezone sidebar panel
-    And user of browser2 clicks on the "p1" provider in Onezone providers sidebar panel
-    And user of browser2 clicks on the "Go to your files" button in provider popup
-    And user of browser2 clicks on the "groups" tab in main menu sidebar
-    And user of browser2 clicks on the "Join" button in groups sidebar
-    And user of browser2 sees that input box in "Join a group" modal is active
-    And user of browser2 types given token on keyboard
-    And user of browser2 presses enter on keyboard
-    And user of browser2 sees that "Join a group" modal has disappeared
-    Then user of browser2 sees that the "group1" has appeared on the groups list
-    And user of browser2 selects "group1" from groups list
-    And user of browser2 sees that "user3" item has appeared on current users permissions table
-    And user of browser selects "group1" from groups list
-    And user of browser sees that "user3" item has appeared on current users permissions table
-    And user of browser2 clicks a settings icon displayed for "group1" item on the groups list
-    And user of browser2 sees a settings dropdown menu for "group1" item on the groups list
-    And user of browser2 clicks on the "LEAVE THIS GROUP" item in current settings dropdown
-    And user of browser2 clicks "YES" confirmation button in displayed modal
-    And user of browser2 sees that "Leave the group" modal has disappeared
-    And user of browser2 sees an info notify with text matching to: .*group1.*left
-    And user of browser2 refreshes Oneprovider site
-    And user of browser2 clicks on the "groups" tab in main menu sidebar
-    And user of browser2 sees that the "group1" has disappeared from the groups list
 
   Scenario: User can invite group
     # group 'group1' defined in env.json

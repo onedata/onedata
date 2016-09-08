@@ -4,7 +4,8 @@ Feature: Oneprovider Data view
   Background:
     # in future: Given [u1, u2] open a Onezone URL in their web browsers
     # in future: Given [u1, u2] open a Onezone URL in [Firefox, Chrome]
-    Given user of browser opens a Onezone URL
+    Given user opened browser window for browser
+    And user of browser opens a Onezone URL
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
     And user of browser clicks on the "plgrid" login button

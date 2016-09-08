@@ -18,6 +18,7 @@ from common import select_button_from_buttons_by_name
 
 from ..utils.generic import click_on_element
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
+from tests.utils.acceptance_utils import list_parser
 
 
 def _uncollapse_oz_panel(driver, name):
@@ -40,18 +41,20 @@ def _uncollapse_oz_panel(driver, name):
         toggle.click()
 
 
-@given(parsers.parse('user of {browser_id} expands the "{name}" '
-                     'Onezone sidebar panel'))
-def g_uncollapse_oz_panel(selenium, browser_id, name):
-    driver = select_browser(selenium, browser_id)
-    _uncollapse_oz_panel(driver, name)
+@given(parsers.re('users? of (?P<browser_id_list>.*) expands the "(?P<name>.*)" '
+                  'Onezone sidebar panel'))
+def g_uncollapse_oz_panel(selenium, browser_id_list, name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _uncollapse_oz_panel(driver, name)
 
 
-@when(parsers.parse('user of {browser_id} expands the "{name}" '
-                    'Onezone sidebar panel'))
-def w_uncollapse_oz_panel(selenium, browser_id,  name):
-    driver = select_browser(selenium, browser_id)
-    _uncollapse_oz_panel(driver, name)
+@when(parsers.re('users? of (?P<browser_id_list>.*) expands the "(?P<name>.*)" '
+                 'Onezone sidebar panel'))
+def w_uncollapse_oz_panel(selenium, browser_id_list, name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _uncollapse_oz_panel(driver, name)
 
 
 @when(parsers.parse('user of {browser_id} clicks on the "{name}" '
@@ -106,18 +109,12 @@ def _click_on_provider(driver, browser_id, name, tmp_memory):
     ).click()
 
 
-@given(parsers.parse('user of {browser_id} clicks on the "{name}" provider '
-                     'in Onezone providers sidebar panel'))
-def g_click_on_provider_in_sidebar(selenium, browser_id, name, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    _click_on_provider(driver, browser_id, name, tmp_memory)
-
-
-@when(parsers.parse('user of {browser_id} clicks on the "{name}" provider '
-                    'in Onezone providers sidebar panel'))
-def w_click_on_provider_in_sidebar(selenium, browser_id, name, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    _click_on_provider(driver, browser_id, name, tmp_memory)
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the "(?P<name>.*)" '
+                  'provider in Onezone providers sidebar panel'))
+def g_click_on_provider_in_sidebar(selenium, browser_id_list, name, tmp_memory):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _click_on_provider(driver, browser_id, name, tmp_memory)
 
 
 def _click_on_button_in_provider_popup(driver, name):
@@ -134,18 +131,12 @@ def _click_on_button_in_provider_popup(driver, name):
     ).click()
 
 
-@given(parsers.parse('user of {browser_id} clicks on the "Go to your files" '
-                     'button in provider popup'))
-def g_click_on_go_to_files_provider(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    _click_on_button_in_provider_popup(driver, 'Go to your files')
-
-
-@when(parsers.parse('user of {browser_id} clicks on the "Go to your files" '
-                    'button in provider popup'))
-def w_click_on_go_to_files_provider(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    _click_on_button_in_provider_popup(driver, 'Go to your files')
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+                  '"Go to your files" button in provider popup'))
+def g_click_on_go_to_files_provider(selenium, browser_id_list):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _click_on_button_in_provider_popup(driver, 'Go to your files')
 
 
 @when(parsers.parse('user of {browser_id} clicks on the user alias'))

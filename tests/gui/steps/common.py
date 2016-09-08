@@ -23,9 +23,9 @@ from ..utils.generic import enter_text
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-@given(parsers.parse('other users are logged in {browser_id_list}'))
-def create_more_instances_of_webdriver(selenium, driver,
-                                       config_driver, browser_id_list):
+@given(parsers.re('users? opened browser window for (?P<browser_id_list>.*)'))
+def create_instances_of_webdriver(selenium, driver,
+                                  config_driver, browser_id_list):
     for browser_id in list_parser(browser_id_list):
         if browser_id in selenium:
             raise AttributeError('{:s} already in use'.format(browser_id))
@@ -104,20 +104,12 @@ def link_with_text_present(selenium, browser_id, links_names):
         assert driver.find_element_by_link_text(name)
 
 
-def _click_on_link_with_text(driver, link_name):
-    driver.find_element_by_link_text(link_name).click()
-
-
-@given(parsers.parse('user of {browser_id} clicks on the "{link_name}" link'))
-def g_click_on_link_with_text(selenium, browser_id, link_name):
-    driver = select_browser(selenium, browser_id)
-    _click_on_link_with_text(driver, link_name)
-
-
-@when(parsers.parse('user of {browser_id} clicks on the "{link_name}" link'))
-def w_click_on_link_with_text(selenium, browser_id, link_name):
-    driver = select_browser(selenium, browser_id)
-    _click_on_link_with_text(driver, link_name)
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+                  '"(?P<link_name>.*)" link'))
+def g_click_on_link_with_text(selenium, browser_id_list, link_name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        driver.find_element_by_link_text(link_name).click()
 
 
 @when(parsers.parse('user of {browser_id} is idle for {seconds:d} seconds'))
