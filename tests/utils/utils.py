@@ -14,6 +14,7 @@ import subprocess
 import pytest
 import os
 import inspect
+import time
 
 ENV_UP_RETRIES_NUMBER = 5
 
@@ -51,6 +52,7 @@ def run_env_up_script(script, config=None, logdir=None, args=[], skip=True,
     if config:
         cmd.append(config)
 
+    output = ""
     try:
         output = retry_running_cmd_until(cmd, retries=retries)
     except Exception as e:
@@ -87,15 +89,20 @@ def retry_running_cmd_until(cmd, retries=0):
     :param retries: number of times that command will be retried to run
     :type retries: <type 'int'>
     """
+    output = ""
     try:
-        return subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
     except Exception as e:
+        print """{0}
+Number of retries left: {1}
+""".format(e, retries)
+
         if retries > 0:
-            print "Retrying command: {0}. Number of retries left: {1}\n".format(cmd, retries)
+            time.sleep(1)
             retry_running_cmd_until(cmd, retries - 1)
         else:
-            print "Command: {} failed".format(cmd)
             raise e
+    return output
 
 
 def strip_output_logs(output):
