@@ -12,7 +12,7 @@ from tests.utils.acceptance_utils import list_parser
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-@given(parsers.re("users? of (?P<browser_id_list>.*) opened a Onezone URL"))
+@given(parsers.re("users? of (?P<browser_id_list>.*) opened Onezone URL"))
 def g_visit_onezone(base_url, selenium, browser_id_list):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)

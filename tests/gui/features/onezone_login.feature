@@ -3,7 +3,7 @@ Feature: Onezone login page
 
   Background:
     Given user opened browser window
-    And user of browser opened a Onezone URL
+    And user of browser opened Onezone URL
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
 

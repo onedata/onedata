@@ -203,6 +203,7 @@ def op_check_if_item_of_name_appeared_in_list(selenium, browser_id,
     _check_for_item_in_given_list(driver, item_name, item_type)
 
 
+# TODO uncomment when leave from group backend will be repaired
 # @then(parsers.parse('user of {browser_id} sees that the "{item_name}" '
 #                     'has disappeared from the {item_type} list'))
 # def op_check_if_item_of_name_disappeared_from_list(selenium, browser_id,

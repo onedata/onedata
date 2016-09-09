@@ -5,7 +5,7 @@ Feature: Oneprovider Group functionality
   # provider 'p1' defined in env.json
   Background:
     Given user opened browser window
-    And user of browser opened a Onezone URL
+    And user of browser opened Onezone URL
     And user of browser clicked on the "plgrid" login button
     And user of browser clicked on the "user1" link
     And user of browser expanded the "go to your files" Onezone sidebar panel
@@ -13,7 +13,7 @@ Feature: Oneprovider Group functionality
     And user of browser clicked on the "Go to your files" button in provider popup
     And user of browser clicked on the "groups" tab in main menu sidebar
 
-  Scenario: User creates new group (click ENTER after entering group name)
+  Scenario: User creates new group (clicks ENTER after entering group name)
     Given user of browser generates valid name string
     When user of browser clicks on the "Create" button in groups sidebar
     And user of browser sees that input box in "Create a new group" modal is active
@@ -22,7 +22,7 @@ Feature: Oneprovider Group functionality
     And user of browser sees that "Create a new group" modal has disappeared
     Then user of browser sees that the new item has appeared on the groups list
 
-  Scenario: User creates new group (click CREATE confirmation button after entering group name)
+  Scenario: User creates new group (clicks CREATE confirmation button after entering group name)
     Given user of browser generates valid name string
     When user of browser clicks on the "Create" button in groups sidebar
     And user of browser sees that input box in "Create a new group" modal is active
