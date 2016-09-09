@@ -38,7 +38,7 @@ is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 
 @pytest.fixture
 def tmp_memory():
-    """Dict to use when one wants to send sth between steps.
+    """Dict to use when one wants to store sth between steps.
 
     Because of use of multiple browsers, the correct format would be:
      {'browser1': {...}, 'browser2': {...}, ...}

@@ -41,8 +41,6 @@ Feature: Oneprovider Group functionality using multiple browsers
     And user of browser2 clicks "YES" confirmation button in displayed modal
     And user of browser2 sees that "Leave the group" modal has disappeared
     And user of browser2 sees an info notify with text matching to: .*group1.*left
-    And user of browser2 refreshes Oneprovider site
-    And user of browser2 clicks on the "groups" tab in main menu sidebar
     And user of browser2 sees that the "group1" has disappeared from the groups list
 
   # TODO rm leave from group at the end of test
@@ -75,6 +73,4 @@ Feature: Oneprovider Group functionality using multiple browsers
     And user of browser2 clicks "YES" confirmation button in displayed modal
     And user of browser2 sees that "Leave the group" modal has disappeared
     And user of browser2 sees an info notify with text matching to: .*group1.*left
-    And user of browser2 refreshes Oneprovider site
-    And user of browser2 clicks on the "groups" tab in main menu sidebar
     And user of browser2 sees that the "group1" has disappeared from the groups list
