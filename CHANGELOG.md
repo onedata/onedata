@@ -4,6 +4,22 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc5
+
+* Update interfaces
+* Increase system performance
+* VFS-2534 Improve events processing
+* Update one panel for extended configuration options
+* VFS-2527 Use sbin/init as docker entrypoint
+* VFS-2449 fix step names and activating input box
+* VFS-2476 Add events profiling tests
+* VFS-2449 fix entering text to input box
+* VFS-2449 add msg to wait(...).until(..., msg=...)
+* VFS-2450 fail test instead of skipping if setting up environment fails
+* VFS-2454 add download test for firefox
+* VFS-2454 add download test for chrome
+
+
 ### 3.0.0-rc4
 
 * Add ONEPANEL_DEBUG_MODE env variable to release docker entrypoint
