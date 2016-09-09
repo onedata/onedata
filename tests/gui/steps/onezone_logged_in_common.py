@@ -41,7 +41,7 @@ def _uncollapse_oz_panel(driver, name):
         toggle.click()
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) expands the "(?P<name>.*)" '
+@given(parsers.re('users? of (?P<browser_id_list>.*) expanded the "(?P<name>.*)" '
                   'Onezone sidebar panel'))
 def g_uncollapse_oz_panel(selenium, browser_id_list, name):
     for browser_id in list_parser(browser_id_list):
@@ -109,7 +109,7 @@ def _click_on_provider(driver, browser_id, name, tmp_memory):
     ).click()
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the "(?P<name>.*)" '
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the "(?P<name>.*)" '
                   'provider in Onezone providers sidebar panel'))
 def g_click_on_provider_in_sidebar(selenium, browser_id_list, name, tmp_memory):
     for browser_id in list_parser(browser_id_list):
@@ -131,7 +131,7 @@ def _click_on_button_in_provider_popup(driver, name):
     ).click()
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
                   '"Go to your files" button in provider popup'))
 def g_click_on_go_to_files_provider(selenium, browser_id_list):
     for browser_id in list_parser(browser_id_list):

@@ -16,7 +16,8 @@ from selenium.common.exceptions import TimeoutException
 from inspect import selector
 
 
-RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))(/#)?(?P<method>/.*)')
+RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))'
+                    r'(/#)?(?P<method>/(?P<tab>[^/]*)(/.*)?)')
 
 
 def parse_url(url):

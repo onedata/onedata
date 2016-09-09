@@ -2,8 +2,8 @@ Feature: Onezone login page
   A site where you can login to Onezone.
 
   Background:
-    Given user opened browser window for browser
-    And user of browser opens a Onezone URL
+    Given user opened browser window
+    And user of browser opened a Onezone URL
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
 
@@ -20,4 +20,3 @@ Feature: Onezone login page
     When user of browser clicks on the "plgrid" login button
     Then user of browser should see a page with "Developer mode login:" header
     And user of browser should see [user1,user2,user3] links
-

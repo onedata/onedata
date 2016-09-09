@@ -15,7 +15,7 @@ import pytest
 import re
 
 import sys
-import pkg_resources
+from pytest_selenium_multi.drivers.utils import factory
 
 
 SELENIUM_IMPLICIT_WAIT = 8
@@ -119,9 +119,6 @@ def capabilities(request, capabilities, tmpdir):
     # print "DEBUG: Current capabilities: ", capabilities
 
     return capabilities
-
-
-from pytest_selenium_multi.drivers.utils import factory
 
 
 @pytest.fixture

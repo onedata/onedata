@@ -2,14 +2,14 @@ Feature: Oneprovider Group functionality using multiple browsers
   Various operations on groups using multiple browsers
 
   Background:
-    Given users opened browser window for [browser1, browser2]
-    And users of [browser1, browser2] opens a Onezone URL
-    And users of [browser1, browser2] clicks on the "plgrid" login button
-    And users of [browser1, browser2] logs as [user1, user3]
-    And users of [browser1, browser2] expands the "go to your files" Onezone sidebar panel
-    And users of [browser1, browser2] clicks on the "p1" provider in Onezone providers sidebar panel
-    And users of [browser1, browser2] clicks on the "Go to your files" button in provider popup
-    And users of [browser1, browser2] clicks on the "groups" tab in main menu sidebar
+    Given users opened [browser1, browser2] browsers' windows
+    And users of [browser1, browser2] opened a Onezone URL
+    And users of [browser1, browser2] clicked on the "plgrid" login button
+    And users of [browser1, browser2] logged as [user1, user3]
+    And users of [browser1, browser2] expanded the "go to your files" Onezone sidebar panel
+    And users of [browser1, browser2] clicked on the "p1" provider in Onezone providers sidebar panel
+    And users of [browser1, browser2] clicked on the "Go to your files" button in provider popup
+    And users of [browser1, browser2] clicked on the "groups" tab in main menu sidebar
 
   # TODO rm leave from group at the end of test
   Scenario: User successfully invites other user to join his group (click ENTER after entering token)

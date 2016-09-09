@@ -19,7 +19,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 
 from ..utils.inspect import is_active
-from ..utils.generic import refresh_and_call, click_on_element
+from ..utils.generic import refresh_and_call, click_on_element, parse_url
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
@@ -33,8 +33,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
     def _load_main_menu_tab_page():
         def _check_url():
             try:
-                found = re.search('https?://[^/]*/#/([^/]*)/?',
-                                  driver.current_url).group(1).lower()
+                found = parse_url(driver.current_url).group('tab')
             except AttributeError:
                 return False
             else:
@@ -57,7 +56,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
     )
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
                   '"(?P<main_menu_tab>.*)" tab in main menu sidebar'))
 def g_op_click_on_the_given_main_menu_tab(selenium, browser_id_list,
                                           main_menu_tab):
@@ -90,8 +89,7 @@ def _get_visible_token_from_active_modal(driver):
 @then(parsers.parse('user of {browser_id} refreshes Oneprovider site'))
 def op_refresh_op_site_by_rm_hashtag(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
-    op_url = re.search('(https?://.*?)(/#)?(/.*)',
-                       driver.current_url).group(1)
+    op_url = parse_url(driver.current_url).group('base_url')
     driver.get(op_url)
 
 
@@ -177,16 +175,10 @@ def _check_for_item_in_given_list(driver, name, elem_type):
 
 @given(parsers.parse('that in {browser_id} there is an "{item_name}" '
                      'item on the {item_type} list'))
-def op_check_if_there_is_an_item_on_the_list(selenium, browser_id,
-                                             item_name, item_type):
-    driver = select_browser(selenium, browser_id)
-    _check_for_item_in_given_list(driver, item_name, item_type)
-
-
 @given(parsers.parse('that in {browser_id} there is a "{item_name}" '
                      'item on the {item_type} list'))
-def op_check_if_there_is_a_item_on_the_list(selenium, browser_id,
-                                            item_name, item_type):
+def op_check_if_there_is_an_item_on_the_list(selenium, browser_id,
+                                             item_name, item_type):
     driver = select_browser(selenium, browser_id)
     _check_for_item_in_given_list(driver, item_name, item_type)
 
@@ -244,8 +236,7 @@ def op_check_if_item_of_name_disappeared_from_list(selenium, browser_id,
         """Refresh browser and keep calling callback with given args
         until achieve expected result or timeout.
         """
-        op_url = re.search('(https?://.*?)(/#)?(/.*)',
-                           driver.current_url).group(1)
+        op_url = parse_url(driver.current_url).group('base_url')
         driver.get(op_url)
         _click_on_tab_in_main_menu_sidebar(driver, item_type)
 

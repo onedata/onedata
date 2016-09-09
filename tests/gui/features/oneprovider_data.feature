@@ -4,15 +4,15 @@ Feature: Oneprovider Data view
   Background:
     # in future: Given [u1, u2] open a Onezone URL in their web browsers
     # in future: Given [u1, u2] open a Onezone URL in [Firefox, Chrome]
-    Given user opened browser window for browser
-    And user of browser opens a Onezone URL
+    Given user opened browser window
+    And user of browser opened a Onezone URL
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
-    And user of browser clicks on the "plgrid" login button
-    And user of browser clicks on the "user1" link
-    And user of browser expands the "go to your files" Onezone sidebar panel
-    And user of browser clicks on the "p1" provider in Onezone providers sidebar panel
-    And user of browser clicks on the "Go to your files" button in provider popup
+    And user of browser clicked on the "plgrid" login button
+    And user of browser clicked on the "user1" link
+    And user of browser expanded the "go to your files" Onezone sidebar panel
+    And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
+    And user of browser clicked on the "Go to your files" button in provider popup
     And user of browser sees that main content has ended loading
     # data is default, so it is unnecessary
     # And user clicks on the "data" menu item in Oneprovider main menu

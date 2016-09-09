@@ -23,7 +23,8 @@ from ..utils.generic import enter_text
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-@given(parsers.re('users? opened browser window for (?P<browser_id_list>.*)'))
+@given(parsers.parse("user opened {browser_id_list} window"))
+@given(parsers.parse("users opened {browser_id_list} browsers' windows"))
 def create_instances_of_webdriver(selenium, driver,
                                   config_driver, browser_id_list):
     for browser_id in list_parser(browser_id_list):
@@ -104,7 +105,7 @@ def link_with_text_present(selenium, browser_id, links_names):
         assert driver.find_element_by_link_text(name)
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
                   '"(?P<link_name>.*)" link'))
 def g_click_on_link_with_text(selenium, browser_id_list, link_name):
     for browser_id in list_parser(browser_id_list):

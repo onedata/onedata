@@ -2,14 +2,14 @@ Feature: Oneprovider space functionality
   Various operations on spaces
 
   Background:
-    Given user opened browser window for browser
-    And user of browser opens a Onezone URL
-    And user of browser clicks on the "plgrid" login button
-    And user of browser clicks on the "user1" link
-    And user of browser expands the "go to your files" Onezone sidebar panel
-    And user of browser clicks on the "p1" provider in Onezone providers sidebar panel
-    And user of browser clicks on the "Go to your files" button in provider popup
-    And user of browser clicks on the "spaces" tab in main menu sidebar
+    Given user opened browser window
+    And user of browser opened a Onezone URL
+    And user of browser clicked on the "plgrid" login button
+    And user of browser clicked on the "user1" link
+    And user of browser expanded the "go to your files" Onezone sidebar panel
+    And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
+    And user of browser clicked on the "Go to your files" button in provider popup
+    And user of browser clicked on the "spaces" tab in main menu sidebar
 
 
   Scenario: Create new space with specified name

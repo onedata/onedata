@@ -12,7 +12,7 @@ from tests.utils.acceptance_utils import list_parser
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-@given(parsers.re("users? of (?P<browser_id_list>.*) opens a Onezone URL"))
+@given(parsers.re("users? of (?P<browser_id_list>.*) opened a Onezone URL"))
 def g_visit_onezone(base_url, selenium, browser_id_list):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
@@ -35,7 +35,7 @@ def _click_login_provider_button(driver, provider_name):
     ).click()
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
                   '"(?P<provider_name>.*)" login button'))
 def g_click_login_provider_button(selenium, browser_id_list, provider_name):
     for browser_id in list_parser(browser_id_list):
@@ -58,7 +58,7 @@ def being_redirected_to_page(page, selenium, browser_id):
     wait(driver, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) logs '
+@given(parsers.re('users? of (?P<browser_id_list>.*) logged '
                   'as (?P<user_id_list>.*)'))
 def log_to_user_in_each_browser(selenium, browser_id_list,
                                 user_id_list):
