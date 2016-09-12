@@ -151,7 +151,7 @@ test_performance:
 	${TEST_RUN} --test-type performance --test-dir tests/performance
 
 test_gui:
-	${TEST_RUN} --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
+	${TEST_RUN} --test-type gui --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance --test-dir tests/acceptance/profiling
