@@ -1,8 +1,8 @@
 {
     "dirs_config": {
         "onepanel": {
-            "input_dir": "rel/op_panel",
-            "target_dir": "rel/test_cluster"
+            "input_dir": "_build/default/rel/op_panel",
+            "target_dir": "_build/default/rel/test_cluster"
         }
     },
     "os_configs": {
