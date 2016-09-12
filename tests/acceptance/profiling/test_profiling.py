@@ -65,6 +65,16 @@ def test_profile_touch(env_description_file):
     pass
 
 
+@scenario('Profile write sysbench')
+def test_profile_write_sysbench(env_description_file):
+    pass
+
+
+@scenario('Profile dd')
+def test_profile_dd(env_description_file):
+    pass
+
+
 @scenario('Profile write')
 def test_profile_write(env_description_file):
     pass
