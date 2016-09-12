@@ -1,12 +1,12 @@
 {
     "dirs_config": {
         "cluster_manager": {
-            "input_dir": "rel/cluster_manager",
-            "target_dir": "rel/test_cluster"
+            "input_dir": "_build/default/rel/cluster_manager",
+            "target_dir": "_build/default/rel/test_cluster"
         },
         "cluster_worker": {
-            "input_dir": "rel/cluster_worker",
-            "target_dir": "rel/test_cluster"
+            "input_dir": "_build/default/rel/cluster_worker",
+            "target_dir": "_build/default/rel/test_cluster"
         }
     },
     "os_configs": {
