@@ -67,6 +67,7 @@ check_call(['wget', '-O', '/etc/ssl/cert.pem',
 with open('/root/data/install.yml', 'r') as f:
     r = requests.post(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+        auth=('admin', 'password'),
         headers={'content-type': 'application/x-yaml'},
         data=f.read(),
         verify=False)
@@ -75,7 +76,7 @@ with open('/root/data/install.yml', 'r') as f:
     status = 'running'
     while status == 'running':
         r = requests.get('https://127.0.0.1:9443' + loc,
-                         auth=('admin1', 'Password1'),
+                         auth=('admin', 'password'),
                          verify=False)
         print(r.text)
         assert r.status_code == 200
@@ -93,7 +94,7 @@ for service in ['workers', 'managers', 'databases']:
     r = requests.patch(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/{0}?started=false'.format(
             service),
-        auth=('admin1', 'Password1'),
+        auth=('admin', 'password'),
         headers={'content-type': 'application/json'},
         verify=False)
     assert r.status_code == 204

@@ -4,6 +4,37 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc5
+
+* Update interfaces
+* Increase system performance
+* VFS-2534 Improve events processing
+* Update one panel for extended configuration options
+* VFS-2527 Use sbin/init as docker entrypoint
+* VFS-2449 fix step names and activating input box
+* VFS-2476 Add events profiling tests
+* VFS-2449 fix entering text to input box
+* VFS-2449 add msg to wait(...).until(..., msg=...)
+* VFS-2450 fail test instead of skipping if setting up environment fails
+* VFS-2454 add download test for firefox
+* VFS-2454 add download test for chrome
+
+
+### 3.0.0-rc4
+
+* Add ONEPANEL_DEBUG_MODE env variable to release docker entrypoint
+
+
+### 3.0.0-RC3
+
+* VFS-2156 Update release docker
+* VFS-2156 Update packages tests
+* VFS-2395 Fix given step for checking provider's name in file distribution
+* VFS-2395 Fix given for data spaces and renamed some steps for spaces tests
+* VFS-2395 Added scrolling to element when clicking settings icon.
+* VFS-2395 Refactorize functions for creating space in onezone
+
+
 ### 3.0.0-RC2
 
 * Turn off HSTS by default, allow configuration via app.config

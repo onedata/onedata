@@ -15,9 +15,10 @@ import pytest
 import re
 
 import sys
+import pkg_resources
 
 
-SELENIUM_IMPLICIT_WAIT = 15
+SELENIUM_IMPLICIT_WAIT = 8
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
@@ -28,16 +29,25 @@ WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
 WAIT_BACKEND = 15
 
 # waiting for backend to load after refresh
-WAIT_REFRESH = 2 * WAIT_BACKEND
+WAIT_REFRESH = WAIT_BACKEND
+MAX_REFRESH_COUNT = 6
 
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 
 
+@pytest.fixture
+def tmp_memory():
+    return {}
+
+
 @pytest.fixture(scope='module', autouse=True)
 def _verify_url(request, base_url):
     """Override original fixture to change scope to module (we can have different base_urls for each module)"""
-    from pytest_selenium.pytest_selenium import _verify_url as orig_verify_url
+    if pkg_resources.get_distribution("pytest-selenium").version == '1.3.1':
+        from pytest_base_url.plugin import _verify_url as orig_verify_url
+    else:
+        from pytest_selenium.pytest_selenium import _verify_url as orig_verify_url
     return orig_verify_url(request, base_url)
 
 
@@ -134,4 +144,8 @@ def selenium(selenium):
     selenium.set_window_size(1280, 1024)
     # currenlty, we rather set window size
     # selenium.maximize_window()
-    return selenium
+    return {'browser': selenium}
+
+
+def select_browser(selenium, browser_id):
+    return selenium[browser_id]
