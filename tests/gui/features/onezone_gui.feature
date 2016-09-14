@@ -12,18 +12,18 @@ Feature: Onezone GUI elements
     And user of browser clicked on the "user1" link
 
 
-  Scenario: User can change his alias using valid alias string
+  Scenario: User changes his alias using valid alias string (clicks ENTER after entering text)
     When user of browser expands the "user alias" Onezone sidebar panel
     And user of browser clicks on the user alias
     And user of browser types "helloworld" on keyboard
     And user of browser presses enter on keyboard
-    Then user of browser should see that the alias changed to "helloworld"
+    Then user of browser sees that the alias changed to "helloworld"
 
   Scenario: User can create space using valid name string
     Given user of browser generates valid name string
     When user of browser expands the "data space management" Onezone sidebar panel
-    And user of browser clicks on the "Create new space" in "Data space management" sidebar panel
-    And user of browser clicks on new space name input box
+    And user of browser clicks on the "Create new space" button in "Data space management" sidebar panel
+    And user of browser clicks on the input box in "Data space management" sidebar panel
     And user of browser types given name on keyboard
     And user of browser presses enter on keyboard
     Then user of browser should see that the new space has appeared on the spaces list in "Data space management" sidebar panel
