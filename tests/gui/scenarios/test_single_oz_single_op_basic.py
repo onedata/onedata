@@ -12,11 +12,11 @@ from tests.gui.steps.oneprovider_common import *
 from tests.gui.steps.oneprovider_data import *
 from tests.gui.steps.oneprovider_spaces import *
 
-
 import pytest
 from pytest_bdd import scenarios, scenario
 
 # --- FEATURES: all non-destructive (does not change state) ---
+scenarios('../features/oneprovider_group_multi.feature')
 scenarios('../features/oneprovider_group.feature')
 scenarios('../features/onezone_login.feature')
 scenarios('../features/onezone_gui.feature')

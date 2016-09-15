@@ -21,7 +21,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from ..utils.inspect import selector
 from ..utils.generic import find_item_with_given_properties, refresh_and_call, \
     click_on_element
-from ..conftest import select_browser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
@@ -90,8 +90,10 @@ def op_select_file_from_file_list(selenium, browser_id, file_name):
 
 @then(parsers.parse('user of {browser_id} sees that downloaded file '
                     '"{file_name}" contains "{content}"'))
-def check_if_downloaded_file_contains_given_content(tmpdir, file_name,
+def check_if_downloaded_file_contains_given_content(selenium, tmpdir,
+                                                    file_name,
                                                     content, browser_id):
+    driver = select_browser(selenium, browser_id)
     tmpdir_path = str(tmpdir)
     file_path = os.path.join(tmpdir_path, file_name)
 
@@ -100,9 +102,15 @@ def check_if_downloaded_file_contains_given_content(tmpdir, file_name,
         if not os.listdir(tmpdir_path):
             time.sleep(sleep_time)
 
-    with open(file_path, 'r') as f:
-        file_content = ''.join(f.readlines())
-        assert content == file_content
+    def _check_file_content():
+        with open(file_path, 'r') as f:
+            file_content = ''.join(f.readlines())
+            return content == file_content
+
+    Wait(driver, WAIT_BACKEND).until(
+        lambda _: _check_file_content,
+        message='checking if downloaded file contains {:s}'.format(content)
+    )
 
 
 def _check_for_lack_of_file_in_file_list(driver, file_name):
@@ -206,7 +214,7 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
             '#file-chunks-modal .container-fluid '
             'table.file-blocks-table td.provider-name')
         for elem in providers:
-            if elem.text == tmp_memory['supporting_provider']:
+            if elem.text == tmp_memory[browser_id]['supporting_provider']:
                 return elem
         return None
 
@@ -214,5 +222,5 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
     Wait(driver, WAIT_FRONTEND).until(
         _find_provider,
         message='check file distribution, focusing on {:s} provide'
-                ''.format(tmp_memory['supporting_provider'])
+                ''.format(tmp_memory[browser_id]['supporting_provider'])
     )

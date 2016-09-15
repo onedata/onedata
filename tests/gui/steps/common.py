@@ -20,7 +20,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 
 from ..utils.generic import enter_text
-from ..conftest import select_browser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
+
+@given(parsers.parse("user opened {browser_id_list} window"))
+@given(parsers.parse("users opened {browser_id_list} browsers' windows"))
+def create_instances_of_webdriver(selenium, driver,
+                                  config_driver, browser_id_list):
+    for browser_id in list_parser(browser_id_list):
+        if browser_id in selenium:
+            raise AttributeError('{:s} already in use'.format(browser_id))
+        else:
+            selenium[browser_id] = config_driver(driver.get_instance())
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))
@@ -62,6 +73,17 @@ def type_string_into_active_element(selenium, browser_id, text):
     )
 
 
+@when(parsers.parse('user of {browser_id} types given token on keyboard'))
+@then(parsers.parse('user of {browser_id} types given token on keyboard'))
+def type_string_into_active_element(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    token = tmp_memory[browser_id]['token']
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda s: enter_text(s.switch_to.active_element, token),
+        message='entering {:s} to input box'.format(token)
+    )
+
+
 @when(parsers.parse('user of {browser_id} presses enter on keyboard'))
 @then(parsers.parse('user of {browser_id} presses enter on keyboard'))
 def press_enter_on_active_element(selenium, browser_id):
@@ -83,20 +105,12 @@ def link_with_text_present(selenium, browser_id, links_names):
         assert driver.find_element_by_link_text(name)
 
 
-def _click_on_link_with_text(driver, link_name):
-    driver.find_element_by_link_text(link_name).click()
-
-
-@given(parsers.parse('user of {browser_id} clicks on the "{link_name}" link'))
-def g_click_on_link_with_text(selenium, browser_id, link_name):
-    driver = select_browser(selenium, browser_id)
-    _click_on_link_with_text(driver, link_name)
-
-
-@when(parsers.parse('user of {browser_id} clicks on the "{link_name}" link'))
-def w_click_on_link_with_text(selenium, browser_id, link_name):
-    driver = select_browser(selenium, browser_id)
-    _click_on_link_with_text(driver, link_name)
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
+                  '"(?P<link_name>.*)" link'))
+def g_click_on_link_with_text(selenium, browser_id_list, link_name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        driver.find_element_by_link_text(link_name).click()
 
 
 @when(parsers.parse('user of {browser_id} is idle for {seconds:d} seconds'))
