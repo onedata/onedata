@@ -51,7 +51,6 @@ Example: (invoke from onedata repo root dir)
 New parameters:
 
 * ``--copy-etc-hosts`` - optional, use if want to copy local contents of ``/etc/hosts`` file to docker, because some domains are defined locally
-* ``--base-url=https://veilfsdev.com`` - optional, use if want to copy local instance of container
 
 2. Non-headless using local machine (BDD)
 -----------------------------------------------------
@@ -61,7 +60,7 @@ Required Python packages to install (e.g. using ``pip install``):
 
 * pytest
 * pytest_bdd
-* pytest_selenium
+* git+git://github.com/bwalkowi/pytest-selenium-multi
 * pytest_xvfb
 
 A browser selected for tests (with ``--driver``) should be also installed.
@@ -90,8 +89,9 @@ For some purposes, taking screenshots can be required in time of test run.
 
 In steps of scenarios simply use:
 ```
-selenium.get_screenshot_as_file('/tmp/some-screenshot.png')
+driver.get_screenshot_as_file('/tmp/some-screenshot.png')
 ```
+where driver is instance of Selenium WebDriver
 
 Development
 ===========
@@ -101,7 +101,7 @@ Please read these section before you start writing or modifying GUI tests.
 Fixtures and pytest plugins overrides
 =====================================
 
-* The default configuration of ``pytest-selenium`` for sensitive URLs is inverted:
+* The default configuration of ``pytest-selenium-multi`` for sensitive URLs is inverted:
 all tests are considered *non-destructive by default*.
 You can add a ``@pytest.mark.destructive`` mark to test scenario to mark test as destructive.
 
