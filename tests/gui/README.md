@@ -26,15 +26,16 @@ dir with configurations). Setting up environment can take some time.
 
 Example: (invoke from onedata repo root dir)
 ```
-./test_run.py -t tests/gui -i onedata/gui_builder:selenium --test-type gui --driver=Firefox 
+./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --self-contained-html
 ```
 
 Used parameters:
 
 * ``-t tests/gui`` - standard ``./test_run.py`` parameter to set the test cases path to gui tests
-* ``-i onedata/gui_builder:selenium`` - use Docker image with dependencied for GUI tests (i.a. Xvfb, Selenium, Firefox, Chrome)
+* ``-i onedata/gui_builder:latest`` - use Docker image with dependencied for GUI tests (i.a. Xvfb, Selenium, Firefox, Chrome)
 * ``--test-type gui`` - set the test type use by core Onedata test helpers to differ from "cucumber" tests etc.
 * ``--driver=<Firefox|Chrome>`` - set the browser to test in (will be launched in headless mode)
+* ``--self-contained-html`` - generated report will be contained in 1 file
 
 
 ### Headless using existing Onedata installation
@@ -44,12 +45,13 @@ The URL should be a main application address of Onezone.
 
 Example: (invoke from onedata repo root dir)
 ```
-./test_run.py -t tests/gui -i onedata/gui_builder:selenium --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://veilfsdev.com
+./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://veilfsdev.com --self-contained-html
 ```
 
 New parameters:
 
 * ``--copy-etc-hosts`` - optional, use if want to copy local contents of ``/etc/hosts`` file to docker, because some domains are defined locally
+* ``--base-url=https://veilfsdev.com`` - optional, use if want to copy local instance of container
 
 2. Non-headless using local machine (BDD)
 -----------------------------------------------------
@@ -70,7 +72,7 @@ Note, that ``--no-xvfb`` option is used to force to not use Xvfb even if it is i
 
 Example: (invoke from onedata repo root dir)
 ```
-py.test --test-type=gui tests/gui --driver=Firefox --no-xvfb --base-url=https://veilfsdev.com
+py.test --test-type=gui tests/gui --driver=Firefox --no-xvfb --base-url=https://veilfsdev.com --self-contained-html
 ```
 
 
