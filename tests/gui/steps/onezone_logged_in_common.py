@@ -81,7 +81,10 @@ def _click_on_item_in_uncollapsed_oz_panel(driver, item_name,
                          'panel'.format(type=item_type, panel=panel_name))
 
 
-@when(parsers.re('users? of (?P<browser_id_list>.*?) clicks on the '
+# item_name is optional, possible calls:
+# e.g 'user of browser clicks on "Create new space" button in "Data space management" sidebar panel'
+# or 'user of browser clicks on input box in "Data space management" sidebar panel'
+@when(parsers.re('users? of (?P<browser_id_list>.*?) clicks? on the '
                  '("(?P<item_name>.*?)" )?(?P<item_type>.*?) '
                  'in "(?P<panel_name>.*?)" sidebar panel'))
 def click_on_item_in_uncollapsed_oz_panel(selenium, browser_id_list,
