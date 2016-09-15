@@ -14,6 +14,9 @@ import subprocess
 import pytest
 import os
 import inspect
+import time
+
+ENV_UP_RETRIES_NUMBER = 5
 
 
 def run_os_command(cmd, output=True):
@@ -34,7 +37,8 @@ def run_os_command(cmd, output=True):
             return subprocess.call(cmd, stdout=devnull, stderr=devnull)
 
 
-def run_env_up_script(script, config=None, logdir=None, args=[], skip=True):
+def run_env_up_script(script, config=None, logdir=None, args=[], skip=True,
+                      retries=ENV_UP_RETRIES_NUMBER):
     """Runs given script to bring up test environment.
     Script must be located in docker_dir directory (see test_common.py)
     If script fails, functions skips test (if skip=True).
@@ -48,8 +52,9 @@ def run_env_up_script(script, config=None, logdir=None, args=[], skip=True):
     if config:
         cmd.append(config)
 
+    output = ""
     try:
-        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        output = retry_running_cmd_until(cmd, retries=retries)
     except Exception as e:
         if isinstance(e, subprocess.CalledProcessError):
             err_msg = e.output
@@ -75,6 +80,29 @@ def run_env_up_script(script, config=None, logdir=None, args=[], skip=True):
         logfile.write(stripped_output)
         logfile.close()
     return output_dict
+
+
+def retry_running_cmd_until(cmd, retries=0):
+    """Retries running command
+    :param cmd: command to be run
+    :type cmd: <type 'str'>
+    :param retries: number of times that command will be retried to run
+    :type retries: <type 'int'>
+    """
+    output = ""
+    try:
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+    except Exception as e:
+        print """{0}
+Number of retries left: {1}
+""".format(e, retries)
+
+        if retries > 0:
+            time.sleep(1)
+            retry_running_cmd_until(cmd, retries - 1)
+        else:
+            raise e
+    return output
 
 
 def strip_output_logs(output):
