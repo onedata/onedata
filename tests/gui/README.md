@@ -35,7 +35,7 @@ Used parameters:
 * ``-i onedata/gui_builder:latest`` - use Docker image with dependencied for GUI tests (i.a. Xvfb, Selenium, Firefox, Chrome)
 * ``--test-type gui`` - set the test type use by core Onedata test helpers to differ from "cucumber" tests etc.
 * ``--driver=<Firefox|Chrome>`` - set the browser to test in (will be launched in headless mode)
-* ``--self-contained-html`` - generated report will be contained in 1 file
+* ``--self-contained-html`` - optional, if used generated report will be contained in 1 html file
 
 
 ### Headless using existing Onedata installation
