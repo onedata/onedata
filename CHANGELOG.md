@@ -4,6 +4,23 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc6
+
+* VFS-2180 Improve links conflict resolution
+* VFS-2180 Improve dbsync implementation
+* VFS-2180 Use gen_server2 instead of erlang's gen_server module
+* VFS-2390 Fix handlers specification in REST API
+* VFS-2390 Update rebar to version 3
+* Update memory management
+* VFS-2180 Allow for concurrent file creation
+* VFS-2202 modify README.md
+* VFS-2202 fix step name of step creating webdriver instances
+* VFS-2202 remake givens to work with multiple browsers
+* VFS-2202 add join group test
+* VFS-2202 remake use of pytest_selenium_multi fixtures
+* VFS-2202 remake firefox profile as factory
+
+
 ### 3.0.0-rc5
 
 * Update interfaces
