@@ -84,10 +84,14 @@ def start_services():
     start_service('op_worker')
 
 def is_configured():
-    r = requests.get('https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
-                     auth=(ADMIN, PASSWORD),
-                     verify=False)
-    return r.status_code != 404
+    try:
+        r = requests.get('https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
+                         auth=(ADMIN, PASSWORD),
+                         verify=False)
+        return r.status_code != 404
+    except Exception:
+        time.sleep(1)
+        return is_configured()
 
 def format_step(step):
     service, action = step.split(':')
@@ -202,15 +206,17 @@ if __name__ == '__main__':
 
     start_service('op_panel')
 
-    if is_configured():
+    configured = is_configured()
+
+    if configured:
         start_services()
     else:
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
         batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
         if batch_mode.lower() == 'true':
-            configure(batch_config)
+            configured = configure(batch_config)
 
     show_details()
 
-    if is_configured():
+    if configured:
         log('\nCongratulations! oneprovider has been successfully started.')
