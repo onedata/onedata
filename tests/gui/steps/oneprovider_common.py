@@ -80,7 +80,6 @@ def _get_visible_token_from_active_modal(driver):
     return Wait(driver, WAIT_BACKEND).until(
         lambda s: s.find_element_by_css_selector(
             '.input-with-button '
-            'div[id*=form-token] '
             'input')
     ).get_attribute('value')
 
