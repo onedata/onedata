@@ -9,6 +9,7 @@ Feature: Oneprovider space functionality
     And user of browser expanded the "go to your files" Onezone sidebar panel
     And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
     And user of browser clicked on the "Go to your files" button in provider popup
+    And user of browser seen that Oneprovider session has started
     And user of browser clicked on the "spaces" tab in main menu sidebar
 
   Scenario: User successfully creates new space with specified name (clicks ENTER after entering space name)

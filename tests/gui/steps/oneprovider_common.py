@@ -37,7 +37,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
             except AttributeError:
                 return False
             else:
-                return main_menu_tab_to_url[main_menu_tab].lower() == found
+                return main_menu_tab_to_url[main_menu_tab] == found.lower()
 
         click_on_element(driver, item_name=main_menu_tab,
                          css_path='.primary-sidebar a#main-'
@@ -46,7 +46,8 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
 
         return Wait(driver, WAIT_FRONTEND).until(
             lambda _: _check_url(),
-            message='waiting for url to change'
+            message='waiting for url to change.'
+                    'Current url: {:s}'.format(driver.current_url)
         )
 
     Wait(driver, WAIT_BACKEND).until(
@@ -80,7 +81,6 @@ def _get_visible_token_from_active_modal(driver):
     return Wait(driver, WAIT_BACKEND).until(
         lambda s: s.find_element_by_css_selector(
             '.input-with-button '
-            'div[id*=form-token] '
             'input')
     ).get_attribute('value')
 
@@ -432,3 +432,22 @@ def op_check_if_modal_with_input_box_disappeared(selenium, browser_id,
                                                        modal_name),
         message='waiting for {:s} modal to disappear'.format(modal_name)
     )
+
+
+@given(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
+                  'Oneprovider session has started'))
+def wait_for_op_session_to_start(selenium, browser_id_list):
+    def _check_url():
+        try:
+            found = parse_url(driver.current_url).group('access')
+        except AttributeError:
+            return False
+        else:
+            return 'onedata' == found.lower()
+
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        Wait(driver, WAIT_BACKEND).until(
+            lambda _: _check_url(),
+            message='waiting for session to start'
+        )
