@@ -37,7 +37,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
             except AttributeError:
                 return False
             else:
-                return main_menu_tab_to_url[main_menu_tab].lower() == found
+                return main_menu_tab_to_url[main_menu_tab] == found.lower()
 
         click_on_element(driver, item_name=main_menu_tab,
                          css_path='.primary-sidebar a#main-'
@@ -46,7 +46,8 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
 
         return Wait(driver, WAIT_FRONTEND).until(
             lambda _: _check_url(),
-            message='waiting for url to change'
+            message='waiting for url to change.\n'
+                    'Current url: {:s}'.format(driver.current_url)
         )
 
     Wait(driver, WAIT_BACKEND).until(
