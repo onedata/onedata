@@ -13,8 +13,8 @@ Feature: Oneprovider Data view
     And user of browser expanded the "go to your files" Onezone sidebar panel
     And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
     And user of browser clicked on the "Go to your files" button in provider popup
-#    And user of browser seen that main content has ended loading
-    And user of browser sees that main content has ended loading
+    And user of browser seen that Oneprovider session has started
+#    And user of browser sees that main content has ended loading
     # data is default, so it is unnecessary
     # And user clicks on the "data" menu item in Oneprovider main menu
 

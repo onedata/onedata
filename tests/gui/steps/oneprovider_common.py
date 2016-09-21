@@ -432,3 +432,22 @@ def op_check_if_modal_with_input_box_disappeared(selenium, browser_id,
                                                        modal_name),
         message='waiting for {:s} modal to disappear'.format(modal_name)
     )
+
+
+@given(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
+                  'Oneprovider session has started'))
+def wait_for_op_session_to_start(selenium, browser_id_list):
+    def _check_url():
+        try:
+            found = parse_url(driver.current_url).group('access')
+        except AttributeError:
+            return False
+        else:
+            return 'onedata' == found.lower()
+
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        Wait(driver, WAIT_BACKEND).until(
+            lambda _: _check_url(),
+            message='waiting for session to start'
+        )

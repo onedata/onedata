@@ -9,6 +9,7 @@ Feature: Oneprovider Group functionality using multiple browsers
     And users of [browser1, browser2] expanded the "go to your files" Onezone sidebar panel
     And users of [browser1, browser2] clicked on the "p1" provider in Onezone providers sidebar panel
     And users of [browser1, browser2] clicked on the "Go to your files" button in provider popup
+    And users of [browser1, browser2] seen that Oneprovider session has started
     And users of [browser1, browser2] clicked on the "groups" tab in main menu sidebar
 
   # TODO rm leave from group at the end of test
