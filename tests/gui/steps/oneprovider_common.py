@@ -46,7 +46,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
 
         return Wait(driver, WAIT_FRONTEND).until(
             lambda _: _check_url(),
-            message='waiting for url to change.\n'
+            message='waiting for url to change.'
                     'Current url: {:s}'.format(driver.current_url)
         )
 
