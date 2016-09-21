@@ -24,9 +24,12 @@ from ..utils.generic import find_item_with_given_properties, refresh_and_call, \
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
+import tests.gui.utils.file_system as fs
+
+
 @when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
                  r'data space to "(?P<space_name>.+)"'))
-def change_space(selenium, browser_id, space_name):
+def change_space(selenium, browser_id, space_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
     # HACK: because Firefox driver have buggy EC.element_to_be_clickable,
     # we wait for loader to disappear
@@ -46,6 +49,24 @@ def change_space(selenium, browser_id, space_name):
             return None
 
     Wait(driver, WAIT_FRONTEND).until(space_by_name).click()
+
+    # TODO rm after integrate with swagger
+    if browser_id in tmp_memory:
+        browser = tmp_memory[browser_id]
+        if 'spaces' in browser:
+            spaces = browser['spaces']
+            if space_name in spaces:
+                root_dir = spaces[space_name]
+            else:
+                root_dir = spaces[space_name] = fs.mkdir(space_name)
+        else:
+            root_dir = fs.mkdir(space_name)
+            browser['spaces'] = {space_name: root_dir}
+    else:
+        root_dir = fs.mkdir(space_name)
+        tmp_memory[browser_id] = {'spaces': {space_name: root_dir}}
+
+    tmp_memory[browser_id].update({'website': {'op': {'data': {'current_dir': root_dir}}}})
 
 
 @when(parsers.parse('user of {browser_id} uses upload button in toolbar '
@@ -148,7 +169,7 @@ def _check_for_file_in_file_list(driver, file_name):
         files = s.find_elements_by_css_selector('.files-list td')
         return sum(1 for li in files if li.text == name) == 1
 
-    Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
+    return Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _find_file,
                                    file_name),
         message='searching for exactly one {:s} on file list'.format(file_name)
@@ -224,3 +245,27 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
         message='check file distribution, focusing on {:s} provide'
                 ''.format(tmp_memory[browser_id]['supporting_provider'])
     )
+
+
+@when(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has appeared in file list'))
+@then(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has appeared in file list'))
+def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_name,
+                                           item_type, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    if _check_for_file_in_file_list(driver, item_name):
+        cur_dir = tmp_memory[browser_id]['website']['op']['data']['current_dir']
+        (fs.mkdir if item_type == 'directory' else fs.touch)(item_name, cur_dir)
+
+
+@when(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has disappeared from files list'))
+@then(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has disappeared from files list'))
+def op_check_if_item_disappeared_from_file_list(selenium, browser_id,
+                                                item_type, item_name, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    if _check_for_lack_of_file_in_file_list(driver, item_name):
+        cur_dir = tmp_memory[browser_id]['website']['op']['data']['current_dir']
+        (fs.rmdir if item_type == 'directory' else fs.rmfile)(item_name, cur_dir)
