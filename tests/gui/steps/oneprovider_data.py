@@ -12,22 +12,23 @@ import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, MAX_REFRESH_COUNT
 from tests.gui.utils.generic import upload_file_path
-from pytest_bdd import when, then, parsers, given
+from pytest_bdd import when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 
-from ..utils.inspect import selector
-from ..utils.generic import find_item_with_given_properties, refresh_and_call, \
-    click_on_element
+from tests.gui.utils.generic import refresh_and_call
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 import tests.gui.utils.file_system as fs
+from tests.utils.acceptance_utils import list_parser
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
+                 r'data space to "(?P<space_name>.+)"'))
+@then(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
                  r'data space to "(?P<space_name>.+)"'))
 def change_space(selenium, browser_id, space_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
@@ -50,23 +51,13 @@ def change_space(selenium, browser_id, space_name, tmp_memory):
 
     Wait(driver, WAIT_FRONTEND).until(space_by_name).click()
 
-    # TODO rm after integrate with swagger
-    if browser_id in tmp_memory:
-        browser = tmp_memory[browser_id]
-        if 'spaces' in browser:
-            spaces = browser['spaces']
-            if space_name in spaces:
-                root_dir = spaces[space_name]
-            else:
-                root_dir = spaces[space_name] = fs.mkdir(space_name)
-        else:
-            root_dir = fs.mkdir(space_name)
-            browser['spaces'] = {space_name: root_dir}
+    spaces = tmp_memory[browser_id]['spaces']
+    if space_name in spaces:
+        root_dir = spaces[space_name]
     else:
-        root_dir = fs.mkdir(space_name)
-        tmp_memory[browser_id] = {'spaces': {space_name: root_dir}}
+        root_dir = spaces[space_name] = fs.mkdir(space_name)
 
-    tmp_memory[browser_id].update({'website': {'op': {'data': {'current_dir': root_dir}}}})
+    tmp_memory[browser_id]['website']['current_dir'] = root_dir
 
 
 @when(parsers.parse('user of {browser_id} uses upload button in toolbar '
@@ -91,29 +82,39 @@ def upload_file_to_current_dir(selenium, browser_id, file_name):
     Wait(driver, WAIT_BACKEND).until(file_browser_ready)
 
 
-@then(parsers.parse('user of {browser_id} double clicks '
-                    'on file "{file_name}" from files list'))
-@when(parsers.parse('user of {browser_id} double clicks '
-                    'on file "{file_name}" from files list'))
-def op_select_file_from_file_list(selenium, browser_id, file_name):
-    driver = select_browser(selenium, browser_id)
-    check_properties = selector(driver, text=file_name,
-                                check_visibility=True)
-    css_path = '.files-list table.files-table td.file-list-col-file'
+def _get_items_from_file_list(driver, name, type):
+    files = driver.find_elements_by_css_selector('table.files-table td '
+                                                 '.file-icon .oneicon, '
+                                                 'table.files-table td '
+                                                 '.file-label')
+    icons, labels = files[::2], files[1::2]
+    return [label for icon, label in zip(icons, labels)
+            if label.text == name and type in icon.get_attribute('class')]
 
-    list_item = Wait(driver, WAIT_FRONTEND).until(
-        lambda s: find_item_with_given_properties(s, css_path,
-                                                  check_properties),
-        message='searching for {:s} in file list'.format(file_name)
-    )
-    ActionChains(driver).double_click(list_item).perform()
+
+@then(parsers.parse('user of {browser_id} double clicks '
+                    'on {item_type} "{item_name}" from files list'))
+@when(parsers.parse('user of {browser_id} double clicks '
+                    'on {item_type} "{item_name}" from files list'))
+def double_click_on_item(selenium, browser_id, item_name,
+                         item_type, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _, _, icon = get_icon_and_fun_for_item_type(item_type)
+
+    item = Wait(driver, WAIT_FRONTEND).until(
+        lambda d: _get_items_from_file_list(d, item_name, item_type),
+        message='searching for {:s} in file list'.format(item_name)
+    )[0]
+    ActionChains(driver).double_click(item).perform()
+    if item_type == 'directory':
+        curr_dir = tmp_memory[browser_id]['website']['current_dir']
+        tmp_memory[browser_id]['website']['current_dir'] = curr_dir.files[item_name]
 
 
 @then(parsers.parse('user of {browser_id} sees that downloaded file '
                     '"{file_name}" contains "{content}"'))
-def check_if_downloaded_file_contains_given_content(selenium, tmpdir,
-                                                    file_name,
-                                                    content, browser_id):
+def has_downloaded_file_content(selenium, tmpdir, file_name,
+                                content, browser_id):
     driver = select_browser(selenium, browser_id)
     tmpdir_path = str(tmpdir)
     file_path = os.path.join(tmpdir_path, file_name)
@@ -134,64 +135,75 @@ def check_if_downloaded_file_contains_given_content(selenium, tmpdir,
     )
 
 
-def _check_for_lack_of_file_in_file_list(driver, file_name):
-    def _find_file(s, name):
-        files = s.find_elements_by_css_selector('.files-list td')
-        return all(li.text != name for li in files)
+def get_icon_and_fun_for_item_type(item_type):
+    return {'directory-share': (fs.mkshare, fs.rmshare,
+                                'oneicon-folder-share'),
+            'directory': (fs.mkdir, fs.rmdir, 'oneicon-folder'),
+            'file': (fs.touch, fs.rmfile, 'oneicon-file')}[item_type]
+
+
+def _not_in_file_list(driver, item_name, item_type):
+    def _not_in(d, name):
+        return not _get_items_from_file_list(d, name, item_type)
 
     Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
-        lambda s: refresh_and_call(s, _find_file,
-                                   file_name),
-        message='searching for lack of {:s} ''on file list'.format(file_name)
+        lambda s: refresh_and_call(s, _not_in,
+                                   item_name),
+        message='searching for lack of {:s} ''on file list'.format(item_name)
     )
 
 
-@given(parsers.parse('that in {browser_id} there is no file named '
-                     '"{file_list_elem}" in files list'))
-@given(parsers.parse('that in {browser_id} there is no directory named '
-                     '"{file_list_elem}" in files list'))
-def check_if_file_not_exist(selenium, browser_id, file_list_elem):
+@when(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has disappeared from file list'))
+@then(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has disappeared from file list'))
+def op_check_if_item_disappeared_from_file_list(selenium, browser_id,
+                                                item_type, item_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
-    _check_for_lack_of_file_in_file_list(driver, file_list_elem)
+    _, rm_fun, icon = get_icon_and_fun_for_item_type(item_type)
+    if _not_in_file_list(driver, item_name, icon):
+        cur_dir = tmp_memory[browser_id]['website']['current_dir']
+        rm_fun(item_name, cur_dir)
 
 
-@then(parsers.parse('user of {browser_id} should not see directory named '
-                    '"{file_list_elem}" in files list'))
-@then(parsers.parse('user of {browser_id} should not see file named '
-                    '"{file_list_elem}" in files list'))
-def check_absence_deleted_file(selenium, browser_id, file_list_elem):
-    driver = select_browser(selenium, browser_id)
-    _check_for_lack_of_file_in_file_list(driver, file_list_elem)
-
-
-def _check_for_file_in_file_list(driver, file_name):
-    def _find_file(s, name):
-        files = s.find_elements_by_css_selector('.files-list td')
-        return sum(1 for li in files if li.text == name) == 1
+def _in_file_list(driver, item_name, item_type):
+    def _in(d, name):
+        return len(_get_items_from_file_list(d, name, item_type)) == 1
 
     return Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
-        lambda s: refresh_and_call(s, _find_file,
-                                   file_name),
-        message='searching for exactly one {:s} on file list'.format(file_name)
+        lambda s: refresh_and_call(s, _in,
+                                   item_name),
+        message='searching for exactly one {} on file list'.format(item_name)
     )
 
 
-@given(parsers.parse('that in {browser_id} there is a "{file_name}" file '
-                     'on the files list'))
-def existing_file(selenium, browser_id, file_name):
+@when(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has appeared in file list'))
+@then(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has appeared in file list'))
+def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_type,
+                                           item_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
-    _check_for_file_in_file_list(driver, file_name)
+    mk_fun, _, icon = get_icon_and_fun_for_item_type(item_type)
+    if _in_file_list(driver, item_name, icon):
+        cur_dir = tmp_memory[browser_id]['website']['current_dir']
+        mk_fun(item_name, cur_dir)
 
 
-@when(parsers.parse('user of {browser_id} sees new file named '
-                    '"{file_list_element}" in files list'))
-@then(parsers.parse('user of {browser_id} sees new directory named '
-                    '"{file_list_element}" in files list'))
-@then(parsers.parse('user of {browser_id} sees new file named '
-                    '"{file_list_element}" in files list'))
-def op_check_if_new_file_appeared(selenium, browser_id, file_list_element):
+@when(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has became share with alias '
+                    '"{share_name}"'))
+@when(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has became share with alias '
+                    '"{share_name}"'))
+def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_type,
+                                           item_name, share_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
-    _check_for_file_in_file_list(driver, file_list_element)
+    mk_fun, _, icon = get_icon_and_fun_for_item_type('{:s}-share'
+                                                     ''.format(item_type))
+    if _in_file_list(driver, item_name, icon):
+        item = tmp_memory[browser_id]['website']['current_dir'].files[item_name]
+        mk_fun(browser_id, share_name, item, tmp_memory)
 
 
 @then(parsers.parse('user of {browser_id} clicks the button from top menu bar '
@@ -199,31 +211,34 @@ def op_check_if_new_file_appeared(selenium, browser_id, file_list_element):
 @when(parsers.parse('user of {browser_id} clicks the button from top menu bar '
                     'with tooltip "{tooltip_name}"'))
 def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
-
-    def _find_tooltip_with_given_name(s):
-        tooltips = s.find_elements_by_css_selector('ul.toolbar-group a')
-        for tooltip in tooltips:
-            if tooltip.get_attribute('data-original-title') == tooltip_name:
-                return tooltip
-
     driver = select_browser(selenium, browser_id)
+    css_path = 'ul.toolbar-group a[data-original-title="{:s}"]' \
+               ''.format(tooltip_name)
     Wait(driver, WAIT_BACKEND).until(
-        _find_tooltip_with_given_name,
-        message='clicking on {:s} from top menu bar'.format(tooltip_name)
+        lambda d: d.find_element_by_css_selector(css_path),
+        message='clicking on button with tooltip {:s} '
+                'from top menu bar'.format(tooltip_name)
     ).click()
 
 
-@then(parsers.parse('user of {browser_id} selects "{file_list_element}" '
+@when(parsers.parse('user of {browser_id} selects {item_list} '
                     'from files list'))
-@when(parsers.parse('user of {browser_id} selects "{file_list_element}" '
+@then(parsers.parse('user of {browser_id} selects {item_list} '
                     'from files list'))
-def op_select_file(selenium, browser_id, file_list_element):
+def select_files_from_file_list(selenium, browser_id, item_list):
     driver = select_browser(selenium, browser_id)
-    click_on_element(driver, item_name=file_list_element,
-                     css_path='.files-list td',
-                     ignore_case=False,
-                     msg='clicking on {:s} in file '
-                         'list'.format(file_list_element))
+    items = {item.text: item for item in
+             driver.find_elements_by_css_selector('table.files-table '
+                                                  'tr:not([class$="active"]) '
+                                                  'td.file-list-col-file')}
+    for item in list_parser(item_list):
+        if item in items:
+            item = items[item]
+            Wait(driver, WAIT_FRONTEND).until(
+                lambda _: item.is_displayed() and item.is_enabled(),
+                message='clicking on {:s} in file list'.format(item.text)
+            )
+            item.click()
 
 
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '
@@ -245,27 +260,3 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
         message='check file distribution, focusing on {:s} provide'
                 ''.format(tmp_memory[browser_id]['supporting_provider'])
     )
-
-
-@when(parsers.parse('user of {browser_id} sees that {item_type} '
-                    'named "{item_name}" has appeared in file list'))
-@then(parsers.parse('user of {browser_id} sees that {item_type} '
-                    'named "{item_name}" has appeared in file list'))
-def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_name,
-                                           item_type, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    if _check_for_file_in_file_list(driver, item_name):
-        cur_dir = tmp_memory[browser_id]['website']['op']['data']['current_dir']
-        (fs.mkdir if item_type == 'directory' else fs.touch)(item_name, cur_dir)
-
-
-@when(parsers.parse('user of {browser_id} sees that {item_type} '
-                    'named "{item_name}" has disappeared from files list'))
-@then(parsers.parse('user of {browser_id} sees that {item_type} '
-                    'named "{item_name}" has disappeared from files list'))
-def op_check_if_item_disappeared_from_file_list(selenium, browser_id,
-                                                item_type, item_name, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    if _check_for_lack_of_file_in_file_list(driver, item_name):
-        cur_dir = tmp_memory[browser_id]['website']['op']['data']['current_dir']
-        (fs.rmdir if item_type == 'directory' else fs.rmfile)(item_name, cur_dir)

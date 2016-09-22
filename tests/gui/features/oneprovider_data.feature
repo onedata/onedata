@@ -24,12 +24,6 @@ Feature: Oneprovider Data view
     And user of browser sees that file named "20B-1.txt" has appeared in file list
     And user of browser double clicks on file "20B-1.txt" from files list
     Then user of browser sees that downloaded file "20B-1.txt" contains "11111111111111111111"
-    # TODO rm after integrating with swagger
-    And user of browser selects "20B-1.txt" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
-    And user of browser sees that file named "20B-1.txt" has disappeared from files list
 
 
   Scenario: Uploading a small file to space that accepts large files should succeed
@@ -38,71 +32,74 @@ Feature: Oneprovider Data view
     Then user of browser sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
     And user of browser sees that file named "20B-0.txt" has appeared in file list
     # TODO rm after integrating with swagger
-    And user of browser selects "20B-0.txt" from files list
+    And user of browser selects 20B-0.txt from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser clicks "OK" confirmation button in displayed modal
     And user of browser sees an success notify with text matching to: .*removed.*
-    And user of browser sees that file named "20B-0.txt" has disappeared from files list
-#
-#
-#  Scenario: Create new file and then remove it
-#    Given that in browser there is no file named "file1" in files list
-#    When user of browser clicks the button from top menu bar with tooltip "Create file"
-#    And user of browser sees that input box in "New file" modal is active
-#    And user of browser types "file1" on keyboard
-#    And user of browser presses enter on keyboard
-#    Then user of browser sees that "New file" modal has disappeared
-#    And user of browser sees new file named "file1" in files list
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser clicks "OK" confirmation button in displayed modal
-#    And user of browser sees an success notify with text matching to: .*removed.*
-#    And user of browser should not see file named "file1" in files list
-#
-#
-#  Scenario: Create new directory and then remove it
-#    Given that in browser there is no directory named "directory1" in files list
-#    When user of browser clicks the button from top menu bar with tooltip "Create directory"
-#    And user of browser sees that input box in "New directory" modal is active
-#    And user of browser types "directory1" on keyboard
-#    And user of browser presses enter on keyboard
-#    Then user of browser sees that "New directory" modal has disappeared
-#    And user of browser sees new directory named "directory1" in files list
-#    And user of browser selects "directory1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser clicks "OK" confirmation button in displayed modal
-#    And user of browser sees an success notify with text matching to: .*removed.*
-#    And user of browser should not see file named "directory1" in files list
-#
-#
-#  Scenario: Create file and then remove it
-#    When user of browser clicks the button from top menu bar with tooltip "Create file"
-#    And user of browser sees that input box in "New file" modal is active
-#    And user of browser types "file2" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that "New file" modal has disappeared
-#    And user of browser sees new file named "file2" in files list
-#    And user of browser selects "file2" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser clicks "OK" confirmation button in displayed modal
-#    Then user of browser sees an success notify with text matching to: .*removed.*
-#    And user of browser should not see file named "file2" in files list
-#
-#
-#  # 'space1' supported by 'p1' defined in env.json
-#  Scenario: Create file and check if provider name is displayed in the file distribution panel
-#    When user of browser clicks the button from top menu bar with tooltip "Create file"
-#    And user of browser sees that input box in "New file" modal is active
-#    And user of browser types "file3" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that "New file" modal has disappeared
-#    And user of browser sees new file named "file3" in files list
-#    And user of browser selects "file3" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-#    Then user of browser sees modal with name of provider supporting space in providers column
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "20B-1.txt" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser clicks "OK" confirmation button in displayed modal
-#    And user of browser sees an success notify with text matching to: .*removed.*
-#    And user of browser sees that file named "20B-1.txt" has disappeared from files list
+    And user of browser sees that file named "20B-0.txt" has disappeared from file list
+
+
+  Scenario: Create new file and then remove it
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that input box in "New file" modal is active
+    And user of browser types "file1" on keyboard
+    And user of browser presses enter on keyboard
+    Then user of browser sees that "New file" modal has disappeared
+    And user of browser sees that file named "file1" has appeared in file list
+    # TODO rm after integrating with swagger
+    And user of browser selects file1 from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser sees that file named "file1" has disappeared from file list
+
+  Scenario: Create new directory and then remove it
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that input box in "New directory" modal is active
+    And user of browser types "directory1" on keyboard
+    And user of browser presses enter on keyboard
+    Then user of browser sees that "New directory" modal has disappeared
+    And user of browser sees that directory named "directory1" has appeared in file list
+    # TODO rm after integrating with swagger
+    And user of browser selects directory1 from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser sees that directory named "directory1" has disappeared from file list
+
+  Scenario: Create file and then remove it
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that input box in "New file" modal is active
+    And user of browser types "file2" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that "New file" modal has disappeared
+    And user of browser sees that file named "file2" has appeared in file list
+    # TODO rm after integrating with swagger
+    And user of browser selects file2 from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser clicks "OK" confirmation button in displayed modal
+    Then user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser sees that file named "file2" has disappeared from file list
+
+  # 'space1' supported by 'p1' defined in env.json
+  Scenario: Create file and check if provider name is displayed in the file distribution panel
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that input box in "New file" modal is active
+    And user of browser types "file3" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that "New file" modal has disappeared
+    And user of browser sees that file named "file3" has appeared in file list
+    And user of browser selects file3 from files list
+    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
+    Then user of browser sees modal with name of provider supporting space in providers column
+    And user of browser clicks "Close" confirmation button in displayed modal
+    # TODO rm after integrating with swagger
+    And user of browser selects file3 from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser sees that file named "file3" has disappeared from file list

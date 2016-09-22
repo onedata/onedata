@@ -26,12 +26,16 @@ from pytest_selenium_multi.pytest_selenium_multi import select_browser
 @given(parsers.parse("user opened {browser_id_list} window"))
 @given(parsers.parse("users opened {browser_id_list} browsers' windows"))
 def create_instances_of_webdriver(selenium, driver,
-                                  config_driver, browser_id_list):
+                                  config_driver, browser_id_list,
+                                  tmp_memory):
     for browser_id in list_parser(browser_id_list):
         if browser_id in selenium:
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
             selenium[browser_id] = config_driver(driver.get_instance())
+            tmp_memory[browser_id] = {'shares': {},
+                                      'spaces': {},
+                                      'website': {}}
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))
