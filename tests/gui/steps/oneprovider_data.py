@@ -158,12 +158,28 @@ def _not_in_file_list(driver, item_name, item_type):
 @then(parsers.parse('user of {browser_id} sees that {item_type} '
                     'named "{item_name}" has disappeared from file list'))
 def op_check_if_item_disappeared_from_file_list(selenium, browser_id,
-                                                item_type, item_name, tmp_memory):
+                                                item_type, item_name,
+                                                tmp_memory):
     driver = select_browser(selenium, browser_id)
     _, rm_fun, icon = get_icon_and_fun_for_item_type(item_type)
     if _not_in_file_list(driver, item_name, icon):
         cur_dir = tmp_memory[browser_id]['website']['current_dir']
         rm_fun(item_name, cur_dir)
+
+
+@when(parsers.parse('user of {browser_id} sees that shared {item_type} '
+                    'named "{item_name}" has disappeared from file list'))
+@then(parsers.parse('user of {browser_id} sees that shared {item_type} '
+                    'named "{item_name}" has disappeared from file list'))
+def op_check_if_item_disappeared_from_file_list(selenium, browser_id,
+                                                item_type, item_name,
+                                                tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _, rm_fun, icon = get_icon_and_fun_for_item_type('{:s}-share'
+                                                     ''.format(item_type))
+    if _not_in_file_list(driver, item_name, icon):
+        cur_dir = tmp_memory[browser_id]['website']['current_dir']
+        rm_fun(browser_id, item_name, cur_dir, tmp_memory)
 
 
 def _in_file_list(driver, item_name, item_type):
@@ -191,10 +207,10 @@ def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_type,
 
 
 @when(parsers.parse('user of {browser_id} sees that {item_type} '
-                    'named "{item_name}" has became share with alias '
+                    'named "{item_name}" has became shared with alias '
                     '"{share_name}"'))
-@when(parsers.parse('user of {browser_id} sees that {item_type} '
-                    'named "{item_name}" has became share with alias '
+@then(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" has became shared with alias '
                     '"{share_name}"'))
 def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_type,
                                            item_name, share_name, tmp_memory):
@@ -204,6 +220,17 @@ def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_type,
     if _in_file_list(driver, item_name, icon):
         item = tmp_memory[browser_id]['website']['current_dir'].files[item_name]
         mk_fun(browser_id, share_name, item, tmp_memory)
+
+
+@when(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" is no longer shared'))
+@then(parsers.parse('user of {browser_id} sees that {item_type} '
+                    'named "{item_name}" is no longer shared'))
+def op_check_if_item_appeared_in_file_list(selenium, browser_id,
+                                           item_type, item_name):
+    driver = select_browser(selenium, browser_id)
+    _, _, icon = get_icon_and_fun_for_item_type(item_type)
+    assert _in_file_list(driver, item_name, icon)
 
 
 @then(parsers.parse('user of {browser_id} clicks the button from top menu bar '

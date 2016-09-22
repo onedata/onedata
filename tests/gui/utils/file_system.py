@@ -56,8 +56,12 @@ def mkshare(browser, name, item, tmp_memory):
         tmp_memory[browser]['shares'][name] = share
 
 
-def rmshare():
-    pass
+def rmshare(browser, name, in_dir, tmp_memory):
+    share = tmp_memory[browser]['shares'][name]
+    if share.shared:
+        (rmdir if share.shared == OneDirectory
+         else rmfile)(share.shared.name, in_dir)
+    tmp_memory[browser]['shares'].pop(name)
 
 
 def _get_dir_path(directory, relative_root):
