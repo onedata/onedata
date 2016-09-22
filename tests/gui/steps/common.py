@@ -212,6 +212,12 @@ def find_element_by_css_selector_and_text(selector, text):
     return _find_element
 
 
+@when(parsers.parse('user of {browser_id} sees that url matches {path}'))
+def check_if_url_match(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    assert re.search(path, driver.current_url)
+
+
 # Below functions are currently unused and should not be used,
 # because it involves a knowledge about internals...
 

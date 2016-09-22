@@ -36,3 +36,34 @@ def create_share(browser_id, share_name, item_type, item_name, tmp_memory):
     assert item_type in ('file', 'directory')
     cur_dir = tmp_memory[browser_id]['website']['current_dir']
     fs.mkshare(browser_id, share_name, cur_dir.files[item_name], tmp_memory)
+
+
+@when(parsers.parse('user of {browser_id} does not see any share info'))
+@then(parsers.parse('user of {browser_id} does not see any share info'))
+def check_that_there_is_no_share_info(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    assert not driver.find_elements_by_css_selector('#content-scroll '
+                                                    '.share-info-head')
+
+
+@when(parsers.parse('user of {browser_id} does sees valid share info '
+                    'for "{share_name}"'))
+@then(parsers.parse('user of {browser_id} does sees valid share info '
+                    'for "{share_name}"'))
+def check_share_info(selenium, browser_id, share_name, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    share = tmp_memory[browser_id]['shares'][share_name]
+
+    name, breadcrumbs = Wait(driver, WAIT_FRONTEND).until(
+        lambda d: d.find_elements_by_css_selector('#content-scroll '
+                                                  '.share-info-head '
+                                                  '.share-name, '
+                                                  '#content-scroll '
+                                                  '.share-info-head '
+                                                  '.file-breadcrumbs-list'),
+        message='waiting for share {:s} info to appear'.format(share_name)
+    )
+    assert name.text == share_name
+    displayed_path = breadcrumbs.text.split()
+    for dir1, dir2 in zip(displayed_path, fs.get_path(share.shared)):
+        assert dir1 == dir2

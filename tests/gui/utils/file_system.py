@@ -30,7 +30,7 @@ def mkdir(name, in_dir=None):
 
 
 def rmdir(name, in_dir):
-    in_dir.files.pop(name)
+    del in_dir.files[name]
 
 
 def touch(name, in_dir=None):
@@ -45,23 +45,25 @@ def touch(name, in_dir=None):
 
 
 def rmfile(name, in_dir):
-    in_dir.files.pop(name)
+    del in_dir.files[name]
 
 
 def mkshare(browser, name, item, tmp_memory):
     share = OneShare(type=OneShare, name=name, shared=item)
     if name in tmp_memory[browser]['shares']:
-        raise ValueError('share {:s} already exist')
+        raise ValueError('share {:s} already exist'.format(name))
     else:
         tmp_memory[browser]['shares'][name] = share
 
 
 def rmshare(browser, name, in_dir, tmp_memory):
-    share = tmp_memory[browser]['shares'][name]
+    share_name, share = [(share_name, share) for share_name, share
+             in tmp_memory[browser]['shares'].iteritems()
+             if share.shared.name == name][0]
     if share.shared:
         (rmdir if share.shared == OneDirectory
          else rmfile)(share.shared.name, in_dir)
-    tmp_memory[browser]['shares'].pop(name)
+    del tmp_memory[browser]['shares'][share_name]
 
 
 def _get_dir_path(directory, relative_root):
@@ -85,6 +87,6 @@ def get_path(item, relative_root=None):
 
 
 def ls(directory):
-    return {file_name: file.type for file_name, file
+    return {item_name: item.type for item_name, item
             in directory.files.iteritems()
-            if file_name not in ('.', '..')}
+            if item_name not in ('.', '..')}

@@ -146,7 +146,7 @@ def _not_in_file_list(driver, item_name, item_type):
     def _not_in(d, name):
         return not _get_items_from_file_list(d, name, item_type)
 
-    Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
+    return Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda s: refresh_and_call(s, _not_in,
                                    item_name),
         message='searching for lack of {:s} ''on file list'.format(item_name)
@@ -162,9 +162,9 @@ def op_check_if_item_disappeared_from_file_list(selenium, browser_id,
                                                 tmp_memory):
     driver = select_browser(selenium, browser_id)
     _, rm_fun, icon = get_icon_and_fun_for_item_type(item_type)
-    if _not_in_file_list(driver, item_name, icon):
-        cur_dir = tmp_memory[browser_id]['website']['current_dir']
-        rm_fun(item_name, cur_dir)
+    assert _not_in_file_list(driver, item_name, icon)
+    cur_dir = tmp_memory[browser_id]['website']['current_dir']
+    rm_fun(item_name, cur_dir)
 
 
 @when(parsers.parse('user of {browser_id} sees that shared {item_type} '
@@ -177,9 +177,9 @@ def op_check_if_item_disappeared_from_file_list(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
     _, rm_fun, icon = get_icon_and_fun_for_item_type('{:s}-share'
                                                      ''.format(item_type))
-    if _not_in_file_list(driver, item_name, icon):
-        cur_dir = tmp_memory[browser_id]['website']['current_dir']
-        rm_fun(browser_id, item_name, cur_dir, tmp_memory)
+    assert _not_in_file_list(driver, item_name, icon)
+    cur_dir = tmp_memory[browser_id]['website']['current_dir']
+    rm_fun(browser_id, item_name, cur_dir, tmp_memory)
 
 
 def _in_file_list(driver, item_name, item_type):
@@ -201,9 +201,9 @@ def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_type,
                                            item_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
     mk_fun, _, icon = get_icon_and_fun_for_item_type(item_type)
-    if _in_file_list(driver, item_name, icon):
-        cur_dir = tmp_memory[browser_id]['website']['current_dir']
-        mk_fun(item_name, cur_dir)
+    assert _in_file_list(driver, item_name, icon)
+    cur_dir = tmp_memory[browser_id]['website']['current_dir']
+    mk_fun(item_name, cur_dir)
 
 
 @when(parsers.parse('user of {browser_id} sees that {item_type} '
@@ -217,9 +217,9 @@ def op_check_if_item_appeared_in_file_list(selenium, browser_id, item_type,
     driver = select_browser(selenium, browser_id)
     mk_fun, _, icon = get_icon_and_fun_for_item_type('{:s}-share'
                                                      ''.format(item_type))
-    if _in_file_list(driver, item_name, icon):
-        item = tmp_memory[browser_id]['website']['current_dir'].files[item_name]
-        mk_fun(browser_id, share_name, item, tmp_memory)
+    assert _in_file_list(driver, item_name, icon)
+    item = tmp_memory[browser_id]['website']['current_dir'].files[item_name]
+    mk_fun(browser_id, share_name, item, tmp_memory)
 
 
 @when(parsers.parse('user of {browser_id} sees that {item_type} '

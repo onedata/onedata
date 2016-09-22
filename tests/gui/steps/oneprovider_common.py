@@ -29,7 +29,7 @@ main_menu_tab_to_url = {'spaces': 'spaces',
                         'shared': 'shares'}
 
 
-def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
+def _click_on_tab_in_main_menu_sidebar(driver, tab):
     def _load_main_menu_tab_page():
         def _check_url():
             try:
@@ -37,11 +37,11 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
             except AttributeError:
                 return False
             else:
-                return main_menu_tab_to_url[main_menu_tab] == found.lower()
+                return main_menu_tab_to_url[tab] == found.lower()
 
-        click_on_element(driver, item_name=main_menu_tab,
-                         css_path='.primary-sidebar a#main-'
-                                  '{:s}'.format(main_menu_tab),
+        click_on_element(driver, item_name=tab,
+                         css_path='.primary-sidebar a#main-{:s}'
+                                  ''.format(main_menu_tab_to_url[tab]),
                          msg='clicking on {:s} tab in main menu')
 
         return Wait(driver, WAIT_FRONTEND).until(
@@ -53,7 +53,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
     Wait(driver, WAIT_BACKEND).until(
         lambda _: _load_main_menu_tab_page(),
         message='waiting for {:s} main menu tab page to load'
-                ''.format(main_menu_tab)
+                ''.format(tab)
     )
 
 
