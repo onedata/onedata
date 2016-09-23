@@ -218,12 +218,21 @@ def check_if_url_match(selenium, browser_id, path):
     assert re.search(path, driver.current_url)
 
 
+from selenium.webdriver.support.expected_conditions import staleness_of
+
+
 @when(parsers.parse('user of {browser_id} opens received url'))
-def open_received_url(selenium, browser_id, tmp_memory):
+def open_received_url(selenium, browser_id, tmp_memory, base_url):
     driver = select_browser(selenium, browser_id)
+
+    old_page = driver.find_element_by_css_selector('html')
     url = tmp_memory[browser_id]['url']
-    domain = parse_url(url).group('domain')
-    driver.get(url.replace(domain, 'veilfsdev.com', 1))
+    curr_base_url = parse_url(url).group('base_url')
+    driver.get(url.replace(curr_base_url, base_url, 1))
+
+    Wait(driver, WAIT_BACKEND).until(
+        staleness_of(old_page)
+    )
 
 
 # Below functions are currently unused and should not be used,

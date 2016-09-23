@@ -32,53 +32,53 @@ Feature: Oneprovider space functionality
 
   # 'space1' defined in env.json
   Scenario: User successfully renames space (clicks ENTER after entering space name)
-    Given that in browser there is a "space1" item on the spaces list
-    When user of browser clicks a settings icon displayed for "space1" item on the spaces list
-    And user of browser sees a settings dropdown menu for "space1" item on the spaces list
+    Given that in browser there is a "space2" item on the spaces list
+    When user of browser clicks a settings icon displayed for "space2" item on the spaces list
+    And user of browser sees a settings dropdown menu for "space2" item on the spaces list
     And user of browser clicks on the "RENAME" item in current settings dropdown
     And user of browser sees that input box in "Rename a space" modal is active
     And user of browser types "NewNameSpace" on keyboard
     And user of browser presses enter on keyboard
-    And user of browser sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
+    And user of browser sees an info notify with text matching to: .*space2.*renamed.*NewNameSpace.*
     And user of browser sees that "Rename a space" modal has disappeared
-    Then user of browser sees that the "space1" has disappeared from the spaces list
+    Then user of browser sees that the "space2" has disappeared from the spaces list
     And user of browser sees that the "NewNameSpace" has appeared on the spaces list
     # TODO rm code below after REST API become available
     And user of browser clicks a settings icon displayed for "NewNameSpace" item on the spaces list
     And user of browser sees a settings dropdown menu for "NewNameSpace" item on the spaces list
     And user of browser clicks on the "RENAME" item in current settings dropdown
     And user of browser sees that input box in "Rename a space" modal is active
-    And user of browser types "space1" on keyboard
+    And user of browser types "space2" on keyboard
     And user of browser presses enter on keyboard
-    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*space1.*
+    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*space2.*
     And user of browser sees that "Rename a space" modal has disappeared
     And user of browser sees that the "NewNameSpace" has disappeared from the spaces list
-    And user of browser sees that the "space1" has appeared on the spaces list
+    And user of browser sees that the "space2" has appeared on the spaces list
 
   # 'space1' defined in env.json
   Scenario: User successfully renames space (clicks OK confirmation button after entering space name)
-    Given that in browser there is a "space1" item on the spaces list
-    When user of browser clicks a settings icon displayed for "space1" item on the spaces list
-    And user of browser sees a settings dropdown menu for "space1" item on the spaces list
+    Given that in browser there is a "space2" item on the spaces list
+    When user of browser clicks a settings icon displayed for "space2" item on the spaces list
+    And user of browser sees a settings dropdown menu for "space2" item on the spaces list
     And user of browser clicks on the "RENAME" item in current settings dropdown
     And user of browser sees that input box in "Rename a space" modal is active
     And user of browser types "NewNameSpace" on keyboard
     And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
+    And user of browser sees an info notify with text matching to: .*space2.*renamed.*NewNameSpace.*
     And user of browser sees that "Rename a space" modal has disappeared
-    Then user of browser sees that the "space1" has disappeared from the spaces list
+    Then user of browser sees that the "space2" has disappeared from the spaces list
     And user of browser sees that the "NewNameSpace" has appeared on the spaces list
     # TODO rm code below after REST API become available
     And user of browser clicks a settings icon displayed for "NewNameSpace" item on the spaces list
     And user of browser sees a settings dropdown menu for "NewNameSpace" item on the spaces list
     And user of browser clicks on the "RENAME" item in current settings dropdown
     And user of browser sees that input box in "Rename a space" modal is active
-    And user of browser types "space1" on keyboard
+    And user of browser types "space2" on keyboard
     And user of browser presses enter on keyboard
-    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*space1.*
+    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*space2.*
     And user of browser sees that "Rename a space" modal has disappeared
     And user of browser sees that the "NewNameSpace" has disappeared from the spaces list
-    And user of browser sees that the "space1" has appeared on the spaces list
+    And user of browser sees that the "space2" has appeared on the spaces list
 
   # 'space1' defined in env.json
   Scenario: Check if "invite group" token box is not empty
