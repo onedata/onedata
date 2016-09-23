@@ -26,12 +26,16 @@ from pytest_selenium_multi.pytest_selenium_multi import select_browser
 @given(parsers.parse("user opened {browser_id_list} window"))
 @given(parsers.parse("users opened {browser_id_list} browsers' windows"))
 def create_instances_of_webdriver(selenium, driver,
-                                  config_driver, browser_id_list):
+                                  config_driver, browser_id_list,
+                                  tmp_memory):
     for browser_id in list_parser(browser_id_list):
         if browser_id in selenium:
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
             selenium[browser_id] = config_driver(driver.get_instance())
+            tmp_memory[browser_id] = {'shares': {},
+                                      'spaces': {},
+                                      'website': {}}
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))
@@ -178,8 +182,8 @@ def check_if_url_changed(selenium, browser_id, tmp_memory):
     assert driver.current_url != tmp_memory[browser_id]['url']
 
 
-@when('user of {browser_id} refreshes site')
-@then('user of {browser_id} refreshes site')
+@when(parsers.parse('user of {browser_id} refreshes site'))
+@then(parsers.parse('user of {browser_id} refreshes site'))
 def refresh_site(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     driver.refresh()
@@ -206,6 +210,29 @@ def find_element_by_css_selector_and_text(selector, text):
             if elem.text.lower() == text.lower():
                 return elem
     return _find_element
+
+
+@when(parsers.parse('user of {browser_id} sees that url matches {path}'))
+def check_if_url_match(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    assert re.search(path, driver.current_url)
+
+
+from selenium.webdriver.support.expected_conditions import staleness_of
+
+
+@when(parsers.parse('user of {browser_id} opens received url'))
+def open_received_url(selenium, browser_id, tmp_memory, base_url):
+    driver = select_browser(selenium, browser_id)
+
+    old_page = driver.find_element_by_css_selector('html')
+    url = tmp_memory[browser_id]['url']
+    curr_base_url = parse_url(url).group('base_url')
+    driver.get(url.replace(curr_base_url, base_url, 1))
+
+    Wait(driver, WAIT_BACKEND).until(
+        staleness_of(old_page)
+    )
 
 
 # Below functions are currently unused and should not be used,

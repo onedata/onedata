@@ -29,7 +29,7 @@ main_menu_tab_to_url = {'spaces': 'spaces',
                         'shared': 'shares'}
 
 
-def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
+def _click_on_tab_in_main_menu_sidebar(driver, tab):
     def _load_main_menu_tab_page():
         def _check_url():
             try:
@@ -37,11 +37,11 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
             except AttributeError:
                 return False
             else:
-                return main_menu_tab_to_url[main_menu_tab] == found.lower()
+                return main_menu_tab_to_url[tab] == found.lower()
 
-        click_on_element(driver, item_name=main_menu_tab,
-                         css_path='.primary-sidebar a#main-'
-                                  '{:s}'.format(main_menu_tab),
+        click_on_element(driver, item_name=tab,
+                         css_path='.primary-sidebar a#main-{:s}'
+                                  ''.format(main_menu_tab_to_url[tab]),
                          msg='clicking on {:s} tab in main menu')
 
         return Wait(driver, WAIT_FRONTEND).until(
@@ -53,7 +53,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab):
     Wait(driver, WAIT_BACKEND).until(
         lambda _: _load_main_menu_tab_page(),
         message='waiting for {:s} main menu tab page to load'
-                ''.format(main_menu_tab)
+                ''.format(tab)
     )
 
 
@@ -118,6 +118,10 @@ def op_check_for_non_empty_token_in_active_modal(selenium, browser_id):
                     'input box to copy visible token'))
 @then(parsers.parse('user of {browser_id} clicks on copy button next to '
                     'input box to copy visible token'))
+@when(parsers.parse('user of {browser_id} clicks on copy button next to '
+                    'input box to copy visible url'))
+@then(parsers.parse('user of {browser_id} clicks on copy button next to '
+                    'input box to copy visible url'))
 def op_copy_visible_token_to_clipboard(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until(
@@ -126,19 +130,19 @@ def op_copy_visible_token_to_clipboard(selenium, browser_id):
     ).click()
 
 
-@when(parsers.parse('user of {browser_id} sends copied token '
+@when(parsers.parse('user of {browser_id} sends copied {item_type} '
                     'to users of {browser_list}'))
-@then(parsers.parse('user of {browser_id} sends copied token '
+@then(parsers.parse('user of {browser_id} sends copied {item_type} '
                     'to users of {browser_list}'))
-def op_send_visible_token_to_other_users(selenium, browser_id,
+def op_send_visible_token_to_other_users(selenium, browser_id, item_type,
                                          browser_list, tmp_memory):
     select_browser(selenium, browser_id)
-    token = pyperclip.paste()
+    item = pyperclip.paste()
     for browser in list_parser(browser_list):
         if browser in tmp_memory:
-            tmp_memory[browser]['token'] = token
+            tmp_memory[browser][item_type] = item
         else:
-            tmp_memory[browser] = {'token': token}
+            tmp_memory[browser] = {item_type: item}
 
 
 @when(parsers.parse('user of {browser_id} clicks on the "{button_name}" '
@@ -223,6 +227,8 @@ def op_check_if_item_of_name_appeared_in_list(selenium, browser_id,
 
 
 # TODO rm when leave from group backend will be repaired
+@when(parsers.parse('user of {browser_id} sees that the "{item_name}" '
+                    'has disappeared from the {item_type} list'))
 @then(parsers.parse('user of {browser_id} sees that the "{item_name}" '
                     'has disappeared from the {item_type} list'))
 def op_check_if_item_of_name_disappeared_from_list(selenium, browser_id,
