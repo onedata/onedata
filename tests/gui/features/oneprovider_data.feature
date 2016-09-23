@@ -97,9 +97,3 @@ Feature: Oneprovider Data view
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     Then user of browser sees modal with name of provider supporting space in providers column
     And user of browser clicks "Close" confirmation button in displayed modal
-    # TODO rm after integrating with swagger
-    And user of browser selects file3 from files list
-    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
-    And user of browser sees that file named "file3" has disappeared from file list
