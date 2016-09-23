@@ -24,6 +24,7 @@ scenarios('../features/onezone_gui.feature')
 scenarios('../features/oneprovider_data.feature')
 scenarios('../features/oneprovider_space.feature')
 scenarios('../features/oneprovider_shares.feature')
+scenarios('../features/oneprovider_shares_multi.feature')
 #
 # # --- FEATURES: oneprovider_data --- #
 #

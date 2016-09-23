@@ -201,7 +201,7 @@ Feature: Oneprovider Share view
     And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
 
     And user of browser selects "share1" from shares list
-    And user of browser does sees valid share info for "share1"
+    And user of browser sees valid share info for "share1"
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar

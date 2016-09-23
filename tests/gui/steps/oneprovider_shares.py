@@ -6,24 +6,17 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import re
-import os
-import time
 
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, MAX_REFRESH_COUNT
-from tests.gui.utils.generic import upload_file_path
+import re
+
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, MAX_REFRESH_COUNT, WAIT_REFRESH
 from pytest_bdd import when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-
-from tests.gui.utils.generic import refresh_and_call
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
-
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.expected_conditions import staleness_of
 
 import tests.gui.utils.file_system as fs
-from tests.utils.acceptance_utils import list_parser
 
 
 @when(parsers.parse('user of {browser_id} sees that new share named '
@@ -46,9 +39,9 @@ def check_that_there_is_no_share_info(selenium, browser_id):
                                                     '.share-info-head')
 
 
-@when(parsers.parse('user of {browser_id} does sees valid share info '
+@when(parsers.parse('user of {browser_id} sees valid share info '
                     'for "{share_name}"'))
-@then(parsers.parse('user of {browser_id} does sees valid share info '
+@then(parsers.parse('user of {browser_id} sees valid share info '
                     'for "{share_name}"'))
 def check_share_info(selenium, browser_id, share_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
@@ -67,3 +60,134 @@ def check_share_info(selenium, browser_id, share_name, tmp_memory):
     displayed_path = breadcrumbs.text.split()
     for dir1, dir2 in zip(displayed_path, fs.get_path(share.shared)):
         assert dir1 == dir2
+
+    tmp_memory[browser_id]['website']['current_dir'] = share.shared
+
+
+# TODO VFS-2634
+@when(parsers.parse('user of {browser_id} sees that share received from '
+                    'user of {browser_id2} is named "{share_name}"'))
+@then(parsers.parse('user of {browser_id} sees that share is named '
+                    '"{share_name}"'))
+def check_share_name_in_public_view(selenium, browser_id, browser_id2,
+                                    share_name, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    name = driver.find_element_by_css_selector('.share-name').text
+    assert name == share_name
+    share_root = tmp_memory[browser_id2]['shares'][share_name]
+    tmp_memory[browser_id] = {'website': {'current_dir': share_root.shared}}
+
+
+@when(parsers.parse('user of {browser_id} sees that current working directory '
+                    'is {path}'))
+@then(parsers.parse('user of {browser_id} sees that current working directory '
+                    'is {path}'))
+def check_breadcrumbs(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    path = path.split('/')
+    breadcrumbs = driver.find_element_by_css_selector('.files-list '
+                                                      '.file-breadcrumbs-list')
+    breadcrumbs_path = breadcrumbs.text.split()
+    for dir1, dir2 in zip(path, breadcrumbs_path):
+        assert dir1 == dir2
+
+
+# TODO VFS-2634
+@when(parsers.parse('user of {browser_id} sees that the "{name}" has '
+                    'disappeared from the shared list'))
+@then(parsers.parse('user of {browser_id} sees that the "{name}" has '
+                    'disappeared from the shared list'))
+def check_if_renamed(selenium, browser_id, name):
+    driver = select_browser(selenium, browser_id)
+
+    def _check_for_lack_of_item_in_list(s):
+        items = s.find_elements_by_css_selector('.shares-list .secondary-'
+                                                'sidebar-item .item-label '
+                                                '.truncate')
+        return all(item.text != name for item in items)
+
+    def _refresh_and_call():
+        """Refresh browser and keep calling callback with given args
+        until achieve expected result or timeout.
+        """
+        from tests.gui.utils.generic import parse_url
+        from tests.gui.steps.oneprovider_common import _click_on_tab_in_main_menu_sidebar
+        op_url = parse_url(driver.current_url).group('base_url')
+        driver.get(op_url)
+        _click_on_tab_in_main_menu_sidebar(driver, 'shared')
+
+        try:
+            result = Wait(driver, WAIT_REFRESH).until(
+                lambda s: _check_for_lack_of_item_in_list(s)
+            )
+        except TimeoutException:
+            return None
+        else:
+            return result
+
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, MAX_REFRESH_COUNT*WAIT_BACKEND).until(
+        lambda s: _refresh_and_call(),
+        message='waiting for {:s} to disappear from '
+                'groups list'.format(name)
+    )
+
+
+# TODO VFS-2634
+@when(parsers.parse('user of {browser_id} sees that '
+                    '"{prev_name}" has been renamed to "{next_name}"'))
+@then(parsers.parse('user of {browser_id} sees that '
+                    '"{prev_name}" has been renamed to "{next_name}"'))
+def check_if_renamed(selenium, browser_id, prev_name, next_name, tmp_memory):
+    from tests.gui.steps.oneprovider_common import _check_for_item_in_given_list
+    driver = select_browser(selenium, browser_id)
+
+    def _check_for_lack_of_item_in_list(s):
+        items = s.find_elements_by_css_selector('.shares-list .secondary-'
+                                                'sidebar-item .item-label '
+                                                '.truncate')
+        return all(item.text != prev_name for item in items)
+
+    def _refresh_and_call():
+        """Refresh browser and keep calling callback with given args
+        until achieve expected result or timeout.
+        """
+        from tests.gui.utils.generic import parse_url
+        from tests.gui.steps.oneprovider_common import _click_on_tab_in_main_menu_sidebar
+        op_url = parse_url(driver.current_url).group('base_url')
+        driver.get(op_url)
+        _click_on_tab_in_main_menu_sidebar(driver, 'shared')
+
+        try:
+            result = Wait(driver, WAIT_REFRESH).until(
+                lambda s: _check_for_lack_of_item_in_list(s)
+            )
+        except TimeoutException:
+            return None
+        else:
+            return result
+
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, MAX_REFRESH_COUNT*WAIT_BACKEND).until(
+        lambda s: _refresh_and_call(),
+        message='waiting for {:s} to disappear from '
+                'groups list'.format(prev_name)
+    )
+
+    _check_for_item_in_given_list(driver, next_name, 'shares')
+
+    share = tmp_memory[browser_id]['shares'].pop(prev_name, None)
+    tmp_memory[browser_id]['shares'][next_name] = share
+
+
+@when(parsers.parse('user of {browser_id} sees that he '
+                    'no longer has access to share'))
+@then(parsers.parse('user of {browser_id} sees that he '
+                    'no longer has access to share'))
+def check_if_user_lost_access(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    old_page = driver.find_element_by_css_selector('html')
+    Wait(driver, WAIT_BACKEND).until(
+        staleness_of(old_page)
+    )
+    assert not re.search(r'https?://.*?/public/shares(/.*)?', driver.current_url)

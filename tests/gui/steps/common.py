@@ -182,8 +182,8 @@ def check_if_url_changed(selenium, browser_id, tmp_memory):
     assert driver.current_url != tmp_memory[browser_id]['url']
 
 
-@when('user of {browser_id} refreshes site')
-@then('user of {browser_id} refreshes site')
+@when(parsers.parse('user of {browser_id} refreshes site'))
+@then(parsers.parse('user of {browser_id} refreshes site'))
 def refresh_site(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     driver.refresh()
@@ -216,6 +216,14 @@ def find_element_by_css_selector_and_text(selector, text):
 def check_if_url_match(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
     assert re.search(path, driver.current_url)
+
+
+@when(parsers.parse('user of {browser_id} opens received url'))
+def open_received_url(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    url = tmp_memory[browser_id]['url']
+    domain = parse_url(url).group('domain')
+    driver.get(url.replace(domain, 'veilfsdev.com', 1))
 
 
 # Below functions are currently unused and should not be used,

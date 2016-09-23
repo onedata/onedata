@@ -111,6 +111,8 @@ def double_click_on_item(selenium, browser_id, item_name,
         tmp_memory[browser_id]['website']['current_dir'] = curr_dir.files[item_name]
 
 
+@when(parsers.parse('user of {browser_id} sees that downloaded file '
+                    '"{file_name}" contains "{content}"'))
 @then(parsers.parse('user of {browser_id} sees that downloaded file '
                     '"{file_name}" contains "{content}"'))
 def has_downloaded_file_content(selenium, tmpdir, file_name,
