@@ -78,7 +78,7 @@ Feature: Oneprovider Share view
     And user of browser sees that shared directory named "directory1" has disappeared from file list
 
 
-  Scenario: tmp_name # TODO create share > open the share w modalu > przełączamy się na data > rm share > create new share > przełączamy się na shared > gui próbuje wyświetlić starego share'a
+  Scenario: Opening shares index view after removing shared dir
     When user of browser uses spaces select to change data space to "space1"
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that input box in "New directory" modal is active
