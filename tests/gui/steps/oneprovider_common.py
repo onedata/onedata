@@ -77,14 +77,6 @@ def wt_op_click_on_the_given_main_menu_tab(selenium, browser_id_list,
         _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
 
 
-def _get_visible_token_from_active_modal(driver):
-    return Wait(driver, WAIT_BACKEND).until(
-        lambda s: s.find_element_by_css_selector(
-            '.input-with-button '
-            'input')
-    ).get_attribute('value')
-
-
 @when(parsers.parse('user of {browser_id} refreshes Oneprovider site'))
 @then(parsers.parse('user of {browser_id} refreshes Oneprovider site'))
 def op_refresh_op_site_by_rm_hashtag(selenium, browser_id):
@@ -105,13 +97,6 @@ def op_select_item_from_list(selenium, browser_id, item_name, item_type):
                               '.secondary-sidebar-item'.format(item_type),
                      msg='clicking on {{:s}} item in {type} '
                          'list'.format(type=item_type))
-
-
-@when(parsers.parse('user of {browser_id} sees non-empty token in active modal'))
-@then(parsers.parse('user of {browser_id} sees non-empty token in active modal'))
-def op_check_for_non_empty_token_in_active_modal(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    assert _get_visible_token_from_active_modal(driver)
 
 
 @when(parsers.parse('user of {browser_id} clicks on copy button next to '
@@ -356,18 +341,6 @@ def op_click_on_item_in_current_settings_dropdown(selenium, browser_id,
                          'settings dropdown')
 
 
-@then(parsers.parse('user of {browser_id} clicks "{button_name}" '
-                    'confirmation button in displayed modal'))
-@when(parsers.parse('user of {browser_id} clicks "{button_name}" '
-                    'confirmation button in displayed modal'))
-def op_click_confirmation_button_in_displayed_modal(selenium, browser_id,
-                                                    button_name):
-    driver = select_browser(selenium, browser_id)
-    click_on_element(driver, item_name=button_name,
-                     css_path='.modal-content button',
-                     msg='clicking on {:s} in displayed modal')
-
-
 @given(parsers.parse('user of {browser_id} sees that main content '
                      'has ended loading'))
 def op_check_if_main_content_has_been_reloaded(selenium, browser_id):
@@ -376,67 +349,6 @@ def op_check_if_main_content_has_been_reloaded(selenium, browser_id):
         EC.invisibility_of_element_located((By.CSS_SELECTOR,
                                             '.common-loader-spinner')),
         message='wait for main content to end loading'
-    )
-
-
-def _chech_if_modal_of_name_is_displayed(driver, modal_name):
-    modal_name = modal_name.lower()
-    modals = driver.find_elements_by_css_selector('.ember-view.modal')
-    for modal in modals:
-        name = modal.find_element_by_css_selector('.modal-title').text
-        if modal_name == name.lower() and modal.is_displayed():
-            return modal
-
-
-@when(parsers.parse('user of {browser_id} sees that input box in "{modal_name}" '
-                    'modal is active'))
-@then(parsers.parse('user of {browser_id} sees that input box in "{modal_name}" '
-                    'modal is active'))
-def op_wait_for_active_input_box_in_modal_with_given_name(selenium, browser_id,
-                                                          modal_name):
-    driver = select_browser(selenium, browser_id)
-    modal = Wait(driver, WAIT_FRONTEND).until(
-        lambda s: _chech_if_modal_of_name_is_displayed(s, modal_name),
-        message='waiting for {:s} modal to appear'.format(modal_name)
-    )
-    modal_input = modal.find_element_by_css_selector('input')
-    # activate input box
-    modal_input.send_keys(Keys.NULL)
-
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda s: is_active(s, modal_input),
-        message='waiting for input box to become active'
-    )
-
-
-@when(parsers.parse('user of {browser_id} sees that token box in '
-                    '"{modal_name}" modal is active'))
-@then(parsers.parse('user of {browser_id} sees that token box in '
-                    '"{modal_name}" modal is active'))
-def op_wait_for_token_box_in_modal_with_name(selenium, browser_id,
-                                             modal_name):
-    driver = select_browser(selenium, browser_id)
-    modal = Wait(driver, WAIT_FRONTEND).until(
-        lambda s: _chech_if_modal_of_name_is_displayed(s, modal_name),
-        message='waiting for {:s} modal to appear'.format(modal_name)
-    )
-    Wait(driver, WAIT_BACKEND).until(
-        EC.visibility_of(modal.find_element_by_css_selector('input')),
-        message='waiting for token to appear in input box'
-    )
-
-
-@when(parsers.parse('user of {browser_id} sees that "{modal_name}" '
-                    'modal has disappeared'))
-@then(parsers.parse('user of {browser_id} sees that "{modal_name}" '
-                    'modal has disappeared'))
-def op_check_if_modal_with_input_box_disappeared(selenium, browser_id,
-                                                 modal_name):
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until_not(
-        lambda s: _chech_if_modal_of_name_is_displayed(s,
-                                                       modal_name),
-        message='waiting for {:s} modal to disappear'.format(modal_name)
     )
 
 
