@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc7
+
+* VFS-2549 Add share tests for multiple browsers: download, rename, remove
+
+
 ### 3.0.0-rc6
 
 * VFS-2180 Improve links conflict resolution
