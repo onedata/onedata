@@ -33,9 +33,9 @@ def is_present_on_share_list(selenium, browser_id, name):
 
 
 @when(parsers.parse('user of {browser_id} sees that share named '
-                    '"{name}" has disappeared from the shared list'))
+                    '"{name}" has disappeared from the shares list'))
 @then(parsers.parse('user of {browser_id} sees that share named '
-                    '"{name}" has disappeared from the shared list'))
+                    '"{name}" has disappeared from the shares list'))
 def is_not_present_in_share_list(selenium, browser_id, name):
     driver = select_browser(selenium, browser_id)
     assert len(_get_share_from_shares_list(driver, name)) == 0

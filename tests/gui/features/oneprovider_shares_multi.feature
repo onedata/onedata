@@ -69,7 +69,7 @@ Feature: Oneprovider Share view
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that public  share is named "share1"
+    And user of browser2 sees that public share is named "share1"
     And user of browser2 sees that current working directory is share1
     And user of browser2 double clicks on dir1 directory from files list
     And user of browser2 sees that current working directory is share1/dir1
@@ -91,95 +91,95 @@ Feature: Oneprovider Share view
     And user of browser1 sees that dir1 shared-directory has disappeared from file list
 
 
-#  Scenario: User creates share, sends it's url to other user, renames it and removes it
-#    When user of browser1 uses spaces select to change data space to "space1"
-#    And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
-#    And user of browser1 sees that "New directory" modal has appeared
-#    And user of browser1 clicks on input box in active modal
-#    And user of browser1 types "directory1" on keyboard
-#    And user of browser1 presses enter on keyboard
-#    And user of browser1 sees that modal has disappeared
-#    And user of browser1 sees that directory named "directory1" has appeared in file list
-#
-#    And user of browser1 double clicks on directory "directory1" from files list
-#    And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-#    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
-#    And user of browser1 sees that file named "20B-0.txt" has appeared in file list
-#
-#    And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
-#    And user of browser1 sees that "New directory" modal has appeared
-#    And user of browser1 clicks on input box in active modal
-#    And user of browser1 types "directory2" on keyboard
-#    And user of browser1 presses enter on keyboard
-#    And user of browser1 sees that modal has disappeared
-#    And user of browser1 sees that directory named "directory2" has appeared in file list
-#
-#    And user of browser1 double clicks on directory "directory2" from files list
-#    And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-#    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
-#    And user of browser1 sees that file named "20B-1.txt" has appeared in file list
-#
-#    And user of browser1 uses spaces select to change data space to "Small space"
-#    And user of browser1 uses spaces select to change data space to "space1"
-#    And user of browser1 selects directory1 from files list
-#    And user of browser1 clicks the button from top menu bar with tooltip "Share element"
-#
-#    And user of browser1 sees that "Share the directory" modal has appeared
-#    And user of browser1 clicks on input box in active modal
-#    And user of browser1 types "share1" on keyboard
-#    And user of browser1 presses enter on keyboard
-#    And user of browser1 sees an info notify with text matching to: Share created sucessfully
-#    And user of browser1 sees that new share named "share1" was created from directory "directory1"
-#    And user of browser1 sees that modal has disappeared
-#
-#    And user of browser1 sees that "Share summary" modal has appeared
-#    And user of browser1 clicks on copy button next to input box to copy visible url
-#    And user of browser1 sends copied url to users of [browser2]
-#    And user of browser1 clicks "Open the share" confirmation button in displayed modal
-#    And user of browser1 sees that url matches https?://[^/]*/#/onedata/shares/.*
-#    And user of browser1 sees valid share info for "share1"
-#    And user of browser1 sees that current working directory is directory1
-#
-#    And user of browser2 opens received url
-#    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-#    And user of browser2 sees that share received from user of browser1 is named "share1"
-#    And user of browser2 sees that current working directory is directory1
-#
-#    And user of browser1 clicks a settings icon displayed for "share1" item on the shares list
-#    And user of browser1 sees a settings dropdown menu for "share1" item on the shares list
-#    And user of browser1 clicks on the "RENAME" item in current settings dropdown
-#    And user of browser1 sees that "Rename share" modal has appeared
-#    And user of browser1 clicks on input box in active modal
-#    And user of browser1 types "helloworld" on keyboard
-#    And user of browser1 presses enter on keyboard
-#    And user of browser1 sees that modal has disappeared
-#
-#    And user of browser1 sees that "share1" has been renamed to "helloworld"
-#    And user of browser1 selects "helloworld" from shares list
-#    And user of browser1 sees valid share info for "helloworld"
-#
-#    And user of browser2 refreshes site
-#    And user of browser2 sees that share received from user of browser1 is named "helloworld"
-#
-#    And user of browser1 clicks a settings icon displayed for "helloworld" item on the shares list
-#    And user of browser1 sees a settings dropdown menu for "helloworld" item on the shares list
-#    And user of browser1 clicks on the "REMOVE" item in current settings dropdown
-#    And user of browser1 sees that "Remove share" modal has appeared
-#    And user of browser1 clicks "Yes" confirmation button in displayed modal
-#    And user of browser1 sees that modal has disappeared
-#    And user of browser1 sees that the "helloworld" has disappeared from the shared list
-#
-#    And user of browser2 refreshes site
-#    And user of browser2 sees that he no longer has access to share
-#
-#    # TODO rm after integrating with swagger
-#    Then user of browser1 clicks on the "data" tab in main menu sidebar
-#    And user of browser1 uses spaces select to change data space to "Small space"
-#    And user of browser1 uses spaces select to change data space to "space1"
-#    And user of browser1 selects directory1 from files list
-#    And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser1 sees that "Remove files" modal has appeared
-#    And user of browser1 clicks "OK" confirmation button in displayed modal
-#    And user of browser1 sees an success notify with text matching to: .*removed.*
-#    And user of browser1 sees that modal has disappeared
-#    And user of browser1 sees that shared directory named "directory1" has disappeared from file list
+  Scenario: User creates share, sends it's url to other user, renames it and removes it
+    When user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser1 sees that "New directory" modal has appeared
+    And user of browser1 clicks on input box in active modal
+    And user of browser1 types "dir1" on keyboard
+    And user of browser1 presses enter on keyboard
+    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that dir1 directory has appeared in file list
+
+    And user of browser1 double clicks on directory dir1 from files list
+    And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees that 20B-0.txt file has appeared in file list
+
+    And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser1 sees that "New directory" modal has appeared
+    And user of browser1 clicks on input box in active modal
+    And user of browser1 types "dir2" on keyboard
+    And user of browser1 presses enter on keyboard
+    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that dir2 directory has appeared in file list
+
+    And user of browser1 double clicks on directory dir2 from files list
+    And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
+    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees that 20B-1.txt file has appeared in file list
+
+    And user of browser1 uses spaces select to change data space to "Small space"
+    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 selects dir1 from files list
+    And user of browser1 clicks the button from top menu bar with tooltip "Share element"
+
+    And user of browser1 sees that "Share the directory" modal has appeared
+    And user of browser1 clicks on input box in active modal
+    And user of browser1 types "share1" on keyboard
+    And user of browser1 presses enter on keyboard
+    And user of browser1 sees an info notify with text matching to: Share created sucessfully
+    And user of browser1 sees that modal has disappeared
+
+    And user of browser1 sees that "Share summary" modal has appeared
+    And user of browser1 clicks on copy button in active modal
+    And user of browser1 sends copied url to users of [browser2]
+    And user of browser1 clicks "Open the share" confirmation button in displayed modal
+    And user of browser1 sees that url matches https?://[^/]*/#/onedata/shares/.*
+
+    And user of browser1 selects share named "share1" from the shared list
+    And user of browser1 sees that selected share is named "helloworld"
+
+    And user of browser2 opens received url
+    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
+    And user of browser2 sees that share received from user of browser1 is named "share1"
+    And user of browser2 sees that current working directory is dir1
+
+    And user of browser1 clicks a settings icon displayed for "share1" item on the shares list
+    And user of browser1 sees a settings dropdown menu for "share1" item on the shares list
+    And user of browser1 clicks on the "RENAME" item in current settings dropdown
+    And user of browser1 sees that "Rename share" modal has appeared
+    And user of browser1 clicks on input box in active modal
+    And user of browser1 types "helloworld" on keyboard
+    And user of browser1 presses enter on keyboard
+    And user of browser1 sees that modal has disappeared
+
+    And user of browser1 sees that "share1" has been renamed to "helloworld"
+    And user of browser1 selects "helloworld" from shares list
+    And user of browser1 sees that selected share is named "helloworld"
+
+    And user of browser2 refreshes site
+    And user of browser2 sees that public share is named "helloworld"
+
+    And user of browser1 clicks a settings icon displayed for "helloworld" item on the shares list
+    And user of browser1 sees a settings dropdown menu for "helloworld" item on the shares list
+    And user of browser1 clicks on the "REMOVE" item in current settings dropdown
+    And user of browser1 sees that "Remove share" modal has appeared
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that share named "helloworld" has disappeared from the shares list
+
+    And user of browser2 refreshes site
+    And user of browser2 sees that he no longer has access to share
+
+    # TODO rm after integrating with swagger
+    Then user of browser1 clicks on the "data" tab in main menu sidebar
+    And user of browser1 uses spaces select to change data space to "Small space"
+    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 selects dir1 from files list
+    And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser1 sees that "Remove files" modal has appeared
+    And user of browser1 clicks "OK" confirmation button in displayed modal
+    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that dir1 shared-directory has disappeared from file list
