@@ -99,13 +99,9 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
                     'with tooltip "{tooltip_name}"'))
 def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
     driver = select_browser(selenium, browser_id)
-    css_path = 'ul.toolbar-group a[data-original-title="{:s}"]' \
-               ''.format(tooltip_name)
-    Wait(driver, WAIT_BACKEND).until(
-        lambda d: d.find_element_by_css_selector(css_path),
-        message='clicking on button with tooltip {:s} '
-                'from top menu bar'.format(tooltip_name)
-    ).click()
+    driver.find_element_by_css_selector('ul.toolbar-group '
+                                        'a[data-original-title="{:s}"]'
+                                        ''.format(tooltip_name)).click()
 
 
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '
@@ -127,3 +123,17 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
         message='check file distribution, focusing on {:s} provide'
                 ''.format(tmp_memory[browser_id]['supporting_provider'])
     )
+
+
+# TODO implement better checking dir tree
+@when(parsers.parse('user of {browser_id} sees that current working directory '
+                    'displayed in sidebar list is {path}'))
+@then(parsers.parse('user of {browser_id} sees that current working directory '
+                    'displayed in sidebar list is {path}'))
+def is_displayed_path_correct(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    path = path.split('/')
+    dir_name = driver.find_element_by_css_selector('.data-files-tree '
+                                                   'li.level-{} .active'
+                                                   ''.format(len(path) - 1))
+    assert dir_name.text == path[-1]
