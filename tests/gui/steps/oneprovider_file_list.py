@@ -115,9 +115,9 @@ def _click_on_file_tool_icon(driver, item_name, item_type,
 @then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
                  r'(?P<item_type>.*?)s? (has|have) disappeared from file list'))
 @when(parsers.re(r'user of (?P<browser_id>.*?) does not see (?P<item_list>.*?) '
-                 r'as (?P<item_type>.*?)s? in file list'))
+                 r'(as )?(?P<item_type>.*?)s? in file list'))
 @then(parsers.re(r'user of (?P<browser_id>.*?) does not see (?P<item_list>.*?) '
-                 r'as (?P<item_type>.*?)s? in file list'))
+                 r'(as )?(?P<item_type>.*?)s? in file list'))
 def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until(
@@ -132,9 +132,9 @@ def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
 @then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
                  r'(?P<item_type>.*?)s? (has|have) appeared in file list'))
 @when(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_list>.*?) '
-                 r'as (?P<item_type>.*?)s? in file list'))
+                 r'(as )?(?P<item_type>.*?)s? in file list'))
 @then(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_list>.*?) '
-                 r'as (?P<item_type>.*?)s? in file list'))
+                 r'(as )?(?P<item_type>.*?)s? in file list'))
 def is_present_in_file_list(selenium, browser_id, item_list, item_type):
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until_not(
