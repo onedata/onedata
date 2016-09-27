@@ -288,6 +288,11 @@ package.tar.gz:
 docker:
 	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
-                          --password $(DOCKER_REG_PASSWORD) --build-arg RELEASE=$(DOCKER_RELEASE) \
-                          --build-arg VERSION=$(ONEPROVIDER_VERSION) --name oneprovider \
-                          --publish --remove docker
+                      --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg RELEASE=$(DOCKER_RELEASE) \
+                      --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
+                      --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
+                      --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
+                      --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
+                      --name oneprovider \
+                      --publish --remove docker
