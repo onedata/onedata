@@ -14,7 +14,7 @@ from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 def _find_modal(driver, modal_name):
-    def _get_modal():
+    def _find():
         for name, modal in zip(modals[1::2], modals[::2]):
             if name.text.lower() == modal_name:
                 return modal
@@ -23,7 +23,7 @@ def _find_modal(driver, modal_name):
     modals = driver.find_elements_by_css_selector('.modal.in, '
                                                   '.modal.in .modal-title')
     return Wait(driver, WAIT_FRONTEND).until(
-        lambda _: _get_modal(),
+        lambda _: _find(),
         message='waiting for {:s} modal to appear'.format(modal_name)
     )
 

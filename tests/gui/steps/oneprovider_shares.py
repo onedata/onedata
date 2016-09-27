@@ -47,8 +47,9 @@ def is_not_present_in_share_list(selenium, browser_id, name):
                     '"{name}" from the shared list'))
 def select_share_from_share_list(selenium, browser_id, name, tmp_memory):
     driver = select_browser(selenium, browser_id)
-    share = _get_share_from_shares_list(driver, name)
-    tmp_memory[browser_id].update({'share': share})
+    shares = _get_share_from_shares_list(driver, name)
+    shares[0].click()
+    tmp_memory[browser_id].update({'share': shares[0]})
 
 
 @when(parsers.parse('user of {browser_id} sees that '
@@ -136,17 +137,35 @@ def check_if_user_lost_access(selenium, browser_id):
                          driver.current_url)
 
 
-# TODO merge with file list
-@when(parsers.parse('user of {browser_id} clicks on '
-                    'share icon next to directory named "{name}"'))
-@then(parsers.parse('user of {browser_id} clicks on '
-                    'share icon next to directory named "{name}"'))
-def click_on_share_icon(selenium, browser_id, name):
+@when(parsers.parse('user of {browser_id} clicks on {path} '
+                    'using breadcrumbs from file browser'))
+@then(parsers.parse('user of {browser_id} clicks on {path} '
+                    'using breadcrumbs from file browser'))
+def change_cwd_using_breadcrumbs(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    files = driver.find_elements_by_css_selector('.files-table '
-                                                 'td .file-label, '
-                                                 '.files-table '
-                                                 'td .file-row-tools')
-    for file_name, icon in zip(files[::2], files[1::2]):
-        if file_name.text == name:
-            icon.find_element_by_css_selector('.oneicon-share').click()
+    breadcrumbs = driver.find_elements_by_css_selector('.files-list '
+                                                       '.file-breadcrumbs-list '
+                                                       '.file-breadcrumbs-item '
+                                                       'a')
+    path = path.split('/')
+    dir1, dir2 = None, None
+    for dir1, dir2 in zip(path, breadcrumbs):
+        assert dir1 == dir2.text
+    dir2.click()
+
+
+@when(parsers.parse('user of {browser_id} clicks on {path} '
+                    'using breadcrumbs from share info header'))
+@then(parsers.parse('user of {browser_id} clicks on {path} '
+                    'using breadcrumbs from share info header'))
+def click_on_dir_in_abs_path(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    breadcrumbs = driver.find_elements_by_css_selector('.share-info-head '
+                                                       '.file-breadcrumbs-list '
+                                                       '.file-breadcrumbs-item '
+                                                       'a')
+    path = path.split('/')
+    dir1, dir2 = None, None
+    for dir1, dir2 in zip(path, breadcrumbs):
+        assert dir1 == dir2.text
+    dir2.click()
