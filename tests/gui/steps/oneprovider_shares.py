@@ -15,6 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait as Wait
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.expected_conditions import staleness_of
+from tests.gui.utils.generic import click_on_element
 
 import tests.gui.utils.file_system as fs
 
@@ -191,3 +192,9 @@ def check_if_user_lost_access(selenium, browser_id):
         staleness_of(old_page)
     )
     assert not re.search(r'https?://.*?/public/shares(/.*)?', driver.current_url)
+
+
+@when(parsers.parse('user of {browser_id} clicks on the "{button_name}" button'))
+def clicks_button_in_shares_view(selenium, browser_id, button_name):
+    driver = select_browser(selenium, browser_id)
+    click_on_element(driver, 'button.btn', button_name, 'clicking on {:s} button in share view')

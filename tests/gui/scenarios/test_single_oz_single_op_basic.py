@@ -12,6 +12,7 @@ from tests.gui.steps.oneprovider_common import *
 from tests.gui.steps.oneprovider_data import *
 from tests.gui.steps.oneprovider_spaces import *
 from tests.gui.steps.oneprovider_shares import *
+from tests.gui.steps.oneprovider_metadata import *
 
 import pytest
 from pytest_bdd import scenarios, scenario
@@ -25,6 +26,7 @@ scenarios('../features/oneprovider_data.feature')
 scenarios('../features/oneprovider_space.feature')
 scenarios('../features/oneprovider_shares.feature')
 scenarios('../features/oneprovider_shares_multi.feature')
+scenarios('../features/oneprovider_metadata.feature')
 #
 # # --- FEATURES: oneprovider_data --- #
 #
