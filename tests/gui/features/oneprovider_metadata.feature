@@ -267,6 +267,7 @@ Feature: Oneprovider Metadata view
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
     And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -300,6 +301,7 @@ Feature: Oneprovider Metadata view
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
     And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -334,6 +336,7 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add icon in metadata submenu
     And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -365,6 +368,7 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add icon in metadata submenu
     And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
