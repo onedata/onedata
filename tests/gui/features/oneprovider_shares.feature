@@ -462,7 +462,7 @@ Feature: Oneprovider Share view
     And user of browser sees that dir1 shared-directory has disappeared from file list
 
 
-  Scenario: User can jump to outer directory from inner one
+  Scenario: User can remove directory which contains shared directory
     When user of browser uses spaces select to change data space to "space1"
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared

@@ -24,9 +24,32 @@ type_to_icon = {'shared-directory': 'oneicon-folder-share',
                 'file': 'oneicon-file'}
 
 
+def _unpack_content_into_rows(items):
+    items_num = len(items)
+    index = 0
+    while index < items_num:
+        # keep index of possible metadata node
+        if index + 6 < items_num:
+            if 'metadata' in items[index + 6].get_attribute('class'):
+                yield (items[index], items[index + 2], items[index + 1],
+                       items[index + 3], items[index + 4], items[index + 5],
+                       items[index + 6])
+                index += 7
+            else:
+                yield (items[index], items[index + 2], items[index + 1],
+                       items[index + 3], items[index + 4], items[index + 5],
+                       None)
+                index += 6
+        else:
+            yield (items[index], items[index + 2], items[index + 1],
+                   items[index + 3], items[index + 4], items[index + 5],
+                   None)
+            index += 6
+
+
 def _get_items_from_file_list(driver):
-    files = driver.find_elements_by_css_selector('table.files-table '
-                                                 'tr,'
+    items = driver.find_elements_by_css_selector('table.files-table '
+                                                 'tr, '
                                                  'table.files-table '
                                                  'td.file-list-col-file '
                                                  '.file-icon .oneicon, '
@@ -39,11 +62,13 @@ def _get_items_from_file_list(driver):
                                                  'table.files-table '
                                                  'td.file-list-col-size,'
                                                  'table.files-table '
-                                                 'td.file-list-col-modification')
-    return {label.text: (row, label, icon, tools, size, modification)
-            for row, label, icon, tools, size, modification
-            in zip(files[::6], files[2::6], files[1::6],
-                   files[3::6], files[4::6], files[5::6])}
+                                                 'td.file-list-col-modification, '
+                                                 'table.files-table '
+                                                 'tr td .metadata-panel')
+
+    return {label.text: (row, label, icon, tools, size, modification, meta)
+            for row, label, icon, tools, size, modification, meta
+            in _unpack_content_into_rows(items)}
 
 
 def _not_in_file_list(driver, items, items_type, file_list=None):

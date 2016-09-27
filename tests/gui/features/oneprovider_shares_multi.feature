@@ -71,9 +71,9 @@ Feature: Oneprovider Share view
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
     And user of browser2 sees that current working directory is share1
-    And user of browser2 double clicks on dir1 directory from files list
+    And user of browser2 double clicks on directory dir1 from files list
     And user of browser2 sees that current working directory is share1/dir1
-    And user of browser2 double clicks on dir2 directory from files list
+    And user of browser2 double clicks on directory dir2 from files list
     And user of browser2 sees that current working directory is share1/dir1/dir2
     And user of browser2 double clicks on file 20B-1.txt from files list
     And user of browser2 sees that downloaded file "20B-1.txt" contains "11111111111111111111"
@@ -138,12 +138,12 @@ Feature: Oneprovider Share view
     And user of browser1 sees that url matches https?://[^/]*/#/onedata/shares/.*
 
     And user of browser1 selects share named "share1" from the shared list
-    And user of browser1 sees that selected share is named "helloworld"
+    And user of browser1 sees that selected share is named "share1"
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that share received from user of browser1 is named "share1"
-    And user of browser2 sees that current working directory is dir1
+    And user of browser2 sees that public share is named "share1"
+    And user of browser2 sees that current working directory is share1/dir1
 
     And user of browser1 clicks a settings icon displayed for "share1" item on the shares list
     And user of browser1 sees a settings dropdown menu for "share1" item on the shares list
@@ -170,7 +170,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that share named "helloworld" has disappeared from the shares list
 
     And user of browser2 refreshes site
-    And user of browser2 sees that he no longer has access to share
+    And user of browser2 sees that he no longer has access to the share
 
     # TODO rm after integrating with swagger
     Then user of browser1 clicks on the "data" tab in main menu sidebar
@@ -182,4 +182,4 @@ Feature: Oneprovider Share view
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
     And user of browser1 sees that modal has disappeared
-    And user of browser1 sees that dir1 shared-directory has disappeared from file list
+    And user of browser1 sees that dir1 directory has disappeared from file list
