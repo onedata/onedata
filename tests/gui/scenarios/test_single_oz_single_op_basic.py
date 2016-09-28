@@ -13,6 +13,8 @@ from tests.gui.steps.oneprovider_data import *
 from tests.gui.steps.oneprovider_spaces import *
 from tests.gui.steps.oneprovider_shares import *
 from tests.gui.steps.oneprovider_metadata import *
+from tests.gui.steps.modal import *
+from tests.gui.steps.oneprovider_file_list import *
 
 import pytest
 from pytest_bdd import scenarios, scenario

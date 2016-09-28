@@ -39,17 +39,6 @@ def _get_items_with_opened_metadata_submenu_from_file_list(driver, name, type):
             if label.text == name and type in icon.get_attribute('class')]
 
 
-def _in_file_list(driver, item_name, item_type):
-    def _in(d, name):
-        return len(_get_items_with_opened_metadata_submenu_from_file_list(d, name, item_type)) == 1
-
-    return Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
-        lambda s: refresh_and_call(s, _in,
-                                   item_name),
-        message='searching for exactly one {} on file list'.format(item_name)
-    )
-
-
 @when(parsers.parse('user of {browser_id} sees that metadata submenu for {item_type} '
                     '"{item_name}" in files list has appeared'))
 @then(parsers.parse('user of {browser_id} sees that metadata submenu for {item_type} '
@@ -370,3 +359,15 @@ def check_if_textarea_in_navigation_tabhasnt_got_any_metadata_record(selenium, b
         assert textarea.get_attribute('value') == '{}'
     else:
         assert textarea.get_attribute('value') == ''
+
+
+@when(parsers.parse('user of {browser_id} sees that metadata panel for {item_type} "{item_name}" '
+                    'has disappeared'))
+@then(parsers.parse('user of {browser_id} sees that metadata panel for {item_type} "{item_name}" '
+                    'has disappeared'))
+def check_if_metadata_panel_has_disappeared(selenium, browser_id, item_type, item_name):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_FRONTEND).until_not(
+        lambda s: _get_items_with_opened_metadata_submenu_from_file_list(driver, item_name,
+                                                                         item_type)
+    )
