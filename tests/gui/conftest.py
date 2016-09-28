@@ -155,7 +155,3 @@ def config_driver(config_driver):
         return driver
     return _configure
 
-
-@pytest.fixture
-def firefox_timeout():
-    return 120
