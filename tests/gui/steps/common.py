@@ -35,7 +35,8 @@ def create_instances_of_webdriver(selenium, driver,
             selenium[browser_id] = config_driver(driver.get_instance())
             tmp_memory[browser_id] = {'shares': {},
                                       'spaces': {},
-                                      'website': {}}
+                                      'website': {},
+                                      'window': {'modal': None}}
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))

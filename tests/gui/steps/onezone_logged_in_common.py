@@ -8,13 +8,9 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
-from tests.gui.steps.common import find_element_by_css_selector_and_text
-from common import select_button_from_buttons_by_name
 
 from ..utils.generic import click_on_element
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
