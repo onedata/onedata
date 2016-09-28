@@ -154,3 +154,8 @@ def config_driver(config_driver):
         # selenium.maximize_window()
         return driver
     return _configure
+
+
+@pytest.fixture
+def firefox_timeout():
+    return 120
