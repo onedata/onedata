@@ -24,27 +24,20 @@ type_to_icon = {'shared-directory': 'oneicon-folder-share',
                 'file': 'oneicon-file'}
 
 
-def _unpack_content_into_rows(items):
+def _pack_content_into_rows(items):
     items_num = len(items)
     index = 0
     while index < items_num:
-        # keep index of possible metadata node
-        if index + 6 < items_num:
-            if 'metadata' in items[index + 6].get_attribute('class'):
-                yield (items[index], items[index + 2], items[index + 1],
-                       items[index + 3], items[index + 4], items[index + 5],
-                       items[index + 6])
-                index += 7
-            else:
-                yield (items[index], items[index + 2], items[index + 1],
-                       items[index + 3], items[index + 4], items[index + 5],
-                       None)
-                index += 6
-        else:
-            yield (items[index], items[index + 2], items[index + 1],
-                   items[index + 3], items[index + 4], items[index + 5],
-                   None)
-            index += 6
+        row, label, icon, tools, size, mod = (items[index], items[index+2],
+                                              items[index+1], items[index+3],
+                                              items[index+4], items[index+5])
+        meta = None
+        if index + 6 < items_num \
+                and 'metadata' in items[index + 6].get_attribute('class'):
+            meta = items[index + 6]
+
+        index += 7 if meta else 6
+        yield (row, label, icon, tools, size, mod, meta)
 
 
 def _get_items_from_file_list(driver):
@@ -68,7 +61,7 @@ def _get_items_from_file_list(driver):
 
     return {label.text: (row, label, icon, tools, size, modification, meta)
             for row, label, icon, tools, size, modification, meta
-            in _unpack_content_into_rows(items)}
+            in _pack_content_into_rows(items)}
 
 
 def _not_in_file_list(driver, items, items_type, file_list=None):
@@ -84,8 +77,7 @@ def _not_in_file_list(driver, items, items_type, file_list=None):
 def _double_click_on_item(driver, item_name, item_type, items=None):
     items = items if items else _get_items_from_file_list(driver)
     item = items.get(item_name)
-    if item:
-        assert type_to_icon[item_type] in item[2].get_attribute('class')
+    if item and type_to_icon[item_type] in item[2].get_attribute('class'):
         ActionChains(driver).double_click(item[1]).perform()
     else:
         raise ValueError('no {} named {} found'. format(item_type, item_name))
@@ -99,8 +91,16 @@ def _select_items_from_file_list(driver, item_list, all_items=None):
                 item[1].click()
 
 
-def _click_on_file_tool_icon(driver, item_name, item_type,
-                             tool_type, items=None):
+def _deselect_items_from_file_list(driver, item_list, all_items=None):
+    all_items = all_items if all_items else _get_items_from_file_list(driver)
+    for item_name in list_parser(item_list):
+        item = all_items.get(item_name)
+        if item and 'active' in item[0].get_attribute('class'):
+                item[1].click()
+
+
+def _click_on_tool_icon_for_file(driver, item_name, item_type,
+                                 tool_type, items=None):
     items = items if items else _get_items_from_file_list(driver)
     item = items.get(item_name)
     if item and type_to_icon[item_type] in item[2].get_attribute('class'):
@@ -163,6 +163,26 @@ def select_files_from_file_list(selenium, browser_id, item_list):
     _select_items_from_file_list(driver, item_list)
 
 
+@when(parsers.parse('user of {browser_id} deselects {item_list} '
+                    'from files list'))
+@then(parsers.parse('user of {browser_id} deselects {item_list} '
+                    'from files list'))
+def deselect_files_from_file_list(selenium, browser_id, item_list):
+    driver = select_browser(selenium, browser_id)
+    _deselect_items_from_file_list(driver, item_list)
+
+
+@when(parsers.parse('user of {browser_id} deselects all '
+                    'selected items from files list'))
+@then(parsers.parse('user of {browser_id} deselects all '
+                    'selected items from files list'))
+def deselect_all_items_from_file_list(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    all_items = _get_items_from_file_list(driver)
+    items_list = ','.join(item for item in all_items.iterkeys())
+    _deselect_items_from_file_list(driver, items_list)
+
+
 @when(parsers.parse("user of {browser_id} clicks on {tool_type} "
                     "icon in tools column for {file_name} {file_type}"))
 @then(parsers.parse("user of {browser_id} clicks on {tool_type} "
@@ -170,4 +190,4 @@ def select_files_from_file_list(selenium, browser_id, item_list):
 def click_on_file_icon_tool(selenium, browser_id, tool_type,
                             file_name, file_type):
     driver = select_browser(selenium, browser_id)
-    _click_on_file_tool_icon(driver, file_name, file_type, tool_type)
+    _click_on_tool_icon_for_file(driver, file_name, file_type, tool_type)
