@@ -5,21 +5,15 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import re
 import pyperclip
 
 from tests.utils.acceptance_utils import list_parser
-from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT, \
-    WAIT_REFRESH
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_bdd import given, parsers, when, then
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import TimeoutException
-
-from ..utils.inspect import is_active
-from ..utils.generic import refresh_and_call, click_on_element, parse_url
+from tests.gui.utils.generic import refresh_and_call, click_on_element, parse_url
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
@@ -85,20 +79,6 @@ def op_refresh_op_site_by_rm_hashtag(selenium, browser_id):
     driver.get(op_url)
 
 
-@when(parsers.parse('user of {browser_id} selects "{item_name}" '
-                    'from {item_type} list'))
-@then(parsers.parse('user of {browser_id} selects "{item_name}" '
-                    'from {item_type} list'))
-def op_select_item_from_list(selenium, browser_id, item_name, item_type):
-    driver = select_browser(selenium, browser_id)
-    click_on_element(driver, item_name=item_name,
-                     ignore_case=False,
-                     css_path='ul.{:s}-list '
-                              '.secondary-sidebar-item'.format(item_type),
-                     msg='clicking on {{:s}} item in {type} '
-                         'list'.format(type=item_type))
-
-
 @when(parsers.parse('user of {browser_id} clicks on copy button next to '
                     'input box to copy visible token'))
 @then(parsers.parse('user of {browser_id} clicks on copy button next to '
@@ -147,108 +127,6 @@ def op_click_on_button_in_main_menu_tab_sidebar(selenium, browser_id,
                          'in {tab}'.format(tab=main_menu_tab))
 
 
-def _check_for_item_in_given_list(driver, name, elem_type):
-    def _assert_one_item_in_list(s, item_name, item_type):
-        items = s.find_elements_by_css_selector('.{:s}-list .secondary-'
-                                                'sidebar-item .item-label '
-                                                '.truncate'.format(item_type))
-        return sum(1 for li in items if li.text == item_name) == 1
-
-    Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
-        lambda s: refresh_and_call(s, _assert_one_item_in_list,
-                                   name, elem_type),
-        message='searching for exactly one {item} '
-                'on {list} list'.format(item=name, list=elem_type)
-    )
-
-
-@given(parsers.parse('that in {browser_id} there is an "{item_name}" '
-                     'item on the {item_type} list'))
-@given(parsers.parse('that in {browser_id} there is a "{item_name}" '
-                     'item on the {item_type} list'))
-def op_check_if_there_is_an_item_on_the_list(selenium, browser_id,
-                                             item_name, item_type):
-    driver = select_browser(selenium, browser_id)
-    _check_for_item_in_given_list(driver, item_name, item_type)
-
-
-@when(parsers.parse('user of {browser_id} sees that the new item has appeared '
-                    'on the {item_type} list'))
-@then(parsers.parse('user of {browser_id} sees that the new item has appeared '
-                    'on the {item_type} list'))
-def op_check_if_new_item_appeared_in_list(selenium, browser_id,
-                                          item_type, name_string):
-    driver = select_browser(selenium, browser_id)
-    _check_for_item_in_given_list(driver, name_string, item_type)
-
-
-@when(parsers.parse('user of {browser_id} sees that the "{item_name}" '
-                    'has appeared on the {item_type} list'))
-@then(parsers.parse('user of {browser_id} sees that the "{item_name}" '
-                    'has appeared on the {item_type} list'))
-def op_check_if_item_of_name_appeared_in_list(selenium, browser_id,
-                                              item_name, item_type):
-    driver = select_browser(selenium, browser_id)
-    _check_for_item_in_given_list(driver, item_name, item_type)
-
-
-# TODO uncomment when leave from group backend will be repaired
-# @then(parsers.parse('user of {browser_id} sees that the "{item_name}" '
-#                     'has disappeared from the {item_type} list'))
-# def op_check_if_item_of_name_disappeared_from_list(selenium, browser_id,
-#                                                    item_type, item_name):
-#     def _check_for_lack_of_item_in_list(s):
-#         items = s.find_elements_by_css_selector('.{:s}-list .secondary-'
-#                                                 'sidebar-item .item-label '
-#                                                 '.truncate'.format(item_type))
-#         return all(item.text != item_name for item in items)
-#
-#     driver = select_browser(selenium, browser_id)
-#     Wait(driver, MAX_REFRESH_COUNT*WAIT_BACKEND).until(
-#         lambda s: refresh_and_call(s, _check_for_lack_of_item_in_list),
-#         message='waiting for {item} to disappear from '
-#                 '{list} list'.format(item=item_name, list=item_type)
-#     )
-
-
-# TODO rm when leave from group backend will be repaired
-@when(parsers.parse('user of {browser_id} sees that the "{item_name}" '
-                    'has disappeared from the {item_type} list'))
-@then(parsers.parse('user of {browser_id} sees that the "{item_name}" '
-                    'has disappeared from the {item_type} list'))
-def op_check_if_item_of_name_disappeared_from_list(selenium, browser_id,
-                                                   item_name, item_type):
-    def _check_for_lack_of_item_in_list(s):
-        items = s.find_elements_by_css_selector('.{:s}-list .secondary-'
-                                                'sidebar-item .item-label '
-                                                '.truncate'.format(item_type))
-        return all(item.text != item_name for item in items)
-
-    def _refresh_and_call():
-        """Refresh browser and keep calling callback with given args
-        until achieve expected result or timeout.
-        """
-        op_url = parse_url(driver.current_url).group('base_url')
-        driver.get(op_url)
-        _click_on_tab_in_main_menu_sidebar(driver, item_type)
-
-        try:
-            result = Wait(driver, WAIT_REFRESH).until(
-                lambda s: _check_for_lack_of_item_in_list(s)
-            )
-        except TimeoutException:
-            return None
-        else:
-            return result
-
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, MAX_REFRESH_COUNT*WAIT_BACKEND).until(
-        lambda s: _refresh_and_call(),
-        message='waiting for {:s} to disappear from '
-                'groups list'.format(item_name)
-    )
-
-
 def _check_for_presence_of_item_in_table(driver, name, caption):
     table_elems = driver.find_elements_by_css_selector('table thead, '
                                                        'table tbody')
@@ -274,71 +152,6 @@ def op_check_if_row_of_name_appeared_in_table(selenium, browser_id,
         message='searching for exactly one {:s} '
                 'on {:s} list in table'.format(name, caption)
     )
-
-
-def _find_item_in_sidebar_list(driver, item_name, item_type):
-    items = driver.find_elements_by_css_selector('.' + item_type + '-list '
-                                                 '.secondary-sidebar-item')
-    for item in items:
-        # if settings dropdown menu is expanded text looks like: name\noption1\noption2\n...
-        # so splitting text on nl and getting 0 element
-        if item_name == item.text.split('\n')[0]:  # TODO better way to check if it is the item we seek
-            return item
-
-
-@when(parsers.parse('user of {browser_id} clicks a settings icon displayed '
-                    'for "{item_name}" item on the {item_type} list'))
-@then(parsers.parse('user of {browser_id} clicks a settings icon displayed '
-                    'for "{item_name}" item on the {item_type} list'))
-def op_click_settings_icon_for_list_item(selenium, browser_id,
-                                         item_name, item_type):
-
-    def _find_settings_icon_and_check_if_clickable(s):
-        list_item = _find_item_in_sidebar_list(s, item_name, item_type)
-        icon = list_item.find_element_by_css_selector('.oneicon-settings')
-        if icon.is_enabled():
-            s.execute_script('arguments[0].scrollIntoView();', icon)
-            return icon
-
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        _find_settings_icon_and_check_if_clickable,
-        message='clicks on settings icon for {name} on {type} '
-                'list'.format(name=item_name, type=item_type)
-    ).click()
-
-
-@when(parsers.parse('user of {browser_id} sees a settings dropdown menu for '
-                    '"{name}" item on the {elem_type} list'))
-@then(parsers.parse('user of {browser_id} sees a settings dropdown menu for '
-                    '"{name}" item on the {elem_type} list'))
-def op_wait_for_settings_dropdown_menu(selenium, browser_id, name, elem_type):
-
-    def _find_expanded_menu(s):
-        list_item = _find_item_in_sidebar_list(s, name, elem_type)
-        toggle = list_item.find_element_by_css_selector('.dropdown-toggle')
-        return toggle.get_attribute('aria-expanded') == 'true'
-
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        _find_expanded_menu,
-        message='waiting for settings dropdown to expand'
-    )
-
-
-@when(parsers.parse('user of {browser_id} clicks on the "{item_name}" item '
-                    'in current settings dropdown'))
-@then(parsers.parse('user of {browser_id} clicks on the "{item_name}" item '
-                    'in current settings dropdown'))
-def op_click_on_item_in_current_settings_dropdown(selenium, browser_id,
-                                                  item_name):
-    driver = select_browser(selenium, browser_id)
-    click_on_element(driver, item_name=item_name,
-                     css_path='.settings-dropdown '
-                              '.dropdown-menu-settings '
-                              '.clickable',
-                     msg='clicking on {:s} in current '
-                         'settings dropdown')
 
 
 @given(parsers.parse('user of {browser_id} sees that main content '

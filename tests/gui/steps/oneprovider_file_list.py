@@ -1,4 +1,4 @@
-"""Steps used for modal handling in various GUI testing scenarios
+"""Steps used for file list handling in various GUI testing scenarios
 """
 
 __author__ = "Bartek Walkowicz"
@@ -31,12 +31,17 @@ def _pack_content_into_rows(items):
         row, label, icon, tools, size, mod = (items[index], items[index+2],
                                               items[index+1], items[index+3],
                                               items[index+4], items[index+5])
-        meta = None
-        if index + 6 < items_num \
-                and 'metadata' in items[index + 6].get_attribute('class'):
-            meta = items[index + 6]
+        meta_index = index + 6
+        while meta_index < items_num and items[meta_index].tag_name == 'tr':
+            meta_index += 1
 
-        index += 7 if meta else 6
+        if meta_index - index > 7:
+            meta = items[index + 6]
+            index = meta_index - 1 if meta_index < items_num else items_num
+        else:
+            meta = None
+            index += 6
+
         yield (row, label, icon, tools, size, mod, meta)
 
 
@@ -53,11 +58,9 @@ def _get_items_from_file_list(driver):
                                                  'td.file-list-col-file '
                                                  '.file-row-tools, '
                                                  'table.files-table '
-                                                 'td.file-list-col-size,'
+                                                 'td.file-list-col-size, '
                                                  'table.files-table '
-                                                 'td.file-list-col-modification, '
-                                                 'table.files-table '
-                                                 'tr td .metadata-panel')
+                                                 'td.file-list-col-modification')
 
     return {label.text: (row, label, icon, tools, size, modification, meta)
             for row, label, icon, tools, size, modification, meta
@@ -89,6 +92,8 @@ def _select_items_from_file_list(driver, item_list, all_items=None):
         item = all_items.get(item_name)
         if item and 'active' not in item[0].get_attribute('class'):
                 item[1].click()
+        else:
+            raise ValueError('no item named {} found'.format(item_name))
 
 
 def _deselect_items_from_file_list(driver, item_list, all_items=None):
@@ -97,6 +102,8 @@ def _deselect_items_from_file_list(driver, item_list, all_items=None):
         item = all_items.get(item_name)
         if item and 'active' in item[0].get_attribute('class'):
                 item[1].click()
+        else:
+            raise ValueError('no item named {} found'.format(item_name))
 
 
 def _click_on_tool_icon_for_file(driver, item_name, item_type,

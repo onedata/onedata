@@ -40,9 +40,11 @@ def create_instances_of_webdriver(selenium, driver,
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))
-def name_string():
+def name_string(tmp_memory, browser_id):
     chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
-    return ''.join(random.sample(chars, 6))
+    gen_str = ''.join(random.sample(chars, 6))
+    tmp_memory[browser_id]['gen_str'] = gen_str
+    return gen_str
 
 
 @when(parsers.parse('user of {browser_id} should see that the page title '
