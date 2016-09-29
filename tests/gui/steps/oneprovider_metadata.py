@@ -25,7 +25,6 @@ from tests.gui.utils.generic import refresh_and_call
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-import tests.gui.utils.file_system as fs
 from tests.utils.acceptance_utils import list_parser
 
 
