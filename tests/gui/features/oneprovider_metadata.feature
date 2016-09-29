@@ -11,7 +11,7 @@ Feature: Oneprovider Metadata view
     And user of browser clicked on the "Go to your files" button in provider popup
     And user of browser seen that Oneprovider session has started
 
-  Scenario: Open metadata submenu and check presence of navigation tabs
+  Scenario: Open metadata panel and check presence of navigation tabs
     When user of browser uses spaces select to change data space to "space1"
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
@@ -23,8 +23,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    Then user of browser sees that metadata submenu for file "file1" in files list has appeared
-    Then user of browser sees [Basic, JSON, RDF] navigation tabs in opened metadata submenu
+    Then user of browser sees that metadata panel for file "file1" in files list has appeared
+    Then user of browser sees [Basic, JSON, RDF] navigation tabs in opened metadata panel
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
@@ -46,8 +46,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     Then user of browser sees metadata icon for file "file1"
@@ -72,8 +72,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     Then user of browser sees metadata icon for directory "dir1"
@@ -97,7 +97,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     Then user of browser sees that entered metadata record with attribute "attr" is red
@@ -121,7 +121,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     Then user of browser sees that entered metadata record with attribute "attr" is red
@@ -145,24 +145,24 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -185,24 +185,24 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -212,7 +212,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that modal has disappeared
     And user of browser sees that dir1 directory has disappeared from file list
 
-    #TODO only one metadata submenu can be active at time
+    #TODO only one metadata panel can be active at time
   Scenario: Add metadata to file (clicks both add icon and "Save all changes" button)
     When user of browser uses spaces select to change data space to "space1"
     And user of browser clicks the button from top menu bar with tooltip "Create file"
@@ -225,20 +225,20 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -260,13 +260,13 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
@@ -295,12 +295,12 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -311,7 +311,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -333,12 +333,12 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -349,7 +349,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -371,20 +371,20 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on delete metadata record icon for metadata record with attribute "attr"
     Then user of browser should not see new metadata record with attribute "attr"
     And user of browser selects file1 from files list
@@ -407,20 +407,20 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on delete metadata record icon for metadata record with attribute "attr"
     Then user of browser should not see new metadata record with attribute "attr"
     And user of browser selects dir1 from files list
@@ -443,22 +443,22 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks on "Remove metadata" button in metadata submenu
+    And user of browser clicks on "Remove metadata" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
     Then user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -484,22 +484,22 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks on "Remove metadata" button in metadata submenu
+    And user of browser clicks on "Remove metadata" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
     Then user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -525,17 +525,17 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Discard changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Discard changes" button in metadata panel
     Then user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -557,17 +557,17 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata submenu
-    And user of browser clicks on "Discard changes" button in metadata submenu
+    And user of browser clicks on add icon in metadata panel
+    And user of browser clicks on "Discard changes" button in metadata panel
     Then user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -589,20 +589,20 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser clicks on textarea in "JSON" navigation tab
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -624,20 +624,20 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser clicks on textarea in "JSON" navigation tab
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -659,28 +659,28 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser clicks on textarea in "JSON" navigation tab
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata submenu
+    And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -702,28 +702,28 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser clicks on textarea in "JSON" navigation tab
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata submenu
+    And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -745,17 +745,17 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser clicks on textarea in "JSON" navigation tab
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata submenu
+    And user of browser clicks on "Discard changes" button in metadata panel
     Then user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -777,17 +777,17 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser clicks on textarea in "JSON" navigation tab
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata submenu
+    And user of browser clicks on "Discard changes" button in metadata panel
     Then user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -810,24 +810,24 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -849,20 +849,20 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser clicks on textarea in "XML" navigation tab
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -884,20 +884,20 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser clicks on textarea in "XML" navigation tab
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -919,28 +919,28 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser clicks on textarea in "XML" navigation tab
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata submenu
+    And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -962,28 +962,28 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser clicks on textarea in "XML" navigation tab
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata submenu
+    And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata submenu
+    And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -1005,17 +1005,17 @@ Feature: Oneprovider Metadata view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser clicks on textarea in "XML" navigation tab
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata submenu
+    And user of browser clicks on "Discard changes" button in metadata panel
     Then user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
-    And user of browser sees that metadata submenu for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for file "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -1037,17 +1037,17 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser clicks on textarea in "XML" navigation tab
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata submenu
+    And user of browser clicks on "Discard changes" button in metadata panel
     Then user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata submenu
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
