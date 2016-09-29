@@ -5,15 +5,16 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import pyperclip
 
 from tests.utils.acceptance_utils import list_parser
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
+from tests.gui.utils.generic import refresh_and_call, click_on_element, parse_url
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
+
 from pytest_bdd import given, parsers, when, then
-from tests.gui.utils.generic import refresh_and_call, click_on_element, parse_url
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
@@ -33,10 +34,9 @@ def _click_on_tab_in_main_menu_sidebar(driver, tab):
             else:
                 return main_menu_tab_to_url[tab] == found.lower()
 
-        click_on_element(driver, item_name=tab,
-                         css_path='.primary-sidebar a#main-{:s}'
-                                  ''.format(main_menu_tab_to_url[tab]),
-                         msg='clicking on {:s} tab in main menu')
+        menu_tab = main_menu_tab_to_url[tab]
+        css_path = '.primary-sidebar a#main-{:s}'.format(menu_tab)
+        driver.find_element_by_css_selector(css_path).click()
 
         return Wait(driver, WAIT_FRONTEND).until(
             lambda _: _check_url(),
@@ -53,8 +53,8 @@ def _click_on_tab_in_main_menu_sidebar(driver, tab):
 
 @given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
                   '"(?P<main_menu_tab>.*)" tab in main menu sidebar'))
-def g_op_click_on_the_given_main_menu_tab(selenium, browser_id_list,
-                                          main_menu_tab):
+def g_click_on_the_given_main_menu_tab(selenium, browser_id_list,
+                                       main_menu_tab):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
         _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
@@ -64,8 +64,8 @@ def g_op_click_on_the_given_main_menu_tab(selenium, browser_id_list,
                  '"(?P<main_menu_tab>.*)" tab in main menu sidebar'))
 @then(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
                  '"(?P<main_menu_tab>.*)" tab in main menu sidebar'))
-def wt_op_click_on_the_given_main_menu_tab(selenium, browser_id_list,
-                                           main_menu_tab):
+def wt_click_on_the_given_main_menu_tab(selenium, browser_id_list,
+                                        main_menu_tab):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
         _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
@@ -77,54 +77,6 @@ def op_refresh_op_site_by_rm_hashtag(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     op_url = parse_url(driver.current_url).group('base_url')
     driver.get(op_url)
-
-
-@when(parsers.parse('user of {browser_id} clicks on copy button next to '
-                    'input box to copy visible token'))
-@then(parsers.parse('user of {browser_id} clicks on copy button next to '
-                    'input box to copy visible token'))
-@when(parsers.parse('user of {browser_id} clicks on copy button next to '
-                    'input box to copy visible url'))
-@then(parsers.parse('user of {browser_id} clicks on copy button next to '
-                    'input box to copy visible url'))
-def op_copy_visible_token_to_clipboard(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '.input-with-button '
-                                                     'button.copy-btn'))
-    ).click()
-
-
-@when(parsers.parse('user of {browser_id} sends copied {item_type} '
-                    'to users of {browser_list}'))
-@then(parsers.parse('user of {browser_id} sends copied {item_type} '
-                    'to users of {browser_list}'))
-def op_send_visible_token_to_other_users(selenium, browser_id, item_type,
-                                         browser_list, tmp_memory):
-    select_browser(selenium, browser_id)
-    item = pyperclip.paste()
-    for browser in list_parser(browser_list):
-        if browser in tmp_memory:
-            tmp_memory[browser][item_type] = item
-        else:
-            tmp_memory[browser] = {item_type: item}
-
-
-@when(parsers.parse('user of {browser_id} clicks on the "{button_name}" '
-                    'button in {main_menu_tab} sidebar'))
-@then(parsers.parse('user of {browser_id} clicks on the "{button_name}" '
-                    'button in {main_menu_tab} sidebar'))
-def op_click_on_button_in_main_menu_tab_sidebar(selenium, browser_id,
-                                                button_name,
-                                                main_menu_tab):
-    driver = select_browser(selenium, browser_id)
-    assert main_menu_tab in ('spaces', 'groups')
-
-    click_on_element(driver, item_name=button_name,
-                     css_path='.secondary-sidebar '
-                              'figure.icon',
-                     msg='clicking on {{:s}} '
-                         'in {tab}'.format(tab=main_menu_tab))
 
 
 def _check_for_presence_of_item_in_table(driver, name, caption):

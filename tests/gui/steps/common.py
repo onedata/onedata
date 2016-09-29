@@ -9,17 +9,19 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import time
 import random
+import pyperclip
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
-from tests.utils.acceptance_utils import list_parser
-from tests.gui.utils.generic import parse_url
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
+from selenium.webdriver.support.expected_conditions import staleness_of
 
-from ..utils.generic import enter_text
+from tests.utils.acceptance_utils import list_parser
+from tests.gui.utils.generic import parse_url, enter_text
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
+
+from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
@@ -35,7 +37,8 @@ def create_instances_of_webdriver(selenium, driver,
             selenium[browser_id] = config_driver(driver.get_instance())
             tmp_memory[browser_id] = {'shares': {},
                                       'spaces': {},
-                                      'website': {},
+                                      'groups': {},
+                                      'mailbox': {},
                                       'window': {'modal': None}}
 
 
@@ -80,14 +83,17 @@ def type_string_into_active_element(selenium, browser_id, text):
     )
 
 
-@when(parsers.parse('user of {browser_id} types given token on keyboard'))
-@then(parsers.parse('user of {browser_id} types given token on keyboard'))
-def type_string_into_active_element(selenium, browser_id, tmp_memory):
+@when(parsers.parse('user of {browser_id} types received '
+                    '{item_type} on keyboard'))
+@then(parsers.parse('user of {browser_id} types received '
+                    '{item_type} on keyboard'))
+def type_item_into_active_element(selenium, browser_id, item_type,
+                                  tmp_memory):
     driver = select_browser(selenium, browser_id)
-    token = tmp_memory[browser_id]['token']
+    item = tmp_memory[browser_id]['mailbox'][item_type]
     Wait(driver, WAIT_FRONTEND).until(
-        lambda s: enter_text(s.switch_to.active_element, token),
-        message='entering {:s} to input box'.format(token)
+        lambda s: enter_text(s.switch_to.active_element, item),
+        message='entering {:s} to input box'.format(item)
     )
 
 
@@ -121,7 +127,7 @@ def g_click_on_link_with_text(selenium, browser_id_list, link_name):
 
 
 @when(parsers.parse('user of {browser_id} is idle for {seconds:d} seconds'))
-def wait_n_seconds(seconds, browser_id):
+def wait_n_seconds(seconds):
     time.sleep(seconds)
 
 
@@ -169,22 +175,6 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
     Wait(driver, 2*WAIT_BACKEND).until(notify_with_text_present)
 
 
-@when(parsers.parse('user of {browser_id} can see current url'))
-def get_current_url(selenium, browser_id, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    url = driver.current_url
-    if browser_id in tmp_memory:
-        tmp_memory[browser_id]['url'] = url
-    else:
-        tmp_memory[browser_id] = {'url': driver.current_url}
-
-
-@then(parsers.parse('user of {browser_id} sees that url has changed'))
-def check_if_url_changed(selenium, browser_id, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    assert driver.current_url != tmp_memory[browser_id]['url']
-
-
 @when(parsers.parse('user of {browser_id} refreshes site'))
 @then(parsers.parse('user of {browser_id} refreshes site'))
 def refresh_site(selenium, browser_id):
@@ -192,50 +182,36 @@ def refresh_site(selenium, browser_id):
     driver.refresh()
 
 
-def select_button_from_buttons_by_name(name, buttons_selector):
-    def _go_to_button(s):
-        buttons = s.find_elements_by_css_selector(buttons_selector)
-        for button in buttons:
-            if button.text.lower() == name.lower():
-                Wait(s, WAIT_FRONTEND).until(
-                    EC.visibility_of(button)
-                )
-                if button.is_enabled():
-                    return button
-    return _go_to_button
-
-
-def find_element_by_css_selector_and_text(selector, text):
-    """finds element on site by css selector and element's text"""
-    def _find_element(s):
-        elements_list = s.find_elements_by_css_selector(selector)
-        for elem in elements_list:
-            if elem.text.lower() == text.lower():
-                return elem
-    return _find_element
-
-
 @when(parsers.parse('user of {browser_id} sees that url matches {path}'))
-def check_if_url_match(selenium, browser_id, path):
+@then(parsers.parse('user of {browser_id} sees that url matches {path}'))
+def is_url_matching(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
     assert re.search(path, driver.current_url)
 
 
-from selenium.webdriver.support.expected_conditions import staleness_of
-
-
 @when(parsers.parse('user of {browser_id} opens received url'))
+@then(parsers.parse('user of {browser_id} opens received url'))
 def open_received_url(selenium, browser_id, tmp_memory, base_url):
     driver = select_browser(selenium, browser_id)
 
     old_page = driver.find_element_by_css_selector('html')
-    url = tmp_memory[browser_id]['url']
-    curr_base_url = parse_url(url).group('base_url')
-    driver.get(url.replace(curr_base_url, base_url, 1))
+    url = tmp_memory[browser_id]['mailbox']['url']
+    driver.get(url.replace(parse_url(url).group('base_url'), base_url, 1))
 
     Wait(driver, WAIT_BACKEND).until(
-        staleness_of(old_page)
+        staleness_of(old_page),
+        message='waiting for page {:s} to load'.format(url)
     )
+
+
+@when(parsers.re('user of (?P<browser_id>.*?) sends copied (?P<item_type>.*?) '
+                 'to users? of (?P<browser_list>.*)'))
+@then(parsers.re('user of (?P<browser_id>.*?) sends copied (?P<item_type>.*?) '
+                 'to users? of (?P<browser_list>.*)'))
+def send_copied_item_to_other_users(item_type, browser_list, tmp_memory):
+    item = pyperclip.paste()
+    for browser in list_parser(browser_list):
+        tmp_memory[browser]['mailbox'][item_type] = item
 
 
 # Below functions are currently unused and should not be used,

@@ -92,8 +92,6 @@ def _select_items_from_file_list(driver, item_list, all_items=None):
         item = all_items.get(item_name)
         if item and 'active' not in item[0].get_attribute('class'):
                 item[1].click()
-        else:
-            raise ValueError('no item named {} found'.format(item_name))
 
 
 def _deselect_items_from_file_list(driver, item_list, all_items=None):
@@ -102,8 +100,6 @@ def _deselect_items_from_file_list(driver, item_list, all_items=None):
         item = all_items.get(item_name)
         if item and 'active' in item[0].get_attribute('class'):
                 item[1].click()
-        else:
-            raise ValueError('no item named {} found'.format(item_name))
 
 
 def _click_on_tool_icon_for_file(driver, item_name, item_type,

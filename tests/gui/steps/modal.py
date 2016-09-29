@@ -11,6 +11,7 @@ from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
+from selenium.webdriver.common.keys import Keys
 
 from pytest_bdd import parsers, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
@@ -72,6 +73,8 @@ def click_on_confirmation_btn_in_modal(browser_id, button_name,
         if button.text.lower() == button_name:
             button.click()
             break
+    else:
+        raise ValueError('no button named {} found'.format(button_name))
 
 
 @when(parsers.parse('user of {browser_id} sees '
@@ -96,7 +99,9 @@ def get_token_from_modal(selenium, browser_id, tmp_memory):
 def activate_input_box_in_modal(browser_id, in_type, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
     css_path = 'input#{}'.format(in_type_to_id[in_type]) if in_type else 'input'
-    modal.find_element_by_css_selector(css_path).click()
+    in_box = modal.find_element_by_css_selector(css_path)
+    # send NULL to activates input box
+    in_box.send_keys(Keys.NULL)
 
 
 @when(parsers.parse('user of {browser_id} clicks on '
