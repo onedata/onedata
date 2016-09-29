@@ -20,15 +20,14 @@ import pytest
 from pytest_bdd import scenarios, scenario
 
 # --- FEATURES: all non-destructive (does not change state) ---
-# scenarios('../features/oneprovider_group_multi.feature')
-# scenarios('../features/oneprovider_group.feature')
-# scenarios('../features/onezone_login.feature')
-# scenarios('../features/onezone_gui.feature')
-# scenarios('../features/oneprovider_data.feature')
-# scenarios('../features/oneprovider_space.feature')
+scenarios('../features/oneprovider_group_multi.feature')
+scenarios('../features/oneprovider_group.feature')
+scenarios('../features/onezone_login.feature')
+scenarios('../features/onezone_gui.feature')
+scenarios('../features/oneprovider_data.feature')
+scenarios('../features/oneprovider_space.feature')
 scenarios('../features/oneprovider_shares.feature')
-
-# scenarios('../features/oneprovider_shares_multi.feature')
+scenarios('../features/oneprovider_shares_multi.feature')
 #
 # # --- FEATURES: oneprovider_data --- #
 #

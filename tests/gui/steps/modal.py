@@ -64,14 +64,20 @@ def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
                     'confirmation button in displayed modal'))
 @then(parsers.parse('user of {browser_id} clicks "{button_name}" '
                     'confirmation button in displayed modal'))
-def click_on_confirmation_btn_in_modal(browser_id, button_name,
+def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
                                        tmp_memory):
+    driver = select_browser(selenium, browser_id)
     button_name = button_name.lower()
     modal = tmp_memory[browser_id]['window']['modal']
     buttons = modal.find_elements_by_css_selector('button')
-    for button in buttons:
-        if button.text.lower() == button_name:
-            button.click()
+    for btn in buttons:
+        if btn.text.lower() == button_name:
+            Wait(driver, WAIT_FRONTEND).until(
+                lambda _: btn.is_displayed() and btn.is_enabled(),
+                message='waiting for button {} to be enabled'
+                        ''.format(button_name)
+            )
+            btn.click()
             break
     else:
         raise ValueError('no button named {} found'.format(button_name))

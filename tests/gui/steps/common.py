@@ -175,6 +175,16 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
     Wait(driver, 2*WAIT_BACKEND).until(notify_with_text_present)
 
 
+@when(parsers.parse('user of {browser_id} closes all notifies'))
+@then(parsers.parse('user of {browser_id} closes all notifies'))
+def close_notifies(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    notifies = driver.find_elements_by_css_selector('.ember-notify '
+                                                    'a.close-button')
+    for notify in notifies:
+        notify.click()
+
+
 @when(parsers.parse('user of {browser_id} refreshes site'))
 @then(parsers.parse('user of {browser_id} refreshes site'))
 def refresh_site(selenium, browser_id):
