@@ -29,7 +29,7 @@ import tests.gui.utils.file_system as fs
 from tests.utils.acceptance_utils import list_parser
 
 
-def _get_items_with_opened_metadata_submenu_from_file_list(driver, name, type):
+def _get_items_with_opened_metadata_panel_from_file_list(driver, name, type):
     files = driver.find_elements_by_css_selector('table.files-table tr.metadata-opened td '
                                                  '.file-icon .oneicon, '
                                                  'table.files-table tr.metadata-opened td '
@@ -39,14 +39,14 @@ def _get_items_with_opened_metadata_submenu_from_file_list(driver, name, type):
             if label.text == name and type in icon.get_attribute('class')]
 
 
-@when(parsers.parse('user of {browser_id} sees that metadata submenu for {item_type} '
+@when(parsers.parse('user of {browser_id} sees that metadata panel for {item_type} '
                     '"{item_name}" in files list has appeared'))
-@then(parsers.parse('user of {browser_id} sees that metadata submenu for {item_type} '
+@then(parsers.parse('user of {browser_id} sees that metadata panel for {item_type} '
                     '"{item_name}" in files list has appeared'))
-def check_if_metadata_submenu_fir_file_is_displayed(selenium, browser_id, item_name, item_type):
+def check_if_metadata_panel_fir_file_is_displayed(selenium, browser_id, item_name, item_type):
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until(
-        lambda s: _get_items_with_opened_metadata_submenu_from_file_list(driver, item_name, item_type)
+        lambda s: _get_items_with_opened_metadata_panel_from_file_list(driver, item_name, item_type)
     )
 
 
@@ -70,8 +70,8 @@ def deselect_items_from_file_list(selenium, browser_id, item_list):
 
 
 @then(parsers.parse('user of {browser_id} sees {tab_list} navigation tabs in opened metadata '
-                    'submenu'))
-def check_if_navigation_tabs_for_metadata_submenu_are_displayed(selenium, browser_id, tab_list):
+                    'panel'))
+def check_if_navigation_tabs_for_metadata_panel_are_displayed(selenium, browser_id, tab_list):
     driver = select_browser(selenium, browser_id)
     navigation_tabs = driver.find_elements_by_css_selector('table.files-table .metadata-panel '
                                                            'ul.nav-tabs a')
@@ -89,7 +89,7 @@ def _find_input_box(d, input_box_name):
 
 
 @when(parsers.parse('user of {browser_id} clicks on "{input_box_name}" input box'))
-def _click_on_input_box_in_metadata_submenu(selenium, browser_id, input_box_name):
+def _click_on_input_box_in_metadata_panel(selenium, browser_id, input_box_name):
 
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until(
@@ -98,9 +98,9 @@ def _click_on_input_box_in_metadata_submenu(selenium, browser_id, input_box_name
     ).click()
 
 
-@when(parsers.parse('user of {browser_id} clicks on "{button_name}" button in metadata submenu'))
-@then(parsers.parse('user of {browser_id} clicks on "{button_name}" button in metadata submenu'))
-def click_on_button_in_metadata_submenu(selenium, browser_id, button_name):
+@when(parsers.parse('user of {browser_id} clicks on "{button_name}" button in metadata panel'))
+@then(parsers.parse('user of {browser_id} clicks on "{button_name}" button in metadata panel'))
+def click_on_button_in_metadata_panel(selenium, browser_id, button_name):
     driver = select_browser(selenium, browser_id)
     if button_name.lower() == "save all changes":
         css_selector = '.metadata-panel .save-metadata-row button ' \
@@ -108,7 +108,7 @@ def click_on_button_in_metadata_submenu(selenium, browser_id, button_name):
     else:
         css_selector = '.metadata-panel .save-metadata-row button'
     click_on_element(driver, css_selector, button_name,
-                     'clicking on {:s} button in metadata submenu')
+                     'clicking on {:s} button in metadata panel')
 
 
 def _check_for_item_in_given_list(driver, name):
@@ -218,8 +218,8 @@ def click_delete_metadata_record_button(selenium, browser_id, attribute_name):
                      '{attribute}'.format(attribute=attribute_name))
 
 
-@when(parsers.parse('user of {browser_id} clicks on add icon in metadata submenu'))
-def click_on_add_button_in_metadata_submenu(selenium, browser_id):
+@when(parsers.parse('user of {browser_id} clicks on add icon in metadata panel'))
+def click_on_add_button_in_metadata_panel(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     click_on_element(driver, '.metadata-panel table.metadata-basic-table '
                              'span.oneicon-add', '', 'clicking on add metadata record icon')
@@ -248,21 +248,21 @@ def click_input_box_for_new_metadata_record(selenium, browser_id, input_box_name
     )
     click_on_element(driver, 'input[placeholder="Value"]', '', 'clicking on {input_box_name} input '
                                           'box'.format(input_box_name=input_box_name))
-
-
-@then(parsers.parse('user of {browser_id} sees that "{button_name}" button is disabled'))
-def check_if_button_is_disabled(selenium, browser_id, button_name):
-    driver = select_browser(selenium, browser_id)
-    button = driver.find_element_by_css_selector('.metadata-panel .save-metadata-row button '
-                                                 'span.spin-button-label')
-    Wait(driver, WAIT_FRONTEND).until_not(
-        lambda s: button.is_enabled()
-    )
-    # Wait(driver, WAIT_FRONTEND).until_not(
-    #     EC.element_to_be_clickable((By.CSS_SELECTOR, '.metadata-panel .save-metadata-row button '
-    #                                                  'span.spin-button-label')),
-    #     message='checking if {button_name} is not clickable'.format(button_name=button_name)
-    # )
+#
+#
+# @then(parsers.parse('user of {browser_id} sees that "{button_name}" button is disabled'))
+# def check_if_button_is_disabled(selenium, browser_id, button_name):
+#     driver = select_browser(selenium, browser_id)
+#     button = driver.find_element_by_css_selector('.metadata-panel .save-metadata-row button '
+#                                                  'span.spin-button-label')
+#     Wait(driver, WAIT_FRONTEND).until_not(
+#         lambda s: button.is_enabled()
+#     )
+#     # Wait(driver, WAIT_FRONTEND).until_not(
+#     #     EC.element_to_be_clickable((By.CSS_SELECTOR, '.metadata-panel .save-metadata-row button '
+#     #                                                  'span.spin-button-label')),
+#     #     message='checking if {button_name} is not clickable'.format(button_name=button_name)
+#     # )
 
 
 def _get_items_from_file_list_with_metadata_icon(driver, name, type, visibility=''):
@@ -309,13 +309,13 @@ def check_if_entered_metadata_record_is_red(selenium, browser_id, attribute_name
 
 
 @when(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation tab in metadata '
-                    'submenu'))
+                    'panel'))
 @then(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation tab in metadata '
-                    'submenu'))
-def click_on_navigation_tab_in_metadata_submenu(selenium, browser_id, tab_name):
+                    'panel'))
+def click_on_navigation_tab_in_metadata_panel(selenium, browser_id, tab_name):
     driver = select_browser(selenium, browser_id)
     click_on_element(driver, 'table.files-table .metadata-panel ul.nav-tabs li', tab_name,
-                     'clicking on {:s} navigation tab in metadata submenu')
+                     'clicking on {:s} navigation tab in metadata panel')
 
 
 @when(parsers.parse('user of {browser_id} clicks on textarea in "{tab_name}" navigation tab'))
@@ -368,6 +368,36 @@ def check_if_textarea_in_navigation_tabhasnt_got_any_metadata_record(selenium, b
 def check_if_metadata_panel_has_disappeared(selenium, browser_id, item_type, item_name):
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until_not(
-        lambda s: _get_items_with_opened_metadata_submenu_from_file_list(driver, item_name,
+        lambda s: _get_items_with_opened_metadata_panel_from_file_list(driver, item_name,
                                                                          item_type)
     )
+
+
+def tmp_name(driver, name, type):
+    files = driver.find_elements_by_css_selector('table.files-table td.file-list-col-file')
+    for file in files:
+        icon = file.find_element_by_css_selector('.file-icon span.oneicon')
+        label = file.find_element_by_css_selector('.file-label .truncate').text
+        if type in icon.get_attribute('class') and label == name:
+            return file
+    return None
+
+
+@when(parsers.parse('user of {browser_id} clicks the metadata icon for {item_type} "{item_name}" '
+                    'in files list'))
+def click_metadata_icon_for_item(selenium, browser_id, item_type, item_name):
+    driver = select_browser(selenium, browser_id)
+    file = Wait(driver, WAIT_FRONTEND).until(
+        lambda s: tmp_name(driver, item_name, item_type),
+        message='checking if metadata icon for {item_type} {item_name} is visible'.format(
+            item_type=item_type, item_name=item_name)
+    )
+    click_on_element(file, '.file-tool-metadata', '', 'clicking on metadata icon for {type} '
+                                                      '{item}'.format(type=item_type,
+                                                                      item=item_name))
+
+
+
+
+
+

@@ -273,7 +273,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects dir1 from files list
-    And user of browser sees that metadata submenu for directory "dir1" in files list has appeared
+    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
     And user of browser selects dir1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
