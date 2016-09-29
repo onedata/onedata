@@ -14,6 +14,7 @@ from tests.gui.steps.oneprovider_spaces import *
 from tests.gui.steps.oneprovider_shares import *
 from tests.gui.steps.modal import *
 from tests.gui.steps.oneprovider_file_list import *
+from tests.gui.steps.oneprovider_sidebar_list import *
 
 import pytest
 from pytest_bdd import scenarios, scenario
