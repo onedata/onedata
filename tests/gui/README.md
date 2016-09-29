@@ -62,6 +62,7 @@ Required Python packages to install (e.g. using ``pip install``):
 * pytest_bdd
 * git+git://github.com/bwalkowi/pytest-selenium-multi
 * pytest_xvfb
+* pyperclip
 
 A browser selected for tests (with ``--driver``) should be also installed.
 
