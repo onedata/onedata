@@ -182,7 +182,9 @@ def close_notifies(selenium, browser_id):
     notify = driver.find_elements_by_css_selector('.ember-notify '
                                                   'a.close-button, '
                                                   '.ember-notify '
-                                                  '.message')[:2]
+                                                  '.message')
+    notify = notify[:2] if notify else None
+
     while notify:
         cls_btn, msg = notify
         msg = msg.text
@@ -194,7 +196,8 @@ def close_notifies(selenium, browser_id):
         notify = driver.find_elements_by_css_selector('.ember-notify '
                                                       'a.close-button, '
                                                       '.ember-notify '
-                                                      '.message')[:2]
+                                                      '.message')
+        notify = notify[:2] if notify else None
 
 
 @when(parsers.parse('user of {browser_id} refreshes site'))
