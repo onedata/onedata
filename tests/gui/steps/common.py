@@ -234,6 +234,38 @@ def send_copied_item_to_other_users(item_type, browser_list, tmp_memory):
 # because it involves a knowledge about internals...
 
 
-@when(parsers.re(r'user changes application path to (?P<path>.+)'))
-def on_ember_path(selenium, path):
-    selenium.get(parse_url(selenium.current_url).group('base_url') + '/#' + path)
+@when(parsers.re(r'user of (?P<browser_id>.*?) changes '
+                 r'application path to plain (?P<path>.+)'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) changes '
+                 r'application path to plain (?P<path>.+)'))
+def on_ember_path(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    driver.get(parse_url(driver.current_url).group('base_url') + '/#' + path)
+
+
+@when(parsers.re(r'user of (?P<browser_id>.*?) changes application path to '
+                 r'(?P<path>.+?) concatenated with copied item'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) changes application path to '
+                 r'(?P<path>.+?) concatenated with copied item'))
+def change_app_path_with_copied_item(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    base_url = parse_url(driver.current_url).group('base_url')
+    url = '{base_url}/#/{path}/{item}'.format(base_url=base_url,
+                                              path=path,
+                                              item=pyperclip.paste())
+    driver.get(url)
+
+
+@when(parsers.re(r'user of (?P<browser_id>.*?) changes application path to '
+                 r'(?P<path>.+?) concatenated with received (?P<item>.*)'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) changes application path to '
+                 r'(?P<path>.+?) concatenated with received (?P<item>.*)'))
+def change_app_path_with_recv_item(selenium, browser_id, path,
+                                   tmp_memory, item):
+    driver = select_browser(selenium, browser_id)
+    base_url = parse_url(driver.current_url).group('base_url')
+    item = tmp_memory[browser_id]['mailbox'][item]
+    url = '{base_url}/#/{path}/{item}'.format(base_url=base_url,
+                                              path=path,
+                                              item=item)
+    driver.get(url)

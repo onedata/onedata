@@ -6,6 +6,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+import re
 import pyperclip
 
 from tests.utils.acceptance_utils import list_parser
@@ -143,16 +144,3 @@ def wait_for_op_session_to_start(selenium, browser_id_list):
 def cp_part_of_url(selenium, browser_id, item):
     driver = select_browser(selenium, browser_id)
     pyperclip.copy(parse_url(driver.current_url).group(item))
-
-
-@when(parsers.parse('user of {browser_id} opens url created by replacing '
-                    '{curr_item} in current url by received {recv_item}'))
-@then(parsers.parse('user of {browser_id} opens url created by replacing '
-                    '{curr_item} in current url by received {recv_item}'))
-def open_url_with_replaced_item(selenium, browser_id, curr_item,
-                                tmp_memory, recv_item):
-    driver = select_browser(selenium, browser_id)
-    url = driver.current_url
-    url = url.replace(parse_url(url).group(curr_item),
-                      tmp_memory[browser_id]['mailbox'][recv_item])
-    driver.get(url)

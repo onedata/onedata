@@ -175,3 +175,26 @@ Feature: Oneprovider Group functionality
     And user of browser presses enter on keyboard
     And user of browser sees that modal has disappeared
     And user of browser sees that group1 has appeared on groups sidebar list
+
+  Scenario: User fails to view group, to which he does not belong to, using it's id
+    # group 'group1' defined in env.json
+    When user of browser selects group1 from groups sidebar list
+    And user of browser copies id visible in url
+    And user of browser clicks on settings icon displayed for group1 item on the groups sidebar list
+    And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named group1
+    And user of browser sees that "Leave the group" modal has appeared
+    And user of browser clicks "YES" confirmation button in displayed modal
+    And user of browser sees that modal has disappeared
+    And user of browser sees an info notify with text matching to: .*group1.*left
+    And user of browser sees that group1 has disappeared from groups sidebar list
+    And user of browser changes application path to onedata/groups concatenated with copied item
+    Then user of browser sees an error notify with text matching to: Cannot load requested resource: undefined
+    And user of browser does not see group1 in groups sidebar list
+    # TODO rm code below after REST API become available
+    And user of browser clicks on the "Create" button in sidebar list's header
+    And user of browser sees that "Create a new group" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "group1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that modal has disappeared
+    And user of browser sees that group1 has appeared on groups sidebar list
