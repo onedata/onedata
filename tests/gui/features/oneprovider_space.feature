@@ -118,10 +118,8 @@ Feature: Oneprovider space functionality
   Scenario: Switching between spaces
     When user of browser selects space2 from spaces sidebar list
     And user of browser sees that submenu for selected space named space2 has appeared
-    And user of browser sees that url matches https?://[^/]*/#/onedata/spaces/space2/.*
     And user of browser selects space1 from spaces sidebar list
-    And user of browser sees that submenu for selected space named space1 has appeared
-    Then user of browser sees that url matches https?://[^/]*/#/onedata/spaces/space1/.*
+    Then user of browser sees that submenu for selected space named space1 has appeared
 
   # 'space1' and 'space2' defined in env.json
   Scenario: Set given space as home and than set previous space as home

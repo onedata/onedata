@@ -180,9 +180,15 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
 def close_notifies(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     notifies = driver.find_elements_by_css_selector('.ember-notify '
-                                                    'a.close-button')
-    for notify in notifies:
-        notify.click()
+                                                    'a.close-button, '
+                                                    '.ember-notify '
+                                                    '.message')
+    for cls_btn, msg in zip(notifies[::2], notifies[1::2]):
+        cls_btn.click()
+        Wait(driver, WAIT_BACKEND).until(
+            staleness_of(cls_btn),
+            message='waiting for notify "{:s}" to disappear'.format(msg)
+        )
 
 
 @when(parsers.parse('user of {browser_id} refreshes site'))
