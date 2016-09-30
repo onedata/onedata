@@ -12,7 +12,7 @@ Feature: Oneprovider Share view
     And user of browser1 seen that Oneprovider session has started
 
 
-  Scenario: User veiws and downloads files from public share
+  Scenario: User views and downloads files from public share
     When user of browser1 uses spaces select to change data space to "space1"
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
     And user of browser1 sees that "New directory" modal has appeared

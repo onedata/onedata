@@ -176,7 +176,7 @@ Feature: Oneprovider Group functionality
     And user of browser sees that modal has disappeared
     And user of browser sees that group1 has appeared on groups sidebar list
 
-  Scenario: User fails to view group, to which he does not belong to, using it's id
+  Scenario: User fails to view group after leaving it
     # group 'group1' defined in env.json
     When user of browser selects group1 from groups sidebar list
     And user of browser copies id visible in url
