@@ -73,3 +73,13 @@ Feature: Oneprovider Group functionality using multiple browsers
     And user of browser2 sees that modal has disappeared
     And user of browser2 sees an info notify with text matching to: .*group1.*left
     And user of browser2 sees that group1 has disappeared from groups sidebar list
+
+  Scenario: User fails to view group, to which he does not belong to, using it's id
+    # groups 'group1' and 'group2' defined in env.json
+    When user of browser1 selects group1 from groups sidebar list
+    And user of browser1 copies id visible in url
+    And user of browser1 sends copied group-id to user of browser2
+    And user of browser2 selects group2 from groups sidebar list
+    And user of browser2 opens url created by replacing id in current url by received group-id
+    Then user of browser2 sees an error notify with text matching to: Cannot load requested resource: undefined
+    And user of browser2 does not see group1 in groups sidebar list

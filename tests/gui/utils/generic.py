@@ -16,16 +16,17 @@ from selenium.common.exceptions import TimeoutException
 from inspect import selector
 
 
-# RE_URL regexp is matched as shown below
+# RE_URL regexp is matched as shown below:
 #
 # https://172.18.0.8/#/onedata/data/small_space/g2gDZAAEZ3VpZG0AAAAkZzJnQ
-# \       \        /   \     / \  /                                    /
-#  \        domain      \   /   tab                                   /
+# \       \        /   \     / \  / \         /                        /
+#  \        domain      \   /   tab  \___id__/                        /
 #   \            /      access                                       /
 #    \_base_url_/         \_________________method__________________/
 
 RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))'
-                    r'(/#)?(?P<method>/(?P<access>[^/]*)/(?P<tab>[^/]*)(/.*)?)')
+                    r'(/#)?(?P<method>/(?P<access>[^/]*)/(?P<tab>[^/]*)'
+                    r'(/(?P<id>[^/]*).*)?)')
 
 
 def parse_url(url):
