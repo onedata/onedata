@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc9
+
+* VFS-2617 Changed metadata submenu to metadata panel
+
+
 ### 3.0.0-rc8
 
 * Releasing new version 3.0.0-rc8
