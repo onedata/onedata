@@ -24,27 +24,23 @@ type_to_icon = {'shared-directory': 'oneicon-folder-share',
                 'file': 'oneicon-file'}
 
 
-def _unpack_content_into_rows(items):
+def _pack_content_into_rows(items):
     items_num = len(items)
     index = 0
     while index < items_num:
-        # keep index of possible metadata node
-        if index + 6 < items_num:
-            if 'metadata' in items[index + 6].get_attribute('class'):
-                yield (items[index], items[index + 2], items[index + 1],
-                       items[index + 3], items[index + 4], items[index + 5],
-                       items[index + 6])
-                index += 7
-            else:
-                yield (items[index], items[index + 2], items[index + 1],
-                       items[index + 3], items[index + 4], items[index + 5],
-                       None)
-                index += 6
+        row, label, icon, tools, size, mod = (items[index], items[index+2],
+                                              items[index+1], items[index+3],
+                                              items[index+4], items[index+5])
+        meta_index = index + 6
+        while meta_index < items_num and items[meta_index].tag_name == 'tr':
+            meta_index += 1
+        if meta_index - index > 7:
+            meta = items[index + 6]
+            index = meta_index - 1 if meta_index < items_num else items_num
         else:
-            yield (items[index], items[index + 2], items[index + 1],
-                   items[index + 3], items[index + 4], items[index + 5],
-                   None)
+            meta = None
             index += 6
+        yield (row, label, icon, tools, size, mod, meta)
 
 
 def _get_items_from_file_list(driver):
@@ -60,15 +56,12 @@ def _get_items_from_file_list(driver):
                                                  'td.file-list-col-file '
                                                  '.file-row-tools, '
                                                  'table.files-table '
-                                                 'td.file-list-col-size,'
+                                                 'td.file-list-col-size, '
                                                  'table.files-table '
-                                                 'td.file-list-col-modification, '
-                                                 'table.files-table '
-                                                 'tr td .metadata-panel')
-
+                                                 'td.file-list-col-modification')
     return {label.text: (row, label, icon, tools, size, modification, meta)
             for row, label, icon, tools, size, modification, meta
-            in _unpack_content_into_rows(items)}
+            in _pack_content_into_rows(items)}
 
 
 def _not_in_file_list(driver, items, items_type, file_list=None):
