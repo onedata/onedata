@@ -6,6 +6,7 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import multi_file_steps
 from tests.utils.utils import get_function_name, handle_exception
 from tests.utils.acceptance_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, md5sum, write, read,
@@ -46,6 +47,7 @@ def write_rand_text(user_name, megabytes, file, client_node, context):
     file_path = client.absolute_path(file)
     try:
         dd(client, megabytes, 1, file_path, user=user_name, output=True)
+        multi_file_steps.check_size(user_name, file, int(megabytes) * 1024 * 1024, client_node, context)
         context.md5 = md5sum(client, file_path)
         user.mark_last_operation_succeeded()
     except Exception as e:
@@ -165,7 +167,7 @@ def replace(user, text1, text2, file, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     file_path = client.absolute_path(file)
-    ret = replace_pattern(client, file_path, text1, text2, user)
+    ret = replace_pattern(client, file_path, text1, text2, user.name)
     if ret == 0:
         user.mark_last_operation_succeeded()
     else:
