@@ -128,25 +128,23 @@ def is_not_present_in_sidebar_list(selenium, browser_id, item_list, item_type):
 
 
 # TODO remove refresh after gui will become more responsive
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<items>.*?) '
                  r'(has|have) appeared on (?P<item_type>.*?) sidebar list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<items>.*?) '
                  r'(has|have) appeared on (?P<item_type>.*?) sidebar list'))
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_list>.*?) '
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<items>.*?) '
                  r'in (?P<item_type>.*?) sidebar list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_list>.*?) '
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<items>.*?) '
                  r'in (?P<item_type>.*?) sidebar list'))
-def is_present_in_sidebar_list(selenium, browser_id, item_list,
+def is_present_in_sidebar_list(selenium, browser_id, items,
                                item_type, tmp_memory):
     driver = select_browser(selenium, browser_id)
+    items = tmp_memory[browser_id]['gen_str'] if items == 'new item' else items
     Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda d: refresh_and_call(d, lambda _, n, t: not _not_in_sidebar_list(d, n, t),
-                                   tmp_memory[browser_id]['gen_str']
-                                   if item_list == 'new item'
-                                   else item_list,
-                                   item_type),
+                                   items, item_type),
         message='searching for presence of {item} '
-                'on {list} list'.format(item=item_list,
+                'on {list} list'.format(item=items,
                                         list=item_type)
     )
 

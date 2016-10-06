@@ -39,6 +39,7 @@ def create_instances_of_webdriver(selenium, driver,
                                       'spaces': {},
                                       'groups': {},
                                       'mailbox': {},
+                                      'oz': {},
                                       'window': {'modal': None}}
 
 
@@ -94,6 +95,17 @@ def type_item_into_active_element(selenium, browser_id, item_type,
     Wait(driver, WAIT_FRONTEND).until(
         lambda s: enter_text(s.switch_to.active_element, item),
         message='entering {:s} to input box'.format(item)
+    )
+
+
+@when(parsers.parse('user of {browser_id} types recorded alias on keyboard'))
+@then(parsers.parse('user of {browser_id} types recorded alias on keyboard'))
+def type_alias_into_active_element(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    alias = tmp_memory[browser_id]['user_alias']
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda s: enter_text(s.switch_to.active_element, alias),
+        message='entering {:s} to input box'.format(alias)
     )
 
 
