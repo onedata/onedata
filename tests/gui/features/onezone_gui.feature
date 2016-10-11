@@ -40,7 +40,7 @@ Feature: Onezone GUI elements
 #    And user of browser sees that the user alias is as recorded one
 #
 #
-#  Scenario: User sees that his alias remains unchanged after resigning from renaming it
+#  Scenario: User sees that his alias remains unchanged after resigning from renaming it (clicks CANCEL button after entering alias)
 #    When user of browser expands the "USER ALIAS" Onezone sidebar panel
 #    And user of browser records his current alias
 #    And user of browser clicks on the user alias in expanded "USER ALIAS" panel
@@ -82,16 +82,33 @@ Feature: Onezone GUI elements
 #    # TODO remove after integrate with swagger
 #    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" panel
 #    And user of browser sees exactly 0 items on tokens list in expanded "ACCESS TOKENS" panel
-
-
-
-  Scenario: User successfully creates space
-    Given user of browser generates valid name string
-    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser clicks on "Create new access token" button in expanded "DATA SPACE MANAGEMENT" panel
-
-    And user of browser clicks on the input box in "Data space management" sidebar panel
-
-    And user of browser types given name on keyboard
-    And user of browser presses enter on keyboard
-    Then user of browser sees that new item has appeared on space list in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#
+#
+#  Scenario: User successfully creates space (presses ENTER after entering text)
+#    Given user of browser generates valid name string
+#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+#    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" panel
+#    And user of browser clicks on input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser types given name on keyboard
+#    And user of browser presses enter on keyboard
+#    Then user of browser sees that new item has appeared on space list in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#
+#
+#  Scenario: User successfully creates space (clicks on CONFIRM button after entering text)
+#    Given user of browser generates valid name string
+#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+#    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" panel
+#    And user of browser clicks on input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser types given name on keyboard
+#    And user of browser clicks on confirm button for input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    Then user of browser sees that new item has appeared on space list in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#
+#
+#  Scenario: User sees that no space has been created after resigning from creating it (clicks CANCEL button after entering space name)
+#    Given user of browser generates valid name string
+#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+#    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" panel
+#    And user of browser clicks on input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser types given name on keyboard
+#    And user of browser clicks on cancel button for input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    Then user of browser does not see new item on space list in expanded "DATA SPACE MANAGEMENT" Onezone panel

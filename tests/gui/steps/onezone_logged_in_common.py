@@ -12,6 +12,7 @@ from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
 from tests.utils.acceptance_utils import list_parser
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
+from selenium.webdriver.common.keys import Keys
 
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
@@ -22,6 +23,9 @@ panel_to_css = {'access tokens': '#collapse-tokens',
                 'data space management': '#collapse-spaces',
                 'user alias': '#collapse-alias',
                 'authentication settings': '#collapse-accounts'}
+
+
+icon_to_css = {'create space': 'oneicon-space-add'}
 
 
 def _uncollapse_oz_panel(driver, name):
@@ -47,6 +51,19 @@ def _uncollapse_oz_panel(driver, name):
     return group
 
 
+def _get_clicked_heading_components(driver, panel, icon):
+    items = driver.find_elements_by_css_selector('{panel} a.clickable, '
+                                                 '{panel} a.clickable > '
+                                                 '.secondary-icon > .{icon}'
+                                                 ''.format(panel=panel,
+                                                           icon=icon))
+    header = None
+    for item in items:
+        if icon in item.get_attribute('class'):
+            return header
+        header = item
+
+
 @given(parsers.re('users? of (?P<browser_id_list>.*) expanded the '
                   '"(?P<name>.*)" Onezone sidebar panel'))
 def g_uncollapse_oz_panel(selenium, browser_id_list, name):
@@ -66,9 +83,9 @@ def wt_uncollapse_oz_panel(selenium, browser_id_list, name):
 
 
 @when(parsers.parse('user of {browser_id} clicks on "{btn_name}" button '
-                    'in uncollapsed "{panel_name}" panel'))
+                    'in expanded "{panel_name}" panel'))
 @then(parsers.parse('user of {browser_id} clicks on "{btn_name}" button '
-                    'in uncollapsed "{panel_name}" panel'))
+                    'in expanded "{panel_name}" panel'))
 def click_on_btn_in_panel(selenium, browser_id, btn_name, panel_name):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css[panel_name.lower()]
@@ -83,41 +100,45 @@ def click_on_btn_in_panel(selenium, browser_id, btn_name, panel_name):
         raise ValueError('no button named "{}" found'.format(btn_name))
 
 
-
-
-
-# item_name is optional, possible calls:
-# e.g 'user of browser clicks on "Create new space" button in "Data space management" sidebar panel'
-# or 'user of browser clicks on input box in "Data space management" sidebar panel'
-# @when(parsers.re('users? of (?P<browser_id_list>.*?) clicks? on the '
-#                  '("(?P<item_name>.*?)" )?(?P<item_type>.*?) '
-#                  'in "(?P<panel_name>.*?)" sidebar panel'))
-# def click_on_item_in_uncollapsed_oz_panel(selenium, browser_id_list,
-#                                           item_name, item_type,
-#                                           panel_name):
-#     for browser_id in list_parser(browser_id_list):
-#         driver = select_browser(selenium, browser_id)
-#         _click_on_item_in_uncollapsed_oz_panel(driver, item_name,
-#                                                item_type, panel_name)
-
-
-@then(parsers.parse('user of {browser_id} should see that the new space '
-                    'has appeared on the '
-                    'spaces list in "{panel_name}" sidebar panel'))
-def check_spaces_names_headers_whether_new_space_appeared(selenium,
-                                                          browser_id,
-                                                          name_string):
-
-    def header_with_text_presence(s):
-        headers = s.find_elements_by_css_selector('#collapse-spaces '
-                                                  '.secondary-header')
-        return sum(1 for h in headers if h.text == name_string) == 1
-
+@when(parsers.parse('user of {browser_id} clicks on input box next to '
+                    '{icon} icon in expanded "{panel}" Onezone panel'))
+@then(parsers.parse('user of {browser_id} clicks on input box next to '
+                    '{icon} icon in expanded "{panel}" Onezone panel'))
+def activate_input_next_to_icon(selenium, browser_id, icon, panel):
     driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_BACKEND).until(
-        header_with_text_presence,
-        message='waiting for space {:s} to appear on list'.format(name_string)
-    )
+    header = _get_clicked_heading_components(driver,
+                                             panel_to_css[panel.lower()],
+                                             icon_to_css[icon.lower()])
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda _: header.find_element_by_css_selector('input'),
+        message='waiting for input box next to {} icon to appear'.format(icon)
+    ).send_keys(Keys.NULL)
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) clicks on '
+                 '(?P<btn_type>confirm|cancel) button for '
+                 'input box next to (?P<icon>.+?) icon '
+                 'in expanded "(?P<panel>.+?)" Onezone panel'))
+@then(parsers.re('user of (?P<browser_id>.+?) clicks on '
+                 '(?P<btn_type>confirm|cancel) button for '
+                 'input box next to (?P<icon>.+?) icon '
+                 'in expanded "(?P<panel>.+?)" Onezone panel'))
+def click_on_btn_for_in_box_next_to_icon(selenium, browser_id, btn_type,
+                                         icon, panel):
+    driver = select_browser(selenium, browser_id)
+    header = _get_clicked_heading_components(driver,
+                                             panel_to_css[panel.lower()],
+                                             icon_to_css[icon.lower()])
+    header.find_element_by_css_selector('.oneicon-checkbox-{}'
+                                        ''.format('check'
+                                                  if btn_type == 'confirm'
+                                                  else 'x')).click()
+
+
+
+
+
+
 
 
 def _click_on_provider(driver, browser_id, name, tmp_memory):
