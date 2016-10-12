@@ -47,9 +47,9 @@ def wait_for_modal_to_appear(selenium, browser_id, modal_name, tmp_memory):
 
 
 @when(parsers.parse('user of {browser_id} sees that '
-                    'modal has disappeared'))
+                    'the modal has disappeared'))
 @then(parsers.parse('user of {browser_id} sees that '
-                    'modal has disappeared'))
+                    'the modal has disappeared'))
 def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
     driver = select_browser(selenium, browser_id)
     modal = tmp_memory[browser_id]['window']['modal']

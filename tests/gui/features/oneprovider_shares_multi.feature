@@ -19,7 +19,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir1" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir1 from files list
@@ -32,7 +32,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir2" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir2 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir2 from files list
@@ -50,17 +50,17 @@ Feature: Oneprovider Share view
     And user of browser1 types "share1" on keyboard
     And user of browser1 presses enter on keyboard
     And user of browser1 sees an info notify with text matching to: Share created sucessfully
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
     And user of browser1 sends copied url to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that public share is named share1
+    And user of browser2 sees that public share is named "share1"
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
     And user of browser2 double clicks on directory dir1 from files list
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1
@@ -75,7 +75,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that "Remove files" modal has appeared
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 shared-directory has disappeared from file list
 
 
@@ -86,7 +86,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir1" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir1 from files list
@@ -99,7 +99,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir2" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir2 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir2 from files list
@@ -117,7 +117,7 @@ Feature: Oneprovider Share view
     And user of browser1 types "share1" on keyboard
     And user of browser1 presses enter on keyboard
     And user of browser1 sees an info notify with text matching to: Share created sucessfully
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
@@ -128,23 +128,23 @@ Feature: Oneprovider Share view
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that public share is named share1
+    And user of browser2 sees that public share is named "share1"
 
-    And user of browser1 selects share1 from shares sidebar list
-    And user of browser1 sees that selected share is named share1
+    And user of browser1 selects "share1" from shares sidebar list
+    And user of browser1 sees that selected share is named "share1"
     And user of browser1 sees that absolute share path visible in share's info header is as follows: space1/dir1
 
     And user of browser1 clicks on settings icon displayed for share1 item on the shares sidebar list
-    And user of browser1 clicks on the "RENAME" item in settings dropdown for share named share1
+    And user of browser1 clicks on the "RENAME" item in settings dropdown for share named "share1"
     And user of browser1 sees that "Rename share" modal has appeared
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "helloworld" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that "share1" has been renamed to "helloworld"
 
     And user of browser2 refreshes site
-    And user of browser2 sees that public share is named helloworld
+    And user of browser2 sees that public share is named "helloworld"
 
     # TODO rm after integrating with swagger
     Then user of browser1 clicks on the "data" tab in main menu sidebar
@@ -155,7 +155,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that "Remove files" modal has appeared
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 shared-directory has disappeared from file list
 
 
@@ -166,7 +166,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir1" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir1 from files list
@@ -179,7 +179,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir2" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir2 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir2 from files list
@@ -197,7 +197,7 @@ Feature: Oneprovider Share view
     And user of browser1 types "share1" on keyboard
     And user of browser1 presses enter on keyboard
     And user of browser1 sees an info notify with text matching to: Share created sucessfully
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
@@ -208,17 +208,17 @@ Feature: Oneprovider Share view
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that public share is named share1
+    And user of browser2 sees that public share is named "share1"
 
-    And user of browser1 selects share1 from shares sidebar list
-    And user of browser1 sees that selected share is named share1
+    And user of browser1 selects "share1" from shares sidebar list
+    And user of browser1 sees that selected share is named "share1"
     And user of browser1 sees that absolute share path visible in share's info header is as follows: space1/dir1
 
     And user of browser1 clicks on settings icon displayed for share1 item on the shares sidebar list
-    And user of browser1 clicks on the "REMOVE" item in settings dropdown for share named share1
+    And user of browser1 clicks on the "REMOVE" item in settings dropdown for share named "share1"
     And user of browser1 sees that "Remove share" modal has appeared
     And user of browser1 clicks "Yes" confirmation button in displayed modal
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that share named "share1" has disappeared from the shares list
 
     And user of browser2 refreshes site
@@ -233,7 +233,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that "Remove files" modal has appeared
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 shared-directory has disappeared from file list
 
 
@@ -244,7 +244,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir1" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir1 from files list
@@ -253,7 +253,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir2" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir2 directory has appeared in file list
 
     And user of browser1 uses spaces select to change data space to "Small space"
@@ -266,17 +266,17 @@ Feature: Oneprovider Share view
     And user of browser1 types "share1" on keyboard
     And user of browser1 presses enter on keyboard
     And user of browser1 sees an info notify with text matching to: Share created sucessfully
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
     And user of browser1 sends copied url to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that public share is named share1
+    And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
     And user of browser2 double clicks on directory dir1 from files list
@@ -289,7 +289,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "file2" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that file2 file has appeared in file list
 
     And user of browser2 refreshes site
@@ -307,7 +307,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that "Remove files" modal has appeared
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 shared-directory has disappeared from file list
 
 
@@ -318,7 +318,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir1" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir1 from files list
@@ -331,7 +331,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir2" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir2 directory has appeared in file list
 
     And user of browser1 uses spaces select to change data space to "Small space"
@@ -344,17 +344,17 @@ Feature: Oneprovider Share view
     And user of browser1 types "share1" on keyboard
     And user of browser1 presses enter on keyboard
     And user of browser1 sees an info notify with text matching to: Share created sucessfully
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
     And user of browser1 sends copied url to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that public share is named share1
+    And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
     And user of browser2 double clicks on directory dir1 from files list
@@ -367,7 +367,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that "Remove files" modal has appeared
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that 20B-0.txt file has disappeared from file list
 
     And user of browser2 refreshes site
@@ -385,7 +385,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that "Remove files" modal has appeared
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 shared-directory has disappeared from file list
 
 
@@ -396,7 +396,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir1" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir1 from files list
@@ -409,7 +409,7 @@ Feature: Oneprovider Share view
     And user of browser1 clicks on input box in active modal
     And user of browser1 types "dir2" on keyboard
     And user of browser1 presses enter on keyboard
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir2 directory has appeared in file list
 
     And user of browser1 double clicks on directory dir2 from files list
@@ -427,17 +427,17 @@ Feature: Oneprovider Share view
     And user of browser1 types "share1" on keyboard
     And user of browser1 presses enter on keyboard
     And user of browser1 sees an info notify with text matching to: Share created sucessfully
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
     And user of browser1 sends copied url to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
 
     And user of browser2 opens received url
     And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
-    And user of browser2 sees that public share is named share1
+    And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
     And user of browser2 double clicks on directory dir1 from files list
@@ -456,5 +456,5 @@ Feature: Oneprovider Share view
     And user of browser1 sees that "Remove files" modal has appeared
     And user of browser1 clicks "OK" confirmation button in displayed modal
     And user of browser1 sees an success notify with text matching to: .*removed.*
-    And user of browser1 sees that modal has disappeared
+    And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that dir1 shared-directory has disappeared from file list

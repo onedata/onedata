@@ -13,7 +13,7 @@ from pytest_selenium_multi.pytest_selenium_multi import select_browser
 from tests.gui.conftest import WAIT_FRONTEND
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
-from tests.utils.acceptance_utils import list_parser
+from tests.gui.utils.generic import parse_seq
 
 
 tool_type_to_icon = {'share': 'oneicon-share'}
@@ -70,7 +70,7 @@ def _get_items_from_file_list(driver):
 def _not_in_file_list(driver, items, items_type, file_list=None):
     file_list = file_list if file_list else _get_items_from_file_list(driver)
     icon = type_to_icon[items_type]
-    for item_name in list_parser(items):
+    for item_name in parse_seq(items):
         item = file_list.get(item_name)
         if item and icon in item[2].get_attribute('class'):
                 return False
@@ -88,7 +88,7 @@ def _double_click_on_item(driver, item_name, item_type, items=None):
 
 def _select_items_from_file_list(driver, item_list, all_items=None):
     all_items = all_items if all_items else _get_items_from_file_list(driver)
-    for item_name in list_parser(item_list):
+    for item_name in parse_seq(item_list):
         item = all_items.get(item_name)
         if item and 'active' not in item[0].get_attribute('class'):
                 item[1].click()
@@ -96,7 +96,7 @@ def _select_items_from_file_list(driver, item_list, all_items=None):
 
 def _deselect_items_from_file_list(driver, item_list, all_items=None):
     all_items = all_items if all_items else _get_items_from_file_list(driver)
-    for item_name in list_parser(item_list):
+    for item_name in parse_seq(item_list):
         item = all_items.get(item_name)
         if item and 'active' in item[0].get_attribute('class'):
                 item[1].click()

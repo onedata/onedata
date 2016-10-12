@@ -38,6 +38,10 @@ def go_to_relative_url(selenium, relative_url):
     selenium.get(new_url)
 
 
+def parse_seq(seq):
+    return [el.strip().strip('"') for el in seq.strip("[]").split(',') if el != ""]
+
+
 # A draft - not tested yet, but can be helpful in the future
 def change_implicit_wait(driver, fun, wait_time):
     """This will invoke fun(driver), chaining implicitly_wait for time of execution

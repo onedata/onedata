@@ -7,7 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from tests.utils.acceptance_utils import list_parser
+from tests.gui.utils.generic import parse_seq
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from tests.gui.utils.generic import refresh_and_call
 
@@ -30,7 +30,7 @@ def _select_items_from_sidebar_list(driver, browser_id, tmp_memory,
                                     items_names, items_type, items=None):
     items = items if items else _get_items_from_sidebar_list(driver,
                                                              items_type)
-    for item_name in list_parser(items_names):
+    for item_name in parse_seq(items_names):
         item = items.get(item_name)
         if item and 'active' not in item.get_attribute('class'):
             item.click()
@@ -40,16 +40,16 @@ def _select_items_from_sidebar_list(driver, browser_id, tmp_memory,
 def _not_in_sidebar_list(driver, items_names, items_type, items=None):
     items = items if items else _get_items_from_sidebar_list(driver,
                                                              items_type)
-    for item_name in list_parser(items_names):
+    for item_name in parse_seq(items_names):
         item = items.get(item_name)
         if item:
             return False
     return True
 
 
-@when(parsers.parse('user of {browser_id} selects {item_name} '
+@when(parsers.parse('user of {browser_id} selects "{item_name}" '
                     'from {item_type} sidebar list'))
-@then(parsers.parse('user of {browser_id} selects {item_name} '
+@then(parsers.parse('user of {browser_id} selects "{item_name}" '
                     'from {item_type} sidebar list'))
 def select_item_from_sidebar_list(selenium, browser_id, item_name,
                                   item_type, tmp_memory):
@@ -59,9 +59,9 @@ def select_item_from_sidebar_list(selenium, browser_id, item_name,
 
 
 @when(parsers.parse('user of {browser_id} clicks on settings icon displayed '
-                    'for {item_name} item on the {item_type} sidebar list'))
+                    'for "{item_name}" item on the {item_type} sidebar list'))
 @then(parsers.parse('user of {browser_id} clicks on settings icon displayed '
-                    'for {item_name} item on the {item_type} sidebar list'))
+                    'for "{item_name}" item on the {item_type} sidebar list'))
 def click_settings_icon_for_item(selenium, browser_id, item_name, item_type):
     driver = select_browser(selenium, browser_id)
     items = _get_items_from_sidebar_list(driver, item_type)
@@ -83,9 +83,9 @@ def click_settings_icon_for_item(selenium, browser_id, item_name, item_type):
 
 
 @when(parsers.parse('user of {browser_id} clicks on the "{option_name}" item '
-                    'in settings dropdown for {item_type} named {item_name}'))
+                    'in settings dropdown for {item_type} named "{item_name}"'))
 @then(parsers.parse('user of {browser_id} clicks on the "{option_name}" item '
-                    'in settings dropdown for {item_type} named {item_name}'))
+                    'in settings dropdown for {item_type} named "{item_name}"'))
 def click_on_item_in_settings_dropdown(selenium, browser_id, option_name,
                                        item_name, item_type):
     driver = select_browser(selenium, browser_id)
@@ -142,7 +142,7 @@ def is_present_in_sidebar_list(selenium, browser_id, item_list,
     Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda d: refresh_and_call(d, lambda _, n, t: not _not_in_sidebar_list(d, n, t),
                                    tmp_memory[browser_id]['gen_str']
-                                   if item_list == 'new item'
+                                   if item_list == 'a new item'
                                    else item_list,
                                    item_type),
         message='searching for presence of {item} '
@@ -168,10 +168,10 @@ def click_on_button_in_sidebar_header(selenium, browser_id, btn_name):
         raise ValueError('no button named {:s} found'.format(btn_name))
 
 
-@when(parsers.parse('user of {browser_id} sees that submenu for selected '
-                    '{item_type} named {item_name} has appeared'))
-@then(parsers.parse('user of {browser_id} sees that submenu for selected '
-                    '{item_type} named {item_name} has appeared'))
+@when(parsers.parse('user of {browser_id} sees that submenu for '
+                    '{item_type} named "{item_name}" has appeared'))
+@then(parsers.parse('user of {browser_id} sees that submenu for '
+                    '{item_type} named "{item_name}" has appeared'))
 def has_submenu_appeared(browser_id, item_type, item_name, tmp_memory):
     item = tmp_memory[browser_id]['{}s'.format(item_type)][item_name]
     assert item.find_element_by_css_selector('ul.submenu')

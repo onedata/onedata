@@ -17,7 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
-from tests.utils.acceptance_utils import list_parser
+from tests.gui.utils.generic import parse_seq
 from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
@@ -30,7 +30,7 @@ from pytest_selenium_multi.pytest_selenium_multi import select_browser
 def create_instances_of_webdriver(selenium, driver,
                                   config_driver, browser_id_list,
                                   tmp_memory):
-    for browser_id in list_parser(browser_id_list):
+    for browser_id in parse_seq(browser_id_list):
         if browser_id in selenium:
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
@@ -114,14 +114,14 @@ def press_enter_on_active_element(selenium, browser_id):
 @then(parsers.parse('user of {browser_id} should see {links_names} links'))
 def link_with_text_present(selenium, browser_id, links_names):
     driver = select_browser(selenium, browser_id)
-    for name in list_parser(links_names):
+    for name in parse_seq(links_names):
         assert driver.find_element_by_link_text(name)
 
 
 @given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
                   '"(?P<link_name>.*)" link'))
 def g_click_on_link_with_text(selenium, browser_id_list, link_name):
-    for browser_id in list_parser(browser_id_list):
+    for browser_id in parse_seq(browser_id_list):
         driver = select_browser(selenium, browser_id)
         driver.find_element_by_link_text(link_name).click()
 
@@ -235,7 +235,7 @@ def open_received_url(selenium, browser_id, tmp_memory, base_url):
                  'to users? of (?P<browser_list>.*)'))
 def send_copied_item_to_other_users(item_type, browser_list, tmp_memory):
     item = pyperclip.paste()
-    for browser in list_parser(browser_list):
+    for browser in parse_seq(browser_list):
         tmp_memory[browser]['mailbox'][item_type] = item
 
 

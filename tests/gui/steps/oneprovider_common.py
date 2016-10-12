@@ -9,9 +9,9 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import pyperclip
 
-from tests.utils.acceptance_utils import list_parser
+from tests.gui.utils.generic import parse_seq
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
-from tests.gui.utils.generic import refresh_and_call, click_on_element, parse_url
+from tests.gui.utils.generic import refresh_and_call, parse_url
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
@@ -58,7 +58,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, tab):
                   '"(?P<main_menu_tab>.*)" tab in main menu sidebar'))
 def g_click_on_the_given_main_menu_tab(selenium, browser_id_list,
                                        main_menu_tab):
-    for browser_id in list_parser(browser_id_list):
+    for browser_id in parse_seq(browser_id_list):
         driver = select_browser(selenium, browser_id)
         _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
 
@@ -69,7 +69,7 @@ def g_click_on_the_given_main_menu_tab(selenium, browser_id_list,
                  '"(?P<main_menu_tab>.*)" tab in main menu sidebar'))
 def wt_click_on_the_given_main_menu_tab(selenium, browser_id_list,
                                         main_menu_tab):
-    for browser_id in list_parser(browser_id_list):
+    for browser_id in parse_seq(browser_id_list):
         driver = select_browser(selenium, browser_id)
         _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
 
@@ -131,7 +131,7 @@ def wait_for_op_session_to_start(selenium, browser_id_list):
         else:
             return 'onedata' == found.lower()
 
-    for browser_id in list_parser(browser_id_list):
+    for browser_id in parse_seq(browser_id_list):
         driver = select_browser(selenium, browser_id)
         Wait(driver, WAIT_BACKEND).until(
             lambda _: _check_url(),
