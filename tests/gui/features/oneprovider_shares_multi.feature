@@ -134,7 +134,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that selected share is named "share1"
     And user of browser1 sees that absolute share path visible in share's info header is as follows: space1/dir1
 
-    And user of browser1 clicks on settings icon displayed for share1 item on the shares sidebar list
+    And user of browser1 clicks on settings icon displayed for "share1" item on the shares sidebar list
     And user of browser1 clicks on the "RENAME" item in settings dropdown for share named "share1"
     And user of browser1 sees that "Rename share" modal has appeared
     And user of browser1 clicks on input box in active modal
@@ -214,7 +214,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that selected share is named "share1"
     And user of browser1 sees that absolute share path visible in share's info header is as follows: space1/dir1
 
-    And user of browser1 clicks on settings icon displayed for share1 item on the shares sidebar list
+    And user of browser1 clicks on settings icon displayed for "share1" item on the shares sidebar list
     And user of browser1 clicks on the "REMOVE" item in settings dropdown for share named "share1"
     And user of browser1 sees that "Remove share" modal has appeared
     And user of browser1 clicks "Yes" confirmation button in displayed modal
