@@ -19,7 +19,7 @@ from tests.gui.utils.generic import parse_seq
 tool_type_to_icon = {'share': 'oneicon-share'}
 
 
-type_to_icon = {'shared-directory': 'oneicon-folder-share',
+type_to_icon = {'shared directory': 'oneicon-folder-share',
                 'directory': 'oneicon-folder',
                 'file': 'oneicon-file'}
 
@@ -113,14 +113,18 @@ def _click_on_tool_icon_for_file(driver, item_name, item_type,
         raise ValueError('no {} named {} found'.format(item_type, item_name))
 
 
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
-                 r'(?P<item_type>.*?)s? (has|have) disappeared from file list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
-                 r'(?P<item_type>.*?)s? (has|have) disappeared from file list'))
-@when(parsers.re(r'user of (?P<browser_id>.*?) does not see (?P<item_list>.*?) '
-                 r'(as )?(?P<item_type>.*?)s? in file list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) does not see (?P<item_list>.*?) '
-                 r'(as )?(?P<item_type>.*?)s? in file list'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
+                 r'named (?P<item_list>.*?) (has|have) disappeared from file list'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
+                 r'named (?P<item_list>.*?) (has|have) disappeared from file list'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) does not see any '
+                 r'(?P<item_type>.*?)s? named (?P<item_list>.*?) in file list'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) does not see any '
+                 r'(?P<item_type>.*?)s? named (?P<item_list>.*?) in file list'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees that there is no '
+                 r'(?P<item_type>.*?)s? named (?P<item_list>.*?) in file list'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees that there is no '
+                 r'(?P<item_type>.*?)s? named (?P<item_list>.*?) in file list'))
 def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until(
@@ -130,16 +134,17 @@ def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
     )
 
 
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
-                 r'(?P<item_type>.*?)s? (has|have) appeared in file list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_list>.*?) '
-                 r'(?P<item_type>.*?)s? (has|have) appeared in file list'))
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_list>.*?) '
-                 r'(as )?(?P<item_type>.*?)s? in file list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_list>.*?) '
-                 r'(as )?(?P<item_type>.*?)s? in file list'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_type>.*?)s? '
+                 r'named (?P<item_list>.*?) in file list'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_type>.*?)s? '
+                 r'named (?P<item_list>.*?) in file list'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
+                 r'named (?P<item_list>.*?) (has|have) appeared on file list'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
+                 r'named (?P<item_list>.*?) (has|have) appeared on file list'))
 def is_present_in_file_list(selenium, browser_id, item_list, item_type):
     driver = select_browser(selenium, browser_id)
+    item_type = item_type.replace('directorie', 'directory')
     Wait(driver, WAIT_FRONTEND).until_not(
         lambda _: _not_in_file_list(driver, item_list, item_type),
         message='waiting for {:s} item/items '
@@ -148,9 +153,9 @@ def is_present_in_file_list(selenium, browser_id, item_list, item_type):
 
 
 @then(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} {item_name} from files list'))
+                    'on {item_type} named "{item_name}" from files list'))
 @when(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} {item_name} from files list'))
+                    'on {item_type} named "{item_name}" from files list'))
 def double_click_on_item(selenium, browser_id, item_name,
                          item_type):
     driver = select_browser(selenium, browser_id)
@@ -187,9 +192,9 @@ def deselect_all_items_from_file_list(selenium, browser_id):
 
 
 @when(parsers.parse("user of {browser_id} clicks on {tool_type} "
-                    "icon in tools column for {file_name} {file_type}"))
+                    "icon in tools column for {file_type} named {file_name}"))
 @then(parsers.parse("user of {browser_id} clicks on {tool_type} "
-                    "icon in tools column for {file_name} {file_type}"))
+                    "icon in tools column for {file_type} named {file_name}"))
 def click_on_file_icon_tool(selenium, browser_id, tool_type,
                             file_name, file_type):
     driver = select_browser(selenium, browser_id)
