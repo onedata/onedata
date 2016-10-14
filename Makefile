@@ -35,9 +35,6 @@ else
 TEST_RUN := ./test_run.py
 endif
 
-ifdef VERBOSE
-TEST_RUN := $(TEST_RUN) -v
-endif
 
 GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
 GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
@@ -143,22 +140,22 @@ artifact_onepanel:
 ##
 
 test_env_up:
-	${TEST_RUN} --test-type env_up --test-dir tests/env_up
+	${TEST_RUN} --test-type env_up -vvv --test-dir tests/env_up
 
 test_packaging:
-	${TEST_RUN} --test-type packaging --test-dir tests/packaging -s
+	${TEST_RUN} --test-type packaging -vvv --test-dir tests/packaging -s
 
 test:
-	${TEST_RUN} --test-type acceptance --test-dir tests/acceptance/scenarios/${suite}
+	${TEST_RUN} --test-type acceptance -vvv --gherkin-terminal-reporter --test-dir tests/acceptance/scenarios/${SUITE}
 
 test_performance:
-	${TEST_RUN} --test-type performance --test-dir tests/performance
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
 test_gui:
-	${TEST_RUN} --test-type gui --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html
 
 test_profiling:
-	${TEST_RUN} --test-type acceptance --test-dir tests/acceptance/profiling
+	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
 
 ##
 ## Clean
