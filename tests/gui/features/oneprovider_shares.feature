@@ -153,7 +153,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
     And user of browser selects "share1" from shares sidebar list
     And user of browser sees that selected share is named "share1"
@@ -242,7 +242,7 @@ Feature: Oneprovider Share view
     And user of browser clicks on share icon in file row for shared directory named "dir1" in file browser
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
     And user of browser selects "share1" from shares sidebar list
     And user of browser sees that selected share is named "share1"
@@ -284,7 +284,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
     And user of browser clicks on the "data" tab in main menu sidebar
     And user of browser uses spaces select to change data space to "space1"
@@ -321,7 +321,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
     And user of browser clicks on the "data" tab in main menu sidebar
     And user of browser uses spaces select to change data space to "space1"
@@ -391,7 +391,7 @@ Feature: Oneprovider Share view
 
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
     And user of browser selects "share1" from shares sidebar list
 
@@ -485,7 +485,7 @@ Feature: Oneprovider Share view
 
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
 
     And user of browser selects "share1" from shares sidebar list
@@ -566,7 +566,7 @@ Feature: Oneprovider Share view
 
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
 
     And user of browser selects "share1" from shares sidebar list
@@ -639,7 +639,7 @@ Feature: Oneprovider Share view
 
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
 
     And user of browser selects "share1" from shares sidebar list
@@ -652,7 +652,7 @@ Feature: Oneprovider Share view
     And user of browser sees directory named "dir3" on files list
 
     And user of browser clicks on space1/dir1 using breadcrumbs from share info header
-    And user of browser sees that url matches https?://[^/]*/#/onedata/data/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/data/.*
     And user of browser sees that current working directory displayed in sidebar list is space1/dir1
 
     # TODO rm after integrating with swagger
@@ -717,7 +717,7 @@ Feature: Oneprovider Share view
 
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
 
     And user of browser selects "share1" from shares sidebar list
     And user of browser sees that current working directory path visible in share's file browser is as follows: share1
@@ -765,7 +765,7 @@ Feature: Oneprovider Share view
 
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
 
     And user of browser selects "share1" from shares sidebar list
@@ -823,7 +823,7 @@ Feature: Oneprovider Share view
 
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Open the share" confirmation button in displayed modal
-    And user of browser sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser sees that URL matches https?://[^/]*/#/onedata/shares/.*
     And user of browser sees that share named "share1" has appeared in the shared list
 
     And user of browser selects "share1" from shares sidebar list

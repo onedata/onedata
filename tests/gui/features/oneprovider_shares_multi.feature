@@ -55,12 +55,12 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
-    And user of browser1 sends copied url to user of browser2
+    And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
 
-    And user of browser2 opens received url
-    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
+    And user of browser2 opens received URL
+    And user of browser2 sees that URL matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
     And user of browser2 double clicks on directory named "dir1" from files list
@@ -123,13 +123,13 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
-    And user of browser1 sends copied url to user of browser2
+    And user of browser1 sends copied URL to user of browser2
     And user of browser1 closes all notifies
     And user of browser1 clicks "Open the share" confirmation button in displayed modal
-    And user of browser1 sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser1 sees that URL matches https?://[^/]*/#/onedata/shares/.*
 
-    And user of browser2 opens received url
-    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
+    And user of browser2 opens received URL
+    And user of browser2 sees that URL matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
 
     And user of browser1 selects "share1" from shares sidebar list
@@ -205,13 +205,13 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
-    And user of browser1 sends copied url to user of browser2
+    And user of browser1 sends copied URL to user of browser2
     And user of browser1 closes all notifies
     And user of browser1 clicks "Open the share" confirmation button in displayed modal
-    And user of browser1 sees that url matches https?://[^/]*/#/onedata/shares/.*
+    And user of browser1 sees that URL matches https?://[^/]*/#/onedata/shares/.*
 
-    And user of browser2 opens received url
-    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
+    And user of browser2 opens received URL
+    And user of browser2 sees that URL matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
 
     And user of browser1 selects "share1" from shares sidebar list
@@ -276,12 +276,12 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
-    And user of browser1 sends copied url to user of browser2
+    And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
 
-    And user of browser2 opens received url
-    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
+    And user of browser2 opens received URL
+    And user of browser2 sees that URL matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
@@ -356,12 +356,12 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
-    And user of browser1 sends copied url to user of browser2
+    And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
 
-    And user of browser2 opens received url
-    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
+    And user of browser2 opens received URL
+    And user of browser2 sees that URL matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
@@ -441,12 +441,12 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
-    And user of browser1 sends copied url to user of browser2
+    And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
 
-    And user of browser2 opens received url
-    And user of browser2 sees that url matches https?://[^/]*/#/public/shares/.*
+    And user of browser2 opens received URL
+    And user of browser2 sees that URL matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1

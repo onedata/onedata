@@ -182,7 +182,7 @@ Feature: Oneprovider Group functionality
   Scenario: User fails to view group after leaving it
     # group 'group1' defined in env.json
     When user of browser selects "group1" from groups sidebar list
-    And user of browser copies id visible in url
+    And user of browser copies a first resource ID from URL
     And user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
     And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "group1"
     And user of browser sees that "Leave the group" modal has appeared
@@ -190,7 +190,7 @@ Feature: Oneprovider Group functionality
     And user of browser sees that the modal has disappeared
     And user of browser sees an info notify with text matching to: .*group1.*left
     And user of browser sees that group1 has disappeared from groups sidebar list
-    And user of browser changes application path to onedata/groups concatenated with copied item
+    And user of browser changes webapp path to /#/onedata/groups concatenated with copied item
     Then user of browser sees an error notify with text matching to: .*?[Cc]annot load requested resource.*?
     And user of browser does not see group1 in groups sidebar list
 

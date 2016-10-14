@@ -139,8 +139,10 @@ def wait_for_op_session_to_start(selenium, browser_id_list):
         )
 
 
-@when(parsers.parse('user of {browser_id} copies {item} visible in url'))
-@then(parsers.parse('user of {browser_id} copies {item} visible in url'))
+@when(parsers.parse('user of {browser_id} copies a first '
+                    'resource {item} from URL'))
+@then(parsers.parse('user of {browser_id} copies a first '
+                    'resource {item} from URL'))
 def cp_part_of_url(selenium, browser_id, item):
     driver = select_browser(selenium, browser_id)
-    pyperclip.copy(parse_url(driver.current_url).group(item))
+    pyperclip.copy(parse_url(driver.current_url).group(item.lower()))
