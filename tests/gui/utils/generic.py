@@ -16,16 +16,17 @@ from selenium.common.exceptions import TimeoutException
 from inspect import selector
 
 
-# RE_URL regexp is matched as shown below
+# RE_URL regexp is matched as shown below:
 #
 # https://172.18.0.8/#/onedata/data/small_space/g2gDZAAEZ3VpZG0AAAAkZzJnQ
-# \       \        /   \     / \  /                                    /
-#  \        domain      \   /   tab                                   /
+# \       \        /   \     / \  / \         /                        /
+#  \        domain      \   /   tab  \___id__/                        /
 #   \            /      access                                       /
 #    \_base_url_/         \_________________method__________________/
 
 RE_URL = re.compile(r'(?P<base_url>https?://(?P<domain>.*?))'
-                    r'(/#)?(?P<method>/(?P<access>[^/]*)/(?P<tab>[^/]*)(/.*)?)')
+                    r'(/#)?(?P<method>/(?P<access>[^/]*)/(?P<tab>[^/]*)'
+                    r'(/(?P<id>[^/]*).*)?)')
 
 
 def parse_url(url):
@@ -35,6 +36,10 @@ def parse_url(url):
 def go_to_relative_url(selenium, relative_url):
     new_url = RE_URL.match(selenium.current_url).group('base_url') + relative_url
     selenium.get(new_url)
+
+
+def parse_seq(seq):
+    return [el.strip().strip('"') for el in seq.strip("[]").split(',') if el != ""]
 
 
 # A draft - not tested yet, but can be helpful in the future
