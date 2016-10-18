@@ -23,7 +23,7 @@ Feature: Oneprovider Data view
     And user of browser uses upload button in toolbar to upload file "20B-1.txt" to current dir
     And user of browser sees that file named "20B-1.txt" has appeared on files list
     And user of browser double clicks on file named "20B-1.txt" from files list
-    Then user of browser sees that content of downloaded file "20B-1.txt" is as: 11111111111111111111
+    Then user of browser sees that content of downloaded file "20B-1.txt" is equal to: "11111111111111111111"
 
 
   Scenario: Uploading a small file to space that accepts large files should succeed

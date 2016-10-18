@@ -68,9 +68,9 @@ def upload_file_to_current_dir(selenium, browser_id, file_name):
 
 
 @when(parsers.parse('user of {browser_id} sees that content of downloaded '
-                    'file "{file_name}" is as: {content}'))
+                    'file "{file_name}" is equal to: "{content}"'))
 @then(parsers.parse('user of {browser_id} sees that content of downloaded '
-                    'file "{file_name}" is as: {content}'))
+                    'file "{file_name}" is equal to: "{content}"'))
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)

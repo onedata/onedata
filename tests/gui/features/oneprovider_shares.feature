@@ -725,7 +725,7 @@ Feature: Oneprovider Share view
     And user of browser sees that current working directory path visible in share's file browser is as follows: share1/dir1
     And user of browser double clicks on file named "20B-0.txt" from files list
 
-    And user of browser sees that content of downloaded file "20B-0.txt" is as: 00000000000000000000
+    And user of browser sees that content of downloaded file "20B-0.txt" is equal to: "00000000000000000000"
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
