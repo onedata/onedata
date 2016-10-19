@@ -4,6 +4,12 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc10
+
+* Releasing new version 3.0.0-rc10
+* VFS-2714 print gherkin-reports in acceptance tests after pytest-bdd update
+
+
 ### 3.0.0-rc9
 
 * VFS-2617 Changed metadata submenu to metadata panel
