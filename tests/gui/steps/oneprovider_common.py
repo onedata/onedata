@@ -120,9 +120,7 @@ def op_check_if_main_content_has_been_reloaded(selenium, browser_id):
     )
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
-                  'Oneprovider session has started'))
-def wait_for_op_session_to_start(selenium, browser_id_list):
+def _wait_for_op_session_to_start(selenium, browser_id_list):
     def _check_url():
         try:
             found = parse_url(driver.current_url).group('access')
@@ -137,6 +135,20 @@ def wait_for_op_session_to_start(selenium, browser_id_list):
             lambda _: _check_url(),
             message='waiting for session to start'
         )
+
+
+@given(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
+                  'Oneprovider session has started'))
+def g_wait_for_op_session_to_start(selenium, browser_id_list):
+    _wait_for_op_session_to_start(selenium, browser_id_list)
+
+
+@when(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
+                 'Oneprovider session has started'))
+@then(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
+                 'Oneprovider session has started'))
+def wt_wait_for_op_session_to_start(selenium, browser_id_list):
+    _wait_for_op_session_to_start(selenium, browser_id_list)
 
 
 @when(parsers.parse('user of {browser_id} copies {item} visible in url'))

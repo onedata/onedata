@@ -7,15 +7,11 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from pytest_bdd import parsers, then
+from pytest_bdd import parsers, given, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-@then(parsers.parse('user of {browser_id} sees that home space icon '
-                    'has appeared next to displayed '
-                    'name of space "{space_name}" in spaces list'))
-def check_if_home_space_icon_next_to_spaces(selenium, browser_id, space_name):
-
+def _is_home_space(driver, space_name):
     def _find_home_space_icon(s):
         spaces = s.find_elements_by_css_selector('ul.spaces-list '
                                                  'li:not([class~="clickable"])')
@@ -24,5 +20,23 @@ def check_if_home_space_icon_next_to_spaces(selenium, browser_id, space_name):
                 return space
         return None
 
-    driver = select_browser(selenium, browser_id)
     assert _find_home_space_icon(driver).text == space_name
+
+
+@given(parsers.parse('user of {browser_id} seen that home space icon '
+                     'was displayed next to name of space "{space_name}" '
+                     'in spaces list'))
+def wt_is_home_space(selenium, browser_id, space_name):
+    driver = select_browser(selenium, browser_id)
+    _is_home_space(driver, space_name)
+
+
+@when(parsers.parse('user of {browser_id} sees that home space icon '
+                    'is displayed next to name of space "{space_name}" '
+                    'in spaces list'))
+@then(parsers.parse('user of {browser_id} sees that home space icon '
+                    'is displayed next to name of space "{space_name}" '
+                    'in spaces list'))
+def wt_is_home_space(selenium, browser_id, space_name):
+    driver = select_browser(selenium, browser_id)
+    _is_home_space(driver, space_name)

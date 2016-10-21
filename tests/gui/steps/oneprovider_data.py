@@ -12,7 +12,7 @@ import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
-from pytest_bdd import when, then, parsers
+from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -123,6 +123,38 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
         message='check file distribution, focusing on {:s} provide'
                 ''.format(tmp_memory[browser_id]['supporting_provider'])
     )
+
+
+def _is_space_tree_root(driver, is_home, space_name):
+    space_select = driver.find_element_by_css_selector('nav.secondary-sidebar '
+                                                       '.data-spaces-select')
+    icon, label = space_select.find_element_by_css_selector('.item-icon '
+                                                            '.oneicon, '
+                                                            '.item-label')
+    displayed_name = label.text
+    assert displayed_name == space_name
+
+    if is_home:
+        assert 'oneicon-space-home' in icon.get_attribute('class')
+
+
+@given(parsers.re('user of (?P<browser_id>.+?) seen that displayed directory '
+                  'tree in sidebar panel belonged to (?P<is_home>(home )?)space '
+                  'named "(?P<space_name>.+?)'))
+def g_is_space_tree_root(selenium, browser_id, is_home, space_name):
+    driver = select_browser(selenium, browser_id)
+    _is_space_tree_root(driver, True if is_home else False, space_name)
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) sees that displayed directory '
+                 'tree in sidebar panel belongs to (?P<is_home>(home )?)space '
+                 'named "(?P<space_name>.+?)'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that displayed directory '
+                 'tree in sidebar panel belongs to (?P<is_home>(home )?)space '
+                 'named "(?P<space_name>.+?)'))
+def wt_is_space_tree_root(selenium, browser_id, is_home, space_name):
+    driver = select_browser(selenium, browser_id)
+    _is_space_tree_root(driver, True if is_home else False, space_name)
 
 
 # TODO implement better checking dir tree

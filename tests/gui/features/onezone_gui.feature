@@ -112,3 +112,36 @@ Feature: Onezone GUI elements
 #    And user of browser types given name on keyboard
 #    And user of browser clicks on cancel button for input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
 #    Then user of browser does not see new item on space list in expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+
+  Scenario: User succesfully set space as home space
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that item named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel is marked as home space
+    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+    And user of browser clicks on item named "p1" in providers list in expanded "GO TO YOUR FILES" Onezone panel
+
+    And user of browser clicks on the "Go to your files" button in provider popup
+    And user of browser sees that Oneprovider session has started
+    And user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space1"
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser sees that home space icon was displayed next to name of space "space1" in spaces list
+    And user of browser clicks on the "providers" tab in main menu sidebar
+
+    And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser click on home outline icon in item row for item named "space2" from spaces list in expanded "DATA SPACE MANAGEMENT" panel Onezone panel
+    And user of browser sees that item named "space2" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel is marked as home space
+    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+    And user of browser clicks on item named "p1" in providers list in expanded "GO TO YOUR FILES" Onezone panel    And user of browser clicked on the "Go to your files" button in provider popup
+    And user of browser clicks on the "Go to your files" button in provider popup
+
+    And user of browser sees that Oneprovider session has started
+    And user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space2"
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser sees that home space icon displayed next to name of space "space2" in spaces list
+    And user of browser clicks on the "providers" tab in main menu sidebar
+
+    # TODO rm after ategrating with swagger
+    Then user of browser clicked on the "providers" tab in main menu sidebar
+    And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser click on home outline icon in item row for item named "space1" from spaces list in expanded "DATA SPACE MANAGEMENT" panel Onezone panel
+    And user of browser sees that item named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel is marked as home space
