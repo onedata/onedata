@@ -20,7 +20,7 @@ DIRS = ['/etc/op_panel', '/etc/op_worker', '/etc/cluster_manager',
         '/var/lib/cluster_manager', '/usr/lib/cluster_manager',
         '/opt/couchbase/var/lib/couchbase', '/var/log/op_panel',
         '/var/log/op_worker', '/var/log/cluster_manager']
-EXCLUDE_PATHS = ['/etc/op_panel/cacerts', '/etc/op_worker/cacerts']
+EXCLUDED_DIRS = ['/etc/op_panel/cacerts', '/etc/op_worker/cacerts']
 
 
 def log(message, end='\n'):
@@ -37,8 +37,8 @@ def replace(file_path, pattern, value):
         f.write(content)
 
 
-def excluded_path(path):
-    for prefix in EXCLUDE_PATHS:
+def excluded_dir(path):
+    for prefix in EXCLUDED_DIRS:
         if path.startswith(prefix):
             return True
     return False
@@ -48,7 +48,10 @@ def copy_missing_files():
     for rootdir in DIRS:
         for subdir, _, files in os.walk(rootdir):
             subdir_path = os.path.join(ROOT, subdir[1:])
-            if not excluded_path(subdir_path) and not os.path.exists(subdir_path):
+            if excluded_dir(subdir) and os.path.exists(subdir_path):
+                continue
+
+            if not os.path.exists(subdir_path):
                 stat = os.stat(subdir)
                 os.makedirs(subdir_path)
                 os.chown(subdir_path, stat.st_uid, stat.st_gid)
@@ -56,9 +59,10 @@ def copy_missing_files():
             for f in files:
                 source_path = os.path.join(subdir, f)
                 dest_path = os.path.join(subdir_path, f)
-                if not excluded_path(source_path) and not os.path.exists(dest_path):
+                if not os.path.exists(dest_path):
                     stat = os.stat(source_path)
                     shutil.copy(source_path, dest_path)
+                    os.chown(dest_path, stat.st_uid, stat.st_gid)
 
 
 def remove_dirs():
