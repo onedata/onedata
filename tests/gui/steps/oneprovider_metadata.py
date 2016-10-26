@@ -268,7 +268,7 @@ def _get_items_from_file_list_with_metadata_icon(driver, name, type, visibility=
     files = driver.find_elements_by_css_selector('table.files-table td.file-list-col-file')
     for file in files:
         icon = file.find_element_by_css_selector('.file-icon span.oneicon')
-        label = file.find_element_by_css_selector('.file-label .truncate').text
+        label = file.find_element_by_css_selector('.file-label').text
         if type in icon.get_attribute('class') and label == name:
             metadata_tool = file.find_element_by_css_selector('.file-tool-metadata')
             if 'visible-on-parent-hover' + visibility in metadata_tool.get_attribute('class'):
@@ -376,7 +376,7 @@ def tmp_name(driver, name, type):
     files = driver.find_elements_by_css_selector('table.files-table td.file-list-col-file')
     for file in files:
         icon = file.find_element_by_css_selector('.file-icon span.oneicon')
-        label = file.find_element_by_css_selector('.file-label .truncate').text
+        label = file.find_element_by_css_selector('.file-label').text
         if type in icon.get_attribute('class') and label == name:
             return file
     return None
