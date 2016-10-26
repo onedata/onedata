@@ -14,6 +14,7 @@ Feature: Oneprovider Group functionality
     And user of browser seen that Oneprovider session has started
     And user of browser clicked on the "groups" tab in main menu sidebar
 
+
   Scenario: User creates new group (presses ENTER after entering group name)
     Given user of browser generates valid name string
     When user of browser clicks on the "Create" button in sidebar list's header
@@ -23,6 +24,7 @@ Feature: Oneprovider Group functionality
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     Then user of browser sees that a new item has appeared on groups sidebar list
+
 
   Scenario: User creates new group (clicks CREATE confirmation button after entering group name)
     Given user of browser generates valid name string
@@ -34,6 +36,7 @@ Feature: Oneprovider Group functionality
     And user of browser sees that the modal has disappeared
     Then user of browser sees that a new item has appeared on groups sidebar list
 
+
   Scenario: User can invite group
     # group 'group1' defined in env.json
     When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
@@ -41,12 +44,14 @@ Feature: Oneprovider Group functionality
     And user of browser sees that "Invite group to the group" modal has appeared
     Then user of browser sees non-empty token in active modal
 
+
   Scenario: User can request space creation
     # group 'group1' defined in env.json
     When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
     And user of browser clicks on the "REQUEST SPACE CREATION" item in settings dropdown for group named "group1"
     And user of browser sees that "Request space creation for the group" modal has appeared
     Then user of browser sees non-empty token in active modal
+
 
   Scenario: User fails to join group to space because of using invalid token (presses ENTER after entering token)
     # group 'group1' defined in env.json
@@ -59,6 +64,7 @@ Feature: Oneprovider Group functionality
     Then user of browser sees an error notify with text matching to: .*join.*group1.*space.*
     And user of browser sees that the modal has disappeared
 
+
   Scenario: User fails to join group to space because of using invalid token (clicks Join confirmation button after entering token)
     # group 'group1' defined in env.json
     When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
@@ -69,6 +75,7 @@ Feature: Oneprovider Group functionality
     And user of browser clicks "Join" confirmation button in displayed modal
     Then user of browser sees an error notify with text matching to: .*join.*group1.*space.*
     And user of browser sees that the modal has disappeared
+
 
   Scenario: User fails to join group as subgroup because of using invalid token (presses ENTER after entering token)
     # group 'group1' defined in env.json
@@ -81,6 +88,7 @@ Feature: Oneprovider Group functionality
     Then user of browser sees an error notify with text matching to: .*join.*group1.*subgroup.*
     And user of browser sees that the modal has disappeared
 
+
   Scenario: User fails to join group as subgroup because of using invalid token (clicks Join confirmation button after entering token)
     # group 'group1' defined in env.json
     When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
@@ -92,6 +100,7 @@ Feature: Oneprovider Group functionality
     Then user of browser sees an error notify with text matching to: .*join.*group1.*subgroup.*
     And user of browser sees that the modal has disappeared
 
+
   Scenario: User fails to join to group because of using invalid token (presses ENTER after entering token)
     When user of browser clicks on the "Join" button in sidebar list's header
     And user of browser sees that "Join a group" modal has appeared
@@ -101,6 +110,7 @@ Feature: Oneprovider Group functionality
     Then user of browser sees an error notify with text matching to: .*[Ff]ailed.*join.*group.*
     And user of browser sees that the modal has disappeared
 
+
   Scenario: User fails to join to group because of using invalid token (clicks Join confirmation button after entering token)
     When user of browser clicks on the "Join" button in sidebar list's header
     And user of browser sees that "Join a group" modal has appeared
@@ -109,6 +119,7 @@ Feature: Oneprovider Group functionality
     And user of browser clicks "Join" confirmation button in displayed modal
     Then user of browser sees an error notify with text matching to: .*[Ff]ailed.*join.*group.*
     And user of browser sees that the modal has disappeared
+
 
   Scenario: User successfully renames group (presses ENTER after entering group name)
     # group 'group1' defined in env.json
@@ -135,6 +146,7 @@ Feature: Oneprovider Group functionality
     Then user of browser sees that NewNameGroup has disappeared from groups sidebar list
     And user of browser sees that group1 has appeared on groups sidebar list
 
+
   Scenario: User successfully renames group (clicks OK after entering group name)
     # group 'group1' defined in env.json
     When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
@@ -160,6 +172,7 @@ Feature: Oneprovider Group functionality
     Then user of browser sees that NewNameGroup has disappeared from groups sidebar list
     And user of browser sees that group1 has appeared on groups sidebar list
 
+
   Scenario: User can leave existing group and then create group with the same name
     # group 'group1' defined in env.json
     When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
@@ -178,6 +191,7 @@ Feature: Oneprovider Group functionality
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that group1 has appeared on groups sidebar list
+
 
   Scenario: User fails to view group after leaving it
     # group 'group1' defined in env.json

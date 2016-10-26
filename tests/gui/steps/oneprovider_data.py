@@ -12,7 +12,7 @@ import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
-from pytest_bdd import when, then, parsers
+from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -45,26 +45,43 @@ def change_space(selenium, browser_id, space_name):
     Wait(driver, WAIT_FRONTEND).until(space_by_name).click()
 
 
-@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
-                    'to upload file "{file_name}" to current dir'))
-def upload_file_to_current_dir(selenium, browser_id, file_name):
+def _upload_files_to_cwd(driver, files):
     """This interaction is very hacky, because uploading files with Selenium
     needs to use input element, but we do not use it directly in frontend.
     So we unhide an input element for a while and pass a local file path to it.
     """
-    driver = select_browser(selenium, browser_id)
     # HACK: for Firefox driver - because we cannot interact with hidden elements
     driver.execute_script("$('input#toolbar-file-browse').removeClass('hidden')")
     driver.find_element_by_css_selector('input#toolbar-file-browse').send_keys(
-        upload_file_path(file_name)
+        files
     )
     driver.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
-    def file_browser_ready(d):
-        files_table = d.find_element_by_css_selector('.files-table')
-        return not re.match(r'.*is-loading.*', files_table.get_attribute('class'))
+    upload_panel = driver.find_element_by_css_selector('.file-upload-panel')
+    Wait(driver, WAIT_BACKEND).until_not(
+        lambda _: upload_panel.is_displayed(),
+        message='waiting for files to get uploaded'
+    )
 
-    Wait(driver, WAIT_BACKEND).until(file_browser_ready)
+
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
+                    'to upload file "{file_name}" to current dir'))
+def upload_file_to_cwd(selenium, browser_id, file_name):
+    driver = select_browser(selenium, browser_id)
+    _upload_files_to_cwd(driver, upload_file_path(file_name))
+
+
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
+                    'upload files from directory "{dir_path}" to current dir'))
+def upload_files_to_cwd(selenium, browser_id, dir_path, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    abs_root, cwd = tmp_memory[browser_id]['/']
+    abs_path = os.path.join(abs_root, dir_path)
+    for dir_name in dir_path.split('/'):
+        cwd = cwd[dir_name]
+    _upload_files_to_cwd(driver, '\n'.join(os.path.join(abs_path, name)
+                                           for name in cwd
+                                           if cwd[name] == 'regular'))
 
 
 @when(parsers.parse('user of {browser_id} sees that content of downloaded '
@@ -127,13 +144,13 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
 
 # TODO implement better checking dir tree
 @when(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in sidebar list is {path}'))
+                    'displayed in breadcrumbs is {path}'))
 @then(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in sidebar list is {path}'))
+                    'displayed in breadcrumbs is {path}'))
 def is_displayed_path_correct(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    path = path.split('/')
-    dir_name = driver.find_element_by_css_selector('.data-files-tree '
-                                                   'li.level-{} .active'
-                                                   ''.format(len(path) - 1))
-    assert dir_name.text == path[-1]
+    breadcrumbs = driver.find_element_by_css_selector('#main-content '
+                                                      '.secondary-top-bar '
+                                                      '.file-breadcrumbs-list')
+    for dir1, dir2 in zip(path.split('/'), breadcrumbs.text.split('\n')):
+        assert dir1 == dir2, '{:s} == {:s}'.format(dir1, dir2)

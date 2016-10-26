@@ -6,9 +6,11 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import os
 import re
 import time
 import random
+import tempfile as tf
 import pyperclip
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
@@ -39,6 +41,8 @@ def create_instances_of_webdriver(selenium, driver,
                                       'spaces': {},
                                       'groups': {},
                                       'mailbox': {},
+                                      '/': (tf.mkdtemp(dir=tf.gettempdir()),
+                                            {}),
                                       'window': {'modal': None}}
 
 
@@ -280,3 +284,35 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
                                            path=path,
                                            item=item)
     driver.get(url)
+
+
+def _create_dir_in_users_file_system(browser_id, dir_path, tmp_memory):
+    abs_root_path, cwd = tmp_memory[browser_id]['/']
+    abs_dir_path = os.path.join(abs_root_path, dir_path)
+    if not os.path.isdir(abs_dir_path):
+        os.mkdir(abs_dir_path)
+
+    for directory in dir_path.split('/'):
+        if directory not in cwd or type(cwd[directory]) is not dict:
+            cwd[directory] = {}
+        cwd = cwd[directory]
+
+
+def _gen_files_in_users_file_system(browser_id, dir_path, num, tmp_memory):
+    abs_root_path, cwd = tmp_memory[browser_id]['/']
+    abs_dir_path = os.path.join(abs_root_path, dir_path)
+    for directory in dir_path.split('/'):
+        cwd = cwd[directory]
+
+    for i in range(10, num + 10):
+        file_name = 'file_{num:d}'.format(num=i)
+        with open(os.path.join(abs_dir_path, file_name), 'w') as f:
+            f.write('1' * i)
+        cwd[file_name] = 'regular'
+
+
+@given(parsers.parse('user of {browser_id} has {num:d} files '
+                     'in directory named "{dir_path}"'))
+def create_files(browser_id, num, dir_path, tmp_memory):
+    _create_dir_in_users_file_system(browser_id, dir_path, tmp_memory)
+    _gen_files_in_users_file_system(browser_id, dir_path, num, tmp_memory)

@@ -653,7 +653,7 @@ Feature: Oneprovider Share view
 
     And user of browser clicks on space1/dir1 using breadcrumbs from share info header
     And user of browser sees that URL matches https?://[^/]*/#/onedata/data/.*
-    And user of browser sees that current working directory displayed in sidebar list is space1/dir1
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar

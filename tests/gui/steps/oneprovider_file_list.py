@@ -47,19 +47,24 @@ def _pack_content_into_rows(items):
 
 def _get_items_from_file_list(driver):
     items = driver.find_elements_by_css_selector('table.files-table '
-                                                 'tr, '
+                                                 'tr.file-row, '
                                                  'table.files-table '
+                                                 'tr.file-row '
                                                  'td.file-list-col-file '
                                                  '.file-icon .oneicon, '
                                                  'table.files-table '
+                                                 'tr.file-row '
                                                  'td.file-list-col-file '
                                                  '.file-label, '
                                                  'table.files-table '
+                                                 'tr.file-row '
                                                  'td.file-list-col-file '
                                                  '.file-row-tools, '
                                                  'table.files-table '
+                                                 'tr.file-row '
                                                  'td.file-list-col-size, '
                                                  'table.files-table '
+                                                 'tr.file-row '
                                                  'td.file-list-col-modification')
 
     return {label.text: (row, label, icon, tools, size, modification, meta)
@@ -197,3 +202,25 @@ def click_on_file_icon_tool(selenium, browser_id, tool_type,
                             file_name, file_type):
     driver = select_browser(selenium, browser_id)
     _click_on_tool_icon_for_file(driver, file_name, file_type, tool_type)
+
+
+@when(parsers.parse('user of {browser_id} sees that {num:d} files '
+                    'are displayed in file browser'))
+@then(parsers.parse('user of {browser_id} sees that {num:d} files '
+                    'are displayed in file browser'))
+def check_how_many_files_are_displayed_in_file_browser(selenium, browser_id,
+                                                       num):
+    driver = select_browser(selenium, browser_id)
+    items_num = len(_get_items_from_file_list(driver))
+    assert items_num == num, '{:d} != {:d}'.format(items_num, num)
+
+
+@when(parsers.parse('user of {browser_id} scrolls to the bottom '
+                    'of file list in file browser'))
+@then(parsers.parse('user of {browser_id} scrolls to the bottom '
+                    'of file list in file browser'))
+def scroll_to_the_bottom_of_file_browser(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    bottom = driver.find_element_by_css_selector('table.files-table '
+                                                 'tr.file-row-load-more')
+    driver.execute_script('arguments[0].scrollIntoView();', bottom)
