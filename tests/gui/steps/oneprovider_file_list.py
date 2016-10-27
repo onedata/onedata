@@ -212,7 +212,7 @@ def check_how_many_files_are_displayed_in_file_browser(selenium, browser_id,
                                                        num):
     driver = select_browser(selenium, browser_id)
     items_num = len(_get_items_from_file_list(driver))
-    assert items_num == num, '{:d} != {:d}'.format(items_num, num)
+    assert items_num == num, '{:d} == {:d}'.format(items_num, num)
 
 
 @when(parsers.parse('user of {browser_id} scrolls to the bottom '

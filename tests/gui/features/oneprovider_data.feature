@@ -34,8 +34,8 @@ Feature: Oneprovider Data view
     And user of browser selects "20B-0.txt" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "20B-0.txt" has disappeared from files list
 
@@ -54,10 +54,11 @@ Feature: Oneprovider Data view
     And user of browser selects file1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: Create new directory and then remove it
     When user of browser uses spaces select to change data space to "space1"
@@ -73,10 +74,11 @@ Feature: Oneprovider Data view
     And user of browser selects directory1 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "directory1" has disappeared from files list
+
 
   Scenario: Create file and then remove it
     When user of browser uses spaces select to change data space to "space1"
@@ -92,10 +94,11 @@ Feature: Oneprovider Data view
     And user of browser selects file2 from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file2" has disappeared from files list
+
 
   # 'space1' supported by 'p1' defined in env.json
   Scenario: Create file and check if provider name is displayed in the file distribution panel
@@ -122,11 +125,11 @@ Feature: Oneprovider Data view
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "dir1" on keyboard
+    And user of browser types "dir10" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser double clicks on directory named "dir1" from files list
+    And user of browser sees that directory named "dir10" has appeared on files list
+    And user of browser double clicks on directory named "dir10" from files list
     And user of browser uses upload button in toolbar to upload files from directory "my_files" to current dir
     And user of browser is idle for 5 seconds
     And user of browser sees that 70 files are displayed in file browser
@@ -141,10 +144,10 @@ Feature: Oneprovider Data view
     # in order to change cwd to root dir change space to other than change back
     And user of browser uses spaces select to change data space to "Small space"
     And user of browser uses spaces select to change data space to "space1"
-    And user of browser selects "dir1" from files list
+    And user of browser selects "dir10" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
-    And user of browser does not see any directory named "dir1" on files list
+    And user of browser does not see any directory named "dir10" on files list

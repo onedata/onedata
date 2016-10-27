@@ -176,7 +176,10 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
             return None
 
     driver = select_browser(selenium, browser_id)
-    Wait(driver, 2*WAIT_BACKEND).until(notify_with_text_present)
+    Wait(driver, 2*WAIT_BACKEND).until(
+        notify_with_text_present,
+        message='waiting for notify matching: {}'.format(text_regexp)
+    )
 
 
 @when(parsers.parse('user of {browser_id} closes all notifies'))

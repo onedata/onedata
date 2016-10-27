@@ -28,8 +28,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -54,8 +54,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -80,8 +80,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -104,8 +104,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -128,8 +128,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -167,8 +167,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -207,8 +207,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -243,8 +243,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -278,8 +278,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -316,8 +316,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -354,8 +354,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -390,8 +390,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -426,8 +426,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -468,8 +468,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -509,8 +509,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -541,8 +541,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -573,8 +573,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -608,8 +608,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -643,8 +643,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -686,8 +686,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -729,8 +729,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -761,8 +761,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -793,8 +793,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -833,8 +833,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -868,8 +868,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -903,8 +903,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -946,8 +946,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -989,8 +989,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
@@ -1021,8 +1021,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
@@ -1053,7 +1053,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "OK" confirmation button in displayed modal
-    And user of browser sees an success notify with text matching to: .*removed.*
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
