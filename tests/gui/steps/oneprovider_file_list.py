@@ -8,11 +8,14 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 from pytest_bdd import when, then, parsers
+
 from selenium.webdriver.common.action_chains import ActionChains
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
-from tests.gui.conftest import WAIT_FRONTEND
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
+from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.utils.generic import parse_seq
 
 
@@ -91,20 +94,30 @@ def _double_click_on_item(driver, item_name, item_type, items=None):
         raise ValueError('no {} named {} found'. format(item_type, item_name))
 
 
-def _select_items_from_file_list(driver, item_list, all_items=None):
-    all_items = all_items if all_items else _get_items_from_file_list(driver)
-    for item_name in parse_seq(item_list):
-        item = all_items.get(item_name)
-        if item and 'active' not in item[0].get_attribute('class'):
-                item[1].click()
+def _is_file_selected(file_item):
+    return file_item and 'active' in file_item[0].get_attribute('class')
 
 
-def _deselect_items_from_file_list(driver, item_list, all_items=None):
+def _is_not_file_selected(file_item):
+    return file_item and 'active' not in file_item[0].get_attribute('class')
+
+
+def _select_items_from_file_list_upon_cond(driver, item_list, keys,
+                                           cond=_is_file_selected,
+                                           all_items=None):
     all_items = all_items if all_items else _get_items_from_file_list(driver)
+    actions = ActionChains(driver)
+    for key in keys:
+        actions.key_down(key)
+
     for item_name in parse_seq(item_list):
         item = all_items.get(item_name)
-        if item and 'active' in item[0].get_attribute('class'):
-                item[1].click()
+        if cond(item):
+                actions.click(item[0])
+
+    for key in keys:
+        actions.key_up(key)
+    actions.perform()
 
 
 def _click_on_tool_icon_for_file(driver, item_name, item_type,
@@ -128,6 +141,7 @@ def _click_on_tool_icon_for_file(driver, item_name, item_type,
                  r'(?P<item_type>.*?)s? named (?P<item_list>.*?) on files list'))
 def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
     driver = select_browser(selenium, browser_id)
+    item_type = item_type.replace('directorie', 'directory')
     Wait(driver, WAIT_FRONTEND).until(
         lambda _: _not_in_file_list(driver, item_list, item_type),
         message='waiting for {:s} item/items '
@@ -157,10 +171,25 @@ def is_present_in_file_list(selenium, browser_id, item_list, item_type):
                     'on {item_type} named "{item_name}" from files list'))
 @when(parsers.parse('user of {browser_id} double clicks '
                     'on {item_type} named "{item_name}" from files list'))
-def double_click_on_item(selenium, browser_id, item_name,
-                         item_type):
+def double_click_on_file_item(selenium, browser_id, item_name,
+                              item_type):
     driver = select_browser(selenium, browser_id)
     _double_click_on_item(driver, item_name, item_type)
+
+
+@when(parsers.parse('user of {browser_id} clicks on {item_type} '
+                    'named "{item_name}" from files list'))
+@then(parsers.parse('user of {browser_id} clicks on {item_type} '
+                    'named "{item_name}" from files list'))
+def click_on_file_item(selenium, browser_id, item_name,
+                       item_type):
+    driver = select_browser(selenium, browser_id)
+    all_items = _get_items_from_file_list(driver)
+    item = all_items.get(item_name)
+    if item:
+        item[0].click()
+    else:
+        raise ValueError('no {} named {} found'.format(item_type, item_name))
 
 
 @when(parsers.parse('user of {browser_id} selects {item_list} '
@@ -169,7 +198,9 @@ def double_click_on_item(selenium, browser_id, item_name,
                     'from files list'))
 def select_files_from_file_list(selenium, browser_id, item_list):
     driver = select_browser(selenium, browser_id)
-    _select_items_from_file_list(driver, item_list)
+    _select_items_from_file_list_upon_cond(driver, item_list,
+                                           keys=(Keys.LEFT_CONTROL, ),
+                                           cond=_is_not_file_selected)
 
 
 @when(parsers.parse('user of {browser_id} deselects {item_list} '
@@ -178,7 +209,9 @@ def select_files_from_file_list(selenium, browser_id, item_list):
                     'from files list'))
 def deselect_files_from_file_list(selenium, browser_id, item_list):
     driver = select_browser(selenium, browser_id)
-    _deselect_items_from_file_list(driver, item_list)
+    _select_items_from_file_list_upon_cond(driver, item_list,
+                                           keys=(Keys.LEFT_CONTROL, ),
+                                           cond=_is_file_selected)
 
 
 @when(parsers.parse('user of {browser_id} deselects all '
@@ -188,8 +221,10 @@ def deselect_files_from_file_list(selenium, browser_id, item_list):
 def deselect_all_items_from_file_list(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     all_items = _get_items_from_file_list(driver)
-    items_list = ','.join(item for item in all_items.iterkeys())
-    _deselect_items_from_file_list(driver, items_list)
+    items_list = ', '.join(item for item in all_items.iterkeys())
+    _select_items_from_file_list_upon_cond(driver, items_list,
+                                           keys=(Keys.LEFT_CONTROL, ),
+                                           cond=_is_file_selected)
 
 
 @when(parsers.parse('user of {browser_id} clicks on {tool_type} '

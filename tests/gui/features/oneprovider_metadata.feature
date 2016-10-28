@@ -20,12 +20,12 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     Then user of browser sees that metadata panel for file "file1" in files list has appeared
     Then user of browser sees [Basic, JSON, RDF] navigation tabs in opened metadata panel
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -43,7 +43,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
     And user of browser should not see metadata icon for file "file1"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects file1 from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -51,7 +51,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     Then user of browser sees metadata icon for file "file1"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -69,7 +69,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
     And user of browser should not see metadata icon for directory "dir1"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -77,7 +77,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     Then user of browser sees metadata icon for directory "dir1"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -94,14 +94,14 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     Then user of browser sees that entered metadata record with attribute "attr" is red
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -118,14 +118,14 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "Attribute" input box
     And user of browser types "attr" on keyboard
     Then user of browser sees that entered metadata record with attribute "attr" is red
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -142,7 +142,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -150,7 +150,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -159,12 +159,12 @@ Feature: Oneprovider Metadata view
     And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -182,7 +182,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
     And user of browser should not see metadata icon for directory "dir1"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -190,7 +190,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -199,12 +199,12 @@ Feature: Oneprovider Metadata view
     And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -222,7 +222,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -235,12 +235,12 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -257,7 +257,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -270,12 +270,12 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -292,7 +292,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -302,18 +302,18 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -330,7 +330,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -340,18 +340,18 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on "Save all changes" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -368,7 +368,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -381,13 +381,13 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on delete metadata record icon for metadata record with attribute "attr"
     Then user of browser should not see new metadata record with attribute "attr"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -404,7 +404,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -417,13 +417,13 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on delete metadata record icon for metadata record with attribute "attr"
     Then user of browser should not see new metadata record with attribute "attr"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -441,7 +441,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -454,18 +454,18 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
     And user of browser clicks on "Remove metadata" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
-    Then user of browser selects "file1" from files list
+    Then user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser should not see any metadata record for "file1"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -482,7 +482,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -495,18 +495,18 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should see new metadata record with attribute "attr" and value "val"
     And user of browser clicks on "Remove metadata" button in metadata panel
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    Then user of browser selects "dir1" from files list
+    Then user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser should not see any metadata record for "dir1"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -523,7 +523,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -533,12 +533,12 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add icon in metadata panel
     And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser selects "file1" from files list
+    Then user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -555,7 +555,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -565,12 +565,12 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add icon in metadata panel
     And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser selects "dir1" from files list
+    Then user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -587,7 +587,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -599,13 +599,13 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -622,7 +622,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -634,13 +634,13 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -657,7 +657,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -669,7 +669,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -677,13 +677,13 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
     And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -700,7 +700,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -712,7 +712,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -720,13 +720,13 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
     And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -743,7 +743,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -752,13 +752,13 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser selects "file1" from files list
+    Then user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -775,7 +775,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -784,13 +784,13 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea in "JSON" navigation tab
     And user of browser types "{"id": 1}" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser selects "dir1" from files list
+    Then user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel
     And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -808,7 +808,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
     And user of browser should not see metadata icon for file "file1"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -816,7 +816,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -825,12 +825,12 @@ Feature: Oneprovider Metadata view
     And user of browser clicks on "Save all changes" button in metadata panel
     Then user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser should not see new metadata record with attribute "attr"
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -847,7 +847,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -859,13 +859,13 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -882,7 +882,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -894,13 +894,13 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -917,7 +917,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -929,7 +929,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -937,13 +937,13 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
     And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -960,7 +960,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -972,7 +972,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -980,13 +980,13 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
     And user of browser clicks on "Remove metadata" button in metadata panel
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -1003,7 +1003,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
@@ -1012,13 +1012,13 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser selects "file1" from files list
+    Then user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "file1" from files list
     And user of browser sees that metadata panel for file "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser selects "file1" from files list
+    And user of browser clicks on file named "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -1035,7 +1035,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
@@ -1044,13 +1044,13 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea in "XML" navigation tab
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser selects "dir1" from files list
+    Then user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel
     And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser selects "dir1" from files list
+    And user of browser clicks on directory named "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
