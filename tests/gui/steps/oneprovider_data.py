@@ -92,7 +92,7 @@ def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)
-    file_path = os.path.join(str(tmpdir), 'download', file_name)
+    file_path = os.path.join(str(tmpdir), file_name)
 
     # sleep waiting for file to finish downloading
     exist = False

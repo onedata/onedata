@@ -108,9 +108,7 @@ def capabilities(request, capabilities, tmpdir):
         # TODO: use --no-sandbox only in headless mode, support for Chrome in Docker and XVFB can be buggy now: https://jira.plgrid.pl/jira/browse/VFS-2204
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("enable-popup-blocking")
-
-        download_dir = tmpdir.mkdir('download')
-        prefs = {"download.default_directory": str(download_dir)}
+        prefs = {"download.default_directory": str(tmpdir)}
 
         chrome_options.add_experimental_option("prefs", prefs)
         capabilities.update(chrome_options.to_capabilities())
@@ -133,14 +131,12 @@ def capabilities(request, capabilities, tmpdir):
 def firefox_profile(firefox_profile, tmpdir):
     @factory
     def _get_instance():
-        download_dir = tmpdir.mkdir('download')
-
         profile = firefox_profile.get_instance()
         profile.set_preference('browser.download.folderList', 2)
         profile.set_preference('browser.download.manager.showWhenStarting',
                                False)
         profile.set_preference('browser.helperApps.alwaysAsk.force', False)
-        profile.set_preference('browser.download.dir', str(download_dir))
+        profile.set_preference('browser.download.dir', str(tmpdir))
         profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
                                'text/anytext, text/plain, text/html')
         profile.update_preferences()

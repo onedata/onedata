@@ -119,7 +119,7 @@ Feature: Oneprovider Data view
 
 
   # 'space1' supported by 'p1' defined in env.json
-  Scenario: User uploads more than 50 files
+  Scenario: User uploads more than 50 files and uses files list lazy loading
     Given user of browser has 70 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
