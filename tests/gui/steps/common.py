@@ -220,7 +220,7 @@ def refresh_site(selenium, browser_id):
 def is_url_matching(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
     assert re.search(path, driver.current_url), \
-        '{} is like {}'.format(driver.current_url, path)
+        '{} is not like {}'.format(driver.current_url, path)
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) opens received (?:url|URL)'))

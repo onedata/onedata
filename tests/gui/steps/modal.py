@@ -93,7 +93,7 @@ def is_modal_msg_matching(browser_id, regexp, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
     msg = modal.find_element_by_css_selector('.modal-body .message-text').text
     assert re.match(regexp, msg), \
-        '{regexp} == {msg}'.format(regexp=regexp, msg=msg)
+        'displayed {msg} does not match {regexp}'.format(regexp=regexp, msg=msg)
 
 
 @when(parsers.parse('user of {browser_id} sees '

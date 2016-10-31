@@ -97,9 +97,11 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
     # sleep waiting for file to finish downloading
     exist = False
     for sleep_time in range(10):
-        exist = os.path.isfile(file_path)
         if not exist:
             time.sleep(sleep_time)
+        else:
+            break
+        exist = os.path.isfile(file_path)
 
     if not exist:
         raise ValueError('file {} not downloaded'.format(file_name))
@@ -109,7 +111,7 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
             file_content = ''.join(f.readlines())
             return content == file_content
 
-    assert file_path, 'file has not been downloaded'
+    assert file_path, 'file {} has not been downloaded'.format(file_name)
     Wait(driver, WAIT_BACKEND).until(
         lambda _: _check_file_content(),
         message='checking if downloaded file contains {:s}'.format(content)
@@ -157,8 +159,10 @@ def is_displayed_path_correct(selenium, browser_id, path):
     breadcrumbs = driver.find_element_by_css_selector('#main-content '
                                                       '.secondary-top-bar '
                                                       '.file-breadcrumbs-list')
-    for dir1, dir2 in zip(path.split('/'), breadcrumbs.text.split('\n')):
-        assert dir1 == dir2, '{:s} == {:s}'.format(dir1, dir2)
+    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs.text.split('\n'))):
+        assert dir1 == dir2, \
+            '{} not found on {}th position in breadcrumbs, instead we have {}' \
+            ''.format(dir2, i, breadcrumbs.text)
 
 
 @when(parsers.parse('user of {browser_id} changes current working directory '
@@ -173,6 +177,8 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
                                                        '.file-breadcrumbs-item '
                                                        'a')
     dir1, dir2 = None, None
-    for dir1, dir2 in zip(path.split('/'), breadcrumbs):
-        assert dir1 == dir2.text, '{} == {}'.format(dir1, dir2.text)
+    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs)):
+        assert dir1 == dir2.text, \
+            '{} not found on {}th position in breadcrumbs, instead we have {}' \
+            ''.format(dir2, i, breadcrumbs.text)
     dir2.click()

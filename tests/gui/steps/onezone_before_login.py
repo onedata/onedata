@@ -26,7 +26,7 @@ def login_provider_buttons(selenium, browser_id, provider_name):
     driver = select_browser(selenium, browser_id)
     assert driver.find_element_by_css_selector(
             '.login-box a.login-icon-box.{name}'.format(name=provider_name)
-        ), 'login not found'
+        ), 'login for provider {} not found'.format(provider_name)
 
 
 def _click_login_provider_button(driver, provider_name):
