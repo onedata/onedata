@@ -12,6 +12,7 @@ Feature: Oneprovider Group functionality using multiple browsers
     And users of [browser1, browser2] seen that Oneprovider session has started
     And users of [browser1, browser2] clicked on the "groups" tab in main menu sidebar
 
+
   # TODO rm leave from group at the end of test
   Scenario: User successfully invites other user to join his group (presses ENTER after entering token)
     # group 'group1' defined in env.json
@@ -43,6 +44,7 @@ Feature: Oneprovider Group functionality using multiple browsers
     And user of browser2 sees an info notify with text matching to: .*group1.*left
     And user of browser2 sees that group1 has disappeared from groups sidebar list
 
+
   # TODO rm leave from group at the end of test
   Scenario: User successfully invites other user to join his group (clicks JOIN confirmation button after entering token)
     # group 'group1' defined in env.json
@@ -73,6 +75,7 @@ Feature: Oneprovider Group functionality using multiple browsers
     And user of browser2 sees that the modal has disappeared
     And user of browser2 sees an info notify with text matching to: .*group1.*left
     And user of browser2 sees that group1 has disappeared from groups sidebar list
+
 
   Scenario: User fails to view group, to which he does not belong to, using its ID in URL
     # groups 'group1' defined in env.json

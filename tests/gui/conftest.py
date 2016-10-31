@@ -109,6 +109,7 @@ def capabilities(request, capabilities, tmpdir):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("enable-popup-blocking")
         prefs = {"download.default_directory": str(tmpdir)}
+
         chrome_options.add_experimental_option("prefs", prefs)
         capabilities.update(chrome_options.to_capabilities())
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
@@ -140,6 +141,8 @@ def firefox_profile(firefox_profile, tmpdir):
                                'text/anytext, text/plain, text/html')
         profile.update_preferences()
         return profile
+
+    _get_instance.browser = None
     return _get_instance
 
 
