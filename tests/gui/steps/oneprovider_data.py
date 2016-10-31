@@ -6,6 +6,8 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import py
+
 import re
 import os
 import time
@@ -73,15 +75,12 @@ def upload_file_to_cwd(selenium, browser_id, file_name):
 
 @when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
                     'upload files from directory "{dir_path}" to current dir'))
-def upload_files_to_cwd(selenium, browser_id, dir_path, tmp_memory):
+def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
     driver = select_browser(selenium, browser_id)
-    abs_root, cwd = tmp_memory[browser_id]['/']
-    abs_path = os.path.join(abs_root, dir_path)
-    for dir_name in dir_path.split('/'):
-        cwd = cwd[dir_name]
-    _upload_files_to_cwd(driver, '\n'.join(os.path.join(abs_path, name)
-                                           for name in cwd
-                                           if cwd[name] == 'regular'))
+    directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
+    _upload_files_to_cwd(driver, '\n'.join(str(item) for item
+                                           in directory.listdir()
+                                           if item.isfile()))
 
 
 @when(parsers.parse('user of {browser_id} sees that content of downloaded '
@@ -91,21 +90,23 @@ def upload_files_to_cwd(selenium, browser_id, dir_path, tmp_memory):
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)
-    tmpdir_path = str(tmpdir)
-    file_path = os.path.join(tmpdir_path, file_name)
+    file_path = None
 
     # sleep waiting for file to finish downloading
     for sleep_time in range(10):
-        if not os.listdir(tmpdir_path):
-            time.sleep(sleep_time)
+        try:
+            file_path = tmpdir.ensure('download', file_name)
+        except py.error.ENOENT:
+            continue
 
     def _check_file_content():
-        with open(file_path, 'r') as f:
+        with file_path.open() as f:
             file_content = ''.join(f.readlines())
             return content == file_content
 
+    assert file_path, 'file has not been downloaded'
     Wait(driver, WAIT_BACKEND).until(
-        lambda _: _check_file_content,
+        lambda _: _check_file_content(),
         message='checking if downloaded file contains {:s}'.format(content)
     )
 

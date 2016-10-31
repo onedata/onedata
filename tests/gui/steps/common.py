@@ -10,7 +10,8 @@ import os
 import re
 import time
 import random
-import tempfile as tf
+
+import py
 import pyperclip
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
@@ -41,8 +42,6 @@ def create_instances_of_webdriver(selenium, driver,
                                       'spaces': {},
                                       'groups': {},
                                       'mailbox': {},
-                                      '/': (tf.mkdtemp(dir=tf.gettempdir()),
-                                            {}),
                                       'window': {'modal': None}}
 
 
@@ -291,33 +290,39 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
     driver.get(url)
 
 
-def _create_dir_in_users_file_system(browser_id, dir_path, tmp_memory):
-    abs_root_path, cwd = tmp_memory[browser_id]['/']
-    abs_dir_path = os.path.join(abs_root_path, dir_path)
-    if not os.path.isdir(abs_dir_path):
-        os.mkdir(abs_dir_path)
-
-    for directory in dir_path.split('/'):
-        if directory not in cwd or type(cwd[directory]) is not dict:
-            cwd[directory] = {}
-        cwd = cwd[directory]
+def _mkdir_in_users_file_system(browser_id, dir_path, tmpdir):
+    try:
+        tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
+    except py.error.ENOENT:
+        tmpdir.mkdir(browser_id, *dir_path.split('/'))
 
 
-def _gen_files_in_users_file_system(browser_id, dir_path, num, tmp_memory):
-    abs_root_path, cwd = tmp_memory[browser_id]['/']
-    abs_dir_path = os.path.join(abs_root_path, dir_path)
-    for directory in dir_path.split('/'):
-        cwd = cwd[directory]
+def _touch_in_users_file_system(directory, file_name,
+                                file_content, tmpdir):
+    if isinstance(directory, list):
+        try:
+            directory = tmpdir.ensure(*directory, dir=True)
+        except py.error.ENOENT:
+            raise ValueError('direcotry {} does not exist'
+                             ''.format('/'.join(directory[1:])))
+
+    reg_file = directory.join(file_name)
+    reg_file.write(file_content)
+
+
+def _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir):
+    try:
+        directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
+    except py.error.ENOENT:
+        raise ValueError('directory {} does not exist'.format(dir_path))
 
     for i in range(10, num + 10):
-        file_name = 'file_{num:d}'.format(num=i)
-        with open(os.path.join(abs_dir_path, file_name), 'w') as f:
-            f.write('1' * i)
-        cwd[file_name] = 'regular'
+        _touch_in_users_file_system(directory, 'file_{}'.format(i),
+                                    '1' * i, tmpdir)
 
 
 @given(parsers.parse('user of {browser_id} has {num:d} files '
                      'in directory named "{dir_path}"'))
-def create_files(browser_id, num, dir_path, tmp_memory):
-    _create_dir_in_users_file_system(browser_id, dir_path, tmp_memory)
-    _gen_files_in_users_file_system(browser_id, dir_path, num, tmp_memory)
+def create_files(browser_id, num, dir_path, tmpdir):
+    _mkdir_in_users_file_system(browser_id, dir_path, tmpdir)
+    _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir)

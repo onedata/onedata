@@ -108,7 +108,15 @@ def capabilities(request, capabilities, tmpdir):
         # TODO: use --no-sandbox only in headless mode, support for Chrome in Docker and XVFB can be buggy now: https://jira.plgrid.pl/jira/browse/VFS-2204
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("enable-popup-blocking")
-        prefs = {"download.default_directory": str(tmpdir)}
+
+        tmpdir.mkdir('download')
+        download_dir = tmpdir.ensure('download', dir=True)
+        # heh = tmpdir.dirpath('download')
+        # foopath = heh.join('foo')
+        # foopath.write('heh')
+        # heh.listdir()
+        prefs = {"download.default_directory": str(download_dir)}
+
         chrome_options.add_experimental_option("prefs", prefs)
         capabilities.update(chrome_options.to_capabilities())
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
