@@ -91,7 +91,7 @@ def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
                     'displayed in modal matches: {regexp}'))
 def is_modal_msg_matching(browser_id, regexp, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
-    msg = modal.find_element_by_css_selector('.modal-body .message-text')
+    msg = modal.find_element_by_css_selector('.modal-body .message-text').text
     assert re.match(regexp, msg), \
         '{regexp} == {msg}'.format(regexp=regexp, msg=msg)
 

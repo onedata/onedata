@@ -29,7 +29,8 @@ def _get_share_from_shares_list(driver, name):
                     '"{name}" has appeared in the shared list'))
 def is_present_on_share_list(selenium, browser_id, name):
     driver = select_browser(selenium, browser_id)
-    assert len(_get_share_from_shares_list(driver, name)) == 1
+    assert len(_get_share_from_shares_list(driver, name)) == 1, \
+        '{} == 1'.format(len(_get_share_from_shares_list(driver, name)))
 
 
 @when(parsers.parse('user of {browser_id} sees that share named '
@@ -38,7 +39,8 @@ def is_present_on_share_list(selenium, browser_id, name):
                     '"{name}" has disappeared from the shares list'))
 def is_not_present_in_share_list(selenium, browser_id, name):
     driver = select_browser(selenium, browser_id)
-    assert len(_get_share_from_shares_list(driver, name)) == 0
+    assert len(_get_share_from_shares_list(driver, name)) == 0, \
+        '{} == 0'.format(len(_get_share_from_shares_list(driver, name)))
 
 
 @when(parsers.parse('user of {browser_id} sees that '
@@ -47,8 +49,10 @@ def is_not_present_in_share_list(selenium, browser_id, name):
                     '"{prev_name}" has been renamed to "{next_name}"'))
 def has_share_been_renamed(selenium, browser_id, prev_name, next_name):
     driver = select_browser(selenium, browser_id)
-    assert len(_get_share_from_shares_list(driver, prev_name)) == 0
-    assert len(_get_share_from_shares_list(driver, next_name)) == 1
+    assert len(_get_share_from_shares_list(driver, prev_name)) == 0, \
+        '{} == 0'.format(len(_get_share_from_shares_list(driver, prev_name)))
+    assert len(_get_share_from_shares_list(driver, next_name)) == 1, \
+        '{} == 1'.format(len(_get_share_from_shares_list(driver, next_name)))
 
 
 @when(parsers.parse('user of {browser_id} sees that absolute share path '
@@ -61,7 +65,7 @@ def is_share_abs_path_correct(selenium, browser_id, path):
                                                    '.share-info-head '
                                                    '.file-breadcrumbs-list')
     for dir1, dir2 in zip(path.split('/'), abs_path.text.split()):
-        assert dir1 == dir2
+        assert dir1 == dir2, '{} == {}'.format(dir1, dir2)
 
 
 @when(parsers.parse('user of {browser_id} sees that current working directory '
@@ -73,7 +77,7 @@ def is_cwd_correct(selenium, browser_id, path):
     cwd = driver.find_element_by_css_selector('.files-list '
                                               '.file-breadcrumbs-list')
     for dir1, dir2 in zip(path.split('/'), cwd.text.split()):
-        assert dir1 == dir2
+        assert dir1 == dir2, '{} == {}'.format(dir1, dir2)
 
 
 @when(parsers.parse('user of {browser_id} changes current working directory '
@@ -88,7 +92,7 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
                                                        'a')
     dir1, dir2 = None, None
     for dir1, dir2 in zip(path.split('/'), breadcrumbs):
-        assert dir1 == dir2.text
+        assert dir1 == dir2.text, '{} == {}'.format(dir1, dir2.text)
     dir2.click()
 
 
@@ -105,7 +109,7 @@ def click_on_dir_in_abs_path(selenium, browser_id, path):
                                                        'a')
     dir1, dir2 = None, None
     for dir1, dir2 in zip(path.split('/'), breadcrumbs):
-        assert dir1 == dir2.text
+        assert dir1 == dir2.text, '{} == {}'.format(dir1, dir2.text)
     dir2.click()
 
 
@@ -118,7 +122,7 @@ def is_selected_share_named(selenium, browser_id, share_name):
     name = driver.find_element_by_css_selector('#content-scroll '
                                                '.share-info-head '
                                                '.share-name').text
-    assert name == share_name
+    assert name == share_name, '{} == {}'.format(name, share_name)
 
 
 @when(parsers.parse('user of {browser_id} sees that '
@@ -128,7 +132,7 @@ def is_selected_share_named(selenium, browser_id, share_name):
 def is_public_share_named(selenium, browser_id, share_name):
     driver = select_browser(selenium, browser_id)
     name = driver.find_element_by_css_selector('.share-name').text
-    assert name == share_name
+    assert name == share_name, '{} == {}'.format(name, share_name)
 
 
 @when(parsers.parse('user of {browser_id} does not see any share'))
@@ -139,7 +143,7 @@ def is_not_any_share(selenium, browser_id):
                                                   '.secondary-sidebar-item, '
                                                   '#content-scroll '
                                                   '.share-info-head')
-    assert not shares
+    assert not shares, 'shares found'
 
 
 @when(parsers.parse('user of {browser_id} sees that he '
@@ -154,4 +158,4 @@ def is_share_not_viewable(selenium, browser_id):
         message='waiting for public share view to disappear'
     )
     assert not re.search(r'https?://.*?/public/shares(/.*)?',
-                         driver.current_url)
+                         driver.current_url), r'user can see public share'

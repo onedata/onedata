@@ -119,7 +119,8 @@ def press_enter_on_active_element(selenium, browser_id):
 def link_with_text_present(selenium, browser_id, links_names):
     driver = select_browser(selenium, browser_id)
     for name in parse_seq(links_names):
-        assert driver.find_element_by_link_text(name)
+        assert driver.find_element_by_link_text(name), \
+            '{} link not found'.format(name)
 
 
 @given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
@@ -220,7 +221,8 @@ def refresh_site(selenium, browser_id):
                  '(?:url|URL) matches (?P<path>.+?)'))
 def is_url_matching(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    assert re.search(path, driver.current_url)
+    assert re.search(path, driver.current_url), \
+        '{} is like {}'.format(driver.current_url, path)
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) opens received (?:url|URL)'))

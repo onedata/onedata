@@ -168,5 +168,5 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
                                                        'a')
     dir1, dir2 = None, None
     for dir1, dir2 in zip(path.split('/'), breadcrumbs):
-        assert dir1 == dir2.text
+        assert dir1 == dir2.text, '{} == {}'.format(dir1, dir2.text)
     dir2.click()

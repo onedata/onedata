@@ -25,4 +25,6 @@ def check_if_home_space_icon_next_to_spaces(selenium, browser_id, space_name):
         return None
 
     driver = select_browser(selenium, browser_id)
-    assert _find_home_space_icon(driver).text == space_name
+    displayed_name = _find_home_space_icon(driver).text
+    assert displayed_name == space_name, \
+        '{} == {}'.format(space_name, displayed_name)

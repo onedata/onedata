@@ -174,4 +174,4 @@ def click_on_button_in_sidebar_header(selenium, browser_id, btn_name):
                     '{item_type} named "{item_name}" has appeared'))
 def has_submenu_appeared(browser_id, item_type, item_name, tmp_memory):
     item = tmp_memory[browser_id]['{}s'.format(item_type)][item_name]
-    assert item.find_element_by_css_selector('ul.submenu')
+    assert item.find_element_by_css_selector('ul.submenu'), 'submenu not found'
