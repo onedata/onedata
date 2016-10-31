@@ -186,7 +186,7 @@ def click_on_file_item(selenium, browser_id, item_name,
     driver = select_browser(selenium, browser_id)
     all_items = _get_items_from_file_list(driver)
     item = all_items.get(item_name)
-    if item:
+    if item and type_to_icon[item_type] in item[2].get_attribute('class'):
         item[0].click()
     else:
         raise ValueError('no {} named {} found'.format(item_type, item_name))

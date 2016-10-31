@@ -142,7 +142,6 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
     )
 
 
-# TODO implement better checking dir tree
 @when(parsers.parse('user of {browser_id} sees that current working directory '
                     'displayed in breadcrumbs is {path}'))
 @then(parsers.parse('user of {browser_id} sees that current working directory '
@@ -154,3 +153,20 @@ def is_displayed_path_correct(selenium, browser_id, path):
                                                       '.file-breadcrumbs-list')
     for dir1, dir2 in zip(path.split('/'), breadcrumbs.text.split('\n')):
         assert dir1 == dir2, '{:s} == {:s}'.format(dir1, dir2)
+
+
+@when(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs'))
+@then(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs'))
+def change_cwd_using_breadcrumbs(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    breadcrumbs = driver.find_elements_by_css_selector('#main-content '
+                                                       '.secondary-top-bar '
+                                                       '.file-breadcrumbs-list '
+                                                       '.file-breadcrumbs-item '
+                                                       'a')
+    dir1, dir2 = None, None
+    for dir1, dir2 in zip(path.split('/'), breadcrumbs):
+        assert dir1 == dir2.text
+    dir2.click()

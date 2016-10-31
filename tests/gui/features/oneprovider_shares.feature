@@ -24,7 +24,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -39,9 +39,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back
-    Then user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    Then user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -62,7 +61,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -77,9 +76,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back
-    Then user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    Then user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -100,7 +98,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -112,7 +110,7 @@ Feature: Oneprovider Share view
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
     And user of browser sees shared directory named "dir1" on files list
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share summary" modal has appeared
     And user of browser clicks "Close" confirmation button in displayed modal
@@ -120,9 +118,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back
-    Then user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    Then user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -143,7 +140,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -161,10 +158,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -185,7 +180,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -204,10 +199,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -228,7 +221,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -250,10 +243,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -274,7 +265,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -288,7 +279,7 @@ Feature: Oneprovider Share view
     And user of browser sees that share named "share1" has appeared in the shared list
     And user of browser clicks on the "data" tab in main menu sidebar
     And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -311,7 +302,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
     And user of browser sees that "Share the directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -342,10 +333,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -377,9 +366,8 @@ Feature: Oneprovider Share view
     And user of browser sees that file named "file3" has appeared on files list
 
     # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
 
     And user of browser sees that "Share the directory" modal has appeared
@@ -421,10 +409,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -470,10 +456,8 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir3" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
 
     And user of browser sees that "Share the directory" modal has appeared
@@ -506,10 +490,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -550,11 +532,9 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir3" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
+    And user of browser changes current working directory to space1 using breadcrumbs
     And user of browser double clicks on directory named "dir1" from files list
-    And user of browser clicks on directory named "dir2" from files list
+    And user of browser selects "dir2" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
 
     And user of browser sees that "Share the directory" modal has appeared
@@ -574,10 +554,8 @@ Feature: Oneprovider Share view
     And user of browser sees that absolute share path visible in share's info header is as follows: space1/dir1/dir2
 
     And user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -623,11 +601,9 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir3" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
+    And user of browser changes current working directory to space1 using breadcrumbs
     And user of browser double clicks on directory named "dir1" from files list
-    And user of browser clicks on directory named "dir2" from files list
+    And user of browser selects "dir2" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
 
     And user of browser sees that "Share the directory" modal has appeared
@@ -657,10 +633,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -702,10 +676,8 @@ Feature: Oneprovider Share view
     And user of browser sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
     And user of browser sees that file named "20B-1.txt" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
 
     And user of browser sees that "Share the directory" modal has appeared
@@ -729,10 +701,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -753,7 +723,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
 
     And user of browser sees that "Share the directory" modal has appeared
@@ -787,10 +757,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -811,7 +779,7 @@ Feature: Oneprovider Share view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Share element"
 
     And user of browser sees that "Share the directory" modal has appeared
@@ -840,10 +808,8 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser uses spaces select to change data space to "Small space"
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks on directory named "dir1" from files list
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal

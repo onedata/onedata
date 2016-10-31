@@ -178,7 +178,7 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
     driver = select_browser(selenium, browser_id)
     Wait(driver, 2*WAIT_BACKEND).until(
         notify_with_text_present,
-        message='waiting for notify matching: {}'.format(text_regexp)
+        message='waiting for notify matching: {}'.format(text_regexp.pattern)
     )
 
 

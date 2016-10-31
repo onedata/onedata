@@ -7,6 +7,8 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+import re
+
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
@@ -81,6 +83,17 @@ def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
             break
     else:
         raise ValueError('no button named {} found'.format(button_name))
+
+
+@when(parsers.parse('user of {browser_id} sees that message '
+                    'displayed in modal matches: {regexp}'))
+@then(parsers.parse('user of {browser_id} sees that message '
+                    'displayed in modal matches: {regexp}'))
+def is_modal_msg_matching(browser_id, regexp, tmp_memory):
+    modal = tmp_memory[browser_id]['window']['modal']
+    msg = modal.find_element_by_css_selector('.modal-body .message-text')
+    assert re.match(regexp, msg), \
+        '{regexp} == {msg}'.format(regexp=regexp, msg=msg)
 
 
 @when(parsers.parse('user of {browser_id} sees '
