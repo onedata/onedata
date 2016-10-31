@@ -83,6 +83,8 @@ def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
                                            if item.isfile()))
 
 
+# TODO currently every browser in test download to that same dir,
+# repair it by changing capabilities in pytest selenium mult
 @when(parsers.parse('user of {browser_id} sees that content of downloaded '
                     'file "{file_name}" is equal to: "{content}"'))
 @then(parsers.parse('user of {browser_id} sees that content of downloaded '
@@ -90,17 +92,20 @@ def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)
-    file_path = None
+    file_path = os.path.join(str(tmpdir), 'download', file_name)
 
     # sleep waiting for file to finish downloading
+    exist = False
     for sleep_time in range(10):
-        try:
-            file_path = tmpdir.ensure('download', file_name)
-        except py.error.ENOENT:
-            continue
+        exist = os.path.isfile(file_path)
+        if not exist:
+            time.sleep(sleep_time)
+
+    if not exist:
+        raise ValueError('file {} not downloaded'.format(file_name))
 
     def _check_file_content():
-        with file_path.open() as f:
+        with open(file_path, 'r') as f:
             file_content = ''.join(f.readlines())
             return content == file_content
 
