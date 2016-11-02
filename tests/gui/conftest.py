@@ -15,9 +15,10 @@ import pytest
 import re
 
 import sys
+from pytest_selenium_multi.drivers.utils import factory
 
 
-SELENIUM_IMPLICIT_WAIT = 5
+SELENIUM_IMPLICIT_WAIT = 8
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
@@ -25,24 +26,37 @@ WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
 
 # use this const when using: WebDriverWait(selenium, WAIT_BACKEND).until(lambda s: ...)
 # when waiting for backend changes
-WAIT_BACKEND = 10
+WAIT_BACKEND = 15
 
+# waiting for backend to load after refresh
+WAIT_REFRESH = WAIT_BACKEND
+MAX_REFRESH_COUNT = 6
 
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 
 
+@pytest.fixture
+def tmp_memory():
+    """Dict to use when one wants to store sth between steps.
+
+    Because of use of multiple browsers, the correct format would be:
+     {'browser1': {...}, 'browser2': {...}, ...}
+    """
+    return {}
+
+
 @pytest.fixture(scope='module', autouse=True)
 def _verify_url(request, base_url):
     """Override original fixture to change scope to module (we can have different base_urls for each module)"""
-    from pytest_selenium.pytest_selenium import _verify_url as orig_verify_url
+    from pytest_base_url.plugin import _verify_url as orig_verify_url
     return orig_verify_url(request, base_url)
 
 
 @pytest.fixture(scope='module', autouse=True)
 def sensitive_url(request, base_url):
     """Override original fixture to change scope to module (we can have different base_urls for each module)"""
-    from pytest_selenium.safety import sensitive_url as orig_sensitive_url
+    from pytest_selenium_multi.safety import sensitive_url as orig_sensitive_url
     return orig_sensitive_url(request, base_url)
 
 
@@ -82,7 +96,7 @@ def _skip_sensitive(request, sensitive_url):
 
 
 @pytest.fixture
-def capabilities(request, capabilities):
+def capabilities(request, capabilities, tmpdir):
     """Add --no-sandbox argument for Chrome headless
     Should be the same as adding capability: 'chromeOptions': {'args': ['--no-sandbox'], 'extensions': []}
     """
@@ -93,6 +107,9 @@ def capabilities(request, capabilities):
         chrome_options = webdriver.ChromeOptions()
         # TODO: use --no-sandbox only in headless mode, support for Chrome in Docker and XVFB can be buggy now: https://jira.plgrid.pl/jira/browse/VFS-2204
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("enable-popup-blocking")
+        prefs = {"download.default_directory": str(tmpdir)}
+        chrome_options.add_experimental_option("prefs", prefs)
         capabilities.update(chrome_options.to_capabilities())
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
     # but currently this driver is buggy...
@@ -109,11 +126,32 @@ def capabilities(request, capabilities):
     return capabilities
 
 
+@pytest.fixture
+def firefox_profile(firefox_profile, tmpdir):
+    @factory
+    def _get_instance():
+        profile = firefox_profile.get_instance()
+        profile.set_preference('browser.download.folderList', 2)
+        profile.set_preference('browser.download.manager.showWhenStarting',
+                               False)
+        profile.set_preference('browser.helperApps.alwaysAsk.force', False)
+        profile.set_preference('browser.download.dir', str(tmpdir))
+        profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
+                               'text/anytext, text/plain, text/html')
+        profile.update_preferences()
+        return profile
+    return _get_instance
+
+
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
 @pytest.fixture
-def selenium(selenium):
-    selenium.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
-    selenium.set_window_size(1280, 1024)
-    # currenlty, we rather set window size
-    # selenium.maximize_window()
-    return selenium
+def config_driver(config_driver):
+    def _configure(driver):
+        driver = config_driver(driver)
+        driver.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
+        driver.set_window_size(1280, 1024)
+        # currenlty, we rather set window size
+        # selenium.maximize_window()
+        return driver
+    return _configure
+

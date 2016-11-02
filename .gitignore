@@ -5,12 +5,13 @@
 
 test-reports/*
 
+tests/env_up/logs
 tests/acceptance/logs
-tests/cucumber/logs
 tests/performance/logs
 tests/gui/logs
+.cache
 tests/**/.cache
-
+tests/acceptance/profiling_data/
 
 package
 docker-build-list.json

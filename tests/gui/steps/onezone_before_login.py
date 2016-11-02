@@ -6,70 +6,63 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import re
-from selenium.common.exceptions import TimeoutException
-from tests.utils.cucumber_utils import list_parser
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from pytest_bdd import given, when, then, parsers
-from tests.gui.utils.generic import parse_url, go_to_relative_url
+from tests.utils.acceptance_utils import list_parser
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-@given("user opens a Onezone URL in a web browser")
-def visit_onezone(base_url, selenium):
-    oz_url = base_url
-    selenium.get(oz_url)
+@given(parsers.re("users? of (?P<browser_id_list>.*) opened Onezone URL"))
+def g_visit_onezone(base_url, selenium, browser_id_list):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        oz_url = base_url
+        driver.get(oz_url)
 
 
-# @given("I'm logged in to Onezone")
-# def logged_in_to_onezone(selenium):
-#     """Will check if going to / will redirect to onezone page (default when logged in)
-#     If not - try to login with dev_login"""
-#     go_to_relative_url(selenium, '/')
-#     try:
-#         wait(selenium, 2).\
-#             until(lambda s: parse_url(s.current_url).group('method') == '/onezone')
-#     except TimeoutException:
-#         go_to_relative_url(selenium, '/dev_login')
-#         selenium.find_element_by_css_selector('a').click()
-#         wait(selenium, 4). \
-#             until(lambda s: parse_url(s.current_url).group('method') == '/onezone',
-#                   'Current URL method: {m}'.format(m=parse_url(selenium.current_url).group('method')))
-
-
-@then(parsers.parse('user should see login buttons for {provider_names}'))
-def login_provider_buttons(selenium, provider_names):
-    for name in list_parser(provider_names):
-        assert selenium.find_element_by_css_selector(
-            '.login-box a.login-icon-box.{name}'.format(name=name)
+@then(parsers.parse('user of {browser_id} should see login button '
+                    'for {provider_name}'))
+def login_provider_buttons(selenium, browser_id, provider_name):
+    driver = select_browser(selenium, browser_id)
+    assert driver.find_element_by_css_selector(
+            '.login-box a.login-icon-box.{name}'.format(name=provider_name)
         )
 
 
-def _click_login_provider_button(selenium, provider_name):
-    selenium.find_element_by_css_selector(
-        '.login-box a.login-icon-box.{name}'.format(name=provider_name)).click()
+def _click_login_provider_button(driver, provider_name):
+    driver.find_element_by_css_selector(
+        '.login-box a.login-icon-box.{:s}'.format(provider_name)
+    ).click()
 
 
-@given(parsers.parse('user clicks on the "{provider_name}" login button'))
-def g_click_login_provider_button(selenium, provider_name):
-    _click_login_provider_button(selenium, provider_name)
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
+                  '"(?P<provider_name>.*)" login button'))
+def g_click_login_provider_button(selenium, browser_id_list, provider_name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _click_login_provider_button(driver, provider_name)
 
 
-@when(parsers.parse('user clicks on the "{provider_name}" login button'))
-def w_click_login_provider_button(selenium, provider_name):
-    _click_login_provider_button(selenium, provider_name)
+@when(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+                 '"(?P<provider_name>.*)" login button'))
+def w_click_login_provider_button(selenium, browser_id_list, provider_name):
+    for browser_id in list_parser(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        _click_login_provider_button(driver, provider_name)
 
 
+@then(parsers.re('user of (?P<browser_id>.+) should be '
+                 'redirected to (?P<page>.+) page'))
+def being_redirected_to_page(page, selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    wait(driver, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
 
 
-
-
-
-@then(parsers.re('I should be redirected to (?P<page>.+) page'))
-def being_redirected_to_page(page, selenium):
-    wait(selenium, 5).until(lambda s: re.match(r'https?://.*?(/#)?(/.*)', s.current_url).group(2) == page)
-
-
-# @when('I login with development login link as "{user}"')
-# def login_dev_onezone_with_url(selenium, base_url, user):
-#     url = '{oz_url}/validate_dev_login?user={user}'.format(oz_url=base_url, user=user)
-#     url.replace('//', '/')
-#     selenium.get(url)
+@given(parsers.re('users? of (?P<browser_id_list>.*) logged '
+                  'as (?P<user_id_list>.*)'))
+def log_to_user_in_each_browser(selenium, browser_id_list,
+                                user_id_list):
+    for browser_id, user_id in zip(list_parser(browser_id_list),
+                                   list_parser(user_id_list)):
+        driver = select_browser(selenium, browser_id)
+        driver.find_element_by_link_text(user_id).click()

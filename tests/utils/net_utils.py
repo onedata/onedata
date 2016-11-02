@@ -1,4 +1,4 @@
-"""This module contains net utility functions for acceptance, cucumber
+"""This module contains net utility functions for env_up, acceptance
 and performance tests.
 """
 __author__ = "Lukasz Opiola, Jakub Kudzia"

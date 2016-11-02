@@ -7,8 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import (Result, generate_configs, performance)
-from tests.utils.client_utils import (get_client, mktemp, rm,
-                                      user_home_dir, dd)
+from tests.utils.client_utils import mkstemp, rm, user_home_dir, dd
 
 import os
 import re
@@ -46,19 +45,15 @@ class Testdd(AbstractPerformanceTest):
         user_directio = "u1"
         user_proxy = "u2"
 
-        client_directio = get_client("client-directio", user_directio, context)
-        client_proxy = get_client("client-proxy", user_proxy, context)
+        client_directio = context.get_client(user_directio, "client-directio")
+        client_proxy = context.get_client(user_proxy, "client-proxy")
 
-        test_file_directio = mktemp(client_directio,
-                                    path=client_directio.mount_path,
-                                    user=user_directio)
+        test_file_directio = mkstemp(client_directio,
+                                     dir=client_directio.absolute_path("s1"))
 
-        test_file_proxy = mktemp(client_proxy,
-                                 path=client_proxy.mount_path,
-                                 user=user_proxy)
-        test_file_host = mktemp(client_proxy,
-                                path=user_home_dir(user_proxy),
-                                user=user_proxy)
+        test_file_proxy = mkstemp(client_proxy,
+                                  dir=client_proxy.absolute_path("s1"))
+        test_file_host = mkstemp(client_proxy, dir=user_home_dir(user_proxy))
 
         test_result1 = execute_dd_test(client_directio, user_directio,
                                        test_file_directio, block_size,
@@ -74,12 +69,9 @@ class Testdd(AbstractPerformanceTest):
                                        block_size, block_size_unit, size,
                                        size_unit, "host system")
 
-        rm(client_directio, test_file_directio, recursive=True, force=True,
-           user=user_directio)
-        rm(client_proxy, test_file_proxy, recursive=True, force=True,
-           user=user_proxy)
-        rm(client_proxy, test_file_host, recursive=True, force=True,
-           user=user_proxy)
+        rm(client_directio, test_file_directio, recursive=True, force=True)
+        rm(client_proxy, test_file_proxy, recursive=True, force=True)
+        rm(client_proxy, test_file_host, recursive=True, force=True)
 
         return test_result1 + test_result2 + test_result3
 

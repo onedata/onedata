@@ -22,7 +22,9 @@ class TestRpmInstallation:
         oz_node = self.result['oz_worker_nodes'][0]
         (_, _, oz_dockername) = oz_node.partition('@')
 
-        command = 'dnf install -y python && ' \
+        command = 'dnf -y update && ' \
+                  'dnf install -y ca-certificates python python-setuptools wget && ' \
+                  'easy_install requests && ' \
                   'python /root/data/rpm_install_script.py'
 
         container = docker.run(tty=True,

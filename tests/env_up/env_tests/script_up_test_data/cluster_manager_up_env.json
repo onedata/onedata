@@ -1,0 +1,79 @@
+{
+    "dirs_config": {
+        "cluster_manager": {
+            "input_dir": "_build/default/rel/cluster_manager",
+            "target_dir": "_build/default/rel/test_cluster"
+        }
+    },
+    "os_configs": {
+        "cfg1": {
+            "storages": [
+                "/mnt/st1"
+            ],
+            "users": [
+                "user1"
+            ],
+            "groups": {
+                "group1": [
+                    "user1"
+                ]
+            }
+        },
+        "cfg2": {
+            "storages": [
+                {
+                    "type": "posix",
+                    "name": "/mnt/st1"
+                },
+                {
+                    "type": "posix",
+                    "name": "/mnt/st2"
+                }
+            ],
+            "users": [
+                "user1",
+                "user2",
+                "user3"
+            ],
+            "groups": {
+                "group1": [
+                    "user1"
+                ],
+                "group2": [
+                    "user2",
+                    "user3"
+                ],
+                "group3": [
+                    "user1",
+                    "user3"
+                ],
+                "fuse": [
+                    "user1",
+                    "user2",
+                    "user3"
+                ]
+            }
+        }
+    },
+    "provider_domains": {
+        "p1": {
+            "db_driver": "couchdb",
+            "os_config": "cfg1",
+            "cluster_manager": {
+                "cm1": {
+                    "vm.args": {
+                        "setcookie": "cookie2"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "worker_num": 0
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

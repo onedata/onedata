@@ -13,6 +13,10 @@ import re
 import subprocess
 import pytest
 import os
+import inspect
+import time
+
+ENV_UP_RETRIES_NUMBER = 5
 
 
 def run_os_command(cmd, output=True):
@@ -33,10 +37,11 @@ def run_os_command(cmd, output=True):
             return subprocess.call(cmd, stdout=devnull, stderr=devnull)
 
 
-def run_env_up_script(script, config=None, logdir=None, args=[]):
+def run_env_up_script(script, config=None, logdir=None, args=[], skip=True,
+                      retries=ENV_UP_RETRIES_NUMBER):
     """Runs given script to bring up test environment.
     Script must be located in docker_dir directory (see test_common.py)
-    If script fails, functions skips test.
+    If script fails, functions skips test (if skip=True).
     """
     cmd = [os.path.join(DOCKER_DIR, script)]
 
@@ -47,8 +52,9 @@ def run_env_up_script(script, config=None, logdir=None, args=[]):
     if config:
         cmd.append(config)
 
+    output = ""
     try:
-        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        output = retry_running_cmd_until(cmd, retries=retries)
     except Exception as e:
         if isinstance(e, subprocess.CalledProcessError):
             err_msg = e.output
@@ -57,13 +63,12 @@ def run_env_up_script(script, config=None, logdir=None, args=[]):
         if not logdir:
             # even if script doesn't have logdir option we want logs from
             # executing this script
-            logdir = make_logdir(ACCEPTANCE_DIR, script)
+            logdir = make_logdir(ENV_UP_DIR, script)
         logfile_error_path = os.path.join(logdir, PREPARE_ENV_ERROR_LOG_FILE)
         save_log_to_file(logfile_error_path, err_msg)
-        pytest.skip("{script} script failed because of {reason}".format(
-            script=script,
-            reason=err_msg
-        ))
+        msg = "{script} script failed because of {reason}"\
+            .format(script=script, reason=err_msg)
+        pytest.skip(msg) if skip else pytest.fail(msg)
 
     stripped_output = strip_output_logs(output)
 
@@ -75,6 +80,29 @@ def run_env_up_script(script, config=None, logdir=None, args=[]):
         logfile.write(stripped_output)
         logfile.close()
     return output_dict
+
+
+def retry_running_cmd_until(cmd, retries=0):
+    """Retries running command
+    :param cmd: command to be run
+    :type cmd: <type 'str'>
+    :param retries: number of times that command will be retried to run
+    :type retries: <type 'int'>
+    """
+    output = ""
+    try:
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+    except Exception as e:
+        print """{0}
+Number of retries left: {1}
+""".format(e, retries)
+
+        if retries > 0:
+            time.sleep(1)
+            retry_running_cmd_until(cmd, retries - 1)
+        else:
+            raise e
+    return output
 
 
 def strip_output_logs(output):
@@ -144,6 +172,10 @@ def get_storages(config_path, provider_id):
     return config['os_configs'][cfg]['storages']
 
 
+def get_matching_op_erl_node(name, env):
+    return [w for w in env['op_worker_nodes'] if name in w][0]
+
+
 def get_first_op_erl_node(domain, env):
     return get_first_erl_node(domain, env, 'op_worker_nodes')
 
@@ -172,3 +204,42 @@ def get_domain(node):
     if '@' in node:
         node = hostname(node)
     return node.split('.', 1)[-1]
+
+
+def get_function_name(depth=1):
+    """Returns function name. Function name is acquired by inspecting stack,
+    by default it will return name of function that call this function.
+    i.e.
+    def f():
+        print get_function_name()
+
+    f()
+    >> f
+    Passing other value for depth you can get name of deeper nested function
+    i.e.
+    def f1():
+        return get_function_name(depth=2)
+
+    def f2():
+        print f1()
+
+    f2()
+    >> f2
+    """
+
+    return inspect.stack()[depth][3]
+
+
+def handle_exception(e, function_name=None):
+    """Nice printing of exceptions in tests.
+    :param e: exception object,
+    :param function_name: name of function in which exception was raised, if None,
+     function_name is acquired from get_function_name() function
+    """
+    if not function_name:
+        function_name = get_function_name(depth=2)
+
+    print """#######################################
+ERROR IN FUNCTION {0}:
+{1}
+#######################################""".format(function_name, e)

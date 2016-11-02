@@ -4,6 +4,105 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc10
+
+* Releasing new version 3.0.0-rc10
+* VFS-2714 print gherkin-reports in acceptance tests after pytest-bdd update
+
+
+### 3.0.0-rc9
+
+* VFS-2617 Changed metadata submenu to metadata panel
+
+
+### 3.0.0-rc8
+
+* Releasing new version 3.0.0-rc8
+* VFS-2549 Add tests for public readonly share: add file, remove file, jump no breadcrumbs
+* VFS-2549 Fix share tests to work with new gui
+* VFS-2549 Add 2 new tests for shares: recursive delete, jumping in breadcrumbs
+* VFS-2549 Fix share multi test
+* VFS-2634 Fix tests to work with new gui, add new share tests
+* VFS-2634 Fix share steps, add 2 new scenarios
+
+
+### 3.0.0-rc7
+
+* VFS-2549 Add share tests for multiple browsers: download, rename, remove
+
+
+### 3.0.0-rc6
+
+* VFS-2180 Improve links conflict resolution
+* VFS-2180 Improve dbsync implementation
+* VFS-2180 Use gen_server2 instead of erlang's gen_server module
+* VFS-2390 Fix handlers specification in REST API
+* VFS-2390 Update rebar to version 3
+* Update memory management
+* VFS-2180 Allow for concurrent file creation
+* VFS-2202 modify README.md
+* VFS-2202 fix step name of step creating webdriver instances
+* VFS-2202 remake givens to work with multiple browsers
+* VFS-2202 add join group test
+* VFS-2202 remake use of pytest_selenium_multi fixtures
+* VFS-2202 remake firefox profile as factory
+
+
+### 3.0.0-rc5
+
+* Update interfaces
+* Increase system performance
+* VFS-2534 Improve events processing
+* Update one panel for extended configuration options
+* VFS-2527 Use sbin/init as docker entrypoint
+* VFS-2449 fix step names and activating input box
+* VFS-2476 Add events profiling tests
+* VFS-2449 fix entering text to input box
+* VFS-2449 add msg to wait(...).until(..., msg=...)
+* VFS-2450 fail test instead of skipping if setting up environment fails
+* VFS-2454 add download test for firefox
+* VFS-2454 add download test for chrome
+
+
+### 3.0.0-rc4
+
+* Add ONEPANEL_DEBUG_MODE env variable to release docker entrypoint
+
+
+### 3.0.0-RC3
+
+* VFS-2156 Update release docker
+* VFS-2156 Update packages tests
+* VFS-2395 Fix given step for checking provider's name in file distribution
+* VFS-2395 Fix given for data spaces and renamed some steps for spaces tests
+* VFS-2395 Added scrolling to element when clicking settings icon.
+* VFS-2395 Refactorize functions for creating space in onezone
+
+
+### 3.0.0-RC2
+
+* Turn off HSTS by default, allow configuration via app.config
+* Update file consistency management
+* Enable metadata caching
+* Extend support for user-defined metadata
+* Update Web_GUI and REST API
+* added NO_CACHE option to makefile
+* Enable Symmetric Multiprocessing
+* Use environment variables for packages build
+
+
+### 3.0.0-RC1
+
+* Tests refactoring
+* Several op_worker stability improvements
+* Extend op_worker system monitoring
+* Update session management
+* VFS-2316 Update etls.
+* Improve client stability
+* VFS-1963 Improve automatic storage discovery
+* VFS-2270 Print out the hostname of client's provider.
+
+
 ### 3.0.0-beta8
 
 * Additional GUI model relations

@@ -1,5 +1,5 @@
 """
-Definitions of fixtures used in acceptance, cucumber and performance tests.
+Definitions of fixtures used in env_up, acceptance and performance tests.
 """
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -20,14 +20,16 @@ import shutil
 
 def pytest_addoption(parser):
     parser.addoption("--test-type", action="store", default=None,
-                     help="type of test (cucumber, acceptance,"
+                     help="type of test (acceptance, env_up,"
                           "performance, packaging, gui)")
+    parser.addoption("--ignore-xfail", action="store_true",
+                     help="Ignores xfail mark")
 
 
 def pytest_generate_tests(metafunc):
     if 'test_type' in metafunc.fixturenames:
         test_type = metafunc.config.option.test_type
-        if test_type in ['cucumber', 'performance', 'gui']:
+        if test_type in ['acceptance', 'performance', 'gui']:
             envs = get_json_files(map_test_type_to_env_dir(test_type),
                                   relative=True)
             metafunc.parametrize(
@@ -44,8 +46,8 @@ def test_type():
 @pytest.fixture(scope="module")
 def env_description_file(request, test_type, env):
     """NOTE: If you want to start tests in given suite with environments
-    different than all .json files from DEFAULT_CUCUMBER_ENV_DIR or
-    PERFORMANCE_ENV_DIR (cucumber and performance tests respectively)
+    different than all .json files from DEFAULT_ACCEPTANCE_ENV_DIR or
+    PERFORMANCE_ENV_DIR (acceptance and performance tests respectively)
     this fixture must be overridden in that test module. As params
     for overridden fixture you must specify .json files with description
     of test environment for which you want tests to be started.
@@ -69,7 +71,7 @@ def persistent_environment(request, test_type, env_description_file):
     feature_name = request.module.__name__.split('.')[-1]
     logdir = make_logdir(logdir_path, os.path
                          .join(get_file_name(env_description_file), feature_name))
-    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir)
+    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir, skip=False)
 
     def fin():
         docker.remove(request.onedata_environment['docker_ids'],
@@ -94,12 +96,12 @@ def onedata_environment(persistent_environment, request):
 
 
 @pytest.fixture(scope="module")
-def client_ids(persistent_environment):
+def client_dockers(persistent_environment, context):
     ids = {}
     for client in persistent_environment['client_nodes']:
         client = str(client)
         client_name = client.split(".")[0]
-        ids[client_name] = docker.inspect(client)['Id']
+        ids[client_name] = client
     return ids
 
 
@@ -157,21 +159,23 @@ def xfail_by_env(request, env_description_file):
     global variable in that module named pytestmark in
     the following way:
     pytestmark = pytest.mark.xfail_env(*envs)
-    Running tests with --runxfail causes tests marked as xfail to run
+    Running tests with --ignore-xfail causes xfail marks to be ignored.
     """
     if request.node.get_marker('xfail_env'):
         env = get_file_name(env_description_file)
         args = request.node.get_marker('xfail_env').kwargs
         reason = args['reason']
         arg_envs = [get_file_name(e) for e in args['envs']]
-        if env in arg_envs:
-            pytest.xfail('xfailed on env: {env} with reason: {reason}'
-                         .format(env=env, reason=reason))
+        ignore = request.config.getoption("--ignore-xfail")
+        if env in arg_envs and not ignore:
+            request.node.add_marker(pytest.mark.xfail(
+                    reason='xfailed on env: {env} with reason: {reason}'
+                        .format(env=env, reason=reason)))
 
 
 def map_test_type_to_env_dir(test_type):
     return {
-        'cucumber': DEFAULT_CUCUMBER_ENV_DIR,
+        'acceptance': DEFAULT_ACCEPTANCE_ENV_DIR,
         'performance': PERFORMANCE_ENV_DIR,
         'gui': GUI_ENV_DIR
     }[test_type]
@@ -179,10 +183,10 @@ def map_test_type_to_env_dir(test_type):
 
 def map_test_type_to_logdir(test_type):
     return {
-        'cucumber': CUCUMBER_LOGDIR,
+        'acceptance': ACCEPTANCE_LOGDIR,
         'performance': PERFORMANCE_LOGDIR,
         'gui': GUI_LOGDIR
-    }.get(test_type, CUCUMBER_LOGDIR)
+    }.get(test_type, ACCEPTANCE_LOGDIR)
 
 
 def clear_storage(storage_path):

@@ -1,38 +1,51 @@
-FROM onedata/fedora-systemd:23
+FROM ubuntu:16.04
 MAINTAINER Krzysztof Trzepla <krzysztof.trzepla@gmail.com>
 
 # Build arguments
 ARG RELEASE
-ARG VERSION=""
+ARG OP_PANEL_VERSION
+ARG CLUSTER_MANAGER_VERSION
+ARG OP_WORKER_VERSION
+ARG ONEPROVIDER_VERSION
 ARG ONEPANEL_AUTOSTART=false
 
 # Get the image up to date and install utility tools
-RUN dnf -y upgrade && \
-    dnf -y install fping python net-tools traceroute vim && \
-    dnf clean all
+RUN apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get -y install ca-certificates curl net-tools python python-setuptools \
+                       python-yaml traceroute vim && \
+    easy_install requests && \
+    apt-get clean
+
+# Generate locale
+RUN locale-gen en_US.UTF-8
 
 # Install oneprovider package
 RUN case ${RELEASE} in \
-		production) \
-			curl -o install.sh http://get.onedata.org/oneprovider.sh; \
-                        sh install.sh ${VERSION}; \
-			;; \
-		*) \
-			curl -o install.sh http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh; \
-                        sh install.sh ${VERSION}; \
-			sed -i 's/{verify_oz_cert, true}/{verify_oz_cert, false}/g' /etc/op_panel/app.config \
-			;; \
-	esac
+        production) \
+            curl -O http://get.onedata.org/oneprovider.sh; \
+            ;; \
+        *) \
+            curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh; \
+            ;; \
+    esac && \
+    sh oneprovider.sh op-panel=${OP_PANEL_VERSION}-1; \
+    sh oneprovider.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1; \
+    sh oneprovider.sh op-worker=${OP_WORKER_VERSION}-1; \
+    sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1
+
+# Disable onezone certificate verification
+RUN sed -i 's/{verify_oz_cert, true}/{verify_oz_cert, false}/g' /etc/op_panel/app.config
+
+EXPOSE 53 53/udp 80 443 5555 5556 6665 6666 7443 8443 8876 8877 9443
 
 # Add missing CA bundle (required for server cert validation)
 ADD ca-bundle.pem /etc/ssl/cert.pem
 
-EXPOSE 53 5555 443 8443 80 8876 8877 9443
-
 # Add entrypoint script
-ADD run.py /root/run.py
+ADD oneprovider.py /root/oneprovider.py
 
-RUN mkdir -p /volumes/persistency /volumes/storage
-VOLUME ["/volumes/persistency", "/volumes/storage"]
+RUN mkdir -p /volumes/persistence /volumes/storage
+VOLUME ["/volumes/persistence", "/volumes/storage"]
 
-CMD /root/run.py
+CMD ["sh", "-c", "/root/oneprovider.py"]

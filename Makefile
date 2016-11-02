@@ -5,11 +5,36 @@ DOCKER_REG_NAME     ?= "docker.onedata.org"
 DOCKER_REG_USER     ?= ""
 DOCKER_REG_PASSWORD ?= ""
 
-ONEPROVIDER_VERSION     ?= $(shell git describe --tags --always | tr - .)
+ifeq ($(strip $(ONEPROVIDER_VERSION)),)
+ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
+endif
+ifeq ($(strip $(CLUSTER_MANAGER_VERSION)),)
+CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always)
+endif
+ifeq ($(strip $(OP_WORKER_VERSION)),)
+OP_WORKER_VERSION       := $(shell git -C op_worker describe --tags --always)
+endif
+ifeq ($(strip $(OP_PANEL_VERSION)),)
+OP_PANEL_VERSION        := $(shell git -C onepanel describe --tags --always)
+endif
+ifeq ($(strip $(ONECLIENT_VERSION)),)
+ONECLIENT_VERSION       := $(shell git -C oneclient describe --tags --always)
+endif
+
+ONEPROVIDER_VERSION     := $(shell echo ${ONEPROVIDER_VERSION} | tr - .)
+CLUSTER_MANAGER_VERSION := $(shell echo ${CLUSTER_MANAGER_VERSION} | tr - .)
+OP_WORKER_VERSION       := $(shell echo ${OP_WORKER_VERSION} | tr - .)
+OP_PANEL_VERSION        := $(shell echo ${OP_PANEL_VERSION} | tr - .)
+ONECLIENT_VERSION       := $(shell echo ${ONECLIENT_VERSION} | tr - .)
+
 ONEPROVIDER_BUILD       ?= 1
-CLUSTER_MANAGER_VERSION	?= $(shell git -C cluster_manager describe --tags --always | tr - .)
-OP_WORKER_VERSION       ?= $(shell git -C op_worker describe --tags --always | tr - .)
-OP_PANEL_VERSION        ?= $(shell git -C onepanel describe --tags --always | tr - .)
+
+ifdef IGNORE_XFAIL
+TEST_RUN := ./test_run.py --ignore-xfail
+else
+TEST_RUN := ./test_run.py
+endif
+
 
 GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
 GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
@@ -24,14 +49,9 @@ all: build
 ## Macros
 ##
 
-MAKE_APPMOCK := appmock/make.py -s appmock -r .
-MAKE_ONEPANEL := onepanel/make.py -s onepanel -r .
-MAKE_OZ_WORKER := oz_worker/make.py -s oz_worker -r .
-MAKE_ONECLIENT := oneclient/make.py -s oneclient -r .
-MAKE_OP_WORKER := op_worker/make.py -s op_worker -r .
-MAKE_CLUSTER_MANAGER := cluster_manager/make.py -s cluster_manager -r .
+NO_CACHE :=  $(shell if [ "${NO_CACHE}" != "" ]; then echo "--no-cache"; fi)
 
-make = $(1)/make.py -s $(1) -r .
+make = $(1)/make.py -s $(1) -r . $(NO_CACHE)
 clean = $(call make, $(1)) clean
 make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i rpm_builder:$(DISTRIBUTION) $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
@@ -51,11 +71,11 @@ unpack = tar xzf $(1).tar.gz
 
 branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
-	./onedata_submodules.sh init
+	./onedata_submodules.sh init ${submodule}
 ifeq ($(branch),develop)
-	./onedata_submodules.sh update --remote
+	./onedata_submodules.sh update --remote ${submodule}
 else
-	./onedata_submodules.sh update
+	./onedata_submodules.sh update ${submodule}
 endif
 
 ##
@@ -90,12 +110,9 @@ build_onepanel: submodules
 ## Artifacts
 ##
 
-artifact: artifact_bamboos artifact_appmock artifact_oneclient artifact_op_worker \
+artifact: artifact_appmock artifact_oneclient artifact_op_worker \
     artifact_oz_worker artifact_cluster_manager artifact_cluster_worker \
     artifact_onepanel
-
-artifact_bamboos:
-	$(call unpack, bamboos)
 
 artifact_appmock:
 	$(call unpack, appmock)
@@ -122,20 +139,23 @@ artifact_onepanel:
 ## Test
 ##
 
-test:
-	./test_run.py --test-type acceptance --test-dir tests/acceptance
+test_env_up:
+	${TEST_RUN} --test-type env_up -vvv --test-dir tests/env_up
 
 test_packaging:
-	./test_run.py --test-type packaging --test-dir tests/packaging -s
+	${TEST_RUN} --test-type packaging -vvv --test-dir tests/packaging -s
 
-test_cucumber:
-	./test_run.py --test-type cucumber --test-dir tests/cucumber
+test:
+	${TEST_RUN} --test-type acceptance -vvv --gherkin-terminal-reporter --test-dir tests/acceptance/scenarios/${SUITE}
 
 test_performance:
-	./test_run.py --test-type performance --test-dir tests/performance
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
 test_gui:
-	./test_run.py --test-type gui --test-dir tests/gui -i onedata/gui_builder:selenium --driver=Firefox
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html
+
+test_profiling:
+	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
 
 ##
 ## Clean
@@ -197,19 +217,19 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	$(call mv_rpm, oneprovider_meta)
 
 rpm_op_panel: clean_onepanel rpmdirs
-	$(call make_rpm, onepanel, package) -e REL_TYPE=oneprovider
+	$(call make_rpm, onepanel, package) -e PKG_VERSION=$(OP_PANEL_VERSION) -e REL_TYPE=oneprovider
 	$(call mv_rpm, onepanel)
 
 rpm_op_worker: clean_op_worker rpmdirs
-	$(call make_rpm, op_worker, package)
+	$(call make_rpm, op_worker, package) -e PKG_VERSION=$(OP_WORKER_VERSION)
 	$(call mv_rpm, op_worker)
 
 rpm_cluster_manager: clean_cluster_manager rpmdirs
-	$(call make_rpm, cluster_manager, package)
+	$(call make_rpm, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION)
 	$(call mv_rpm, cluster_manager)
 
 rpm_oneclient: clean_oneclient rpmdirs
-	$(call make_rpm, oneclient, rpm)
+	$(call make_rpm, oneclient, rpm) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_rpm, oneclient)
 
 rpmdirs:
@@ -233,19 +253,19 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	mv oneprovider_meta/oneprovider.deb package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
 
 deb_op_panel: clean_onepanel debdirs
-	$(call make_deb, onepanel, package) -e REL_TYPE=oneprovider
+	$(call make_deb, onepanel, package) -e PKG_VERSION=$(OP_PANEL_VERSION) -e REL_TYPE=oneprovider
 	$(call mv_deb, onepanel)
 
 deb_op_worker: clean_op_worker debdirs
-	$(call make_deb, op_worker, package)
+	$(call make_deb, op_worker, package) -e PKG_VERSION=$(OP_WORKER_VERSION)
 	$(call mv_deb, op_worker)
 
 deb_cluster_manager: clean_cluster_manager debdirs
-	$(call make_deb, cluster_manager, package)
+	$(call make_deb, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION)
 	$(call mv_deb, cluster_manager)
 
 deb_oneclient: clean_oneclient debdirs
-	$(call make_deb, oneclient, deb)
+	$(call make_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_deb, oneclient)
 
 debdirs:
@@ -263,8 +283,13 @@ package.tar.gz:
 ##
 
 docker:
-	$(MAKE) -C oneclient docker
+	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
-                          --password $(DOCKER_REG_PASSWORD) --build-arg RELEASE=$(DOCKER_RELEASE) \
-                          --build-arg VERSION=$(ONEPROVIDER_VERSION) --name oneprovider \
-                          --publish --remove docker
+                      --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg RELEASE=$(DOCKER_RELEASE) \
+                      --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
+                      --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
+                      --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
+                      --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
+                      --name oneprovider \
+                      --publish --remove docker
