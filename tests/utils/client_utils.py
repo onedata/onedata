@@ -11,7 +11,8 @@ from tests.utils.docker_utils import run_cmd
 from tests.utils.path_utils import escape_path
 from tests.utils.user_utils import User
 from tests.utils.utils import (set_dns, get_token, get_oz_cookie,
-                               get_function_name, handle_exception)
+                               get_function_name, handle_exception,
+                               log_exception)
 
 import pytest
 import os
@@ -75,7 +76,7 @@ class Client:
             self.rpyc_server_pid = None
 
     def perform(self, condition, timeout=None):
-        if not timeout:
+        if timeout is None:
             timeout = self.timeout
         return self._repeat_until(condition, timeout)
 
@@ -94,20 +95,27 @@ class Client:
 
     @staticmethod
     def _repeat_until(condition, timeout):
-        condition_satisfied = condition()
+        condition_satisfied = False
         while not condition_satisfied and timeout >= 0:
-            print "TIMEOUT: ", timeout
-            time.sleep(1)
-            timeout -= 1
-            condition_satisfied = condition()
-        return timeout > 0 or condition_satisfied
+            try:
+                condition_satisfied = condition()
+                if condition_satisfied is None:
+                    condition_satisfied = True
+            except:
+                log_exception()
+                condition_satisfied = False
+            finally:
+                time.sleep(1)
+                timeout -= 1
+
+        return timeout >= 0 or condition_satisfied
 
     def absolute_path(self, path):
         return os.path.join(self.mount_path, str(path))
 
 
 def mount_users(request, environment, context, client_dockers,
-                env_description_file, test_type, providers, user_names=[],
+                env_description_file, providers, user_names=[],
                 client_instances=[], mount_paths=[], client_hosts=[],
                 tokens=[]):
 
@@ -164,7 +172,7 @@ def mount_users(request, environment, context, client_dockers,
             pytest.fail("Error mounting oneclient")
 
         # todo without this sleep protocol error occurs more often during cleaning spaces
-        time.sleep(3)
+        # time.sleep(3)
 
         if token != 'bad_token':
             if not clean_spaces_safe(user_name, client):
@@ -218,6 +226,7 @@ def mv(client, src, dest):
 
 
 def chmod(client, mode, file_path):
+    print "CHANGING FILE %s mode to %s" % (file_path, mode)
     client.rpyc_connection.modules.os.chmod(file_path, mode)
 
 
@@ -251,7 +260,7 @@ def mkdir(client, dir_path, recursive=False):
         client.rpyc_connection.modules.os.mkdir(dir_path)
 
 
-def create_file(client, file_path, mode=0644):
+def create_file(client, file_path, mode=0664):
     client.rpyc_connection.modules.os.mknod(file_path, mode, stat_lib.S_IFREG)
 
 
@@ -319,7 +328,7 @@ def md5sum(client, file_path):
     m = hashlib.md5()
     with client.rpyc_connection.builtins.open(file_path, 'r') as f:
         m.update(f.read())
-    return m.digest()
+    return m.hexdigest()
 
 
 def mkstemp(client, dir=None):
@@ -348,7 +357,7 @@ def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
                 output="of={}".format(escape_path(output_file)),
                 bs="bs={0}{1}".format(block_size, unit),
                 count="count={}".format(count))
-    return run_cmd(user, client, cmd, output=output, error=True)
+    return run_cmd(user, client, cmd, output=output, error=error)
 
 
 def fusermount(client, path, user='root', unmount=False, lazy=False,
@@ -390,10 +399,17 @@ def clean_spaces_safe(user, client):
 
 
 def clean_spaces(user, client):
+    print "CLEANING SPACES FOR", user
     spaces = ls(client, path=client.mount_path)
+    print "SPACES: ", spaces
     # clean spaces
     for space in spaces:
-        rm(client, path=client.absolute_path(space), recursive=True, force=True)
+        try:
+            rm(client, path=client.absolute_path(space), recursive=True)
+        except:
+            print "FAILED TO DELETE %s for %s" % (space, user)
+            log_exception()
+            print ls(client, client.absolute_path(space))
 
 
 def clean_mount_path(user, client):

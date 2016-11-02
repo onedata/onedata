@@ -21,6 +21,12 @@ def write_text(user, text, file, context):
     multi_reg_file_steps.write_text(user, text, file, "client1", context)
 
 
+@when(parsers.parse('{user} fails to write "{text}" to {file}'))
+@then(parsers.parse('{user} fails to write "{text}" to {file}'))
+def write_text_fail(user, text, file, context):
+    multi_reg_file_steps.write_text_fail(user, text, file, "client1", context)
+
+
 @when(parsers.parse('{user} reads "{text}" from file {file}'))
 @then(parsers.parse('{user} reads "{text}" from file {file}'))
 def read(user, text, file, context):
@@ -41,6 +47,12 @@ def replace(user, text1, text2, file, context):
 @then(parsers.parse('{user} executes {file}'))
 def execute_script(user, file, context):
     multi_reg_file_steps.execute_script(user, file, "client1", context)
+
+
+@when(parsers.parse('{user} fails to execute {file}'))
+@then(parsers.parse('{user} fails to execute {file}'))
+def execute_script_fail(user, file, context):
+    multi_reg_file_steps.execute_script_fail(user, file, "client1", context)
 
 
 @then(parsers.parse('{user} checks MD5 of {file}'))

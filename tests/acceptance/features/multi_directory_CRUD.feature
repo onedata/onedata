@@ -15,16 +15,14 @@ Feature: Multi_directory_CRUD
 
   Scenario: Rename someone's directory without permission
     When u1 creates directories [s1/dir1] on client1
-    And last operation by u1 succeeds
-    And u2 renames s1/dir1 to s1/dir2 on client2
-    Then last operation by u2 fails
+    And u1 sees [dir1] in s1 on client1
+    Then u2 fails to rename s1/dir1 to s1/dir2 on client2
 
   Scenario: Rename someone's directory with permission
     When u1 creates directory and parents [s1/dir1/child1] on client1
     And u1 changes s1/dir1/child1 mode to 775 on client1
     And mode of u2's s1/dir1/child1 is 775 on client2
     And u2 renames s1/dir1/child1 to s1/dir1/child2 on client2
-    And last operation by u2 succeeds
     Then u1 sees [child2] in s1/dir1 on client1
     And u1 doesn't see [child1] in s1/dir1 on client1
     And u2 sees [child2] in s1/dir1 on client2
@@ -40,16 +38,14 @@ Feature: Multi_directory_CRUD
 
   Scenario: Delete someone's empty directory
     When u2 creates directories [s1/dir1] on client2
-    And last operation by u2 succeeds
     And u1 sees [dir1] in s1 on client1
-    And u1 deletes empty directories [s1/dir1] on client1
-    Then last operation by u1 fails
+    And u1 fails to delete empty directories [s1/dir1] on client1
     And u1 sees [dir1] in s1 on client1
     And u2 sees [dir1] in s1 on client2
 
   Scenario: Delete own empty directory
     When u2 creates directories [s1/dir1] on client2
-    And last operation by u2 succeeds
+    And u1 sees [dir1] in s1 on client1
     And u2 deletes empty directories [s1/dir1] on client2
     Then u1 doesn't see [dir1] in s1 on client1
     And u2 doesn't see [dir1] in s1 on client2
@@ -57,15 +53,13 @@ Feature: Multi_directory_CRUD
   Scenario: List directory without read permission
     When u2 creates directory and parents [s1/dir1/dir2] on client2
     And u2 changes s1/dir1/dir2 mode to 735 on client2
-    Then last operation by u2 succeeds
     And u1 can't list s1/dir1/dir2 on client1
 
   Scenario: Create file in directory without write permission
     When u2 creates directories [s1/dir1] on client2
     And u2 changes s1/dir1 mode to 755 on client2
     And mode of u1's s1/dir1 is 755 on client1
-    And u1 creates directories [s1/dir1/dir2] on client1
-    Then last operation by u1 fails
+    And u1 fails to create directories [s1/dir1/dir2] on client1
 
   Scenario: Create file in directory with write permission
     When u2 creates directories [s1/dir1] on client2
@@ -77,8 +71,7 @@ Feature: Multi_directory_CRUD
     When u2 creates directory and parents [s1/dir1/dir2] on client2
     And u2 changes s1/dir1 mode to 755 on client2
     And mode of u1's s1/dir1 is 755 on client1
-    And u1 deletes empty directories [s1/dir1/dir2] on client1
-    Then last operation by u1 fails
+    And u1 fails to delete empty directories [s1/dir1/dir2] on client1
 
   Scenario: Delete file in directory with write permission
     When u2 creates directory and parents [s1/dir1/dir2] on client2
@@ -90,8 +83,7 @@ Feature: Multi_directory_CRUD
     When u2 creates directory and parents [s1/dir1/dir2] on client2
     And u2 changes s1/dir1 mode to 755 on client2
     And mode of u1's s1/dir1 is 755 on client1
-    And u1 renames file s1/dir1/dir2 to s1/dir1/dir3 on client1
-    Then last operation by u1 fails
+    And u1 fails to rename file s1/dir1/dir2 to s1/dir1/dir3 on client1
 
   Scenario: Rename file in directory with write permission
     When u2 creates directory and parents [s1/dir1/dir2] on client2
@@ -127,8 +119,7 @@ Feature: Multi_directory_CRUD
   Scenario: Duplication
     When u1 creates directories [s1/dir1] on client1
     And u2 sees [dir1] in s1 on client2
-    And u2 creates directories [s1/dir1] on client2
-    Then last operation by u2 fails
+    And u2 fails to create directories [s1/dir1] on client2
 
   Scenario: Delete empty directory and parents
     #rmdir -p dir1/dir2/dir3
@@ -151,9 +142,8 @@ Feature: Multi_directory_CRUD
     And u2 sees [dir1] in s1 on client2
     And u1 sees [child1] in s1/dir1 on client1
     And u2 sees [child1] in s1/dir1 on client2
-    And u1 deletes empty directories [s1/dir1] on client1
+    And u1 fails to delete empty directories [s1/dir1] on client1
     #dir1 is not empty, but we use step for empty dirs
-    Then last operation by u1 fails
     And u1 sees [dir1] in s1 on client1
     And u2 sees [dir1] in s1 on client2
     And u1 sees [child1] in s1/dir1 on client1
@@ -213,8 +203,7 @@ Feature: Multi_directory_CRUD
     When u1 creates directories [s1/dir1] on client1
     And u1 sees [dir1] in s1 on client1
     And u2 sees [dir1] in s1 on client2
-    And u1 moves s1/dir1 to s1/dir1 using shell command on client1
-    Then last operation by u1 fails
+    And u1 fails to move s1/dir1 to s1/dir1 using shell command on client1
     And u1 sees [dir1] in s1 on client1
     And u2 sees [dir1] in s1 on client2
 
@@ -226,8 +215,7 @@ Feature: Multi_directory_CRUD
     And u2 sees [dir2] in s1/dir1 on client2
     And u1 sees [dir3] in s1/dir1/dir2 on client1
     And u2 sees [dir3] in s1/dir1/dir2 on client2
-    And u1 renames s1/dir1 to s1/dir1/dir2/dir3 on client1
-    Then last operation by u1 fails
+    And u1 fails to rename s1/dir1 to s1/dir1/dir2/dir3 on client1
     And u1 sees [dir1] in s1 on client1
     And u2 sees [dir1] in s1 on client2
     And u1 sees [dir2] in s1/dir1 on client1

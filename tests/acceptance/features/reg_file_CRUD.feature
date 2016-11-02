@@ -66,7 +66,7 @@ Feature: Regular_file_CRUD
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1
     Then u1 doesn't see [file1] in s1/dir1/dir2
     And u1 sees [file1] in s1/dir3
-    And u1 checks MD5 of s1/dir3/file1
+    Then u1 checks MD5 of s1/dir3/file1
 
   Scenario: Copy regular file and read
     When u1 creates directory and parents [s1/dir1/dir2, s1/dir3]

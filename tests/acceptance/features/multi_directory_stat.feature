@@ -24,8 +24,7 @@ Feature: Multi_directory_stat
 
   Scenario: Change someone's file access permissions
     When u1 creates directories [s1/dir1] on client1
-    And u2 changes s1/dir1 mode to 211 on client2
-    Then last operation by u2 fails
+    And u2 fails to change s1/dir1 mode to 211 on client2
     And mode of u2's s1/dir1 is 775 on client2
     And mode of u1's s1/dir1 is 775 on client1
  
@@ -40,9 +39,9 @@ Feature: Multi_directory_stat
     And u1 waits 1 second
     And u1 changes s1/dir1 mode to 755 on client1
     And u1 creates directories [s1/dir1/dir2] on client1
-    And u2 updates [s1/dir1] timestamps on client2
+    And u2 fails to update [s1/dir1] timestamps on client2
     # updating timestamps without write permission should fail
-    Then last operation by u2 fails
+#    Then last operation by u2 fails
 
   Scenario: Update timestamps with write permission
     # touch s1/dir1
@@ -90,6 +89,6 @@ Feature: Multi_directory_stat
     When u1 creates directories [s1/dir1] on client1
     When u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
-    When u1 changes s1/dir1 mode to 211 on client1
+    When u1 changes s1/dir1 mode to 711 on client1
     Then status-change time of u2's s1/dir1 is greater than modification time on client2
     Then status-change time of u2's s1/dir1 is greater than access time on client2

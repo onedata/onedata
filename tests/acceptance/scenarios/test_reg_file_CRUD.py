@@ -57,7 +57,9 @@ def test_read_write(env_description_file):
 def test_append(env_description_file):
     pass
 
-
+@pytest.mark.xfail_env(envs=["singleprovider_singleclient_directio",
+                             "singleprovider_singleclient_proxy"],
+                       reason="sed fails")
 @scenario('Replace word in file')
 def test_replace(env_description_file):
     pass

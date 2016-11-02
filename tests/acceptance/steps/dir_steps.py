@@ -14,6 +14,12 @@ def create(user, dirs, context):
     multi_dir_steps.create(user, dirs, "client1", context)
 
 
+@when(parsers.parse('{user} fails to create directories {dirs}'))
+@then(parsers.parse('{user} fails to create directories {dirs}'))
+def create(user, dirs, context):
+    multi_dir_steps.fail_to_create(user, dirs, "client1", context)
+
+
 @when(parsers.parse('{user} creates structure of {number} nested directories in {root_dir}'))
 @then(parsers.parse('{user} creates structure of {number} nested directories in {root_dir}'))
 def create_nested_dirs(user, number, root_dir, context):
@@ -26,8 +32,15 @@ def create_parents(user, paths, context):
 
 
 @when(parsers.parse('{user} deletes empty directories {dirs}'))
+@then(parsers.parse('{user} deletes empty directories {dirs}'))
 def delete_empty(user, dirs, context):
     multi_dir_steps.delete_empty(user, dirs, "client1", context)
+
+
+@when(parsers.parse('{user} fails to delete empty directories {dirs}'))
+@then(parsers.parse('{user} fails to delete empty directories {dirs}'))
+def fail_to_delete_empty(user, dirs, context):
+    multi_dir_steps.fail_to_delete_empty(user, dirs, "client1", context)
 
 
 @when(parsers.parse('{user} deletes non-empty directories {dirs}'))

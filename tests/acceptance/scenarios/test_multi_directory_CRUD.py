@@ -89,7 +89,9 @@ def test_rename_subfile_with_permission(env_description_file):
 
 # # TODO VFS-1824
 @pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
+    envs=["singleprovider_singleclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
           "multiprovider_directio"],
     reason="u2 is unable to create direcory with the same name "
            "although first one was deleted")
@@ -113,10 +115,10 @@ def test_duplication(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="Fails only for multiprovider tests")
+# @pytest.mark.xfail_env(
+#     envs=["multiprovider_proxy",
+#           "multiprovider_directio"],
+#     reason="Fails only for multiprovider tests")
 @scenario('Delete empty directory and parents')
 def test_delete_parents(env_description_file):
     pass

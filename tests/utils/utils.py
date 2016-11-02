@@ -1,4 +1,7 @@
 """This module contains utility functions to be used in acceptance tests."""
+import logging
+import traceback
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -230,6 +233,11 @@ def get_function_name(depth=1):
     return inspect.stack()[depth][3]
 
 
+def log_exception():
+    extracted_stack = traceback.format_exc(10)
+    logging.error(extracted_stack)
+
+
 def handle_exception(e, function_name=None):
     """Nice printing of exceptions in tests.
     :param e: exception object,
@@ -243,3 +251,20 @@ def handle_exception(e, function_name=None):
 ERROR IN FUNCTION {0}:
 {1}
 #######################################""".format(function_name, e)
+
+
+def assert_generic(expression, should_fail, *args, **kwargs):
+    if should_fail:
+        assert_false(expression, *args, **kwargs)
+    else:
+        assert_(expression, *args, **kwargs)
+
+
+def assert_(expression, *args, **kwargs):
+    assert_result = expression(*args, **kwargs)
+    assert assert_result
+
+
+def assert_false(expression, *args, **kwargs):
+    assert_result = expression(*args, **kwargs)
+    assert not assert_result

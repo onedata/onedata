@@ -64,11 +64,13 @@ def test_modification_time(env_description_file):
     pass
 
 
+@scenario('Status-change time when renaming')
+def test_stat_change_time_mv(env_description_file):
+    pass
+
+
 @scenario('Status-change time when changing mode')
 def test_stat_change_time_chmod(env_description_file):
     pass
 
 
-@scenario('Status-change time when renaming')
-def test_stat_change_time_mv(env_description_file):
-    pass

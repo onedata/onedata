@@ -20,8 +20,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u2 renames s1/file1 to s1/file2 on client2
-    Then last operation by u2 fails
+    And u2 fails to rename s1/file1 to s1/file2 on client2
 
   Scenario: Rename regular file with permission
     When u1 creates directories [s1/dir1] on client1
@@ -31,7 +30,6 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1 on client2
     And u2 renames s1/dir1/file1 to s1/dir1/file2 on client2
     Then u1 sees [file2] in s1/dir1 on client1
-    And last operation by u2 succeeds
     And u1 sees [file2] in s1/dir1 on client1
     And u2 sees [file2] in s1/dir1 on client2
     And u1 doesn't see [file1] in s1/dir1 on client1
@@ -49,8 +47,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u2 deletes files [s1/file1] on client2
-    Then last operation by u2 fails
+    And u2 fails to delete files [s1/file1] on client2
     Then u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
 
@@ -89,9 +86,9 @@ Feature: Multi_regular_file_CRUD
     And u1 creates regular files [s1/dir1/file1] on client1
     And u1 changes s1/dir1/file1 mode to 600 on client1
     And mode of u2's s1/dir1/file1 is 600 on client2
-    And u2 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client2
-    Then last operation by u2 fails
+    And u2 fails to write "TEST TEXT ONEDATA" to s1/dir1/file1 on client2
     And u1 sees [file1] in s1/dir1 on client1
+    And u1 reads "" from file s1/dir1/file1 on client1
 
   Scenario: Execute file with execute permission
     When u1 creates directories [s1/dir1] on client1
@@ -101,15 +98,13 @@ Feature: Multi_regular_file_CRUD
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
     And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
     And u2 executes s1/dir1/script.sh on client2
-    Then last operation by u2 succeeds
 
   Scenario: Execute file without execute permission
     When u1 creates directories [s1/dir1] on client1
     And u1 creates regular files [s1/dir1/script.sh] on client1
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
     And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
-    And u2 executes s1/dir1/script.sh on client2
-    Then last operation by u2 fails
+    And u2 fails to execute s1/dir1/script.sh on client2
 
   Scenario: Move regular file and read
     When u1 creates directory and parents [s1/dir1/dir2, s1/dir3] on client1
@@ -205,8 +200,7 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in s1 on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     And u1 opens s1/file1 with mode r+ on client1
-    And u2 deletes files [s1/file1] on client2
-    And last operation by u2 fails
+    And u2 fails to delete files [s1/file1] on client2
     # because u2 has no write permission to file1
     And u1 closes s1/file1 on client1
     And u1 sees [file1] in s1 on client1
