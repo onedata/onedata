@@ -79,10 +79,13 @@ def upload_file_to_cwd(selenium, browser_id, file_name):
                     'upload files from directory "{dir_path}" to current dir'))
 def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
     driver = select_browser(selenium, browser_id)
-    directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
-    _upload_files_to_cwd(driver, '\n'.join(str(item) for item
-                                           in directory.listdir()
-                                           if item.isfile()))
+    directory = tmpdir.join(browser_id, *dir_path.split('/'))
+    if directory.isdir():
+        _upload_files_to_cwd(driver, '\n'.join(str(item) for item
+                                               in directory.listdir()
+                                               if item.isfile()))
+    else:
+        raise ValueError('directory {} does not exist'.format(str(directory)))
 
 
 # TODO currently every browser in test download to that same dir,
@@ -94,7 +97,7 @@ def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)
-    file_path = os.path.join(str(tmpdir), file_name)
+    downloaded_file = tmpdir.join(file_name)
 
     # sleep waiting for file to finish downloading
     exist = False
@@ -104,12 +107,12 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
             time.sleep(sleep_time)
         else:
             break
-        exist = os.path.isfile(file_path)
+        exist = downloaded_file.isfile()
 
     assert exist, 'file {} has not been downloaded'.format(file_name)
 
     def _check_file_content():
-        with open(file_path, 'r') as f:
+        with downloaded_file.open() as f:
             file_content = ''.join(f.readlines())
             return content == file_content
 

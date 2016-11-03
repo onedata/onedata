@@ -9,6 +9,7 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import time
 import random
+import stat
 
 import py
 import pyperclip
@@ -27,6 +28,13 @@ from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
+USR_RW_ = stat.S_IRUSR | stat.S_IWUSR
+GRP_RW_ = stat.S_IRGRP | stat.S_IWGRP
+OTH_RW_ = stat.S_IROTH | stat.S_IROTH
+_file_perms = USR_RW_ | GRP_RW_ | OTH_RW_
+_dir_perms = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
+
+
 @given(parsers.parse("user opened {browser_id_list} window"))
 @given(parsers.parse("users opened {browser_id_list} browsers' windows"))
 def create_instances_of_webdriver(selenium, driver,
@@ -37,6 +45,7 @@ def create_instances_of_webdriver(selenium, driver,
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
             selenium[browser_id] = config_driver(driver.get_instance())
+            selenium[browser_id].execute_script('window.debug = window.info')
             tmp_memory[browser_id] = {'shares': {},
                                       'spaces': {},
                                       'groups': {},
@@ -289,39 +298,40 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
     driver.get(url)
 
 
-def _mkdir_in_users_file_system(browser_id, dir_path, tmpdir):
-    try:
-        tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
-    except py.error.ENOENT:
-        tmpdir.mkdir(browser_id, *dir_path.split('/'))
+def _mkdir(root, *dir_path):
+    dir_created = root.mkdir(*dir_path)
+    dir_created.chmod(_dir_perms)
+    return dir_created
 
 
-def _touch_in_users_file_system(directory, file_name,
-                                file_content, tmpdir):
-    if isinstance(directory, list):
-        try:
-            directory = tmpdir.ensure(*directory, dir=True)
-        except py.error.ENOENT:
-            raise ValueError('direcotry {} does not exist'
-                             ''.format('/'.join(directory[1:])))
+def _mkdir_in_users_file_system(root, recursive, *path):
+    directory = path
 
+    if recursive:
+        for directory in path[:-1]:
+            if root.join(directory).isdir():
+                root = root.join(directory)
+                continue
+            else:
+                root = _mkdir(root, directory)
+        else:
+            directory = [path[-1]]
+
+    directory = _mkdir(root, *directory)
+    return directory
+
+
+def _touch_in_users_file_system(directory, file_name, file_content):
     reg_file = directory.join(file_name)
     reg_file.write(file_content)
-
-
-def _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir):
-    try:
-        directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
-    except py.error.ENOENT:
-        raise ValueError('directory {} does not exist'.format(dir_path))
-
-    for i in range(10, num + 10):
-        _touch_in_users_file_system(directory, 'file_{}'.format(i),
-                                    '1' * i, tmpdir)
+    reg_file.chmod(_file_perms)
+    return reg_file
 
 
 @given(parsers.parse('user of {browser_id} has {num:d} files '
                      'in directory named "{dir_path}"'))
 def create_files(browser_id, num, dir_path, tmpdir):
-    _mkdir_in_users_file_system(browser_id, dir_path, tmpdir)
-    _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir)
+    directory = _mkdir_in_users_file_system(tmpdir, True,
+                                            browser_id, *dir_path.split('/'))
+    for i in range(10, num + 10):
+        _touch_in_users_file_system(directory, 'file_{}.txt'.format(i), '1'*i)
