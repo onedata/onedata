@@ -11,7 +11,6 @@ import time
 import random
 import stat
 
-import py
 import pyperclip
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
@@ -28,11 +27,7 @@ from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-USR_RW_ = stat.S_IRUSR | stat.S_IWUSR
-GRP_RW_ = stat.S_IRGRP | stat.S_IWGRP
-OTH_RW_ = stat.S_IROTH | stat.S_IROTH
-_file_perms = USR_RW_ | GRP_RW_ | OTH_RW_
-_dir_perms = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
+_777 = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
 
 
 @given(parsers.parse("user opened {browser_id_list} window"))
@@ -300,7 +295,7 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
 
 def _mkdir(root, *dir_path):
     dir_created = root.mkdir(*dir_path)
-    dir_created.chmod(_dir_perms)
+    dir_created.chmod(_777)
     return dir_created
 
 
@@ -324,7 +319,7 @@ def _mkdir_in_users_file_system(root, recursive, *path):
 def _touch_in_users_file_system(directory, file_name, file_content):
     reg_file = directory.join(file_name)
     reg_file.write(file_content)
-    reg_file.chmod(_file_perms)
+    reg_file.chmod(_777)
     return reg_file
 
 
