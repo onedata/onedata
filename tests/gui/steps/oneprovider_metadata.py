@@ -25,8 +25,7 @@ from tests.gui.utils.generic import refresh_and_call
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-import tests.gui.utils.file_system as fs
-from tests.utils.acceptance_utils import list_parser
+from tests.gui.utils.generic import parse_seq
 
 
 def _get_items_with_opened_metadata_panel_from_file_list(driver, name, type):
@@ -59,7 +58,7 @@ def deselect_items_from_file_list(selenium, browser_id, item_list):
              driver.find_elements_by_css_selector('table.files-table '
                                                   'tr[class$="active"] '
                                                   'td.file-list-col-file')}
-    for item in list_parser(item_list):
+    for item in parse_seq(item_list):
         if item in items:
             item = items[item]
             Wait(driver, WAIT_FRONTEND).until(
@@ -76,7 +75,7 @@ def check_if_navigation_tabs_for_metadata_panel_are_displayed(selenium, browser_
     navigation_tabs = driver.find_elements_by_css_selector('table.files-table .metadata-panel '
                                                            'ul.nav-tabs a')
     navigation_tabs = [x.text.lower() for x in navigation_tabs]
-    for tab in list_parser(tab_list):
+    for tab in parse_seq(tab_list):
         assert tab.lower() in navigation_tabs
 
 
@@ -269,7 +268,7 @@ def _get_items_from_file_list_with_metadata_icon(driver, name, type, visibility=
     files = driver.find_elements_by_css_selector('table.files-table td.file-list-col-file')
     for file in files:
         icon = file.find_element_by_css_selector('.file-icon span.oneicon')
-        label = file.find_element_by_css_selector('.file-label .truncate').text
+        label = file.find_element_by_css_selector('.file-label').text
         if type in icon.get_attribute('class') and label == name:
             metadata_tool = file.find_element_by_css_selector('.file-tool-metadata')
             if 'visible-on-parent-hover' + visibility in metadata_tool.get_attribute('class'):
@@ -377,7 +376,7 @@ def tmp_name(driver, name, type):
     files = driver.find_elements_by_css_selector('table.files-table td.file-list-col-file')
     for file in files:
         icon = file.find_element_by_css_selector('.file-icon span.oneicon')
-        label = file.find_element_by_css_selector('.file-label .truncate').text
+        label = file.find_element_by_css_selector('.file-label').text
         if type in icon.get_attribute('class') and label == name:
             return file
     return None
