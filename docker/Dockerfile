@@ -34,13 +34,7 @@ RUN case ${RELEASE} in \
     sh oneprovider.sh op-worker=${OP_WORKER_VERSION}-1; \
     sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1
 
-# Disable onezone certificate verification
-RUN sed -i 's/{verify_oz_cert, true}/{verify_oz_cert, false}/g' /etc/op_panel/app.config
-
 EXPOSE 53 53/udp 80 443 5555 5556 6665 6666 7443 8443 8876 8877 9443
-
-# Add missing CA bundle (required for server cert validation)
-ADD ca-bundle.pem /etc/ssl/cert.pem
 
 # Add entrypoint script
 ADD oneprovider.py /root/oneprovider.py
