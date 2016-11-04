@@ -142,7 +142,7 @@
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
                     "token_for": "u1",
-                    "default_timeout": 5
+                    "default_timeout": 10
                 }
             }
         },
@@ -157,7 +157,7 @@
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u2/onedata",
                     "token_for": "u2",
-                    "default_timeout": 5
+                    "default_timeout": 10
                 }
             }
         }
