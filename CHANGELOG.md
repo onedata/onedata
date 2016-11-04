@@ -4,6 +4,35 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc11
+
+* VFS-2733 Fix provider key/cert filename
+* VFS-2739 make msg for assertion more descriptive
+* VFS-2739 rewrite msg on assertions
+* VFS-2739 use tmpdir pytest fixture instead of os to crete tmpdir and files
+* VFS-2739 add msg to assertions
+* VFS-2739 change click on file -> select file in shares test
+* VFS-2739 add test to select multiple files witch ctrl
+* VFS-2739 add cleaning to upload many files test
+* VFS-2739 add paging test
+* VFS-2733 Add excluded path to docker entrypoint
+* VFS-2549 fix checking content of downloaded file step
+* VFS-2549 change url->URL, id->ID in gherkin steps
+* VFS-2549 add quotes to files/dirs in shares tests steps in gherkin
+* VFS-2549 add quotes to file/dir names in data and metadata features
+* VFS-2549 add quotation marks to names of groups/spaces/shares/...
+* VFS-2549 fix closing notifies
+* VFS-2549 fix scenario names in group and share tests
+* VFS-2564 add test checking that user can't view left group
+* VFS-2616 add test checking if user can view group having it's id
+* VFS-2549 fix waiting for notifies to disappear and switching spaces
+* VFS-2549 remove import of non existing module file_system
+* VFS-2634 refactor share tests
+* VFS-2634 fix step fun definitions, add new share tests
+* VFS-2634 refactor modals and file list steps, add sidebar list steps
+* VFS-2634 fix modal and file list steps
+
+
 ### 3.0.0-rc10
 
 * Releasing new version 3.0.0-rc10
