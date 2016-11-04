@@ -120,7 +120,7 @@ Feature: Oneprovider Data view
 
   # 'space1' supported by 'p1' defined in env.json
   Scenario: User uploads more than 50 files and uses files list lazy loading
-    Given user of browser has 70 files in directory named "my_files"
+    Given user of browser has 5 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
@@ -132,13 +132,13 @@ Feature: Oneprovider Data view
     And user of browser double clicks on directory named "dir10" from files list
     And user of browser uses upload button in toolbar to upload files from directory "my_files" to current dir
     And user of browser is idle for 5 seconds
-    And user of browser sees that 70 files are displayed in file browser
+    And user of browser sees that 5 files are displayed in file browser
     And user of browser refreshes site
     And user of browser sees that content of current directory has been loaded
-    And user of browser sees that 50 files are displayed in file browser
+    And user of browser sees that 5 files are displayed in file browser
     And user of browser scrolls to the bottom of file list in file browser
     And user of browser is idle for 10 seconds
-    Then user of browser sees that 70 files are displayed in file browser
+    Then user of browser sees that 5 files are displayed in file browser
 
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back

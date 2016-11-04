@@ -152,7 +152,7 @@ test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
 test_gui:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=file_system
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/file_system
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
