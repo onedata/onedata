@@ -83,3 +83,8 @@ def test_copy(env_description_file):
 @scenario('Copy big regular file and check MD5')
 def test_copy_big(env_description_file):
     pass
+
+
+@scenario('Delete file copied right after read')
+def test_delete_copied_after_read(env_description_file):
+    pass

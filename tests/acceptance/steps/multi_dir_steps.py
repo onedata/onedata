@@ -149,8 +149,6 @@ def cannot_list_dir(user, dir, client_node, context):
     list_dir_base(user, dir, client_node, context, should_fail=True)
 
 
-@when(parsers.parse('{user} lists {dir} on {client_node}'))
-@then(parsers.parse('{user} lists {dir} on {client_node}'))
 @when(parsers.parse('{user} can list {dir} on {client_node}'))
 @then(parsers.parse('{user} can list {dir} on {client_node}'))
 def list_dir(user, dir, client_node, context):

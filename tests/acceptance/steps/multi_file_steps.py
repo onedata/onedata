@@ -259,11 +259,6 @@ def check_mode(user, file, mode, client_node, context):
 
     def condition():
         stat_result = stat(client, file_path)
-        print "IS: ", stat_result
-        print "IS: ", stat_result.st_mode
-        print "IS: ", stat_lib.S_IMODE(stat_result.st_mode)
-        print "EXPECTED: ", mode
-
         assert stat_lib.S_IMODE(stat_result.st_mode) == mode
 
     assert_(client.perform, condition)

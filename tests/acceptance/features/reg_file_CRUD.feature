@@ -74,13 +74,14 @@ Feature: Regular_file_CRUD
     And u1 sees [file1] in s1/dir1/dir2
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/dir2/file1
+    # TODO delete below sleep after resolving VFS-2779
+    And u1 waits 2 seconds
     And u1 copies regular file s1/dir1/dir2/file1 to s1/dir3
     Then u1 sees [dir1, dir3] in s1
     And u1 sees [file1] in s1/dir1/dir2
     And u1 sees [file1] in s1/dir3
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir3/file1
     And size of u1's s1/dir3/file1 is 17 bytes
-
 
   Scenario: Copy big regular file and check MD5
     When u1 creates directory and parents [s1/dir1/dir2, s1/dir3]
@@ -92,3 +93,11 @@ Feature: Regular_file_CRUD
     And u1 sees [file1] in s1/dir3
     And u1 checks MD5 of s1/dir3/file1
     And u1 checks MD5 of s1/dir1/dir2/file1
+
+  Scenario: Delete file copied right after read
+    When u1 creates directory and parents [s1/dir1/dir2]
+    And u1 creates regular files [s1/dir1/dir2/file1]
+    And u1 sees [file1] in s1/dir1/dir2
+    And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/dir2/file1
+    And u1 deletes non-empty directories [s1/dir1]

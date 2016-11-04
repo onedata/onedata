@@ -12,7 +12,7 @@ from tests.utils.path_utils import escape_path
 from tests.utils.user_utils import User
 from tests.utils.utils import (set_dns, get_token, get_oz_cookie,
                                get_function_name, handle_exception,
-                               log_exception)
+                               log_exception, assert_)
 
 import pytest
 import os
@@ -64,7 +64,8 @@ class Client:
             try:
                 self.rpyc_connection = rpyc.classic.connect(self.docker_name)
                 started = True
-            except:
+            except Exception as e:
+                print e
                 time.sleep(1)
                 timeout -= 1
         if not started:
@@ -175,7 +176,9 @@ def mount_users(request, environment, context, client_dockers,
         # time.sleep(3)
 
         if token != 'bad_token':
-            if not clean_spaces_safe(user_name, client):
+            try:
+                clean_spaces_safe(user_name, client)
+            except AssertionError:
                 pytest.fail("Failed to clean spaces")
 
         if ret == 0:
@@ -226,7 +229,6 @@ def mv(client, src, dest):
 
 
 def chmod(client, mode, file_path):
-    print "CHANGING FILE %s mode to %s" % (file_path, mode)
     client.rpyc_connection.modules.os.chmod(file_path, mode)
 
 
@@ -385,20 +387,14 @@ def create_clients(users, client_hosts, mount_paths, client_dockers):
 
 def clean_spaces_safe(user, client):
 
-    function_name = get_function_name()
-
     def condition():
-        try:
-            clean_spaces(user, client)
-            return True
-        except Exception as e:
-            handle_exception(e, function_name)
-            return False
+        clean_spaces(user, client)
 
-    return client.perform(condition, 5)
+    assert_(client.perform, condition, timeout=5)
 
 
 def clean_spaces(user, client):
+    # TODO delete after debugging
     print "CLEANING SPACES FOR", user
     spaces = ls(client, path=client.mount_path)
     print "SPACES: ", spaces
