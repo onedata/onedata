@@ -32,8 +32,11 @@ def click_on_btn_for_selected_token(selenium, browser_id, icon_type, ordinal):
                                                   ''.format(panel))
     token = tokens[int(ordinal[:-2])-1]
     btn = token.find_element_by_css_selector('.oneicon-{}'.format(icon_type))
-    assert btn.is_displayed()
-    btn.click()
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda _: btn.is_displayed(),
+        message='waiting for {} btn for {} token to appear'.format(icon_type,
+                                                                   ordinal)
+    ).click()
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that token for '
@@ -56,21 +59,15 @@ def has_token_been_copied_correctly(selenium, browser_id, ordinal):
     assert token_val == copied_val
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) sees exactly (?P<num>\d+?) items?'
-                 ' on tokens list in expanded "ACCESS TOKENS" panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees exactly (?P<num>\d+?) items?'
-                 ' on tokens list in expanded "ACCESS TOKENS" panel'))
+@when(parsers.parse('user of {browser_id} sees exactly {num:d} item(s)'
+                    ' on tokens list in expanded "ACCESS TOKENS" panel'))
+@then(parsers.parse('user of {browser_id} sees exactly {num:d} item(s)'
+                    ' on tokens list in expanded "ACCESS TOKENS" panel'))
 def has_token_list_enough_items(selenium, browser_id, num):
-    def _check_len(d, n):
-        tokens = d.find_elements_by_css_selector('{} .tokens-list-item'
-                                                 ''.format(panel))
-        return len(tokens) == n
-
     driver = select_browser(selenium, browser_id)
-    num = int(num)
     panel = panel_to_css['access tokens']
-
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda d: _check_len(d, num),
-        message='seeing if tokens list contains exactly {} items'.format(num)
-    )
+    tokens = driver.find_elements_by_css_selector('{} .tokens-list-item'
+                                                  ''.format(panel))
+    err_msg = 'there is {} tokens displayed ' \
+              'instead of expected {}'.format(len(tokens), num)
+    assert len(tokens) == num, err_msg

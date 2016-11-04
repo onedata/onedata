@@ -29,12 +29,7 @@ def _get_items_from_panel_list(driver, panel, item_type):
 
 
 def _get_item_from_panel_list(driver, item_name, item_type, panel):
-    items = Wait(driver, WAIT_FRONTEND).until(
-        lambda _: _get_items_from_panel_list(driver, panel, item_type),
-        message='waiting for {}s list to appear in expanded {} panel'
-                ''.format(item_type, panel)
-    )
-
+    items = _get_items_from_panel_list(driver, panel, item_type)
     item = items.get(item_name)
     if not item:
         raise ValueError('no {:s} named {:s} found'.format(item_type,
