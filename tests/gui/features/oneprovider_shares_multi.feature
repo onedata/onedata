@@ -24,7 +24,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir1" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -37,7 +37,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir2" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
     And user of browser1 changes current working directory to space1 using breadcrumbs
@@ -90,7 +90,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir1" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -103,7 +103,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir2" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
     And user of browser1 changes current working directory to space1 using breadcrumbs
@@ -168,7 +168,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir1" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -181,7 +181,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir2" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
     And user of browser1 changes current working directory to space1 using breadcrumbs
@@ -313,7 +313,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir1" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -386,7 +386,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir1" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -399,7 +399,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 double clicks on directory named "dir2" from files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
     And user of browser1 changes current working directory to space1 using breadcrumbs

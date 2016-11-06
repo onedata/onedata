@@ -239,10 +239,10 @@ def click_on_file_icon_tool(selenium, browser_id, tool_type,
     _click_on_tool_icon_for_file(driver, file_name, file_type, tool_type)
 
 
-@when(parsers.parse('user of {browser_id} sees that {num:d} files '
-                    'are displayed in file browser'))
-@then(parsers.parse('user of {browser_id} sees that {num:d} files '
-                    'are displayed in file browser'))
+@when(parsers.parse('user of {browser_id} sees that file browser '
+                    'contains {num:d} file(s)'))
+@then(parsers.parse('user of {browser_id} sees that file browser '
+                    'contains {num:d} file(s)'))
 def check_how_many_files_are_displayed_in_file_browser(selenium, browser_id,
                                                        num):
     driver = select_browser(selenium, browser_id)

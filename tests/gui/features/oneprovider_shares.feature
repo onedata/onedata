@@ -434,7 +434,7 @@ Feature: Oneprovider Share view
     # upload file 20B-0.txt to space1/dir1
     And user of browser double clicks on directory named "dir1" from files list
     And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser sees that file named "20B-0.txt" has appeared on files list
 
     # create dir2 in space1/dir1
@@ -658,7 +658,7 @@ Feature: Oneprovider Share view
     # upload file 20B-0.txt to space1/dir1
     And user of browser double clicks on directory named "dir1" from files list
     And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser sees that file named "20B-0.txt" has appeared on files list
 
     # create dir2 in space1/dir1
@@ -673,7 +673,7 @@ Feature: Oneprovider Share view
     # upload file 20B-1.txt to space1/dir1/dir2
     And user of browser double clicks on directory named "dir2" from files list
     And user of browser uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser sees that file named "20B-1.txt" has appeared on files list
 
     And user of browser changes current working directory to space1 using breadcrumbs

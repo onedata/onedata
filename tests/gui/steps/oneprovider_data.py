@@ -7,7 +7,6 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import re
-import os
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
@@ -76,7 +75,8 @@ def upload_file_to_cwd(selenium, browser_id, file_name):
 
 
 @when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
-                    'upload files from directory "{dir_path}" to current dir'))
+                    'upload files from local directory "{dir_path}" to remote '
+                    'current dir'))
 def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
     driver = select_browser(selenium, browser_id)
     directory = tmpdir.join(browser_id, *dir_path.split('/'))
