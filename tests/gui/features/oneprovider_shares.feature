@@ -392,7 +392,7 @@ Feature: Oneprovider Share view
     And user of browser uses spaces select to change data space to "space1"
     And user of browser double clicks on directory named "dir1" of files list
 
-    And user of browser clicks on file named "file3" from files list
+    And user of browser clicks once on file named "file3" of files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -695,7 +695,7 @@ Feature: Oneprovider Share view
     And user of browser sees that current working directory path visible in share's file browser is as follows: share1
     And user of browser double clicks on directory named "dir1" of files list
     And user of browser sees that current working directory path visible in share's file browser is as follows: share1/dir1
-    And user of browser double clicks on file named "20B-0.txt" from files list
+    And user of browser double clicks on file named "20B-0.txt" of files list
 
     And user of browser sees that content of downloaded file "20B-0.txt" is equal to: "00000000000000000000"
 

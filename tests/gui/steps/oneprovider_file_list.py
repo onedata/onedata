@@ -177,9 +177,9 @@ def double_click_on_file_item(selenium, browser_id, item_name,
     _double_click_on_item(driver, item_name, item_type)
 
 
-@when(parsers.parse('user of {browser_id} clicks one time on '
+@when(parsers.parse('user of {browser_id} clicks once on '
                     '{item_type} named "{item_name}" of files list'))
-@then(parsers.parse('user of {browser_id} clicks one time on '
+@then(parsers.parse('user of {browser_id} clicks once on '
                     '{item_type} named "{item_name}" of files list'))
 def click_on_file_item(selenium, browser_id, item_name,
                        item_type):
