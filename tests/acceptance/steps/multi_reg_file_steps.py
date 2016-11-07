@@ -7,7 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import multi_file_steps
-from tests.utils.utils import assert_, assert_generic
+from tests.utils.utils import assert_, assert_generic, assert_false
 from tests.utils.acceptance_utils import *
 from tests.utils.client_utils import (cp, truncate, dd, md5sum, write, read,
                                       replace_pattern, open_file, execute,
@@ -64,7 +64,10 @@ def count_md5(user_name, file_path, client_node, context):
 def write_opened(user, text, file, client_node, context):
     client = context.get_client(user, client_node)
     file_path = client.absolute_path(file)
-    write_to_opened_file(client, file_path, text)
+    def condition():
+        write_to_opened_file(client, file_path, text)
+
+    assert_(client.perform, condition)
 
 
 @when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
@@ -129,6 +132,7 @@ def read_text(user, text, file, client_node, context):
     assert_(client.perform, condition)
 
 
+@when(parsers.parse('{user} reads "" from file {file} on {client_node}'))
 @then(parsers.parse('{user} reads "" from file {file} on {client_node}'))
 def read_empty(user, file, client_node, context):
     read_text(user, '', file, client_node, context)
@@ -143,7 +147,7 @@ def cannot_read(user, file, client_node, context):
     def condition():
         read(client, file_path)
 
-    assert_(client.perform, condition)
+    assert_false(client.perform, condition)
 
 
 @when(parsers.parse('{user} appends "{text}" to {file} on {client_node}'))
@@ -221,7 +225,18 @@ def copy_reg_file(user, file, path, client_node, context):
 
 
 @when(parsers.parse('{user} changes {file} size to {new_size} bytes on {client_node}'))
+@then(parsers.parse('{user} changes {file} size to {new_size} bytes on {client_node}'))
 def do_truncate(user, file, new_size, client_node, context):
+    do_truncate_base(user, file, new_size, client_node, context)
+
+
+@when(parsers.parse('{user} fails to change {file} size to {new_size} bytes on {client_node}'))
+@then(parsers.parse('{user} fails to change {file} size to {new_size} bytes on {client_node}'))
+def do_truncate_fail(user, file, new_size, client_node, context):
+    do_truncate_base(user, file, new_size, client_node, context, should_fail=True)
+
+
+def do_truncate_base(user, file, new_size, client_node, context, should_fail=False):
     user = context.get_user(user)
     client = user.get_client(client_node)
     file_path = client.absolute_path(file)
@@ -229,7 +244,7 @@ def do_truncate(user, file, new_size, client_node, context):
     def condition():
         truncate(client, file_path, int(new_size))
 
-    assert_(client.perform, condition, timeout=0)
+    assert_generic(client.perform, should_fail, condition, timeout=0)
 
 
 @when(parsers.parse('{user} performs command "{command}" in {path} directory on {client_node}'))

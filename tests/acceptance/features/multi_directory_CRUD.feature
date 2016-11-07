@@ -55,19 +55,29 @@ Feature: Multi_directory_CRUD
     And u2 changes s1/dir1/dir2 mode to 735 on client2
     And u1 can't list s1/dir1/dir2 on client1
 
-  Scenario: Create file in directory without write permission
+  Scenario: Fail to create file in directory without write permission
     When u2 creates directories [s1/dir1] on client2
     And u2 changes s1/dir1 mode to 755 on client2
     And mode of u1's s1/dir1 is 755 on client1
     And u1 fails to create directories [s1/dir1/dir2] on client1
+
+  Scenario: Delete directory right after deleting its subdirectory by other client
+    When u2 creates directories [s1/dir1] on client2
+    And u1 sees [dir1] in s1 on client1
+    And u1 creates directories [s1/dir1/dir2] on client1
+    Then u2 sees [dir2] in s1/dir1 on client2
+    Then u1 deletes non-empty directories [s1/dir1/dir2] on client1
+    Then u1 doesn't see [dir2] in s1/dir1 on client1
+    Then u2 doesn't see [dir2] in s1/dir1 on client2
 
   Scenario: Create file in directory with write permission
     When u2 creates directories [s1/dir1] on client2
     And u1 sees [dir1] in s1 on client1
     And u1 creates directories [s1/dir1/dir2] on client1
     Then u2 sees [dir2] in s1/dir1 on client2
+    And u1 sees [dir2] in s1/dir1 on client1
 
-  Scenario: Delete file in directory without write permission
+  Scenario: Fail to delete file in directory without write permission
     When u2 creates directory and parents [s1/dir1/dir2] on client2
     And u2 changes s1/dir1 mode to 755 on client2
     And mode of u1's s1/dir1 is 755 on client1
@@ -79,15 +89,15 @@ Feature: Multi_directory_CRUD
     And u1 deletes empty directories [s1/dir1/dir2] on client1
     Then u2 doesn't see [dir2] in s1/dir1 on client2
 
-  Scenario: Rename file in directory without write permission
+  Scenario: Fail to rename file in directory without write permission
     When u2 creates directory and parents [s1/dir1/dir2] on client2
     And u2 changes s1/dir1 mode to 755 on client2
     And mode of u1's s1/dir1 is 755 on client1
-    And u1 fails to rename file s1/dir1/dir2 to s1/dir1/dir3 on client1
+    And u1 fails to rename s1/dir1/dir2 to s1/dir1/dir3 on client1
 
   Scenario: Rename file in directory with write permission
     When u2 creates directory and parents [s1/dir1/dir2] on client2
-    And u1 renames file s1/dir1/dir2 to s1/dir1/dir3 on client1
+    And u1 renames s1/dir1/dir2 to s1/dir1/dir3 on client1
     Then u2 sees [dir3] in s1/dir1 on client2
     And u2 doesn't see [dir2] in s1/dir1 on client2
 

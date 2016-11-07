@@ -212,8 +212,6 @@ def change_mode_base(user, file, mode, client_node, context, should_fail=False):
         chmod(client, mode, file_path)
 
     assert_generic(client.perform, should_fail, condition)
-    # print ("CHANGED MODE")
-    # time.sleep(6000)
 
 
 @then(parsers.parse('file type of {user}\'s {file} is {file_type} on {client_node}'))

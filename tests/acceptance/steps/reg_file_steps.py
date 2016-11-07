@@ -70,6 +70,13 @@ def do_truncate(user, file, new_size, context):
     multi_reg_file_steps.do_truncate(user, file, new_size, "client1", context)
 
 
+@when(parsers.parse('{user} fails to change {file} size to {new_size} bytes'))
+@then(parsers.parse('{user} fails to change {file} size to {new_size} bytes'))
+def do_truncate_fail(user, file, new_size, context):
+    multi_reg_file_steps.do_truncate_fail(user, file, new_size, "client1", context)
+
+
+
 @when(parsers.parse('{user} performs command "{command}" in {path} directory'))
 @then(parsers.parse('{user} performs command "{command}" in {path} directory'))
 def run_cmd_in_directory(user, command, path, context):

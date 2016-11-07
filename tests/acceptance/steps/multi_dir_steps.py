@@ -100,6 +100,7 @@ def delete_empty_base(user, dirs, client_node, context, should_fail=False):
 
 
 @when(parsers.parse('{user} deletes non-empty directories {dirs} on {client_node}'))
+@then(parsers.parse('{user} deletes non-empty directories {dirs} on {client_node}'))
 def delete_non_empty(user, dirs, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)

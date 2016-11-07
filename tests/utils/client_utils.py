@@ -11,8 +11,8 @@ from tests.utils.docker_utils import run_cmd
 from tests.utils.path_utils import escape_path
 from tests.utils.user_utils import User
 from tests.utils.utils import (set_dns, get_token, get_oz_cookie,
-                               get_function_name, handle_exception,
                                log_exception, assert_)
+import errno
 
 import pytest
 import os
@@ -177,7 +177,7 @@ def mount_users(request, environment, context, client_dockers,
 
         if token != 'bad_token':
             try:
-                clean_spaces_safe(user_name, client)
+                clean_spaces(user_name, client)
             except AssertionError:
                 pytest.fail("Failed to clean spaces")
 
@@ -189,6 +189,9 @@ def mount_users(request, environment, context, client_dockers,
     def fin():
         params = zip(user_names, clients)
         for user_name, client in params:
+            for opened_file in client.opened_files.keys():
+                close_file(client, opened_file)
+            client.opened_files.clear()
             clean_mount_path(user_name, client)
         for user_name in user_names:
             user = context.get_user(user_name)
@@ -236,12 +239,11 @@ def stat(client, path):
     return client.rpyc_connection.modules.os.stat(path)
 
 
-def rm(client, path, recursive=False, force=False):
-
+def rm(client, path, recursive=False, force=False, onerror=None):
     if recursive and force:
-        client.rpyc_connection.modules.shutil.rmtree(path, ignore_errors=True)
+        client.rpyc_connection.modules.shutil.rmtree(path, ignore_errors=True, onerror=onerror)
     elif recursive:
-        client.rpyc_connection.modules.shutil.rmtree(path)
+        client.rpyc_connection.modules.shutil.rmtree(path, onerror=onerror)
     else:
         client.rpyc_connection.modules.os.remove(path)
 
@@ -263,7 +265,7 @@ def mkdir(client, dir_path, recursive=False):
 
 
 def create_file(client, file_path, mode=0664):
-    client.rpyc_connection.modules.os.mknod(file_path, mode, stat_lib.S_IFREG)
+    client.rpyc_connection.modules.os.mknod(file_path, mode | stat_lib.S_IFREG)
 
 
 def touch(client, file_path):
@@ -385,36 +387,36 @@ def create_clients(users, client_hosts, mount_paths, client_dockers):
     return clients
 
 
-def clean_spaces_safe(user, client):
-
-    def condition():
-        clean_spaces(user, client)
-
-    assert_(client.perform, condition, timeout=5)
-
-
-def clean_spaces(user, client):
-    # TODO delete after debugging
-    print "CLEANING SPACES FOR", user
+def clean_spaces(client):
     spaces = ls(client, path=client.mount_path)
-    print "SPACES: ", spaces
-    # clean spaces
+
+    def onerror(func, path, exception_info):
+        exception_type, exception, traceback = exception_info
+        if isinstance(exception, OSError):
+            if exception.errno == errno.EACCES:
+                # ignore EACCES errors during cleaning
+                return
+        raise CleaningError(exception=exception)
+
     for space in spaces:
-        try:
-            rm(client, path=client.absolute_path(space), recursive=True)
-        except:
-            print "FAILED TO DELETE %s for %s" % (space, user)
-            log_exception()
-            print ls(client, client.absolute_path(space))
+        space_path = client.absolute_path(space)
+
+        def condition():
+            try:
+                rm(client, path=space_path, recursive=True, onerror=onerror)
+            except Exception as e:
+                if isinstance(e, CleaningError):
+                    e = e.exception
+                log_exception()
+                raise e
+        assert_(client.perform, condition, timeout=5)
 
 
 def clean_mount_path(user, client):
-    function_name = get_function_name()
-
     try:
-        clean_spaces(user, client)
+        clean_spaces(client)
     except Exception as e:
-        handle_exception(e, function_name)
+        pass
     finally:
         # get pid of running oneclient node
         pid = run_cmd('root', client,
@@ -431,9 +433,15 @@ def clean_mount_path(user, client):
 
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True)
-
         rm(client, path=client.mount_path, recursive=True, force=True)
 
 
 def user_home_dir(user="root"):
     return os.path.join("/home", user)
+
+
+class CleaningError(Exception):
+    # this class is wrapper for exceptions raised during cleaning spaces
+    def __init__(self, *args, **kwargs):
+        self.exception = kwargs.pop("exception")
+        super(CleaningError, self).__init__(*args, **kwargs)
