@@ -122,7 +122,7 @@ def capabilities(request, capabilities, tmpdir):
 
     # currently there are no problems with invalid SSL certs in built-in FF driver and Chrome
     # but some drivers could need it
-    capabilities['loggingPrefs'] = {'browser': 'ALL'}
+    capabilities['loggingPrefs'] = {'browser': 'DEBUG'}
     capabilities['acceptSslCerts'] = True
 
     # uncomment to debug selenium browser init

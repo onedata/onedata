@@ -137,7 +137,7 @@ Feature: Oneprovider Data view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir10" has appeared on files list
-    And user of browser double clicks on directory named "dir10" from files list
+    And user of browser double clicks on directory named "dir10" of files list
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir10
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
     Then user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*5.*
@@ -168,7 +168,7 @@ Feature: Oneprovider Data view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir100" has appeared on files list
-    And user of browser double clicks on directory named "dir100" from files list
+    And user of browser double clicks on directory named "dir100" of files list
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir100
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
     And user of browser is idle for 5 seconds
@@ -248,7 +248,7 @@ Feature: Oneprovider Data view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir20" has appeared on files list
-    And user of browser double clicks on directory named "dir20" from files list
+    And user of browser double clicks on directory named "dir20" of files list
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir20
 
     # create dir 10 in dir20
@@ -259,7 +259,7 @@ Feature: Oneprovider Data view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir10" has appeared on files list
-    And user of browser double clicks on directory named "dir10" from files list
+    And user of browser double clicks on directory named "dir10" of files list
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir20/dir10
 
     # start uploading files in dir10 and go back to dir 20
@@ -271,7 +271,7 @@ Feature: Oneprovider Data view
     And user of browser sees that file browser contains 1 file(s)
 
     # go to dir 10 and see if every file has benn uploaded
-    And user of browser double clicks on directory named "dir10" from files list
+    And user of browser double clicks on directory named "dir10" of files list
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir20/dir10
     Then user of browser sees that file browser contains 70 file(s)
 

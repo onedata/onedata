@@ -168,19 +168,19 @@ def is_present_in_file_list(selenium, browser_id, item_list, item_type):
 
 
 @then(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} named "{item_name}" from files list'))
+                    'on {item_type} named "{item_name}" of files list'))
 @when(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} named "{item_name}" from files list'))
+                    'on {item_type} named "{item_name}" of files list'))
 def double_click_on_file_item(selenium, browser_id, item_name,
                               item_type):
     driver = select_browser(selenium, browser_id)
     _double_click_on_item(driver, item_name, item_type)
 
 
-@when(parsers.parse('user of {browser_id} clicks on {item_type} '
-                    'named "{item_name}" from files list'))
-@then(parsers.parse('user of {browser_id} clicks on {item_type} '
-                    'named "{item_name}" from files list'))
+@when(parsers.parse('user of {browser_id} clicks one time on '
+                    '{item_type} named "{item_name}" of files list'))
+@then(parsers.parse('user of {browser_id} clicks one time on '
+                    '{item_type} named "{item_name}" of files list'))
 def click_on_file_item(selenium, browser_id, item_name,
                        item_type):
     driver = select_browser(selenium, browser_id)
