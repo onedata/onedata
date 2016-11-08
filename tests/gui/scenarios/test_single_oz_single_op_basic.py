@@ -40,7 +40,7 @@ scenarios('../features/oneprovider_shares.feature')
 scenarios('../features/oneprovider_shares_multi.feature')
 scenarios('../features/oneprovider_metadata.feature')
 
-# limit some tests to chrome (due to multiple files upload working only on chrome)
+# limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
 if BROWSER == 'Chrome':
     scenarios('../features/oneprovider_upload_multi_files.feature')
 
