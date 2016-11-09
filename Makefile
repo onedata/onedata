@@ -146,7 +146,7 @@ test_packaging:
 	${TEST_RUN} --test-type packaging -vvv --test-dir tests/packaging -s
 
 test:
-	${TEST_RUN} --test-type acceptance -vvv --gherkin-terminal-reporter --test-dir tests/acceptance/scenarios/${SUITE}
+	${TEST_RUN} --test-type acceptance -vvv  --test-dir tests/acceptance/scenarios/${SUITE}
 
 test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
