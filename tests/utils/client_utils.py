@@ -177,7 +177,7 @@ def mount_users(request, environment, context, client_dockers,
 
         if token != 'bad_token':
             try:
-                clean_spaces(user_name, client)
+                clean_spaces(client)
             except AssertionError:
                 pytest.fail("Failed to clean spaces")
 

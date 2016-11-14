@@ -105,8 +105,7 @@ Feature: Multi_regular_file_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    Then last operation by u1 succeeds
-    And modification time of u2's s1/file1 is greater than access time on client2
+    Then modification time of u2's s1/file1 is greater than access time on client2
     And modification time of u2's s1/file1 is equal to status-change time on client2
 
   Scenario: Status-change time when changing mode

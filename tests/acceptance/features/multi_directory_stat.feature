@@ -41,7 +41,6 @@ Feature: Multi_directory_stat
     And u1 creates directories [s1/dir1/dir2] on client1
     And u2 fails to update [s1/dir1] timestamps on client2
     # updating timestamps without write permission should fail
-#    Then last operation by u2 fails
 
   Scenario: Update timestamps with write permission
     # touch s1/dir1
