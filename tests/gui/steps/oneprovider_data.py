@@ -6,19 +6,20 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import py
-
 import re
-import os
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
+from tests.gui.utils.oneprovider_gui import assert_breadcrumbs_correctness, \
+    chdir_using_breadcrumbs
+
 from pytest_bdd import when, then, parsers, given
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
@@ -74,13 +75,17 @@ def upload_file_to_cwd(selenium, browser_id, file_name):
 
 
 @when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
-                    'upload files from directory "{dir_path}" to current dir'))
+                    'upload files from local directory "{dir_path}" to remote '
+                    'current dir'))
 def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
     driver = select_browser(selenium, browser_id)
-    directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
-    _upload_files_to_cwd(driver, '\n'.join(str(item) for item
-                                           in directory.listdir()
-                                           if item.isfile()))
+    directory = tmpdir.join(browser_id, *dir_path.split('/'))
+    if directory.isdir():
+        _upload_files_to_cwd(driver, '\n'.join(str(item) for item
+                                               in directory.listdir()
+                                               if item.isfile()))
+    else:
+        raise ValueError('directory {} does not exist'.format(str(directory)))
 
 
 # TODO currently every browser in test download to that same dir,
@@ -92,26 +97,25 @@ def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)
-    file_path = os.path.join(str(tmpdir), file_name)
+    downloaded_file = tmpdir.join(file_name)
 
     # sleep waiting for file to finish downloading
     exist = False
-    for sleep_time in range(10):
+    sleep_time = 5
+    for _ in range(10):
         if not exist:
             time.sleep(sleep_time)
         else:
             break
-        exist = os.path.isfile(file_path)
+        exist = downloaded_file.isfile()
 
-    if not exist:
-        raise ValueError('file {} not downloaded'.format(file_name))
+    assert exist, 'file {} has not been downloaded'.format(file_name)
 
     def _check_file_content():
-        with open(file_path, 'r') as f:
+        with downloaded_file.open() as f:
             file_content = ''.join(f.readlines())
             return content == file_content
 
-    assert file_path, 'file {} has not been downloaded'.format(file_name)
     Wait(driver, WAIT_BACKEND).until(
         lambda _: _check_file_content(),
         message='checking if downloaded file contains {:s}'.format(content)
@@ -159,10 +163,7 @@ def is_displayed_path_correct(selenium, browser_id, path):
     breadcrumbs = driver.find_element_by_css_selector('#main-content '
                                                       '.secondary-top-bar '
                                                       '.file-breadcrumbs-list')
-    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs.text.split('\n'))):
-        assert dir1 == dir2, \
-            '{} not found on {}th position in breadcrumbs, instead we have {}' \
-            ''.format(dir2, i, breadcrumbs.text)
+    assert_breadcrumbs_correctness(path, breadcrumbs)
 
 
 @when(parsers.parse('user of {browser_id} changes current working directory '
@@ -176,9 +177,4 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
                                                        '.file-breadcrumbs-list '
                                                        '.file-breadcrumbs-item '
                                                        'a')
-    dir1, dir2 = None, None
-    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs)):
-        assert dir1 == dir2.text, \
-            '{} not found on {}th position in breadcrumbs, instead we have {}' \
-            ''.format(dir2, i, breadcrumbs.text)
-    dir2.click()
+    chdir_using_breadcrumbs(path, breadcrumbs)

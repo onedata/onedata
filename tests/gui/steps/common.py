@@ -9,8 +9,8 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import time
 import random
+import stat
 
-import py
 import pyperclip
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
@@ -27,6 +27,9 @@ from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
+PERMS_777 = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
+
+
 @given(parsers.parse("user opened {browser_id_list} window"))
 @given(parsers.parse("users opened {browser_id_list} browsers' windows"))
 def create_instances_of_webdriver(selenium, driver,
@@ -37,6 +40,8 @@ def create_instances_of_webdriver(selenium, driver,
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
             selenium[browser_id] = config_driver(driver.get_instance())
+            # TODO find better way to gather logs from browser console (this works only for chrome)
+            selenium[browser_id].execute_script('console.debug = console.warn')
             tmp_memory[browser_id] = {'shares': {},
                                       'spaces': {},
                                       'groups': {},
@@ -129,9 +134,10 @@ def g_click_on_link_with_text(selenium, browser_id_list, link_name):
         driver.find_element_by_link_text(link_name).click()
 
 
-@when(parsers.parse('user of {browser_id} is idle for {seconds:d} seconds'))
+@when(parsers.re('user of (?P<browser_id>.+?) is idle for '
+                 '(?P<seconds>\d*\.?\d+([eE][-+]?\d+)?) seconds'))
 def wait_n_seconds(seconds):
-    time.sleep(seconds)
+    time.sleep(float(seconds))
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+) changes the relative URL to (?P<path>.+)'))
@@ -220,7 +226,7 @@ def refresh_site(selenium, browser_id):
 def is_url_matching(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
     assert re.search(path, driver.current_url), \
-        '{} is not like {}'.format(driver.current_url, path)
+        '{} url is not like expected {}'.format(driver.current_url, path)
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) opens received (?:url|URL)'))
@@ -289,39 +295,41 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
     driver.get(url)
 
 
-def _mkdir_in_users_file_system(browser_id, dir_path, tmpdir):
-    try:
-        tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
-    except py.error.ENOENT:
-        tmpdir.mkdir(browser_id, *dir_path.split('/'))
+def _create_dir(root, dir_path, perms=PERMS_777):
+    dir_created = root.mkdir(*dir_path)
+    dir_created.chmod(perms)
+    return dir_created
 
 
-def _touch_in_users_file_system(directory, file_name,
-                                file_content, tmpdir):
-    if isinstance(directory, list):
-        try:
-            directory = tmpdir.ensure(*directory, dir=True)
-        except py.error.ENOENT:
-            raise ValueError('direcotry {} does not exist'
-                             ''.format('/'.join(directory[1:])))
+def _create_temp_dir(root, path, recursive=True):
+    directory = path
 
+    if recursive:
+        for directory in path[:-1]:
+            next_dir = root.join(directory)
+            if next_dir.isdir():
+                root = next_dir
+            else:
+                root = _create_dir(root, [directory])
+        else:
+            directory = [path[-1]]
+
+    directory = _create_dir(root, directory)
+    return directory
+
+
+def _create_temp_file(directory, file_name, file_content='', perms=PERMS_777):
     reg_file = directory.join(file_name)
     reg_file.write(file_content)
-
-
-def _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir):
-    try:
-        directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
-    except py.error.ENOENT:
-        raise ValueError('directory {} does not exist'.format(dir_path))
-
-    for i in range(10, num + 10):
-        _touch_in_users_file_system(directory, 'file_{}'.format(i),
-                                    '1' * i, tmpdir)
+    reg_file.chmod(perms)
+    return reg_file
 
 
 @given(parsers.parse('user of {browser_id} has {num:d} files '
                      'in directory named "{dir_path}"'))
-def create_files(browser_id, num, dir_path, tmpdir):
-    _mkdir_in_users_file_system(browser_id, dir_path, tmpdir)
-    _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir)
+def create_temp_dir_with_files(browser_id, num, dir_path, tmpdir):
+    path = [browser_id]
+    path.extend(dir_path.split('/'))
+    directory = _create_temp_dir(tmpdir, path, recursive=True)
+    for i in range(10, num + 10):
+        _create_temp_file(directory, 'file_{}.txt'.format(i), '1' * i)

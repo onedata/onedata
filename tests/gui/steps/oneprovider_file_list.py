@@ -168,19 +168,19 @@ def is_present_in_file_list(selenium, browser_id, item_list, item_type):
 
 
 @then(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} named "{item_name}" from files list'))
+                    'on {item_type} named "{item_name}" of files list'))
 @when(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} named "{item_name}" from files list'))
+                    'on {item_type} named "{item_name}" of files list'))
 def double_click_on_file_item(selenium, browser_id, item_name,
                               item_type):
     driver = select_browser(selenium, browser_id)
     _double_click_on_item(driver, item_name, item_type)
 
 
-@when(parsers.parse('user of {browser_id} clicks on {item_type} '
-                    'named "{item_name}" from files list'))
-@then(parsers.parse('user of {browser_id} clicks on {item_type} '
-                    'named "{item_name}" from files list'))
+@when(parsers.parse('user of {browser_id} clicks once on '
+                    '{item_type} named "{item_name}" of files list'))
+@then(parsers.parse('user of {browser_id} clicks once on '
+                    '{item_type} named "{item_name}" of files list'))
 def click_on_file_item(selenium, browser_id, item_name,
                        item_type):
     driver = select_browser(selenium, browser_id)
@@ -239,10 +239,10 @@ def click_on_file_icon_tool(selenium, browser_id, tool_type,
     _click_on_tool_icon_for_file(driver, file_name, file_type, tool_type)
 
 
-@when(parsers.parse('user of {browser_id} sees that {num:d} files '
-                    'are displayed in file browser'))
-@then(parsers.parse('user of {browser_id} sees that {num:d} files '
-                    'are displayed in file browser'))
+@when(parsers.parse('user of {browser_id} sees that file browser '
+                    'contains {num:d} file(s)'))
+@then(parsers.parse('user of {browser_id} sees that file browser '
+                    'contains {num:d} file(s)'))
 def check_how_many_files_are_displayed_in_file_browser(selenium, browser_id,
                                                        num):
     driver = select_browser(selenium, browser_id)

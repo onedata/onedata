@@ -10,9 +10,13 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 
 from tests.gui.conftest import WAIT_BACKEND
+from tests.gui.utils.oneprovider_gui import assert_breadcrumbs_correctness, \
+    chdir_using_breadcrumbs
+
 from pytest_bdd import when, then, parsers
-from selenium.webdriver.support.ui import WebDriverWait as Wait
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
+from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
 
@@ -64,10 +68,7 @@ def is_share_abs_path_correct(selenium, browser_id, path):
     abs_path = driver.find_element_by_css_selector('#content-scroll '
                                                    '.share-info-head '
                                                    '.file-breadcrumbs-list')
-    for i, dir1, dir2 in enumerate(zip(path.split('/'), abs_path.text.split())):
-        assert dir1 == dir2, \
-            '{} not found on {}th position in breadcrumbs, instead we have {}' \
-            ''.format(dir2, i, abs_path.text)
+    assert_breadcrumbs_correctness(path, abs_path)
 
 
 @when(parsers.parse('user of {browser_id} sees that current working directory '
@@ -78,10 +79,7 @@ def is_cwd_correct(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
     cwd = driver.find_element_by_css_selector('.files-list '
                                               '.file-breadcrumbs-list')
-    for i, dir1, dir2 in enumerate(zip(path.split('/'), cwd.text.split())):
-        assert dir1 == dir2, \
-            '{} not found on {}th position in breadcrumbs, instead we have {}' \
-            ''.format(dir2, i, cwd.text)
+    assert_breadcrumbs_correctness(path, cwd)
 
 
 @when(parsers.parse('user of {browser_id} changes current working directory '
@@ -94,12 +92,7 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
                                                        '.file-breadcrumbs-list '
                                                        '.file-breadcrumbs-item '
                                                        'a')
-    dir1, dir2 = None, None
-    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs)):
-        assert dir1 == dir2.text, \
-            '{} not found on {}th position in breadcrumbs, instead we have {}' \
-            ''.format(dir2, i, breadcrumbs.text)
-    dir2.click()
+    chdir_using_breadcrumbs(path, breadcrumbs)
 
 
 @when(parsers.parse('user of {browser_id} clicks on {path} '
@@ -113,12 +106,7 @@ def click_on_dir_in_abs_path(selenium, browser_id, path):
                                                        '.file-breadcrumbs-list '
                                                        '.file-breadcrumbs-item '
                                                        'a')
-    dir1, dir2 = None, None
-    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs)):
-        assert dir1 == dir2.text, \
-            '{} not found on {}th position in breadcrumbs, instead we have {}' \
-            ''.format(dir2, i, breadcrumbs.text)
-    dir2.click()
+    chdir_using_breadcrumbs(path, breadcrumbs)
 
 
 @when(parsers.parse('user of {browser_id} sees that selected share '
