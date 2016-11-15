@@ -55,6 +55,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates regular files [s1/file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
+    # TODO delete below sleep after resolving 2816
     And u2 waits 5 seconds
     And u2 reads "TEST TEXT ONEDATA" from file s1/file1 on client2
     And size of u1's s1/file1 is 17 bytes on client1
@@ -72,6 +73,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates directories [s1/dir1] on client1
     And u1 creates regular files [s1/dir1/file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client1
+    # TODO delete below sleep after resolving 2816
     Then u2 waits 5 seconds
     Then u2 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client2
     And u1 changes s1/dir1/file1 mode to 620 on client1
@@ -87,7 +89,8 @@ Feature: Multi_regular_file_CRUD
     And mode of u2's s1/dir1/file1 is 660 on client2
     And u2 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client2
     Then u2 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client2
-    And u1 waits 15 seconds
+    # TODO delete below sleep after resolving 2816
+    And u1 waits 5 seconds
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
     And size of u1's s1/dir1/file1 is 17 bytes on client1
     And size of u2's s1/dir1/file1 is 17 bytes on client2
@@ -107,6 +110,7 @@ Feature: Multi_regular_file_CRUD
     And u1 changes s1/dir1/script.sh mode to 654 on client1
     And mode of u2's s1/dir1/script.sh is 654 on client2
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
+    # TODO delete below sleep after resolving 2816
     And u2 waits 5 seconds
     And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
     And u2 executes s1/dir1/script.sh on client2
@@ -115,6 +119,7 @@ Feature: Multi_regular_file_CRUD
     When u1 creates directories [s1/dir1] on client1
     And u1 creates regular files [s1/dir1/script.sh] on client1
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
+    # TODO delete below sleep after resolving 2816
     And u2 waits 5 seconds
     And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
     And u2 fails to execute s1/dir1/script.sh on client2
