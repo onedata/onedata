@@ -6,13 +6,15 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import py
+
 import re
 import os
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
-from pytest_bdd import when, then, parsers
+from pytest_bdd import when, then, parsers, given
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -45,28 +47,44 @@ def change_space(selenium, browser_id, space_name):
     Wait(driver, WAIT_FRONTEND).until(space_by_name).click()
 
 
-@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
-                    'to upload file "{file_name}" to current dir'))
-def upload_file_to_current_dir(selenium, browser_id, file_name):
+def _upload_files_to_cwd(driver, files):
     """This interaction is very hacky, because uploading files with Selenium
     needs to use input element, but we do not use it directly in frontend.
     So we unhide an input element for a while and pass a local file path to it.
     """
-    driver = select_browser(selenium, browser_id)
     # HACK: for Firefox driver - because we cannot interact with hidden elements
     driver.execute_script("$('input#toolbar-file-browse').removeClass('hidden')")
     driver.find_element_by_css_selector('input#toolbar-file-browse').send_keys(
-        upload_file_path(file_name)
+        files
     )
     driver.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
-    def file_browser_ready(d):
-        files_table = d.find_element_by_css_selector('.files-table')
-        return not re.match(r'.*is-loading.*', files_table.get_attribute('class'))
+    upload_panel = driver.find_element_by_css_selector('.file-upload-panel')
+    Wait(driver, WAIT_BACKEND).until_not(
+        lambda _: upload_panel.is_displayed(),
+        message='waiting for files to get uploaded'
+    )
 
-    Wait(driver, WAIT_BACKEND).until(file_browser_ready)
+
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
+                    'to upload file "{file_name}" to current dir'))
+def upload_file_to_cwd(selenium, browser_id, file_name):
+    driver = select_browser(selenium, browser_id)
+    _upload_files_to_cwd(driver, upload_file_path(file_name))
 
 
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
+                    'upload files from directory "{dir_path}" to current dir'))
+def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
+    driver = select_browser(selenium, browser_id)
+    directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
+    _upload_files_to_cwd(driver, '\n'.join(str(item) for item
+                                           in directory.listdir()
+                                           if item.isfile()))
+
+
+# TODO currently every browser in test download to that same dir,
+# repair it by changing capabilities in pytest selenium mult
 @when(parsers.parse('user of {browser_id} sees that content of downloaded '
                     'file "{file_name}" is equal to: "{content}"'))
 @then(parsers.parse('user of {browser_id} sees that content of downloaded '
@@ -74,21 +92,28 @@ def upload_file_to_current_dir(selenium, browser_id, file_name):
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)
-    tmpdir_path = str(tmpdir)
-    file_path = os.path.join(tmpdir_path, file_name)
+    file_path = os.path.join(str(tmpdir), file_name)
 
     # sleep waiting for file to finish downloading
+    exist = False
     for sleep_time in range(10):
-        if not os.listdir(tmpdir_path):
+        if not exist:
             time.sleep(sleep_time)
+        else:
+            break
+        exist = os.path.isfile(file_path)
+
+    if not exist:
+        raise ValueError('file {} not downloaded'.format(file_name))
 
     def _check_file_content():
         with open(file_path, 'r') as f:
             file_content = ''.join(f.readlines())
             return content == file_content
 
+    assert file_path, 'file {} has not been downloaded'.format(file_name)
     Wait(driver, WAIT_BACKEND).until(
-        lambda _: _check_file_content,
+        lambda _: _check_file_content(),
         message='checking if downloaded file contains {:s}'.format(content)
     )
 
@@ -125,15 +150,35 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
     )
 
 
-# TODO implement better checking dir tree
 @when(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in sidebar list is {path}'))
+                    'displayed in breadcrumbs is {path}'))
 @then(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in sidebar list is {path}'))
+                    'displayed in breadcrumbs is {path}'))
 def is_displayed_path_correct(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    path = path.split('/')
-    dir_name = driver.find_element_by_css_selector('.data-files-tree '
-                                                   'li.level-{} .active'
-                                                   ''.format(len(path) - 1))
-    assert dir_name.text == path[-1]
+    breadcrumbs = driver.find_element_by_css_selector('#main-content '
+                                                      '.secondary-top-bar '
+                                                      '.file-breadcrumbs-list')
+    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs.text.split('\n'))):
+        assert dir1 == dir2, \
+            '{} not found on {}th position in breadcrumbs, instead we have {}' \
+            ''.format(dir2, i, breadcrumbs.text)
+
+
+@when(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs'))
+@then(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs'))
+def change_cwd_using_breadcrumbs(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    breadcrumbs = driver.find_elements_by_css_selector('#main-content '
+                                                       '.secondary-top-bar '
+                                                       '.file-breadcrumbs-list '
+                                                       '.file-breadcrumbs-item '
+                                                       'a')
+    dir1, dir2 = None, None
+    for i, dir1, dir2 in enumerate(zip(path.split('/'), breadcrumbs)):
+        assert dir1 == dir2.text, \
+            '{} not found on {}th position in breadcrumbs, instead we have {}' \
+            ''.format(dir2, i, breadcrumbs.text)
+    dir2.click()

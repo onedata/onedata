@@ -6,22 +6,20 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-import re
 import pyperclip
 
 from tests.gui.utils.generic import parse_seq
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from tests.gui.utils.generic import refresh_and_call, parse_url
 
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 from pytest_bdd import given, parsers, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-main_menu_tab_to_url = {'spaces': 'spaces',
+MAIN_MENU_TAB_TO_URL = {'spaces': 'spaces',
                         'groups': 'groups',
                         'data': 'data',
                         'shared': 'shares'}
@@ -35,10 +33,8 @@ def _click_on_tab_in_main_menu_sidebar(driver, tab):
             except AttributeError:
                 return False
             else:
-                return main_menu_tab_to_url[tab] == found.lower()
+                return MAIN_MENU_TAB_TO_URL[tab] == found.lower()
 
-        menu_tab = main_menu_tab_to_url[tab]
-        css_path = '.primary-sidebar a#main-{:s}'.format(menu_tab)
         driver.find_element_by_css_selector(css_path).click()
 
         return Wait(driver, WAIT_FRONTEND).until(
@@ -46,6 +42,9 @@ def _click_on_tab_in_main_menu_sidebar(driver, tab):
             message='waiting for url to change.'
                     'Current url: {:s}'.format(driver.current_url)
         )
+
+    menu_tab = MAIN_MENU_TAB_TO_URL[tab]
+    css_path = '.primary-sidebar a#main-{:s}'.format(menu_tab)
 
     Wait(driver, WAIT_BACKEND).until(
         lambda _: _load_main_menu_tab_page(),
@@ -109,17 +108,6 @@ def op_check_if_row_of_name_appeared_in_table(selenium, browser_id,
     )
 
 
-@given(parsers.parse('user of {browser_id} sees that main content '
-                     'has ended loading'))
-def op_check_if_main_content_has_been_reloaded(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR,
-                                            '.common-loader-spinner')),
-        message='wait for main content to end loading'
-    )
-
-
 @given(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
                   'Oneprovider session has started'))
 def wait_for_op_session_to_start(selenium, browser_id_list):
@@ -146,3 +134,94 @@ def wait_for_op_session_to_start(selenium, browser_id_list):
 def cp_part_of_url(selenium, browser_id, item):
     driver = select_browser(selenium, browser_id)
     pyperclip.copy(parse_url(driver.current_url).group(item.lower()))
+
+
+def _wait_for_tab_main_content_to_load(driver):
+    # find_element_* throws exception if nothing found
+    try:
+        loader = driver.find_element_by_css_selector('#main-content '
+                                                     '.loader-area-'
+                                                     'main-content'
+                                                     ':not([class~=hidden])')
+    except NoSuchElementException:
+        return
+    else:
+        Wait(driver, WAIT_BACKEND).until_not(
+            lambda _: loader.is_displayed(),
+            message='waiting for tab main content to end loading'
+        )
+
+
+@given(parsers.parse('user of {browser_id} seen that '
+                     'tab main content has been loaded'))
+def g_has_tab_main_content_been_loaded(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _wait_for_tab_main_content_to_load(driver)
+
+
+@when(parsers.parse('user of {browser_id} sees that '
+                    'tab main content has been loaded'))
+@then(parsers.parse('user of {browser_id} sees that '
+                    'tab main content has been loaded'))
+def wt_has_tab_main_content_been_loaded(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _wait_for_tab_main_content_to_load(driver)
+
+
+def _has_dir_content_been_loaded(driver):
+    # find_element_* throws exception if nothing found
+    loader = driver.find_elements_by_css_selector('#main-content '
+                                                  '.loader-area-'
+                                                  'content-with-'
+                                                  'secondary-top')
+    if loader:
+        loader = loader[0]
+        Wait(driver, WAIT_BACKEND).until_not(
+            lambda _: loader.is_displayed(),
+            message='waiting for dir content to end loading'
+        )
+
+
+@given(parsers.parse('user of {browser_id} sees that content of current '
+                     'directory has been loaded'))
+def g_has_dir_content_been_loaded(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _has_dir_content_been_loaded(driver)
+
+
+@when(parsers.parse('user of {browser_id} sees that content of current '
+                    'directory has been loaded'))
+@then(parsers.parse('user of {browser_id} sees that content of current '
+                    'directory has been loaded'))
+def wt_has_dir_content_been_loaded(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _has_dir_content_been_loaded(driver)
+
+
+def _has_file_browser_been_loaded(driver):
+    # find_element_* throws exception if nothing found
+    loader = driver.find_elements_by_css_selector('#main-content '
+                                                  '#content-scroll '
+                                                  '.route-loading')
+    if loader:
+        loader = loader[0]
+        Wait(driver, WAIT_BACKEND).until_not(
+            lambda _: loader.is_displayed(),
+            message='waiting for file browser to end loading'
+        )
+
+
+@given(parsers.parse('user of {browser_id} seen that file browser '
+                     'has been loaded'))
+def g_has_file_browser_been_loaded(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _has_file_browser_been_loaded(driver)
+
+
+@when(parsers.parse('user of {browser_id} sees that file browser '
+                    'has been loaded'))
+@then(parsers.parse('user of {browser_id} sees that file browser '
+                    'has been loaded'))
+def wt_has_file_browser_been_loaded(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    _has_file_browser_been_loaded(driver)

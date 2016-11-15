@@ -9,6 +9,8 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import time
 import random
+
+import py
 import pyperclip
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
@@ -115,7 +117,8 @@ def press_enter_on_active_element(selenium, browser_id):
 def link_with_text_present(selenium, browser_id, links_names):
     driver = select_browser(selenium, browser_id)
     for name in parse_seq(links_names):
-        assert driver.find_element_by_link_text(name)
+        assert driver.find_element_by_link_text(name), \
+            '{} link not found'.format(name)
 
 
 @given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
@@ -172,7 +175,10 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
             return None
 
     driver = select_browser(selenium, browser_id)
-    Wait(driver, 2*WAIT_BACKEND).until(notify_with_text_present)
+    Wait(driver, 2*WAIT_BACKEND).until(
+        notify_with_text_present,
+        message='waiting for notify matching: {}'.format(text_regexp.pattern)
+    )
 
 
 @when(parsers.parse('user of {browser_id} closes all notifies'))
@@ -213,7 +219,8 @@ def refresh_site(selenium, browser_id):
                  '(?:url|URL) matches (?P<path>.+?)'))
 def is_url_matching(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    assert re.search(path, driver.current_url)
+    assert re.search(path, driver.current_url), \
+        '{} is not like {}'.format(driver.current_url, path)
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) opens received (?:url|URL)'))
@@ -280,3 +287,41 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
                                            path=path,
                                            item=item)
     driver.get(url)
+
+
+def _mkdir_in_users_file_system(browser_id, dir_path, tmpdir):
+    try:
+        tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
+    except py.error.ENOENT:
+        tmpdir.mkdir(browser_id, *dir_path.split('/'))
+
+
+def _touch_in_users_file_system(directory, file_name,
+                                file_content, tmpdir):
+    if isinstance(directory, list):
+        try:
+            directory = tmpdir.ensure(*directory, dir=True)
+        except py.error.ENOENT:
+            raise ValueError('direcotry {} does not exist'
+                             ''.format('/'.join(directory[1:])))
+
+    reg_file = directory.join(file_name)
+    reg_file.write(file_content)
+
+
+def _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir):
+    try:
+        directory = tmpdir.ensure(browser_id, *dir_path.split('/'), dir=True)
+    except py.error.ENOENT:
+        raise ValueError('directory {} does not exist'.format(dir_path))
+
+    for i in range(10, num + 10):
+        _touch_in_users_file_system(directory, 'file_{}'.format(i),
+                                    '1' * i, tmpdir)
+
+
+@given(parsers.parse('user of {browser_id} has {num:d} files '
+                     'in directory named "{dir_path}"'))
+def create_files(browser_id, num, dir_path, tmpdir):
+    _mkdir_in_users_file_system(browser_id, dir_path, tmpdir)
+    _gen_files_in_users_file_system(browser_id, dir_path, num, tmpdir)
