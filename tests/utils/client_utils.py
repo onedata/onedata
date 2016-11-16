@@ -21,7 +21,6 @@ import rpyc
 import stat as stat_lib
 import hashlib
 
-
 TOKEN_PATH = '/tmp/token'
 
 
@@ -390,26 +389,19 @@ def create_clients(users, client_hosts, mount_paths, client_dockers):
 def clean_spaces(client):
     spaces = ls(client, path=client.mount_path)
 
-    def onerror(func, path, exception_info):
-        exception_type, exception, traceback = exception_info
-        if isinstance(exception, OSError):
-            if exception.errno == errno.EACCES:
-                # ignore EACCES errors during cleaning
-                return
-        raise CleaningError(exception=exception)
-
     for space in spaces:
         space_path = client.absolute_path(space)
 
         def condition():
             try:
-                rm(client, path=space_path, recursive=True, onerror=onerror)
+                rm(client, path=space_path, recursive=True)
             except Exception as e:
-                if isinstance(e, CleaningError):
-                    e = e.exception
-                log_exception()
-                raise e
-        assert_(client.perform, condition, timeout=5)
+                if isinstance(e, OSError):
+                    if e.errno == errno.EACCES:
+                       # ignore EACCES errors during cleaning
+                        return
+                raise
+        assert_(client.perform, condition)
 
 
 def clean_mount_path(user, client):
@@ -438,10 +430,3 @@ def clean_mount_path(user, client):
 
 def user_home_dir(user="root"):
     return os.path.join("/home", user)
-
-
-class CleaningError(Exception):
-    # this class is wrapper for exceptions raised during cleaning spaces
-    def __init__(self, *args, **kwargs):
-        self.exception = kwargs.pop("exception")
-        super(CleaningError, self).__init__(*args, **kwargs)

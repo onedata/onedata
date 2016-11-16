@@ -5,7 +5,7 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.utils import get_function_name, handle_exception, assert_
+from tests.utils.utils import assert_
 from tests.utils.client_utils import ls, mount_users
 from tests.utils.acceptance_utils import *
 

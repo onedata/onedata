@@ -29,11 +29,6 @@ def test_create(env_description_file):
     pass
 
 
-@scenario("Create many children")
-def test_create_many(env_description_file):
-    pass
-
-
 @scenario('Rename regular file without permission')
 def test_rename_without_permission(env_description_file):
     pass
@@ -133,4 +128,9 @@ def test_delete_file_opened_for_rdwr(env_description_file):
 
 @scenario('Deleting file without permission, file is opened by other user')
 def test_delete_opened_file_without_permission(env_description_file):
+    pass
+
+
+@scenario("Create many children")
+def test_create_many(env_description_file):
     pass
