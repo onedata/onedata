@@ -1,5 +1,6 @@
 """Steps for features of Oneprovider shares.
 """
+from selenium.common.exceptions import StaleElementReferenceException
 
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -88,11 +89,22 @@ def is_cwd_correct(selenium, browser_id, path):
                     'to {path} using breadcrumbs from share\'s file browser'))
 def change_cwd_using_breadcrumbs(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    breadcrumbs = driver.find_elements_by_css_selector('.files-list '
-                                                       '.file-breadcrumbs-list '
-                                                       '.file-breadcrumbs-item '
-                                                       'a')
-    chdir_using_breadcrumbs(path, breadcrumbs)
+    # HACK: a workaround for fast multiple breadcrumbs re-computations leading to
+    # quick DOM changes between find elements and chdir_using_breadcrumbs
+    tries = 10
+    while tries > 0:
+        breadcrumbs = driver.find_elements_by_css_selector('.files-list '
+                                                        '.file-breadcrumbs-list '
+                                                        '.file-breadcrumbs-item '
+                                                        'a')
+        try:
+            chdir_using_breadcrumbs(path, breadcrumbs)
+        except StaleElementReferenceException:
+            tries -= 1
+            if tries <= 0:
+                raise
+        else:
+            tries = 0
 
 
 @when(parsers.parse('user of {browser_id} clicks on {path} '
