@@ -350,10 +350,10 @@ def click_on_navigation_tab_in_metadata_panel(selenium, browser_id, tab_name,
                                                     item_name))
 
 
-@when(parsers.parse('user of {browser_id} clicks on textarea '
+@when(parsers.parse('user of {browser_id} clicks on textarea placed '
                     'in metadata panel opened for {item_type} '
                     'named "{item_name}"'))
-@then(parsers.parse('user of {browser_id} clicks on textarea '
+@then(parsers.parse('user of {browser_id} clicks on textarea placed '
                     'in metadata panel opened for {item_type} '
                     'named "{item_name}"'))
 def click_on_textarea_in_metadata_panel(selenium, browser_id,
@@ -364,10 +364,10 @@ def click_on_textarea_in_metadata_panel(selenium, browser_id,
     panel.find_element_by_css_selector('.tab-pane.active textarea').click()
 
 
-@when(parsers.parse('user of {browser_id} clears textarea '
+@when(parsers.parse('user of {browser_id} clears textarea placed '
                     'in metadata panel opened for {item_type} '
                     'named "{item_name}"'))
-@then(parsers.parse('user of {browser_id} clears textarea '
+@then(parsers.parse('user of {browser_id} clears textarea placed '
                     'in metadata panel opened for {item_type} '
                     'named "{item_name}"'))
 def clear_textarea_in_metadata_panel(selenium, browser_id,
@@ -378,12 +378,12 @@ def clear_textarea_in_metadata_panel(selenium, browser_id,
     panel.find_element_by_css_selector('.tab-pane.active textarea').clear()
 
 
-@when(parsers.parse('user of {browser_id} sees that textarea in metadata '
-                    'panel opened for {item_type} named "{item_name}" '
-                    'contains "{metadata_record}"'))
-@then(parsers.parse('user of {browser_id} sees that textarea in metadata '
-                    'panel opened for {item_type} named "{item_name}" '
-                    'contains "{metadata_record}"'))
+@when(parsers.parse('user of {browser_id} sees that textarea placed '
+                    'in metadata panel opened for {item_type} named '
+                    '"{item_name}" contains "{metadata_record}"'))
+@then(parsers.parse('user of {browser_id} sees that textarea placed '
+                    'in metadata panel opened for {item_type} named '
+                    '"{item_name}" contains "{metadata_record}"'))
 def assert_textarea_contains_record(selenium, browser_id, metadata_record,
                                     item_type, item_name):
     driver = select_browser(selenium, browser_id)
@@ -396,10 +396,10 @@ def assert_textarea_contains_record(selenium, browser_id, metadata_record,
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) sees that content of textarea '
-                 'in metadata panel opened for (?P<item_type>.+?) named '
+                 'placed in metadata panel opened for (?P<item_type>.+?) named '
                  '"(?P<item_name>.+?)" is equal to: "(?P<content>.*?)"'))
 @then(parsers.re('user of (?P<browser_id>.+?) sees that content of textarea '
-                 'in metadata panel opened for (?P<item_type>.+?) named '
+                 'placed in metadata panel opened for (?P<item_type>.+?) named '
                  '"(?P<item_name>.+?)" is equal to: "(?P<content>.*?)"'))
 def assert_textarea_content_is_eq_to(selenium, browser_id,
                                      item_type, item_name, content):
