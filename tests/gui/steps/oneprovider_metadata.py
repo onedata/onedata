@@ -8,8 +8,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, MAX_REFRESH_COUNT
-from tests.gui.utils.generic import click_on_element
+from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.utils.generic import parse_seq
 from tests.gui.steps.oneprovider_file_list import _get_items_from_file_list, type_to_icon
 
@@ -24,19 +23,16 @@ def _get_metadata_panel_for_file(files, file_name, file_type):
     icon = type_to_icon[file_type]
     if file_row and icon in file_row[2].get_attribute('class'):
         return file_row[6]
+    else:
+        raise ValueError('no metadata panel for {type} named "{name}" found'
+                         ''.format(type=file_type, name=file_name))
 
 
-def _get_metadata_record(panel, attr_name, unsaved=False):
+def _get_metadata_record(panel, attr_name):
     records = panel.find_elements_by_css_selector('table.metadata-basic-table tr')
     for rec in records:
-        if unsaved:
-            if attr_name == rec.find_element_by_css_selector('th input'
-                                                             '.basic-new-entry-key'
-                                                             ).get_attribute('value'):
-                return rec
-        else:
-            if rec.find_element_by_css_selector('th').text == attr_name:
-                return rec
+        if rec.find_element_by_css_selector('th').text == attr_name:
+            return rec
 
 
 def _find_input_box_using_placeholder(panel, placeholder):
@@ -186,8 +182,8 @@ def click_on_button_in_metadata_panel(selenium, browser_id, button_name,
 @then(parsers.parse('user of {browser_id} should not see metadata record with '
                     'attribute named "{attribute_name}" in metadata panel '
                     'opened for {item_type} named "{item_name}"'))
-def has_metadata_record_not_appeared(selenium, browser_id, attribute_name,
-                                     item_type, item_name):
+def assert_there_is_no_such_meta_record(selenium, browser_id, attribute_name,
+                                        item_type, item_name):
     driver = select_browser(selenium, browser_id)
     panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
                                          item_name, item_type)
@@ -204,8 +200,8 @@ def has_metadata_record_not_appeared(selenium, browser_id, attribute_name,
 @then(parsers.parse('user of {browser_id} should see metadata record '
                     'with attribute named "{attr_name}" and value "{attr_val}" '
                     'in metadata panel opened for {item_type} named "{item_name}"'))
-def check_if_new_metadata_record_has_appeared(selenium, browser_id, attr_name,
-                                              attr_val, item_type, item_name):
+def assert_there_is_such_meta_record(selenium, browser_id, attr_name,
+                                     attr_val, item_type, item_name):
     driver = select_browser(selenium, browser_id)
     panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
                                          item_name, item_type)
@@ -224,68 +220,82 @@ def check_if_new_metadata_record_has_appeared(selenium, browser_id, attr_name,
                                                               attr_val)
 
 
-
-
-
-
-
-
-@then(parsers.parse('user of {browser_id} should not see any metadata record for "{file_name}"'))
-def check_if_all_metadata_records_have_been_deleted(selenium, browser_id):
+@when(parsers.parse('user of {browser_id} should not see any metadata record '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} should not see any metadata record '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+def is_metadata_rocords_empty(selenium, browser_id, item_type, item_name):
     driver = select_browser(selenium, browser_id)
-    records = driver.find_elements_by_css_selector('table.files-table .metadata-panel '
-                                                   'table.metadata-basic-table tr')
-    assert len(records) == 1
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    records = panel.find_elements_by_css_selector('table.metadata-basic-table tr')
+    assert len(records) == 1, 'there still are some metadata records for {} ' \
+                              'named {} when there should ' \
+                              'not be any'.format(item_type,
+                                                  item_name)
 
 
 @when(parsers.parse('user of {browser_id} clicks on delete metadata record icon for '
-                    'metadata record with attribute "{attribute_name}"'))
-def click_delete_metadata_record_button(selenium, browser_id, attribute_name):
+                    'metadata record with attribute named "{attr_name}" '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} clicks on delete metadata record icon for '
+                    'metadata record with attribute named "{attr_name}" '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+def click_on_del_metadata_record_button(selenium, browser_id, attr_name,
+                                        item_type, item_name):
     driver = select_browser(selenium, browser_id)
-    files_table = driver.find_element_by_css_selector('table.files-table')
-    record = _get_metadata_record(files_table, attribute_name)
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda s: _get_metadata_record(driver, attribute_name),
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    attr = Wait(driver, WAIT_FRONTEND).until(
+        lambda _: _get_metadata_record(panel, attr_name),
         message='searching for metadata record with attribute '
-                '{attribute}'.format(attribute=attribute_name)
+                '{attribute} in metadata panel opened for {type} '
+                'named {name}'.format(attribute=attr_name,
+                                      type=item_type,
+                                      name=item_name)
     )
-    click_on_element(record, 'td span.oneicon-close', '',
-                     'clicking on delete icon for metadata record with attribute '
-                     '{attribute}'.format(attribute=attribute_name))
+    attr.find_element_by_css_selector('.oneicon-close').click()
 
 
-@when(parsers.parse('user of {browser_id} clicks on add icon in metadata panel'))
-def click_on_add_button_in_metadata_panel(selenium, browser_id):
+@when(parsers.parse('user of {browser_id} clicks on add metadata record icon '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} clicks on add metadata record icon '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+def click_on_add_meta_rec_btn_in_metadata_panel(selenium, browser_id,
+                                                item_type, item_name):
     driver = select_browser(selenium, browser_id)
-    click_on_element(driver, '.metadata-panel table.metadata-basic-table '
-                             'span.oneicon-add', '', 'clicking on add metadata record icon')
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    panel.find_element_by_css_selector('table.metadata-basic-table '
+                                       'tr.basic-new-entry '
+                                       '.oneicon-add').click()
 
 
-@when(parsers.parse('user of {browser_id} clicks on "{input_box_name}" input box for metadata '
-                    'record with attribute "{attribute_name}"'))
-def click_input_box_for_metadata_record(selenium, browser_id, input_box_name, attribute_name):
-    driver = select_browser(selenium, browser_id)
-    driver = Wait(driver, WAIT_FRONTEND).until(
-        lambda s: _get_metadata_record(driver, attribute_name),
-        message='searching for metadata record with attribute '
-                '{attribute}'.format(attribute=attribute_name)
-    )
-    click_on_element(driver, 'input', '', 'clicking on {input_box_name} input '
-                                          'box'.format(input_box_name=input_box_name))
-
-
-@when(parsers.parse('user of {browser_id} clicks on "{input_box_name}" input box for new metadata '
-                    'record with attribute "{attribute_name}"'))
-def click_input_box_for_new_metadata_record(selenium, browser_id, input_box_name, attribute_name):
-    driver = select_browser(selenium, browser_id)
-    driver = Wait(driver, WAIT_FRONTEND).until(
-        lambda s: _get_metadata_record(driver, attribute_name, unsaved=True),
-        message='searching for new metadata record'
-    )
-    click_on_element(driver, 'input[placeholder="Value"]', '', 'clicking on {input_box_name} input '
-                                          'box'.format(input_box_name=input_box_name))
+# @when(parsers.parse('user of {browser_id} clicks on "{input_box_name}" input box for metadata '
+#                     'record with attribute "{attribute_name}"'))
+# def click_input_box_for_metadata_record(selenium, browser_id, input_box_name, attribute_name):
+#     driver = select_browser(selenium, browser_id)
+#     driver = Wait(driver, WAIT_FRONTEND).until(
+#         lambda s: _get_metadata_record(driver, attribute_name),
+#         message='searching for metadata record with attribute '
+#                 '{attribute}'.format(attribute=attribute_name)
+#     )
+#     click_on_element(driver, 'input', '', 'clicking on {input_box_name} input '
+#                                           'box'.format(input_box_name=input_box_name))
 #
 #
+# @when(parsers.parse('user of {browser_id} clicks on "{input_box_name}" input box for new metadata '
+#                     'record with attribute "{attribute_name}"'))
+# def click_input_box_for_new_metadata_record(selenium, browser_id, input_box_name, attribute_name):
+#     driver = select_browser(selenium, browser_id)
+#     driver = Wait(driver, WAIT_FRONTEND).until(
+#         lambda s: _get_metadata_record(driver, attribute_name, unsaved=True),
+#         message='searching for new metadata record'
+#     )
+#     click_on_element(driver, 'input[placeholder="Value"]', '', 'clicking on {input_box_name} input '
+#                                           'box'.format(input_box_name=input_box_name))
+
+
 # @then(parsers.parse('user of {browser_id} sees that "{button_name}" button is disabled'))
 # def check_if_button_is_disabled(selenium, browser_id, button_name):
 #     driver = select_browser(selenium, browser_id)
@@ -301,62 +311,102 @@ def click_input_box_for_new_metadata_record(selenium, browser_id, input_box_name
 #     # )
 
 
-@then(parsers.parse('user of {browser_id} sees that entered metadata record with attribute '
-                    '"{attribute_name}" is red'))
-def check_if_entered_metadata_record_is_red(selenium, browser_id, attribute_name):
+@when(parsers.parse('user of {browser_id} sees that edited attribute key in '
+                    'metadata panel opened for {item_type} named "{item_name}" '
+                    'is highlighted as invalid'))
+@then(parsers.parse('user of {browser_id} sees that edited attribute key in '
+                    'metadata panel opened for {item_type} named "{item_name}" '
+                    'is highlighted as invalid'))
+def assert_entered_attr_key_is_invalid(selenium, browser_id,
+                                       item_type, item_name):
     driver = select_browser(selenium, browser_id)
-    record = _get_metadata_record(driver, attribute_name, unsaved=True)
-    assert 'invalid' in record.get_attribute('class')
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    edit_rec = panel.find_element_by_css_selector('table.metadata-basic-table '
+                                                  'tr.basic-new-entry')
+    assert 'invalid' in edit_rec.get_attribute('class'), \
+        'edited metadata record is valid while it should not be'
 
 
-@when(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation tab in metadata '
-                    'panel'))
-@then(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation tab in metadata '
-                    'panel'))
-def click_on_navigation_tab_in_metadata_panel(selenium, browser_id, tab_name):
+@when(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation tab '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation tab '
+                    'in metadata panel opened for {item_type} named "{item_name}"'))
+def click_on_navigation_tab_in_metadata_panel(selenium, browser_id, tab_name,
+                                              item_type, item_name):
     driver = select_browser(selenium, browser_id)
-    click_on_element(driver, 'table.files-table .metadata-panel ul.nav-tabs li', tab_name,
-                     'clicking on {:s} navigation tab in metadata panel')
-
-
-@when(parsers.parse('user of {browser_id} clicks on textarea in "{tab_name}" navigation tab'))
-def click_on_textarea_in_navigation_tab(selenium, browser_id, tab_name):
-    driver = select_browser(selenium, browser_id)
-    click_on_element(driver, 'table.files-table .metadata-panel '
-                             '.metadata-{tab_name}-editor textarea'.format(tab_name=tab_name.lower()),
-                     '', 'clicking on textarea for {tab_name} metadata'.format(tab_name=tab_name))
-
-
-@when(parsers.parse('user of {browser_id} sees that textarea in "{tab_name}" navigation tab '
-                    'has got "{metadata_record}" metadata record'))
-@then(parsers.parse('user of {browser_id} sees that textarea in "{tab_name}" navigation tab '
-                    'has got "{metadata_record}" metadata record'))
-def check_if_textarea_in_navigation_tab_has_got_metadata_record(selenium, browser_id,
-                                                                metadata_record, tab_name):
-    driver = select_browser(selenium, browser_id)
-    textarea = driver.find_element_by_css_selector('table.files-table .metadata-panel '
-                                                   '.metadata-{tab_name}-editor '
-                                                   'textarea'.format(tab_name=tab_name.lower()))
-    assert metadata_record in textarea.get_attribute('value')
-
-
-@when(parsers.parse('user of {browser_id} clears textarea in "{tab_name}" navigation tab'))
-def clear_textarea_in_navigation_tab(selenium, browser_id, tab_name):
-    driver = select_browser(selenium, browser_id)
-    driver.find_element_by_css_selector('table.files-table .metadata-panel '
-                                        '.metadata-{tab_name}-editor '
-                                        'textarea'.format(tab_name=tab_name.lower())).clear()
-
-
-@then(parsers.parse('user of {browser_id} should see that textarea in "{tab_name}" navigation tab '
-                    'hasn\'t got any metadata record'))
-def check_if_textarea_in_navigation_tabhasnt_got_any_metadata_record(selenium, browser_id,
-                                                                     tab_name):
-    driver = select_browser(selenium, browser_id)
-    textarea = driver.find_element_by_css_selector('table.files-table .metadata-panel '
-                                                   '.metadata-{tab_name}-editor '
-                                                   'textarea'.format(tab_name=tab_name.lower()))
-    if tab_name.lower() == 'json':
-        assert textarea.get_attribute('value') == '{}'
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    nav_tabs = panel.find_elements_by_css_selector('ul.nav-tabs a')
+    tab_name = tab_name.lower()
+    for tab in nav_tabs:
+        if tab.text.lower() == tab_name:
+            tab.click()
+            break
     else:
-        assert textarea.get_attribute('value') == ''
+        raise ValueError('no tab named {} found in metadata panel opened '
+                         'for {} named "{}"'.format(tab_name,
+                                                    item_type,
+                                                    item_name))
+
+
+@when(parsers.parse('user of {browser_id} clicks on textarea '
+                    'in metadata panel opened for {item_type} '
+                    'named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} clicks on textarea '
+                    'in metadata panel opened for {item_type} '
+                    'named "{item_name}"'))
+def click_on_textarea_in_metadata_panel(selenium, browser_id,
+                                        item_type, item_name):
+    driver = select_browser(selenium, browser_id)
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    panel.find_element_by_css_selector('.tab-pane.active textarea').click()
+
+
+@when(parsers.parse('user of {browser_id} clears textarea '
+                    'in metadata panel opened for {item_type} '
+                    'named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} clears textarea '
+                    'in metadata panel opened for {item_type} '
+                    'named "{item_name}"'))
+def clear_textarea_in_metadata_panel(selenium, browser_id,
+                                     item_type, item_name):
+    driver = select_browser(selenium, browser_id)
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    panel.find_element_by_css_selector('.tab-pane.active textarea').clear()
+
+
+@when(parsers.parse('user of {browser_id} sees that textarea in metadata '
+                    'panel opened for {item_type} named "{item_name}" '
+                    'contains "{metadata_record}"'))
+@then(parsers.parse('user of {browser_id} sees that textarea in metadata '
+                    'panel opened for {item_type} named "{item_name}" '
+                    'contains "{metadata_record}"'))
+def assert_textarea_contains_record(selenium, browser_id, metadata_record,
+                                    item_type, item_name):
+    driver = select_browser(selenium, browser_id)
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    textarea = panel.find_element_by_css_selector('.tab-pane.active textarea')
+    val = textarea.get_attribute('value')
+    assert metadata_record in val, \
+        'text in textarea : {} does not contain {}'.format(val, metadata_record)
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) sees that content of textarea '
+                 'in metadata panel opened for (?P<item_type>.+?) named '
+                 '"(?P<item_name>.+?)" is equal to: "(?P<content>.*?)"'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that content of textarea '
+                 'in metadata panel opened for (?P<item_type>.+?) named '
+                 '"(?P<item_name>.+?)" is equal to: "(?P<content>.*?)"'))
+def assert_textarea_content_is_eq_to(selenium, browser_id,
+                                     item_type, item_name, content):
+    driver = select_browser(selenium, browser_id)
+    panel = _get_metadata_panel_for_file(_get_items_from_file_list(driver),
+                                         item_name, item_type)
+    textarea = panel.find_element_by_css_selector('.tab-pane.active textarea')
+    val = textarea.get_attribute('value')
+    assert val == content, 'content of textarea should be {} but is {} ' \
+                           'instead'.format(content, val)
