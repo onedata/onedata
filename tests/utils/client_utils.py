@@ -188,6 +188,7 @@ def mount_users(request, environment, context, client_dockers,
     def fin():
         params = zip(user_names, clients)
         for user_name, client in params:
+            time.sleep(5)
             for opened_file in client.opened_files.keys():
                 close_file(client, opened_file)
             client.opened_files.clear()
