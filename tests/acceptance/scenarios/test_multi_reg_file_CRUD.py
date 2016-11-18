@@ -131,6 +131,11 @@ def test_delete_opened_file_without_permission(env_description_file):
     pass
 
 
+@scenario('Deleting file right after closing it')
+def test_delete_right_after_close(env_description_file):
+    pass
+
+
 @scenario("Create many children")
 def test_create_many(env_description_file):
     pass

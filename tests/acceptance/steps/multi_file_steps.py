@@ -66,6 +66,18 @@ def create_many(user, lower, upper, parent_dir, client_node, context):
         create_reg_file(user, make_arg_list(new_file), client_node, context)
 
 
+@when(parsers.parse('{directory} is empty for {user} on {client_node}'))
+@then(parsers.parse('{directory} is empty for {user} on {client_node}'))
+def ls_empty(directory, user, client_node, context):
+    client = context.get_client(user, client_node)
+    dir_path = client.absolute_path(directory)
+
+    def condition():
+        assert len(ls(client, dir_path)) == 0
+
+    assert_(client.perform, condition)
+
+
 @when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 @then(parsers.parse('{user} sees {files} in {path} on {client_node}'))
 def ls_present(user, files, path, client_node, context):
@@ -97,7 +109,7 @@ def ls_children(user, parent_dir, lower, upper, client_node, context):
         for i in range(lower, upper):
             assert str(i) in listed_files
 
-    assert client.perform(condition)
+    assert_(client.perform, condition)
 
 
 @when(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))

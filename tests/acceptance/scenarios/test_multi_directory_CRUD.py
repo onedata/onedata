@@ -63,7 +63,7 @@ def test_fail_to_create_subfile_without_permission(env_description_file):
 
 
 @scenario('Delete directory right after deleting its subdirectory by other client')
-def test_dir_right_after_deleting_subdir(env_description_file):
+def test_delete_dir_right_after_deleting_subdir(env_description_file):
     pass
 
 

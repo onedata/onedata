@@ -216,11 +216,26 @@ Feature: Multi_regular_file_CRUD
   Scenario: Deleting file without permission, file is opened by other user
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
+    And u2 sees [file1] in s1 on client2
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     And u1 opens s1/file1 with mode r+ on client1
     And u2 fails to delete files [s1/file1] on client2
     # because u2 has no write permission to file1
     And u1 closes s1/file1 on client1
+    # TODO below sleep should be deleted after resolving VFS-2828
+    And u1 waits 10 seconds
     And u1 sees [file1] in s1 on client1
     And u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
+
+  Scenario: Deleting file right after closing it
+    When u1 creates regular files [s1/file1] on client1
+    And u1 sees [file1] in s1 on client1
+    And u2 sees [file1] in s1 on client2
+    And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
+    And u1 opens s1/file1 with mode r+ on client1
+#    And u2 fails to delete files [s1/file1] on client2
+    # because u2 has no write permission to file1
+    And u1 closes s1/file1 on client1
+    And u1 deletes files [s1/file1] on client1
+    And s1 is empty for u1 on client1
 
