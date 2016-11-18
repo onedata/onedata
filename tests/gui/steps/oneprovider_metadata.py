@@ -148,34 +148,6 @@ def click_on_button_in_metadata_panel(selenium, browser_id, button_name,
                                                     item_name))
 
 
-# def _check_for_item_in_given_list(driver, name):
-#     def _assert_one_item_in_list(s, item_name):
-#         items = s.find_elements_by_css_selector('nav.secondary-sidebar ul.shares-list li .truncate')
-#         return sum(1 for li in items if li.text == item_name) == 1
-#
-#     Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
-#         lambda s: refresh_and_call(s, _assert_one_item_in_list,
-#                                    name),
-#         message='searching for exactly one {item} '
-#                 'on shares list'.format(item=name)
-#     )
-#
-#
-# @when(parsers.parse('user of {browser_id} sees "{share_name}" share in shares list'))
-# @then(parsers.parse('user of {browser_id} sees "{share_name}" share in shares list'))
-# def check_if_share_is_in_shares_list(selenium, browser_id, share_name):
-#     driver = select_browser(selenium, browser_id)
-#     _check_for_item_in_given_list(driver, share_name)
-#
-#
-# @when(parsers.parse('user of {browser_id} selects "{share_name}" share from shares list'))
-# @then(parsers.parse('user of {browser_id} selects "{share_name}" share from shares list'))
-# def select_share_from_share_list(selenium, browser_id, share_name):
-#     driver = select_browser(selenium, browser_id)
-#     click_on_element(driver, 'nav.secondary-sidebar ul.shares-list li .truncate', share_name,
-#                      'clicking on {:s} share in shares list', ignore_case=False)
-
-
 @when(parsers.parse('user of {browser_id} should not see metadata record with '
                     'attribute named "{attribute_name}" in metadata panel '
                     'opened for {item_type} named "{item_name}"'))
@@ -269,46 +241,6 @@ def click_on_add_meta_rec_btn_in_metadata_panel(selenium, browser_id,
     panel.find_element_by_css_selector('table.metadata-basic-table '
                                        'tr.basic-new-entry '
                                        '.oneicon-add').click()
-
-
-# @when(parsers.parse('user of {browser_id} clicks on "{input_box_name}" input box for metadata '
-#                     'record with attribute "{attribute_name}"'))
-# def click_input_box_for_metadata_record(selenium, browser_id, input_box_name, attribute_name):
-#     driver = select_browser(selenium, browser_id)
-#     driver = Wait(driver, WAIT_FRONTEND).until(
-#         lambda s: _get_metadata_record(driver, attribute_name),
-#         message='searching for metadata record with attribute '
-#                 '{attribute}'.format(attribute=attribute_name)
-#     )
-#     click_on_element(driver, 'input', '', 'clicking on {input_box_name} input '
-#                                           'box'.format(input_box_name=input_box_name))
-#
-#
-# @when(parsers.parse('user of {browser_id} clicks on "{input_box_name}" input box for new metadata '
-#                     'record with attribute "{attribute_name}"'))
-# def click_input_box_for_new_metadata_record(selenium, browser_id, input_box_name, attribute_name):
-#     driver = select_browser(selenium, browser_id)
-#     driver = Wait(driver, WAIT_FRONTEND).until(
-#         lambda s: _get_metadata_record(driver, attribute_name, unsaved=True),
-#         message='searching for new metadata record'
-#     )
-#     click_on_element(driver, 'input[placeholder="Value"]', '', 'clicking on {input_box_name} input '
-#                                           'box'.format(input_box_name=input_box_name))
-
-
-# @then(parsers.parse('user of {browser_id} sees that "{button_name}" button is disabled'))
-# def check_if_button_is_disabled(selenium, browser_id, button_name):
-#     driver = select_browser(selenium, browser_id)
-#     button = driver.find_element_by_css_selector('.metadata-panel .save-metadata-row button '
-#                                                  'span.spin-button-label')
-#     Wait(driver, WAIT_FRONTEND).until_not(
-#         lambda s: button.is_enabled()
-#     )
-#     # Wait(driver, WAIT_FRONTEND).until_not(
-#     #     EC.element_to_be_clickable((By.CSS_SELECTOR, '.metadata-panel .save-metadata-row button '
-#     #                                                  'span.spin-button-label')),
-#     #     message='checking if {button_name} is not clickable'.format(button_name=button_name)
-#     # )
 
 
 @when(parsers.parse('user of {browser_id} sees that edited attribute key in '
