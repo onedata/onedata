@@ -102,7 +102,8 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
         except StaleElementReferenceException:
             tries -= 1
             if tries <= 0:
-                raise
+                raise RuntimeError(('A StaleElementReferenceException has been thrown %s times. ' % tries) +
+                                   'Breadcrumbs was probably rendered multiple times between find_elements and elements usage.')
         else:
             tries = 0
 

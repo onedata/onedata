@@ -137,7 +137,6 @@ def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '
                     'supporting space in providers column'))
 def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
-
     def _find_provider(s):
         providers = s.find_elements_by_css_selector(
             '#file-chunks-modal .container-fluid '
@@ -187,7 +186,7 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
         except StaleElementReferenceException:
             tries -= 1
             if tries <= 0:
-                raise
+                raise RuntimeError(('A StaleElementReferenceException has been thrown %s times. ' % tries) +
+                                   'Breadcrumbs was probably rendered multiple times between find_elements and elements usage.')
         else:
             tries = 0
-
