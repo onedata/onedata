@@ -29,6 +29,17 @@ def test_create(env_description_file):
     pass
 
 
+@pytest.mark.xfail_env(
+    envs=["multiprovider_proxy",
+          "multiprovider_directio"],
+    reason="client2 during read uses old, cached file uuid which results in "
+           "error enoent")
+@scenario('Create a file, read it on the second client, delete it, and repeat '
+          'the whole process')
+def test_recreate_and_read(env_description_file):
+    pass
+
+
 @scenario('Rename regular file without permission')
 def test_rename_without_permission(env_description_file):
     pass

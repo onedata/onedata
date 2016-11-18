@@ -16,6 +16,15 @@ Feature: Multi_regular_file_CRUD
     When u1 creates children files of s1 with names in range [1, 127) on client1
     Then u2 lists only children of s1 with names in range [1, 127) on client2
 
+  Scenario: Create a file, read it on the second client, delete it, and repeat the whole process
+    When u1 creates regular files [s1/file1] on client1
+    And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
+    And u2 reads "TEST TEXT ONEDATA" from file s1/file1 on client2
+    And u1 deletes files [s1/file1] on client1
+    Then u1 creates regular files [s1/file1] on client1
+    And u1 writes "DIFFERENT TEST TEXT ONEDATA" to s1/file1 on client1
+    And u2 reads "DIFFERENT TEST TEXT ONEDATA" from file s1/file1 on client2
+
   Scenario: Rename regular file without permission
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
