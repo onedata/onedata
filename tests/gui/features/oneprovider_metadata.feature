@@ -84,7 +84,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser should not see metadata icon for directory named "dir1"
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -94,7 +94,7 @@ Feature: Oneprovider Metadata view
     Then user of browser sees metadata icon for directory named "dir1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -145,7 +145,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -154,7 +154,7 @@ Feature: Oneprovider Metadata view
     Then user of browser sees that edited attribute key in metadata panel opened for directory named "dir1" is highlighted as invalid
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -224,7 +224,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     # try saving empty forms
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -232,7 +232,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
 
     # try saving metadata with record key being filled only
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -242,14 +242,14 @@ Feature: Oneprovider Metadata view
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should not see metadata record with attribute named "attr" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -311,7 +311,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -324,14 +324,14 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -393,7 +393,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -405,14 +405,14 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -474,7 +474,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -487,7 +487,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -495,7 +495,7 @@ Feature: Oneprovider Metadata view
     Then user of browser should not see metadata record with attribute named "attr" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -563,7 +563,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -576,20 +576,20 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     Then user of browser should not see any metadata record in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -648,7 +648,7 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -658,14 +658,14 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add metadata record icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
-    Then user of browser clicks once on directory named "dir1" of files list
+    Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should not see metadata record with attribute named "attr" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -727,7 +727,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -739,7 +739,7 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -747,7 +747,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains ""id": 1"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -817,7 +817,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -829,7 +829,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -837,7 +837,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains ""id": 1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -845,7 +845,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: "{}"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -904,7 +904,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -913,7 +913,7 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "{"id": 1}" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
-    Then user of browser clicks once on directory named "dir1" of files list
+    Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -921,7 +921,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: "{}"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -983,7 +983,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -995,7 +995,7 @@ Feature: Oneprovider Metadata view
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -1003,7 +1003,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -1073,7 +1073,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -1085,7 +1085,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -1093,7 +1093,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -1101,7 +1101,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -1160,7 +1160,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
 
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -1169,7 +1169,7 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
-    Then user of browser clicks once on directory named "dir1" of files list
+    Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser deselects "dir1" from files list
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -1177,7 +1177,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""
 
     # TODO rm after integrating with swagger
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
