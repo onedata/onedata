@@ -23,9 +23,6 @@ def _get_metadata_panel_for_file(files, file_name, file_type):
     icon = type_to_icon[file_type]
     if file_row and icon in file_row[2].get_attribute('class'):
         return file_row[6]
-    else:
-        raise ValueError('no metadata panel for {type} named "{name}" found'
-                         ''.format(type=file_type, name=file_name))
 
 
 def _get_metadata_record(panel, attr_name):
