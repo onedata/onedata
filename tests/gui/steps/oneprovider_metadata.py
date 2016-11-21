@@ -58,7 +58,8 @@ def is_files_metadata_panel_displayed(selenium, browser_id, item_name, item_type
     driver = select_browser(selenium, browser_id)
     metadata_panel = Wait(driver, WAIT_FRONTEND).until(
         lambda _: _get_metadata_panel_for_file(_get_items_from_file_list(driver),
-                                               item_name, item_type),
+                                               item_name, item_type,
+                                               exception=False),
         message="waiting for '{:s}' {:s}'s metadata panel "
                 "to appear".format(item_name, item_type)
     )
@@ -84,7 +85,8 @@ def is_not_files_metadata_panel_displayed(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
     Wait(driver, WAIT_FRONTEND).until_not(
         lambda _: _get_metadata_panel_for_file(_get_items_from_file_list(driver),
-                                               item_name, item_type),
+                                               item_name, item_type,
+                                               exception=False),
         message="waiting for '{:s}' {:s}'s metadata panel "
                 "to disappear".format(item_name, item_type)
     )
