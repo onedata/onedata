@@ -298,15 +298,15 @@
     "luma_setup": {
         "credentials_mapping": [
             {
-                "global_id": "u1",
-                "storage_id": "DirectIO",
+                "userId": "u1",
+                "storageId": "DirectIO",
                 "credentials": {
                     "uid": 45148
                 }
             },
             {
-                "global_id": "u2",
-                "storage_id": "DirectIO",
+                "userId": "u2",
+                "storageId": "DirectIO",
                 "credentials": {
                     "uid": 45151
                 }
