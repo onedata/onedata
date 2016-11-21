@@ -138,7 +138,7 @@
                     "user_key": "./cert.pem",
                     "mounting_path": "/home/u1/onedata",
                     "token_for": "u1",
-                    "default_timeout": 2
+                    "default_timeout": 10
                 }
             }
         }

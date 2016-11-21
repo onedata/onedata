@@ -95,5 +95,4 @@ Feature: Space management with single provider
     And u1 creates regular files [s1/file1] on client1
     And u1 writes 2 MB of random characters to s1/file1 on client1 and saves MD5
     And u1 waits 10 seconds
-    And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    And last operation by u1 fails
+    And u1 fails to write "TEST TEXT ONEDATA" to s1/file1 on client1

@@ -9,12 +9,10 @@ Feature: Directory_CRUD
     Then u1 sees [dir1, dir2, dir3] in s1
 
   Scenario: Create directory in spaces directory
-    When u1 creates directories [dir]
-    Then last operation by u1 fails
+    Then u1 fails to create directories [dir]
 
   Scenario: Create space
-    When u1 creates directories [s1]
-    Then last operation by u1 fails
+    Then u1 fails to create directories [s1]
 
   Scenario: Rename directory
     When u1 creates directories [s1/dir1]
@@ -24,7 +22,7 @@ Feature: Directory_CRUD
 
   Scenario: Delete empty directory
     When u1 creates directories [s1/dir1]
-    And last operation by u1 succeeds
+    Then u1 sees [dir1] in s1
     And u1 deletes empty directories [s1/dir1]
     Then u1 doesn't see [dir1] in s1
 
@@ -45,8 +43,7 @@ Feature: Directory_CRUD
 
   Scenario: Duplication
     When u1 creates directories [s1/dir1]
-    And u1 creates directories [s1/dir1]
-    Then last operation by u1 fails
+    Then u1 fails to create directories [s1/dir1]
     
   Scenario: Delete empty directory and parents
     #rmdir -p dir1/dir2/dir3
@@ -62,9 +59,8 @@ Feature: Directory_CRUD
     When u1 creates directories [s1/dir1, s1/dir1/child1]
     And u1 sees [dir1] in s1
     And u1 sees [child1] in s1/dir1
-    And u1 deletes empty directories [s1/dir1]
+    Then u1 fails to delete empty directories [s1/dir1]
     #dir1 is not empty, but we use step for empty dirs
-    Then last operation by u1 fails
     And u1 sees [dir1] in s1
     And u1 sees [child1] in s1/dir1
 
@@ -103,8 +99,7 @@ Feature: Directory_CRUD
   Scenario: Move directory to itself
     When u1 creates directories [s1/dir1]
     And u1 sees [dir1] in s1
-    And u1 moves s1/dir1 to s1/dir1 using shell command
-    Then last operation by u1 fails
+    Then u1 fails to move s1/dir1 to s1/dir1 using shell command
     And u1 sees [dir1] in s1
 
   Scenario: Move directory to its subtree
@@ -112,7 +107,6 @@ Feature: Directory_CRUD
     And u1 sees [dir1] in s1
     And u1 sees [dir2] in s1/dir1
     And u1 sees [dir3] in s1/dir1/dir2
-    And u1 renames s1/dir1 to s1/dir1/dir2/dir3
-    Then last operation by u1 fails
+    And u1 fails to rename s1/dir1 to s1/dir1/dir2/dir3
     And u1 sees [dir1] in s1
     And u1 doesn't see [dir1] in s1/dir1/dir2/dir3
