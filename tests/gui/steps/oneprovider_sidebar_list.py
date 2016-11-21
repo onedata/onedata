@@ -67,8 +67,8 @@ def click_settings_icon_for_item(selenium, browser_id, item_name, item_type):
     items = _get_items_from_sidebar_list(driver, item_type)
     item = items.get(item_name)
     if not item:
-        raise ValueError('no {:s} named {:s} found'.format(item_type,
-                                                           item_name))
+        raise RuntimeError('no {:s} named {:s} found'.format(item_type,
+                                                             item_name))
 
     settings_icon = item.find_element_by_css_selector('.settings-dropdown '
                                                       '.dropdown-toggle')
@@ -92,8 +92,8 @@ def click_on_item_in_settings_dropdown(selenium, browser_id, option_name,
     items = _get_items_from_sidebar_list(driver, '{}s'.format(item_type))
     item = items.get(item_name)
     if not item:
-        raise ValueError('no {:s} named {:s} found'.format(item_type,
-                                                           item_name))
+        raise RuntimeError('no {:s} named {:s} found'.format(item_type,
+                                                             item_name))
 
     options = item.find_elements_by_css_selector('.settings-dropdown '
                                                  '.dropdown-menu-settings '
@@ -104,7 +104,7 @@ def click_on_item_in_settings_dropdown(selenium, browser_id, option_name,
             option.click()
             break
     else:
-        raise ValueError('no option named {:s} found'.format(option_name))
+        raise RuntimeError('no option named {:s} found'.format(option_name))
 
 
 # TODO remove refresh after gui will become more responsive
@@ -165,7 +165,7 @@ def click_on_button_in_sidebar_header(selenium, browser_id, btn_name):
             btn.click()
             break
     else:
-        raise ValueError('no button named {:s} found'.format(btn_name))
+        raise RuntimeError('no button named {:s} found'.format(btn_name))
 
 
 @when(parsers.parse('user of {browser_id} sees that submenu for '

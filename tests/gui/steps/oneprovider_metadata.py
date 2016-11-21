@@ -18,11 +18,16 @@ from selenium.webdriver.support.ui import WebDriverWait as Wait
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-def _get_metadata_panel_for_file(files, file_name, file_type):
+def _get_metadata_panel_for_file(files, file_name, file_type, exception=True):
     file_row = files.get(file_name, None)
     icon = type_to_icon[file_type]
     if file_row and icon in file_row[2].get_attribute('class'):
         return file_row[6]
+    elif exception:
+        raise RuntimeError('no metadata panel for {} named "{}" '
+                           'found'.format(file_type, file_name))
+    else:
+        return None
 
 
 def _get_metadata_record(panel, attr_name):
@@ -139,10 +144,10 @@ def click_on_button_in_metadata_panel(selenium, browser_id, button_name,
             btn.click()
             break
     else:
-        raise ValueError('no button named {} found in metadata panel '
-                         'for {} named "{}"'.format(button_name,
-                                                    item_type,
-                                                    item_name))
+        raise RuntimeError('no button named {} found in metadata panel '
+                           'for {} named "{}"'.format(button_name,
+                                                      item_type,
+                                                      item_name))
 
 
 @when(parsers.parse('user of {browser_id} should not see metadata record with '
@@ -273,10 +278,10 @@ def click_on_navigation_tab_in_metadata_panel(selenium, browser_id, tab_name,
             tab.click()
             break
     else:
-        raise ValueError('no tab named {} found in metadata panel opened '
-                         'for {} named "{}"'.format(tab_name,
-                                                    item_type,
-                                                    item_name))
+        raise RuntimeError('no tab named {} found in metadata panel opened '
+                           'for {} named "{}"'.format(tab_name,
+                                                      item_type,
+                                                      item_name))
 
 
 @when(parsers.parse('user of {browser_id} clicks on textarea placed '

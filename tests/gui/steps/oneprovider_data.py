@@ -85,7 +85,7 @@ def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
                                                in directory.listdir()
                                                if item.isfile()))
     else:
-        raise ValueError('directory {} does not exist'.format(str(directory)))
+        raise RuntimeError('directory {} does not exist'.format(str(directory)))
 
 
 # TODO currently every browser in test download to that same dir,

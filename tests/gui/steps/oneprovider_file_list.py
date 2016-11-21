@@ -92,7 +92,7 @@ def _double_click_on_item(driver, item_name, item_type, items=None):
     if item and type_to_icon[item_type] in item[2].get_attribute('class'):
         ActionChains(driver).double_click(item[1]).perform()
     else:
-        raise ValueError('no {} named {} found'. format(item_type, item_name))
+        raise RuntimeError('no {} named {} found'. format(item_type, item_name))
 
 
 def _is_file_selected(file_item):
@@ -241,7 +241,7 @@ def click_on_file_item(selenium, browser_id, item_name,
     if item and type_to_icon[item_type] in item[2].get_attribute('class'):
         item[0].click()
     else:
-        raise ValueError('no {} named {} found'.format(item_type, item_name))
+        raise RuntimeError('no {} named {} found'.format(item_type, item_name))
 
 
 @when(parsers.parse('user of {browser_id} selects {item_list} '
@@ -295,12 +295,14 @@ def click_on_file_icon_tool(selenium, browser_id, tool_type,
                     'contains {num:d} file(s)'))
 @then(parsers.parse('user of {browser_id} sees that file browser '
                     'contains {num:d} file(s)'))
-def check_how_many_files_are_displayed_in_file_browser(selenium, browser_id,
-                                                       num):
+def assert_num_of_files_are_displayed_in_file_browser(selenium, browser_id,
+                                                      num):
     driver = select_browser(selenium, browser_id)
-    items_num = len(_get_items_from_file_list(driver))
-    assert items_num == num, 'displayed number of files {} does ' \
-                             'not match expected {}'.format(items_num, num)
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda _: len(_get_items_from_file_list(driver)) == num,
+        message='displayed number of files {} does not match expected {}'
+                ''.format(len(_get_items_from_file_list(driver)), num)
+    )
 
 
 @when(parsers.parse('user of {browser_id} scrolls to the bottom '
