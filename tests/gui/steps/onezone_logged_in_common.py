@@ -174,25 +174,3 @@ def g_click_on_provider_in_sidebar(selenium, browser_id_list, name, tmp_memory):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
         _click_on_provider(driver, browser_id, name, tmp_memory)
-
-
-def _click_on_button_in_provider_popup(driver, name):
-    def go_to_files_button(s):
-        links = s.find_elements_by_css_selector('.provider-place-drop a, '
-                                                '.provider-place-drop button')
-        for e in links:
-            if e.text == name:
-                return e
-
-    Wait(driver, WAIT_FRONTEND).until(
-        go_to_files_button,
-        message='clicking on "{:s}" button in providers popup'.format(name)
-    ).click()
-
-
-@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the '
-                  '"Go to your files" button in provider popup'))
-def g_click_on_go_to_files_provider(selenium, browser_id_list):
-    for browser_id in list_parser(browser_id_list):
-        driver = select_browser(selenium, browser_id)
-        _click_on_button_in_provider_popup(driver, 'Go to your files')

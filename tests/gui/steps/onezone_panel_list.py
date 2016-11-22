@@ -28,12 +28,12 @@ def _get_items_from_panel_list(driver, panel, item_type):
     return {label.text: item for label, item in zip(items[1::2], items[::2])}
 
 
-def _get_item_from_panel_list(driver, item_name, item_type, panel):
+def _get_item_from_panel_list(driver, item_name, item_type, panel, exception=True):
     items = _get_items_from_panel_list(driver, panel, item_type)
-    item = items.get(item_name)
-    if not item:
-        raise ValueError('no {:s} named {:s} found'.format(item_type,
-                                                           item_name))
+    item = items.get(item_name, None)
+    if not item and exception:
+        raise RuntimeError('no {:s} named {:s} found'.format(item_type,
+                                                             item_name))
     else:
         return item
 
@@ -97,10 +97,10 @@ def is_present_in_panel_list(selenium, browser_id, items,
 
 
 @when(parsers.parse('user of {browser_id} clicks on {tool_name} in item row '
-                    'for item named "{item_name}" in {item_type} list in '
-                    'in expanded "{panel}" Onezone panel'))
+                    'for item named "{item_name}" in {item_type}s list in '
+                    'expanded "{panel}" Onezone panel'))
 @then(parsers.parse('user of {browser_id} clicks on {tool_type} in item row '
-                    'for item named "{item_name}" in {item_type} list in '
+                    'for item named "{item_name}" in {item_type}s list in '
                     'expanded "{panel}" Onezone panel'))
 def click_on_tool_in_item_row(selenium, browser_id, tool_name, item_name,
                               item_type, panel):
@@ -139,7 +139,12 @@ def wt_is_marked_as_home_item(selenium, browser_id, item_name, item_type, panel)
 
 
 def _click_on_list_item(driver, item_name, item_type, panel):
-    _get_item_from_panel_list(driver, item_name, item_type, panel).clik()
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda d: _get_item_from_panel_list(d, item_name, item_type,
+                                            panel, exception=False),
+        message='clicking on {} named "{}" from uncollapsed {}'
+                ''.format(item_type, item_name, panel)
+    ).click()
 
 
 @given(parsers.parse('user of {browser_id} clicked on item named "{item_name}" '

@@ -143,9 +143,9 @@ def g_wait_for_op_session_to_start(selenium, browser_id_list):
     _wait_for_op_session_to_start(selenium, browser_id_list)
 
 
-@when(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
+@when(parsers.re('users? of (?P<browser_id_list>.*?) sees that '
                  'Oneprovider session has started'))
-@then(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
+@then(parsers.re('users? of (?P<browser_id_list>.*?) sees that '
                  'Oneprovider session has started'))
 def wt_wait_for_op_session_to_start(selenium, browser_id_list):
     _wait_for_op_session_to_start(selenium, browser_id_list)
