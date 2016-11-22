@@ -38,7 +38,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has disappeared from files list
 
 
-  Scenario: Edit metadata icon is visible if file has empty metadata record
+  Scenario: Edit metadata icon is visible if file has empty basic metadata entry
     When user of browser uses spaces select to change data space to "space1"
 
     # create file1 in space1
@@ -69,7 +69,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has disappeared from files list
 
 
-  Scenario: Edit metadata icon is visible if directory has empty metadata record
+  Scenario: Edit metadata icon is visible if directory has empty basic metadata entry
     When user of browser uses spaces select to change data space to "space1"
 
     # create dir1 in space1
@@ -100,7 +100,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has disappeared from files list
 
 
-  Scenario: Invalid metadata record for file should be colored red
+  Scenario: Invalid basic metadata entry for file should be colored red
     When user of browser uses spaces select to change data space to "space1"
 
     # create file1 in space1
@@ -115,7 +115,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
     Then user of browser sees that edited attribute key in metadata panel opened for file named "file1" is highlighted as invalid
 
@@ -129,7 +129,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has disappeared from files list
 
 
-  Scenario: Invalid metadata record for directory should be colored red
+  Scenario: Invalid basic metadata entry for directory should be colored red
     When user of browser uses spaces select to change data space to "space1"
 
     # create dir1 in space1
@@ -144,7 +144,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
     Then user of browser sees that edited attribute key in metadata panel opened for directory named "dir1" is highlighted as invalid
 
@@ -181,9 +181,9 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for file named "file1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
 
     Then user of browser refreshes site
@@ -191,7 +191,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser should not see metadata record with attribute named "attr" in metadata panel opened for file named "file1"
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "file1" from files list
@@ -226,16 +226,16 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser should not see metadata record with attribute named "attr" in metadata panel opened for directory named "dir1"
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "dir1" from files list
@@ -262,11 +262,11 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for file named "file1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
@@ -274,7 +274,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "file1" from files list
@@ -301,11 +301,11 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
@@ -313,7 +313,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "dir1" from files list
@@ -340,9 +340,9 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
     And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
@@ -352,7 +352,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "file1" from files list
@@ -379,9 +379,9 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
@@ -390,7 +390,7 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "dir1" from files list
@@ -402,7 +402,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has disappeared from files list
 
 
-  Scenario: Delete single metadata record for file
+  Scenario: Delete single basic metadata entry for file
     When user of browser uses spaces select to change data space to "space1"
 
     # create file1 in space1
@@ -417,11 +417,11 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for file named "file1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
@@ -429,8 +429,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on delete metadata record icon for metadata record with attribute named "attr" in metadata panel opened for file named "file1"
-    Then user of browser should not see metadata record with attribute named "attr" in metadata panel opened for file named "file1"
+    And user of browser clicks on delete basic metadata entry icon for basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
+    Then user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "file1" from files list
@@ -442,7 +442,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has disappeared from files list
 
 
-  Scenario: Delete single metadata record for directory
+  Scenario: Delete single basic metadata entry for directory
     When user of browser uses spaces select to change data space to "space1"
 
     # create dir1 in space1
@@ -456,11 +456,11 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
@@ -468,8 +468,8 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on delete metadata record icon for metadata record with attribute named "attr" in metadata panel opened for directory named "dir1"
-    Then user of browser should not see metadata record with attribute named "attr" in metadata panel opened for directory named "dir1"
+    And user of browser clicks on delete basic metadata entry icon for basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
+    Then user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "dir1" from files list
@@ -496,11 +496,11 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for file named "file1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
@@ -508,12 +508,12 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    Then user of browser should not see any metadata record in metadata panel opened for file named "file1"
+    Then user of browser should not see any basic metadata entry in metadata panel opened for file named "file1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "file1" from files list
@@ -540,11 +540,11 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
@@ -552,12 +552,12 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser should see metadata record with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    Then user of browser should not see any metadata record in metadata panel opened for directory named "dir1"
+    Then user of browser should not see any basic metadata entry in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "dir1" from files list
@@ -584,17 +584,17 @@ Feature: Oneprovider Metadata view
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for file named "file1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for file named "file1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
     And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
 
     Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
-    And user of browser should not see metadata record with attribute named "attr" in metadata panel opened for file named "file1"
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "file1" from files list
@@ -620,16 +620,16 @@ Feature: Oneprovider Metadata view
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser clicks on input box with placeholder equal to Attribute in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on input box with placeholder equal to Value in metadata panel opened for directory named "dir1"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add metadata record icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
     Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-    And user of browser should not see metadata record with attribute named "attr" in metadata panel opened for directory named "dir1"
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
     And user of browser selects "dir1" from files list
