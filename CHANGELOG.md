@@ -4,6 +4,22 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc9
+
+* VFS-2617 Changed metadata submenu to metadata panel
+
+
+### 3.0.0-rc8
+
+* Releasing new version 3.0.0-rc8
+* VFS-2549 Add tests for public readonly share: add file, remove file, jump no breadcrumbs
+* VFS-2549 Fix share tests to work with new gui
+* VFS-2549 Add 2 new tests for shares: recursive delete, jumping in breadcrumbs
+* VFS-2549 Fix share multi test
+* VFS-2634 Fix tests to work with new gui, add new share tests
+* VFS-2634 Fix share steps, add 2 new scenarios
+
+
 ### 3.0.0-rc7
 
 * VFS-2549 Add share tests for multiple browsers: download, rename, remove

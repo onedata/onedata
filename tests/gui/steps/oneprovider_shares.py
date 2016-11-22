@@ -110,9 +110,9 @@ def click_on_dir_in_abs_path(selenium, browser_id, path):
 
 
 @when(parsers.parse('user of {browser_id} sees that selected share '
-                    'is named {share_name}'))
+                    'is named "{share_name}"'))
 @then(parsers.parse('user of {browser_id} sees that selected share '
-                    'is named {share_name}'))
+                    'is named "{share_name}"'))
 def is_selected_share_named(selenium, browser_id, share_name):
     driver = select_browser(selenium, browser_id)
     name = driver.find_element_by_css_selector('#content-scroll '
@@ -122,9 +122,9 @@ def is_selected_share_named(selenium, browser_id, share_name):
 
 
 @when(parsers.parse('user of {browser_id} sees that '
-                    'public share is named {share_name}'))
+                    'public share is named "{share_name}"'))
 @then(parsers.parse('user of {browser_id} sees that '
-                    'public share is named {share_name}'))
+                    'public share is named "{share_name}"'))
 def is_public_share_named(selenium, browser_id, share_name):
     driver = select_browser(selenium, browser_id)
     name = driver.find_element_by_css_selector('.share-name').text
