@@ -67,7 +67,7 @@ Feature: Regular_file_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to s1/file1
-    Then last operation by u1 succeeds
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1
     And modification time of u1's s1/file1 is greater than access time
     And modification time of u1's s1/file1 is equal to status-change time
 
@@ -76,8 +76,8 @@ Feature: Regular_file_stat
     And u1 sees file1 in s1
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
-    And u1 changes s1/file1 mode to 211
-    Then last operation by u1 succeeds
+    And u1 changes s1/file1 mode to 711
+    Then mode of u1's s1/file1 is 711
     And status-change time of u1's s1/file1 is greater than modification time
     And status-change time of u1's s1/file1 is greater than access time
 
@@ -87,7 +87,8 @@ Feature: Regular_file_stat
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/file1 to s1/file2
-    Then last operation by u1 succeeds
+    Then u1 sees file2 in s1
+    And u1 doesn't see file1 in s1
     And u1 waits 1 second
     And status-change time of u1's s1/file2 is greater than modification time
     And status-change time of u1's s1/file2 is greater than access time

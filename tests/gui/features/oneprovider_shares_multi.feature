@@ -22,9 +22,9 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir1" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -35,14 +35,12 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir2" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir2" from files list
+    And user of browser1 double clicks on directory named "dir2" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Share element"
 
@@ -63,19 +61,19 @@ Feature: Oneprovider Share view
     And user of browser2 sees that URL matches https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
-    And user of browser2 double clicks on directory named "dir1" from files list
+    And user of browser2 double clicks on directory named "dir1" of files list
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1
-    And user of browser2 double clicks on directory named "dir2" from files list
+    And user of browser2 double clicks on directory named "dir2" of files list
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1/dir2
-    And user of browser2 double clicks on file named "20B-1.txt" from files list
+    And user of browser2 double clicks on file named "20B-1.txt" of files list
     And user of browser2 sees that content of downloaded file "20B-1.txt" is equal to: "11111111111111111111"
 
     # TODO rm after integrating with swagger
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser1 sees that "Remove files" modal has appeared
-    And user of browser1 clicks "OK" confirmation button in displayed modal
-    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees an info notify with text matching to: .*removed.*
     And user of browser1 sees that the modal has disappeared
     And user of browser1 does not see any shared directory named "dir1" on files list
 
@@ -90,9 +88,9 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir1" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -103,14 +101,12 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir2" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir2" from files list
+    And user of browser1 double clicks on directory named "dir2" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Share element"
 
@@ -150,14 +146,12 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser1 clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser1 sees that "Remove files" modal has appeared
-    And user of browser1 clicks "OK" confirmation button in displayed modal
-    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees an info notify with text matching to: .*removed.*
     And user of browser1 sees that the modal has disappeared
     And user of browser1 does not see any shared directory named "dir1" on files list
 
@@ -172,9 +166,9 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir1" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -185,14 +179,12 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir2" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir2" from files list
+    And user of browser1 double clicks on directory named "dir2" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Share element"
 
@@ -230,14 +222,12 @@ Feature: Oneprovider Share view
 
     # TODO rm after integrating with swagger
     Then user of browser1 clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser1 sees that "Remove files" modal has appeared
-    And user of browser1 clicks "OK" confirmation button in displayed modal
-    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees an info notify with text matching to: .*removed.*
     And user of browser1 sees that the modal has disappeared
     And user of browser1 does not see any shared directory named "dir1" on files list
 
@@ -252,7 +242,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir1" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
     And user of browser1 sees that "New directory" modal has appeared
     And user of browser1 clicks on input box in active modal
@@ -261,9 +251,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir2" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Share element"
 
@@ -285,11 +273,11 @@ Feature: Oneprovider Share view
     And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
-    And user of browser2 double clicks on directory named "dir1" from files list
+    And user of browser2 double clicks on directory named "dir1" of files list
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1
     And user of browser2 does not see any file named "file2" on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
     And user of browser1 clicks the button from top menu bar with tooltip "Create file"
     And user of browser1 sees that "New file" modal has appeared
     And user of browser1 clicks on input box in active modal
@@ -299,21 +287,16 @@ Feature: Oneprovider Share view
     And user of browser1 sees that file named "file2" has appeared on files list
 
     And user of browser2 refreshes site
-    And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
-    And user of browser2 double clicks on directory named "dir1" from files list
-    And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1
     And user of browser2 sees that file named "file2" has appeared on files list
 
     # TODO rm after integrating with swagger
     Then user of browser1 clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser1 sees that "Remove files" modal has appeared
-    And user of browser1 clicks "OK" confirmation button in displayed modal
-    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees an info notify with text matching to: .*removed.*
     And user of browser1 sees that the modal has disappeared
     And user of browser1 does not see any shared directory named "dir1" on files list
 
@@ -328,9 +311,9 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir1" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -341,9 +324,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir2" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Share element"
 
@@ -365,35 +346,30 @@ Feature: Oneprovider Share view
     And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
-    And user of browser2 double clicks on directory named "dir1" from files list
+    And user of browser2 double clicks on directory named "dir1" of files list
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1
     And user of browser2 sees file named "20B-0.txt" on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
-    And user of browser1 selects "20B-0.txt" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
+    And user of browser1 clicks once on file named "20B-0.txt" of files list
     And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser1 sees that "Remove files" modal has appeared
-    And user of browser1 clicks "OK" confirmation button in displayed modal
-    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees an info notify with text matching to: .*removed.*
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that file named "20B-0.txt" has disappeared from files list
 
     And user of browser2 refreshes site
-    And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
-    And user of browser2 double clicks on directory named "dir1" from files list
-    And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1
     And user of browser2 sees that file named "file2" has disappeared from files list
 
     # TODO rm after integrating with swagger
     Then user of browser1 clicks on the "data" tab in main menu sidebar
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser1 sees that "Remove files" modal has appeared
-    And user of browser1 clicks "OK" confirmation button in displayed modal
-    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees an info notify with text matching to: .*removed.*
     And user of browser1 sees that the modal has disappeared
     And user of browser1 does not see any shared directory named "dir1" on files list
 
@@ -408,9 +384,9 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir1" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir1" from files list
+    And user of browser1 double clicks on directory named "dir1" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-0\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-0.txt" has appeared on files list
 
     And user of browser1 clicks the button from top menu bar with tooltip "Create directory"
@@ -421,14 +397,12 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that directory named "dir2" has appeared on files list
 
-    And user of browser1 double clicks on directory named "dir2" from files list
+    And user of browser1 double clicks on directory named "dir2" of files list
     And user of browser1 uses upload button in toolbar to upload file "20B-1.txt" to current dir
-    And user of browser1 sees an info notify with text matching to: .*20B-1\.txt.*uploaded successfully.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that file named "20B-1.txt" has appeared on files list
 
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser1 uses spaces select to change data space to "Small space"
-    And user of browser1 uses spaces select to change data space to "space1"
+    And user of browser1 changes current working directory to space1 using breadcrumbs
     And user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Share element"
 
@@ -450,10 +424,10 @@ Feature: Oneprovider Share view
     And user of browser2 sees that public share is named "share1"
 
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1
-    And user of browser2 double clicks on directory named "dir1" from files list
+    And user of browser2 double clicks on directory named "dir1" of files list
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1
     And user of browser2 sees file named "20B-0.txt" on files list
-    And user of browser2 double clicks on directory named "dir2" from files list
+    And user of browser2 double clicks on directory named "dir2" of files list
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1/dir1/dir2
     And user of browser2 sees file named "20B-1.txt" on files list
     And user of browser2 changes current working directory to share1/dir1 using breadcrumbs from share's file browser
@@ -464,7 +438,7 @@ Feature: Oneprovider Share view
     Then user of browser1 selects "dir1" from files list
     And user of browser1 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser1 sees that "Remove files" modal has appeared
-    And user of browser1 clicks "OK" confirmation button in displayed modal
-    And user of browser1 sees an success notify with text matching to: .*removed.*
+    And user of browser1 clicks "Yes" confirmation button in displayed modal
+    And user of browser1 sees an info notify with text matching to: .*removed.*
     And user of browser1 sees that the modal has disappeared
     And user of browser1 does not see any shared directory named "dir1" on files list

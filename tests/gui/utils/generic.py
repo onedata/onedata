@@ -8,6 +8,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 import os
+from contextlib import contextmanager
+
 from tests import gui
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH, WAIT_FRONTEND
 from selenium.webdriver.support.wait import WebDriverWait as Wait
@@ -115,3 +117,15 @@ def enter_text(input_box, text):
     input_box.clear()
     input_box.send_keys(text)
     return True if input_box.get_attribute('value') == text else False
+
+
+@contextmanager
+def implicit_wait(driver, time, prev_time):
+    driver.implicitly_wait(time)
+    try:
+        yield
+    except Exception as exc:
+        driver.implicitly_wait(prev_time)
+        raise exc
+    else:
+        driver.implicitly_wait(prev_time)

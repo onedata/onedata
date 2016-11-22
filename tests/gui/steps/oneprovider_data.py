@@ -1,5 +1,6 @@
 """Steps for features of Onezone login page.
 """
+from selenium.common.exceptions import StaleElementReferenceException
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -7,16 +8,19 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import re
-import os
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import upload_file_path
-from pytest_bdd import given, when, then, parsers
+from tests.gui.utils.oneprovider_gui import assert_breadcrumbs_correctness, \
+    chdir_using_breadcrumbs
+
+from pytest_bdd import when, then, parsers, given
+from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
@@ -45,28 +49,48 @@ def change_space(selenium, browser_id, space_name):
     Wait(driver, WAIT_FRONTEND).until(space_by_name).click()
 
 
-@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
-                    'to upload file "{file_name}" to current dir'))
-def upload_file_to_current_dir(selenium, browser_id, file_name):
+def _upload_files_to_cwd(driver, files):
     """This interaction is very hacky, because uploading files with Selenium
     needs to use input element, but we do not use it directly in frontend.
     So we unhide an input element for a while and pass a local file path to it.
     """
-    driver = select_browser(selenium, browser_id)
     # HACK: for Firefox driver - because we cannot interact with hidden elements
     driver.execute_script("$('input#toolbar-file-browse').removeClass('hidden')")
     driver.find_element_by_css_selector('input#toolbar-file-browse').send_keys(
-        upload_file_path(file_name)
+        files
     )
     driver.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
-    def file_browser_ready(d):
-        files_table = d.find_element_by_css_selector('.files-table')
-        return not re.match(r'.*is-loading.*', files_table.get_attribute('class'))
+    upload_panel = driver.find_element_by_css_selector('.file-upload-panel')
+    Wait(driver, WAIT_BACKEND).until_not(
+        lambda _: upload_panel.is_displayed(),
+        message='waiting for files to get uploaded'
+    )
 
-    Wait(driver, WAIT_BACKEND).until(file_browser_ready)
+
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
+                    'to upload file "{file_name}" to current dir'))
+def upload_file_to_cwd(selenium, browser_id, file_name):
+    driver = select_browser(selenium, browser_id)
+    _upload_files_to_cwd(driver, upload_file_path(file_name))
 
 
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
+                    'upload files from local directory "{dir_path}" to remote '
+                    'current dir'))
+def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
+    driver = select_browser(selenium, browser_id)
+    directory = tmpdir.join(browser_id, *dir_path.split('/'))
+    if directory.isdir():
+        _upload_files_to_cwd(driver, '\n'.join(str(item) for item
+                                               in directory.listdir()
+                                               if item.isfile()))
+    else:
+        raise ValueError('directory {} does not exist'.format(str(directory)))
+
+
+# TODO currently every browser in test download to that same dir,
+# repair it by changing capabilities in pytest selenium mult
 @when(parsers.parse('user of {browser_id} sees that content of downloaded '
                     'file "{file_name}" is equal to: "{content}"'))
 @then(parsers.parse('user of {browser_id} sees that content of downloaded '
@@ -74,21 +98,27 @@ def upload_file_to_current_dir(selenium, browser_id, file_name):
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
     driver = select_browser(selenium, browser_id)
-    tmpdir_path = str(tmpdir)
-    file_path = os.path.join(tmpdir_path, file_name)
+    downloaded_file = tmpdir.join(file_name)
 
     # sleep waiting for file to finish downloading
-    for sleep_time in range(10):
-        if not os.listdir(tmpdir_path):
+    exist = False
+    sleep_time = 5
+    for _ in range(10):
+        if not exist:
             time.sleep(sleep_time)
+        else:
+            break
+        exist = downloaded_file.isfile()
+
+    assert exist, 'file {} has not been downloaded'.format(file_name)
 
     def _check_file_content():
-        with open(file_path, 'r') as f:
+        with downloaded_file.open() as f:
             file_content = ''.join(f.readlines())
             return content == file_content
 
     Wait(driver, WAIT_BACKEND).until(
-        lambda _: _check_file_content,
+        lambda _: _check_file_content(),
         message='checking if downloaded file contains {:s}'.format(content)
     )
 
@@ -164,13 +194,38 @@ def wt_is_space_tree_root(selenium, browser_id, is_home, space_name):
 
 # TODO implement better checking dir tree
 @when(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in sidebar list is {path}'))
+                    'displayed in breadcrumbs is {path}'))
 @then(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in sidebar list is {path}'))
+                    'displayed in breadcrumbs is {path}'))
 def is_displayed_path_correct(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    path = path.split('/')
-    dir_name = driver.find_element_by_css_selector('.data-files-tree '
-                                                   'li.level-{} .active'
-                                                   ''.format(len(path) - 1))
-    assert dir_name.text == path[-1]
+    breadcrumbs = driver.find_element_by_css_selector('#main-content '
+                                                      '.secondary-top-bar '
+                                                      '.file-breadcrumbs-list')
+    assert_breadcrumbs_correctness(path, breadcrumbs)
+
+
+@when(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs'))
+@then(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs'))
+def change_cwd_using_breadcrumbs(selenium, browser_id, path):
+    driver = select_browser(selenium, browser_id)
+    # HACK: a workaround for fast multiple breadcrumbs re-computations leading to
+    # quick DOM changes between find elements and chdir_using_breadcrumbs
+    tries = 10
+    while tries > 0:
+        breadcrumbs = driver.find_elements_by_css_selector('#main-content '
+                                                           '.secondary-top-bar '
+                                                           '.file-breadcrumbs-list '
+                                                           '.file-breadcrumbs-item '
+                                                           'a')
+        try:
+            chdir_using_breadcrumbs(path, breadcrumbs)
+        except StaleElementReferenceException:
+            tries -= 1
+            if tries <= 0:
+                raise RuntimeError(('A StaleElementReferenceException has been thrown %s times. ' % tries) +
+                                   'Breadcrumbs was probably rendered multiple times between find_elements and elements usage.')
+        else:
+            tries = 0

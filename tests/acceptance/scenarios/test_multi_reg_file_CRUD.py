@@ -29,8 +29,14 @@ def test_create(env_description_file):
     pass
 
 
-@scenario("Create many children")
-def test_create_many(env_description_file):
+@pytest.mark.xfail_env(
+    envs=["multiprovider_proxy",
+          "multiprovider_directio"],
+    reason="client2 during read uses old, cached file uuid which results in "
+           "error enoent")
+@scenario('Create a file, read it on the second client, delete it, and repeat '
+          'the whole process')
+def test_recreate_and_read(env_description_file):
     pass
 
 
@@ -56,6 +62,11 @@ def test_delete_by_other_user(env_description_file):
 
 @scenario('Read and write to regular file')
 def test_read_write(env_description_file):
+    pass
+
+
+@scenario('Read right after write by other client')
+def test_read_right_after_write(env_description_file):
     pass
 
 
@@ -128,4 +139,14 @@ def test_delete_file_opened_for_rdwr(env_description_file):
 
 @scenario('Deleting file without permission, file is opened by other user')
 def test_delete_opened_file_without_permission(env_description_file):
+    pass
+
+
+@scenario('Deleting file right after closing it')
+def test_delete_right_after_close(env_description_file):
+    pass
+
+
+@scenario("Create many children")
+def test_create_many(env_description_file):
     pass

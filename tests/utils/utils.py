@@ -1,4 +1,7 @@
 """This module contains utility functions to be used in acceptance tests."""
+import logging
+import traceback
+
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -101,7 +104,7 @@ Number of retries left: {1}
             time.sleep(1)
             retry_running_cmd_until(cmd, retries - 1)
         else:
-            raise e
+            raise
     return output
 
 
@@ -206,40 +209,23 @@ def get_domain(node):
     return node.split('.', 1)[-1]
 
 
-def get_function_name(depth=1):
-    """Returns function name. Function name is acquired by inspecting stack,
-    by default it will return name of function that call this function.
-    i.e.
-    def f():
-        print get_function_name()
-
-    f()
-    >> f
-    Passing other value for depth you can get name of deeper nested function
-    i.e.
-    def f1():
-        return get_function_name(depth=2)
-
-    def f2():
-        print f1()
-
-    f2()
-    >> f2
-    """
-
-    return inspect.stack()[depth][3]
+def log_exception():
+    extracted_stack = traceback.format_exc(10)
+    logging.error(extracted_stack)
 
 
-def handle_exception(e, function_name=None):
-    """Nice printing of exceptions in tests.
-    :param e: exception object,
-    :param function_name: name of function in which exception was raised, if None,
-     function_name is acquired from get_function_name() function
-    """
-    if not function_name:
-        function_name = get_function_name(depth=2)
+def assert_generic(expression, should_fail, *args, **kwargs):
+    if should_fail:
+        assert_false(expression, *args, **kwargs)
+    else:
+        assert_(expression, *args, **kwargs)
 
-    print """#######################################
-ERROR IN FUNCTION {0}:
-{1}
-#######################################""".format(function_name, e)
+
+def assert_(expression, *args, **kwargs):
+    assert_result = expression(*args, **kwargs)
+    assert assert_result
+
+
+def assert_false(expression, *args, **kwargs):
+    assert_result = expression(*args, **kwargs)
+    assert not assert_result

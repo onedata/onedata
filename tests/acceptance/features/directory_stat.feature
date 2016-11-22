@@ -13,7 +13,7 @@ Feature: Directory_stat
     Then mode of u1's s1/dir1 is 755
 
   Scenario: Change access permissions
-    When u1 creates directories [s1/dir]
+    When u1 creates directories [s1/dir1]
     And u1 changes s1/dir1 mode to 211
     Then mode of u1's s1/dir1 is 211
     And u1 changes s1/dir1 mode to 755
@@ -68,6 +68,6 @@ Feature: Directory_stat
     When u1 creates directories [s1/dir1]
     And u1 waits 1 second
     # call sleep, to be sure that time of above and below operations is different
-    And u1 changes s1/dir1 mode to 211
+    And u1 changes s1/dir1 mode to 711
     Then status-change time of u1's s1/dir1 is greater than modification time
     And status-change time of u1's s1/dir1 is greater than access time

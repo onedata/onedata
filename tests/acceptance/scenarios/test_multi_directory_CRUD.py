@@ -57,8 +57,13 @@ def test_list_dir_without_permission(env_description_file):
     pass
 
 
-@scenario('Create file in directory without write permission')
-def test_create_subfile_without_permission(env_description_file):
+@scenario('Fail to create file in directory without write permission')
+def test_fail_to_create_subfile_without_permission(env_description_file):
+    pass
+
+
+@scenario('Delete directory right after deleting its subdirectory by other client')
+def test_delete_dir_right_after_deleting_subdir(env_description_file):
     pass
 
 
@@ -67,8 +72,8 @@ def test_create_subfile_with_permission(env_description_file):
     pass
 
 
-@scenario('Delete file in directory without write permission')
-def test_delete_subfile_without_permission(env_description_file):
+@scenario('Fail to delete file in directory without write permission')
+def test_fail_to_delete_subfile_without_permission(env_description_file):
     pass
 
 
@@ -77,19 +82,21 @@ def test_delete_subfile_with_permission(env_description_file):
     pass
 
 
-@scenario('Rename file in directory without write permission')
-def test_rename_subfile_without_permission(env_description_file):
+@scenario('Fail to rename file in directory without write permission')
+def test_fail_to_rename_subfile_without_permission(env_description_file):
     pass
 
 
-@scenario('Rename file in directory without write permission')
+@scenario('Rename file in directory with write permission')
 def test_rename_subfile_with_permission(env_description_file):
     pass
 
 
 # # TODO VFS-1824
 @pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
+    envs=["singleprovider_multiclient_directio",
+          "singleprovider_multiclient_proxy",
+          "multiprovider_proxy",
           "multiprovider_directio"],
     reason="u2 is unable to create direcory with the same name "
            "although first one was deleted")

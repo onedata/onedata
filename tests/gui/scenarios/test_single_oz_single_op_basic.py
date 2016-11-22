@@ -5,6 +5,8 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import sys
+
 from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
 
@@ -26,16 +28,28 @@ from tests.gui.steps.oneprovider_sidebar_list import *
 import pytest
 from pytest_bdd import scenarios, scenario
 
+
+BROWSER = ''
+for arg in sys.argv:
+    if '--driver=' in arg:
+        BROWSER = arg.split('=')[1]
+
+
 # --- FEATURES: all non-destructive (does not change state) ---
-# scenarios('../features/oneprovider_group_multi.feature')
-# scenarios('../features/oneprovider_group.feature')
-# scenarios('../features/onezone_login.feature')
+scenarios('../features/oneprovider_group_multi.feature')
+scenarios('../features/oneprovider_group.feature')
+scenarios('../features/onezone_login.feature')
 scenarios('../features/onezone_gui.feature')
-# scenarios('../features/oneprovider_data.feature')
-# scenarios('../features/oneprovider_space.feature')
-# scenarios('../features/oneprovider_shares.feature')
-# scenarios('../features/oneprovider_shares_multi.feature')
-# scenarios('../features/oneprovider_metadata.feature')
+scenarios('../features/oneprovider_data.feature')
+scenarios('../features/oneprovider_space.feature')
+scenarios('../features/oneprovider_shares.feature')
+scenarios('../features/oneprovider_shares_multi.feature')
+scenarios('../features/oneprovider_metadata.feature')
+
+# limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
+if BROWSER == 'Chrome':
+    scenarios('../features/oneprovider_upload_multi_files.feature')
+
 #
 # # --- FEATURES: oneprovider_data --- #
 #

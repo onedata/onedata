@@ -8,13 +8,13 @@ Feature: Authorization
     When u1 creates directories [s1/dir1]
     When u1 remounts oneclient
     When profiling is started on worker1.p1
-    When u1 lists s1/dir1
+    When u1 can list s1/dir1
     Then profiling is stopped on worker1.p1
 
   Scenario: Profile ls without remounting
     When u1 creates directories [s1/dir1]
     When profiling is started on worker1.p1
-    When u1 lists s1/dir1
+    When u1 can list s1/dir1
     Then profiling is stopped on worker1.p1
 
   Scenario: Profile ls nested
@@ -51,7 +51,7 @@ Feature: Authorization
   Scenario: Profile write sysbench
     When profiling is started on worker1.p1
     And u1 performs command "sysbench --test=fileio --file-total-size=5MB --file-num=5 --file-test-mode=rndrw --init-rng=on prepare" in s1 directory
-    Then u1 lists s1
+    Then u1 can list s1
     Then profiling is stopped on worker1.p1
 
   Scenario: Profile dd

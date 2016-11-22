@@ -9,12 +9,15 @@ __license__ = "This software is released under the MIT license cited in " \
 from tests.utils.utils import set_dns
 from tests.utils.path_utils import make_logdir
 from tests.conftest import map_test_type_to_logdir
+
 from pytest import fixture
 from selenium import webdriver
-import pytest
-import re
 
+import pytest
+
+import re
 import sys
+
 from pytest_selenium_multi.drivers.utils import factory
 
 
@@ -109,6 +112,7 @@ def capabilities(request, capabilities, tmpdir):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("enable-popup-blocking")
         prefs = {"download.default_directory": str(tmpdir)}
+
         chrome_options.add_experimental_option("prefs", prefs)
         capabilities.update(chrome_options.to_capabilities())
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
@@ -118,6 +122,7 @@ def capabilities(request, capabilities, tmpdir):
 
     # currently there are no problems with invalid SSL certs in built-in FF driver and Chrome
     # but some drivers could need it
+    capabilities['loggingPrefs'] = {'browser': 'DEBUG'}
     capabilities['acceptSslCerts'] = True
 
     # uncomment to debug selenium browser init
@@ -140,6 +145,8 @@ def firefox_profile(firefox_profile, tmpdir):
                                'text/anytext, text/plain, text/html')
         profile.update_preferences()
         return profile
+
+    _get_instance.browser = None
     return _get_instance
 
 
@@ -154,4 +161,3 @@ def config_driver(config_driver):
         # selenium.maximize_window()
         return driver
     return _configure
-

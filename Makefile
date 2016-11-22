@@ -146,13 +146,16 @@ test_packaging:
 	${TEST_RUN} --test-type packaging -vvv --test-dir tests/packaging -s
 
 test:
-	${TEST_RUN} --test-type acceptance -vvv --gherkin-terminal-reporter --test-dir tests/acceptance/scenarios/${SUITE}
+	${TEST_RUN} --test-type acceptance -vvv  --test-dir tests/acceptance/scenarios/${SUITE}
 
 test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
-test_gui:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html
+test_gui_firefox:
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files
+
+test_gui_chrome:
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
