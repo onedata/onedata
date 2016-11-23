@@ -1,20 +1,24 @@
 """Steps for access tokens features in Onezone login page.
 """
 
-__author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 import pyperclip
 
 from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.steps.onezone_logged_in_common import panel_to_css
+from tests.gui.utils.generic import implicit_wait
+from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
 from pytest_bdd import when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
+
+__author__ = "Bartek Walkowicz"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 
 @when(parsers.re(r'user of (?P<browser_id>.*?) clicks on (?P<icon_type>.*?) '
@@ -36,7 +40,8 @@ def click_on_btn_for_selected_token(selenium, browser_id, icon_type, ordinal):
         lambda _: btn.is_displayed(),
         message='waiting for {} btn for {} token to appear'.format(icon_type,
                                                                    ordinal)
-    ).click()
+    )
+    btn.click()
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that token for '
@@ -65,9 +70,10 @@ def has_token_been_copied_correctly(selenium, browser_id, ordinal):
                     ' on tokens list in expanded "ACCESS TOKENS" panel'))
 def has_token_list_enough_items(selenium, browser_id, num):
     driver = select_browser(selenium, browser_id)
-    panel = panel_to_css['access tokens']
-    tokens = driver.find_elements_by_css_selector('{} .tokens-list-item'
-                                                  ''.format(panel))
-    err_msg = 'there is {} tokens displayed ' \
-              'instead of expected {}'.format(len(tokens), num)
-    assert len(tokens) == num, err_msg
+    token_css = '{} .tokens-list-item'.format(panel_to_css['access tokens'])
+
+    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
+        Wait(driver, WAIT_FRONTEND).until(
+            lambda d: len(d.find_elements_by_css_selector(token_css)) == num,
+            message='Number of tokens differ from expected one {}'.format(num)
+        )

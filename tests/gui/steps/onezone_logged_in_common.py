@@ -89,15 +89,22 @@ def wt_uncollapse_oz_panel(selenium, browser_id_list, name):
 def click_on_btn_in_panel(selenium, browser_id, btn_name, panel_name):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css[panel_name.lower()]
-    buttons = driver.find_elements_by_css_selector('{} a.clickable'
-                                                   ''.format(panel))
     btn_name = btn_name.lower()
-    for btn in buttons:
-        if btn.text.lower() == btn_name:
-            btn.click()
-            break
-    else:
-        raise ValueError('no button named "{}" found'.format(btn_name))
+
+    def _get_btn(d):
+        buttons = d.find_elements_by_css_selector('{} a.clickable'
+                                                  ''.format(panel))
+        for btn in buttons:
+            if btn.text.lower() == btn_name:
+                btn.click()
+                return True
+        else:
+            return False
+
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda d: _get_btn(d),
+        message='no button named "{}" found'.format(btn_name)
+    )
 
 
 @when(parsers.parse('user of {browser_id} clicks on input box next to '
