@@ -12,7 +12,7 @@ from tests.utils.client_utils import mkstemp, rm, user_home_dir, dd
 import os
 import re
 
-REPEATS = 5
+REPEATS = 10
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
