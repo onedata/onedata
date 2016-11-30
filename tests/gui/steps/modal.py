@@ -82,7 +82,7 @@ def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
             btn.click()
             break
     else:
-        raise ValueError('no button named {} found'.format(button_name))
+        raise RuntimeError('no button named {} found'.format(button_name))
 
 
 @when(parsers.parse('user of {browser_id} sees that message '
