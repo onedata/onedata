@@ -17,7 +17,10 @@ import pytest
 
 import re
 import sys
+from tests import gui
+import os
 
+from environment import docker
 from pytest_selenium_multi.drivers.utils import factory
 
 
@@ -35,8 +38,12 @@ WAIT_BACKEND = 15
 WAIT_REFRESH = WAIT_BACKEND
 MAX_REFRESH_COUNT = 6
 
+# name of browser currently being created create_instances_of_webdriver in common.py
+BROWSER_BEING_CREATED = ['']
+
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
+is_logging_enabled = re.match(r'.*--enable-logs.*', cmd_line)
 
 
 @pytest.fixture
@@ -122,7 +129,7 @@ def capabilities(request, capabilities, tmpdir):
 
     # currently there are no problems with invalid SSL certs in built-in FF driver and Chrome
     # but some drivers could need it
-    capabilities['loggingPrefs'] = {'browser': 'DEBUG'}
+    capabilities['loggingPrefs'] = {'browser': 'ALL'}
     capabilities['acceptSslCerts'] = True
 
     # uncomment to debug selenium browser init
@@ -143,6 +150,35 @@ def firefox_profile(firefox_profile, tmpdir):
         profile.set_preference('browser.download.dir', str(tmpdir))
         profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
                                'text/anytext, text/plain, text/html')
+
+        if is_logging_enabled:
+            gui_tests_dir = os.path.dirname(os.path.abspath(gui.__file__))
+            firebug_path = os.path.join(gui_tests_dir, 'firefox_extensions',
+                                        'firebug-2.0.17.xpi')
+            profile.add_extension(firebug_path)
+            console_exp_path = os.path.join(gui_tests_dir, 'firefox_extensions',
+                                            'consoleExport-0.5b5.xpi')
+            profile.add_extension(console_exp_path)
+
+            profile.set_preference('extensions.firebug.consoleexport.active',
+                                   'true')
+            profile.set_preference('extensions.firebug.consoleexport.logFilePath',
+                                   '{root_dir}/{browser_id}/logs/firefox.log'
+                                   ''.format(root_dir=str(tmpdir),
+                                             browser_id=BROWSER_BEING_CREATED[0]))
+
+            profile.set_preference('extensions.firebug.framePosition',
+                                   'detached')
+            profile.set_preference("extensions.firebug.currentVersion", "2.0")
+            profile.set_preference("extensions.firebug.console.enableSites",
+                                   'true')
+            profile.set_preference("extensions.firebug.net.enableSites",
+                                   'true')
+            profile.set_preference("extensions.firebug.script.enableSites",
+                                   'true')
+            profile.set_preference("extensions.firebug.allPagesActivation",
+                                   'on')
+
         profile.update_preferences()
         return profile
 
@@ -161,3 +197,10 @@ def config_driver(config_driver):
         # selenium.maximize_window()
         return driver
     return _configure
+
+
+@pytest.fixture
+def env(env):
+    x = env
+    print x
+    return x
