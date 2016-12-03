@@ -49,14 +49,14 @@ def create_instances_of_webdriver(selenium, driver,
                                       'mailbox': {},
                                       'window': {'modal': None}}
 
+            selenium[browser_id].instance_name = browser_id
+            selenium[browser_id].logs_enabled = is_logging_enabled
+            selenium[browser_id].root_dir = str(tmpdir)
+
             if is_logging_enabled:
                 directory = _create_temp_dir(tmpdir, [browser_id, 'logs'],
                                              recursive=True)
                 _create_temp_file(directory, 'firefox.log')
-
-                selenium[browser_id].instance_name = browser_id
-                selenium[browser_id].logs_enabled = is_logging_enabled
-                selenium[browser_id].root_dir = str(tmpdir)
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))

@@ -199,8 +199,17 @@ def config_driver(config_driver):
     return _configure
 
 
-@pytest.fixture
-def env(env):
-    x = env
-    print x
-    return x
+# @pytest.fixture(scope="module")
+# def logging_environment(persistent_environment):
+#     command = r"'echo \"{\"debug\": true}\" > " \
+#               r"/root/bin/node/data/gui_static/app-config.json'"
+#
+#     for op_worker in persistent_environment['op_worker_nodes']:
+#         docker_name = op_worker.split('@')[1]
+#         docker.exec_(docker_name, command)
+#
+#     for oz_worker in persistent_environment['oz_worker_nodes']:
+#         docker_name = oz_worker.split('@')[1]
+#         docker.exec_(docker_name, command)
+#
+#     return persistent_environment
