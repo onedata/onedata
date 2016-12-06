@@ -199,17 +199,20 @@ def config_driver(config_driver):
     return _configure
 
 
-# @pytest.fixture(scope="module")
-# def logging_environment(persistent_environment):
-#     command = r"'echo \"{\"debug\": true}\" > " \
-#               r"/root/bin/node/data/gui_static/app-config.json'"
-#
-#     for op_worker in persistent_environment['op_worker_nodes']:
-#         docker_name = op_worker.split('@')[1]
-#         docker.exec_(docker_name, command)
-#
-#     for oz_worker in persistent_environment['oz_worker_nodes']:
-#         docker_name = oz_worker.split('@')[1]
-#         docker.exec_(docker_name, command)
-#
-#     return persistent_environment
+# TODO discover why chrome logs even without this setup using test_run, but doesn't when using ./bamboos/.../env_up.py
+if not is_base_url_provided:
+    @pytest.fixture(scope="module", autouse=True)
+    def logging_environment(persistent_environment, xvfb):
+        cmd = r'echo {\"debug\": true} > ' \
+              r'/root/bin/node/data/gui_static/app-config.json'
+
+        import pdb
+        pdb.set_trace()
+
+        for op_worker in persistent_environment['op_worker_nodes']:
+            docker_name = op_worker.split('@')[1]
+            docker.exec_(docker_name, cmd)
+
+        for oz_worker in persistent_environment['oz_worker_nodes']:
+            docker_name = oz_worker.split('@')[1]
+            docker.exec_(docker_name, cmd)
