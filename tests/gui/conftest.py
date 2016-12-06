@@ -19,6 +19,7 @@ import re
 import sys
 from tests import gui
 import os
+import subprocess as sp
 
 from environment import docker
 from pytest_selenium_multi.drivers.utils import factory
@@ -44,6 +45,7 @@ BROWSER_BEING_CREATED = ['']
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 is_logging_enabled = re.match(r'.*--enable-logs.*', cmd_line)
+is_recording_enabled = re.match(r'.*--xvfb-recording.*', cmd_line)
 
 
 @pytest.fixture
@@ -186,13 +188,23 @@ def firefox_profile(firefox_profile, tmpdir):
     return _get_instance
 
 
+@pytest.fixture
+def browser_width():
+    return 1280
+
+
+@pytest.fixture
+def browser_height():
+    return 1024
+
+
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
 @pytest.fixture
-def config_driver(config_driver):
+def config_driver(config_driver, browser_width, browser_height):
     def _configure(driver):
         driver = config_driver(driver)
         driver.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
-        driver.set_window_size(1280, 1024)
+        driver.set_window_size(browser_width, browser_height)
         # currenlty, we rather set window size
         # selenium.maximize_window()
         return driver
@@ -202,12 +214,9 @@ def config_driver(config_driver):
 # TODO discover why chrome logs even without this setup using test_run, but doesn't when using ./bamboos/.../env_up.py
 if not is_base_url_provided:
     @pytest.fixture(scope="module", autouse=True)
-    def logging_environment(persistent_environment, xvfb):
+    def logging_environment(persistent_environment):
         cmd = r'echo {\"debug\": true} > ' \
               r'/root/bin/node/data/gui_static/app-config.json'
-
-        import pdb
-        pdb.set_trace()
 
         for op_worker in persistent_environment['op_worker_nodes']:
             docker_name = op_worker.split('@')[1]
@@ -216,3 +225,30 @@ if not is_base_url_provided:
         for oz_worker in persistent_environment['oz_worker_nodes']:
             docker_name = oz_worker.split('@')[1]
             docker.exec_(docker_name, cmd)
+
+
+if not is_base_url_provided and is_recording_enabled:
+    @pytest.yield_fixture(autouse=True)
+    def xvfb_recording(request, xvfb, browser_width, browser_height):
+
+        file_name = '{name}.mp4'.format(name=request.node.name)
+        logdir = os.path.dirname(request.config.option.htmlpath)
+        asset_path = os.path.join(logdir, 'movies', file_name)
+        if not os.path.exists(os.path.dirname(asset_path)):
+            os.makedirs(os.path.dirname(asset_path))
+
+        cmd = ['ffmpeg', '-f', 'x11grab', '-video_size',
+               '{width}x{height}'.format(width=browser_width,
+                                         height=browser_height),
+               '-i', ':{display}'.format(display=xvfb.display),
+               '-codec:v', 'libx264', '-r', '25',
+               '{path}'.format(path=asset_path)]
+
+        dev_null = open(os.devnull, 'w')
+        p = sp.Popen(cmd, stdin=sp.PIPE, stdout=dev_null, stderr=dev_null)
+
+        yield
+
+        p.communicate(input=b'q')
+        if not p.stdin.closed:
+            p.stdin.close()
