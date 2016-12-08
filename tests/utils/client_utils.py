@@ -211,7 +211,7 @@ def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
            ' && export X509_USER_CERT={user_cert}'
            ' && export X509_USER_KEY={user_key}'
            ' && echo {token} > {token_path}'
-           ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+           ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --log_dir /tmp --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
            ).format(mount_path=mount_path,
                     gr_domain=oz_domain,
                     op_domain=op_domain,
