@@ -40,7 +40,18 @@ WAIT_REFRESH = WAIT_BACKEND
 MAX_REFRESH_COUNT = 6
 
 # name of browser currently being created create_instances_of_webdriver in common.py
-BROWSER_BEING_CREATED = ['']
+browser_being_created = ''
+
+
+def get_global_browser_being_created():
+    global browser_being_created
+    return browser_being_created
+
+
+def set_global_browser_being_created(val):
+    global browser_being_created
+    browser_being_created = val
+
 
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
@@ -167,7 +178,7 @@ def firefox_profile(firefox_profile, tmpdir):
             profile.set_preference('extensions.firebug.consoleexport.logFilePath',
                                    '{root_dir}/{browser_id}/logs/firefox.log'
                                    ''.format(root_dir=str(tmpdir),
-                                             browser_id=BROWSER_BEING_CREATED[0]))
+                                             browser_id=get_global_browser_being_created()))
 
             profile.set_preference('extensions.firebug.framePosition',
                                    'detached')

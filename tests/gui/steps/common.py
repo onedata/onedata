@@ -21,7 +21,7 @@ from selenium.webdriver.support.expected_conditions import staleness_of
 
 from tests.gui.utils.generic import parse_seq
 from tests.gui.utils.generic import parse_url, enter_text
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, BROWSER_BEING_CREATED, \
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
     is_logging_enabled
 
 from pytest_bdd import given, when, then, parsers
@@ -40,7 +40,7 @@ def create_instances_of_webdriver(selenium, driver,
         if browser_id in selenium:
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
-            BROWSER_BEING_CREATED[0] = browser_id
+            set_global_browser_being_created(browser_id)
             selenium[browser_id] = config_driver(driver.get_instance())
 
             tmp_memory[browser_id] = {'shares': {},
