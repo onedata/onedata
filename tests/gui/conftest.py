@@ -45,7 +45,7 @@ BROWSER_BEING_CREATED = ['']
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
 is_logging_enabled = re.match(r'.*--enable-logs.*', cmd_line)
-is_recording_enabled = re.match(r'.*--xvfb-recording.*', cmd_line)
+is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*none).*', cmd_line)
 
 
 @pytest.fixture
@@ -190,12 +190,12 @@ def firefox_profile(firefox_profile, tmpdir):
 
 @pytest.fixture
 def browser_width():
-    return 1280
+    return 1150
 
 
 @pytest.fixture
 def browser_height():
-    return 1024
+    return 940
 
 
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205
@@ -206,7 +206,7 @@ def config_driver(config_driver, browser_width, browser_height):
         driver.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
         driver.set_window_size(browser_width, browser_height)
         # currenlty, we rather set window size
-        # selenium.maximize_window()
+        # driver.maximize_window()
         return driver
     return _configure
 
