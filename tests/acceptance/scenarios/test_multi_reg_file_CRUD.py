@@ -116,9 +116,7 @@ def test_copy_big(env_description_file):
 
 
 @pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
+    envs=["multiprovider_proxy",
           "multiprovider_directio"],
     reason="cannot read although file was opened before deletion")
 @scenario('Deleting file opened by other user for reading')
@@ -127,9 +125,7 @@ def test_delete_file_opened_for_reading(env_description_file):
 
 
 @pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
+    envs=["multiprovider_proxy",
           "multiprovider_directio"],
     reason="cannot read although file was opened before deletion")
 @scenario('Deleting file opened by other user for reading and writing')
