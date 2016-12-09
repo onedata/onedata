@@ -55,8 +55,8 @@ def set_global_browser_being_created(val):
 
 cmd_line = ' '.join(sys.argv)
 is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
-is_logging_enabled = re.match(r'.*--enable-logs.*', cmd_line)
-is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*none).*', cmd_line)
+is_firefox_logging_enabled = re.match(r'.*--firefox-logs.*', cmd_line)
+is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_line)
 
 
 @pytest.fixture
@@ -164,7 +164,7 @@ def firefox_profile(firefox_profile, tmpdir):
         profile.set_preference('browser.helperApps.neverAsk.saveToDisk',
                                'text/anytext, text/plain, text/html')
 
-        if is_logging_enabled:
+        if is_firefox_logging_enabled:
             gui_tests_dir = os.path.dirname(os.path.abspath(gui.__file__))
             firebug_path = os.path.join(gui_tests_dir, 'firefox_extensions',
                                         'firebug-2.0.17.xpi')
@@ -238,7 +238,7 @@ if not is_base_url_provided:
             docker.exec_(docker_name, cmd)
 
 
-if not is_base_url_provided and is_recording_enabled:
+if is_recording_enabled:
     @pytest.yield_fixture(autouse=True)
     def xvfb_recording(request, xvfb, browser_width, browser_height):
 

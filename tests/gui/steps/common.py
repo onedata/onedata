@@ -22,7 +22,7 @@ from selenium.webdriver.support.expected_conditions import staleness_of
 from tests.gui.utils.generic import parse_seq
 from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
-    is_logging_enabled
+    is_firefox_logging_enabled
 
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
@@ -50,13 +50,8 @@ def create_instances_of_webdriver(selenium, driver,
                                       'window': {'modal': None}}
 
             selenium[browser_id].instance_name = browser_id
-            selenium[browser_id].logs_enabled = is_logging_enabled
+            selenium[browser_id].ff_logs_enabled = is_firefox_logging_enabled
             selenium[browser_id].root_dir = str(tmpdir)
-
-            if is_logging_enabled:
-                directory = _create_temp_dir(tmpdir, [browser_id, 'logs'],
-                                             recursive=True)
-                _create_temp_file(directory, 'firefox.log')
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))
