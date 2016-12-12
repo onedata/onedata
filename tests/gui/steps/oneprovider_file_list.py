@@ -19,7 +19,8 @@ from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.utils.generic import parse_seq
 
 
-tool_type_to_icon = {'share': 'oneicon-share'}
+tool_type_to_icon = {'share': 'oneicon-share',
+                     'metadata': 'oneicon-metadata'}
 
 
 type_to_icon = {'shared directory': 'oneicon-folder-share',
@@ -34,15 +35,12 @@ def _pack_content_into_rows(items):
         row, label, icon, tools, size, mod = (items[index], items[index+2],
                                               items[index+1], items[index+3],
                                               items[index+4], items[index+5])
+        meta = None
         meta_index = index + 6
-        while meta_index < items_num and items[meta_index].tag_name == 'tr':
-            meta_index += 1
-
-        if meta_index - index > 7:
-            meta = items[index + 6]
-            index = meta_index - 1 if meta_index < items_num else items_num
+        if meta_index < items_num and 'metadata-panel' in items[meta_index].get_attribute('class'):
+            meta = items[meta_index]
+            index += 7
         else:
-            meta = None
             index += 6
 
         yield (row, label, icon, tools, size, mod, meta)
@@ -68,7 +66,10 @@ def _get_items_from_file_list(driver):
                                                  'td.file-list-col-size, '
                                                  'table.files-table '
                                                  'tr.file-row '
-                                                 'td.file-list-col-modification')
+                                                 'td.file-list-col-modification, '
+                                                 'table.files-table '
+                                                 'tr:not([class~=file-row]) '
+                                                 '.metadata-panel')
 
     return {label.text: (row, label, icon, tools, size, modification, meta)
             for row, label, icon, tools, size, modification, meta
@@ -91,7 +92,7 @@ def _double_click_on_item(driver, item_name, item_type, items=None):
     if item and type_to_icon[item_type] in item[2].get_attribute('class'):
         ActionChains(driver).double_click(item[1]).perform()
     else:
-        raise ValueError('no {} named {} found'. format(item_type, item_name))
+        raise RuntimeError('no {} named {} found'. format(item_type, item_name))
 
 
 def _is_file_selected(file_item):
@@ -120,15 +121,66 @@ def _select_items_from_file_list_upon_cond(driver, item_list, keys,
     actions.perform()
 
 
-def _click_on_tool_icon_for_file(driver, item_name, item_type,
-                                 tool_type, items=None):
+def _get_tool_icon(driver, item_name, item_type, tool_type,
+                   items=None, css_path=None):
     items = items if items else _get_items_from_file_list(driver)
     item = items.get(item_name)
     if item and type_to_icon[item_type] in item[2].get_attribute('class'):
-        css_path = '.{}'.format(tool_type_to_icon[tool_type])
-        item[3].find_element_by_css_selector(css_path).click()
+        if not css_path:
+            css_path = '.{}'.format(tool_type_to_icon[tool_type])
+        return item[3].find_element_by_css_selector(css_path)
     else:
-        raise ValueError('no {} named {} found'.format(item_type, item_name))
+        return None
+
+
+def _click_on_tool_icon_for_file(driver, item_name, item_type,
+                                 tool_type, items=None):
+    item = _get_tool_icon(driver, item_name, item_type, tool_type, items)
+    if item:
+        item.click()
+
+
+def _is_tool_icon_displayed(driver, item_name, item_type,
+                            tool_type):
+    item = _get_tool_icon(driver, item_name, item_type, tool_type,
+                          css_path='.file-tool-{}'.format(tool_type))
+    if item:
+        return 'visible-on-parent-hover-25p' in item.get_attribute('class')
+    else:
+        return False
+
+
+@when(parsers.parse('user of {browser_id} should not see {tool_type} '
+                    'icon for {item_type} named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} should not see {tool_type} '
+                    'icon for {item_type} named "{item_name}"'))
+def is_tool_icon_hidden(selenium, browser_id, tool_type, item_name, item_type):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_FRONTEND).until_not(
+        lambda _: _is_tool_icon_displayed(driver, item_name,
+                                          item_type, tool_type),
+        message='checking if {tool_type} icon for {item_type} named '
+                '"{item_name}" is hidden'.format(tool_type=tool_type,
+                                                 item_type=item_type,
+                                                 item_name=item_name)
+    )
+
+
+@when(parsers.parse('user of {browser_id} sees {tool_type} icon for '
+                    '{item_type} named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} sees {tool_type} icon for '
+                    '{item_type} named "{item_name}"'))
+def is_tool_icon_displayed(selenium, browser_id, tool_type,
+                           item_type, item_name):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda s: _is_tool_icon_displayed(driver, item_name,
+                                          item_type, tool_type),
+        message='checking if {tool_type} icon for {item_type} named '
+                '"{item_name}" is displayed'.format(tool_type=tool_type,
+                                                    item_type=item_type,
+                                                    item_name=item_name)
+    )
 
 
 @when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
@@ -189,7 +241,7 @@ def click_on_file_item(selenium, browser_id, item_name,
     if item and type_to_icon[item_type] in item[2].get_attribute('class'):
         item[0].click()
     else:
-        raise ValueError('no {} named {} found'.format(item_type, item_name))
+        raise RuntimeError('no {} named {} found'.format(item_type, item_name))
 
 
 @when(parsers.parse('user of {browser_id} selects {item_list} '
@@ -243,12 +295,14 @@ def click_on_file_icon_tool(selenium, browser_id, tool_type,
                     'contains {num:d} file(s)'))
 @then(parsers.parse('user of {browser_id} sees that file browser '
                     'contains {num:d} file(s)'))
-def check_how_many_files_are_displayed_in_file_browser(selenium, browser_id,
-                                                       num):
+def assert_num_of_files_are_displayed_in_file_browser(selenium, browser_id,
+                                                      num):
     driver = select_browser(selenium, browser_id)
-    items_num = len(_get_items_from_file_list(driver))
-    assert items_num == num, 'displayed number of files {} does ' \
-                             'not match expected {}'.format(items_num, num)
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda _: len(_get_items_from_file_list(driver)) == num,
+        message='displayed number of files {} does not match expected {}'
+                ''.format(len(_get_items_from_file_list(driver)), num)
+    )
 
 
 @when(parsers.parse('user of {browser_id} scrolls to the bottom '

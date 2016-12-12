@@ -13,6 +13,8 @@ Feature: Oneprovider Metadata view
 
   Scenario: Open metadata panel and check presence of navigation tabs
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -20,12 +22,14 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    Then user of browser sees that metadata panel for file "file1" in files list has appeared
-    Then user of browser sees [Basic, JSON, RDF] navigation tabs in opened metadata panel
-    And user of browser clicks once on file named "file1" of files list
+    Then user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser sees [Basic, JSON, RDF] navigation tabs in metadata panel opened for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -33,8 +37,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
-  Scenario: Edit metadata icon is visible if file has empty metadata record
+
+  Scenario: Edit metadata icon is visible if file has empty basic metadata entry
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -42,16 +49,18 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser should not see metadata icon for file "file1"
-    And user of browser clicks once on file named "file1" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects file1 from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata panel
+
+    And user of browser should not see metadata icon for file named "file1"
+    And user of browser selects "file1" from files list
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    Then user of browser sees metadata icon for file "file1"
-    And user of browser clicks once on file named "file1" of files list
+    Then user of browser sees metadata icon for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -59,8 +68,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
-  Scenario: Edit metadata icon is visible if directory has empty metadata record
+
+  Scenario: Edit metadata icon is visible if directory has empty basic metadata entry
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -68,16 +80,18 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser should not see metadata icon for directory "dir1"
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser should not see metadata icon for directory named "dir1"
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    Then user of browser sees metadata icon for directory "dir1"
-    And user of browser clicks once on directory named "dir1" of files list
+    Then user of browser sees metadata icon for directory named "dir1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -85,8 +99,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
-  Scenario: Invalid metadata record for file should be colored red and should not be saved
+
+  Scenario: Invalid basic metadata entry for file should be colored red
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -94,14 +111,16 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    Then user of browser sees that entered metadata record with attribute "attr" is red
-    And user of browser clicks once on file named "file1" of files list
+    Then user of browser sees that edited attribute key in metadata panel opened for file named "file1" is highlighted as invalid
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -109,8 +128,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
-  Scenario: Invalid metadata record for directory should be colored red and should not be saved
+
+  Scenario: Invalid basic metadata entry for directory should be colored red
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -118,14 +140,16 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    Then user of browser sees that entered metadata record with attribute "attr" is red
-    And user of browser clicks once on directory named "dir1" of files list
+    Then user of browser sees that edited attribute key in metadata panel opened for directory named "dir1" is highlighted as invalid
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -133,8 +157,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
-  Scenario: When entered metadata for file is invalid "Save all changes" button should be disabled
+
+  Scenario: Entered invalid metadata for file will not be saved
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -142,29 +169,32 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    # try saving empty forms
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata panel
-    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+
+    # try saving metadata with record key being filled only
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
+
     Then user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser should not see new metadata record with attribute "attr"
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -172,8 +202,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
-  Scenario: When entered metadata for directory is invalid "Save all changes" button should be disabled
+
+  Scenario: Entered invalid metadata for directory will not be saved
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -181,30 +214,31 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser should not see metadata icon for directory "dir1"
-    And user of browser clicks once on directory named "dir1" of files list
+
+    # try saving empty forms
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata panel
-    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+
+    # try saving metadata with record key being filled only
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser should not see new metadata record with attribute "attr"
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -212,9 +246,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
-    #TODO only one metadata panel can be active at time
+
   Scenario: Add metadata to file (clicks both add icon and "Save all changes" button)
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -222,34 +258,38 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: Add metadata to directory (clicks both add icon and "Save all changes" button)
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -257,34 +297,38 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
+
 
   Scenario: Add metadata to file (clicks only "Save all changes" button)
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -292,37 +336,38 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-    And user of browser clicks once on file named "file1" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: Add metadata to directory (clicks only "Save all changes" button)
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -330,28 +375,25 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
-    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-    And user of browser clicks once on directory named "dir1" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -359,8 +401,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
-  Scenario: Delete single metadata record for file
+
+  Scenario: Delete single basic metadata entry for file
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -368,26 +413,27 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on delete metadata record icon for metadata record with attribute "attr"
-    Then user of browser should not see new metadata record with attribute "attr"
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on delete basic metadata entry icon for basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
+    Then user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -395,8 +441,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
-  Scenario: Delete single metadata record for directory
+
+  Scenario: Delete single basic metadata entry for directory
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -404,26 +453,26 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on delete metadata record icon for metadata record with attribute "attr"
-    Then user of browser should not see new metadata record with attribute "attr"
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on delete basic metadata entry icon for basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
+    Then user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -431,9 +480,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
-  # TODO error while selecting file after remove metadata
+
   Scenario: User should not see any metadata for file after clicking "Remove metadata" button
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -441,40 +492,43 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks on "Remove metadata" button in metadata panel
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
-    Then user of browser clicks once on file named "file1" of files list
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser should not see any metadata record for "file1"
-    And user of browser clicks once on file named "file1" of files list
+    Then user of browser should not see any basic metadata entry in metadata panel opened for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: User should not see any metadata for directory after clicking "Remove metadata" button
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -482,40 +536,43 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser should see new metadata record with attribute "attr" and value "val"
-    And user of browser clicks on "Remove metadata" button in metadata panel
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    Then user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser should not see any metadata record for "dir1"
-    And user of browser clicks once on directory named "dir1" of files list
+    Then user of browser should not see any basic metadata entry in metadata panel opened for directory named "dir1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
+
 
   Scenario: User starts adding metadata to file but discards changes
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -523,31 +580,36 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for file named "file1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser clicks once on file named "file1" of files list
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
+    And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+
+    Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser should not see new metadata record with attribute "attr"
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: User starts adding metadata to directory but discards changes
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -555,31 +617,34 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
-    And user of browser clicks on "Value" input box for new metadata record with attribute "attr"
+    And user of browser clicks on input box with placeholder equal to "Value" in metadata panel opened for directory named "dir1"
     And user of browser types "val" on keyboard
-    And user of browser clicks on add icon in metadata panel
-    And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser clicks once on directory named "dir1" of files list
+    And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
+    And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser should not see new metadata record with attribute "attr"
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
+
 
   Scenario: Add valid metadata to file in JSON format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -587,34 +652,38 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser clicks on textarea in "JSON" navigation tab
-    And user of browser clears textarea in "JSON" navigation tab
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
+    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
+    And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains ""id": 1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: Add valid metadata to directory in JSON format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -622,34 +691,38 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser clicks on textarea in "JSON" navigation tab
-    And user of browser clears textarea in "JSON" navigation tab
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
+    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains ""id": 1"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
+
 
   Scenario: Delete file metadata in JSON format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -657,42 +730,45 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser clicks on textarea in "JSON" navigation tab
-    And user of browser clears textarea in "JSON" navigation tab
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
+    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
+    And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata panel
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains ""id": 1"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: "{}"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: Delete directory metadata in JSON format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -700,42 +776,45 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser clicks on textarea in "JSON" navigation tab
-    And user of browser clears textarea in "JSON" navigation tab
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
+    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser sees that textarea in "JSON" navigation tab has got ""id": 1" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata panel
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains ""id": 1"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: "{}"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
+
 
   Scenario: Discard changes while entering metadata for file in JSON format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -743,31 +822,35 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser clicks on textarea in "JSON" navigation tab
-    And user of browser clears textarea in "JSON" navigation tab
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
+    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
+    And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser clicks once on file named "file1" of files list
+    And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: "{}"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: Discard changes while entering metadata for directory in JSON format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -775,22 +858,23 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser clicks on textarea in "JSON" navigation tab
-    And user of browser clears textarea in "JSON" navigation tab
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
+    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "{"id": 1}" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser clicks once on directory named "dir1" of files list
+    And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "JSON" navigation tab in metadata panel
-    And user of browser should see that textarea in "JSON" navigation tab hasn't got any metadata record
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: "{}"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -798,48 +882,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
-  Scenario: When entered metadata in JSON format for file is invalid "Save all changes" button should be disabled
-    When user of browser uses spaces select to change data space to "space1"
-    And user of browser clicks the button from top menu bar with tooltip "Create file"
-    And user of browser sees that "New file" modal has appeared
-    And user of browser clicks on input box in active modal
-    And user of browser types "file1" on keyboard
-    And user of browser presses enter on keyboard
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that file named "file1" has appeared on files list
-    And user of browser should not see metadata icon for file "file1"
-    And user of browser clicks once on file named "file1" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Save all changes" button in metadata panel
-    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-    And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "Attribute" input box
-    And user of browser types "attr" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
-    Then user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser should not see new metadata record with attribute "attr"
-    And user of browser clicks once on file named "file1" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees an info notify with text matching to: .*removed.*
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that file named "file1" has disappeared from files list
 
   Scenario: Add valid metadata to file in XML format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -847,34 +894,38 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser clicks on textarea in "XML" navigation tab
-    And user of browser clears textarea in "XML" navigation tab
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
+    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
+    And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
+
 
   Scenario: Add valid metadata to directory in RDF format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -882,34 +933,38 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser clicks on textarea in "XML" navigation tab
-    And user of browser clears textarea in "XML" navigation tab
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
+    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
+
 
   Scenario: Delete file metadata in XML format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create file1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -917,33 +972,33 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser clicks on textarea in "XML" navigation tab
-    And user of browser clears textarea in "XML" navigation tab
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
+    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
+    And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for file "file1" has disappeared
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata panel
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -951,8 +1006,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
+
   Scenario: Delete directory metadata in XML format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -960,33 +1018,33 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser clicks on textarea in "XML" navigation tab
-    And user of browser clears textarea in "XML" navigation tab
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
+    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Save all changes" button in metadata panel
+    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
     And user of browser refreshes site
-    And user of browser sees that metadata panel for directory "dir1" has disappeared
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser sees that textarea in "XML" navigation tab has got "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" metadata record
-    And user of browser clicks on "Remove metadata" button in metadata panel
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -994,8 +1052,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has disappeared from files list
 
+
   Scenario: Discard changes while entering metadata for file in XML format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create file"
     And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
@@ -1003,22 +1064,23 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has appeared on files list
-    And user of browser clicks once on file named "file1" of files list
+
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser clicks on textarea in "XML" navigation tab
-    And user of browser clears textarea in "XML" navigation tab
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
+    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
+    And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser clicks once on file named "file1" of files list
+    And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "file1" from files list
-    And user of browser sees that metadata panel for file "file1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser clicks once on file named "file1" of files list
+    And user of browser sees that metadata panel for file named "file1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
+    And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
@@ -1026,8 +1088,11 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that file named "file1" has disappeared from files list
 
+
   Scenario: Discard changes while entering metadata for directory in XML format
     When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
@@ -1035,22 +1100,24 @@ Feature: Oneprovider Metadata view
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
-    And user of browser clicks once on directory named "dir1" of files list
+
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser clicks on textarea in "XML" navigation tab
-    And user of browser clears textarea in "XML" navigation tab
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
+    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-    And user of browser clicks on "Discard changes" button in metadata panel
-    Then user of browser clicks once on directory named "dir1" of files list
+    And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+
+    Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
-    And user of browser deselects "dir1" from files list
-    And user of browser sees that metadata panel for directory "dir1" in files list has appeared
-    And user of browser clicks on "RDF" navigation tab in metadata panel
-    And user of browser should see that textarea in "XML" navigation tab hasn't got any metadata record
-    And user of browser clicks once on directory named "dir1" of files list
+    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
+    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
+    And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
