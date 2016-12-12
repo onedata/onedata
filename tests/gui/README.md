@@ -26,7 +26,7 @@ dir with configurations). Setting up environment can take some time.
 
 Example: (invoke from onedata repo root dir)
 ```
-./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --self-contained-html
+./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --self-contained-html --enable-logs
 ```
 
 Used parameters:
@@ -36,7 +36,8 @@ Used parameters:
 * ``--test-type gui`` - set the test type use by core Onedata test helpers to differ from "cucumber" tests etc.
 * ``--driver=<Firefox|Chrome>`` - set the browser to test in (will be launched in headless mode)
 * ``--self-contained-html`` - optional, if used generated report will be contained in 1 html file
-
+* ``--enable-logs`` - optional, if used and driver is Firefox generated report will contain console logs from browser
+* ``--xvfb-recording=<all|none|failed>`` - optional, record all or none or failed tests as movies and save them to <logdir>/movies
 
 ### Headless using existing Onedata installation
 

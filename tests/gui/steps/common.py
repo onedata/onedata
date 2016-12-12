@@ -21,7 +21,8 @@ from selenium.webdriver.support.expected_conditions import staleness_of
 
 from tests.gui.utils.generic import parse_seq
 from tests.gui.utils.generic import parse_url, enter_text
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
+    is_firefox_logging_enabled
 
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
@@ -34,20 +35,24 @@ PERMS_777 = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
 @given(parsers.parse("users opened {browser_id_list} browsers' windows"))
 def create_instances_of_webdriver(selenium, driver,
                                   config_driver, browser_id_list,
-                                  tmp_memory):
+                                  tmp_memory, tmpdir):
     for browser_id in parse_seq(browser_id_list):
         if browser_id in selenium:
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
+            set_global_browser_being_created(browser_id)
             selenium[browser_id] = config_driver(driver.get_instance())
-            # TODO find better way to gather logs from browser console (this works only for chrome)
-            selenium[browser_id].execute_script('console.debug = console.warn')
+
             tmp_memory[browser_id] = {'shares': {},
                                       'spaces': {},
                                       'groups': {},
                                       'mailbox': {},
                                       'oz': {},
                                       'window': {'modal': None}}
+
+            selenium[browser_id].instance_name = browser_id
+            selenium[browser_id].ff_logs_enabled = is_firefox_logging_enabled
+            selenium[browser_id].root_dir = str(tmpdir)
 
 
 @given(parsers.parse('user of {browser_id} generates valid name string'))
