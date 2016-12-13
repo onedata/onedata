@@ -120,10 +120,6 @@ def test_duplication(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="Fails only for multiprovider tests")
 @scenario('Delete empty directory and parents')
 def test_delete_parents(env_description_file):
     pass
