@@ -511,6 +511,8 @@ Feature: Oneprovider Metadata view
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     Then user of browser should not see any basic metadata entry in metadata panel opened for file named "file1"
@@ -555,6 +557,8 @@ Feature: Oneprovider Metadata view
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     Then user of browser should not see any basic metadata entry in metadata panel opened for directory named "dir1"
@@ -590,6 +594,7 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
     And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
 
     Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
@@ -626,6 +631,7 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -749,6 +755,8 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains ""id": 1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
@@ -795,6 +803,8 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains ""id": 1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -831,6 +841,8 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "{"id": 1}" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
@@ -867,6 +879,8 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "{"id": 1}" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -991,6 +1005,8 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
@@ -1037,6 +1053,8 @@ Feature: Oneprovider Metadata view
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
@@ -1073,6 +1091,8 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
@@ -1109,6 +1129,7 @@ Feature: Oneprovider Metadata view
     And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
 
     Then user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
