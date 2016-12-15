@@ -79,19 +79,19 @@ def is_not_present_in_panel_list(selenium, browser_id, items,
 @then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<items>.*?) '
                  r'(has|have) appeared on (?P<item_type>.*?)s list '
                  r'in expanded "(?P<panel>.+?)" Onezone panel'))
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<items>.*?) '
-                 r'on (?P<item_type>.*?)s list '
-                 r'in expanded "(?P<panel>.+?)" Onezone panel'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<items>.*?) '
-                 r'on (?P<item_type>.*?)s list '
-                 r'in expanded "(?P<panel>.+?)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees in expanded '
+                 r'"(?P<panel>.+?)" Onezone panel on (?P<item_type>.*?)s '
+                 r'list following items?: (?P<items>.*?)'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees in expanded '
+                 r'"(?P<panel>.+?)" Onezone panel on (?P<item_type>.*?)s '
+                 r'list following items?: (?P<items>.*?)'))
 def is_present_in_panel_list(selenium, browser_id, items,
                              item_type, panel, tmp_memory):
     driver = select_browser(selenium, browser_id)
     items = tmp_memory[browser_id]['gen_str'] if items == 'new item' else items
     Wait(driver, WAIT_BACKEND).until_not(
         lambda d: _not_in_panel_list(driver, panel, item_type, items),
-        message='checking for presence of {items} on {list} list'
+        message='checking for presence of "{items}" on {list} list'
                 ''.format(items=items, list=item_type)
     )
 

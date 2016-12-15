@@ -124,8 +124,5 @@ def implicit_wait(driver, time, prev_time):
     driver.implicitly_wait(time)
     try:
         yield
-    except Exception as exc:
-        driver.implicitly_wait(prev_time)
-        raise exc
-    else:
+    finally:
         driver.implicitly_wait(prev_time)
