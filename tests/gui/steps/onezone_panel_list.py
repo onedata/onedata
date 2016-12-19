@@ -12,7 +12,7 @@ from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
-__author__ = "Jakub Liput"
+__author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
