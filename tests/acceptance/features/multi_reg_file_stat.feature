@@ -92,7 +92,7 @@ Feature: Multi_regular_file_stat
     When u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of write and read is different
     Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
     And access time of u2's s1/file1 is greater than modification time on client2
@@ -102,7 +102,7 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     Then modification time of u2's s1/file1 is greater than access time on client2
@@ -112,7 +112,7 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 changes s1/file1 mode to 211 on client1
     Then mode of u2's s1/file1 is 211 on client2
@@ -123,7 +123,7 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/file1 to s1/file2 on client1
     Then u2 sees [file2] in s1 on client2
