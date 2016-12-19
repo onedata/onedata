@@ -1,11 +1,6 @@
 """Steps for features of Onezone login page.
 """
 
-__author__ = "Jakub Liput"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
-
 
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
 from tests.gui.steps.onezone_logged_in_common import panel_to_css
@@ -15,6 +10,12 @@ from selenium.webdriver.support.ui import WebDriverWait as Wait
 
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
+
+__author__ = "Jakub Liput"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 
 TOOL_TO_CSS = {'home outline icon': 'oneicon-home-outline',
