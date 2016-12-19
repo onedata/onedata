@@ -29,18 +29,13 @@ __license__ = "This software is released under the MIT license cited in " \
                  r'icon for (?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|\d*?11th|'
                  r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                  r'item on tokens list in expanded "ACCESS TOKENS" panel'))
-def click_on_btn_for_selected_token(selenium, browser_id, icon_type, ordinal):
+def click_on_btn_for_oz_access_token(selenium, browser_id, icon_type, ordinal):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css['access tokens']
     tokens = driver.find_elements_by_css_selector('{} .tokens-list-item'
                                                   ''.format(panel))
     token = tokens[int(ordinal[:-2])-1]
     btn = token.find_element_by_css_selector('.oneicon-{}'.format(icon_type))
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda _: btn.is_displayed(),
-        message='waiting for {} btn for {} token to appear'.format(icon_type,
-                                                                   ordinal)
-    )
     btn.click()
 
 
@@ -54,26 +49,29 @@ def click_on_btn_for_selected_token(selenium, browser_id, icon_type, ordinal):
                  r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                  r'item on tokens list in expanded "ACCESS TOKENS" panel '
                  r'has been copied correctly'))
-def has_token_been_copied_correctly(selenium, browser_id, ordinal):
+def has_oz_access_token_been_copied_correctly(selenium, browser_id, ordinal):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css['access tokens']
     tokens = driver.find_elements_by_css_selector('{} .tokens-list-item input'
                                                   ''.format(panel))
     token_val = tokens[int(ordinal[:-2])-1].get_attribute('value')
     copied_val = pyperclip.paste()
-    assert token_val == copied_val
+
+    err_msg = 'Token has been copied incorrectly.' \
+              'Expected {}, got {}'.format(token_val, copied_val)
+    assert token_val == copied_val, err_msg
 
 
-@when(parsers.parse('user of {browser_id} sees exactly {num:d} item(s)'
-                    ' on tokens list in expanded "ACCESS TOKENS" panel'))
-@then(parsers.parse('user of {browser_id} sees exactly {num:d} item(s)'
-                    ' on tokens list in expanded "ACCESS TOKENS" panel'))
-def has_token_list_enough_items(selenium, browser_id, num):
+@when(parsers.parse('user of {browser_id} sees exactly {num:d} item(s) '
+                    'on tokens list in expanded "ACCESS TOKENS" panel'))
+@then(parsers.parse('user of {browser_id} sees exactly {num:d} item(s) '
+                    'on tokens list in expanded "ACCESS TOKENS" panel'))
+def has_oz_token_list_enough_items(selenium, browser_id, num):
     driver = select_browser(selenium, browser_id)
-    token_css = '{} .tokens-list-item'.format(panel_to_css['access tokens'])
+    css_sel = '{} .tokens-list-item'.format(panel_to_css['access tokens'])
 
     with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
         Wait(driver, WAIT_FRONTEND).until(
-            lambda d: len(d.find_elements_by_css_selector(token_css)) == num,
+            lambda d: len(d.find_elements_by_css_selector(css_sel)) == num,
             message='Number of tokens differ from expected one {}'.format(num)
         )
