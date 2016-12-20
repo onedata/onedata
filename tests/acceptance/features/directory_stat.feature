@@ -26,7 +26,7 @@ Feature: Directory_stat
 
   Scenario: Update timestamps
     When u1 creates directories [s1/dir1]
-    And u1 waits 1 second
+    And u1 waits 2 second
     And u1 creates directories [s1/dir1/dir2]
     And u1 updates [s1/dir1] timestamps
     # aim of above step is to call touch on s1/dir1
@@ -37,12 +37,12 @@ Feature: Directory_stat
 
   Scenario: Access time
     When u1 creates directories [s1/dir1]
-    And u1 waits 1 second
+    And u1 waits 2 second
     And u1 creates directories [s1/dir1/dir2]
     # two steps above ensure that access time is older than
     # modification time or status-change time and
     # will be modified on next access
-    And u1 waits 1 second
+    And u1 waits 2 second
     Then u1 sees [dir2] in s1/dir1
     #aim of above step is to call ls
     And access time of u1's s1/dir1 is greater than modification time
@@ -50,7 +50,7 @@ Feature: Directory_stat
 
   Scenario: Modification time
     When u1 creates directories [s1/dir1]
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 creates directories [s1/dir1/dir2]
     Then modification time of u1's s1/dir1 is greater than access time
@@ -58,7 +58,7 @@ Feature: Directory_stat
 
   Scenario: Status-change time when renaming
     When u1 creates directories [s1/dir1]
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/dir1 to s1/dir2
     Then status-change time of u1's s1/dir2 is greater than modification time
@@ -66,7 +66,7 @@ Feature: Directory_stat
 
   Scenario: Status-change time when changing mode
     When u1 creates directories [s1/dir1]
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 changes s1/dir1 mode to 711
     Then status-change time of u1's s1/dir1 is greater than modification time
