@@ -1,13 +1,11 @@
 """Generic GUI testing utils - mainly helpers and extensions for Selenium.
 """
 
-__author__ = "Jakub Liput"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 import re
 import os
+from time import sleep
+from functools import wraps
 from contextlib import contextmanager
 
 from tests import gui
@@ -16,6 +14,12 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.common.exceptions import TimeoutException
 
 from inspect import selector
+
+
+__author__ = "Jakub Liput"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 
 # RE_URL regexp is matched as shown below:
@@ -50,7 +54,6 @@ def change_implicit_wait(driver, fun, wait_time):
     WARNING: this will change implicit_wait time on global selenium object!
     Returns the result of fun invocation
     """
-    result = None
     try:
         driver.implicitly_wait(wait_time)
         result = fun(driver)
@@ -126,3 +129,20 @@ def implicit_wait(driver, time, prev_time):
         yield
     finally:
         driver.implicitly_wait(prev_time)
+
+
+def repeat_failed(attempts, interval=0.01, exceptions=Exception):
+    def wrapper(function):
+        @wraps(function)
+        def try_until(*args, **kwargs):
+            for _ in range(attempts):
+                try:
+                    result = function(*args, **kwargs)
+                except exceptions:
+                    sleep(interval)
+                    continue
+                else:
+                    return result
+            return function(*args, **kwargs)
+        return try_until
+    return wrapper
