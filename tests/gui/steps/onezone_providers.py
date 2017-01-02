@@ -22,7 +22,6 @@ def _click_on_provider(driver, browser_id, name, tmp_memory):
         tmp_memory[browser_id]['supporting_provider'] = name
     else:
         tmp_memory[browser_id] = {'supporting_provider': name}
-
     collapse_providers = driver.find_element_by_css_selector('#collapse-providers')
 
     Wait(driver, WAIT_FRONTEND).until(

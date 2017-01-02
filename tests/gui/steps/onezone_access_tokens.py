@@ -34,6 +34,7 @@ def click_on_btn_for_oz_access_token(selenium, browser_id, icon_type, ordinal):
     panel = panel_to_css['access tokens']
     tokens = driver.find_elements_by_css_selector('{} .tokens-list-item'
                                                   ''.format(panel))
+    icon_type = 'clipboard-copy' if icon_type == 'copy' else icon_type
     token = tokens[int(ordinal[:-2])-1]
     btn = token.find_element_by_css_selector('.oneicon-{}'.format(icon_type))
     btn.click()

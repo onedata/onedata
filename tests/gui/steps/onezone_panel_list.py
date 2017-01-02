@@ -35,6 +35,12 @@ def get_item_from_oz_panel_list(driver, item_name, item_type, panel):
     return items.get(item_name, None)
 
 
+def get_submenu_for_item_from_oz_panel_list(driver, item_name, item_type, panel):
+    item = get_item_from_oz_panel_list(driver, item_name, item_type, panel)
+    css_sel = '[id*=collapse-{}]'.format(item_type)
+    return item.find_element_by_css_selector(css_sel) if item else None
+
+
 def _is_in_panel_list(driver, panel, item_type, items):
     all_items = get_items_from_oz_panel_list(driver, panel, item_type)
     return all(item in all_items for item in items)
@@ -171,3 +177,22 @@ def wt_is_marked_as_home_item(selenium, browser_id, item_name,
                               item_type, panel):
     driver = select_browser(selenium, browser_id)
     _is_marked_as_home(driver, item_name, item_type, panel)
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) sees that submenu for '
+                 '(?P<item_type>.+?) named "(?P<item_name>.+?)" '
+                 'in (?P=item_type)s list in expanded "(?P<panel>.+?)" '
+                 'Onezone panel has been expanded'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that submenu for '
+                 '(?P<item_type>.+?) named "(?P<item_name>.+?)" '
+                 'in (?P=item_type)s list in expanded "(?P<panel>.+?)" '
+                 'Onezone panel has been expanded'))
+def oz_wt_has_submenu_for_item_been_expanded(selenium, browser_id, item_type,
+                                             item_name, panel):
+    driver = select_browser(selenium, browser_id)
+    Wait(driver, WAIT_BACKEND).until(
+        lambda d: get_submenu_for_item_from_oz_panel_list(d, item_name,
+                                                          item_type, panel),
+        message='waiting for submenu for "{}" in {} list to appear'
+                ''.format(item_name, item_type)
+    )

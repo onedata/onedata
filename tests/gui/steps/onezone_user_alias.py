@@ -45,7 +45,7 @@ def click_user_alias_edit(selenium, browser_id):
 
     _wait_for_loader_to_disappear(driver, loader)
 
-    usr_alias = driver.find_element_by_css_selector('{} a .space-header'
+    usr_alias = driver.find_element_by_css_selector('{} .alias-edit-container'
                                                     ''.format(panel))
     usr_alias.click()
 
@@ -62,7 +62,7 @@ def click_user_alias_edit(selenium, browser_id):
 def user_alias_equals_to(selenium, browser_id, user_name):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css['user alias']
-    usr_alias = driver.find_element_by_css_selector('{} a .space-header'
+    usr_alias = driver.find_element_by_css_selector('{} .alias-edit-container'
                                                     ''.format(panel))
     Wait(driver, WAIT_BACKEND).until(
         lambda s: usr_alias.text == user_name,
@@ -78,7 +78,7 @@ def user_alias_equals_recorded_alias(selenium, browser_id, tmp_memory):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css['user alias']
     prev_alias = tmp_memory[browser_id]['user_alias']
-    usr_alias = driver.find_element_by_css_selector('{} a .space-header'
+    usr_alias = driver.find_element_by_css_selector('{} .alias-edit-container'
                                                     ''.format(panel))
     Wait(driver, WAIT_BACKEND).until(
         lambda _: usr_alias.text == prev_alias,
@@ -93,7 +93,7 @@ def user_alias_equals_recorded_alias(selenium, browser_id, tmp_memory):
 def record_usr_alias(selenium, browser_id, tmp_memory):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css['user alias']
-    alias_header = driver.find_element_by_css_selector('{} a .space-header'
+    alias_header = driver.find_element_by_css_selector('{} .alias-edit-container'
                                                        ''.format(panel))
 
     tmp_memory[browser_id]['user_alias'] = Wait(driver, WAIT_BACKEND).until(
@@ -114,5 +114,5 @@ def tw_click_on_btn_next_to_usr_alias_edit_box(selenium, browser_id, btn_type):
     driver = select_browser(selenium, browser_id)
     panel = panel_to_css['user alias']
     btn_css = 'check' if btn_type == 'confirm' else 'x'
-    css_sel = '{} a .oneicon-checkbox-{}'.format(panel, btn_css)
+    css_sel = '{} .alias-edit-container .oneicon-checkbox-{}'.format(panel, btn_css)
     driver.find_element_by_css_selector(css_sel).click()

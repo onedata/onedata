@@ -126,7 +126,7 @@ Feature: Onezone GUI elements
     And user of browser sees that Oneprovider session has started
 
     # one must wait because gui is to slow to immediately change home space in op when it was changed in oz
-    And user of browser is idle for 3 seconds
+    And user of browser is idle for 5 seconds
     And user of browser refreshes site
     And user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space2"
     And user of browser clicks on the "spaces" tab in main menu sidebar
@@ -137,3 +137,21 @@ Feature: Onezone GUI elements
     And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space1"
     And user of browser sees an info notify with text matching to: .*space1.*home.*
     And user of browser sees that home space icon has appeared next to displayed name of space "space1" in spaces list
+
+
+#  Scenario: User uncollapses space submenu and sees Get support button and provider p1
+#    Given user of browser generates valid name string
+#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+#    And user of browser clicks on item named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    Then user of browser sees that submenu for space named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel has been expanded
+#    And user of browser sees that submenu for space named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel contains p1 supporting provider(s) and Get support button
+#
+#
+#  Scenario: User gets support for given space
+#    Given user of browser generates valid name string
+#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+#    And user of browser clicks on item named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser sees that submenu for space named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel has been expanded
+#    And user of browser clicks on Get support for space named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    Then user of browser sees that token popup for space named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
+#    And user of browser can copy visible token from popup for space named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared

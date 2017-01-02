@@ -46,7 +46,7 @@ def _pack_content_into_rows(items):
         yield (row, label, icon, tools, size, mod, meta)
 
 
-@repeat_failed(attempts=10)
+@repeat_failed(attempts=10, interval=0.1)
 def _get_items_from_file_list(driver):
     items = driver.find_elements_by_css_selector('table.files-table '
                                                  'tr.file-row, '

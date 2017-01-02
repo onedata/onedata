@@ -53,15 +53,18 @@ def _expand_oz_panel(driver, name):
 
 
 def _get_active_heading_components(driver, panel, icon):
-    items = driver.find_elements_by_css_selector('{panel} a.clickable, '
-                                                 '{panel} a.clickable > '
+    items = driver.find_elements_by_css_selector('{panel} .clickable, '
+                                                 '{panel} .clickable > '
                                                  '.secondary-icon > .{icon}'
                                                  ''.format(panel=panel,
                                                            icon=icon))
 
-    for header, header_icon in zip(items[::2], items[1::2]):
+    header = items[0]
+    for header_icon in items[1:]:
         if icon in header_icon.get_attribute('class'):
             return header
+        else:
+            header = header_icon
 
 
 @given(parsers.re('users? of (?P<browser_id_list>.*) expanded the '
@@ -92,7 +95,7 @@ def click_on_btn_in_oz_panel(selenium, browser_id, btn_name, panel_name):
     btn_name = btn_name.lower()
 
     def _get_btn(d):
-        buttons = d.find_elements_by_css_selector('{} a.clickable'
+        buttons = d.find_elements_by_css_selector('{} .clickable'
                                                   ''.format(panel))
         for btn in buttons:
             if btn.text.lower() == btn_name:

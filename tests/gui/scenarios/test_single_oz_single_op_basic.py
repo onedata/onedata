@@ -11,6 +11,7 @@ from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
 
 from tests.gui.steps.onezone_before_login import *
+from tests.gui.steps.onezone_spaces import *
 from tests.gui.steps.onezone_logged_in_common import *
 from tests.gui.steps.onezone_user_alias import *
 from tests.gui.steps.onezone_access_tokens import *
