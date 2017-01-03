@@ -4,6 +4,7 @@
 
 import re
 import os
+import itertools
 from time import sleep
 from functools import wraps
 from contextlib import contextmanager
@@ -11,7 +12,7 @@ from contextlib import contextmanager
 from tests import gui
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH, WAIT_FRONTEND
 from selenium.webdriver.support.wait import WebDriverWait as Wait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 from inspect import selector
 
@@ -146,3 +147,19 @@ def repeat_failed(attempts, interval=0.01, exceptions=Exception):
             return function(*args, **kwargs)
         return try_until
     return wrapper
+
+
+def iter_ahead(iterable):
+    read_ahead = iter(iterable)
+    next(read_ahead)
+    for item, next_item in itertools.izip(iterable, read_ahead):
+        yield item, next_item
+
+
+def find_web_elem(web_elem, css_sel, msg):
+    try:
+        item = web_elem.find_element_by_css_selector(css_sel)
+    except NoSuchElementException:
+        raise RuntimeError(msg)
+    else:
+        return item
