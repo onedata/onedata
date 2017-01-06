@@ -172,3 +172,11 @@ def find_web_elem_with_text(web_elem, css_sel, text, err_msg):
             return item
     else:
         raise RuntimeError(err_msg)
+
+
+@contextmanager
+def suppress(*exceptions):
+    try:
+        yield
+    except exceptions:
+        pass
