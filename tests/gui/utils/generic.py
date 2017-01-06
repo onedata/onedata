@@ -156,10 +156,19 @@ def iter_ahead(iterable):
         yield item, next_item
 
 
-def find_web_elem(web_elem, css_sel, msg):
+def find_web_elem(web_elem, css_sel, err_msg):
     try:
         item = web_elem.find_element_by_css_selector(css_sel)
     except NoSuchElementException:
-        raise RuntimeError(msg)
+        raise RuntimeError(err_msg)
     else:
         return item
+
+
+def find_web_elem_with_text(web_elem, css_sel, text, err_msg):
+    items = web_elem.find_elements_by_css_selector(css_sel)
+    for item in items:
+        if item.text.lower() == text:
+            return item
+    else:
+        raise RuntimeError(err_msg)

@@ -5,7 +5,8 @@ import re
 
 from selenium.common.exceptions import NoSuchElementException
 
-from tests.gui.utils.generic import repeat_failed, iter_ahead, find_web_elem
+from tests.gui.utils.generic import repeat_failed, iter_ahead, find_web_elem, \
+    find_web_elem_with_text
 
 
 __author__ = "Jakub Liput, Bartosz Walkowicz"
@@ -147,6 +148,40 @@ class SpaceRecord(OZPanelRecord):
         count_label = find_web_elem(self.web_elem, css_sel, err_msg)
         return int(count_label.text)
 
+    class SettingsDropdown(object):
+        def __init__(self, web_elem):
+            self.web_elem = web_elem
+
+        def rename(self):
+            btn = self._get_btn('rename')
+            btn.click()
+
+        def get_support(self):
+            btn = self._get_btn('get support')
+            btn.click()
+
+        def leave(self):
+            btn = self._get_btn('leave')
+            btn.click()
+
+        def _get_btn(self, name):
+            css_sel = 'ul.space-dropdown-menu li.clickable'
+            err_msg = 'no button named {btn} found in settings ' \
+                      'dropdown for given space in DATA SPACE ' \
+                      'MANAGAMENT oz panel'.format(btn=name)
+            return find_web_elem_with_text(self.web_elem, css_sel,
+                                           name, err_msg)
+
+    @property
+    def settings(self):
+        css_sel = '.settings-tool .settings-dropdown'
+        err_msg = 'no settings icon for space named "{}" in DATA SPACE ' \
+                  'MANAGEMENT oz pnale found'.format(self.name)
+        settings = find_web_elem(self.web_elem, css_sel, err_msg)
+        if 'open' not in settings.get_attribute('class'):
+            settings.click()
+        return SpaceRecord.SettingsDropdown(settings)
+
     class SpaceSupportTokenDropdownMenu(object):
         def __init__(self, web_elem):
             self.web_elem = web_elem
@@ -219,13 +254,10 @@ class OZPanel(object):
 
     def _get_btn(self, name):
         css_sel = '.clickable'
-        buttons = self.web_elem.find_elements_by_css_selector(css_sel)
-        for btn in buttons:
-            if btn.text.lower() == name:
-                return btn
-        else:
-            raise RuntimeError('no button named {btn} found in "{panel}" '
-                               'oz panel'.format(btn=name, panel=self.name))
+        err_msg = 'no button named {btn} found in "{panel}" ' \
+                  'oz panel'.format(btn=name, panel=self.name)
+        return find_web_elem_with_text(self.web_elem, css_sel,
+                                       name, err_msg)
 
 
 class DataSpaceManagementPanel(OZPanel):
@@ -373,6 +405,52 @@ class GoToYourFilesPanel(OZPanel):
                                'oz panel'.format(prov=name, panel=self.name))
 
 
+class TokenRecord(object):
+
+    def __init__(self, web_elem):
+        self.web_elem = web_elem
+
+    @property
+    def value(self):
+        css_sel = '.token-header input'
+        err_msg = 'no value found for given token in ACCESS TOKEN oz panel'
+        header = find_web_elem(self.web_elem, css_sel, err_msg)
+        return header.get_attribute('value')
+
+    def copy(self):
+        css_sel = '.oneicon-clipboard-copy'
+        err_msg = 'no copy btn for given token in ACCESS TOKEN oz panel'
+        btn = find_web_elem(self.web_elem, css_sel, err_msg)
+        btn.click()
+
+    def remove(self):
+        css_sel = '.oneicon-remove'
+        err_msg = 'no remove btn for given token in ACCESS TOKEN oz panel'
+        btn = find_web_elem(self.web_elem, css_sel, err_msg)
+        btn.click()
+
+
+class AccessTokensPanel(OZPanel):
+
+    @property
+    def tokens(self):
+        css_sel = '.tokens-list-item'
+        return (TokenRecord(token) for token in
+                self.web_elem.find_elements_by_css_selector(css_sel))
+
+    def __getitem__(self, index):
+        for i, token in enumerate(self.tokens):
+            if i == index:
+                return token
+        else:
+            raise RuntimeError('token list in ACCESS TOKENS oz panel does not '
+                               'contain {index} entry'.format(index=index))
+
+    def create_new_access_token(self):
+        btn = self._get_btn('create new access token')
+        btn.click()
+
+
 class EditBox(object):
 
     def __init__(self, web_elem):
@@ -411,7 +489,8 @@ class EditBox(object):
 
 class OZLoggedIn(object):
     panels = {'data_space_management': DataSpaceManagementPanel,
-              'go_to_your_files': GoToYourFilesPanel}
+              'go_to_your_files': GoToYourFilesPanel,
+              'access_tokens': AccessTokensPanel}
 
     def __init__(self, web_elem):
         self.web_elem = web_elem
@@ -441,10 +520,10 @@ class ProviderDropPanel(object):
 
     @property
     def hostname(self):
-        css_sel = '.provider-host-text'
+        css_sel = 'input.provider-host-text'
         err_msg = 'no hostname found in displayed provider drop panel'
         header = find_web_elem(self.web_elem, css_sel, err_msg)
-        return header.text
+        return header.get_attribute('value')
 
     def copy_hostname(self):
         css_sel = '.provider-host-copy-btn'
