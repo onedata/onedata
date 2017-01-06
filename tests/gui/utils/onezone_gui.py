@@ -439,12 +439,14 @@ class AccessTokensPanel(OZPanel):
                 self.web_elem.find_elements_by_css_selector(css_sel))
 
     def __getitem__(self, index):
+        i = 0
         for i, token in enumerate(self.tokens):
             if i == index:
                 return token
         else:
-            raise RuntimeError('token list in ACCESS TOKENS oz panel does not '
-                               'contain {index} entry'.format(index=index))
+            raise RuntimeError('asked for {index} token but there are only '
+                               '{num} tokens in ACCESS TOKENS '
+                               'oz panel'.format(index=index, num=i))
 
     def create_new_access_token(self):
         btn = self._get_btn('create new access token')
@@ -563,6 +565,33 @@ class EditBox(object):
         btn.click()
 
 
+class WorldMap(object):
+
+    def __init__(self, web_elem):
+        self.web_elem = web_elem
+
+    @property
+    def providers(self):
+        css_sel = '.provider-place'
+        return (ProviderDropPanel(provider) for provider in
+                self.web_elem.find_elements_by_css_selector(css_sel))
+
+    def __getitem__(self, index):
+        i = 0
+        for i, provider in enumerate(self.providers):
+            if i == index:
+                return provider
+        else:
+            raise RuntimeError('asked for {index} provider but there are only '
+                               '{num} providers on map'.format(index=index,
+                                                               num=i))
+
+    def get_provider_with_displayed_panel(self):
+        for provider in self.providers:
+            if provider.is_displayed:
+                return provider
+
+
 class OZLoggedIn(object):
     panels = {'data_space_management': DataSpaceManagementPanel,
               'go_to_your_files': GoToYourFilesPanel,
@@ -581,11 +610,18 @@ class OZLoggedIn(object):
             for group, toggle in zip(items[::2], items[1::2]):
                 if panel == toggle.text.lower():
                     return cls(group)
+
         elif panel == 'manage_account':
             css_sel = 'header.onezone-top-bar'
             err_msg = 'no header for oz page found'
             header = find_web_elem(self.web_elem, css_sel, err_msg)
             return ManageAccount(header)
+
+        elif panel == 'world_map':
+            css_sel = '.onezone-atlas'
+            err_msg = 'no world map found on oz page'
+            world_map = find_web_elem(self.web_elem, css_sel, err_msg)
+            return WorldMap(world_map)
 
 
 class ProviderDropPanel(object):
@@ -593,48 +629,83 @@ class ProviderDropPanel(object):
     def __init__(self, web_elem):
         self.web_elem = web_elem
 
+    def click_on(self):
+        self.web_elem.click()
+
+    @property
+    def is_working(self):
+        return 'working' in self.web_elem.get_attribute('class')
+
+    @property
+    def is_displayed(self):
+        css_sel = '.provider-place-drop'
+        try:
+            self.web_elem.find_element_by_css_selector(css_sel)
+        except NoSuchElementException:
+            return False
+        else:
+            return True
+
     @property
     def name(self):
-        css_sel = '.title-label'
-        err_msg = 'no name found in displayed provider drop panel'
-        header = find_web_elem(self.web_elem, css_sel, err_msg)
-        return header.text
+        if self.is_displayed:
+            css_sel = '.title-label'
+            err_msg = 'no name found in displayed provider drop panel'
+            header = find_web_elem(self.web_elem, css_sel, err_msg)
+            return header.text
+        else:
+            raise RuntimeError('no displayed panel found for given provider')
 
     @property
     def hostname(self):
-        css_sel = 'input.provider-host-text'
-        err_msg = 'no hostname found in displayed provider drop panel'
-        header = find_web_elem(self.web_elem, css_sel, err_msg)
-        return header.get_attribute('value')
+        if self.is_displayed:
+            css_sel = 'input.provider-host-text'
+            err_msg = 'no hostname found in displayed provider drop panel'
+            header = find_web_elem(self.web_elem, css_sel, err_msg)
+            return header.get_attribute('value')
+        else:
+            raise RuntimeError('no displayed panel found for given provider')
 
     def copy_hostname(self):
-        css_sel = '.provider-host-copy-btn'
-        err_msg = 'no copy hostname btn found in displayed provider drop panel'
-        btn = find_web_elem(self.web_elem, css_sel, err_msg)
-        btn.click()
+        if self.is_displayed:
+            css_sel = '.provider-host-copy-btn'
+            err_msg = 'no copy hostname btn found in displayed provider drop panel'
+            btn = find_web_elem(self.web_elem, css_sel, err_msg)
+            btn.click()
+        else:
+            raise RuntimeError('no displayed panel found for given provider')
 
     def go_to_your_files(self):
-        css_sel = '.drop-body button'
-        err_msg = "no 'Go to your files' btn found " \
-                  "in displayed provider drop panel"
-        btn = find_web_elem(self.web_elem, css_sel, err_msg)
-        btn.click()
+        if self.is_displayed:
+            css_sel = '.drop-body button'
+            err_msg = "no 'Go to your files' btn found " \
+                      "in displayed provider drop panel"
+            btn = find_web_elem(self.web_elem, css_sel, err_msg)
+            btn.click()
+        else:
+            raise RuntimeError('no displayed panel found for given provider')
 
     @property
     def supported_spaces(self):
-        css_sel = 'ul li.provider-place-drop-space'
-        return (SpaceRecordInProvidersPanel(space,
-                                            name_css='.space-label',
-                                            size_css='.space-size')
-                for space
-                in self.web_elem.find_elements_by_css_selector(css_sel))
+        if self.is_displayed:
+            css_sel = 'ul li.provider-place-drop-space'
+            return (SpaceRecordInProvidersPanel(space,
+                                                name_css='.space-label',
+                                                size_css='.space-size')
+                    for space
+                    in self.web_elem.find_elements_by_css_selector(css_sel))
+        else:
+            raise RuntimeError('no displayed panel found for given provider')
 
     def __getitem__(self, space_name):
-        for space in self.supported_spaces:
-            if space_name == space.name:
-                return space
+        if self.is_displayed:
+            for space in self.supported_spaces:
+                if space_name == space.name:
+                    return space
+            else:
+                raise RuntimeError('no supported space named "{space}" '
+                                   'for provider named "{provider}" in displayed '
+                                   'drop panel found'.format(provider=self.name,
+                                                             space=space_name))
         else:
-            raise RuntimeError('no supported space named "{space}" '
-                               'for provider named "{provider}" in displayed '
-                               'drop panel found'.format(provider=self.name,
-                                                         space=space_name))
+            raise RuntimeError('no displayed panel found for given provider')
