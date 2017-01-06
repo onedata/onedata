@@ -68,7 +68,7 @@
         "p1": {
             "db_driver": "couchdb",
             "os_config": "cfg1",
-            "enable_luma_proxy": true,
+            "luma_mode": "enforced",
             "cluster_manager": {
                 "cm1": {
                     "vm.args": {
@@ -238,5 +238,17 @@
                 }
             }
         }
+    },
+    "luma_setup": {
+        "credentials_mapping": [
+            {
+                "userId": "u1",
+                "storageId": "posix",
+                "credentials": {
+                    "uid": "45148",
+                    "gid": "45148"
+                }
+            }
+        ]
     }
 }
