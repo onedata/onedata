@@ -94,12 +94,12 @@ def enter_text(input_box, text):
 
 
 @contextmanager
-def implicit_wait(driver, time, prev_time):
-    driver.implicitly_wait(time)
+def implicit_wait(driver, timeout, prev_timeout):
+    driver.implicitly_wait(timeout)
     try:
         yield
     finally:
-        driver.implicitly_wait(prev_time)
+        driver.implicitly_wait(prev_timeout)
 
 
 def repeat_failed(attempts=10, interval=0.01, timeout=-1, poll_frequency=0.5,

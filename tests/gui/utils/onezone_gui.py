@@ -433,10 +433,15 @@ class TokenRecord(object):
 class AccessTokensPanel(OZPanel):
 
     @property
+    def tokens_count(self):
+        css_sel = '.tokens-list-item'
+        return len(self.web_elem.find_elements_by_css_selector(css_sel))
+
+    @property
     def tokens(self):
         css_sel = '.tokens-list-item'
-        return (TokenRecord(token) for token in
-                self.web_elem.find_elements_by_css_selector(css_sel))
+        return [TokenRecord(token) for token in
+                self.web_elem.find_elements_by_css_selector(css_sel)]
 
     def __getitem__(self, index):
         i = 0

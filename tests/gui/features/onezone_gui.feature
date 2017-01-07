@@ -49,41 +49,44 @@ Feature: Onezone GUI elements
     Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one
 
 
-#  Scenario: User successfully creates access token
-#    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-#    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
-#    Then user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#    # TODO remove after integrate with swagger
-#    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#
-#
-#  Scenario: User successfully removes access token
-#    # TODO remove after integrate with swagger
-#    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-#    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
-#
-#    And user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#
-#
-#  Scenario: User successfully copies access token
-#    # TODO remove after integrate with swagger
-#    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-#    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
-#
-#    And user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser clicks on copy icon for 1st item on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser sees that token for 1st item on tokens list in expanded "ACCESS TOKENS" panel has been copied correctly
-#    # TODO remove after integrate with swagger
-#    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" panel
-#    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" panel
-#
-#
+  Scenario: User successfully creates access token
+    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
+    Then user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    # TODO remove after integrate with swagger
+    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+
+
+  Scenario: User successfully removes access token
+    # TODO remove after integrate with swagger
+    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
+
+    And user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+
+
+  Scenario: User successfully copies access token
+    # TODO remove after integrate with swagger
+    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
+
+    And user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser clicks on copy icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees that token for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel has been copied correctly
+    # TODO remove after integrate with swagger
+    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
+
+
+
+
+
 #  Scenario: User successfully creates space (presses ENTER after entering text)
 #    Given user of browser generates valid name string
 #    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel

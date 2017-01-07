@@ -21,13 +21,13 @@ def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(timeout=WAIT_BACKEND)
-    def assert_usr_alias(err_msg):
-        usr_alias = oz_page(driver)['user alias'].alias
+    def assert_usr_alias(d, err_msg):
+        usr_alias = oz_page(d)['user alias'].alias
         assert usr_alias != '', err_msg
         return usr_alias
 
     msg = 'user alias in USER ALIAS oz panel is empty'
-    tmp_memory[browser_id]['user_alias'] = assert_usr_alias(err_msg=msg)
+    tmp_memory[browser_id]['user_alias'] = assert_usr_alias(driver, err_msg=msg)
 
 
 @when(parsers.parse('user of {browser_id} activates edit box by clicking on the '
@@ -37,7 +37,7 @@ def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
 def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
     edit_box = oz_page(driver)['user alias'].edit()
-    tmp_memory[browser_id]['user_alias_edit_box'] = edit_box
+    tmp_memory[browser_id]['edit_box'] = edit_box
 
 
 @when(parsers.parse('user of {browser_id} types "{text}" to user '
@@ -45,7 +45,7 @@ def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
 @then(parsers.parse('user of {browser_id} types "{text}" to user '
                     'alias edit box in "USER ALIAS" Onezone panel'))
 def type_text_into_usr_alias_edit_box(browser_id, text, tmp_memory):
-    edit_box = tmp_memory[browser_id]['user_alias_edit_box']
+    edit_box = tmp_memory[browser_id]['edit_box']
     edit_box.value = text
 
 
@@ -55,7 +55,7 @@ def type_text_into_usr_alias_edit_box(browser_id, text, tmp_memory):
                     'alias edit box in "USER ALIAS" Onezone panel'))
 def type_usr_alias_into_usr_alias_edit_box(browser_id, tmp_memory):
     recorded_usr_alias = tmp_memory[browser_id]['user_alias']
-    edit_box = tmp_memory[browser_id]['user_alias_edit_box']
+    edit_box = tmp_memory[browser_id]['edit_box']
     edit_box.value = recorded_usr_alias
 
 
@@ -67,13 +67,13 @@ def user_alias_equals_to_text(selenium, browser_id, usr_alias, oz_page):
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(timeout=WAIT_BACKEND)
-    def assert_usr_alias(alias):
-        displayed_alias = oz_page(driver)['user alias'].alias
+    def assert_usr_alias(d, alias):
+        displayed_alias = oz_page(d)['user alias'].alias
         err_msg = 'displayed user alias in USER ALIAS oz panel is "{}" ' \
                   'instead of "{}"'.format(displayed_alias, usr_alias)
         assert displayed_alias == alias, err_msg
 
-    assert_usr_alias(usr_alias)
+    assert_usr_alias(driver, usr_alias)
 
 
 @when(parsers.parse('user of {browser_id} sees that the user alias displayed '
@@ -85,32 +85,10 @@ def user_alias_equals_recorded_alias(selenium, browser_id, tmp_memory, oz_page):
     recorded_usr_alias = tmp_memory[browser_id]['user_alias']
 
     @repeat_failed(timeout=WAIT_BACKEND)
-    def assert_usr_alias(alias):
-        displayed_alias = oz_page(driver)['user alias'].alias
+    def assert_usr_alias(d, alias):
+        displayed_alias = oz_page(d)['user alias'].alias
         err_msg = 'displayed user alias in USER ALIAS oz panel is "{}" ' \
                   'instead of "{}"'.format(displayed_alias, recorded_usr_alias)
         assert displayed_alias == alias, err_msg
 
-    assert_usr_alias(recorded_usr_alias)
-
-
-@when(parsers.parse('user of {browser_id} clicks on confirm button displayed '
-                    'next to user alias edit box in expanded "USER ALIAS" '
-                    'Onezone panel'))
-@then(parsers.parse('user of {browser_id} clicks on confirm button displayed '
-                    'next to user alias edit box in expanded "USER ALIAS" '
-                    'Onezone panel'))
-def click_on_confirm_btn_for_usr_alias_edit_box(browser_id, tmp_memory):
-    edit_box = tmp_memory[browser_id]['user_alias_edit_box']
-    edit_box.confirm()
-
-
-@when(parsers.parse('user of {browser_id} clicks on cancel button displayed '
-                    'next to user alias edit box in expanded "USER ALIAS" '
-                    'Onezone panel'))
-@then(parsers.parse('user of {browser_id} clicks on cancel button displayed '
-                    'next to user alias edit box in expanded "USER ALIAS" '
-                    'Onezone panel'))
-def click_on_confirm_btn_for_usr_alias_edit_box(browser_id, tmp_memory):
-    edit_box = tmp_memory[browser_id]['user_alias_edit_box']
-    edit_box.cancel()
+    assert_usr_alias(driver, recorded_usr_alias)
