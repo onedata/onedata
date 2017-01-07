@@ -59,6 +59,14 @@ is_firefox_logging_enabled = re.match(r'.*--firefox-logs.*', cmd_line)
 is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_line)
 
 
+from tests.gui.utils.onezone_gui import OZLoggedIn
+
+
+@pytest.fixture(scope='session')
+def oz_page():
+    return OZLoggedIn
+
+
 @pytest.fixture
 def tmp_memory():
     """Dict to use when one wants to store sth between steps.

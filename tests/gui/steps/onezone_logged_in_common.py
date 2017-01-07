@@ -1,8 +1,6 @@
 """Steps for features of Onezone login page.
 """
 
-import re
-
 from tests.gui.conftest import WAIT_FRONTEND
 from tests.utils.acceptance_utils import list_parser
 
@@ -29,60 +27,30 @@ panel_to_css = {'access tokens': '#collapse-tokens',
 icon_to_css = {'create space': 'oneicon-space-add'}
 
 
-def _expand_oz_panel(driver, name):
-    re_lc_name = re.compile(name, re.I)
-
-    def sidebar_group_by_name(d):
-        groups = d.find_elements_by_css_selector('.main-accordion-group')
-        for g in groups:
-            t = g.find_element_by_css_selector('a.main-accordion-toggle')
-            if re_lc_name.match(t.text):
-                return g, t
-        return None
-
-    group, toggle = Wait(driver, WAIT_FRONTEND).until(
-        sidebar_group_by_name,
-        message='searching for {:s} toggle'.format(name)
-    )
-
-    aria_expanded = toggle.get_attribute('aria-expanded')
-    if aria_expanded is None or aria_expanded == 'false':
-        toggle.click()
-
-    return group
-
-
-def _get_active_heading_components(driver, panel, icon):
-    items = driver.find_elements_by_css_selector('{panel} .clickable, '
-                                                 '{panel} .clickable > '
-                                                 '.secondary-icon > .{icon}'
-                                                 ''.format(panel=panel,
-                                                           icon=icon))
-
-    header = items[0]
-    for header_icon in items[1:]:
-        if icon in header_icon.get_attribute('class'):
-            return header
-        else:
-            header = header_icon
+def _oz_expand_oz_panel(oz_page, driver, panel_name):
+    oz_page(driver)[panel_name].expand()
 
 
 @given(parsers.re('users? of (?P<browser_id_list>.*) expanded the '
-                  '"(?P<name>.*)" Onezone sidebar panel'))
-def g_expand_oz_panel(selenium, browser_id_list, name):
+                  '"(?P<panel_name>.*)" Onezone sidebar panel'))
+def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
-        _expand_oz_panel(driver, name)
+        _oz_expand_oz_panel(oz_page, driver, panel_name)
 
 
 @when(parsers.re('users? of (?P<browser_id_list>.*) expands? the '
-                 '"(?P<name>.*)" Onezone sidebar panel'))
+                 '"(?P<panel_name>.*)" Onezone sidebar panel'))
 @then(parsers.re('users? of (?P<browser_id_list>.*) expands? the '
-                 '"(?P<name>.*)" Onezone sidebar panel'))
-def wt_expand_oz_panel(selenium, browser_id_list, name):
+                 '"(?P<panel_name>.*)" Onezone sidebar panel'))
+def wt_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
-        _expand_oz_panel(driver, name)
+        _oz_expand_oz_panel(oz_page, driver, panel_name)
+
+
+
+
 
 
 @when(parsers.parse('user of {browser_id} clicks on "{btn_name}" button '

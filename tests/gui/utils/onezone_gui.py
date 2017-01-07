@@ -593,15 +593,16 @@ class WorldMap(object):
 
 
 class OZLoggedIn(object):
-    panels = {'data_space_management': DataSpaceManagementPanel,
-              'go_to_your_files': GoToYourFilesPanel,
-              'access_tokens': AccessTokensPanel,
-              'user_alias': UserAliasPanel}
+    panels = {'data space management': DataSpaceManagementPanel,
+              'go to your files': GoToYourFilesPanel,
+              'access tokens': AccessTokensPanel,
+              'user alias': UserAliasPanel}
 
     def __init__(self, web_elem):
         self.web_elem = web_elem
 
-    def __getattr__(self, panel):
+    def __getitem__(self, panel):
+        panel = panel.lower()
         cls = self.panels.get(panel, None)
         if cls:
             panel = panel.replace('_', ' ').lower()
@@ -611,13 +612,13 @@ class OZLoggedIn(object):
                 if panel == toggle.text.lower():
                     return cls(group)
 
-        elif panel == 'manage_account':
+        elif panel == 'manage account':
             css_sel = 'header.onezone-top-bar'
             err_msg = 'no header for oz page found'
             header = find_web_elem(self.web_elem, css_sel, err_msg)
             return ManageAccount(header)
 
-        elif panel == 'world_map':
+        elif panel == 'world map':
             css_sel = '.onezone-atlas'
             err_msg = 'no world map found on oz page'
             world_map = find_web_elem(self.web_elem, css_sel, err_msg)

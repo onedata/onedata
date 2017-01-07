@@ -5,7 +5,7 @@
 import re
 import os
 import itertools
-from time import sleep
+from time import sleep, time
 from functools import wraps
 from contextlib import contextmanager
 
@@ -13,8 +13,6 @@ from tests import gui
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH, WAIT_FRONTEND
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-
-from inspect import selector
 
 
 __author__ = "Jakub Liput"
@@ -89,34 +87,6 @@ def refresh_and_call(browser, callback, *args, **kwargs):
         return result
 
 
-def find_item_with_given_properties(browser, css_path, check_properties):
-    """Find elements with given css selector and return first one fulfilling
-    given properties.
-    """
-    items = browser.find_elements_by_css_selector(css_path)
-    for item in items:
-        if check_properties(item):
-            return item
-    return None
-
-
-def click_on_element(browser, css_path, item_name,
-                     msg, ignore_case=True,
-                     wait=WAIT_FRONTEND):
-    """Check if elem is visible and enabled, if so click on it.
-    """
-    properties = selector(browser, text=item_name,
-                          ignore_case=ignore_case,
-                          check_visibility=True,
-                          check_if_enabled=True)
-
-    Wait(browser, wait).until(
-        lambda s: find_item_with_given_properties(s, css_path,
-                                                  properties),
-        message=msg.format(item_name) if item_name else msg
-    ).click()
-
-
 def enter_text(input_box, text):
     input_box.clear()
     input_box.send_keys(text)
@@ -132,20 +102,32 @@ def implicit_wait(driver, time, prev_time):
         driver.implicitly_wait(prev_time)
 
 
-def repeat_failed(attempts, interval=0.01, exceptions=Exception):
+def repeat_failed(attempts=10, interval=0.01, timeout=-1, poll_frequency=0.5,
+                  exceptions=Exception):
+
     def wrapper(function):
         @wraps(function)
-        def try_until(*args, **kwargs):
-            for _ in range(attempts):
+        def repeat_until(*args, **kwargs):
+            if timeout > 0:
+                limit = time() + timeout
+                sleep_time = poll_frequency
+                i = time()
+            else:
+                limit = attempts
+                sleep_time = interval
+                i = 0
+
+            while i < limit:
                 try:
                     result = function(*args, **kwargs)
                 except exceptions:
-                    sleep(interval)
+                    sleep(sleep_time)
+                    i = time() if timeout > 0 else i+1
                     continue
                 else:
                     return result
             return function(*args, **kwargs)
-        return try_until
+        return repeat_until
     return wrapper
 
 
