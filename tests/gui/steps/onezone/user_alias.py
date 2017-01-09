@@ -36,7 +36,7 @@ def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
                     'user alias in expanded "USER ALIAS" Onezone panel'))
 def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
-    edit_box = oz_page(driver)['user alias'].edit()
+    edit_box = oz_page(driver)['user alias'].edit_alias()
     tmp_memory[browser_id]['edit_box'] = edit_box
 
 

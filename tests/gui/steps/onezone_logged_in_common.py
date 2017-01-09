@@ -58,9 +58,9 @@ def wt_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
 def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
     edit_box = tmp_memory[browser_id]['edit_box']
     if btn == 'confirm':
-        edit_box.confirm()
+        edit_box.confirm_input()
     elif btn == 'cancel':
-        edit_box.cancel()
+        edit_box.cancel_input()
     else:
         raise RuntimeError('unrecognized edit box btn: {}'.format(btn))
 
