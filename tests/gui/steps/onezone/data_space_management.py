@@ -275,3 +275,39 @@ def copy_token_from_droprigth_for_space(selenium, browser_id, name, oz_page):
 
     copy_token(driver, name)
 
+
+@when(parsers.parse('user of {browser_id} clicks on "{provider}" provider in submenu '
+                    'of space named "{space}" in expanded "DATA SPACE MANAGEMENT" '
+                    'Onezone panel'))
+@then(parsers.parse('user of {browser_id} clicks on "{provider}" provider in submenu '
+                    'of space named "{space}" in expanded "DATA SPACE MANAGEMENT" '
+                    'Onezone panel'))
+def click_on_supporting_provider_for_space_in_space_submenu(selenium, browser_id,
+                                                            provider, space,
+                                                            oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def click_on_provider(d, space_name, provider_name):
+        prov = oz_page(d)['data space management'][space_name][provider_name]
+        prov.click()
+
+    click_on_provider(driver, space, provider)
+
+
+@when(parsers.parse('user of {browser_id} clicks on unsupport space for provider '
+                    'named "{provider}" in submenu of space named "{space}" '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+@then(parsers.parse('user of {browser_id} clicks on unsupport space for provider '
+                    'named "{provider}" in submenu of space named "{space}" '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+def click_on_unsupport_space_for_supporting_provider(selenium, browser_id,
+                                                     provider, space, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def unsupport_space(d, space_name, provider_name):
+        prov = oz_page(d)['data space management'][space_name][provider_name]
+        prov.unsupport_space()
+
+    unsupport_space(driver, space, provider)

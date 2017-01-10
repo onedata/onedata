@@ -188,11 +188,23 @@ Feature: Onezone GUI elements
     Then user of browser sees that providers counter for "space1" match number of displayed supporting providers in expanded submenu of given space in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
-  Scenario: User successfully receives support token for space
+  Scenario: User successfully receives support token for space (clicking on Get support button in space's submenu)
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser clicks on "Get support" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that dropright with token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
+    And user of browser sees that dropright contains nonempty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser copy token from dropright for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees an info notify with text matching to: .*copied.*
+    And user of browser sees that copied token matches displayed one
+
+
+  Scenario: User successfully receives support token for space (clicking on Get support button in space's settings dropdown)
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands settings dropdown for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "GET SUPPORT" item in settings dropdown for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     Then user of browser sees that dropright with token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
     And user of browser sees that dropright contains nonempty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser copy token from dropright for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
@@ -212,10 +224,40 @@ Feature: Onezone GUI elements
     Then user of browser sees that copied token does not match displayed one
 
 
+  Scenario: User opens provider popup by clicking on supporting provider in space's submenu
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "p1" provider in submenu of space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that provider popup for provider named "p1" has appeared on world map
 
 
+  Scenario: User can not unsupport space without confirming understanding od data loss
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on unsupport space for provider named "p1" in submenu of space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Unsupport space" modal has appeared
+    And user of browser sees that "I understand the risk of data loss" option in modal is not selected
+    Then user of browser sees that "Yes" item displayed in modal is disabled
 
 
+#  Scenario: User can unsupport space
+#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+#    And user of browser sees that there is space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser expands submenu of "Small space" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser clicks on unsupport space for provider named "p1" in submenu of space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser sees that "Unsupport space" modal has appeared
+#    And user of browser selects "I understand the risk of data loss" option in displayed modal
+#    Then user of browser sees that "Yes" item displayed in modal is enabled
+#    And user of browser clicks "Yes" confirmation button in displayed modal
+#    And user of browser sees that the modal has disappeared
+#
+#    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
+#
+#
+#
+#
 #  Scenario: User succesfully set space as home space
 #    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
 #    And user of browser sees that item named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel is marked as home space

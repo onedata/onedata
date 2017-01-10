@@ -1,5 +1,6 @@
 """Steps used for modal handling in various GUI testing scenarios
 """
+import itertools
 
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -132,3 +133,80 @@ def click_on_copy_btn_in_modal(browser_id, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
     copy_btn = modal.find_element_by_css_selector('button.copy-btn')
     copy_btn.click()
+
+
+@when(parsers.parse('user of {browser_id} sees that "{text}" option '
+                    'in modal is not selected'))
+@then(parsers.parse('user of {browser_id} sees that "{text}" option '
+                    'in modal is not selected'))
+def assert_modal_option_is_not_selected(browser_id, text, tmp_memory):
+    modal = tmp_memory[browser_id]['window']['modal']
+    options = modal.find_elements_by_css_selector('.one-option-button',
+                                                  '.one-option-button .oneicon')
+    err_msg = 'option "{}" is selected while it should not be'.format(text)
+    for option, checkbox in itertools.izip(options[::2], options[1::2]):
+        if option.text == text:
+            checkbox_css = checkbox.get_attribute('class')
+            assert '.oneicon-checkbox-empty' in checkbox_css, err_msg
+
+
+@when(parsers.parse('user of {browser_id} sees that "{text}" option '
+                    'in modal is not selected'))
+@then(parsers.parse('user of {browser_id} sees that "{text}" option '
+                    'in modal is not selected'))
+def assert_modal_option_is_not_selected(browser_id, text, tmp_memory):
+    modal = tmp_memory[browser_id]['window']['modal']
+    options = modal.find_elements_by_css_selector('.one-option-button, '
+                                                  '.one-option-button .oneicon')
+    err_msg = 'option "{}" is selected while it should not be'.format(text)
+    for option, checkbox in itertools.izip(options[::2], options[1::2]):
+        if option.text == text:
+            checkbox_css = checkbox.get_attribute('class')
+            assert 'oneicon-checkbox-empty' in checkbox_css, err_msg
+
+
+@when(parsers.parse('user of browser sees that "{btn_name}" item displayed '
+                    'in modal is disabled'))
+@then(parsers.parse('user of browser sees that "{btn_name}" item displayed '
+                    'in modal is disabled'))
+def assert_btn_in_modal_is_disabled(browser_id, btn_name, tmp_memory):
+    button_name = btn_name.lower()
+    modal = tmp_memory[browser_id]['window']['modal']
+    buttons = modal.find_elements_by_css_selector('button')
+    for btn in buttons:
+        if btn.text.lower() == button_name:
+            assert 'true' == btn.get_attribute('disabled')
+            break
+    else:
+        raise RuntimeError('no button named {} found'.format(button_name))
+
+
+@when(parsers.parse('user of {browser_id} selects "{text}" option '
+                    'in displayed modal'))
+@then(parsers.parse('user of {browser_id} selects "{text}" option '
+                    'in displayed modal'))
+def select_option_with_text_in_modal(browser_id, text, tmp_memory):
+    modal = tmp_memory[browser_id]['window']['modal']
+    options = modal.find_elements_by_css_selector('.one-option-button, '
+                                                  '.one-option-button .oneicon')
+    for option, checkbox in itertools.izip(options[::2], options[1::2]):
+        if option.text == text:
+            checkbox_css = checkbox.get_attribute('class')
+            if 'oneicon-checkbox-empty' in checkbox_css:
+                checkbox.click()
+
+
+@when(parsers.parse('user of browser sees that "{btn_name}" item displayed '
+                    'in modal is enabled'))
+@then(parsers.parse('user of browser sees that "{btn_name}" item displayed '
+                    'in modal is enabled'))
+def assert_btn_in_modal_is_enabled(browser_id, btn_name, tmp_memory):
+    button_name = btn_name.lower()
+    modal = tmp_memory[browser_id]['window']['modal']
+    buttons = modal.find_elements_by_css_selector('button')
+    for btn in buttons:
+        if btn.text.lower() == button_name:
+            assert 'false' == btn.get_attribute('disabled')
+            break
+    else:
+        raise RuntimeError('no button named {} found'.format(button_name))
