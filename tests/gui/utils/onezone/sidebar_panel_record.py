@@ -24,6 +24,12 @@ class OZPanelRecord(object):
         self._home_icon_css = self._home_icon_css.format(record_type)
         self._submenu_toggle_css = self._submenu_toggle_css.format(submenu_toggle)
 
+    def __eq__(self, other):
+        if isinstance(other, str) or isinstance(other, unicode):
+            return self.name == other
+        else:
+            raise NotImplementedError('operation not implemented')
+
     @property
     def name(self):
         err_msg = 'cannot locate name header for given {}'.format(self._type)

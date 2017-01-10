@@ -128,6 +128,91 @@ Feature: Onezone GUI elements
     Then user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
+  Scenario: User successfully leaves space
+    # TODO remove after integrate with swagger
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser types "helloworld" to active edit box
+    And user of browser clicks on confirm button displayed next to active edit box
+    Then user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Leave a space" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+
+
+#  #TODO gui not working
+#  Scenario: User successfully renames space
+#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+#    And user of browser sees that there is space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser expands settings dropdown for space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+#    And user of browser clicks on the "RENAME" item in settings dropdown for space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser sees that "Rename a space" modal has appeared
+#    And user of browser clicks on input box in active modal
+#    And user of browser types "NewNameSpace" on keyboard
+#    And user of browser clicks "OK" confirmation button in displayed modal
+#    Then user of browser sees an info notify with text matching to: .*Small space.*renamed.*NewNameSpace.*
+#    And user of browser sees that there is no space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser sees that there is space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    # TODO remove after integrate with swagger
+#    And user of browser expands settings dropdown for space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+#    And user of browser clicks on the "RENAME" item in settings dropdown for space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser sees that "Rename a space" modal has appeared
+#    And user of browser clicks on input box in active modal
+#    And user of browser types "Small space" on keyboard
+#    And user of browser clicks "OK" confirmation button in displayed modal
+#    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*Small space.*
+#    And user of browser sees that there is no space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+#    And user of browser sees that there is space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+
+
+
+  Scenario: User uncollapses space submenu and sees supporting providers list
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that list of supporting providers for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel contains only: "p1"
+
+
+  Scenario: User uncollapses space submenu and sees that providers count match number of displayed supporting providers
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that providers counter for "space1" match number of displayed supporting providers in expanded submenu of given space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+
+  Scenario: User successfully receives support token for space
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Get support" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that dropright with token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
+    And user of browser sees that dropright contains nonempty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser copy token from dropright for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees an info notify with text matching to: .*copied.*
+    And user of browser sees that copied token matches displayed one
+
+
+  Scenario: User sees that each click on Get support button results in different token
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Get support" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that dropright contains nonempty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser copy token from dropright for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Get support" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that dropright contains nonempty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that copied token does not match displayed one
+
+
+
 
 
 

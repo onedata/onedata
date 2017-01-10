@@ -339,3 +339,25 @@ def create_temp_dir_with_files(browser_id, num, dir_path, tmpdir):
     directory = _create_temp_dir(tmpdir, path, recursive=True)
     for i in range(10, num + 10):
         _create_temp_file(directory, 'file_{}.txt'.format(i), '1' * i)
+
+
+@when(parsers.parse('user of browser sees that copied token matches displayed one'))
+@then(parsers.parse('user of browser sees that copied token matches displayed one'))
+def assert_copied_token_match_displayed_one(browser_id, tmp_memory):
+    displayed_token = tmp_memory[browser_id]['token']
+    copied_token = pyperclip.paste()
+    err_msg = 'Displayed token: {} does not match copied one: ' \
+              '{}'.format(displayed_token, copied_token)
+    assert copied_token == displayed_token, err_msg
+
+
+@when(parsers.parse('user of browser sees that copied token '
+                    'does not match displayed one'))
+@then(parsers.parse('user of browser sees that copied token '
+                    'does not match displayed one'))
+def assert_copied_token_does_not_match_displayed_one(browser_id, tmp_memory):
+    displayed_token = tmp_memory[browser_id]['token']
+    copied_token = pyperclip.paste()
+    err_msg = 'Displayed token: {} match copied one: {} ' \
+              'while it should not be'.format(displayed_token, copied_token)
+    assert copied_token != displayed_token, err_msg

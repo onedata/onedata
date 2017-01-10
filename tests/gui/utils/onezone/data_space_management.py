@@ -57,6 +57,12 @@ class SpaceRecord(OZPanelRecord):
         def __init__(self, web_elem):
             self.web_elem = web_elem
 
+        def __eq__(self, other):
+            if isinstance(other, str) or isinstance(other, unicode):
+                return self.name == other
+            else:
+                raise NotImplementedError('operation not implemented')
+
         @property
         def name(self):
             css_sel = '.one-label.truncate'
@@ -179,12 +185,20 @@ class SpaceRecord(OZPanelRecord):
             input_box = find_web_elem(self.web_elem, css_sel, err_msg)
             return input_box.get_attribute('value')
 
-        def copy(self):
+        def copy_token(self):
             css_sel = 'button'
             err_msg = 'no copy button found for ' \
                       'given space support token dropdown'
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
             btn.click()
+
+    @property
+    def dropright_with_token(self):
+        css_sel = 'ul.tertiary-list li.get-support .dropdown-menu'
+        err_msg = 'no dropdown menu with support token for "{}" space found ' \
+                  'in DATA SPACE MANAGEMENT'.format(self.name)
+        dropright = find_web_elem(self.web_elem, css_sel, err_msg)
+        return SpaceRecord.SpaceSupportTokenDropdownMenu(dropright)
 
     def get_support(self):
         if self.is_submenu_expanded:
@@ -193,13 +207,6 @@ class SpaceRecord(OZPanelRecord):
             err_msg = 'no get support btn found for "{}" space'.format(space_name)
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
             btn.click()
-            if 'open' in btn.get_attribute('class'):
-                css_sel2 = '{:s} .dropdown-menu'.format(css_sel)
-                err_msg2 = 'no dropdown menu after clicking on get support ' \
-                           'for "{}" space found in ' \
-                           'DATA SPACE MANAGEMENT'.format(space_name)
-                menu = find_web_elem(self.web_elem, css_sel2, err_msg2)
-                return SpaceRecord.SpaceSupportTokenDropdownMenu(menu)
         else:
             raise RuntimeError('submenu for space named "{}" in DATA SPACE '
                                'MANAGEMENT is not expanded'.format(self.name))
