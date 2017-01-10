@@ -102,32 +102,27 @@ def implicit_wait(driver, timeout, prev_timeout):
         driver.implicitly_wait(prev_timeout)
 
 
-def repeat_failed(attempts=10, interval=0.01, timeout=-1, poll_frequency=0.5,
-                  exceptions=Exception):
+def repeat_failed(attempts, interval=0.5, timeout=False, exceptions=Exception):
 
     def wrapper(function):
+
         @wraps(function)
-        def repeat_until(*args, **kwargs):
-            if timeout > 0:
-                limit = time() + timeout
-                sleep_time = poll_frequency
-                i = time()
-            else:
-                limit = attempts
-                sleep_time = interval
-                i = 0
+        def repeat_until_limit(*args, **kwargs):
+            now = time()
+            limit, i = (now + attempts, now) if timeout else (attempts, 0)
 
             while i < limit:
                 try:
                     result = function(*args, **kwargs)
                 except exceptions:
-                    sleep(sleep_time)
-                    i = time() if timeout > 0 else i+1
+                    sleep(interval)
+                    i = time() if timeout else i+1
                     continue
                 else:
                     return result
             return function(*args, **kwargs)
-        return repeat_until
+
+        return repeat_until_limit
     return wrapper
 
 

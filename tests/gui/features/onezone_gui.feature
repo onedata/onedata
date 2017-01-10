@@ -16,7 +16,7 @@ Feature: Onezone GUI elements
     When user of browser expands the "USER ALIAS" Onezone sidebar panel
     And user of browser records his current alias displayed in "USER ALIAS" Onezone panel
     And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "helloworld" to user alias edit box in "USER ALIAS" Onezone panel
+    And user of browser types "helloworld" to active edit box
     And user of browser presses enter on keyboard
     Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is "helloworld"
     # TODO remove after integrate with swagger
@@ -30,8 +30,8 @@ Feature: Onezone GUI elements
     When user of browser expands the "USER ALIAS" Onezone sidebar panel
     And user of browser records his current alias displayed in "USER ALIAS" Onezone panel
     And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "helloworld" to user alias edit box in "USER ALIAS" Onezone panel
-    And user of browser clicks on confirm button displayed next to user alias edit box in expanded "USER ALIAS" Onezone panel
+    And user of browser types "helloworld" to active edit box
+    And user of browser clicks on confirm button displayed next to active edit box
     Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is "helloworld"
     # TODO remove after integrate with swagger
     And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
@@ -44,8 +44,8 @@ Feature: Onezone GUI elements
     When user of browser expands the "USER ALIAS" Onezone sidebar panel
     And user of browser records his current alias displayed in "USER ALIAS" Onezone panel
     And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "helloworld" to user alias edit box in "USER ALIAS" Onezone panel
-    And user of browser clicks on cancel button displayed next to user alias edit box in expanded "USER ALIAS" Onezone panel
+    And user of browser types "helloworld" to active edit box
+    And user of browser clicks on cancel button displayed next to active edit box
     Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one
 
 
@@ -84,39 +84,53 @@ Feature: Onezone GUI elements
     And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
 
 
+  Scenario: User successfully creates space (presses ENTER after entering text)
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser types "helloworld" to active edit box
+    And user of browser presses enter on keyboard
+    Then user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    # TODO remove after integrate with swagger
+    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Leave a space" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+
+  Scenario: User successfully creates space (clicks on CONFIRM button after entering text)
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser types "helloworld" to active edit box
+    And user of browser clicks on confirm button displayed next to active edit box
+    Then user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    # TODO remove after integrate with swagger
+    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Leave a space" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+
+  Scenario: User sees that no space has been created after resigning from creating it (clicks CANCEL button after entering space name)
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser types "helloworld" to active edit box
+    And user of browser clicks on cancel button displayed next to active edit box
+    Then user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
 
-#  Scenario: User successfully creates space (presses ENTER after entering text)
-#    Given user of browser generates valid name string
-#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-#    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser clicks on input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser types given name on keyboard
-#    And user of browser presses enter on keyboard
-#    Then user of browser sees that new item has appeared on spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#
-#
-#  Scenario: User successfully creates space (clicks on CONFIRM button after entering text)
-#    Given user of browser generates valid name string
-#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-#    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser clicks on input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser types given name on keyboard
-#    And user of browser clicks on confirm button for input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    Then user of browser sees that new item has appeared on spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#
-#
-#  Scenario: User sees that no space has been created after resigning from creating it (clicks CANCEL button after entering space name)
-#    Given user of browser generates valid name string
-#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-#    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser clicks on input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser types given name on keyboard
-#    And user of browser clicks on cancel button for input box next to create space icon in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    Then user of browser does not see new item on spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#
-#
+
+
 #  Scenario: User succesfully set space as home space
 #    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
 #    And user of browser sees that item named "space1" in spaces list in expanded "DATA SPACE MANAGEMENT" Onezone panel is marked as home space

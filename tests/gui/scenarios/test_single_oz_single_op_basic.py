@@ -13,6 +13,7 @@ from tests.gui.steps.modal import *
 
 from tests.gui.steps.onezone.user_alias import *
 from tests.gui.steps.onezone.access_tokens import *
+from tests.gui.steps.onezone.data_space_management import *
 
 
 from tests.gui.steps.onezone_before_login import *

@@ -50,11 +50,9 @@ def wt_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
 
 
 @when(parsers.parse('user of {browser_id} clicks on {btn} button displayed '
-                    'next to user alias edit box in expanded "USER ALIAS" '
-                    'Onezone panel'))
+                    'next to active edit box'))
 @then(parsers.parse('user of {browser_id} clicks on {btn} button displayed '
-                    'next to user alias edit box in expanded "USER ALIAS" '
-                    'Onezone panel'))
+                    'next to active edit box'))
 def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
     edit_box = tmp_memory[browser_id]['edit_box']
     if btn == 'confirm':
@@ -63,6 +61,13 @@ def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
         edit_box.cancel_input()
     else:
         raise RuntimeError('unrecognized edit box btn: {}'.format(btn))
+
+
+@when(parsers.parse('user of {browser_id} types "{text}" to active edit box'))
+@then(parsers.parse('user of {browser_id} types "{text}" to active edit box'))
+def type_text_into_active_edit_box(browser_id, text, tmp_memory):
+    edit_box = tmp_memory[browser_id]['edit_box']
+    edit_box.value = text
 
 
 

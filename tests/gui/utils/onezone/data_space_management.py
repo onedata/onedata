@@ -122,6 +122,23 @@ class SpaceRecord(OZPanelRecord):
         def __init__(self, web_elem):
             self.web_elem = web_elem
 
+        @property
+        def is_expanded(self):
+            css_class = self.web_elem.get_attribute('class')
+            return True if (css_class and 'open' in css_class) else False
+
+        def expand(self):
+            if not self.is_expanded:
+                self.web_elem.click()
+
+        def collapse(self):
+            if self.is_expanded:
+                self.web_elem.click()
+
+        def set_as_home(self):
+            btn = self._get_btn('set as home')
+            btn.click()
+
         def rename(self):
             btn = self._get_btn('rename')
             btn.click()
@@ -148,8 +165,6 @@ class SpaceRecord(OZPanelRecord):
         err_msg = 'no settings icon for space named "{}" in DATA SPACE ' \
                   'MANAGEMENT oz pnale found'.format(self.name)
         settings = find_web_elem(self.web_elem, css_sel, err_msg)
-        if 'open' not in settings.get_attribute('class'):
-            settings.click()
         return SpaceRecord.SettingsDropdown(settings)
 
     class SpaceSupportTokenDropdownMenu(object):

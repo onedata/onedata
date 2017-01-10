@@ -20,7 +20,7 @@ __license__ = "This software is released under the MIT license cited in " \
 def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(timeout=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_usr_alias(d, err_msg):
         usr_alias = oz_page(d)['user alias'].alias
         assert usr_alias != '', err_msg
@@ -40,15 +40,6 @@ def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
     tmp_memory[browser_id]['edit_box'] = edit_box
 
 
-@when(parsers.parse('user of {browser_id} types "{text}" to user '
-                    'alias edit box in "USER ALIAS" Onezone panel'))
-@then(parsers.parse('user of {browser_id} types "{text}" to user '
-                    'alias edit box in "USER ALIAS" Onezone panel'))
-def type_text_into_usr_alias_edit_box(browser_id, text, tmp_memory):
-    edit_box = tmp_memory[browser_id]['edit_box']
-    edit_box.value = text
-
-
 @when(parsers.parse('user of {browser_id} types recorded alias to user '
                     'alias edit box in "USER ALIAS" Onezone panel'))
 @then(parsers.parse('user of {browser_id} types recorded alias to user '
@@ -66,7 +57,7 @@ def type_usr_alias_into_usr_alias_edit_box(browser_id, tmp_memory):
 def user_alias_equals_to_text(selenium, browser_id, usr_alias, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(timeout=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_usr_alias(d, alias):
         displayed_alias = oz_page(d)['user alias'].alias
         err_msg = 'displayed user alias in USER ALIAS oz panel is "{}" ' \
@@ -84,7 +75,7 @@ def user_alias_equals_recorded_alias(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
     recorded_usr_alias = tmp_memory[browser_id]['user_alias']
 
-    @repeat_failed(timeout=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_usr_alias(d, alias):
         displayed_alias = oz_page(d)['user alias'].alias
         err_msg = 'displayed user alias in USER ALIAS oz panel is "{}" ' \

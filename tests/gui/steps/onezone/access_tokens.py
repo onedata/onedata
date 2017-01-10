@@ -68,7 +68,7 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
                                                 num, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(timeout=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_quantity(d, quantity):
         with implicit_wait(d, 0.1, SELENIUM_IMPLICIT_WAIT):
             displayed = oz_page(d)['access tokens'].tokens_count
