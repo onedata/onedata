@@ -29,3 +29,22 @@ def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
         assert provider_name == prov.name, err_msg
 
     assert_popup_appeared(driver, provider)
+
+
+@when(parsers.parse('user of browser clicks on the "Go to your files" button '
+                    'in "{provider}" provider\'s popup displayed on world map'))
+@then(parsers.parse('user of browser clicks on the "Go to your files" button '
+                    'in "{provider}" provider\'s popup displayed on world map'))
+def click_on_go_to_your_files_in_provider_popup(selenium, browser_id, provider,
+                                                oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def click_on_btn(d, provider_name):
+        prov = oz_page(d)['world map'].get_provider_with_displayed_panel()
+        err_msg = 'Popup displayed for provider named "{}" ' \
+                  'instead of "{}"'.format(prov.name, provider_name)
+        assert provider_name == prov.name, err_msg
+        prov.go_to_your_files()
+
+    click_on_btn(driver, provider)

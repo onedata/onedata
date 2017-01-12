@@ -4,8 +4,8 @@
 from pytest_bdd import parsers, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
-from tests.gui.conftest import WAIT_BACKEND
-from tests.gui.utils.generic import repeat_failed, parse_seq
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.utils.generic import repeat_failed, parse_seq, implicit_wait
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -311,3 +311,89 @@ def click_on_unsupport_space_for_supporting_provider(selenium, browser_id,
         prov.unsupport_space()
 
     unsupport_space(driver, space, provider)
+
+
+@when(parsers.parse('user of {browser_id} sees that there is/are no supporting '
+                    'provider(s) named {providers_list} for space named '
+                    '"{space}" in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+@then(parsers.parse('user of {browser_id} sees that there is/are no supporting '
+                    'provider(s) named {providers_list} for space named '
+                    '"{space}" in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+def assert_no_such_supporting_providers_for_space(selenium, browser_id, space,
+                                                  providers_list, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_no_such_providers(d, space_name, not_expected_providers):
+        space_record = oz_page(d)['data space management'][space_name]
+        supporting_providers = space_record.supporting_providers
+
+        err_msg = 'space named "{}" has supporting provider named "{{}}" ' \
+                  'while it should not have'.format(space_name)
+        for provider in not_expected_providers:
+            assert provider not in supporting_providers, err_msg.format(provider)
+
+    with implicit_wait(driver, 0.5, SELENIUM_IMPLICIT_WAIT):
+        assert_no_such_providers(driver, space, parse_seq(providers_list))
+
+
+@when(parsers.parse('user of {browser_id} sees that providers counter for '
+                    'space named "{space}" displays {providers_num:d} '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+@then(parsers.parse('user of {browser_id} sees that providers counter for '
+                    'space named "{space}" displays {providers_num:d} '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+def assert_providers_counter_match_given_num(selenium, browser_id, space,
+                                             providers_num, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_match(d, space_name, display_num):
+        space_record = oz_page(d)['data space management'][space_name]
+        providers_counter = space_record.providers_count
+
+        err_msg = 'Expected providers number {} does not match displayed ' \
+                  'providers counter {}'.format(providers_counter,
+                                                display_num)
+        assert providers_counter == display_num, err_msg
+
+    assert_match(driver, space, providers_num)
+
+
+@when(parsers.parse('user of {browser_id} sees that space named "{space}" '
+                    'is set as home space in expanded '
+                    '"DATA SPACE MANAGEMENT" Onezone panel'))
+@then(parsers.parse('user of {browser_id} sees that space named "{space}" '
+                    'is set as home space in expanded '
+                    '"DATA SPACE MANAGEMENT" Onezone panel'))
+def assert_space_is_home_space_in_oz_panel(selenium, browser_id,
+                                           space, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_home(d, space_name):
+        space_record = oz_page(d)['data space management'][space_name]
+        err_msg = 'space named "{}" is not set as home while it should be in ' \
+                  'DATA SPACE MANAGEMENT oz panel'.format(space_name)
+        assert space_record.is_home, err_msg
+
+    assert_home(driver, space)
+
+
+@when(parsers.parse('user of {browser_id} sets space named "{space}" as home '
+                    'by clicking on home outline in that space record '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+@then(parsers.parse('user of {browser_id} sets space named "{space}" as home '
+                    'by clicking on home outline in that space record '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+def set_given_space_as_home_by_clicking_on_home_outline(selenium, browser_id,
+                                                        space, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def set_as_home(d, space_name):
+        space_record = oz_page(d)['data space management'][space_name]
+        space_record.set_as_home()
+
+    with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
+        set_as_home(driver, space)

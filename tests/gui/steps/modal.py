@@ -206,7 +206,8 @@ def assert_btn_in_modal_is_enabled(browser_id, btn_name, tmp_memory):
     buttons = modal.find_elements_by_css_selector('button')
     for btn in buttons:
         if btn.text.lower() == button_name:
-            assert 'false' == btn.get_attribute('disabled')
+            disabled = btn.get_attribute('disabled')
+            assert not disabled
             break
     else:
         raise RuntimeError('no button named {} found'.format(button_name))
