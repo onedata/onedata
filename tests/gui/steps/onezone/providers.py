@@ -51,28 +51,6 @@ def click_on_go_to_your_files_in_provider_popup(selenium, browser_id, provider,
 
 
 @when(parsers.parse('user of {browser_id} sees that spaces counter for '
-                    'provider named "{provider}" displays {spaces_num:d} '
-                    'in expanded "GO TO YOUR FILES" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that spaces counter for '
-                    'provider named "{provider}" displays {spaces_num:d} '
-                    'in expanded "GO TO YOUR FILES" Onezone panel'))
-def assert_spaces_counter_match_given_num(selenium, browser_id, provider,
-                                          spaces_num, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_match(d, provider_name, display_num):
-        provider_record = oz_page(d)['go to your files'][provider_name]
-        spaces_counter = provider_record.spaces_count
-
-        err_msg = 'Expected spaces number {} does not match displayed ' \
-                  'spaces counter {}'.format(spaces_counter, display_num)
-        assert spaces_counter == display_num, err_msg
-
-    assert_match(driver, provider, spaces_num)
-
-
-@when(parsers.parse('user of {browser_id} sees that spaces counter for '
                     '"{provider}" match number of displayed supported spaces '
                     'in expanded submenu of given provider in expanded '
                     '"GO TO YOUR FILES" Onezone panel'))

@@ -80,6 +80,12 @@ def click_on_settings_option_for_space_in_panel(selenium, browser_id,
     click_on_settings_item(driver, name, option.lower().replace(' ', '_'))
 
 
+
+
+
+
+
+
 @when(parsers.parse('user of {browser_id} expands submenu of "{name}" by '
                     'clicking on space record in expanded '
                     '"DATA SPACE MANAGEMENT" Onezone panel'))
@@ -295,65 +301,3 @@ def assert_no_such_supporting_providers_for_space(selenium, browser_id, space,
 
     with implicit_wait(driver, 0.5, SELENIUM_IMPLICIT_WAIT):
         assert_no_such_providers(driver, space, parse_seq(providers_list))
-
-
-@when(parsers.parse('user of {browser_id} sees that providers counter for '
-                    'space named "{space}" displays {providers_num:d} '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that providers counter for '
-                    'space named "{space}" displays {providers_num:d} '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-def assert_providers_counter_match_given_num(selenium, browser_id, space,
-                                             providers_num, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_match(d, space_name, display_num):
-        space_record = oz_page(d)['data space management'][space_name]
-        providers_counter = space_record.providers_count
-
-        err_msg = 'Expected providers number {} does not match displayed ' \
-                  'providers counter {}'.format(providers_counter,
-                                                display_num)
-        assert providers_counter == display_num, err_msg
-
-    assert_match(driver, space, providers_num)
-
-
-@when(parsers.parse('user of {browser_id} sees that space named "{space}" '
-                    'is set as home space in expanded '
-                    '"DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that space named "{space}" '
-                    'is set as home space in expanded '
-                    '"DATA SPACE MANAGEMENT" Onezone panel'))
-def assert_space_is_home_space_in_oz_panel(selenium, browser_id,
-                                           space, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_home(d, space_name):
-        space_record = oz_page(d)['data space management'][space_name]
-        err_msg = 'space named "{}" is not set as home while it should be in ' \
-                  'DATA SPACE MANAGEMENT oz panel'.format(space_name)
-        assert space_record.is_home, err_msg
-
-    assert_home(driver, space)
-
-
-@when(parsers.parse('user of {browser_id} sets space named "{space}" as home '
-                    'by clicking on home outline in that space record '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sets space named "{space}" as home '
-                    'by clicking on home outline in that space record '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-def set_given_space_as_home_by_clicking_on_home_outline(selenium, browser_id,
-                                                        space, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def set_as_home(d, space_name):
-        space_record = oz_page(d)['data space management'][space_name]
-        space_record.set_as_home()
-
-    with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        set_as_home(driver, space)
