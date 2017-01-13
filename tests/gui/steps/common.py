@@ -225,6 +225,13 @@ def refresh_site(selenium, browser_id):
     driver.refresh()
 
 
+@when(parsers.parse('user of {browser_id} refreshes webapp'))
+@then(parsers.parse('user of {browser_id} refreshes webapp'))
+def refresh_site(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    driver.get(parse_url(driver.current_url).group('base_url'))
+
+
 @when(parsers.re('user of (?P<browser_id>.+?) sees that '
                  '(?:url|URL) matches (?P<path>.+?)'))
 @then(parsers.re('user of (?P<browser_id>.+?) sees that '

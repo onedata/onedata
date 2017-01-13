@@ -14,18 +14,18 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 @when(parsers.parse('user of {browser_id} clicks on "Create new space" '
-                    'button in expanded "ACCESS TOKENS" Onezone panel'))
+                    'button in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
 @then(parsers.parse('user of {browser_id} clicks on "Create new space" '
-                    'button in expanded "ACCESS TOKENS" Onezone panel'))
+                    'button in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
 def click_on_create_new_space_in_oz_panel(selenium, browser_id, oz_page):
     driver = select_browser(selenium, browser_id)
     oz_page(driver)['data space management'].create_new_space()
 
 
-@when(parsers.parse('user of {browser_id} clicks on "Create new space" '
-                    'button in expanded "ACCESS TOKENS" Onezone panel'))
-@then(parsers.parse('user of {browser_id} clicks on "Create new space" '
-                    'button in expanded "ACCESS TOKENS" Onezone panel'))
+@when(parsers.parse('user of {browser_id} clicks on "Join a space" button '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+@then(parsers.parse('user of {browser_id} clicks on "Join a space" button '
+                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
 def click_on_join_space_in_oz_panel(selenium, browser_id, oz_page):
     driver = select_browser(selenium, browser_id)
     oz_page(driver)['data space management'].join_space()
@@ -41,46 +41,6 @@ def get_create_space_edit_box(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
     edit_box = oz_page(driver)['data space management'].create_space_edit_box
     tmp_memory[browser_id]['edit_box'] = edit_box
-
-
-@when(parsers.parse('user of {browser_id} sees that space named "{name}" has '
-                    'disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that space named "{name}" has '
-                    'disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@when(parsers.parse('user of {browser_id} sees that there is no space named '
-                    '"{name}" in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that there is no space named '
-                    '"{name}" in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-def assert_there_is_no_space_named_in_panel(selenium, browser_id, name, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_space_not_exist(d, space_name):
-        err_msg = 'space named "{}" found in DATA SPACE MANAGEMENT ' \
-                  'oz panel while it should not be found'.format(space_name)
-        assert space_name not in oz_page(d)['data space management'].spaces, err_msg
-
-    assert_space_not_exist(driver, name)
-
-
-@when(parsers.parse('user of {browser_id} sees that there is space named "{name}" '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that there is space named "{name}" '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@when(parsers.parse('user of {browser_id} sees that space named "{name}" has '
-                    'appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that space named "{name}" has '
-                    'appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-def assert_there_is_space_named_in_panel(selenium, browser_id, name, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_space_exist(d, space_name):
-        err_msg = 'no space named "{}" found in DATA SPACE MANAGEMENT ' \
-                  'oz panel'.format(space_name)
-        assert space_name in oz_page(d)['data space management'].spaces, err_msg
-
-    assert_space_exist(driver, name)
 
 
 @when(parsers.parse('user of {browser_id} expands settings dropdown for space '

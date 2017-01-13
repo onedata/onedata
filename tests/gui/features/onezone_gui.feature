@@ -283,56 +283,123 @@ Feature: Onezone GUI elements
     Then user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space1"
 
 
-#  Scenario: User succesfully set space as home space (clicks on home outline)
-#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-#    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that space named "space1" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sets space named "space2" as home by clicking on home outline in that space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that space named "space2" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#
-#    And user of browser expands submenu of "space2" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser clicks on "p1" provider in submenu of space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that provider popup for provider named "p1" has appeared on world map
-#    And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
-#    And user of browser sees that Oneprovider session has started
-#
-#    # one must wait because gui is to slow to immediately change home space in op when it was changed in oz
-#    And user of browser is idle for 15 seconds
-#    And user of browser refreshes site
-#    And user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space2"
-#    And user of browser clicks on the "spaces" tab in main menu sidebar
-#    And user of browser sees that home space icon is displayed next to name of space "space2" in spaces list
-#
-#    # TODO rm after ategrating with swagger
-#    Then user of browser clicks on settings icon displayed for "space1" item on the spaces sidebar list
-#    And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space1"
-#    And user of browser sees an info notify with text matching to: .*space1.*home.*
-#    And user of browser sees that home space icon has appeared next to displayed name of space "space1" in spaces list
-#
-#
-#  Scenario: User succesfully set space as home space (clicks on SET AS HOME in space settings)
-#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-#    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that space named "space1" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser expands settings dropdown for space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-#    And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that space named "space2" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#
-#    And user of browser expands submenu of "space2" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser clicks on "p1" provider in submenu of space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that provider popup for provider named "p1" has appeared on world map
-#    And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
-#    And user of browser sees that Oneprovider session has started
-#
-#    # one must wait because gui is to slow to immediately change home space in op when it was changed in oz
-#    And user of browser is idle for 15 seconds
-#    And user of browser refreshes site
-#    And user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space2"
-#    And user of browser clicks on the "spaces" tab in main menu sidebar
-#    And user of browser sees that home space icon is displayed next to name of space "space2" in spaces list
-#
-#    # TODO rm after ategrating with swagger
-#    Then user of browser clicks on settings icon displayed for "space1" item on the spaces sidebar list
-#    And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space1"
-#    And user of browser sees an info notify with text matching to: .*space1.*home.*
-#    And user of browser sees that home space icon has appeared next to displayed name of space "space1" in spaces list
+  Scenario: User succesfully set space as home space (clicks on home outline)
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that space named "space1" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sets space named "space2" as home by clicking on home outline in that space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that space named "space2" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+    And user of browser expands submenu of "space2" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "p1" provider in submenu of space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that provider popup for provider named "p1" has appeared on world map
+    And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
+    And user of browser sees that Oneprovider session has started
+
+    # TODO rm when propagation time in gui became faster
+    And user of browser is idle for 15 seconds
+    And user of browser refreshes webapp
+    And user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space2"
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser sees that home space icon is displayed next to name of space "space2" in spaces list
+
+    # TODO rm after ategrating with swagger
+    Then user of browser clicks on settings icon displayed for "space1" item on the spaces sidebar list
+    And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space1"
+    And user of browser sees an info notify with text matching to: .*space1.*home.*
+    And user of browser sees that home space icon has appeared next to displayed name of space "space1" in spaces list
+
+
+  Scenario: User succesfully set space as home space (clicks on SET AS HOME in space settings)
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that space named "space1" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands settings dropdown for space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that space named "space2" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+    And user of browser expands submenu of "space2" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "p1" provider in submenu of space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that provider popup for provider named "p1" has appeared on world map
+    And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
+    And user of browser sees that Oneprovider session has started
+
+    # TODO rm when propagation time in gui became faster
+    And user of browser is idle for 15 seconds
+    And user of browser refreshes webapp
+    And user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space2"
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser sees that home space icon is displayed next to name of space "space2" in spaces list
+
+    # TODO rm after ategrating with swagger
+    Then user of browser clicks on settings icon displayed for "space1" item on the spaces sidebar list
+    And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space1"
+    And user of browser sees an info notify with text matching to: .*space1.*home.*
+    And user of browser sees that home space icon has appeared next to displayed name of space "space1" in spaces list
+
+
+  Scenario: User can go to Oneprovider by clicking on Go to yout files in provider's popup
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "p1" provider in submenu of space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that provider popup for provider named "p1" has appeared on world map
+    And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
+    And user of browser sees that Oneprovider session has started
+    Then user of browser sees that URL matches https?://[^/]*/#/onedata/data/Scenario: User uncollapses provider submenu and sees that spaces count match number of displayed supported spaces
+
+
+  Scenario: User sees that after going to Oneprovider, without having any home space, the first one alphabetically is loaded into view
+    # TODO after integration with swagger remove this setup
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser types "helloworld" to active edit box
+    And user of browser clicks on confirm button displayed next to active edit box
+    And user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sets space named "helloworld" as home by clicking on home outline in that space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that space named "helloworld" is set as home space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Leave a space" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+    And user of browser expands submenu of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "p1" provider in submenu of space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that provider popup for provider named "p1" has appeared on world map
+    And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
+    And user of browser sees that Oneprovider session has started
+
+    # TODO rm when propagation time in gui became faster
+    And user of browser is idle for 15 seconds
+    And user of browser refreshes webapp
+    Then user of browser sees that displayed directory tree in sidebar panel belongs to space named "A"
+
+    # TODO rm after ategrating with swagger
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser clicks on settings icon displayed for "space1" item on the spaces sidebar list
+    And user of browser clicks on the "SET AS HOME" item in settings dropdown for space named "space1"
+    And user of browser sees an info notify with text matching to: .*space1.*home.*
+    And user of browser sees that home space icon has appeared next to displayed name of space "space1" in spaces list
+
+
+  Scenario: User sees that after unsupporting space number displayed in space counter for given provider decreases
+    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+    And user of browser sees that there is provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser sees that spaces counter for provider named "p1" displays 6 in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser expands submenu of "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel
+
+    And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser expands settings dropdown for space named "B" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "B" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Leave a space" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that space named "B" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+    Then user of browser sees that spaces counter for provider named "p1" displays 5 in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser expands submenu of "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel

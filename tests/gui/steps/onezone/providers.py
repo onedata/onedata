@@ -48,3 +48,71 @@ def click_on_go_to_your_files_in_provider_popup(selenium, browser_id, provider,
         prov.go_to_your_files()
 
     click_on_btn(driver, provider)
+
+
+@when(parsers.parse('user of {browser_id} sees that spaces counter for '
+                    'provider named "{provider}" displays {spaces_num:d} '
+                    'in expanded "GO TO YOUR FILES" Onezone panel'))
+@then(parsers.parse('user of {browser_id} sees that spaces counter for '
+                    'provider named "{provider}" displays {spaces_num:d} '
+                    'in expanded "GO TO YOUR FILES" Onezone panel'))
+def assert_spaces_counter_match_given_num(selenium, browser_id, provider,
+                                          spaces_num, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_match(d, provider_name, display_num):
+        provider_record = oz_page(d)['go to your files'][provider_name]
+        spaces_counter = provider_record.spaces_count
+
+        err_msg = 'Expected spaces number {} does not match displayed ' \
+                  'spaces counter {}'.format(spaces_counter, display_num)
+        assert spaces_counter == display_num, err_msg
+
+    assert_match(driver, provider, spaces_num)
+
+
+@when(parsers.parse('user of {browser_id} sees that spaces counter for '
+                    '"{provider}" match number of displayed supported spaces '
+                    'in expanded submenu of given provider in expanded '
+                    '"GO TO YOUR FILES" Onezone panel'))
+@then(parsers.parse('user of {browser_id} sees that spaces counter for '
+                    '"{provider}" match number of displayed supported spaces '
+                    'in expanded submenu of given provider in expanded '
+                    '"GO TO YOUR FILES" Onezone panel'))
+def assert_number_of_spaces_match_spaces_counter(selenium, browser_id,
+                                                 provider, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_match(d, provider_name):
+        provider_record = oz_page(d)['go to your files'][provider_name]
+        supported_spaces = len(provider_record.supported_spaces)
+        spaces_counter = provider_record.spaces_count
+
+        err_msg = 'Spaces counter number {} does not match displayed number ' \
+                  'of supported spacess {}'.format(spaces_counter,
+                                                   supported_spaces)
+        assert spaces_counter == supported_spaces, err_msg
+
+    assert_match(driver, provider)
+
+
+@when(parsers.parse('user of {browser_id} expands submenu of "{name}" by '
+                    'clicking on cloud in provider record in expanded '
+                    '"GO TO YOUR FILES" Onezone panel'))
+@then(parsers.parse('user of {browser_id} expands submenu of "{name}" by '
+                    'clicking on cloud in provider record in expanded '
+                    '"GO TO YOUR FILES" Onezone panel'))
+def expand_provider_submenu_in_oz_panel(selenium, browser_id, name, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def expand_submenu_for_space(d, provider_name):
+        provider_record = oz_page(d)['go to your files'][provider_name]
+        err_msg = 'submenu for provider named "{name}" has not been ' \
+                  'expanded'.format(name=provider_name)
+        provider_record.expand_submenu()
+        assert provider_record.is_submenu_expanded is True, err_msg
+
+    expand_submenu_for_space(driver, name)

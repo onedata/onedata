@@ -49,7 +49,7 @@ class ProviderRecord(OZPanelRecord):
         err_msg = 'no spaces count for "{}" provider found in ' \
                   'GO TO YOUR FILES panel'.format(self.name)
         spaces_count = find_web_elem(self.web_elem, css_sel, err_msg)
-        return int(spaces_count)
+        return int(spaces_count.text)
 
     def click(self):
         css_sel = '.secondary-item-container'
