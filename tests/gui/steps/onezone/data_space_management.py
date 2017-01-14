@@ -42,14 +42,14 @@ def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
     expand_settings_dropdown(driver, name)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) clicks on the '
-                 '"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
-                 'settings dropdown for space named "(?P<name>.+?)" '
-                 'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) clicks on the '
-                 '"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
-                 'settings dropdown for space named "(?P<name>.+?)" '
-                 'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
+                 r'"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
+                 r'settings dropdown for space named "(?P<name>.+?)" '
+                 r'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
+                 r'"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
+                 r'settings dropdown for space named "(?P<name>.+?)" '
+                 r'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
 def click_on_settings_option_for_space_in_panel(selenium, browser_id,
                                                 option, name, oz_page):
     driver = select_browser(selenium, browser_id)

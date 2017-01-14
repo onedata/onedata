@@ -19,28 +19,28 @@ def _expand_oz_panel(oz_page, driver, panel):
     oz_page(driver)[panel].expand()
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) expanded the '
-                  '"(?P<panel_name>.*)" Onezone sidebar panel'))
+@given(parsers.re(r'users? of (?P<browser_id_list>.*) expanded the '
+                  r'"(?P<panel_name>.*)" Onezone sidebar panel'))
 def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
         _expand_oz_panel(oz_page, driver, panel_name)
 
 
-@when(parsers.re('users? of (?P<browser_id_list>.*) expands? the '
-                 '"(?P<panel_name>.*)" Onezone sidebar panel'))
-@then(parsers.re('users? of (?P<browser_id_list>.*) expands? the '
-                 '"(?P<panel_name>.*)" Onezone sidebar panel'))
+@when(parsers.re(r'users? of (?P<browser_id_list>.*) expands? the '
+                 r'"(?P<panel_name>.*)" Onezone sidebar panel'))
+@then(parsers.re(r'users? of (?P<browser_id_list>.*) expands? the '
+                 r'"(?P<panel_name>.*)" Onezone sidebar panel'))
 def wt_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
         _expand_oz_panel(oz_page, driver, panel_name)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
-                 'button displayed next to active edit box'))
-@then(parsers.re('user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
-                 'button displayed next to active edit box'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
+                 r'button displayed next to active edit box'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
+                 r'button displayed next to active edit box'))
 def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
     edit_box = tmp_memory[browser_id]['edit_box']
     action = getattr(edit_box, '{}_input'.format(btn))
@@ -54,48 +54,48 @@ def type_text_into_active_edit_box(browser_id, text, tmp_memory):
     edit_box.value = text
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) clicks on '
-                 '"(?P<btn>Create new access token)" button in expanded '
-                 '"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) clicks on '
-                 '"(?P<btn>Create new access token)" button in expanded '
-                 '"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) clicks on '
-                 '"(?P<btn>Create new space|Join space)" button in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) clicks on '
-                 '"(?P<btn>Create new space|Join space)" button in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
+                 r'"(?P<btn>Create new access token)" button in expanded '
+                 r'"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
+                 r'"(?P<btn>Create new access token)" button in expanded '
+                 r'"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
+                 r'"(?P<btn>Create new space|Join space)" button in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
+                 r'"(?P<btn>Create new space|Join space)" button in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
     action = getattr(oz_page(driver)[oz_panel], btn.lower().replace(' ', '_'))
     action()
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) sees that there is '
-                 '(?P<item_type>provider) named "(?P<item_name>.+?)" '
-                 'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that there is '
-                 '(?P<item_type>provider) named "(?P<item_name>.+?)" '
-                 'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" has appeared in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" has appeared in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that there is '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that there is '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
-                 'named "(?P<item_name>.+?)" has appeared in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
-                 'named "(?P<item_name>.+?)" has appeared in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'(?P<item_type>provider) named "(?P<item_name>.+?)" '
+                 r'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'(?P<item_type>provider) named "(?P<item_name>.+?)" '
+                 r'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" has appeared in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" has appeared in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
+                 r'named "(?P<item_name>.+?)" has appeared in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
+                 r'named "(?P<item_name>.+?)" has appeared in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
                                                 item_name, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -111,30 +111,30 @@ def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
     assert_item_exist(driver, item_name, item_type, oz_panel)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" has disappeared from expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" has disappeared from expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that there is no '
-                 '(?P<item_type>provider) named "(?P<item_name>.+?)" '
-                 'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that there is no '
-                 '(?P<item_type>provider) named "(?P<item_name>.+?)" '
-                 'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
-                 'named "(?P<item_name>.+?)" has disappeared from expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
-                 'named "(?P<item_name>.+?)" has disappeared from expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that there is no '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that there is no '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" has disappeared from expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" has disappeared from expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
+                 r'(?P<item_type>provider) named "(?P<item_name>.+?)" '
+                 r'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
+                 r'(?P<item_type>provider) named "(?P<item_name>.+?)" '
+                 r'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
+                 r'named "(?P<item_name>.+?)" has disappeared from expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
+                 r'named "(?P<item_name>.+?)" has disappeared from expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
                                                    item_type, item_name,
                                                    oz_panel, oz_page):
@@ -151,22 +151,22 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
     assert_item_not_exist(driver, item_name, item_type, oz_panel)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<counter_type>space) '
-                 'counter for (?P<item_type>provider) named "(?P<item_name>.+?)" '
-                 'displays (?P<number>\d+) in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<counter_type>space) '
-                 'counter for (?P<item_type>provider) named "(?P<item_name>.+?)" '
-                 'displays (?P<number>\d+) in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
-                 'counter for (?P<item_type>space) named "(?P<item_name>.+?)" '
-                 'displays (?P<number>\d+) in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
-                 'counter for (?P<item_type>space) named "(?P<item_name>.+?)" '
-                 'displays (?P<number>\d+) in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space) '
+                 r'counter for (?P<item_type>provider) named "(?P<item_name>.+?)" '
+                 r'displays (?P<number>\d+) in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space) '
+                 r'counter for (?P<item_type>provider) named "(?P<item_name>.+?)" '
+                 r'displays (?P<number>\d+) in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
+                 r'counter for (?P<item_type>space) named "(?P<item_name>.+?)" '
+                 r'displays (?P<number>\d+) in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
+                 r'counter for (?P<item_type>space) named "(?P<item_name>.+?)" '
+                 r'displays (?P<number>\d+) in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
                                         item_type, item_name, number,
                                         oz_panel, oz_page):
@@ -185,22 +185,22 @@ def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
     assert_match(driver, item_name, item_type, counter_type, number, oz_panel)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
-                 'in expanded "(?P<oz_panel>GO TO YOUR FILES)" '
-                 'Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
-                 'in expanded "(?P<oz_panel>GO TO YOUR FILES)" '
-                 'Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
-                 'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
-                 'in expanded "(?P<oz_panel>DATA SPACE MANAGEMENT)" '
-                 'Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
-                 'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
-                 'in expanded "(?P<oz_panel>DATA SPACE MANAGEMENT)" '
-                 'Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
+                 r'in expanded "(?P<oz_panel>GO TO YOUR FILES)" '
+                 r'Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
+                 r'in expanded "(?P<oz_panel>GO TO YOUR FILES)" '
+                 r'Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
+                 r'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
+                 r'in expanded "(?P<oz_panel>DATA SPACE MANAGEMENT)" '
+                 r'Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
+                 r'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
+                 r'in expanded "(?P<oz_panel>DATA SPACE MANAGEMENT)" '
+                 r'Onezone panel'))
 def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
                                          item_name, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -216,22 +216,22 @@ def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
     assert_home(driver, item_name, item_type, oz_panel)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) sets (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" as home by clicking on '
-                 'home outline in that (?P=item_type) record in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sets (?P<item_type>provider) '
-                 'named "(?P<item_name>.+?)" as home by clicking on '
-                 'home outline in that (?P=item_type) record in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sets (?P<item_type>space) named '
-                 '"(?P<item_name>.+?)" as home by clicking on home outline '
-                 'in that (?P=item_type) record in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sets (?P<item_type>space) named '
-                 '"(?P<item_name>.+?)" as home by clicking on home outline '
-                 'in that (?P=item_type) record in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sets (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" as home by clicking on '
+                 r'home outline in that (?P=item_type) record in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sets (?P<item_type>provider) '
+                 r'named "(?P<item_name>.+?)" as home by clicking on '
+                 r'home outline in that (?P=item_type) record in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sets (?P<item_type>space) named '
+                 r'"(?P<item_name>.+?)" as home by clicking on home outline '
+                 r'in that (?P=item_type) record in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sets (?P<item_type>space) named '
+                 r'"(?P<item_name>.+?)" as home by clicking on home outline '
+                 r'in that (?P=item_type) record in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
                                                        item_name, oz_panel,
                                                        oz_page):
@@ -246,26 +246,26 @@ def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
         set_as_home(driver, item_name, oz_panel)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) sees that spaces counter for '
-                 '"(?P<item_name>.+?)" match number of displayed '
-                 '(?<submenu_list_type>supported spaces) in expanded submenu '
-                 'of given (?P<item_type>provider) in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that spaces counter for '
-                 '"(?P<item_name>.+?)" match number of displayed '
-                 '(?<submenu_list_type>supported spaces) in expanded submenu '
-                 'of given (?P<item_type>provider) in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) sees that providers counter for '
-                 '"(?P<item_name>.+?)" match number of displayed '
-                 '(?<submenu_list_type>supporting providers) in expanded submenu '
-                 'of given (?P<item_type>provider) in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that providers counter for '
-                 '"(?P<item_name>.+?)" match number of displayed '
-                 '(?<submenu_list_type>supporting providers) in expanded submenu '
-                 'of given (?P<item_type>provider) in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that spaces counter for '
+                 r'"(?P<item_name>.+?)" match number of displayed '
+                 r'(?P<submenu_list_type>supported spaces) in expanded submenu '
+                 r'of given (?P<item_type>provider) in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that spaces counter for '
+                 r'"(?P<item_name>.+?)" match number of displayed '
+                 r'(?P<submenu_list_type>supported spaces) in expanded submenu '
+                 r'of given (?P<item_type>provider) in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that providers counter for '
+                 r'"(?P<item_name>.+?)" match number of displayed '
+                 r'(?P<submenu_list_type>supporting providers) in expanded submenu '
+                 r'of given (?P<item_type>provider) in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that providers counter for '
+                 r'"(?P<item_name>.+?)" match number of displayed '
+                 r'(?P<submenu_list_type>supporting providers) in expanded submenu '
+                 r'of given (?P<item_type>provider) in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
                                                submenu_list_type, item_type,
                                                oz_panel, oz_page):
@@ -285,22 +285,22 @@ def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
     assert_match(driver, item_name, item_type, submenu_list_type, oz_panel)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" by '
-                 'clicking on cloud in provider record in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" by '
-                 'clicking on cloud in provider record in expanded '
-                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" '
-                 'by clicking on space record in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
-                 '(?P<item_type>space) named "(?P<item_name>.+?)" '
-                 'by clicking on space record in expanded '
-                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" by '
+                 r'clicking on cloud in provider record in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" by '
+                 r'clicking on cloud in provider record in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" '
+                 r'by clicking on space record in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
+                 r'(?P<item_type>space) named "(?P<item_name>.+?)" '
+                 r'by clicking on space record in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
                                      item_name, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)

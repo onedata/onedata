@@ -31,12 +31,12 @@ def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
     assert_popup_appeared(driver, provider)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) clicks on the '
-                 '"(?P<btn>Go to your files|copy hostname)" button in '
-                 '"(?P<provider>.+?)" provider\'s popup displayed on world map'))
-@then(parsers.re('user of (?P<browser_id>.+?) clicks on the '
-                 '"(?P<btn>Go to your files|copy hostname)" button in '
-                 '"(?P<provider>.+?)" provider\'s popup displayed on world map'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
+                 r'"(?P<btn>Go to your files|copy hostname)" button in '
+                 r'"(?P<provider>.+?)" provider\'s popup displayed on world map'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
+                 r'"(?P<btn>Go to your files|copy hostname)" button in '
+                 r'"(?P<provider>.+?)" provider\'s popup displayed on world map'))
 def click_on_btn_in_provider_popup(selenium, browser_id, btn, provider, oz_page):
     driver = select_browser(selenium, browser_id)
 
