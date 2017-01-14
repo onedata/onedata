@@ -1,15 +1,12 @@
 """Steps for features of Onezone login page.
 """
 
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
-from tests.gui.utils.generic import repeat_failed, implicit_wait
-from tests.utils.acceptance_utils import list_parser
-
-from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.common.keys import Keys
-
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
+
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.utils.generic import repeat_failed, implicit_wait
+from tests.utils.acceptance_utils import list_parser
 
 
 __author__ = "Jakub Liput, Bartek Walkowicz"
@@ -18,18 +15,8 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-panel_to_css = {'access tokens': '#collapse-tokens',
-                'go to your files': '#collapse-providers',
-                'data space management': '#collapse-spaces',
-                'user alias': '#collapse-alias',
-                'authentication settings': '#collapse-accounts'}
-
-
-icon_to_css = {'create space': 'oneicon-space-add'}
-
-
-def _oz_expand_oz_panel(oz_page, driver, panel_name):
-    oz_page(driver)[panel_name].expand()
+def _expand_oz_panel(oz_page, driver, panel):
+    oz_page(driver)[panel].expand()
 
 
 @given(parsers.re('users? of (?P<browser_id_list>.*) expanded the '
@@ -37,7 +24,7 @@ def _oz_expand_oz_panel(oz_page, driver, panel_name):
 def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
-        _oz_expand_oz_panel(oz_page, driver, panel_name)
+        _expand_oz_panel(oz_page, driver, panel_name)
 
 
 @when(parsers.re('users? of (?P<browser_id_list>.*) expands? the '
@@ -47,21 +34,17 @@ def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
 def wt_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
         driver = select_browser(selenium, browser_id)
-        _oz_expand_oz_panel(oz_page, driver, panel_name)
+        _expand_oz_panel(oz_page, driver, panel_name)
 
 
-@when(parsers.parse('user of {browser_id} clicks on {btn} button displayed '
-                    'next to active edit box'))
-@then(parsers.parse('user of {browser_id} clicks on {btn} button displayed '
-                    'next to active edit box'))
+@when(parsers.re('user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
+                 'button displayed next to active edit box'))
+@then(parsers.re('user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
+                 'button displayed next to active edit box'))
 def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
     edit_box = tmp_memory[browser_id]['edit_box']
-    if btn == 'confirm':
-        edit_box.confirm_input()
-    elif btn == 'cancel':
-        edit_box.cancel_input()
-    else:
-        raise RuntimeError('unrecognized edit box btn: {}'.format(btn))
+    action = getattr(edit_box, '{}_input'.format(btn))
+    action()
 
 
 @when(parsers.parse('user of {browser_id} types "{text}" to active edit box'))
@@ -69,6 +52,24 @@ def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
 def type_text_into_active_edit_box(browser_id, text, tmp_memory):
     edit_box = tmp_memory[browser_id]['edit_box']
     edit_box.value = text
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) clicks on '
+                 '"(?P<btn>Create new access token)" button in expanded '
+                 '"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
+@then(parsers.re('user of (?P<browser_id>.+?) clicks on '
+                 '"(?P<btn>Create new access token)" button in expanded '
+                 '"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
+@when(parsers.re('user of (?P<browser_id>.+?) clicks on '
+                 '"(?P<btn>Create new space|Join space)" button in expanded '
+                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re('user of (?P<browser_id>.+?) clicks on '
+                 '"(?P<btn>Create new space|Join space)" button in expanded '
+                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
+    driver = select_browser(selenium, browser_id)
+    action = getattr(oz_page(driver)[oz_panel], btn.lower().replace(' ', '_'))
+    action()
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) sees that there is '
@@ -243,3 +244,73 @@ def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
 
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
         set_as_home(driver, item_name, oz_panel)
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) sees that spaces counter for '
+                 '"(?P<item_name>.+?)" match number of displayed '
+                 '(?<submenu_list_type>supported spaces) in expanded submenu '
+                 'of given (?P<item_type>provider) in expanded '
+                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that spaces counter for '
+                 '"(?P<item_name>.+?)" match number of displayed '
+                 '(?<submenu_list_type>supported spaces) in expanded submenu '
+                 'of given (?P<item_type>provider) in expanded '
+                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re('user of (?P<browser_id>.+?) sees that providers counter for '
+                 '"(?P<item_name>.+?)" match number of displayed '
+                 '(?<submenu_list_type>supporting providers) in expanded submenu '
+                 'of given (?P<item_type>provider) in expanded '
+                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that providers counter for '
+                 '"(?P<item_name>.+?)" match number of displayed '
+                 '(?<submenu_list_type>supporting providers) in expanded submenu '
+                 'of given (?P<item_type>provider) in expanded '
+                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
+                                               submenu_list_type, item_type,
+                                               oz_panel, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_match(d, item, items_type, submenu_items_type, panel):
+        item_record = oz_page(d)[panel][item]
+        submenu_list_len = len(getattr(item_record, submenu_items_type))
+        counter = getattr(item_record, '{}s_count'.format(items_type))
+        err_msg = '{type}s counter number {counter} does not match displayed number ' \
+                  'of {type}s {list_len}'.format(type=items_type,
+                                                 counter=counter,
+                                                 list_len=submenu_list_len)
+        assert counter == submenu_list_len, err_msg
+
+    assert_match(driver, item_name, item_type, submenu_list_type, oz_panel)
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
+                 '(?P<item_type>space) named "(?P<item_name>.+?)" by '
+                 'clicking on cloud in provider record in expanded '
+                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
+                 '(?P<item_type>space) named "(?P<item_name>.+?)" by '
+                 'clicking on cloud in provider record in expanded '
+                 '"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@when(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
+                 '(?P<item_type>space) named "(?P<item_name>.+?)" '
+                 'by clicking on space record in expanded '
+                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re('user of (?P<browser_id>.+?) expands submenu of '
+                 '(?P<item_type>space) named "(?P<item_name>.+?)" '
+                 'by clicking on space record in expanded '
+                 '"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
+                                     item_name, oz_panel, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def expand_submenu_for_item(d, item, items_list_type, panel):
+        item_record = oz_page(d)[panel][item]
+        err_msg = 'submenu for {type} named "{name}" has not been ' \
+                  'expanded'.format(type=items_list_type, name=item)
+        item_record.expand_submenu()
+        assert item_record.is_submenu_expanded is True, err_msg
+
+    expand_submenu_for_item(driver, item_name, item_type, oz_panel)

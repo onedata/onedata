@@ -16,26 +16,20 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-@when(parsers.re(r'user of (?P<browser_id>.*?) clicks on (?P<icon_type>.*?) '
+@when(parsers.re(r'user of (?P<browser_id>.*?) clicks on (?P<btn>copy|remove) '
                  r'icon for (?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|\d*?11th|'
                  r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                  r'item on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) clicks on (?P<icon_type>.*?) '
+@then(parsers.re(r'user of (?P<browser_id>.*?) clicks on (?P<btn>copy|remove) '
                  r'icon for (?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|\d*?11th|'
                  r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                  r'item on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
-def click_on_btn_for_oz_access_token(selenium, browser_id, icon_type,
-                                     ordinal, oz_page):
+def click_on_btn_for_oz_access_token(selenium, browser_id, btn, ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
     panel = oz_page(driver)['access tokens']
     token = panel[int(ordinal[:-2]) - 1]
-
-    if icon_type == 'copy':
-        token.copy()
-    elif icon_type == 'remove':
-        token.remove()
-    else:
-        raise RuntimeError('unrecognized icon: {}'.format(icon_type))
+    action = getattr(token, btn)
+    action()
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that token for '
@@ -78,12 +72,3 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
             assert displayed == quantity, err_msg
 
     assert_quantity(driver, num)
-
-
-@when(parsers.parse('user of {browser_id} clicks on "Create new access token" '
-                    'button in expanded "ACCESS TOKENS" Onezone panel'))
-@then(parsers.parse('user of {browser_id} clicks on "Create new access token" '
-                    'button in expanded "ACCESS TOKENS" Onezone panel'))
-def click_on_create_new_access_token(selenium, browser_id, oz_page):
-    driver = select_browser(selenium, browser_id)
-    oz_page(driver)['access tokens'].create_new_access_token()

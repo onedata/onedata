@@ -13,24 +13,6 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-@when(parsers.parse('user of {browser_id} clicks on "Create new space" '
-                    'button in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} clicks on "Create new space" '
-                    'button in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-def click_on_create_new_space_in_oz_panel(selenium, browser_id, oz_page):
-    driver = select_browser(selenium, browser_id)
-    oz_page(driver)['data space management'].create_new_space()
-
-
-@when(parsers.parse('user of {browser_id} clicks on "Join a space" button '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} clicks on "Join a space" button '
-                    'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-def click_on_join_space_in_oz_panel(selenium, browser_id, oz_page):
-    driver = select_browser(selenium, browser_id)
-    oz_page(driver)['data space management'].join_space()
-
-
 @when(parsers.parse('user of {browser_id} focuses on activated edit box for '
                     'creating new space in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
@@ -75,69 +57,10 @@ def click_on_settings_option_for_space_in_panel(selenium, browser_id,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def click_on_settings_item(d, space_name, chosen_option):
         settings = oz_page(d)['data space management'][space_name].settings
-        getattr(settings, chosen_option)()
+        action = getattr(settings, chosen_option)
+        action()
 
     click_on_settings_item(driver, name, option.lower().replace(' ', '_'))
-
-
-
-
-
-
-
-
-@when(parsers.parse('user of {browser_id} expands submenu of "{name}" by '
-                    'clicking on space record in expanded '
-                    '"DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} expands submenu of "{name}" by '
-                    'clicking on space record in expanded '
-                    '"DATA SPACE MANAGEMENT" Onezone panel'))
-def expand_space_submenu_in_panel(selenium, browser_id, name, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def expand_submenu_for_space(d, space_name):
-        space_record = oz_page(d)['data space management'][space_name]
-        err_msg = 'submenu for space named "{name}" has not been ' \
-                  'expanded'.format(name=space_name)
-        space_record.expand_submenu()
-        assert space_record.is_submenu_expanded is True, err_msg
-
-    expand_submenu_for_space(driver, name)
-
-
-@when(parsers.parse('user of {browser_id} sees that list of supporting '
-                    'providers for space named "{name}" in expanded "DATA '
-                    'SPACE MANAGEMENT" Onezone panel contains only: '
-                    '{providers_list}'))
-@then(parsers.parse('user of {browser_id} sees that list of supporting '
-                    'providers for space named "{name}" in expanded "DATA '
-                    'SPACE MANAGEMENT" Onezone panel contains only: '
-                    '{providers_list}'))
-def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
-                                                   providers_list, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_supporting_providers_for_space(d, space_name,
-                                              expected_providers_list):
-        space_record = oz_page(d)['data space management'][space_name]
-        supporting_providers = space_record.supporting_providers
-        supporting_providers_num = len(supporting_providers)
-        expected_providers = set(expected_providers_list)
-        expected_providers_num = len(expected_providers)
-
-        err_msg = 'Expected number of providers {} does not match ' \
-                  'actual {}'.format(expected_providers_num,
-                                     supporting_providers_num)
-        assert expected_providers_num == supporting_providers_num, err_msg
-
-        err_msg = 'space named "{}" does not have supporting provider ' \
-                  'named "{{}}" as it should'.format(space_name)
-        for provider in expected_providers:
-            assert provider in supporting_providers, err_msg.format(provider)
-
-    assert_supporting_providers_for_space(driver, name, parse_seq(providers_list))
 
 
 @when(parsers.parse('user of {browser_id} clicks on "Get support" button in '
@@ -146,8 +69,8 @@ def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
 @then(parsers.parse('user of {browser_id} clicks on "Get support" button in '
                     'submenu for "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
-def click_on_get_support_btn_for_space_in_panel(selenium, browser_id,
-                                                name, oz_page):
+def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
+                                                   name, oz_page):
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
@@ -155,32 +78,6 @@ def click_on_get_support_btn_for_space_in_panel(selenium, browser_id,
         oz_page(d)['data space management'][space_name].get_support()
 
     expand_submenu_for_space(driver, name)
-
-
-@when(parsers.parse('user of {browser_id} sees that providers counter for '
-                    '"{name}" match number of displayed supporting providers '
-                    'in expanded submenu of given space in expanded '
-                    '"DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that providers counter for '
-                    '"{name}" match number of displayed supporting providers '
-                    'in expanded submenu of given space in expanded '
-                    '"DATA SPACE MANAGEMENT" Onezone panel'))
-def assert_number_of_providers_match_providers_counter(selenium, browser_id,
-                                                       name, oz_page):
-    driver = select_browser(selenium, browser_id)
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_match(d, space_name):
-        space_record = oz_page(d)['data space management'][space_name]
-        supporting_providers = len(space_record.supporting_providers)
-        providers_counter = space_record.providers_count
-
-        err_msg = 'Providers counter number {} does not match displayed number ' \
-                  'of providers {}'.format(providers_counter,
-                                           supporting_providers)
-        assert providers_counter == supporting_providers, err_msg
-
-    assert_match(driver, name)
 
 
 @when(parsers.parse('user of {browser_id} sees that dropright with token for '
@@ -201,11 +98,11 @@ def assert_dropright_witk_token_for_space_appeared(selenium, browser_id,
     assert_dropright_appeared(driver, name)
 
 
-@when(parsers.parse('user of {browser_id} sees that dropright contains nonempty '
-                    'token for space named "space1" in expanded '
+@when(parsers.parse('user of {browser_id} sees that dropright contains '
+                    'nonempty token for space named "{name}" in expanded '
                     '"DATA SPACE MANAGEMENT" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees that dropright contains nonempty '
-                    'token for space named "space1" in expanded '
+@then(parsers.parse('user of {browser_id} sees that dropright contains '
+                    'nonempty token for space named "{name}" in expanded '
                     '"DATA SPACE MANAGEMENT" Onezone panel'))
 def assert_dropright_has_nonempty_token_for_space_appeared(selenium, browser_id,
                                                            name, tmp_memory,
@@ -277,6 +174,40 @@ def click_on_unsupport_space_for_supporting_provider(selenium, browser_id,
         prov.unsupport_space()
 
     unsupport_space(driver, space, provider)
+
+
+@when(parsers.parse('user of {browser_id} sees that list of supporting '
+                    'providers for space named "{name}" in expanded "DATA '
+                    'SPACE MANAGEMENT" Onezone panel contains only: '
+                    '{providers_list}'))
+@then(parsers.parse('user of {browser_id} sees that list of supporting '
+                    'providers for space named "{name}" in expanded "DATA '
+                    'SPACE MANAGEMENT" Onezone panel contains only: '
+                    '{providers_list}'))
+def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
+                                                   providers_list, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_supporting_providers_for_space(d, space_name,
+                                              expected_providers_list):
+        space_record = oz_page(d)['data space management'][space_name]
+        supporting_providers = space_record.supporting_providers
+        supporting_providers_num = len(supporting_providers)
+        expected_providers = set(expected_providers_list)
+        expected_providers_num = len(expected_providers)
+
+        err_msg = 'Expected number of providers {} does not match ' \
+                  'actual {}'.format(expected_providers_num,
+                                     supporting_providers_num)
+        assert expected_providers_num == supporting_providers_num, err_msg
+
+        err_msg = 'space named "{}" does not have supporting provider ' \
+                  'named "{{}}" as it should'.format(space_name)
+        for provider in expected_providers:
+            assert provider in supporting_providers, err_msg.format(provider)
+
+    assert_supporting_providers_for_space(driver, name, parse_seq(providers_list))
 
 
 @when(parsers.parse('user of {browser_id} sees that there is/are no supporting '
