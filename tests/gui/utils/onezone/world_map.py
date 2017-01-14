@@ -17,6 +17,9 @@ class WorldMap(object):
     def __init__(self, web_elem):
         self.web_elem = web_elem
 
+    def click(self):
+        self.web_elem.click()
+
     @property
     def providers(self):
         css_sel = '.provider-place'

@@ -22,23 +22,25 @@ from pytest_selenium_multi.pytest_selenium_multi import select_browser
 MAIN_MENU_TAB_TO_URL = {'spaces': 'spaces',
                         'groups': 'groups',
                         'data': 'data',
-                        'shared': 'shares'}
+                        'shared': 'shares',
+                        'providers': 'providers'}
 
 
 def _click_on_tab_in_main_menu_sidebar(driver, tab):
     def _load_main_menu_tab_page():
-        def _check_url():
-            try:
-                found = parse_url(driver.current_url).group('tab')
-            except AttributeError:
-                return False
-            else:
-                return MAIN_MENU_TAB_TO_URL[tab] == found.lower()
+        def _check_url(url):
+            # try:
+            #     found = parse_url(driver.current_url).group('tab')
+            # except AttributeError:
+            #     return False
+            # else:
+            return url != driver.current_url
 
+        current_url = driver.current_url
         driver.find_element_by_css_selector(css_path).click()
 
         return Wait(driver, WAIT_FRONTEND).until(
-            lambda _: _check_url(),
+            lambda _: _check_url(current_url),
             message='waiting for url to change.'
                     'Current url: {:s}'.format(driver.current_url)
         )

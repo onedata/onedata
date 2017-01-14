@@ -266,6 +266,24 @@
                         "supported_size": 10
                     }
                 }
+            },
+            "C": {
+                "displayed_name": "C",
+                "users": [
+                    "user1",
+                    "user2",
+                    "user3"
+                ],
+                "groups": [
+                    "group1",
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
+                    }
+                }
             }
         }
     }
