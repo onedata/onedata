@@ -11,6 +11,7 @@ from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
 
 
+from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *
 from tests.gui.steps.onezone.access_tokens import *
 from tests.gui.steps.onezone.data_space_management import *
@@ -18,9 +19,6 @@ from tests.gui.steps.onezone.providers import *
 
 
 from tests.gui.steps.onezone_before_login import *
-from tests.gui.steps.onezone_spaces import *
-from tests.gui.steps.onezone_logged_in_common import *
-from tests.gui.steps.onezone_panel_list import *
 from tests.gui.steps.onezone_provider_popup import *
 from tests.gui.steps.onezone_providers import *
 
