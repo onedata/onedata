@@ -1,10 +1,8 @@
-# Sample installation config file
 cluster:
-  domainName: "localhost.local"
-  autoDeploy: true
+  domainName: "dev.local"
   nodes:
     n1:
-      hostname: "devel"
+      hostname: "onedata"
   managers:
     mainNode: "n1"
     nodes:

@@ -92,7 +92,7 @@ def retry_running_cmd_until(cmd, retries=0):
     :param retries: number of times that command will be retried to run
     :type retries: <type 'int'>
     """
-    output = ""
+
     try:
         output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
     except Exception as e:
@@ -102,7 +102,7 @@ Number of retries left: {1}
 
         if retries > 0:
             time.sleep(1)
-            retry_running_cmd_until(cmd, retries - 1)
+            output = retry_running_cmd_until(cmd, retries - 1)
         else:
             raise
     return output

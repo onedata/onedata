@@ -100,7 +100,7 @@
         "p1": {
             "db_driver": "couchdb",
             "os_config": "cfg1",
-            "enable_luma_proxy": true,
+            "luma_mode": "enforced",
             "cluster_manager": {
                 "cm1": {
                     "vm.args": {
@@ -139,7 +139,7 @@
         "p2": {
             "db_driver": "couchdb",
             "os_config": "cfg2",
-            "enable_luma_proxy": true,
+            "luma_mode": "enforced",
             "cluster_manager": {
                 "cm1": {
                     "vm.args": {
@@ -299,16 +299,18 @@
         "credentials_mapping": [
             {
                 "userId": "u1",
-                "storageId": "DirectIO",
+                "storageId": "posix",
                 "credentials": {
-                    "uid": 45148
+                    "uid": "45148",
+                    "gid": "45148"
                 }
             },
             {
                 "userId": "u2",
-                "storageId": "DirectIO",
+                "storageId": "posix",
                 "credentials": {
-                    "uid": 45151
+                    "uid": "45151",
+                    "gid": "45151"
                 }
             }
         ]
