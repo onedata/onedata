@@ -132,7 +132,7 @@ def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
                  r'(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
                  r'(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
@@ -151,11 +151,11 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
     assert_item_not_exist(driver, item_name, item_type, oz_panel)
 
 
-@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space) '
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
                  r'counter for (?P<item_type>provider) named "(?P<item_name>.+?)" '
                  r'displays (?P<number>\d+) in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space) '
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
                  r'counter for (?P<item_type>provider) named "(?P<item_name>.+?)" '
                  r'displays (?P<number>\d+) in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
@@ -176,13 +176,17 @@ def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
     def assert_match(d, item, item_list_type, counter, num, panel):
         item_record = oz_page(d)[panel][item]
         item_counter = getattr(item_record, '{}s_count'.format(counter))
-        err_msg = 'Expected {type}s number {num} does not match displayed ' \
-                  '{type}s counter {counter}'.format(type=item_list_type,
-                                                     num=num,
-                                                     counter=item_counter)
+        err_msg = 'expected {counter_type}s number {num} does not match ' \
+                  'displayed {counter_type}s counter {displayed} ' \
+                  'for {type} named "{name}"'.format(type=item_list_type,
+                                                     name=item,
+                                                     counter_type=counter,
+                                                     displayed=item_counter,
+                                                     num=num)
         assert item_counter == num, err_msg
 
-    assert_match(driver, item_name, item_type, counter_type, number, oz_panel)
+    assert_match(driver, item_name, item_type,
+                 counter_type, int(number), oz_panel)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
@@ -246,51 +250,52 @@ def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
         set_as_home(driver, item_name, oz_panel)
 
 
-@when(parsers.re(r'user of (?P<browser_id>.+?) sees that spaces counter for '
-                 r'"(?P<item_name>.+?)" match number of displayed '
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
+                 r'counter for "(?P<item_name>.+?)" match number of displayed '
                  r'(?P<submenu_list_type>supported spaces) in expanded submenu '
                  r'of given (?P<item_type>provider) in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@then(parsers.re(r'user of (?P<browser_id>.+?) sees that spaces counter for '
-                 r'"(?P<item_name>.+?)" match number of displayed '
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
+                 r'counter for "(?P<item_name>.+?)" match number of displayed '
                  r'(?P<submenu_list_type>supported spaces) in expanded submenu '
                  r'of given (?P<item_type>provider) in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@when(parsers.re(r'user of (?P<browser_id>.+?) sees that providers counter for '
-                 r'"(?P<item_name>.+?)" match number of displayed '
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
+                 r'counter for "(?P<item_name>.+?)" match number of displayed '
                  r'(?P<submenu_list_type>supporting providers) in expanded submenu '
-                 r'of given (?P<item_type>provider) in expanded '
+                 r'of given (?P<item_type>space) in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@then(parsers.re(r'user of (?P<browser_id>.+?) sees that providers counter for '
-                 r'"(?P<item_name>.+?)" match number of displayed '
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
+                 r'counter for "(?P<item_name>.+?)" match number of displayed '
                  r'(?P<submenu_list_type>supporting providers) in expanded submenu '
-                 r'of given (?P<item_type>provider) in expanded '
+                 r'of given (?P<item_type>space) in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
                                                submenu_list_type, item_type,
-                                               oz_panel, oz_page):
+                                               counter_type, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_match(d, item, items_type, submenu_items_type, panel):
+    def assert_match(d, item, items_type, counter, submenu_items_type, panel):
         item_record = oz_page(d)[panel][item]
         submenu_list_len = len(getattr(item_record, submenu_items_type))
-        counter = getattr(item_record, '{}s_count'.format(items_type))
+        counter = getattr(item_record, '{}s_count'.format(counter))
         err_msg = '{type}s counter number {counter} does not match displayed number ' \
                   'of {type}s {list_len}'.format(type=items_type,
                                                  counter=counter,
                                                  list_len=submenu_list_len)
         assert counter == submenu_list_len, err_msg
 
-    assert_match(driver, item_name, item_type, submenu_list_type, oz_panel)
+    assert_match(driver, item_name, item_type, counter_type,
+                 submenu_list_type.lower().replace(' ', '_'), oz_panel)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
-                 r'(?P<item_type>space) named "(?P<item_name>.+?)" by '
+                 r'(?P<item_type>provider) named "(?P<item_name>.+?)" by '
                  r'clicking on cloud in provider record in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
 @then(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
-                 r'(?P<item_type>space) named "(?P<item_name>.+?)" by '
+                 r'(?P<item_type>provider) named "(?P<item_name>.+?)" by '
                  r'clicking on cloud in provider record in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
 @when(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '

@@ -146,32 +146,29 @@ Feature: Onezone GUI elements
     And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
-
-#  #TODO gui not working
-#  Scenario: User successfully renames space
-#    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-#    And user of browser sees that there is space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser expands settings dropdown for space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-#    And user of browser clicks on the "RENAME" item in settings dropdown for space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that "Rename a space" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "NewNameSpace" on keyboard
-#    And user of browser clicks "OK" confirmation button in displayed modal
-#    Then user of browser sees an info notify with text matching to: .*Small space.*renamed.*NewNameSpace.*
-#    And user of browser sees that there is no space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that there is space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    # TODO remove after integrate with swagger
-#    And user of browser expands settings dropdown for space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-#    And user of browser clicks on the "RENAME" item in settings dropdown for space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that "Rename a space" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "Small space" on keyboard
-#    And user of browser clicks "OK" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*Small space.*
-#    And user of browser sees that there is no space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-#    And user of browser sees that there is space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-
-
+  #TODO gui not working
+  Scenario: User successfully renames space
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands settings dropdown for space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "RENAME" item in settings dropdown for space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Rename a space" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "NewNameSpace" on keyboard
+    And user of browser clicks "OK" confirmation button in displayed modal
+    Then user of browser sees an info notify with text matching to: .*Small space.*renamed.*NewNameSpace.*
+    And user of browser sees that there is no space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that there is space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    # TODO remove after integrate with swagger
+    And user of browser expands settings dropdown for space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "RENAME" item in settings dropdown for space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Rename a space" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "Small space" on keyboard
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*Small space.*
+    And user of browser sees that there is no space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that there is space named "Small space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
   Scenario: User uncollapses space submenu and sees supporting providers list
@@ -227,7 +224,7 @@ Feature: Onezone GUI elements
   Scenario: User opens provider popup by clicking on supporting provider in space's submenu
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser expands submenu space named of "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser expands submenu of space named "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser clicks on "p1" provider in submenu of space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     Then user of browser sees that provider popup for provider named "p1" has appeared on world map
 
@@ -388,7 +385,7 @@ Feature: Onezone GUI elements
   Scenario: User sees that after unsupporting space number displayed in space counter for given provider decreases
     When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
     And user of browser sees that there is provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser sees that spaces counter for provider named "p1" displays 6 in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser sees that spaces counter for provider named "p1" displays 4 in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser expands submenu of provider named "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel
 
@@ -400,6 +397,6 @@ Feature: Onezone GUI elements
     And user of browser sees that the modal has disappeared
     And user of browser sees that space named "B" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
 
-    Then user of browser sees that spaces counter for provider named "p1" displays 5 in expanded "GO TO YOUR FILES" Onezone panel
+    Then user of browser sees that spaces counter for provider named "p1" displays 3 in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser expands submenu of provider named "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel
