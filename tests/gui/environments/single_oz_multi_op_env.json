@@ -216,13 +216,10 @@
             "space_to_unsupport": {
                 "displayed_name": "Unsupportable space",
                 "users": [
-                    "user1",
-                    "user2",
-                    "user3"
+                    "user1"
                 ],
                 "groups": [
-                    "group1",
-                    "group2"
+                    "group1"
                 ],
                 "providers": {
                     "p1": {
@@ -252,13 +249,10 @@
             "B": {
                 "displayed_name": "B",
                 "users": [
-                    "user1",
-                    "user2",
-                    "user3"
+                    "user1"
                 ],
                 "groups": [
-                    "group1",
-                    "group2"
+                    "group1"
                 ],
                 "providers": {
                     "p1": {
@@ -271,11 +265,9 @@
                 "displayed_name": "C",
                 "users": [
                     "user1",
-                    "user2",
-                    "user3"
+                    "user2"
                 ],
                 "groups": [
-                    "group1",
                     "group2"
                 ],
                 "providers": {

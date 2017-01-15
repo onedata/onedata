@@ -144,7 +144,7 @@ Feature: Oneprovider space functionality
     And user of browser clicks "Yes" confirmation button in displayed modal
     Then user of browser sees an info notify with text matching to: .*C.*left
     And user of browser sees that the modal has disappeared
-    And user of browser sees that C has disappeared from spaces sidebar list
+    And user of browser sees that "C" has disappeared from spaces sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on the "Create" button in sidebar list's header
@@ -153,4 +153,4 @@ Feature: Oneprovider space functionality
     And user of browser types "C" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that C has appeared on spaces sidebar list
+    And user of browser sees that "C" has appeared on spaces sidebar list

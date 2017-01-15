@@ -319,3 +319,36 @@ def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
         assert item_record.is_submenu_expanded is True, err_msg
 
     expand_submenu_for_item(driver, item_name, item_type, oz_panel)
+
+
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that '
+                 r'(?P<subitem_type>space) named "(?P<subitem_name>.+?)" '
+                 r'in submenu of (?P<item_type>provider) named '
+                 r'"(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel '
+                 r'is set as home'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that '
+                 r'(?P<subitem_type>space) named "(?P<subitem_name>.+?)" '
+                 r'in submenu of (?P<item_type>provider) named '
+                 r'"(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel '
+                 r'is set as home'))
+def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
+                                  subitem_name, item_type, item_name,
+                                  oz_panel, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND)
+    def click_on_map(d, item, items_type, subitem, subitems_type, panel):
+        item_record = oz_page(d)[panel][item]
+        subitem_record = item_record[subitem]
+        err_msg = '{subtype} named "{subitem}" is not set as home for {type} ' \
+                  'named "{name}" while it should be ' \
+                  'expanded'.format(subtype=subitems_type,
+                                    subitem=subitem,
+                                    type=items_type,
+                                    name=item)
+        assert subitem_record.is_home, err_msg
+
+    click_on_map(driver, item_name, item_type, subitem_name,
+                 subitem_type, oz_panel)

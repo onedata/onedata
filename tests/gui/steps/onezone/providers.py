@@ -1,6 +1,6 @@
 """Steps for GO TO YOUR FILES panel and provider popup features of Onezone page.
 """
-
+import itertools
 from pytest_bdd import parsers, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
@@ -66,6 +66,8 @@ def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
     def set_as_home(d, item):
         item_record = oz_page(d)['go to your files'][item]
         item_record.unset_from_home()
+        err_msg = 'provider named "{}" is still set as home but it should not'
+        assert not item_record.is_home, err_msg.format(item_record.name)
 
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
         set_as_home(driver, provider)
@@ -160,3 +162,52 @@ def click_on_world_map(selenium, browser_id, oz_page):
         world_map.click()
 
     click_on_map(driver)
+
+
+@when(parsers.parse('user of {browser_id} sees that the list of spaces '
+                    'in provider popup and in expanded "GO TO YOUR FILES" '
+                    'Onezone panel are the same for provider named "{provider}"'))
+@then(parsers.parse('user of {browser_id} sees that the list of spaces '
+                    'in provider popup and in expanded "GO TO YOUR FILES" '
+                    'Onezone panel are the same for provider named "{provider}"'))
+def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
+                                                  provider, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND)
+    def assert_consistency(d, provider_name):
+        prov_record = oz_page(d)['go to your files'][provider_name]
+        prov_popup = oz_page(d)['world map'].get_provider_with_displayed_panel()
+        err_msg = 'Popup displayed for provider named "{}" ' \
+                  'instead of "{}"'.format(prov_popup.name, provider_name)
+        assert provider_name == prov_popup.name, err_msg
+
+        for space1, space2 in itertools.izip(prov_popup.supported_spaces,
+                                             prov_record.supported_spaces):
+            name1, is_home1 = space1.name, space1.is_home
+            name2, is_home2 = space2.name, space2.is_home
+            err_msg = 'mismatch between provider popup ({name1}, {is_home1}) ' \
+                      'and provider record ({name2}, {is_home2}) ' \
+                      'in GO TO YOUR FILES panel in space list ' \
+                      'found'.format(name1=name1, is_home1=is_home1,
+                                     name2=name2, is_home2=is_home2)
+            assert (name1, is_home1) == (name2, is_home2), err_msg
+
+    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
+        assert_consistency(driver, provider)
+
+
+@when(parsers.parse('user of {browser_id} clicks on "{provider}" provider '
+                    'in expanded "GO TO YOUR FILES" Onezone panel'))
+@then(parsers.parse('user of {browser_id} clicks on "{provider}" provider '
+                    'in expanded "GO TO YOUR FILES" Onezone panel'))
+def click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
+                                                   provider, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND)
+    def click_on_provider(d, provider_name):
+        prov_record = oz_page(d)['go to your files'][provider_name]
+        prov_record.click()
+
+    click_on_provider(driver, provider)
