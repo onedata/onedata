@@ -52,12 +52,12 @@ def click_on_btn_in_provider_popup(selenium, browser_id, btn, provider, oz_page)
     click_on_btn(driver, provider)
 
 
-@when(parsers.re(r'user of {browser_id} unsets provider named "{provider}" '
-                 r'from home by clicking on home icon in that provider '
-                 r'record in expanded "GO TO YOUR FILES" Onezone panel'))
-@then(parsers.re(r'user of {browser_id} unsets provider named "{provider}" '
-                 r'from home by clicking on home icon in that provider '
-                 r'record in expanded "GO TO YOUR FILES" Onezone panel'))
+@when(parsers.parse(r'user of {browser_id} unsets provider named "{provider}" '
+                    r'from home by clicking on home icon in that provider '
+                    r'record in expanded "GO TO YOUR FILES" Onezone panel'))
+@then(parsers.parse(r'user of {browser_id} unsets provider named "{provider}" '
+                    r'from home by clicking on home icon in that provider '
+                    r'record in expanded "GO TO YOUR FILES" Onezone panel'))
 def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
                                                         provider, oz_page):
     driver = select_browser(selenium, browser_id)

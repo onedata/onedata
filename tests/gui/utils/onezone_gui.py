@@ -3,7 +3,7 @@
 
 import re
 
-from tests.gui.utils.generic import find_web_elem, find_web_elem_with_text
+from tests.gui.utils.generic import find_web_elem
 from tests.gui.utils.onezone.access_tokens import AccessTokensPanel
 from tests.gui.utils.onezone.data_space_management import DataSpaceManagementPanel
 from tests.gui.utils.onezone.manage_account import ManageAccount
