@@ -44,6 +44,16 @@ class ProviderRecord(OZPanelRecord):
             return True
 
     @property
+    def is_not_working(self):
+        css_sel = '.provider-icon .color-provider-not-working'
+        try:
+            self.web_elem.find_element_by_css_selector(css_sel)
+        except NoSuchElementException:
+            return False
+        else:
+            return True
+
+    @property
     def spaces_count(self):
         css_sel = '.spaces-count'
         err_msg = 'no spaces count for "{}" provider found in ' \

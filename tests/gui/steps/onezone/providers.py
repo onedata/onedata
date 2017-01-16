@@ -211,3 +211,56 @@ def click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
         prov_record.click()
 
     click_on_provider(driver, provider)
+
+
+@when(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
+                    'in expanded "GO TO YOUR FILES" Onezone panel is working'))
+@then(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
+                    'in expanded "GO TO YOUR FILES" Onezone panel is working'))
+def assert_provider_working_in_oz_panel(selenium, browser_id,
+                                        provider, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND)
+    def assert_working(d, provider_name):
+        prov_record = oz_page(d)['go to your files'][provider_name]
+        err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
+                  '"{}" is not green'.format(prov_record.name)
+        assert prov_record.is_working, err_msg
+
+    assert_working(driver, provider)
+
+
+@when(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
+                    'in expanded "GO TO YOUR FILES" Onezone panel is not working'))
+@then(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
+                    'in expanded "GO TO YOUR FILES" Onezone panel is not working'))
+def assert_provider_not_working_in_oz_panel(selenium, browser_id,
+                                            provider, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND)
+    def assert_not_working(d, provider_name):
+        prov_record = oz_page(d)['go to your files'][provider_name]
+        err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
+                  '"{}" is not gray'.format(prov_record.name)
+        assert prov_record.is_not_working, err_msg
+
+    assert_not_working(driver, provider)
+
+
+@when(parsers.parse('user of {browser_id} sees alert with title "{title}" '
+                    'on world map in Onezone gui'))
+@then(parsers.parse('user of {browser_id} sees alert with title "{title}" '
+                    'on world map in Onezone gui'))
+def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND)
+    def assert_alert(d, alert_title):
+        alert = oz_page(d)['world map'].message
+        err_msg = 'alert title {} does not match {}'.format(alert.title,
+                                                            alert_title)
+        assert alert.title.lower() == alert_title.lower(), err_msg
+
+    assert_alert(driver, title)

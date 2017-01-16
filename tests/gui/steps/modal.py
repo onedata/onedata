@@ -175,7 +175,7 @@ def assert_btn_in_modal_is_disabled(browser_id, btn_name, tmp_memory):
     buttons = modal.find_elements_by_css_selector('button')
     for btn in buttons:
         if btn.text.lower() == button_name:
-            assert 'true' == btn.get_attribute('disabled')
+            assert not btn.is_enabled(), '{} is not disabled'.format(btn_name)
             break
     else:
         raise RuntimeError('no button named {} found'.format(button_name))
@@ -206,8 +206,7 @@ def assert_btn_in_modal_is_enabled(browser_id, btn_name, tmp_memory):
     buttons = modal.find_elements_by_css_selector('button')
     for btn in buttons:
         if btn.text.lower() == button_name:
-            disabled = btn.get_attribute('disabled')
-            assert not disabled
+            assert btn.is_enabled(), '{} is disabled'.format(btn_name)
             break
     else:
         raise RuntimeError('no button named {} found'.format(button_name))

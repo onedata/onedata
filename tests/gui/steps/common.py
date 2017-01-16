@@ -10,6 +10,7 @@ import re
 import time
 import random
 import stat
+import subprocess
 
 import pyperclip
 
@@ -59,7 +60,7 @@ def create_instances_of_webdriver(selenium, driver,
 def name_string(tmp_memory, browser_id):
     chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
     gen_str = ''.join(random.sample(chars, 6))
-    tmp_memory[browser_id]['gen_str'] = gen_str
+    tmp_memory[browser_id]['gen_str'] = 'g_' + gen_str
     return gen_str
 
 
@@ -193,7 +194,9 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
                 return len(matching_elements) > 0
             else:
                 return None
-        except NoSuchElementException:
+        # TODO currently we ignore stalement because some old notify may have disappeared
+        #  and probability of new notify to disappear is small
+        except (NoSuchElementException, StaleElementReferenceException):
             return None
 
     driver = select_browser(selenium, browser_id)
@@ -215,12 +218,16 @@ def close_notifies(selenium, browser_id):
 
     while notify:
         cls_btn, msg = notify
-        msg = msg.text
-        cls_btn.click()
-        Wait(driver, WAIT_BACKEND).until(
-            staleness_of(cls_btn),
-            message='waiting for notify "{:s}" to disappear'.format(msg)
-        )
+        try:
+            msg = msg.text
+            cls_btn.click()
+            Wait(driver, WAIT_BACKEND).until(
+                staleness_of(cls_btn),
+                message='waiting for notify "{:s}" to disappear'.format(msg)
+            )
+        except StaleElementReferenceException:
+            pass
+
         notify = driver.find_elements_by_css_selector('.ember-notify '
                                                       'a.close-button, '
                                                       '.ember-notify '
@@ -378,3 +385,12 @@ def assert_copied_token_does_not_match_displayed_one(browser_id, tmp_memory):
     err_msg = 'Displayed token: {} match copied one: {} ' \
               'while it should not be'.format(displayed_token, copied_token)
     assert copied_token != displayed_token, err_msg
+
+
+@given(parsers.parse('there are no working provider(s) named {provider_list}'))
+def kill_providers(persistent_environment, provider_list):
+    for provider in parse_seq(provider_list):
+        regexp = r'worker@(.*?{name}.*)'.format(name=provider)
+        for node in persistent_environment["op_worker_nodes"]:
+            container_name = re.match(regexp, node).groups(0)[0]
+            subprocess.call(['docker', 'kill', container_name])

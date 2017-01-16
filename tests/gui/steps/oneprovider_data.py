@@ -129,9 +129,15 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
                     'with tooltip "{tooltip_name}"'))
 def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
     driver = select_browser(selenium, browser_id)
-    driver.find_element_by_css_selector('ul.toolbar-group '
-                                        'a[data-original-title="{:s}"]'
-                                        ''.format(tooltip_name)).click()
+    btn = driver.find_element_by_css_selector('ul.toolbar-group '
+                                              'a[data-original-title="{:s}"]'
+                                              ''.format(tooltip_name))
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda d: btn.is_enabled(),
+        message='waiting for {} tooltip from top menu bar in '
+                'data tab in op to become active'.format(tooltip_name)
+    )
+    btn.click()
 
 
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '

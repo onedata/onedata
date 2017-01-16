@@ -21,6 +21,13 @@ class WorldMap(object):
         self.web_elem.click()
 
     @property
+    def message(self):
+        css_sel = '.panel-onezone-alert'
+        err_msg = 'no alert on world map in oz found'
+        alert = find_web_elem(self.web_elem, css_sel, err_msg)
+        return Message(alert)
+
+    @property
     def providers(self):
         css_sel = '.provider-place'
         return [ProviderPopup(provider) for provider in
@@ -128,3 +135,23 @@ class ProviderPopup(object):
                                                              space=space_name))
         else:
             raise RuntimeError('no displayed panel found for given provider')
+
+
+class Message(object):
+
+    def __init__(self, web_elem):
+        self.web_elem = web_elem
+
+    @property
+    def title(self):
+        css_sel = '.panel-heading'
+        err_msg = 'no heading for alert on world map in oz found'
+        title = find_web_elem(self.web_elem, css_sel, err_msg)
+        return title.text
+
+    @property
+    def msg(self):
+        css_sel = '.panel-body'
+        err_msg = 'no msg in alert on world map in oz found'
+        msg = find_web_elem(self.web_elem, css_sel, err_msg)
+        return msg.text
