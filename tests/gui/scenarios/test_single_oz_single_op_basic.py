@@ -42,20 +42,20 @@ for arg in sys.argv:
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/oneprovider_group_multi.feature')
-scenarios('../features/oneprovider_group.feature')
-scenarios('../features/onezone_login.feature')
+# scenarios('../features/oneprovider_group_multi.feature')
+# scenarios('../features/oneprovider_group.feature')
+# scenarios('../features/onezone_login.feature')
 scenarios('../features/onezone_gui.feature')
-scenarios('../features/onezone_gui_multi.feature')
-scenarios('../features/oneprovider_data.feature')
-scenarios('../features/oneprovider_space.feature')
-scenarios('../features/oneprovider_shares.feature')
-scenarios('../features/oneprovider_shares_multi.feature')
-scenarios('../features/oneprovider_metadata.feature')
-
-# limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
-if BROWSER == 'Chrome':
-    scenarios('../features/oneprovider_upload_multi_files.feature')
+# scenarios('../features/onezone_gui_multi.feature')
+# scenarios('../features/oneprovider_data.feature')
+# scenarios('../features/oneprovider_space.feature')
+# scenarios('../features/oneprovider_shares.feature')
+# scenarios('../features/oneprovider_shares_multi.feature')
+# scenarios('../features/oneprovider_metadata.feature')
+#
+# # limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
+# if BROWSER == 'Chrome':
+#     scenarios('../features/oneprovider_upload_multi_files.feature')
 
 #
 # # --- FEATURES: oneprovider_data --- #
