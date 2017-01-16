@@ -59,8 +59,8 @@ def create_instances_of_webdriver(selenium, driver,
 @given(parsers.parse('user of {browser_id} generates valid name string'))
 def name_string(tmp_memory, browser_id):
     chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
-    gen_str = ''.join(random.sample(chars, 6))
-    tmp_memory[browser_id]['gen_str'] = 'g_' + gen_str
+    gen_str = 'g_' + ''.join(random.sample(chars, 6))
+    tmp_memory[browser_id]['gen_str'] = gen_str
     return gen_str
 
 
