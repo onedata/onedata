@@ -138,19 +138,19 @@ Feature: Oneprovider space functionality
 
   # 'space2' defined in env.json
   Scenario: Leave existing space and then create space with the same name
-    When user of browser clicks on settings icon displayed for "C" item on the spaces sidebar list
-    And user of browser clicks on the "LEAVE SPACE" item in settings dropdown for space named "C"
+    When user of browser clicks on settings icon displayed for "spaceC" item on the spaces sidebar list
+    And user of browser clicks on the "LEAVE SPACE" item in settings dropdown for space named "spaceC"
     And user of browser sees that "Leave a space" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     Then user of browser sees an info notify with text matching to: .*C.*left
     And user of browser sees that the modal has disappeared
-    And user of browser sees that "C" has disappeared from spaces sidebar list
+    And user of browser sees that "spaceC" has disappeared from spaces sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on the "Create" button in sidebar list's header
     And user of browser sees that "Create a new space" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "C" on keyboard
+    And user of browser types "spaceC" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that "C" has appeared on spaces sidebar list
+    And user of browser sees that "spaceC" has appeared on spaces sidebar list

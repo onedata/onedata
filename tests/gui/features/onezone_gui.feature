@@ -385,7 +385,8 @@ Feature: Onezone GUI elements
   Scenario: User sees that after unsupporting space, number displayed in space counter for given provider decreases
     When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
     And user of browser sees that there is provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser sees that spaces counter for provider named "p1" displays 5 in expanded "GO TO YOUR FILES" Onezone panel
+    # TODO uncomment below step after integration with swagger and remove dependencies between tests
+    # And user of browser sees that spaces counter for provider named "p1" displays 5 in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser expands submenu of provider named "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel
 
@@ -397,8 +398,9 @@ Feature: Onezone GUI elements
     And user of browser sees that the modal has disappeared
     And user of browser sees that space named "spaceB" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
 
-    Then user of browser sees that spaces counter for provider named "p1" displays 4 in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser expands submenu of provider named "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
+    # TODO uncomment below step after integration with swagger and remove dependencies between tests
+    # Then user of browser sees that spaces counter for provider named "p1" displays 4 in expanded "GO TO YOUR FILES" Onezone panel
+    Then user of browser expands submenu of provider named "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel
 
 

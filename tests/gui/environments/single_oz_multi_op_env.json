@@ -260,6 +260,21 @@
                         "supported_size": 10
                     }
                 }
+            },
+            "space_c": {
+                "displayed_name": "spaceC",
+                "users": [
+                    "user1"
+                ],
+                "groups": [
+                    "group1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
+                    }
+                }
             }
         }
     }
