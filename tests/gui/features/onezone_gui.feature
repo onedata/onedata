@@ -406,6 +406,7 @@ Feature: Onezone GUI elements
     When user of browser expands account settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     Then user of browser sees that URL matches https?://[^/]*/#/home/login
+    And user of browser should see that the page title contains "Login"
 
 
   Scenario: User can set Provider as Home provider (icon changes), and when he relogins, he will be redirected to Home provider automatically

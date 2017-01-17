@@ -24,7 +24,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
     Then user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser sees [Basic, JSON, RDF] navigation tabs in metadata panel opened for file named "file1"
 

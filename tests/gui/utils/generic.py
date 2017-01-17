@@ -152,7 +152,8 @@ def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
 
 
 def click_on_web_elem(web_elem, err_msg, wait=WAIT_FRONTEND):
-    @repeat_failed(attempts=wait)
+
+    @repeat_failed(attempts=wait, timeout=True)
     def click_on_elem(elem, msg):
         if elem.is_enabled():
             elem.click()
