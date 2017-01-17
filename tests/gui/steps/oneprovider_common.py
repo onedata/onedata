@@ -29,11 +29,6 @@ MAIN_MENU_TAB_TO_URL = {'spaces': 'spaces',
 def _click_on_tab_in_main_menu_sidebar(driver, tab):
     def _load_main_menu_tab_page():
         def _check_url(url):
-            # try:
-            #     found = parse_url(driver.current_url).group('tab')
-            # except AttributeError:
-            #     return False
-            # else:
             return url != driver.current_url
 
         current_url = driver.current_url

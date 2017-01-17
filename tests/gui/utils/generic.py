@@ -15,7 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
-__author__ = "Jakub Liput"
+__author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
@@ -133,22 +133,33 @@ def iter_ahead(iterable):
         yield item, next_item
 
 
-def find_web_elem(web_elem, css_sel, err_msg):
+def find_web_elem(web_elem_root, css_sel, err_msg):
     try:
-        item = web_elem.find_element_by_css_selector(css_sel)
+        item = web_elem_root.find_element_by_css_selector(css_sel)
     except NoSuchElementException:
         raise RuntimeError(err_msg)
     else:
         return item
 
 
-def find_web_elem_with_text(web_elem, css_sel, text, err_msg):
-    items = web_elem.find_elements_by_css_selector(css_sel)
+def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
+    items = web_elem_root.find_elements_by_css_selector(css_sel)
     for item in items:
         if item.text.lower() == text:
             return item
     else:
         raise RuntimeError(err_msg)
+
+
+def click_on_web_elem(web_elem, err_msg, wait=WAIT_FRONTEND):
+    @repeat_failed(attempts=wait)
+    def click_on_elem(elem, msg):
+        if elem.is_enabled():
+            elem.click()
+        else:
+            raise RuntimeError(msg)
+
+    click_on_elem(web_elem, err_msg)
 
 
 @contextmanager

@@ -10,7 +10,7 @@ from tests.utils.acceptance_utils import list_parser
 
 
 __author__ = "Jakub Liput, Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
@@ -47,8 +47,8 @@ def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
     action()
 
 
-@when(parsers.parse('user of {browser_id} types "{text}" to active edit box'))
-@then(parsers.parse('user of {browser_id} types "{text}" to active edit box'))
+@when(parsers.parse('user of {browser_id} types "{text}" in active edit box'))
+@then(parsers.parse('user of {browser_id} types "{text}" in active edit box'))
 def type_text_into_active_edit_box(browser_id, text, tmp_memory):
     edit_box = tmp_memory[browser_id]['edit_box']
     edit_box.value = text

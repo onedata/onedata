@@ -76,7 +76,7 @@ def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
     for btn in buttons:
         if btn.text.lower() == button_name:
             Wait(driver, WAIT_FRONTEND).until(
-                lambda _: btn.is_displayed(),
+                lambda _: btn.is_enabled(),
                 message='waiting for button {} to be displayed'
                         ''.format(button_name)
             )

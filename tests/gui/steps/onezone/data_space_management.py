@@ -8,7 +8,7 @@ from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
 from tests.gui.utils.generic import repeat_failed, parse_seq, implicit_wait
 
 __author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
@@ -99,10 +99,10 @@ def assert_dropright_witk_token_for_space_appeared(selenium, browser_id,
 
 
 @when(parsers.parse('user of {browser_id} sees that dropright contains '
-                    'nonempty token for space named "{name}" in expanded '
+                    'non-empty token for space named "{name}" in expanded '
                     '"DATA SPACE MANAGEMENT" Onezone panel'))
 @then(parsers.parse('user of {browser_id} sees that dropright contains '
-                    'nonempty token for space named "{name}" in expanded '
+                    'non-empty token for space named "{name}" in expanded '
                     '"DATA SPACE MANAGEMENT" Onezone panel'))
 def assert_dropright_has_nonempty_token_for_space_appeared(selenium, browser_id,
                                                            name, tmp_memory,

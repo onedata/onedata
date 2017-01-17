@@ -214,7 +214,7 @@
                 }
             },
             "space_to_unsupport": {
-                "displayed_name": "Unsupportable space",
+                "displayed_name": "Useless space",
                 "users": [
                     "user1"
                 ],
@@ -228,7 +228,7 @@
                     }
                 }
             },
-            "A": {
+            "space_a": {
                 "displayed_name": "A",
                 "users": [
                     "user1",
@@ -246,29 +246,13 @@
                     }
                 }
             },
-            "B": {
-                "displayed_name": "B",
+            "space_b": {
+                "displayed_name": "spaceB",
                 "users": [
                     "user1"
                 ],
                 "groups": [
                     "group1"
-                ],
-                "providers": {
-                    "p1": {
-                        "storage": "/mnt/st1",
-                        "supported_size": 10
-                    }
-                }
-            },
-            "C": {
-                "displayed_name": "C",
-                "users": [
-                    "user1",
-                    "user2"
-                ],
-                "groups": [
-                    "group2"
                 ],
                 "providers": {
                     "p1": {

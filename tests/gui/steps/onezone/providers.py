@@ -8,7 +8,7 @@ from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
 from tests.gui.utils.generic import repeat_failed, implicit_wait
 
 __author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
@@ -118,7 +118,7 @@ def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
 def click_on_provider_circle(selenium, browser_id, ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def click_on_provider(d, index):
         world_map = oz_page(d)['world map']
         provider = world_map[index]
@@ -139,7 +139,7 @@ def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                   ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_provider_popup(d, index):
         world_map = oz_page(d)['world map']
         provider = world_map[index]
@@ -156,7 +156,7 @@ def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
 def click_on_world_map(selenium, browser_id, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def click_on_map(d):
         world_map = oz_page(d)['world map']
         world_map.click()
@@ -174,7 +174,7 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
                                                   provider, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_consistency(d, provider_name):
         prov_record = oz_page(d)['go to your files'][provider_name]
         prov_popup = oz_page(d)['world map'].get_provider_with_displayed_panel()
@@ -205,7 +205,7 @@ def click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
                                                    provider, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def click_on_provider(d, provider_name):
         prov_record = oz_page(d)['go to your files'][provider_name]
         prov_record.click()
@@ -221,7 +221,7 @@ def assert_provider_working_in_oz_panel(selenium, browser_id,
                                         provider, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_working(d, provider_name):
         prov_record = oz_page(d)['go to your files'][provider_name]
         err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
@@ -239,7 +239,7 @@ def assert_provider_not_working_in_oz_panel(selenium, browser_id,
                                             provider, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_not_working(d, provider_name):
         prov_record = oz_page(d)['go to your files'][provider_name]
         err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
@@ -256,7 +256,7 @@ def assert_provider_not_working_in_oz_panel(selenium, browser_id,
 def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_alert(d, alert_title):
         alert = oz_page(d)['world map'].message
         err_msg = 'alert title {} does not match {}'.format(alert.title,
