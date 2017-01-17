@@ -352,3 +352,33 @@ def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
 
     click_on_map(driver, item_name, item_type, subitem_name,
                  subitem_type, oz_panel)
+
+
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'provider named "(?P<subitem_name>.+?)" in submenu of space '
+                 r'named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'provider named "(?P<subitem_name>.+?)" in submenu of space '
+                 r'named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is space named '
+                 r'"(?P<subitem_name>.+?)" in submenu of provider named '
+                 r'"(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is space named '
+                 r'"(?P<subitem_name>.+?)" in submenu of provider named '
+                 r'"(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
+def assert_item_in_submenu_of_item_in_oz_panel(selenium, browser_id,
+                                               subitem_name, item_name,
+                                               oz_panel, oz_page):
+    driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND)
+    def assert_exist(d, item, subitem, panel):
+        item_record = oz_page(d)[panel][item]
+        # noinspection PyStatementEffect
+        item_record[subitem]
+
+    assert_exist(driver, item_name, subitem_name, oz_panel)

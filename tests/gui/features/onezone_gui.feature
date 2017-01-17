@@ -473,3 +473,13 @@ Feature: Onezone GUI elements
     When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
     Then user of browser sees that provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel is not working
     And user of browser sees alert with title "All your providers are offline" on world map in Onezone gui
+
+
+  Scenario: User ses that if space is displayed in provider submenu in GO TO YOUR FILES panel, that provider is also displayed in submenu of that space in DATA SPACE MANAGEMENT panel
+    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+    And user of browser sees that there is provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser expands submenu of provider named "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser sees that there is space named "space1" in submenu of provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser expands submenu of space named "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that there is provider named "p1" in submenu of space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
