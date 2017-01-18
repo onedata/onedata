@@ -257,8 +257,8 @@ def run_cmd_in_directory(user, command, path, client_node, context):
                                           command=command)
 
     def condition():
-        ret = run_cmd(user.name, client, cmd, output=True)
-        assert ret == 0
+        run_cmd(user.name, client, cmd, output=True)
+
     assert_(client.perform, condition, timeout=0)
 
 
