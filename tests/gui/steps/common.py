@@ -10,6 +10,7 @@ import re
 import time
 import random
 import stat
+import subprocess
 
 import pyperclip
 
@@ -47,6 +48,7 @@ def create_instances_of_webdriver(selenium, driver,
                                       'spaces': {},
                                       'groups': {},
                                       'mailbox': {},
+                                      'oz': {},
                                       'window': {'modal': None}}
 
             selenium[browser_id].instance_name = browser_id
@@ -57,7 +59,7 @@ def create_instances_of_webdriver(selenium, driver,
 @given(parsers.parse('user of {browser_id} generates valid name string'))
 def name_string(tmp_memory, browser_id):
     chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
-    gen_str = ''.join(random.sample(chars, 6))
+    gen_str = 'g_' + ''.join(random.sample(chars, 6))
     tmp_memory[browser_id]['gen_str'] = gen_str
     return gen_str
 
@@ -139,6 +141,16 @@ def g_click_on_link_with_text(selenium, browser_id_list, link_name):
         driver.find_element_by_link_text(link_name).click()
 
 
+@when(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+                 '"(?P<link_name>.*)" link'))
+@then(parsers.re('users? of (?P<browser_id_list>.*) clicks on the '
+                 '"(?P<link_name>.*)" link'))
+def wt_click_on_link_with_text(selenium, browser_id_list, link_name):
+    for browser_id in parse_seq(browser_id_list):
+        driver = select_browser(selenium, browser_id)
+        driver.find_element_by_link_text(link_name).click()
+
+
 @when(parsers.re('user of (?P<browser_id>.+?) is idle for '
                  '(?P<seconds>\d*\.?\d+([eE][-+]?\d+)?) seconds'))
 def wait_n_seconds(seconds):
@@ -182,7 +194,9 @@ def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
                 return len(matching_elements) > 0
             else:
                 return None
-        except NoSuchElementException:
+        # TODO currently we ignore stalement because some old notify may have disappeared
+        #  and probability of new notify to disappear is small
+        except (NoSuchElementException, StaleElementReferenceException):
             return None
 
     driver = select_browser(selenium, browser_id)
@@ -204,12 +218,16 @@ def close_notifies(selenium, browser_id):
 
     while notify:
         cls_btn, msg = notify
-        msg = msg.text
-        cls_btn.click()
-        Wait(driver, WAIT_BACKEND).until(
-            staleness_of(cls_btn),
-            message='waiting for notify "{:s}" to disappear'.format(msg)
-        )
+        try:
+            msg = msg.text
+            cls_btn.click()
+            Wait(driver, WAIT_BACKEND).until(
+                staleness_of(cls_btn),
+                message='waiting for notify "{:s}" to disappear'.format(msg)
+            )
+        except StaleElementReferenceException:
+            pass
+
         notify = driver.find_elements_by_css_selector('.ember-notify '
                                                       'a.close-button, '
                                                       '.ember-notify '
@@ -222,6 +240,13 @@ def close_notifies(selenium, browser_id):
 def refresh_site(selenium, browser_id):
     driver = select_browser(selenium, browser_id)
     driver.refresh()
+
+
+@when(parsers.parse('user of {browser_id} refreshes webapp'))
+@then(parsers.parse('user of {browser_id} refreshes webapp'))
+def refresh_site(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    driver.get(parse_url(driver.current_url).group('base_url'))
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) sees that '
@@ -338,3 +363,34 @@ def create_temp_dir_with_files(browser_id, num, dir_path, tmpdir):
     directory = _create_temp_dir(tmpdir, path, recursive=True)
     for i in range(10, num + 10):
         _create_temp_file(directory, 'file_{}.txt'.format(i), '1' * i)
+
+
+@when(parsers.parse('user of browser sees that copied token matches displayed one'))
+@then(parsers.parse('user of browser sees that copied token matches displayed one'))
+def assert_copied_token_match_displayed_one(browser_id, tmp_memory):
+    displayed_token = tmp_memory[browser_id]['token']
+    copied_token = pyperclip.paste()
+    err_msg = 'Displayed token: {} does not match copied one: ' \
+              '{}'.format(displayed_token, copied_token)
+    assert copied_token == displayed_token, err_msg
+
+
+@when(parsers.parse('user of browser sees that copied token '
+                    'does not match displayed one'))
+@then(parsers.parse('user of browser sees that copied token '
+                    'does not match displayed one'))
+def assert_copied_token_does_not_match_displayed_one(browser_id, tmp_memory):
+    displayed_token = tmp_memory[browser_id]['token']
+    copied_token = pyperclip.paste()
+    err_msg = 'Displayed token: {} match copied one: {} ' \
+              'while it should not be'.format(displayed_token, copied_token)
+    assert copied_token != displayed_token, err_msg
+
+
+@given(parsers.parse('there are no working provider(s) named {provider_list}'))
+def kill_providers(persistent_environment, provider_list):
+    for provider in parse_seq(provider_list):
+        regexp = r'worker@(.*?{name}.*)'.format(name=provider)
+        for node in persistent_environment["op_worker_nodes"]:
+            container_name = re.match(regexp, node).groups(0)[0]
+            subprocess.call(['docker', 'kill', container_name])

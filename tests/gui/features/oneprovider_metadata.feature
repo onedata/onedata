@@ -83,7 +83,7 @@ Feature: Oneprovider Metadata view
 
     And user of browser should not see metadata icon for directory named "dir1"
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
@@ -113,7 +113,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
@@ -142,7 +142,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
@@ -172,14 +172,14 @@ Feature: Oneprovider Metadata view
 
     # try saving empty forms
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
     And user of browser refreshes site
 
     # try saving metadata with record key being filled only
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
@@ -189,7 +189,7 @@ Feature: Oneprovider Metadata view
     Then user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
 
@@ -217,14 +217,14 @@ Feature: Oneprovider Metadata view
 
     # try saving empty forms
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
     And user of browser refreshes site
 
     # try saving metadata with record key being filled only
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
@@ -233,7 +233,7 @@ Feature: Oneprovider Metadata view
     Then user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
 
@@ -260,7 +260,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
@@ -272,7 +272,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
 
@@ -299,7 +299,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
@@ -311,7 +311,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
 
@@ -338,7 +338,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
@@ -350,7 +350,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
 
@@ -377,7 +377,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
@@ -388,7 +388,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
 
@@ -415,7 +415,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
@@ -427,7 +427,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on delete basic metadata entry icon for basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
     Then user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
@@ -454,7 +454,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
@@ -466,7 +466,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on delete basic metadata entry icon for basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
     Then user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
@@ -494,7 +494,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
@@ -506,13 +506,15 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for file named "file1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     Then user of browser should not see any basic metadata entry in metadata panel opened for file named "file1"
 
     # TODO rm after integrating with swagger
@@ -538,7 +540,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
@@ -550,13 +552,15 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should see basic metadata entry with attribute named "attr" and value "val" in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     Then user of browser should not see any basic metadata entry in metadata panel opened for directory named "dir1"
 
     # TODO rm after integrating with swagger
@@ -582,7 +586,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for file named "file1"
     And user of browser types "attr" on keyboard
@@ -590,9 +594,10 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add basic metadata entry icon in metadata panel opened for file named "file1"
     And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
 
     Then user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for file named "file1"
 
@@ -618,7 +623,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that the modal has disappeared
     And user of browser sees that directory named "dir1" has appeared on files list
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on input box with placeholder equal to "Attribute" in metadata panel opened for directory named "dir1"
     And user of browser types "attr" on keyboard
@@ -626,8 +631,9 @@ Feature: Oneprovider Metadata view
     And user of browser types "val" on keyboard
     And user of browser clicks on add basic metadata entry icon in metadata panel opened for directory named "dir1"
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     Then user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser should not see basic metadata entry with attribute named "attr" in metadata panel opened for directory named "dir1"
 
@@ -654,7 +660,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
     And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
@@ -665,7 +671,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains ""id": 1"
@@ -693,7 +699,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
@@ -704,7 +710,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains ""id": 1"
@@ -732,7 +738,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
     And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
@@ -743,14 +749,16 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains ""id": 1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: "{}"
@@ -778,7 +786,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
@@ -789,14 +797,16 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains ""id": 1"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: "{}"
@@ -824,15 +834,17 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
     And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
     And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "{"id": 1}" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     Then user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: "{}"
@@ -860,15 +872,17 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
     And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "{"id": 1}" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     Then user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: "{}"
@@ -896,7 +910,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
     And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
@@ -907,7 +921,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
@@ -935,7 +949,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
@@ -946,7 +960,7 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
@@ -974,7 +988,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
     And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
@@ -985,14 +999,16 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for file named "file1" in files list has disappeared
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: ""
@@ -1020,7 +1036,7 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
@@ -1031,14 +1047,16 @@ Feature: Oneprovider Metadata view
     And user of browser refreshes site
     And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
     And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
     Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
+
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""
@@ -1066,15 +1084,17 @@ Feature: Oneprovider Metadata view
     And user of browser sees that file named "file1" has appeared on files list
 
     And user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
     And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
     And user of browser clears textarea placed in metadata panel opened for file named "file1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
+    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
+
     Then user of browser selects "file1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
     And user of browser sees that metadata panel for file named "file1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
     And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: ""
@@ -1102,16 +1122,17 @@ Feature: Oneprovider Metadata view
     And user of browser sees that directory named "dir1" has appeared on files list
 
     And user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
     And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
     And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
     And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
+    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
 
     Then user of browser selects "dir1" from files list
-    And user of browser clicks the button from top menu bar with tooltip "Edit metadata"
+    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
     And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
     And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
     And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""

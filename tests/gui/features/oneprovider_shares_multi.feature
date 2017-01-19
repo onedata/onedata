@@ -53,6 +53,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
+    And user of browser1 sees an info notify with text matching to: .*copied.*
     And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
@@ -119,6 +120,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
+    And user of browser1 sees an info notify with text matching to: .*copied.*
     And user of browser1 sends copied URL to user of browser2
     And user of browser1 closes all notifies
     And user of browser1 clicks "Open the share" confirmation button in displayed modal
@@ -197,6 +199,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
+    And user of browser1 sees an info notify with text matching to: .*copied.*
     And user of browser1 sends copied URL to user of browser2
     And user of browser1 closes all notifies
     And user of browser1 clicks "Open the share" confirmation button in displayed modal
@@ -264,6 +267,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
+    And user of browser1 sees an info notify with text matching to: .*copied.*
     And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
@@ -337,6 +341,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
+    And user of browser1 sees an info notify with text matching to: .*copied.*
     And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
@@ -415,6 +420,7 @@ Feature: Oneprovider Share view
 
     And user of browser1 sees that "Share summary" modal has appeared
     And user of browser1 clicks on copy button in active modal
+    And user of browser1 sees an info notify with text matching to: .*copied.*
     And user of browser1 sends copied URL to user of browser2
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared

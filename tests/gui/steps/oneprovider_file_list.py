@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait as Wait
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_FRONTEND
-from tests.gui.utils.generic import parse_seq
+from tests.gui.utils.generic import parse_seq, repeat_failed
 
 
 tool_type_to_icon = {'share': 'oneicon-share',
@@ -46,6 +46,7 @@ def _pack_content_into_rows(items):
         yield (row, label, icon, tools, size, mod, meta)
 
 
+@repeat_failed(attempts=10, interval=0.1)
 def _get_items_from_file_list(driver):
     items = driver.find_elements_by_css_selector('table.files-table '
                                                  'tr.file-row, '

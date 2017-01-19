@@ -14,6 +14,7 @@ from tests.gui.steps.oneprovider_file_list import _get_items_from_file_list, typ
 
 from pytest_bdd import when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
+from selenium.common.exceptions import StaleElementReferenceException
 
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
@@ -56,7 +57,10 @@ def _find_input_box_using_placeholder(panel, placeholder):
                     'has appeared'))
 def is_files_metadata_panel_displayed(selenium, browser_id, item_name, item_type):
     driver = select_browser(selenium, browser_id)
-    metadata_panel = Wait(driver, WAIT_FRONTEND).until(
+
+    exceptions = (StaleElementReferenceException, )
+    metadata_panel = Wait(driver, WAIT_FRONTEND,
+                          ignored_exceptions=exceptions).until(
         lambda d: _get_metadata_panel_for_file(_get_items_from_file_list(d),
                                                item_name, item_type,
                                                exception=False),
@@ -83,7 +87,9 @@ def is_files_metadata_panel_displayed(selenium, browser_id, item_name, item_type
 def is_not_files_metadata_panel_displayed(selenium, browser_id,
                                           item_type, item_name):
     driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until_not(
+
+    exceptions = (StaleElementReferenceException, )
+    Wait(driver, WAIT_FRONTEND, ignored_exceptions=exceptions).until_not(
         lambda d: _get_metadata_panel_for_file(_get_items_from_file_list(d),
                                                item_name, item_type,
                                                exception=False),

@@ -129,14 +129,21 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
                     'with tooltip "{tooltip_name}"'))
 def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
     driver = select_browser(selenium, browser_id)
-    driver.find_element_by_css_selector('ul.toolbar-group '
-                                        'a[data-original-title="{:s}"]'
-                                        ''.format(tooltip_name)).click()
+    btn = driver.find_element_by_css_selector('ul.toolbar-group '
+                                              'a[data-original-title="{:s}"]'
+                                              ''.format(tooltip_name))
+    Wait(driver, WAIT_FRONTEND).until(
+        lambda d: btn.is_enabled(),
+        message='waiting for {} tooltip from top menu bar in '
+                'data tab in op to become active'.format(tooltip_name)
+    )
+    btn.click()
 
 
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '
                     'supporting space in providers column'))
 def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
+
     def _find_provider(s):
         providers = s.find_elements_by_css_selector(
             '#file-chunks-modal .container-fluid '
@@ -154,6 +161,44 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
     )
 
 
+def _is_space_tree_root(driver, is_home, space_name):
+    space_select = driver.find_element_by_css_selector('nav.secondary-sidebar '
+                                                       '.data-spaces-select')
+    icon, label = space_select.find_elements_by_css_selector('.dropdown > a '
+                                                             '.item-icon'
+                                                             ':not(.select-arrow) '
+                                                             '.oneicon, '
+                                                             '.dropdown > a '
+                                                             '.item-label')
+    displayed_name = label.text
+    assert displayed_name == space_name, 'current directory tree is displayed ' \
+                                         'for "{}" instead of "{}"'.format(displayed_name,
+                                                                           space_name)
+    if is_home:
+        assert 'oneicon-space-home' in icon.get_attribute('class'), \
+            'space {} is not home space'.format(displayed_name)
+
+
+@given(parsers.re('user of (?P<browser_id>.+?) seen that displayed directory '
+                  'tree in sidebar panel belonged to (?P<is_home>(home )?)space '
+                  'named "(?P<space_name>.+?)'))
+def g_is_space_tree_root(selenium, browser_id, is_home, space_name):
+    driver = select_browser(selenium, browser_id)
+    _is_space_tree_root(driver, True if is_home else False, space_name)
+
+
+@when(parsers.re('user of (?P<browser_id>.+?) sees that displayed directory '
+                 'tree in sidebar panel belongs to (?P<is_home>(home )?)space '
+                 'named "(?P<space_name>.+?)"'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that displayed directory '
+                 'tree in sidebar panel belongs to (?P<is_home>(home )?)space '
+                 'named "(?P<space_name>.+?)"'))
+def wt_is_space_tree_root(selenium, browser_id, is_home, space_name):
+    driver = select_browser(selenium, browser_id)
+    _is_space_tree_root(driver, True if is_home else False, space_name)
+
+
+# TODO implement better checking dir tree
 @when(parsers.parse('user of {browser_id} sees that current working directory '
                     'displayed in breadcrumbs is {path}'))
 @then(parsers.parse('user of {browser_id} sees that current working directory '

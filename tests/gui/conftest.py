@@ -59,6 +59,14 @@ is_firefox_logging_enabled = re.match(r'.*--firefox-logs.*', cmd_line)
 is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_line)
 
 
+from tests.gui.utils.onezone_gui import OZLoggedIn
+
+
+@pytest.fixture(scope='session')
+def oz_page():
+    return OZLoggedIn
+
+
 @pytest.fixture
 def tmp_memory():
     """Dict to use when one wants to store sth between steps.
@@ -263,3 +271,31 @@ if is_recording_enabled:
         p.communicate(input=b'q')
         if not p.stdin.closed:
             p.stdin.close()
+
+
+def pytest_collection_modifyitems(items):
+    first = []
+    last = []
+    rest = []
+    run_first = ('test_user_can_unsupport_space',
+                 'test_user_sees_that_after_unsupporting_space'
+                 )
+    run_last = ('test_user_sees_that_when_no_provider_is_working_'
+                'appropriate_msg_is_shown',)
+
+    for item in items:
+        for test in run_first:
+            if test in item.nodeid:
+                first.append(item)
+                break
+        else:
+            for test in run_last:
+                if test in item.nodeid:
+                    last.append(item)
+                    break
+            else:
+                rest.append(item)
+
+    first.extend(rest)
+    first.extend(last)
+    items[:] = first

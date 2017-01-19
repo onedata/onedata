@@ -1,21 +1,25 @@
 """Generic GUI testing utils - mainly helpers and extensions for Selenium.
 """
 
-__author__ = "Jakub Liput"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 import re
 import os
+import itertools
+from time import sleep, time
+from functools import wraps
 from contextlib import contextmanager
 
 from tests import gui
-from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH, WAIT_FRONTEND
+from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH
 from selenium.webdriver.support.wait import WebDriverWait as Wait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
-from inspect import selector
+
+__author__ = "Jakub Liput, Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 
 # RE_URL regexp is matched as shown below:
@@ -50,7 +54,6 @@ def change_implicit_wait(driver, fun, wait_time):
     WARNING: this will change implicit_wait time on global selenium object!
     Returns the result of fun invocation
     """
-    result = None
     try:
         driver.implicitly_wait(wait_time)
         result = fun(driver)
@@ -85,34 +88,6 @@ def refresh_and_call(browser, callback, *args, **kwargs):
         return result
 
 
-def find_item_with_given_properties(browser, css_path, check_properties):
-    """Find elements with given css selector and return first one fulfilling
-    given properties.
-    """
-    items = browser.find_elements_by_css_selector(css_path)
-    for item in items:
-        if check_properties(item):
-            return item
-    return None
-
-
-def click_on_element(browser, css_path, item_name,
-                     msg, ignore_case=True,
-                     wait=WAIT_FRONTEND):
-    """Check if elem is visible and enabled, if so click on it.
-    """
-    properties = selector(browser, text=item_name,
-                          ignore_case=ignore_case,
-                          check_visibility=True,
-                          check_if_enabled=True)
-
-    Wait(browser, wait).until(
-        lambda s: find_item_with_given_properties(s, css_path,
-                                                  properties),
-        message=msg.format(item_name) if item_name else msg
-    ).click()
-
-
 def enter_text(input_box, text):
     input_box.clear()
     input_box.send_keys(text)
@@ -120,12 +95,74 @@ def enter_text(input_box, text):
 
 
 @contextmanager
-def implicit_wait(driver, time, prev_time):
-    driver.implicitly_wait(time)
+def implicit_wait(driver, timeout, prev_timeout):
+    driver.implicitly_wait(timeout)
     try:
         yield
-    except Exception as exc:
-        driver.implicitly_wait(prev_time)
-        raise exc
+    finally:
+        driver.implicitly_wait(prev_timeout)
+
+
+def repeat_failed(attempts, interval=0.5, timeout=False, exceptions=Exception):
+
+    def wrapper(function):
+
+        @wraps(function)
+        def repeat_until_limit(*args, **kwargs):
+            now = time()
+            limit, i = (now + attempts, now) if timeout else (attempts, 0)
+
+            while i < limit:
+                try:
+                    result = function(*args, **kwargs)
+                except exceptions:
+                    sleep(interval)
+                    i = time() if timeout else i+1
+                    continue
+                else:
+                    return result
+            return function(*args, **kwargs)
+
+        return repeat_until_limit
+    return wrapper
+
+
+def iter_ahead(iterable):
+    read_ahead = iter(iterable)
+    next(read_ahead)
+    for item, next_item in itertools.izip(iterable, read_ahead):
+        yield item, next_item
+
+
+def find_web_elem(web_elem_root, css_sel, err_msg):
+    try:
+        item = web_elem_root.find_element_by_css_selector(css_sel)
+    except NoSuchElementException:
+        raise RuntimeError(err_msg)
     else:
-        driver.implicitly_wait(prev_time)
+        return item
+
+
+def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
+    items = web_elem_root.find_elements_by_css_selector(css_sel)
+    for item in items:
+        if item.text.lower() == text:
+            return item
+    else:
+        raise RuntimeError(err_msg)
+
+
+def click_on_web_elem(driver, web_elem, err_msg):
+    if web_elem.is_enabled():
+        ActionChains(driver).move_to_element(web_elem).click(web_elem).perform()
+        web_elem.click()
+    else:
+        raise RuntimeError(err_msg)
+
+
+@contextmanager
+def suppress(*exceptions):
+    try:
+        yield
+    except exceptions:
+        pass
