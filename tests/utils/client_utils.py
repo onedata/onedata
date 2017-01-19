@@ -206,17 +206,11 @@ def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
               client, token_path, token):
 
     cmd = ('mkdir -p {mount_path}'
-           ' && export GLOBAL_REGISTRY_URL={gr_domain}'
-           ' && export PROVIDER_HOSTNAME={op_domain}'
-           ' && export X509_USER_CERT={user_cert}'
-           ' && export X509_USER_KEY={user_key}'
+           ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
            ' && echo {token} > {token_path}'
-           ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --log_dir /tmp --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+           ' && gdb oneclient -batch -return-child-result -ex \'run --log-dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
            ).format(mount_path=mount_path,
-                    gr_domain=oz_domain,
                     op_domain=op_domain,
-                    user_cert=user_cert,
-                    user_key=user_key,
                     token=token,
                     token_path=token_path)
 
@@ -415,7 +409,7 @@ def clean_mount_path(user, client):
         pid = run_cmd('root', client,
                       " | ".join(
                               ["ps aux",
-                               "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
+                               "grep './oneclient --insecure '" + client.mount_path,
                                "grep -v 'grep'",
                                "awk '{print $2}'"]),
                       output=True)
