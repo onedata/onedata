@@ -208,7 +208,7 @@ def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
     cmd = ('mkdir -p {mount_path}'
            ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
            ' && echo {token} > {token_path}'
-           ' && gdb oneclient -batch -return-child-result -ex \'run --log_dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+           ' && gdb oneclient -batch -return-child-result -ex \'run --log-dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
            ).format(mount_path=mount_path,
                     op_domain=op_domain,
                     token=token,
