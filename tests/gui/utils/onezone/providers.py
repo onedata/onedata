@@ -3,7 +3,7 @@
 
 from selenium.common.exceptions import NoSuchElementException
 
-from tests.gui.utils.generic import find_web_elem
+from tests.gui.utils.generic import find_web_elem, click_on_web_elem
 from tests.gui.utils.onezone.sidebar_panel import OZPanel
 from tests.gui.utils.onezone.sidebar_panel_record import OZPanelRecord
 
@@ -18,7 +18,7 @@ class GoToYourFilesPanel(OZPanel):
     @property
     def providers(self):
         css_sel = '#providers-list .providers-accordion-item'
-        return [ProviderRecord(provider, 'provider', '.spaces-count')
+        return [ProviderRecord(provider, self._driver, 'provider', '.spaces-count')
                 for provider
                 in self.web_elem.find_elements_by_css_selector(css_sel)]
 
@@ -66,14 +66,18 @@ class ProviderRecord(OZPanelRecord):
         err_msg = 'no provider header for "{}" found in GO TO YOUR FILES ' \
                   'panel'.format(self.name)
         header = find_web_elem(self.web_elem, css_sel, err_msg)
-        header.click()
+        err_msg = 'clicking on provider record named "{}" in GO TO YOUR FILES ' \
+                  'panel disabled'.format(self.name)
+        click_on_web_elem(self._driver, header, err_msg)
 
     def unset_from_home(self):
         css_sel = '.secondary-item-element.star-toggle .oneicon-home'
         err_msg = 'no home icon found for "{}" provider in GO TO YOUR FILES ' \
                   'panel'.format(self.name)
         home_icon = find_web_elem(self.web_elem, css_sel, err_msg)
-        home_icon.click()
+        err_msg = 'clicking on home icon for provider record named "{}" in ' \
+                  'GO TO YOUR FILES panel disabled'.format(self.name)
+        click_on_web_elem(self._driver, home_icon, err_msg)
 
     @property
     def supported_spaces(self):

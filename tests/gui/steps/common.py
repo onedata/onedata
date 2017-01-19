@@ -250,12 +250,13 @@ def refresh_site(selenium, browser_id):
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) sees that '
-                 '(?:url|URL) matches (?P<path>.+?)'))
+                 '(?:url|URL) matches: (?P<path>.+)'))
 @then(parsers.re('user of (?P<browser_id>.+?) sees that '
-                 '(?:url|URL) matches (?P<path>.+?)'))
+                 '(?:url|URL) matches: (?P<path>.+)'))
 def is_url_matching(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    assert re.search(path, driver.current_url), \
+    regexp = r'^{}$'.format(path.replace('\\', '\\\\'))
+    assert re.match(regexp, driver.current_url), \
         '{} url is not like expected {}'.format(driver.current_url, path)
 
 

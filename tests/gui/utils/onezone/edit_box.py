@@ -2,7 +2,7 @@
 in Onezone web GUI.
 """
 
-from tests.gui.utils.generic import find_web_elem, repeat_failed
+from tests.gui.utils.generic import find_web_elem, repeat_failed, click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -11,8 +11,9 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class EditBox(object):
-    def __init__(self, web_elem):
+    def __init__(self, web_elem, driver):
         self.web_elem = web_elem
+        self._driver = driver
 
     @property
     def value(self):
@@ -43,4 +44,5 @@ class EditBox(object):
     def _click_on_btn(self, css_sel, btn_type):
         msg = 'no {btn} button found for given edit box'.format(btn=btn_type)
         btn = find_web_elem(self.web_elem, css_sel, msg)
-        btn.click()
+        err_msg = 'clicking on {} btn in edit box disabled'.format(btn_type)
+        click_on_web_elem(self._driver, btn, err_msg)
