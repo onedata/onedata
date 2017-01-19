@@ -10,9 +10,10 @@ from functools import wraps
 from contextlib import contextmanager
 
 from tests import gui
-from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH, WAIT_FRONTEND
+from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 __author__ = "Jakub Liput, Bartosz Walkowicz"
@@ -151,16 +152,12 @@ def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
         raise RuntimeError(err_msg)
 
 
-def click_on_web_elem(web_elem, err_msg, wait=WAIT_FRONTEND):
-
-    @repeat_failed(attempts=wait, timeout=True)
-    def click_on_elem(elem, msg):
-        if elem.is_enabled():
-            elem.click()
-        else:
-            raise RuntimeError(msg)
-
-    click_on_elem(web_elem, err_msg)
+def click_on_web_elem(driver, web_elem, err_msg):
+    if web_elem.is_enabled():
+        ActionChains(driver).move_to_element(web_elem).click(web_elem).perform()
+        web_elem.click()
+    else:
+        raise RuntimeError(err_msg)
 
 
 @contextmanager

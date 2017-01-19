@@ -15,6 +15,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def _expand_oz_panel(oz_page, driver, panel):
     oz_page(driver)[panel].expand()
 

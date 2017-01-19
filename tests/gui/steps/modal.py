@@ -2,6 +2,8 @@
 """
 import itertools
 
+from tests.gui.utils.generic import click_on_web_elem, repeat_failed
+
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -129,10 +131,16 @@ def activate_input_box_in_modal(browser_id, in_type, tmp_memory):
                     'copy button in active modal'))
 @then(parsers.parse('user of {browser_id} clicks on '
                     'copy button in active modal'))
-def click_on_copy_btn_in_modal(browser_id, tmp_memory):
+def click_on_copy_btn_in_modal(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
     modal = tmp_memory[browser_id]['window']['modal']
     copy_btn = modal.find_element_by_css_selector('button.copy-btn')
-    copy_btn.click()
+
+    @repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
+    def click_on_cp_btn(d, btn, err_msg):
+        click_on_web_elem(d, btn, err_msg)
+
+    click_on_cp_btn(driver, copy_btn, 'copy btn for displayed modal disabled')
 
 
 @when(parsers.parse('user of {browser_id} sees that "{text}" option '
