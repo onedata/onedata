@@ -59,7 +59,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
 
     And user of browser2 opens received URL
-    And uesr of browser2 is idle for 2 seconds
+    And user of browser2 is idle for 2 seconds
     And user of browser2 sees that URL matches: https?://[^/]*/#/public/shares/.*
     And user of browser2 sees that public share is named "share1"
     And user of browser2 sees that current working directory path visible in share's file browser is as follows: share1

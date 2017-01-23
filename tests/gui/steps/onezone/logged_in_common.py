@@ -69,8 +69,13 @@ def type_text_into_active_edit_box(browser_id, text, tmp_memory):
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
-    action = getattr(oz_page(driver)[oz_panel], btn.lower().replace(' ', '_'))
-    action()
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def click_on_btn(d, panel, btn_name):
+        action = getattr(oz_page(d)[panel], btn_name.lower().replace(' ', '_'))
+        action()
+
+    click_on_btn(driver, oz_panel, btn)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
@@ -102,14 +107,14 @@ def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_item_exist(d, item, items_list_type, panel):
-        err_msg = 'no {type} named "{name}" found in {panel} ' \
-                  'oz panel'.format(type=items_list_type, name=item,
-                                    panel=panel)
+    def assert_item_exist(d, item, items_list_type, panel, msg):
         list_attr = '{}s'.format(items_list_type)
-        assert item in getattr(oz_page(d)[panel], list_attr), err_msg
+        assert item in getattr(oz_page(d)[panel],
+                               list_attr), msg.format(type=items_list_type,
+                                                      name=item, panel=panel)
 
-    assert_item_exist(driver, item_name, item_type, oz_panel)
+    err_msg = 'no {type} named "{name}" found in {panel} oz panel'
+    assert_item_exist(driver, item_name, item_type, oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
@@ -142,14 +147,15 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_item_not_exist(d, item, items_list_type, panel):
-        err_msg = '{type} named "{name}" found in {panel} oz panel while it ' \
-                  'should not be found'.format(type=items_list_type,
-                                               name=item, panel=panel)
+    def assert_item_not_exist(d, item, items_list_type, panel, msg):
         list_attr = '{}s'.format(items_list_type)
-        assert item not in getattr(oz_page(d)[panel], list_attr), err_msg
+        assert item not in getattr(oz_page(d)[panel],
+                                   list_attr), msg.format(type=items_list_type,
+                                                          name=item, panel=panel)
 
-    assert_item_not_exist(driver, item_name, item_type, oz_panel)
+    err_msg = '{type} named "{name}" found in {panel} oz panel while it ' \
+              'should not be found'
+    assert_item_not_exist(driver, item_name, item_type, oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
@@ -174,20 +180,20 @@ def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_match(d, item, item_list_type, counter, num, panel):
+    def assert_match(d, item, item_list_type, counter, num, panel, msg):
         item_record = oz_page(d)[panel][item]
         item_counter = getattr(item_record, '{}s_count'.format(counter))
-        err_msg = 'expected {counter_type}s number {num} does not match ' \
-                  'displayed {counter_type}s counter {displayed} ' \
-                  'for {type} named "{name}"'.format(type=item_list_type,
-                                                     name=item,
-                                                     counter_type=counter,
-                                                     displayed=item_counter,
-                                                     num=num)
-        assert item_counter == num, err_msg
+        assert item_counter == num, msg.format(type=item_list_type,
+                                               name=item,
+                                               counter_type=counter,
+                                               displayed=item_counter,
+                                               num=num)
 
+    err_msg = 'expected {counter_type}s number {num} does not match ' \
+              'displayed {counter_type}s counter {displayed} ' \
+              'for {type} named "{name}"'
     assert_match(driver, item_name, item_type,
-                 counter_type, int(number), oz_panel)
+                 counter_type, int(number), oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>provider) '
@@ -211,14 +217,15 @@ def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_home(d, item, item_list_type, panel):
+    def assert_home(d, item, item_list_type, panel, msg):
         item_record = oz_page(d)[panel][item]
-        err_msg = '{type} named "{name}" is not set as home while it should be ' \
-                  'in {panel} oz panel'.format(type=item_list_type, name=item,
+        assert item_record.is_home, msg.format(type=item_list_type,
+                                               name=item,
                                                panel=panel)
-        assert item_record.is_home, err_msg
 
-    assert_home(driver, item_name, item_type, oz_panel)
+    err_msg = '{type} named "{name}" is not set as home while it should be ' \
+              'in {panel} oz panel'
+    assert_home(driver, item_name, item_type, oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sets (?P<item_type>provider) '
@@ -277,18 +284,19 @@ def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_match(d, item, items_type, counter, submenu_items_type, panel):
+    def assert_match(d, item, items_type, counter,
+                     submenu_items_type, panel, msg):
         item_record = oz_page(d)[panel][item]
         submenu_list_len = len(getattr(item_record, submenu_items_type))
         counter = getattr(item_record, '{}s_count'.format(counter))
-        err_msg = '{type}s counter number {counter} does not match displayed number ' \
-                  'of {type}s {list_len}'.format(type=items_type,
-                                                 counter=counter,
-                                                 list_len=submenu_list_len)
-        assert counter == submenu_list_len, err_msg
+        assert counter == submenu_list_len, msg.format(type=items_type,
+                                                       counter=counter,
+                                                       list_len=submenu_list_len)
 
+    err_msg = '{type}s counter number {counter} does not match displayed number ' \
+              'of {type}s {list_len}'
     assert_match(driver, item_name, item_type, counter_type,
-                 submenu_list_type.lower().replace(' ', '_'), oz_panel)
+                 submenu_list_type.lower().replace(' ', '_'), oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
@@ -312,14 +320,14 @@ def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def expand_submenu_for_item(d, item, items_list_type, panel):
+    def expand_submenu_for_item(d, item, items_list_type, panel, msg):
         item_record = oz_page(d)[panel][item]
-        err_msg = 'submenu for {type} named "{name}" has not been ' \
-                  'expanded'.format(type=items_list_type, name=item)
         item_record.expand_submenu()
-        assert item_record.is_submenu_expanded is True, err_msg
+        assert item_record.is_submenu_expanded, msg.format(type=items_list_type,
+                                                           name=item)
 
-    expand_submenu_for_item(driver, item_name, item_type, oz_panel)
+    err_msg = 'submenu for {type} named "{name}" has not been expanded'
+    expand_submenu_for_item(driver, item_name, item_type, oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that '
@@ -340,19 +348,18 @@ def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND)
-    def click_on_map(d, item, items_type, subitem, subitems_type, panel):
+    def click_on_map(d, item, items_type, subitem, subitems_type, panel, msg):
         item_record = oz_page(d)[panel][item]
         subitem_record = item_record[subitem]
-        err_msg = '{subtype} named "{subitem}" is not set as home for {type} ' \
-                  'named "{name}" while it should be ' \
-                  'expanded'.format(subtype=subitems_type,
-                                    subitem=subitem,
-                                    type=items_type,
-                                    name=item)
-        assert subitem_record.is_home, err_msg
+        assert subitem_record.is_home, msg.format(subtype=subitems_type,
+                                                  subitem=subitem,
+                                                  type=items_type,
+                                                  name=item)
 
+    err_msg = '{subtype} named "{subitem}" is not set as home for {type} ' \
+              'named "{name}" while it should be expanded'
     click_on_map(driver, item_name, item_type, subitem_name,
-                 subitem_type, oz_panel)
+                 subitem_type, oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '

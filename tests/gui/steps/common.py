@@ -1,5 +1,6 @@
 """Common steps used in various GUI testing scenarios
 """
+import pytest
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -20,10 +21,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
-from tests.gui.utils.generic import parse_seq
+from tests.gui.utils.generic import parse_seq, repeat_failed
 from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
-    is_firefox_logging_enabled
+    is_firefox_logging_enabled, is_base_url_provided
 
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
@@ -153,6 +154,8 @@ def wt_click_on_link_with_text(selenium, browser_id_list, link_name):
 
 @when(parsers.re('user of (?P<browser_id>.+?) is idle for '
                  '(?P<seconds>\d*\.?\d+([eE][-+]?\d+)?) seconds'))
+@then(parsers.re('user of (?P<browser_id>.+?) is idle for '
+                 '(?P<seconds>\d*\.?\d+([eE][-+]?\d+)?) seconds'))
 def wait_n_seconds(seconds):
     time.sleep(float(seconds))
 
@@ -255,9 +258,15 @@ def refresh_site(selenium, browser_id):
                  '(?:url|URL) matches: (?P<path>.+)'))
 def is_url_matching(selenium, browser_id, path):
     driver = select_browser(selenium, browser_id)
-    regexp = r'^{}$'.format(path.replace('\\', '\\\\'))
-    assert re.match(regexp, driver.current_url), \
-        '{} url is not like expected {}'.format(driver.current_url, path)
+    regexp = r'{}$'.format(path.replace('\\', '\\\\'))
+    err_msg = r'{} url is not like expected {}'
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_url_match(d, regex, msg):
+        url = d.current_url
+        assert re.match(regex, url), msg.format(url, regex)
+
+    assert_url_match(driver, regexp, err_msg)
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) opens received (?:url|URL)'))

@@ -6,6 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 from tests.gui.utils.generic import find_web_elem, click_on_web_elem
 from tests.gui.utils.onezone.providers import SpaceRecordInProvidersPanel
 
+
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -103,7 +104,7 @@ class ProviderPopup(object):
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
             err_msg = 'clicking on cp hostname btn in provider "{}" ' \
                       'popup disabled'.format(self.name)
-            btn.click(self._driver, btn, err_msg)
+            click_on_web_elem(self._driver, btn, err_msg)
         else:
             raise RuntimeError('no displayed panel found for given provider')
 
@@ -115,8 +116,7 @@ class ProviderPopup(object):
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
             err_msg = 'clicking on "Go to your files" btn in provider "{}" ' \
                       'popup disabled'.format(self.name)
-            btn.click(self._driver, btn, err_msg)
-            btn.click()
+            click_on_web_elem(self._driver, btn, err_msg)
         else:
             raise RuntimeError('no displayed panel found for given provider')
 

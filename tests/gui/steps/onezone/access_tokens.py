@@ -26,10 +26,14 @@ __license__ = "This software is released under the MIT license cited in " \
                  r'item on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
 def click_on_btn_for_oz_access_token(selenium, browser_id, btn, ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
-    panel = oz_page(driver)['access tokens']
-    token = panel[int(ordinal[:-2]) - 1]
-    action = getattr(token, btn)
-    action()
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def click_on_btn(d, btn_name):
+        token = oz_page(d)['access tokens'][int(ordinal[:-2]) - 1]
+        action = getattr(token, btn_name)
+        action()
+
+    click_on_btn(driver, btn)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that token for '
@@ -50,8 +54,9 @@ def assert_oz_access_token_has_been_copied_correctly(selenium, browser_id,
     copied_val = pyperclip.paste()
 
     err_msg = 'Token has been copied incorrectly. ' \
-              'Expected {}, got {}'.format(displayed_val, copied_val)
-    assert displayed_val == copied_val, err_msg
+              'Expected {}, got {}'
+    assert displayed_val == copied_val, err_msg.format(displayed_val,
+                                                       copied_val)
 
 
 @when(parsers.parse('user of {browser_id} sees exactly {num:d} item(s) '
@@ -63,12 +68,12 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_quantity(d, quantity):
+    def assert_quantity(d, quantity, msg):
         with implicit_wait(d, 0.1, SELENIUM_IMPLICIT_WAIT):
             displayed = oz_page(d)['access tokens'].tokens_count
-            err_msg = 'Displayed tokens in ACCESS TOKENS oz panel: {seen} ' \
-                      'instead of excepted: {excepted}'.format(seen=displayed,
-                                                               excepted=quantity)
-            assert displayed == quantity, err_msg
+            assert displayed == quantity, msg.format(seen=displayed,
+                                                     excepted=quantity)
 
-    assert_quantity(driver, num)
+    err_msg = 'Displayed tokens in ACCESS TOKENS oz panel: {seen} ' \
+              'instead of excepted: {excepted}'
+    assert_quantity(driver, num, err_msg)

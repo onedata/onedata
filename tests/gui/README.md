@@ -41,12 +41,13 @@ Used parameters:
 
 ### Headless using existing Onedata installation
 
-Using this method, the tests will be run using URL provided with ``--base-url=<url>`` parameter.
+Using this method, the tests will be run using URL provided with ``--base-url=<url>`` parameter,
+which should be url provided by starting environment for oz from env.json.
 The URL should be a main application address of Onezone.
 
 Example: (invoke from onedata repo root dir)
 ```
-./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://veilfsdev.com --self-contained-html
+./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://oz.1485165366.dev --self-contained-html
 ```
 
 New parameters:
