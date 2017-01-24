@@ -43,15 +43,7 @@ Feature: Oneprovider Group functionality
     And user of browser clicks on the "INVITE GROUP" item in settings dropdown for group named "group1"
     And user of browser sees that "Invite group to the group" modal has appeared
     Then user of browser sees non-empty token in active modal
-
-
-  Scenario: User can request space creation
-    # group 'group1' defined in env.json
-    When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
-    And user of browser clicks on the "REQUEST SPACE CREATION" item in settings dropdown for group named "group1"
-    And user of browser sees that "Request space creation for the group" modal has appeared
-    Then user of browser sees non-empty token in active modal
-
+    
 
   Scenario: User fails to join group to space because of using invalid token (presses ENTER after entering token)
     # group 'group1' defined in env.json
