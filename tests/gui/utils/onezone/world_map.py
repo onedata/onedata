@@ -60,7 +60,7 @@ class ProviderPopup(object):
         self._driver = driver
 
     def click(self):
-        err_msg = 'clickin on provider popup for "{}" disabled'.format(self.name)
+        err_msg = 'clicking on provider popup circle for disabled'
         click_on_web_elem(self._driver, self.web_elem, err_msg)
 
     @property

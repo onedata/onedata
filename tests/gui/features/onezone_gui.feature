@@ -342,7 +342,7 @@ Feature: Onezone GUI elements
     And user of browser sees that provider popup for provider named "p1" has appeared on world map
     And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
     And user of browser sees that Oneprovider session has started
-    Then user of browser sees that URL matches: https?://[^/]*/#/onedata/data/
+    Then user of browser sees that URL matches: https?://[^/]*/#/onedata/data/.*
 
 
   Scenario: User sees that after going to Oneprovider, without having any home space, the first one alphabetically is loaded into view

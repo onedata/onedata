@@ -261,7 +261,7 @@ def is_url_matching(selenium, browser_id, path):
     regexp = r'{}$'.format(path.replace('\\', '\\\\'))
     err_msg = r'{} url is not like expected {}'
 
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True, interval=0.1)
     def assert_url_match(d, regex, msg):
         url = d.current_url
         assert re.match(regex, url), msg.format(url, regex)
