@@ -7,7 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from tests.gui.utils.generic import parse_seq
+from tests.gui.utils.generic import parse_seq, repeat_failed
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from tests.gui.utils.generic import refresh_and_call
 
@@ -174,5 +174,10 @@ def click_on_button_in_sidebar_header(selenium, browser_id, btn_name):
                     '{item_type} named "{item_name}" has appeared'))
 def has_submenu_appeared(browser_id, item_type, item_name, tmp_memory):
     item = tmp_memory[browser_id]['{}s'.format(item_type)][item_name]
-    assert item.find_element_by_css_selector('ul.submenu'), \
-        'submenu for {} named {} not found'.format(item_type, item_name)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def assert_submenu_appeared(elem, elem_type, elem_name):
+        assert elem.find_element_by_css_selector('ul.submenu'), \
+            'submenu for {} named {} not found'.format(elem_type, elem_name)
+
+    assert_submenu_appeared(item, item_type, item_name)

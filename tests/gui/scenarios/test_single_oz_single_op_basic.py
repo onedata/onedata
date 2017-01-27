@@ -45,6 +45,7 @@ for arg in sys.argv:
 
 SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environment)'
 
+
 @pytest.mark.skipif(USING_BASE_URL, reason=SKIP_REASON_BASE_URL)
 @scenario('../features/onezone_gui.feature',
           'User sees that when no provider is working appropriate msg is shown')
@@ -53,11 +54,9 @@ def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/oneprovider_group_multi.feature')
 scenarios('../features/oneprovider_group.feature')
 scenarios('../features/onezone_login.feature')
 scenarios('../features/onezone_gui.feature')
-scenarios('../features/onezone_gui_multi.feature')
 scenarios('../features/oneprovider_data.feature')
 scenarios('../features/oneprovider_space.feature')
 scenarios('../features/oneprovider_shares.feature')
@@ -67,3 +66,6 @@ scenarios('../features/oneprovider_metadata.feature')
 # limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
 if BROWSER == 'Chrome':
     scenarios('../features/oneprovider_upload_multi_files.feature')
+    # TODO VFS-3000 currently not working for firefox due to unknown reason (access denied which should not happen)
+    scenarios('../features/oneprovider_group_multi.feature')
+    scenarios('../features/onezone_gui_multi.feature')

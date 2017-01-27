@@ -103,7 +103,7 @@ def implicit_wait(driver, timeout, prev_timeout):
         driver.implicitly_wait(prev_timeout)
 
 
-def repeat_failed(attempts, interval=0.5, timeout=False, exceptions=Exception):
+def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=Exception):
 
     def wrapper(function):
 
@@ -157,7 +157,7 @@ def click_on_web_elem(driver, web_elem, err_msg):
         # driver.execute_script('arguments[0].click();', web_elem)
         # TODO check if such alternative works
         action = ActionChains(driver)
-        action.move_to_element(web_elem).click_and_hold(web_elem).release(web_elem)
+        action.move_to_element(web_elem).click(web_elem)  # .click_and_hold(web_elem).release(web_elem)
         action.perform()
     else:
         raise RuntimeError(err_msg)

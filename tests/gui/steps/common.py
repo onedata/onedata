@@ -24,7 +24,7 @@ from selenium.webdriver.support.expected_conditions import staleness_of
 from tests.gui.utils.generic import parse_seq, repeat_failed
 from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
-    is_firefox_logging_enabled, is_base_url_provided
+    is_firefox_logging_enabled
 
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser

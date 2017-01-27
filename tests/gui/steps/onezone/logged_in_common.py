@@ -348,7 +348,7 @@ def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND)
-    def click_on_map(d, item, items_type, subitem, subitems_type, panel, msg):
+    def assert_is_home(d, item, items_type, subitem, subitems_type, panel, msg):
         item_record = oz_page(d)[panel][item]
         subitem_record = item_record[subitem]
         assert subitem_record.is_home, msg.format(subtype=subitems_type,
@@ -357,9 +357,9 @@ def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
                                                   name=item)
 
     err_msg = '{subtype} named "{subitem}" is not set as home for {type} ' \
-              'named "{name}" while it should be expanded'
-    click_on_map(driver, item_name, item_type, subitem_name,
-                 subitem_type, oz_panel, err_msg)
+              'named "{name}" while it should be'
+    assert_is_home(driver, item_name, item_type, subitem_name,
+                   subitem_type, oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
