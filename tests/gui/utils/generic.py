@@ -157,7 +157,7 @@ def click_on_web_elem(driver, web_elem, err_msg):
         # driver.execute_script('arguments[0].click();', web_elem)
         # TODO check if such alternative works
         action = ActionChains(driver)
-        action.move_to_element(web_elem).click(web_elem)  # .click_and_hold(web_elem).release(web_elem)
+        action.move_to_element(web_elem).click_and_hold(web_elem).release(web_elem)
         action.perform()
     else:
         raise RuntimeError(err_msg)
