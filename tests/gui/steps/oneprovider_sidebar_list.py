@@ -7,7 +7,8 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from tests.gui.utils.generic import parse_seq, repeat_failed
+import time
+from tests.gui.utils.generic import parse_seq, repeat_failed, click_on_web_elem
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from tests.gui.utils.generic import refresh_and_call
 
@@ -32,9 +33,12 @@ def _select_items_from_sidebar_list(driver, browser_id, tmp_memory,
                                                              items_type)
     for item_name in parse_seq(items_names):
         item = items.get(item_name)
-        if item and 'active' not in item.get_attribute('class'):
+        times = 10
+        while times > 0 and item and ('active' not in item.get_attribute('class')):
             item.click()
             tmp_memory[browser_id][items_type][item_name] = item
+            time.sleep(1)
+            times -= 1
 
 
 def _not_in_sidebar_list(driver, items_names, items_type, items=None):
