@@ -42,7 +42,7 @@ class OZLoggedIn(object):
 
         elif item == 'manage account':
             css_sel = 'header.onezone-top-bar'
-            err_msg = 'no header/MANAGE ACCOUNT for oz page found'
+            err_msg = 'no header MANAGE ACCOUNT for oz page found'
             header = find_web_elem(self.web_elem, css_sel, err_msg)
             return ManageAccount(header, self.web_elem)
 

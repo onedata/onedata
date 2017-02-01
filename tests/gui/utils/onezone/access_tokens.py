@@ -33,7 +33,8 @@ class AccessTokensPanel(OZPanel):
 
     def create_new_access_token(self):
         btn = self._get_btn('create new access token')
-        err_msg = 'clicking on Create new space in ACCESS TOKENS panel disabled'
+        err_msg = 'clicking on Create new access token in ' \
+                  'ACCESS TOKENS panel disabled'
         click_on_web_elem(self._driver, btn, err_msg)
 
     def _get_tokens_web_elements(self):
