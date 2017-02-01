@@ -1,5 +1,6 @@
 """Utils and fixtures to facilitate operations on Oneprovider web GUI.
 """
+from contextlib import contextmanager
 from itertools import izip
 
 from selenium.common.exceptions import NoSuchElementException
@@ -102,7 +103,7 @@ class FileBrowserItemRow(object):
         err_msg = 'unable to locate size label for "{}" ' \
                   'in file browser'.format(self.name)
         label = find_web_elem(self.web_elem, css_sel, err_msg)
-        return label.text
+        return int(label.text)
 
     @property
     def modification_date(self):
@@ -114,28 +115,50 @@ class FileBrowserItemRow(object):
 
     @property
     def is_file(self):
-        pass
+        icon = self._get_icon()
+        return 'file' in icon.get_attribute('class')
 
     @property
     def is_directory(self):
-        pass
+        icon = self._get_icon()
+        return 'folder' in icon.get_attribute('class')
 
     @property
     def is_shared(self):
-        pass
+        icon = self._get_icon()
+        return 'share' in icon.get_attribute('class')
+
+    def _get_icon(self):
+        css_sel = '.file-icon .one-icon'
+        err_msg = 'unable to locate file icon for "{}" in ' \
+                  'file browser'.format(self.name)
+        return find_web_elem(self.web_elem, css_sel, err_msg)
 
     def click(self):
-        pass
+        err_msg = 'clicking on "{}" in file browser disabled'.format(self.name)
+        click_on_web_elem(self._driver, self.web_elem, err_msg)
+
+    def hover_on(self):
+        ActionChains(self._driver).move_to_element(self.web_elem).perform()
+
+    def click_on_tool(self, name):
+        self.hover_on()
+        tool = self._get_tool_icon(name)
+        err_msg = 'clicking on "{tool}" for "{name}" in file browser ' \
+                  'disabled'.format(tool=name, name=self.name)
+        click_on_web_elem(self._driver, tool, err_msg)
+
+    def _get_tool_icon(self, name):
+        css_sel = '.file-row-tools .oneicon-{}'.format(name)
+        err_msg = 'unable to locate "{tool}" tool in file row for ' \
+                  '"{name}"'.format(tool=name, name=self.name)
+        return find_web_elem(self.web_elem, css_sel, err_msg)
 
 
 class FileBrowserMetadataRow(object):
     def __init__(self, driver, web_elem):
         self.web_elem = web_elem
         self._driver = driver
-
-    @property
-    def name(self):
-        return 1
 
 
 class FileBrowser(object):
@@ -198,6 +221,44 @@ class FileBrowser(object):
         self._driver.execute_script('arguments[0].scrollIntoView();', bottom)
 
 
+from selenium.webdriver.common.keys import Keys
+
+
+class FileSelector(object):
+    def __init__(self, driver):
+        self._driver = driver
+        self.action = ActionChains(driver)
+
+    def perform(self):
+        self.action.perform()
+
+    def shift_down(self):
+        self.action.key_down(Keys.LEFT_SHIFT)
+
+    def shift_up(self):
+        self.action.key_up(Keys.LEFT_SHIFT)
+
+    def ctrl_down(self):
+        self.action.key_down(Keys.LEFT_CONTROL)
+
+    def ctrl_up(self):
+        self.action.key_up(Keys.LEFT_CONTROL)
+
+    def select(self, item):
+        if not item.is_selected:
+            self.action.click(item.web_elem)
+        else:
+            raise RuntimeError('file "{}" in file browser is already '
+                               'selected'.format(item.name))
+
+
+@contextmanager
+def select_files(driver):
+    action = FileSelector(driver)
+    yield action
+    action.perform()
+
+
 class DataTab(object):
     def __init__(self, driver, web_elem):
         self.web_elem = web_elem
@@ -234,8 +295,7 @@ class DataTab(object):
         css_sel = '.lower-main-content .data-files-list'
         err_msg = 'unable to locate file browser in data tab in op'
         file_browser = find_web_elem(self._driver, css_sel, err_msg)
-        return DataTopToolBar(self._driver, file_browser)
-
+        return FileBrowser(self._driver, file_browser)
 
 
 import abc
