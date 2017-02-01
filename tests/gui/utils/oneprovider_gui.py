@@ -2,6 +2,7 @@
 """
 from itertools import izip
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
 
 from tests.gui.utils.generic import click_on_web_elem, find_web_elem
@@ -78,6 +79,125 @@ class DataTopToolBar(object):
         click_on_web_elem(self._driver, btn, err_msg)
 
 
+class FileBrowserItemRow(object):
+    def __init__(self, driver, web_elem, file_browser):
+        self.web_elem = web_elem
+        self._driver = driver
+        self._file_browser = file_browser
+
+    @property
+    def name(self):
+        css_sel = '.file-label'
+        err_msg = 'unable to locate name label for given file in file browser'
+        label = find_web_elem(self.web_elem, css_sel, err_msg)
+        return label.text
+
+    @property
+    def is_selected(self):
+        return 'active' in self.web_elem.get_attribute('class')
+
+    @property
+    def size(self):
+        css_sel = '.file-list-col-size'
+        err_msg = 'unable to locate size label for "{}" ' \
+                  'in file browser'.format(self.name)
+        label = find_web_elem(self.web_elem, css_sel, err_msg)
+        return label.text
+
+    @property
+    def modification_date(self):
+        css_sel = '.file-list-col-modification'
+        err_msg = 'unable to locate modification date label for "{}" ' \
+                  'in file browser'.format(self.name)
+        label = find_web_elem(self.web_elem, css_sel, err_msg)
+        return label.text
+
+    @property
+    def is_file(self):
+        pass
+
+    @property
+    def is_directory(self):
+        pass
+
+    @property
+    def is_shared(self):
+        pass
+
+    def click(self):
+        pass
+
+
+class FileBrowserMetadataRow(object):
+    def __init__(self, driver, web_elem):
+        self.web_elem = web_elem
+        self._driver = driver
+
+    @property
+    def name(self):
+        return 1
+
+
+class FileBrowser(object):
+    def __init__(self, driver, web_elem):
+        self.web_elem = web_elem
+        self._driver = driver
+
+    @property
+    def is_empty(self):
+        css_sel = 'table.files-table'
+        try:
+            self.web_elem.find_element_by_css_selector(css_sel)
+        except NoSuchElementException:
+            return True
+        else:
+            return False
+
+    @property
+    def items(self):
+        return [FileBrowserItemRow(self._driver, item, self)
+                for item in self._get_items()]
+
+    def __getitem__(self, name):
+        for item in self.items:
+            if item.name == name:
+                return item
+        else:
+            raise RuntimeError('unable to find "{name}" in file '
+                               'browser'.format(name=name))
+
+    @property
+    def items_count(self):
+        return len(self._get_items())
+
+    def _get_items(self):
+        css_sel = 'tbody tr.file-row'
+        return self.web_elem.find_elements_by_css_selector(css_sel)
+
+    def get_metadata_for(self, name):
+        css_sel = 'tbody tr.first-level'
+        items = self.web_elem.find_elements_by_css_selector(css_sel)
+        a = iter(items)
+        a.next()
+        for item1, item2 in izip(items, a):
+            item1_css_cls = item1.get_attribute('class')
+            if 'file-row' in item1_css_cls and 'metadata-opened' in item1_css_cls:
+                file_row = FileBrowserItemRow(self._driver, item1, self)
+                if file_row.name == name:
+                    item2_css_cls = item2.get_attribute('class')
+                    if 'file-row' not in item2_css_cls:
+                        return FileBrowserMetadataRow(self._driver, item2)
+        else:
+            raise RuntimeError('no metadata row for "{name}" in file browser '
+                               'found'.format(name=name))
+
+    def scroll_to_bottom(self):
+        css_sel = '.file-row-load-more'
+        err_msg = 'unable to find bottom of file browser'
+        bottom = find_web_elem(self.web_elem, css_sel, err_msg)
+        self._driver.execute_script('arguments[0].scrollIntoView();', bottom)
+
+
 class DataTab(object):
     def __init__(self, driver, web_elem):
         self.web_elem = web_elem
@@ -111,7 +231,10 @@ class DataTab(object):
 
     @property
     def file_browser(self):
-        return 1
+        css_sel = '.lower-main-content .data-files-list'
+        err_msg = 'unable to locate file browser in data tab in op'
+        file_browser = find_web_elem(self._driver, css_sel, err_msg)
+        return DataTopToolBar(self._driver, file_browser)
 
 
 
