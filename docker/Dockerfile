@@ -9,6 +9,12 @@ ARG OP_WORKER_VERSION
 ARG ONEPROVIDER_VERSION
 ARG ONEPANEL_AUTOSTART=false
 
+# Add users and groups
+RUN groupadd -g 110 onedata && \
+    useradd -u 107 -g 110 -d /var/lib/op_panel op_panel && \
+    useradd -u 108 -g 110 -d /var/lib/cluster_manager cluster_manager && \
+    useradd -u 109 -g 110 -d /var/lib/op_worker op_worker
+
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
     apt-get -y upgrade && \
