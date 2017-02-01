@@ -35,17 +35,19 @@ RUN case ${RELEASE} in \
             curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh; \
             ;; \
     esac && \
-    sh oneprovider.sh op-panel=${OP_PANEL_VERSION}-1; \
-    sh oneprovider.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1; \
-    sh oneprovider.sh op-worker=${OP_WORKER_VERSION}-1; \
-    sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1
+    sh oneprovider.sh op-panel=${OP_PANEL_VERSION}-1 && \
+    sh oneprovider.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1 && \
+    sh oneprovider.sh op-worker=${OP_WORKER_VERSION}-1 && \
+    sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1 && \
+    rm -f oneprovider.sh
 
 EXPOSE 53 53/udp 80 443 5555 5556 6665 6666 7443 8443 8876 8877 9443
 
-# Add entrypoint script
+# Add entrypoint scripts
+ADD oneprovider.sh /root/oneprovider.sh
 ADD oneprovider.py /root/oneprovider.py
 
 RUN mkdir -p /volumes/persistence /volumes/storage
 VOLUME ["/volumes/persistence", "/volumes/storage"]
 
-CMD ["sh", "-c", "/root/oneprovider.py"]
+CMD ["/root/oneprovider.sh"]
