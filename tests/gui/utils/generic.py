@@ -153,12 +153,12 @@ def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
 
 
 def click_on_web_elem(driver, web_elem, err_msg):
-    disabled = web_elem.get_attribute('disabled')
+    disabled = 'disabled' in web_elem.get_attribute('class')
     if web_elem.is_enabled() and web_elem.is_displayed() and not disabled:
         # TODO make optional sleep and localize only those tests that need it or find better alternative
         # currently checking if elem is enabled not always work (probably after striping disabled from web elem
         # elem is not immediately clickable)
-        sleep(2)
+        sleep(0.25)
         action = ActionChains(driver)
         action.move_to_element(web_elem).click_and_hold(web_elem).release(web_elem)
         action.perform()

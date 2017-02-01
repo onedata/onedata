@@ -1,5 +1,7 @@
 """Utils and fixtures to facilitate operations on Oneprovider web GUI.
 """
+from itertools import izip
+
 from selenium.webdriver import ActionChains
 
 from tests.gui.utils.generic import click_on_web_elem, find_web_elem
@@ -38,10 +40,79 @@ def chdir_using_breadcrumbs(path, breadcrumbs):
 #         parse_url(driver.current_url).group('method')
 #     ).group('dir')
 
+class Breadcrumbs(object):
+    def __init__(self, driver, web_elem):
+        self.web_elem = web_elem
+        self._driver = driver
+
+    def pwd(self):
+        return '/'.join(directory.text for directory in self._get_breadcrumbs())
+
+    def chdir(self, path):
+        breadcrumbs = self._get_breadcrumbs()
+        i, dir1, dir2 = None, None, None
+        err_msg = '{} not found on {} position in breadcrumbs, ' \
+                  'instead we have {}'
+        for i, (dir1, dir2) in enumerate(izip(path.split('/'), breadcrumbs)):
+            assert dir1 == dir2.text, err_msg.format(dir1, i, self.pwd())
+
+        err_msg = 'clicking on {}nt element in files breadcrumbs "{}" disabled'
+        click_on_web_elem(self._driver, dir2, err_msg.format(i, dir1))
+
+    def _get_breadcrumbs(self):
+        css_sel = '.file-breadcrumbs-item a.file-breadcrumb-item-link'
+        return self.web_elem.find_elements_by_css_selector(css_sel)
+
+
+class DataTopToolBar(object):
+    def __init__(self, driver, web_elem):
+        self.web_elem = web_elem
+        self._driver = driver
+
+    def click_on(self, btn_name):
+        css_sel = 'a[data-original-title="{:s}"]'.format(btn_name)
+        err_msg = 'unable to find "{}" btn in tool top bar in data tab in op'
+        btn = find_web_elem(self.web_elem, css_sel, err_msg.format(btn_name))
+        err_msg = 'clicking on "{}" btn in tool top bar in data tab in op ' \
+                  'disabled'.format(btn_name)
+        click_on_web_elem(self._driver, btn, err_msg)
+
 
 class DataTab(object):
-    def __init__(self, web_elem):
+    def __init__(self, driver, web_elem):
         self.web_elem = web_elem
+        self._driver = driver
+
+    @property
+    def top_bar(self):
+        css_sel = 'header nav.navbar ul.data-files-list-toolbar'
+        err_msg = 'unable to locate tool top bar in data tab in op'
+        tool_bar = find_web_elem(self._driver, css_sel, err_msg)
+        return DataTopToolBar(self._driver, tool_bar)
+
+    @property
+    def breadcrumbs(self):
+        css_sel = '.secondary-top-bar .file-breadcrumbs-list'
+        err_msg = 'unable to locate breadcrumbs in data tab in op'
+        breadcrumbs = find_web_elem(self._driver, css_sel, err_msg)
+        return Breadcrumbs(self._driver, breadcrumbs)
+
+    @property
+    def sidebar(self):
+        css_sel = '.lower-main-content nav.secondary-sidebar, ' \
+                  '.lower-main-content #data-sidebar-resize-handler'
+
+        items = self.web_elem.find_elements_by_css_selector(css_sel)
+        if len(items) != 2:
+            raise RuntimeError('unable to locate directory tree sidebar or '
+                               'resize handler for it in data tab in op')
+        else:
+            return DataTabSidebar(self._driver, *items)
+
+    @property
+    def file_browser(self):
+        return 1
+
 
 
 import abc
