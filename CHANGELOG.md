@@ -4,6 +4,19 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc12
+
+* Enable graceful stop on SIGTERM
+* Add oneprovider users and groups in Dockerfile
+* Update refs to origin/release/3.0.0-rc12.
+* VFS-2910 Adjust tests to LUMA refactoring
+* VFS-2725 improve logging in acceptance tests, all tests in directory_CRUD addapted to new logging, all of them pass successfully
+* restrict tests of uploading many files to chrome only
+* VFS-2551 add test to set space as home in oz
+* VFS-2551 add tests for data space management
+* VFS-2551 add tests for user alies and access tokens
+
+
 ### 3.0.0-rc11
 
 * VFS-2733 Fix provider key/cert filename
