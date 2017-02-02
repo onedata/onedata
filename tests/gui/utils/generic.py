@@ -146,7 +146,7 @@ def find_web_elem(web_elem_root, css_sel, err_msg):
 def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
     items = web_elem_root.find_elements_by_css_selector(css_sel)
     for item in items:
-        if item.text.lower() == text:
+        if item.text.lower() == text.lower():
             return item
     else:
         raise RuntimeError(err_msg)

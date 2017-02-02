@@ -2,6 +2,7 @@
 in Onezone web GUI.
 """
 
+from tests.gui.utils.common.expandable import Expandable
 from tests.gui.utils.generic import iter_ahead, find_web_elem, find_web_elem_with_text, click_on_web_elem
 from tests.gui.utils.onezone.sidebar_panel_record import OZPanelRecord
 from tests.gui.utils.onezone.sidebar_panel import OZPanel
@@ -133,28 +134,18 @@ class SpaceRecord(OZPanelRecord):
         count_label = find_web_elem(self.web_elem, css_sel, err_msg)
         return int(count_label.text)
 
-    class SettingsDropdown(object):
+    class SettingsDropdown(Expandable):
         def __init__(self, web_elem, driver):
             self.web_elem = web_elem
             self._driver = driver
 
-        @property
-        def is_expanded(self):
-            css_class = self.web_elem.get_attribute('class')
-            return True if (css_class and 'open' in css_class) else False
-
-        def expand(self):
-            if not self.is_expanded:
-                self._click()
-
-        def collapse(self):
-            if self.is_expanded:
-                self._click()
-
-        def _click(self):
-            err_msg = 'clicking on settings for space in DATA SPACE MANAGEMENT ' \
-                      'panel disabled'
+        def _click_on_toggle(self, toggle):
+            err_msg = 'clicking on settings for space in ' \
+                      'DATA SPACE MANAGEMENT panel disabled'
             click_on_web_elem(self._driver, self.web_elem, err_msg)
+
+        def _get_toggle(self):
+            return self.web_elem
 
         def set_as_home(self):
             self._click_on_btn('set as home')

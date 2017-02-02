@@ -34,22 +34,22 @@ class FileBrowser(object):
     def items(self):
         return [FileRow(self._driver, item) for item in self._get_items()]
 
-    def __getitem__(self, item):
-        if isinstance(item, int):
+    def __getitem__(self, selector):
+        if isinstance(selector, int):
             items_count = self.items_count
-            if item >= items_count:
+            if selector >= items_count:
                 raise RuntimeError('requested index {index} out of bound '
-                                   '{limit}'.format(index=item,
+                                   '{limit}'.format(index=selector,
                                                     limit=items_count))
             else:
-                return FileRow(self._driver, self._get_items()[item])
-        elif isinstance(item, (str, unicode)):
+                return FileRow(self._driver, self._get_items()[selector])
+        elif isinstance(selector, (str, unicode)):
             for item in self.items:
-                if item.name == item:
+                if item.name == selector:
                     return item
             else:
                 raise RuntimeError('unable to find "{name}" in file '
-                                   'browser'.format(name=item))
+                                   'browser'.format(name=selector))
 
     @property
     def items_count(self):

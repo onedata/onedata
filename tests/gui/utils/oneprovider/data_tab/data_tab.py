@@ -13,23 +13,22 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class DataTab(object):
-    def __init__(self, driver, web_elem):
-        self.web_elem = web_elem
-        self._driver = driver
+    def __init__(self, driver):
+        self.web_elem = driver
 
     @property
     def top_bar(self):
         css_sel = 'header nav.navbar ul.data-files-list-toolbar'
         err_msg = 'unable to locate tool top bar in data tab in op'
-        tool_bar = find_web_elem(self._driver, css_sel, err_msg)
-        return DataTopToolBar(self._driver, tool_bar)
+        tool_bar = find_web_elem(self.web_elem, css_sel, err_msg)
+        return DataTopToolBar(self.web_elem, tool_bar)
 
     @property
     def breadcrumbs(self):
         css_sel = '.secondary-top-bar .file-breadcrumbs-list'
         err_msg = 'unable to locate breadcrumbs in data tab in op'
-        breadcrumbs = find_web_elem(self._driver, css_sel, err_msg)
-        return Breadcrumbs(self._driver, breadcrumbs)
+        breadcrumbs = find_web_elem(self.web_elem, css_sel, err_msg)
+        return Breadcrumbs(self.web_elem, breadcrumbs)
 
     @property
     def sidebar(self):
@@ -41,14 +40,14 @@ class DataTab(object):
             raise RuntimeError('unable to locate directory tree sidebar or '
                                'resize handler for it in data tab in op')
         else:
-            return DataTabSidebar(self._driver, *items)
+            return DataTabSidebar(self.web_elem, *items)
 
     @property
     def file_browser(self):
         css_sel = '.lower-main-content .data-files-list'
         err_msg = 'unable to locate file browser in data tab in op'
-        file_browser = find_web_elem(self._driver, css_sel, err_msg)
-        return FileBrowser(self._driver, file_browser)
+        file_browser = find_web_elem(self.web_elem, css_sel, err_msg)
+        return FileBrowser(self.web_elem, file_browser)
 
 
 class DataTopToolBar(object):
