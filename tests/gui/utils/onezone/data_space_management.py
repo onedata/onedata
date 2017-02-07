@@ -2,10 +2,10 @@
 in Onezone web GUI.
 """
 
-from tests.gui.utils.common.expandable import Expandable
+from tests.gui.utils.common.mixins import ExpandableMixin
 from tests.gui.utils.generic import iter_ahead, find_web_elem, find_web_elem_with_text, click_on_web_elem
 from tests.gui.utils.onezone.sidebar_panel_record import OZPanelRecord
-from tests.gui.utils.onezone.sidebar_panel import OZPanel
+from tests.gui.utils.onezone.panel import OZPanel
 from tests.gui.utils.onezone.edit_box import EditBox
 
 
@@ -134,7 +134,7 @@ class SpaceRecord(OZPanelRecord):
         count_label = find_web_elem(self.web_elem, css_sel, err_msg)
         return int(count_label.text)
 
-    class SettingsDropdown(Expandable):
+    class SettingsDropdown(ExpandableMixin):
         def __init__(self, web_elem, driver):
             self.web_elem = web_elem
             self._driver = driver

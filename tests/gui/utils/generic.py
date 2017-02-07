@@ -127,6 +127,31 @@ def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=Exception):
     return wrapper
 
 
+from decorator import decorator
+
+
+def repeat(attempts, interval=0.1, timeout=False, exceptions=(Exception,)):
+
+    @decorator
+    def wrapper(fun, *args, **kwargs):
+        now = time()
+        limit, i = (now + attempts, now) if timeout else (attempts, 0)
+
+        while i < limit:
+            try:
+                result = fun(*args, **kwargs)
+            except exceptions as ex:
+                print ex
+                sleep(interval)
+                i = time() if timeout else i+1
+                continue
+            else:
+                return result
+        return fun(*args, **kwargs)
+
+    return wrapper
+
+
 def iter_ahead(iterable):
     read_ahead = iter(iterable)
     next(read_ahead)

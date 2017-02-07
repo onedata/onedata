@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on data tab in oneprovider web GUI.
 """
 
-from tests.gui.utils.generic import find_web_elem, click_on_web_elem
+from tests.gui.utils.generic import find_web_elem #, click_on_web_elem
 from tests.gui.utils.oneprovider.breadcrumbs import Breadcrumbs
 from tests.gui.utils.oneprovider.data_tab.sidebar import DataTabSidebar
 from tests.gui.utils.oneprovider.file_browser.browser import FileBrowser
@@ -28,7 +28,7 @@ class DataTab(object):
         css_sel = '.secondary-top-bar .file-breadcrumbs-list'
         err_msg = 'unable to locate breadcrumbs in data tab in op'
         breadcrumbs = find_web_elem(self.web_elem, css_sel, err_msg)
-        return Breadcrumbs(self.web_elem, breadcrumbs)
+        return Breadcrumbs(self.web_elem, breadcrumbs, self)
 
     @property
     def sidebar(self):

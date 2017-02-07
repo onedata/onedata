@@ -4,7 +4,9 @@ data tab in oneprovider web GUI.
 
 from selenium.webdriver import ActionChains
 
-from tests.gui.utils.common.expandable import Expandable
+from tests.gui.utils.common.common import PageObject
+from tests.gui.utils.common.mixins import ExpandableMixin
+from tests.gui.utils.common.web_elements import ToggleWebElement, TextLabelWebElement
 from tests.gui.utils.generic import click_on_web_elem, find_web_elem
 from tests.gui.utils.oneprovider.data_tab.space_selector import SpaceSelector
 
@@ -25,7 +27,7 @@ class DataTabSidebar(object):
         css_sel = '.data-spaces-select'
         err_msg = 'unable to locate space selector in sidebar in data tab in op'
         selector = find_web_elem(self.web_elem, css_sel, err_msg)
-        return SpaceSelector(self._driver, selector)
+        return SpaceSelector(self._driver, selector, self)
 
     @property
     def width(self):
@@ -45,7 +47,7 @@ class DataTabSidebar(object):
         if len(items) < 2:
             raise RuntimeError('unable to locate root dir and its children in '
                                'directory tree sidebar in data tab in op')
-        return DirectoryTree(self._driver, items[0], None, items[1])
+        return DirectoryTree(self._driver, items[0], None, children=items[1])
 
     @property
     def cwd(self):
@@ -64,19 +66,34 @@ class DataTabSidebar(object):
                 return cwd
 
 
-class DirectoryTree(Expandable):
-    def __init__(self, driver, web_elem, parent, children):
-        self._driver = driver
-        self.web_elem = web_elem
-        self._parent = parent
-        self._children = children
+class DirectoryTree(PageObject, ExpandableMixin):
+    name = TextLabelWebElement('.item-label')
+    _toggle = ToggleWebElement('.item-icon .one-icon')
 
-    @property
-    def name(self):
-        err_msg = 'unable to locate name label for given directory in ' \
-                  'data tab sidebar in op'
-        label = find_web_elem(self.web_elem, '.item-label', err_msg)
-        return label.text
+    def __init__(self, *args, **kwargs):
+        self._children = kwargs.pop('children')
+        super(DirectoryTree, self).__init__(*args, **kwargs)
+
+    def __str__(self):
+        return 'DirectoryTree({path}) in {parent}'.format(path=self.pwd(),
+                                                          parent=str(self._parent))
+
+    def __iter__(self):
+        css_sel = 'ul.data-files-tree-list li'
+        return (DirectoryTree(self._driver, dir_tree, self, dir_tree)
+                for dir_tree
+                in self._children.find_elements_by_css_selector(css_sel))
+
+    def __getitem__(self, name):
+        for directory in self:
+            if directory.name == name:
+                return directory
+        else:
+            raise RuntimeError('no subdirectory named "{name}" found '
+                               'in {path}'.format(name=name, path=str(self)))
+
+    def is_expanded(self):
+        return True if 'open' in self._toggle.get_attribute('class') else False
 
     @property
     def is_active(self):
@@ -85,21 +102,6 @@ class DirectoryTree(Expandable):
                   'data tab sidebar in op'
         item = find_web_elem(self.web_elem, css_sel, err_msg)
         return 'active' in item.get_attribute('class')
-
-    def _click_on_toggle(self, toggle):
-        err_msg = 'clicking on directory icon for "{}" directory in data tab ' \
-                  'sidebar in op is disabled'.format(self.pwd())
-        click_on_web_elem(self._driver, toggle, err_msg)
-
-    def _get_toggle(self):
-        css_sel = '.item-icon .one-icon'
-        err_msg = 'unable to locate icon for directory "{}" in data tab ' \
-                  'sidebar in op'.format(self.pwd())
-        return find_web_elem(self.web_elem, css_sel, err_msg)
-
-    # noinspection PyMethodMayBeStatic
-    def _is_expanded(self, toggle):
-        return True if 'folder-open' in toggle.get_attribute('class') else False
 
     def pwd(self):
         if not self._parent:
@@ -114,21 +116,4 @@ class DirectoryTree(Expandable):
                   'data tab sidebar in op'.format(self.pwd())
         item = find_web_elem(self.web_elem, css_sel, err_msg)
         click_on_web_elem(self._driver, item, 'clicking on {} directory '
-                                              'disabled'.format(self.pwd()))
-
-    @property
-    def subdirectories(self):
-        css_sel = 'ul.data-files-tree-list li'
-        return [DirectoryTree(self._driver, dir_tree, self, dir_tree)
-                for dir_tree
-                in self._children.find_elements_by_css_selector(css_sel)]
-
-    def __getitem__(self, name):
-        if not self.is_expanded:
-            self.expand()
-        for directory in self.subdirectories:
-            if directory.name == name:
-                return directory
-        else:
-            raise RuntimeError('no subdirectory named "{name}" found '
-                               'in {path}'.format(name=name, path=self.pwd()))
+                                              'disabled'.format(str(self)))

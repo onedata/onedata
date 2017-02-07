@@ -4,31 +4,12 @@
 from selenium.common.exceptions import NoSuchElementException
 
 from tests.gui.utils.generic import find_web_elem, click_on_web_elem
-from tests.gui.utils.onezone.sidebar_panel import OZPanel
 from tests.gui.utils.onezone.sidebar_panel_record import OZPanelRecord
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
-
-
-class GoToYourFilesPanel(OZPanel):
-
-    @property
-    def providers(self):
-        css_sel = '#providers-list .providers-accordion-item'
-        return [ProviderRecord(provider, self._driver, 'provider', '.spaces-count')
-                for provider
-                in self.web_elem.find_elements_by_css_selector(css_sel)]
-
-    def __getitem__(self, name):
-        for provider in self.providers:
-            if name == provider.name:
-                return provider
-        else:
-            raise RuntimeError('no provider named "{prov}" found in {panel} '
-                               'oz panel'.format(prov=name, panel=self.name))
 
 
 class ProviderRecord(OZPanelRecord):

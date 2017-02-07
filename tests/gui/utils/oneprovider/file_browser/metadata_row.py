@@ -1,8 +1,9 @@
 """Utils and fixtures to facilitate operation on metadata row in file browser in oneprovider web GUI.
 """
 
+from tests.gui.utils.common.web_elements import InputWebElement, TextLabelWebElement
 from tests.gui.utils.generic import click_on_web_elem, find_web_elem, \
-    repeat_failed, find_web_elem_with_text
+    find_web_elem_with_text
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -11,56 +12,28 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class MetadataEditPanel(object):
+    text_area = InputWebElement(name='text_area', css_sel='textarea')
+    status = TextLabelWebElement(name='status', css_sel='.parse-status-panel')
+
     def __init__(self, driver, web_elem, tab):
         self.web_elem = web_elem
         self._driver = driver
         self._tab = tab
 
-    @property
-    def textarea(self):
-        return self._get_textarea().get_attribute('value')
-
-    @textarea.setter
-    @repeat_failed(attempts=10)
-    def textarea(self, text):
-        area = self._get_textarea()
-        area.clear()
-        area.send_keys(text)
-        assert self.textarea == text, 'entering {} to textarea ' \
-                                      'failed'.format(text)
-
-    def _get_textarea(self):
-        css_sel = 'textarea'
-        err_msg = 'unable to locate textarea in {} metadata ' \
-                  'row'.format(self._tab)
-        return find_web_elem(self.web_elem, css_sel, err_msg)
-
-    @property
-    def status(self):
-        css_sel = '.parse-status-panel'
-        err_msg = 'unable to locate status panel in {} metadata ' \
-                  'row'.format(self._tab)
-        return find_web_elem(self.web_elem, css_sel, err_msg).text
+    def __str__(self):
+        return 'metadata edit panel'
 
 
 class MetadataBasicEntry(object):
+    attribute = TextLabelWebElement(name='attribute', css_sel='th')
+    value = TextLabelWebElement(name='value', css_sel='td')
+
     def __init__(self, driver, web_elem):
         self.web_elem = web_elem
         self._driver = driver
 
-    @property
-    def attribute(self):
-        err_msg = 'unable to locate Attribute field for given metadata ' \
-                  'basic entry'
-        item = find_web_elem(self.web_elem, 'th', err_msg)
-        return item.text
-
-    @property
-    def value(self):
-        err_msg = 'unable to locate Value field for given metadata ' \
-                  'basic entry'
-        item = find_web_elem(self.web_elem, 'td', err_msg)
-        return item.text
+    def __str__(self):
+        return 'metadata basic entry'
 
     def remove(self):
         css_sel = '.oneicon-close'
@@ -72,47 +45,17 @@ class MetadataBasicEntry(object):
 
 
 class MetadataNewBasicEntry(object):
+    attribute = InputWebElement(name='attribute',
+                                css_sel='th input[placeholder=Attribute]')
+    value = InputWebElement(name='value',
+                            css_sel='td input[placeholder=Value]')
+
     def __init__(self, driver, web_elem):
         self.web_elem = web_elem
         self._driver = driver
 
-    @property
-    def attribute(self):
-        return self._get_attr_input_box().get_attribute('value')
-
-    @attribute.setter
-    @repeat_failed(attempts=10)
-    def attribute(self, attr):
-        in_box = self._get_attr_input_box()
-        in_box.clear()
-        in_box.send_keys(attr)
-        assert self.attribute == attr, 'entering {} to Attribute field in basic ' \
-                                       'metadata new entry failed'.format(attr)
-
-    def _get_attr_input_box(self):
-        css_sel = 'th input[placeholder=Attribute]'
-        err_msg = 'unable to locate Attribute input field for new basic ' \
-                  'entry in metadata row'
-        return find_web_elem(self.web_elem, css_sel, err_msg)
-
-    @property
-    def value(self):
-        return self._get_value_input_box().get_attribute('value')
-
-    @value.setter
-    @repeat_failed(attempts=10)
-    def value(self, val):
-        in_box = self._get_value_input_box()
-        in_box.clear()
-        in_box.send_keys(val)
-        assert self.value == val, 'entering {} to Value field in basic ' \
-                                  'metadata new entry failed'.format(val)
-
-    def _get_value_input_box(self):
-        css_sel = 'td input[placeholder=Value]'
-        err_msg = 'unable to locate Value input field for new basic ' \
-                  'entry in metadata row'
-        return find_web_elem(self.web_elem, css_sel, err_msg)
+    def __str__(self):
+        return 'metadata basic new entry'
 
     def add(self):
         css_sel = '.oneicon-add'

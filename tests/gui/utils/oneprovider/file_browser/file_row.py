@@ -1,9 +1,16 @@
-"""Utils and fixtures to facilitate operation on file row in file browser in oneprovider web GUI.
+"""Utils and fixtures to facilitate operation on file row in file browser
+in oneprovider web GUI.
 """
 
+from decorator import contextmanager
 from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
 
-from tests.gui.utils.generic import find_web_elem, click_on_web_elem
+from tests.gui.utils.common.mixins import ClickableMixin
+from tests.gui.utils.generic import click_on_web_elem
+from tests.gui.utils.common.common import PageObject
+from tests.gui.utils.common.web_elements import TextLabelWebElement, \
+    web_item, IconWebElement
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -11,78 +18,51 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class FileRow(object):
-    def __init__(self, driver, web_elem):
-        self.web_elem = web_elem
-        self._driver = driver
+@web_item
+class FileRow(PageObject, ClickableMixin):
+    name = TextLabelWebElement('.file-label', parent_name='given file row')
+    size = TextLabelWebElement('.file-list-col-size')
+    modification_date = TextLabelWebElement('.file-list-col-modification')
 
-    @property
-    def name(self):
-        css_sel = '.file-label'
-        err_msg = 'unable to locate name label for given file in file browser'
-        label = find_web_elem(self.web_elem, css_sel, err_msg)
-        return label.text
+    _icon = IconWebElement('.file-icon .one-icon')
+    _metadata_icon = IconWebElement('.file-row-tools .oneicon-metadata')
+    _share_icon = IconWebElement('.file-row-tools .oneicon-share')
 
-    @property
+    def __str__(self):
+        return '{item} in {parent}'.format(item=self.name,
+                                           parent=str(self._parent))
+
     def is_selected(self):
         return 'active' in self.web_elem.get_attribute('class')
 
-    @property
-    def size(self):
-        css_sel = '.file-list-col-size'
-        err_msg = 'unable to locate size label for "{}" ' \
-                  'in file browser'.format(self.name)
-        label = find_web_elem(self.web_elem, css_sel, err_msg)
-        return label.text
-
-    @property
-    def modification_date(self):
-        css_sel = '.file-list-col-modification'
-        err_msg = 'unable to locate modification date label for "{}" ' \
-                  'in file browser'.format(self.name)
-        label = find_web_elem(self.web_elem, css_sel, err_msg)
-        return label.text
-
-    @property
     def is_file(self):
-        icon = self._get_icon()
-        return 'file' in icon.get_attribute('class')
+        return 'file' in self._icon.get_attribute('class')
 
-    @property
     def is_directory(self):
-        icon = self._get_icon()
-        return 'folder' in icon.get_attribute('class')
+        return 'folder' in self._icon.get_attribute('class')
 
-    @property
     def is_shared(self):
-        icon = self._get_icon()
-        return 'share' in icon.get_attribute('class')
+        return 'share' in self._icon.get_attribute('class')
 
-    def _get_icon(self):
-        css_sel = '.file-icon .one-icon'
-        err_msg = 'unable to locate file icon for "{}" in ' \
-                  'file browser'.format(self.name)
-        return find_web_elem(self.web_elem, css_sel, err_msg)
-
-    def click(self):
-        err_msg = 'clicking on "{}" in file browser disabled'.format(self.name)
-        click_on_web_elem(self._driver, self.web_elem, err_msg)
-
-    def double_click(self):
-        ActionChains(self._driver).double_click(self.web_elem).perform()
-
-    def hover_on(self):
-        ActionChains(self._driver).move_to_element(self.web_elem).perform()
+    def is_tool_visible(self, name):
+        tool = getattr(self, '_{tool}_icon'.format(tool=name))
 
     def click_on_tool(self, name):
-        self.hover_on()
-        tool = self._get_tool_icon(name)
-        err_msg = 'clicking on "{tool}" for "{name}" in file browser ' \
-                  'disabled'.format(tool=name, name=self.name)
+        tool = getattr(self, '_{tool}_icon'.format(tool=name))
+        err_msg = 'clicking on "{}" in {} disabled'.format(name, str(self))
         click_on_web_elem(self._driver, tool, err_msg)
 
-    def _get_tool_icon(self, name):
-        css_sel = '.file-row-tools .oneicon-{}'.format(name)
-        err_msg = 'unable to locate "{tool}" tool in file row for ' \
-                  '"{name}"'.format(tool=name, name=self.name)
-        return find_web_elem(self.web_elem, css_sel, err_msg)
+
+@contextmanager
+def select_files(driver):
+    action = ActionChains(driver)
+
+    action.shift_down = lambda: action.key_down(Keys.LEFT_SHIFT)
+    action.shift_up = lambda: action.key_up(Keys.LEFT_SHIFT)
+    action.ctrl_down = lambda: action.key_down(Keys.LEFT_CONTROL)
+    action.ctrl_up = lambda: action.key_up(Keys.LEFT_CONTROL)
+    action.select = lambda item: action.click(item.web_elem)
+
+    yield action
+
+    action.perform()

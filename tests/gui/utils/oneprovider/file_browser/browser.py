@@ -30,9 +30,12 @@ class FileBrowser(object):
         else:
             return False
 
+    def __str__(self):
+        return 'file browser'
+
     @property
     def items(self):
-        return [FileRow(self._driver, item) for item in self._get_items()]
+        return [FileRow(self._driver, item, self) for item in self._get_items()]
 
     def __getitem__(self, selector):
         if isinstance(selector, int):
@@ -42,7 +45,7 @@ class FileBrowser(object):
                                    '{limit}'.format(index=selector,
                                                     limit=items_count))
             else:
-                return FileRow(self._driver, self._get_items()[selector])
+                return FileRow(self._driver, self._get_items()[selector], self)
         elif isinstance(selector, (str, unicode)):
             for item in self.items:
                 if item.name == selector:
@@ -66,7 +69,7 @@ class FileBrowser(object):
         items_ahead.next()
         for item1, item2 in izip(items, items_ahead):
             if 'file-row' in item1.get_attribute('class'):
-                if FileRow(self._driver, item1).name == name:
+                if FileRow(self._driver, item1, self).name == name:
                     if 'file-row' not in item2.get_attribute('class'):
                         return MetadataRow(self._driver, item2)
         else:
