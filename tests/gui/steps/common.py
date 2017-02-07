@@ -151,8 +151,10 @@ def wt_click_on_link_with_text(selenium, browser_id_list, link_name):
         driver.find_element_by_link_text(link_name).click()
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) is idle for '
-                 '(?P<seconds>\d*\.?\d+([eE][-+]?\d+)?) seconds'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) is idle for '
+                 r'(?P<seconds>\d*\.?\d+([eE][-+]?\d+)?) seconds'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) is idle for '
+                 r'(?P<seconds>\d*\.?\d+([eE][-+]?\d+)?) seconds'))
 def wait_n_seconds(seconds):
     time.sleep(float(seconds))
 
