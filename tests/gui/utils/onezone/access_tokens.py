@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on ACCESS TOKENS panel in Onezone web GUI.
 """
 
-from tests.gui.utils.generic import find_web_elem
+from tests.gui.utils.generic import find_web_elem, click_on_web_elem
 from tests.gui.utils.onezone.sidebar_panel import OZPanel
 
 
@@ -15,7 +15,7 @@ class AccessTokensPanel(OZPanel):
 
     @property
     def tokens(self):
-        return [TokenRecord(token) for token in
+        return [TokenRecord(token, self._driver) for token in
                 self._get_tokens_web_elements()]
 
     @property
@@ -25,7 +25,7 @@ class AccessTokensPanel(OZPanel):
     def __getitem__(self, index):
         tokens = self._get_tokens_web_elements()
         try:
-            return TokenRecord(tokens[index])
+            return TokenRecord(tokens[index], self._driver)
         except IndexError:
             raise RuntimeError('asked for number {index} token but there are '
                                'only {num} tokens in ACCESS TOKENS oz panel'
@@ -33,7 +33,9 @@ class AccessTokensPanel(OZPanel):
 
     def create_new_access_token(self):
         btn = self._get_btn('create new access token')
-        btn.click()
+        err_msg = 'clicking on Create new access token in ' \
+                  'ACCESS TOKENS panel disabled'
+        click_on_web_elem(self._driver, btn, err_msg)
 
     def _get_tokens_web_elements(self):
         css_sel = '.tokens-list-item'
@@ -42,8 +44,9 @@ class AccessTokensPanel(OZPanel):
 
 class TokenRecord(object):
 
-    def __init__(self, web_elem):
+    def __init__(self, web_elem, driver):
         self.web_elem = web_elem
+        self._driver = driver
 
     @property
     def value(self):
@@ -56,10 +59,12 @@ class TokenRecord(object):
         css_sel = '.oneicon-clipboard-copy'
         err_msg = 'no copy btn found for given token in ACCESS TOKEN oz panel'
         btn = find_web_elem(self.web_elem, css_sel, err_msg)
-        btn.click()
+        err_msg = 'clicking on cp btn in access token dropright disabled'
+        click_on_web_elem(self._driver, btn, err_msg)
 
     def remove(self):
         css_sel = '.oneicon-remove'
         err_msg = 'no remove btn found for given token in ACCESS TOKEN oz panel'
         btn = find_web_elem(self.web_elem, css_sel, err_msg)
-        btn.click()
+        err_msg = 'clicking on rm btn in access token dropright disabled'
+        click_on_web_elem(self._driver, btn, err_msg)

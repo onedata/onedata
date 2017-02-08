@@ -3,8 +3,9 @@
 
 from selenium.common.exceptions import NoSuchElementException
 
-from tests.gui.utils.generic import find_web_elem
+from tests.gui.utils.generic import find_web_elem, click_on_web_elem
 from tests.gui.utils.onezone.providers import SpaceRecordInProvidersPanel
+
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -14,11 +15,13 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class WorldMap(object):
 
-    def __init__(self, web_elem):
+    def __init__(self, web_elem, driver):
         self.web_elem = web_elem
+        self._driver = driver
 
     def click(self):
-        self.web_elem.click()
+        err_msg = 'clicking on world map disabled'
+        click_on_web_elem(self._driver, self.web_elem, err_msg)
 
     @property
     def message(self):
@@ -30,7 +33,7 @@ class WorldMap(object):
     @property
     def providers(self):
         css_sel = '.provider-place'
-        return [ProviderPopup(provider) for provider in
+        return [ProviderPopup(provider, self._driver) for provider in
                 self.web_elem.find_elements_by_css_selector(css_sel)]
 
     def __getitem__(self, index):
@@ -52,11 +55,13 @@ class WorldMap(object):
 
 class ProviderPopup(object):
 
-    def __init__(self, web_elem):
+    def __init__(self, web_elem, driver):
         self.web_elem = web_elem
+        self._driver = driver
 
     def click(self):
-        self.web_elem.click()
+        err_msg = 'clicking on provider popup circle for disabled'
+        click_on_web_elem(self._driver, self.web_elem, err_msg)
 
     @property
     def is_working(self):
@@ -97,7 +102,9 @@ class ProviderPopup(object):
             css_sel = '.provider-host-copy-btn'
             err_msg = 'no copy hostname btn found in displayed provider drop panel'
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
-            btn.click()
+            err_msg = 'clicking on cp hostname btn in provider "{}" ' \
+                      'popup disabled'.format(self.name)
+            click_on_web_elem(self._driver, btn, err_msg)
         else:
             raise RuntimeError('no displayed panel found for given provider')
 
@@ -107,7 +114,9 @@ class ProviderPopup(object):
             err_msg = "no 'Go to your files' btn found " \
                       "in displayed provider drop panel"
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
-            btn.click()
+            err_msg = 'clicking on "Go to your files" btn in provider "{}" ' \
+                      'popup disabled'.format(self.name)
+            click_on_web_elem(self._driver, btn, err_msg)
         else:
             raise RuntimeError('no displayed panel found for given provider')
 

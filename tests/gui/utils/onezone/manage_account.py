@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on MANAGE ACCOUNT Onezone top bar.
 """
 
-from tests.gui.utils.generic import find_web_elem, find_web_elem_with_text
+from tests.gui.utils.generic import find_web_elem, find_web_elem_with_text, click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -11,16 +11,19 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class ManageAccount(object):
 
-    def __init__(self, web_elem):
+    def __init__(self, web_elem, driver):
         self.web_elem = web_elem
+        self._driver = driver
 
     class AccountDropdown(object):
-        def __init__(self, web_elem):
+        def __init__(self, web_elem, driver):
             self.web_elem = web_elem
+            self._driver = driver
 
         def logout(self):
             btn = self._get_btn('logout')
-            btn.click()
+            err_msg = 'clicking on logout in MANAGE ACCOUNT disabled'
+            click_on_web_elem(self._driver, btn, err_msg)
 
         def _get_btn(self, name):
             css_sel = 'li a'
@@ -35,7 +38,8 @@ class ManageAccount(object):
             css_sel = 'ul.dropdown-menu-list'
             err_msg = 'no account dopdown found in MANAGE ACCOUNT in oz panel'
             return ManageAccount.AccountDropdown(find_web_elem(self.web_elem,
-                                                               css_sel, err_msg))
+                                                               css_sel, err_msg),
+                                                 self._driver)
         else:
             raise RuntimeError('account dropdown in MANAGE ACCOUNT '
                                'in oz is not expanded')
@@ -48,12 +52,16 @@ class ManageAccount(object):
     def expand_account_dropdown(self):
         toggle = self._get_account_dropdown_toggle()
         if not self._is_account_dropdown_expanded(toggle):
-            toggle.click()
+            self._click_on_toggle(toggle)
 
     def collapse_account_dropdown(self):
         toggle = self._get_account_dropdown_toggle()
         if self._is_account_dropdown_expanded(toggle):
-            toggle.click()
+            self._click_on_toggle(toggle)
+
+    def _click_on_toggle(self, toggle):
+        err_msg = 'click on toggle for usr settings in MANAGE ACCOUNT disabled'
+        click_on_web_elem(self._driver, toggle, err_msg)
 
     # noinspection PyMethodMayBeStatic
     def _is_account_dropdown_expanded(self, toggle):

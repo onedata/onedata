@@ -342,7 +342,7 @@ Feature: Onezone GUI elements
     And user of browser sees that provider popup for provider named "p1" has appeared on world map
     And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
     And user of browser sees that Oneprovider session has started
-    Then user of browser sees that URL matches https?://[^/]*/#/onedata/data/
+    Then user of browser sees that URL matches: https?://[^/]*/#/onedata/data/.*
 
 
   Scenario: User sees that after going to Oneprovider, without having any home space, the first one alphabetically is loaded into view
@@ -407,7 +407,7 @@ Feature: Onezone GUI elements
   Scenario: User successfully logout
     When user of browser expands account settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
-    Then user of browser sees that URL matches https?://[^/]*/#/home/login
+    Then user of browser sees that URL matches: https?://[^/]*/#/home/login
     And user of browser should see that the page title contains "Login"
 
 
