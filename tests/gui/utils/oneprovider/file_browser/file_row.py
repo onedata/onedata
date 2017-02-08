@@ -10,7 +10,7 @@ from tests.gui.utils.common.mixins import ClickableMixin
 from tests.gui.utils.generic import click_on_web_elem
 from tests.gui.utils.common.common import PageObject
 from tests.gui.utils.common.web_elements import TextLabelWebElement, \
-    web_item, IconWebElement
+    IconWebElement
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -18,7 +18,6 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-@web_item
 class FileRow(PageObject, ClickableMixin):
     name = TextLabelWebElement('.file-label', parent_name='given file row')
     size = TextLabelWebElement('.file-list-col-size')
