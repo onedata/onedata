@@ -129,16 +129,16 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
                     'with tooltip "{tooltip_name}"'))
 def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
     driver = select_browser(selenium, browser_id)
-    btn = driver.find_element_by_css_selector('ul.toolbar-group '
-                                              'a[data-original-title="{:s}"]'
-                                              ''.format(tooltip_name))
+    css_sel = 'ul.toolbar-group a[data-original-title=' \
+              '"{:s}"]'.format(tooltip_name)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def click_on_tooltip(d, button, err_msg):
-        click_on_web_elem(d, button, err_msg)
+    def click_on_tooltip(d, selector, err_msg):
+        btn = driver.find_element_by_css_selector(selector)
+        click_on_web_elem(d, btn, err_msg)
 
-    click_on_tooltip(driver, btn, 'clicking on {} tooltip '
-                                  'disabled'.format(tooltip_name))
+    click_on_tooltip(driver, css_sel, 'clicking on {} tooltip '
+                                      'disabled'.format(tooltip_name))
 
 
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '
