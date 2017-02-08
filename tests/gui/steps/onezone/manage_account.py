@@ -22,7 +22,7 @@ def expand_account_settings_in_oz(selenium, browser_id, oz_page):
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def expand_usr_settings(d):
-        oz_page(d)['manage account'].expand_account_dropdown()
+        oz_page(d)['manage account'].expand()
 
     expand_usr_settings(driver)
 
@@ -36,7 +36,6 @@ def expand_account_settings_in_oz(selenium, browser_id, oz_page):
 def click_on_option_in_account_settings_in_oz(selenium, browser_id,
                                               option, oz_page):
     driver = select_browser(selenium, browser_id)
-    settings = oz_page(driver)['manage account'].account_dropdown
-    action = getattr(settings, option.lower())
+    action = getattr(oz_page(driver)['manage account'], option.lower())
     action()
 

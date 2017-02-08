@@ -163,6 +163,8 @@ def find_web_elem(web_elem_root, css_sel, err_msg):
     try:
         item = web_elem_root.find_element_by_css_selector(css_sel)
     except NoSuchElementException:
+        with suppress(TypeError):
+            err_msg = err_msg()
         raise RuntimeError(err_msg)
     else:
         return item
@@ -174,6 +176,8 @@ def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
         if item.text.lower() == text.lower():
             return item
     else:
+        with suppress(TypeError):
+            err_msg = err_msg()
         raise RuntimeError(err_msg)
 
 
@@ -188,6 +192,8 @@ def click_on_web_elem(driver, web_elem, err_msg):
         action.move_to_element(web_elem).click_and_hold(web_elem).release(web_elem)
         action.perform()
     else:
+        with suppress(TypeError):
+            err_msg = err_msg()
         raise RuntimeError(err_msg)
 
 

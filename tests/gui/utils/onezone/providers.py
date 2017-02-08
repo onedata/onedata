@@ -3,8 +3,10 @@
 
 from selenium.common.exceptions import NoSuchElementException
 
+from tests.gui.utils.common.common import PageObject, ExpandableMixin
+from tests.gui.utils.common.web_elements import TextLabelWebElement, ToggleWebElement, \
+    WebElement, ItemListWebElement, ButtonWebElement, IconWebElement
 from tests.gui.utils.generic import find_web_elem, click_on_web_elem
-from tests.gui.utils.onezone.sidebar_panel_record import OZPanelRecord
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -12,70 +14,39 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class ProviderRecord(OZPanelRecord):
+class ProviderRecord(PageObject, ExpandableMixin):
+    name = TextLabelWebElement('.provider-header.truncate',
+                               parent_name='given provider record')
+    spaces_count = TextLabelWebElement('.spaces-count')
+    _toggle = ToggleWebElement('.spaces-count')
+    _supported_spaces = ItemListWebElement('ul.tertiary-list '
+                                           'li.sidebar-provider-space')
+    _set_home_btn = ButtonWebElement('.secondary-item-element.star-toggle '
+                                     '.oneicon-home-outline')
+    _home_space_icon = WebElement('.oneicon-provider-home')
+    _home_icon = WebElement('.secondary-item-element.star-toggle .oneicon-home')
+    _working_icon = IconWebElement('.provider-icon .color-provider-working')
+    _not_working_icon = IconWebElement('.provider-icon '
+                                       '.color-provider-not-working')
+    _click_area = WebElement('.secondary-item-container')
 
-    @property
-    def is_working(self):
-        css_sel = '.provider-icon .color-provider-working'
-        try:
-            self.web_elem.find_element_by_css_selector(css_sel)
-        except NoSuchElementException:
-            return False
-        else:
-            return True
+    def __str__(self):
+        return 'provider record named: "{}" in {}'.format(self.name,
+                                                          str(self._parent))
 
-    @property
-    def is_not_working(self):
-        css_sel = '.provider-icon .color-provider-not-working'
-        try:
-            self.web_elem.find_element_by_css_selector(css_sel)
-        except NoSuchElementException:
-            return False
-        else:
-            return True
-
-    @property
-    def spaces_count(self):
-        css_sel = '.spaces-count'
-        err_msg = 'no spaces count for "{}" provider found in ' \
-                  'GO TO YOUR FILES panel'.format(self.name)
-        spaces_count = find_web_elem(self.web_elem, css_sel, err_msg)
-        return int(spaces_count.text)
-
-    def click(self):
-        css_sel = '.secondary-item-container'
-        err_msg = 'no provider header for "{}" found in GO TO YOUR FILES ' \
-                  'panel'.format(self.name)
-        header = find_web_elem(self.web_elem, css_sel, err_msg)
-        err_msg = 'clicking on provider record named "{}" in GO TO YOUR FILES ' \
-                  'panel disabled'.format(self.name)
-        click_on_web_elem(self._driver, header, err_msg)
-
-    def unset_from_home(self):
-        css_sel = '.secondary-item-element.star-toggle .oneicon-home'
-        err_msg = 'no home icon found for "{}" provider in GO TO YOUR FILES ' \
-                  'panel'.format(self.name)
-        home_icon = find_web_elem(self.web_elem, css_sel, err_msg)
-        err_msg = 'clicking on home icon for provider record named "{}" in ' \
-                  'GO TO YOUR FILES panel disabled'.format(self.name)
-        click_on_web_elem(self._driver, home_icon, err_msg)
-
-    @property
-    def supported_spaces(self):
-        if self.is_submenu_expanded:
-            css_sel = 'ul.tertiary-list li.sidebar-provider-space'
-            return [SpaceRecordInProvidersPanel(space,
+    def __iter__(self):
+        if self.is_expanded():
+            return (SpaceRecordInProvidersPanel(space,
                                                 name_css='.one-label.truncate',
                                                 size_css='.space-header-size')
-                    for space
-                    in self.web_elem.find_elements_by_css_selector(css_sel)]
+                    for space in self._supported_spaces)
         else:
             raise RuntimeError('submenu for provider named "{}" '
                                'is not expanded in GO TO YOUR FILES '
                                'panel'.format(self.name))
 
     def __getitem__(self, space_name):
-        for space in self.supported_spaces:
+        for space in self:
             if space_name == space.name:
                 return space
         else:
@@ -85,18 +56,50 @@ class ProviderRecord(OZPanelRecord):
                                'found'.format(provider=self.name,
                                               space=space_name))
 
+    def is_home(self):
+        try:
+            _ = self._home_icon and self._home_space_icon
+        except RuntimeError:
+            return False
+        else:
+            return True
+
+    def set_as_home(self):
+        if not self.is_home():
+            self._click_on_btn('set_home')
+
+    def unset_from_home(self):
+        err_msg = 'cannot click on home icon for provider record named ' \
+                  '"{}" in GO TO YOUR FILES panel'.format(self.name)
+        click_on_web_elem(self._driver, self._home_icon, err_msg)
+
+    def is_working(self):
+        try:
+            _ = self._working_icon
+        except RuntimeError:
+            return False
+        else:
+            return True
+
+    def is_not_working(self):
+        try:
+            _ = self._not_working_icon
+        except RuntimeError:
+            return False
+        else:
+            return True
+
+    def click(self):
+        err_msg = 'cannot click on provider record named "{}" in ' \
+                  'GO TO YOUR FILES panel'.format(self.name)
+        click_on_web_elem(self._driver, self._click_area, err_msg)
+
 
 class SpaceRecordInProvidersPanel(object):
     def __init__(self, web_elem, name_css, size_css):
         self.web_elem = web_elem
         self.name_css = name_css
         self.size_css = size_css
-
-    def __eq__(self, other):
-        if isinstance(other, str) or isinstance(other, unicode):
-            return self.name == other
-        else:
-            raise NotImplementedError('operation not implemented')
 
     @property
     def name(self):

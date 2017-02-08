@@ -26,7 +26,7 @@ class WebElement(object):
 
     def __init__(self, css_sel, name=None, parent_name=None, **kwargs):
         self.name = name
-        self._parent_name = parent_name
+        self.parent_name = parent_name
         self.css_sel = css_sel
         super(WebElement, self).__init__(**kwargs)
 
@@ -34,18 +34,16 @@ class WebElement(object):
         if instance is None:
             return self
 
-        parent_name = self._get_parent_name(instance)
-        err_msg = self.item_not_found_msg.format(item=self._get_name(),
-                                                 parent=parent_name)
-        return find_web_elem(instance.web_elem, self.css_sel, err_msg)
+        return find_web_elem(instance.web_elem, self.css_sel,
+                             lambda: self._format_msg(self.item_not_found_msg,
+                                                      instance))
 
-    def _get_name(self):
-        return self.name.replace('_', ' ').strip().upper()
-
-    def _get_parent_name(self, parent):
-        return str(self._parent_name
-                   if self._parent_name is not None
-                   else parent)
+    def _format_msg(self, msg_template, parent):
+        name = self.name.replace('_', ' ').strip().upper()
+        parent_name = (self.parent_name
+                       if self.parent_name is not None
+                       else str(parent))
+        return msg_template.format(item=name, parent=parent_name)
 
 
 class IconWebElement(WebElement):
@@ -64,6 +62,10 @@ class HeaderWebElement(WebElement):
     item_not_found_msg = '{item} header not found in {parent}'
 
 
+class ModalWebElement(WebElement):
+    item_not_found_msg = '{item} modal not found in {parent}'
+
+
 class InputWebElement(WebElement):
     item_not_found_msg = '{item} input box not found in {parent}'
     typing_text_failed_msg = 'entering {value} to {item} input box in ' \
@@ -75,14 +77,11 @@ class InputWebElement(WebElement):
 
     @repeat(attempts=10)
     def __set__(self, instance, value):
-        parent_name = self._get_parent_name(instance)
-        err_msg = self.typing_text_failed_msg.format(value=value,
-                                                     item=self.name,
-                                                     parent=parent_name)
         input_box = self._get_input_box(instance, None)
         input_box.clear()
         input_box.send_keys(value)
-        assert getattr(instance, self.name) == value, err_msg
+        assert getattr(instance, self.name) == value, \
+            lambda: self._format_msg(self.typing_text_failed_msg, instance)
 
     def _get_input_box(self, instance, owner):
         return super(InputWebElement, self).__get__(instance, owner)
@@ -111,11 +110,10 @@ class ButtonWithTextWebElement(WebElement):
         if instance is None:
             return self
 
-        parent_name = self._get_parent_name(instance)
-        err_msg = self.item_not_found_msg.format(text=self._text,
-                                                 parent=parent_name)
+        msg = self.item_not_found_msg
         return find_web_elem_with_text(instance.web_elem, self.css_sel,
-                                       self._text, err_msg)
+                                       self._text,
+                                       lambda: self._format_msg(msg, instance))
 
 
 class ItemListWebElement(WebElement):

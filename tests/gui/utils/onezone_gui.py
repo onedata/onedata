@@ -3,12 +3,11 @@
 
 import re
 
-from tests.gui.utils.onezone.data_space_management import DataSpaceManagementPanel
 from tests.gui.utils.onezone.manage_account import ManageAccount
 from tests.gui.utils.onezone.panel import UserAliasPanel, AccessTokensPanel, \
-    GoToYourFilesPanel, OZPanel
+    GoToYourFilesPanel, OZPanel, DataSpaceManagementPanel
 from tests.gui.utils.onezone.world_map import WorldMap
-from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement
+from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, HeaderWebElement
 
 __author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -21,7 +20,7 @@ RE_DATA_URL = re.compile(r'(?P<lang>/.*)?/data/(?P<space>.*)/(?P<dir>.*)')
 
 class OZLoggedIn(object):
     _atlas = WebElement('.onezone-atlas')
-    _account_manage = WebElement('header.onezone-top-bar')
+    _manage_account = HeaderWebElement('header.onezone-top-bar')
     _panels = ItemListWebElement('.main-accordion-group')
 
     panels = {'data space management': DataSpaceManagementPanel,
@@ -47,7 +46,7 @@ class OZLoggedIn(object):
                     return panel
 
         elif item == 'manage account':
-            return ManageAccount(self.web_elem, self._account_manage, self)
+            return ManageAccount(self.web_elem, self._manage_account, self)
         elif item == 'world map':
             return WorldMap(self.web_elem, self._atlas, self)
         else:

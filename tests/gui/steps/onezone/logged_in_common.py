@@ -108,10 +108,12 @@ def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_item_exist(d, item, items_list_type, panel, msg):
-        list_attr = '{}s'.format(items_list_type)
-        assert item in getattr(oz_page(d)[panel],
-                               list_attr), msg.format(type=items_list_type,
-                                                      name=item, panel=panel)
+        for record in oz_page(d)[panel]:
+            if record.name == item:
+                break
+        else:
+            raise AssertionError(msg.format(type=items_list_type,
+                                            name=item, panel=panel))
 
     err_msg = 'no {type} named "{name}" found in {panel} oz panel'
     assert_item_exist(driver, item_name, item_type, oz_panel, err_msg)
@@ -148,10 +150,9 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_item_not_exist(d, item, items_list_type, panel, msg):
-        list_attr = '{}s'.format(items_list_type)
-        assert item not in getattr(oz_page(d)[panel],
-                                   list_attr), msg.format(type=items_list_type,
-                                                          name=item, panel=panel)
+        for record in oz_page(d)[panel]:
+            assert record.name != item, msg.format(type=items_list_type,
+                                                   name=item, panel=panel)
 
     err_msg = '{type} named "{name}" found in {panel} oz panel while it ' \
               'should not be found'
@@ -182,7 +183,7 @@ def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_match(d, item, item_list_type, counter, num, panel, msg):
         item_record = oz_page(d)[panel][item]
-        item_counter = getattr(item_record, '{}s_count'.format(counter))
+        item_counter = int(getattr(item_record, '{}s_count'.format(counter)))
         assert item_counter == num, msg.format(type=item_list_type,
                                                name=item,
                                                counter_type=counter,
@@ -219,7 +220,7 @@ def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_home(d, item, item_list_type, panel, msg):
         item_record = oz_page(d)[panel][item]
-        assert item_record.is_home, msg.format(type=item_list_type,
+        assert item_record.is_home(), msg.format(type=item_list_type,
                                                name=item,
                                                panel=panel)
 
@@ -260,43 +261,41 @@ def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
                  r'counter for "(?P<item_name>.+?)" match number of displayed '
-                 r'(?P<submenu_list_type>supported spaces) in expanded submenu '
+                 r'supported spaces in expanded submenu '
                  r'of given (?P<item_type>provider) in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
 @then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
                  r'counter for "(?P<item_name>.+?)" match number of displayed '
-                 r'(?P<submenu_list_type>supported spaces) in expanded submenu '
+                 r'supported spaces in expanded submenu '
                  r'of given (?P<item_type>provider) in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
                  r'counter for "(?P<item_name>.+?)" match number of displayed '
-                 r'(?P<submenu_list_type>supporting providers) in expanded submenu '
+                 r'supporting providers in expanded submenu '
                  r'of given (?P<item_type>space) in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 @then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>provider)s '
                  r'counter for "(?P<item_name>.+?)" match number of displayed '
-                 r'(?P<submenu_list_type>supporting providers) in expanded submenu '
+                 r'supporting providers in expanded submenu '
                  r'of given (?P<item_type>space) in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
 def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
-                                               submenu_list_type, item_type,
-                                               counter_type, oz_panel, oz_page):
+                                               item_type, counter_type, oz_panel,
+                                               oz_page):
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_match(d, item, items_type, counter,
-                     submenu_items_type, panel, msg):
+    def assert_match(d, item, items_type, counter, panel, msg):
         item_record = oz_page(d)[panel][item]
-        submenu_list_len = len(getattr(item_record, submenu_items_type))
-        counter = getattr(item_record, '{}s_count'.format(counter))
+        submenu_list_len = len(list(item_record))
+        counter = int(getattr(item_record, '{}s_count'.format(counter)))
         assert counter == submenu_list_len, msg.format(type=items_type,
                                                        counter=counter,
                                                        list_len=submenu_list_len)
 
     err_msg = '{type}s counter number {counter} does not match displayed number ' \
               'of {type}s {list_len}'
-    assert_match(driver, item_name, item_type, counter_type,
-                 submenu_list_type.lower().replace(' ', '_'), oz_panel, err_msg)
+    assert_match(driver, item_name, item_type, counter_type, oz_panel, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) expands submenu of '
@@ -322,9 +321,9 @@ def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def expand_submenu_for_item(d, item, items_list_type, panel, msg):
         item_record = oz_page(d)[panel][item]
-        item_record.expand_submenu()
-        assert item_record.is_submenu_expanded, msg.format(type=items_list_type,
-                                                           name=item)
+        item_record.expand()
+        assert item_record.is_expanded(), msg.format(type=items_list_type,
+                                                     name=item)
 
     err_msg = 'submenu for {type} named "{name}" has not been expanded'
     expand_submenu_for_item(driver, item_name, item_type, oz_panel, err_msg)
