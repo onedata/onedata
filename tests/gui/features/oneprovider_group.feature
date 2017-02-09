@@ -195,6 +195,7 @@ Feature: Oneprovider Group functionality
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
     And user of browser sees an info notify with text matching to: .*group1.*left
+    And user of browser is idle for 4 seconds
     And user of browser sees that group1 has disappeared from groups sidebar list
     And user of browser changes webapp path to /#/onedata/groups concatenated with copied item
     Then user of browser sees an error notify with text matching to: .*?[Cc]annot load requested resource.*?
