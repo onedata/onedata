@@ -1,52 +1,20 @@
+# coding=utf-8
 """Steps for features of Onezone login page.
 """
-from selenium.common.exceptions import StaleElementReferenceException
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import re
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path, repeat_failed, click_on_web_elem
-from tests.gui.utils.oneprovider_gui import assert_breadcrumbs_correctness, \
-    chdir_using_breadcrumbs
-
+from tests.gui.utils.generic import upload_file_path
 from pytest_bdd import when, then, parsers, given
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
-
-@when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
-                 r'data space to "(?P<space_name>.+)"'))
-@then(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
-                 r'data space to "(?P<space_name>.+)"'))
-def change_space(selenium, browser_id, space_name):
-    driver = select_browser(selenium, browser_id)
-    # HACK: because Firefox driver have buggy EC.element_to_be_clickable,
-    # we wait for loader to disappear
-    Wait(driver, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
-    )
-    Wait(driver, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '.data-spaces-select a[data-toggle=dropdown]'))
-    ).click()
-    spaces = driver.find_elements_by_css_selector('.data-spaces-select .dropdown-menu a')
-
-    def space_by_name(_):
-        named_spaces = [s for s in spaces if re.match(space_name, s.text.strip(), re.I)]
-        if len(named_spaces) > 0 and named_spaces[0].is_enabled():
-            return named_spaces[0]
-        else:
-            return None
-
-    Wait(driver, WAIT_FRONTEND).until(space_by_name).click()
 
 
 def _upload_files_to_cwd(driver, files):
@@ -123,24 +91,6 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
     )
 
 
-@then(parsers.parse('user of {browser_id} clicks the button from top menu bar '
-                    'with tooltip "{tooltip_name}"'))
-@when(parsers.parse('user of {browser_id} clicks the button from top menu bar '
-                    'with tooltip "{tooltip_name}"'))
-def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
-    driver = select_browser(selenium, browser_id)
-    btn = driver.find_element_by_css_selector('ul.toolbar-group '
-                                              'a[data-original-title="{:s}"]'
-                                              ''.format(tooltip_name))
-
-    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def click_on_tooltip(d, button, err_msg):
-        click_on_web_elem(d, button, err_msg)
-
-    click_on_tooltip(driver, btn, 'clicking on {} tooltip '
-                                  'disabled'.format(tooltip_name))
-
-
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '
                     'supporting space in providers column'))
 def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
@@ -197,42 +147,3 @@ def g_is_space_tree_root(selenium, browser_id, is_home, space_name):
 def wt_is_space_tree_root(selenium, browser_id, is_home, space_name):
     driver = select_browser(selenium, browser_id)
     _is_space_tree_root(driver, True if is_home else False, space_name)
-
-
-# TODO implement better checking dir tree
-@when(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in breadcrumbs is {path}'))
-@then(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in breadcrumbs is {path}'))
-def is_displayed_path_correct(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
-    breadcrumbs = driver.find_element_by_css_selector('#main-content '
-                                                      '.secondary-top-bar '
-                                                      '.file-breadcrumbs-list')
-    assert_breadcrumbs_correctness(path, breadcrumbs)
-
-
-@when(parsers.parse('user of {browser_id} changes current working directory '
-                    'to {path} using breadcrumbs'))
-@then(parsers.parse('user of {browser_id} changes current working directory '
-                    'to {path} using breadcrumbs'))
-def change_cwd_using_breadcrumbs(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
-    # HACK: a workaround for fast multiple breadcrumbs re-computations leading to
-    # quick DOM changes between find elements and chdir_using_breadcrumbs
-    tries = 10
-    while tries > 0:
-        breadcrumbs = driver.find_elements_by_css_selector('#main-content '
-                                                           '.secondary-top-bar '
-                                                           '.file-breadcrumbs-list '
-                                                           '.file-breadcrumbs-item '
-                                                           'a')
-        try:
-            chdir_using_breadcrumbs(path, breadcrumbs)
-        except StaleElementReferenceException:
-            tries -= 1
-            if tries <= 0:
-                raise RuntimeError(('A StaleElementReferenceException has been thrown %s times. ' % tries) +
-                                   'Breadcrumbs was probably rendered multiple times between find_elements and elements usage.')
-        else:
-            tries = 0

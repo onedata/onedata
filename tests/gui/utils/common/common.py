@@ -17,7 +17,7 @@ class PageObject(object):
         self.web_elem = web_elem
         self._driver = driver
         self._parent = parent
-        if getattr(self, '_click_area', None) is None:
+        if not hasattr(self, '_click_area'):
             self._click_area = web_elem
         super(PageObject, self).__init__(**kwargs)
 
