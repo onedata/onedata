@@ -67,7 +67,7 @@ class MetadataNewBasicEntry(object):
 
 
 class MetadataBasicEditPanel(object):
-    def __init__(self, driver, web_elem):
+    def __init__(self, driver, web_elem, parent):
         self.web_elem = web_elem
         self._driver = driver
 
@@ -102,7 +102,7 @@ class MetadataBasicEditPanel(object):
 
 
 class MetadataRow(object):
-    def __init__(self, driver, web_elem):
+    def __init__(self, driver, web_elem, parent):
         self.web_elem = web_elem
         self._driver = driver
 
@@ -113,7 +113,7 @@ class MetadataRow(object):
         css_sel = 'table.metadata-basic-table'
         err_msg = 'edit panel for BASIC not found in metadata row'
         panel = find_web_elem(self.web_elem, css_sel, err_msg)
-        return MetadataBasicEditPanel(self._driver, panel)
+        return MetadataBasicEditPanel(self._driver, panel, self)
 
     @property
     def json(self):

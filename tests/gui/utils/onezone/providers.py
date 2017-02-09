@@ -89,11 +89,6 @@ class ProviderRecord(PageObject, ExpandableMixin):
         else:
             return True
 
-    def click(self):
-        err_msg = 'cannot click on provider record named "{}" in ' \
-                  'GO TO YOUR FILES panel'.format(self.name)
-        click_on_web_elem(self._driver, self._click_area, err_msg)
-
 
 class SpaceRecordInProvidersPanel(object):
     def __init__(self, web_elem, name_css, size_css):

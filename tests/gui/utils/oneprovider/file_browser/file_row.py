@@ -6,7 +6,6 @@ from decorator import contextmanager
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from tests.gui.utils.common.mixins import ClickableMixin
 from tests.gui.utils.generic import click_on_web_elem
 from tests.gui.utils.common.common import PageObject
 from tests.gui.utils.common.web_elements import TextLabelWebElement, \
@@ -18,14 +17,14 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class FileRow(PageObject, ClickableMixin):
+class FileRow(PageObject):
     name = TextLabelWebElement('.file-label', parent_name='given file row')
     size = TextLabelWebElement('.file-list-col-size')
     modification_date = TextLabelWebElement('.file-list-col-modification')
 
     _icon = IconWebElement('.file-icon .one-icon')
-    _metadata_icon = IconWebElement('.file-row-tools .oneicon-metadata')
-    _share_icon = IconWebElement('.file-row-tools .oneicon-share')
+    _metadata_tool = IconWebElement('.file-tool-metadata')
+    _share_tool = IconWebElement('.file-tool-share')
 
     def __str__(self):
         return '{item} in {parent}'.format(item=self.name,
@@ -44,12 +43,18 @@ class FileRow(PageObject, ClickableMixin):
         return 'share' in self._icon.get_attribute('class')
 
     def is_tool_visible(self, name):
-        tool = getattr(self, '_{tool}_icon'.format(tool=name))
+        tool = getattr(self, '_{tool}_tool'.format(tool=name))
+        return '25p' in tool.get_attribute('class')
 
     def click_on_tool(self, name):
-        tool = getattr(self, '_{tool}_icon'.format(tool=name))
-        err_msg = 'clicking on "{}" in {} disabled'.format(name, str(self))
-        click_on_web_elem(self._driver, tool, err_msg)
+        tool = getattr(self, '_{tool}_tool'.format(tool=name))
+        tool_icon = tool.find_element_by_css_selector('.oneicon')
+        click_on_web_elem(self._driver, tool_icon,
+                          lambda: 'cannot click on "{}" in '
+                                  '{}'.format(name, self))
+
+    def double_click(self):
+        ActionChains(self._driver).double_click(self.web_elem).perform()
 
 
 @contextmanager

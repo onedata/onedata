@@ -1,9 +1,11 @@
 """Utils and fixtures to facilitate operations on data tab in oneprovider web GUI.
 """
 
-from tests.gui.utils.generic import find_web_elem #, click_on_web_elem
+from tests.gui.utils.common.common import PageObject
+from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement
 from tests.gui.utils.oneprovider.breadcrumbs import Breadcrumbs
 from tests.gui.utils.oneprovider.data_tab.sidebar import DataTabSidebar
+from tests.gui.utils.oneprovider.data_tab.toolbar import DataTopToolBar
 from tests.gui.utils.oneprovider.file_browser.browser import FileBrowser
 
 __author__ = "Bartosz Walkowicz"
@@ -12,53 +14,30 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class DataTab(object):
-    def __init__(self, driver):
-        self.web_elem = driver
+class DataTab(PageObject):
+    _toolbar = WebElement('header nav.navbar ul.data-files-list-toolbar')
+    _breadcrumbs = WebElement('.secondary-top-bar .file-breadcrumbs-list')
+    _file_browser = WebElement('.lower-main-content .data-files-list')
+    _sidebar = ItemListWebElement('.lower-main-content nav.secondary-sidebar, '
+                                  '#data-sidebar-resize-handler')
+
+    def __str__(self):
+        return 'DATA tab in {}'.format(self._parent)
 
     @property
-    def top_bar(self):
-        css_sel = 'header nav.navbar ul.data-files-list-toolbar'
-        err_msg = 'unable to locate tool top bar in data tab in op'
-        tool_bar = find_web_elem(self.web_elem, css_sel, err_msg)
-        return DataTopToolBar(self.web_elem, tool_bar)
+    def toolbar(self):
+        return DataTopToolBar(self._driver, self._toolbar, self)
 
     @property
     def breadcrumbs(self):
-        css_sel = '.secondary-top-bar .file-breadcrumbs-list'
-        err_msg = 'unable to locate breadcrumbs in data tab in op'
-        breadcrumbs = find_web_elem(self.web_elem, css_sel, err_msg)
-        return Breadcrumbs(self.web_elem, breadcrumbs, self)
+        return Breadcrumbs(self._driver, self._breadcrumbs, self)
 
     @property
     def sidebar(self):
-        css_sel = '.lower-main-content nav.secondary-sidebar, ' \
-                  '.lower-main-content #data-sidebar-resize-handler'
-
-        items = self.web_elem.find_elements_by_css_selector(css_sel)
-        if len(items) != 2:
-            raise RuntimeError('unable to locate directory tree sidebar or '
-                               'resize handler for it in data tab in op')
-        else:
-            return DataTabSidebar(self.web_elem, *items)
+        sidebar, resize_handler = self._sidebar
+        return DataTabSidebar(self.web_elem, sidebar, self,
+                              resize_handler=resize_handler)
 
     @property
     def file_browser(self):
-        css_sel = '.lower-main-content .data-files-list'
-        err_msg = 'unable to locate file browser in data tab in op'
-        file_browser = find_web_elem(self.web_elem, css_sel, err_msg)
-        return FileBrowser(self.web_elem, file_browser)
-
-
-class DataTopToolBar(object):
-    def __init__(self, driver, web_elem):
-        self.web_elem = web_elem
-        self._driver = driver
-
-    def click_on(self, btn_name):
-        css_sel = 'a[data-original-title="{:s}"]'.format(btn_name)
-        err_msg = 'unable to find "{}" btn in tool top bar in data tab in op'
-        btn = find_web_elem(self.web_elem, css_sel, err_msg.format(btn_name))
-        err_msg = 'clicking on "{}" btn in tool top bar in data tab in op ' \
-                  'disabled'.format(btn_name)
-        click_on_web_elem(self._driver, btn, err_msg)
+        return FileBrowser(self._driver, self._file_browser, self)

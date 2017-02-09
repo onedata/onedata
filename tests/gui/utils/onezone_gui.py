@@ -4,7 +4,7 @@
 import re
 
 from tests.gui.utils.onezone.manage_account import ManageAccount
-from tests.gui.utils.onezone.panel import UserAliasPanel, AccessTokensPanel, \
+from tests.gui.utils.onezone.panels import UserAliasPanel, AccessTokensPanel, \
     GoToYourFilesPanel, OZPanel, DataSpaceManagementPanel
 from tests.gui.utils.onezone.world_map import WorldMap
 from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, HeaderWebElement

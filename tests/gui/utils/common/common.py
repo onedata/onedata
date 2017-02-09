@@ -1,8 +1,6 @@
 """Utils and fixtures to facilitate operation on page objects.
 """
 
-from selenium.webdriver import ActionChains
-
 from tests.gui.utils.generic import click_on_web_elem
 from tests.gui.utils.common.web_elements import WebItem
 
@@ -19,6 +17,8 @@ class PageObject(object):
         self.web_elem = web_elem
         self._driver = driver
         self._parent = parent
+        if getattr(self, '_click_area', None) is None:
+            self._click_area = web_elem
         super(PageObject, self).__init__(**kwargs)
 
     def _click_on_btn(self, btn_type):
@@ -28,11 +28,8 @@ class PageObject(object):
                                   '{}'.format(btn_type, str(self)))
 
     def click(self):
-        click_on_web_elem(self._driver, self.web_elem,
+        click_on_web_elem(self._driver, self._click_area,
                           lambda: 'cannot click on {}'.format(str(self)))
-
-    def double_click(self):
-        ActionChains(self._driver).double_click(self.web_elem).perform()
 
 
 class ExpandableMixin(object):

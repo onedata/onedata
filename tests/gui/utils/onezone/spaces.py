@@ -84,11 +84,6 @@ class ProviderRecord(PageObject):
         return 'provider record named: "{}" in {}'.format(self.name,
                                                           str(self._parent))
 
-    def click(self):
-        err_msg = 'cannot click on provider record named "{}" in submenu of ' \
-                  'space in DATA SPACE MANAGEMENT panel'.format(self.name)
-        click_on_web_elem(self._driver, self._click_area, err_msg)
-
     def unsupport_space(self):
         self._click_on_btn('unsupport_space')
 

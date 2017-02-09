@@ -1,11 +1,13 @@
 """Utils and fixtures to facilitate operations on file browser in oneprovider web GUI.
 """
 
-from itertools import izip
+from itertools import islice
 
 from selenium.common.exceptions import NoSuchElementException
 
-from tests.gui.utils.generic import find_web_elem
+from tests.gui.utils.common.common import PageObject
+from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement
+from tests.gui.utils.generic import iter_ahead
 from tests.gui.utils.oneprovider.file_browser.file_row import FileRow
 from tests.gui.utils.oneprovider.file_browser.metadata_row import MetadataRow
 
@@ -15,27 +17,16 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class FileBrowser(object):
-    def __init__(self, driver, web_elem):
-        self.web_elem = web_elem
-        self._driver = driver
-
-    @property
-    def is_empty(self):
-        css_sel = 'table.files-table'
-        try:
-            self.web_elem.find_element_by_css_selector(css_sel)
-        except NoSuchElementException:
-            return True
-        else:
-            return False
+class FileBrowser(PageObject):
+    _files = ItemListWebElement('tbody tr.file-row')
+    _files_with_metadata = ItemListWebElement('tbody tr.first-level')
+    _bottom = WebElement('.file-row-load-more')
 
     def __str__(self):
-        return 'file browser'
+        return 'file browser in {}'.format(self._parent)
 
-    @property
-    def items(self):
-        return [FileRow(self._driver, item, self) for item in self._get_items()]
+    def __iter__(self):
+        return (FileRow(self._driver, item, self) for item in self._files)
 
     def __getitem__(self, selector):
         if isinstance(selector, int):
@@ -45,39 +36,39 @@ class FileBrowser(object):
                                    '{limit}'.format(index=selector,
                                                     limit=items_count))
             else:
-                return FileRow(self._driver, self._get_items()[selector], self)
+                return FileRow(self._driver, next(islice(self._files,
+                                                         selector, None)), self)
         elif isinstance(selector, (str, unicode)):
-            for item in self.items:
+            for item in self:
                 if item.name == selector:
                     return item
             else:
-                raise RuntimeError('unable to find "{name}" in file '
-                                   'browser'.format(name=selector))
+                raise RuntimeError('unable to find "{name}" in '
+                                   '{item}'.format(name=selector, item=self))
 
     @property
-    def items_count(self):
-        return len(self._get_items())
+    def files_count(self):
+        return len(self._files)
 
-    def _get_items(self):
-        css_sel = 'tbody tr.file-row'
-        return self.web_elem.find_elements_by_css_selector(css_sel)
+    def is_empty(self):
+        css_sel = 'table.files-table'
+        try:
+            self.web_elem.find_element_by_css_selector(css_sel)
+        except NoSuchElementException:
+            return True
+        else:
+            return False
 
     def get_metadata_for(self, name):
-        css_sel = 'tbody tr.first-level'
-        items = self.web_elem.find_elements_by_css_selector(css_sel)
-        items_ahead = iter(items)
-        items_ahead.next()
-        for item1, item2 in izip(items, items_ahead):
+        for item1, item2 in iter_ahead(self._files_with_metadata):
             if 'file-row' in item1.get_attribute('class'):
-                if FileRow(self._driver, item1, self).name == name:
-                    if 'file-row' not in item2.get_attribute('class'):
-                        return MetadataRow(self._driver, item2)
+                if 'file-row' not in item2.get_attribute('class'):
+                    if FileRow(self._driver, item1, self).name == name:
+                        return MetadataRow(self._driver, item2, self)
         else:
-            raise RuntimeError('no metadata row for "{name}" in file browser '
-                               'found'.format(name=name))
+            raise RuntimeError('no metadata row for "{name}" in {item} '
+                               'found'.format(name=name, item=self))
 
     def scroll_to_bottom(self):
-        css_sel = '.file-row-load-more'
-        err_msg = 'unable to find bottom of file browser'
-        bottom = find_web_elem(self.web_elem, css_sel, err_msg)
-        self._driver.execute_script('arguments[0].scrollIntoView();', bottom)
+        self._driver.execute_script('arguments[0].scrollIntoView();',
+                                    self._bottom)
