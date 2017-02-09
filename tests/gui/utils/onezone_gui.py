@@ -29,25 +29,27 @@ class OZLoggedIn(object):
     def __init__(self, web_elem):
         self.web_elem = web_elem
 
-    def __getitem__(self, panel):
-        panel = panel.lower()
-        cls = self.panels.get(panel, None)
+    def __getitem__(self, item):
+        item = item.lower()
+        cls = self.panels.get(item, None)
         if cls:
-            panel = panel.replace('_', ' ').lower()
+            item = item.replace('_', ' ').lower()
             css_sel = '.main-accordion-group, a.main-accordion-toggle'
             items = self.web_elem.find_elements_by_css_selector(css_sel)
             for group, toggle in zip(items[::2], items[1::2]):
-                if panel == toggle.text.lower():
-                    return cls(group)
+                if item == toggle.text.lower():
+                    return cls(group, self.web_elem)
 
-        elif panel == 'manage account':
+        elif item == 'manage account':
             css_sel = 'header.onezone-top-bar'
-            err_msg = 'no header for oz page found'
+            err_msg = 'no header MANAGE ACCOUNT for oz page found'
             header = find_web_elem(self.web_elem, css_sel, err_msg)
-            return ManageAccount(header)
+            return ManageAccount(header, self.web_elem)
 
-        elif panel == 'world map':
+        elif item == 'world map':
             css_sel = '.onezone-atlas'
             err_msg = 'no world map found on oz page'
             world_map = find_web_elem(self.web_elem, css_sel, err_msg)
-            return WorldMap(world_map)
+            return WorldMap(world_map, self.web_elem)
+        else:
+            raise RuntimeError('no "{}" on oz page found'.format(item))

@@ -190,24 +190,25 @@ def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_supporting_providers_for_space(d, space_name,
-                                              expected_providers_list):
+                                              expected_providers_list,
+                                              msg1, msg2):
         space_record = oz_page(d)['data space management'][space_name]
-        supporting_providers = space_record.supporting_providers
-        supporting_providers_num = len(supporting_providers)
-        expected_providers = set(expected_providers_list)
-        expected_providers_num = len(expected_providers)
+        actual_provs = space_record.supporting_providers
+        actual_provs_num = len(actual_provs)
+        expected_provs = set(expected_providers_list)
+        expected_provs_num = len(expected_provs)
 
-        err_msg = 'Expected number of providers {} does not match ' \
-                  'actual {}'.format(expected_providers_num,
-                                     supporting_providers_num)
-        assert expected_providers_num == supporting_providers_num, err_msg
+        assert expected_provs_num == actual_provs_num, msg1.format(expected_provs_num,
+                                                                   actual_provs_num)
+        for provider in expected_provs:
+            assert provider in actual_provs, msg2.format(provider)
 
-        err_msg = 'space named "{}" does not have supporting provider ' \
-                  'named "{{}}" as it should'.format(space_name)
-        for provider in expected_providers:
-            assert provider in supporting_providers, err_msg.format(provider)
-
-    assert_supporting_providers_for_space(driver, name, parse_seq(providers_list))
+    err_msg1 = 'Expected number of providers {} does not match actual {}'
+    err_msg2 = 'space named "{name}" does not have supporting provider ' \
+               'named "{{}}" as it should'.format(name=name)
+    assert_supporting_providers_for_space(driver, name,
+                                          parse_seq(providers_list),
+                                          err_msg1, err_msg2)
 
 
 @when(parsers.parse('user of {browser_id} sees that there is/are no supporting '
@@ -221,14 +222,15 @@ def assert_no_such_supporting_providers_for_space(selenium, browser_id, space,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_no_such_providers(d, space_name, not_expected_providers):
+    def assert_no_such_providers(d, space_name, not_expected_providers, msg):
         space_record = oz_page(d)['data space management'][space_name]
         supporting_providers = space_record.supporting_providers
 
-        err_msg = 'space named "{}" has supporting provider named "{{}}" ' \
-                  'while it should not have'.format(space_name)
         for provider in not_expected_providers:
-            assert provider not in supporting_providers, err_msg.format(provider)
+            assert provider not in supporting_providers, msg.format(provider)
 
+    err_msg = 'space named "{}" has supporting provider named "{{}}" ' \
+              'while it should not have'.format(space)
     with implicit_wait(driver, 0.5, SELENIUM_IMPLICIT_WAIT):
-        assert_no_such_providers(driver, space, parse_seq(providers_list))
+        assert_no_such_providers(driver, space,
+                                 parse_seq(providers_list), err_msg)

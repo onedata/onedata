@@ -4,12 +4,13 @@
 import json
 import os
 import re
-import requests
 import shutil
 import subprocess as sp
 import sys
-import yaml
 import time
+
+import requests
+import yaml
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -113,6 +114,18 @@ def get_users(config):
     return users
 
 
+def get_onezone_domain(config):
+    config = yaml.load(config)
+    return config.get('onezone', {}).get('domainName', 'onedata.org')
+
+
+def set_onezone_domain(domain):
+    replace('/etc/op_panel/app.config', r'{onezone_domain, .*}',
+            '{{onezone_domain, "{0}"}}'.format(domain))
+    replace('/etc/op_worker/app.config', r'{oz_domain, .*}',
+            '{{oz_domain, "{0}"}}'.format(domain))
+
+
 def do_request(users, request, *args, **kwargs):
     for (username, password) in users:
         r = request(*args, auth=(username, password), **kwargs)
@@ -126,7 +139,6 @@ def do_request(users, request, *args, **kwargs):
 
 def configure(config):
     users = get_users(config)
-
     r = do_request(users, requests.post,
                    'https://127.0.0.1:9444/api/v3/onepanel/provider/configuration',
                    headers={'content-type': 'application/x-yaml'},
@@ -165,11 +177,11 @@ def configure(config):
         raise ValueError('Error: {error}\nDescription: {description}\n'
                          'Module: {module}\nFunction: {function}\nHosts: {hosts}\n'
                          'For more information please check the logs.'.format(
-            error=resp.get('error', 'unknown'),
-            description=resp.get('description', '-'),
-            module=resp.get('module', '-'),
-            function=resp.get('function', '-'),
-            hosts=', '.join(resp.get('hosts', []))))
+                             error=resp.get('error', 'unknown'),
+                             description=resp.get('description', '-'),
+                             module=resp.get('module', '-'),
+                             function=resp.get('function', '-'),
+                             hosts=', '.join(resp.get('hosts', []))))
 
 
 def get_container_id():
@@ -181,7 +193,7 @@ def inspect_container(container_id):
     try:
         result = sp.check_output(['curl', '-s', '--unix-socket',
                                   '/var/run/docker.sock', 'http:/containers/{0}/json'.
-                                 format(container_id)])
+                                  format(container_id)])
         return json.loads(result)
     except Exception:
         return {}
@@ -237,13 +249,17 @@ if __name__ == '__main__':
 
         advertise_address = os.environ.get('ONEPANEL_ADVERTISE_ADDRESS')
         if advertise_address:
-            set_advertise_address('/etc/op_panel/app.config', advertise_address)
+            set_advertise_address(
+                '/etc/op_panel/app.config', advertise_address)
+
+        batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
+        onezone_domain = get_onezone_domain(batch_config)
+        set_onezone_domain(onezone_domain)
 
         start_onepanel()
 
         configured = False
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
-        batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
         if batch_mode.lower() == 'true':
             configure(batch_config)
             configured = True

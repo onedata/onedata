@@ -11,7 +11,7 @@ import re
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path
+from tests.gui.utils.generic import upload_file_path, repeat_failed, click_on_web_elem
 from tests.gui.utils.oneprovider_gui import assert_breadcrumbs_correctness, \
     chdir_using_breadcrumbs
 
@@ -129,15 +129,16 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
                     'with tooltip "{tooltip_name}"'))
 def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
     driver = select_browser(selenium, browser_id)
-    btn = driver.find_element_by_css_selector('ul.toolbar-group '
-                                              'a[data-original-title="{:s}"]'
-                                              ''.format(tooltip_name))
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda d: btn.is_enabled(),
-        message='waiting for {} tooltip from top menu bar in '
-                'data tab in op to become active'.format(tooltip_name)
-    )
-    btn.click()
+    css_sel = 'ul.toolbar-group a[data-original-title=' \
+              '"{:s}"]'.format(tooltip_name)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def click_on_tooltip(d, selector, err_msg):
+        btn = driver.find_element_by_css_selector(selector)
+        click_on_web_elem(d, btn, err_msg)
+
+    click_on_tooltip(driver, css_sel, 'clicking on {} tooltip '
+                                      'disabled'.format(tooltip_name))
 
 
 @then(parsers.parse('user of {browser_id} sees modal with name of provider '

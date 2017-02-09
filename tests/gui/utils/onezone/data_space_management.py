@@ -2,7 +2,7 @@
 in Onezone web GUI.
 """
 
-from tests.gui.utils.generic import iter_ahead, find_web_elem, find_web_elem_with_text
+from tests.gui.utils.generic import iter_ahead, find_web_elem, find_web_elem_with_text, click_on_web_elem
 from tests.gui.utils.onezone.sidebar_panel_record import OZPanelRecord
 from tests.gui.utils.onezone.sidebar_panel import OZPanel
 from tests.gui.utils.onezone.edit_box import EditBox
@@ -19,7 +19,7 @@ class DataSpaceManagementPanel(OZPanel):
     @property
     def spaces(self):
         css_sel = '.spaces-accordion-item'
-        return [SpaceRecord(space, record_type='space',
+        return [SpaceRecord(space, self._driver, record_type='space',
                             submenu_toggle='.clickable') for space in
                 self.web_elem.find_elements_by_css_selector(css_sel)]
 
@@ -33,11 +33,13 @@ class DataSpaceManagementPanel(OZPanel):
 
     def join_space(self):
         btn = self._get_btn('join a space')
-        btn.click()
+        err_msg = 'clicking on Join a space in DATA SPACE MANAGEMENT disabled'
+        click_on_web_elem(self._driver, btn, err_msg)
 
     def create_new_space(self):
         btn = self._get_btn('create new space')
-        btn.click()
+        err_msg = 'clicking on Create new space in DATA SPACE MANAGEMENT disabled'
+        click_on_web_elem(self._driver, btn, err_msg)
 
     @property
     def create_space_edit_box(self):
@@ -45,7 +47,7 @@ class DataSpaceManagementPanel(OZPanel):
         items = self.web_elem.find_elements_by_css_selector(css_sel)
         for item, next_item in iter_ahead(items):
             if next_item.tag_name == 'input':
-                return EditBox(item)
+                return EditBox(item, self._driver)
         else:
             raise RuntimeError('no edit box for create new space found '
                                'in "{panel}" oz panel'.format(panel=self.name))
@@ -54,8 +56,9 @@ class DataSpaceManagementPanel(OZPanel):
 class SpaceRecord(OZPanelRecord):
 
     class ProviderRecord(object):
-        def __init__(self, web_elem):
+        def __init__(self, web_elem, driver):
             self.web_elem = web_elem
+            self._driver = driver
 
         def __eq__(self, other):
             if isinstance(other, str) or isinstance(other, unicode):
@@ -76,7 +79,9 @@ class SpaceRecord(OZPanelRecord):
             err_msg = "can't click on '{}' supporting provider for given space " \
                       "in DATA SPACE MANAGEMENT oz panel".format(self.name)
             provider = find_web_elem(self.web_elem, css_sel, err_msg)
-            provider.click()
+            err_msg = 'clicking on provider record named "{}" in submenu of space ' \
+                      'in DATA SPACE MANAGEMENT panel disabled'.format(self.name)
+            click_on_web_elem(self._driver, provider, err_msg)
 
         def unsupport_space(self):
             css_sel = '.clickable .oneicon-leave-space'
@@ -84,14 +89,18 @@ class SpaceRecord(OZPanelRecord):
                       'provider for given space in ' \
                       'DATA SPACE MANAGEMENT oz panel'.format(self.name)
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
-            btn.click()
+            err_msg = 'clicking on unsupport space icon in provider record ' \
+                      'named "{}" in submenu of space ' \
+                      'in DATA SPACE MANAGEMENT panel disabled'.format(self.name)
+            click_on_web_elem(self._driver, btn, err_msg)
 
     @property
     def supporting_providers(self):
         if self.is_submenu_expanded:
             css_sel = 'ul.tertiary-list li.sidebar-space-provide'
-            return [SpaceRecord.ProviderRecord(provider) for provider in
-                    self.web_elem.find_elements_by_css_selector(css_sel)]
+            return [SpaceRecord.ProviderRecord(provider, self._driver)
+                    for provider
+                    in self.web_elem.find_elements_by_css_selector(css_sel)]
         else:
             raise RuntimeError('submenu for space named "{}" '
                                'is not expanded in DATA SPACE MANAGEMENT '
@@ -125,8 +134,9 @@ class SpaceRecord(OZPanelRecord):
         return int(count_label.text)
 
     class SettingsDropdown(object):
-        def __init__(self, web_elem):
+        def __init__(self, web_elem, driver):
             self.web_elem = web_elem
+            self._driver = driver
 
         @property
         def is_expanded(self):
@@ -135,27 +145,34 @@ class SpaceRecord(OZPanelRecord):
 
         def expand(self):
             if not self.is_expanded:
-                self.web_elem.click()
+                self._click()
 
         def collapse(self):
             if self.is_expanded:
-                self.web_elem.click()
+                self._click()
+
+        def _click(self):
+            err_msg = 'clicking on settings for space in DATA SPACE MANAGEMENT ' \
+                      'panel disabled'
+            click_on_web_elem(self._driver, self.web_elem, err_msg)
 
         def set_as_home(self):
-            btn = self._get_btn('set as home')
-            btn.click()
+            self._click_on_btn('set as home')
 
         def rename(self):
-            btn = self._get_btn('rename')
-            btn.click()
+            self._click_on_btn('rename')
 
         def get_support(self):
-            btn = self._get_btn('get support')
-            btn.click()
+            self._click_on_btn('get support')
 
         def leave(self):
-            btn = self._get_btn('leave')
-            btn.click()
+            self._click_on_btn('leave')
+
+        def _click_on_btn(self, btn_name):
+            btn = self._get_btn(btn_name)
+            err_msg = 'clicking on {btn} in expanded settings for space in ' \
+                      'DATA SPACE MANAGEMENT panel disabled'.format(btn=btn_name)
+            click_on_web_elem(self._driver, btn, err_msg)
 
         def _get_btn(self, name):
             css_sel = 'ul.space-dropdown-menu li.clickable'
@@ -171,11 +188,12 @@ class SpaceRecord(OZPanelRecord):
         err_msg = 'no settings icon for space named "{}" in DATA SPACE ' \
                   'MANAGEMENT oz pnale found'.format(self.name)
         settings = find_web_elem(self.web_elem, css_sel, err_msg)
-        return SpaceRecord.SettingsDropdown(settings)
+        return SpaceRecord.SettingsDropdown(settings, self._driver)
 
     class SpaceSupportTokenDropdownMenu(object):
-        def __init__(self, web_elem):
+        def __init__(self, web_elem, driver):
             self.web_elem = web_elem
+            self._driver = driver
 
         @property
         def token(self):
@@ -190,7 +208,8 @@ class SpaceRecord(OZPanelRecord):
             err_msg = 'no copy button found for ' \
                       'given space support token dropdown'
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
-            btn.click()
+            err_msg = 'clicking on cp btn for token dropdown for space disabled'
+            click_on_web_elem(self._driver, btn, err_msg)
 
     @property
     def dropright_with_token(self):
@@ -198,7 +217,8 @@ class SpaceRecord(OZPanelRecord):
         err_msg = 'no dropdown menu with support token for "{}" space found ' \
                   'in DATA SPACE MANAGEMENT'.format(self.name)
         dropright = find_web_elem(self.web_elem, css_sel, err_msg)
-        return SpaceRecord.SpaceSupportTokenDropdownMenu(dropright)
+        return SpaceRecord.SpaceSupportTokenDropdownMenu(dropright,
+                                                         self._driver)
 
     def get_support(self):
         if self.is_submenu_expanded:
@@ -206,7 +226,9 @@ class SpaceRecord(OZPanelRecord):
             css_sel = 'ul.tertiary-list li.get-support .dropdown'
             err_msg = 'no get support btn found for "{}" space'.format(space_name)
             btn = find_web_elem(self.web_elem, css_sel, err_msg)
-            btn.click()
+            err_msg = 'clicking on Get subbport btn in expanded submenu ' \
+                      'of space disabled'
+            click_on_web_elem(self._driver, btn, err_msg)
         else:
             raise RuntimeError('submenu for space named "{}" in DATA SPACE '
                                'MANAGEMENT is not expanded'.format(self.name))

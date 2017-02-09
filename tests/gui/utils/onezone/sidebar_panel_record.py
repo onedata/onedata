@@ -3,8 +3,7 @@
 
 from selenium.common.exceptions import NoSuchElementException
 
-from tests.gui.utils.generic import find_web_elem
-
+from tests.gui.utils.generic import find_web_elem, click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -17,8 +16,9 @@ class OZPanelRecord(object):
     _home_icon_css = '.oneicon-{}-home'
     _submenu_toggle_css = '.secondary-item-container {}'
 
-    def __init__(self, web_elem, record_type, submenu_toggle):
+    def __init__(self, web_elem, driver, record_type, submenu_toggle):
         self.web_elem = web_elem
+        self._driver = driver
         self._type = record_type
         self._name_css = self._name_css.format(record_type)
         self._home_icon_css = self._home_icon_css.format(record_type)
@@ -53,7 +53,9 @@ class OZPanelRecord(object):
             err_msg = 'no home outline found for {type} named' \
                       '"{name}"'.format(name=self.name, type=self._type)
             home_outline = find_web_elem(self.web_elem, css, err_msg)
-            home_outline.click()
+            err_msg = 'clicking on home outline for {type} named {name} ' \
+                      'disabled'.format(type=self._type, name=self.name)
+            click_on_web_elem(self._driver, home_outline, err_msg)
 
     @property
     def is_submenu_expanded(self):
@@ -63,13 +65,19 @@ class OZPanelRecord(object):
     def expand_submenu(self):
         toggle = self._get_submenu_toggle()
         if not self._is_submenu_expanded(toggle):
-            toggle.click()
+            self._click_on_toggle(toggle)
 
     def collapse_submenu(self):
         toggle = self._get_submenu_toggle()
         if self._is_submenu_expanded(toggle):
-            toggle.click()
+            self._click_on_toggle(toggle)
 
+    def _click_on_toggle(self, toggle):
+        err_msg = 'clicking on toggle for {type} named "{name}" record is ' \
+                  'disabled'.format(type=self._type, name=self.name)
+        click_on_web_elem(self._driver, toggle, err_msg)
+
+    # noinspection PyMethodMayBeStatic
     def _is_submenu_expanded(self, toggle):
         aria_expanded = toggle.get_attribute('aria-expanded')
         return True if (aria_expanded and 'true' == aria_expanded) else False
