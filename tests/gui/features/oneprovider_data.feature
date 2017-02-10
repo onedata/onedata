@@ -165,3 +165,122 @@ Feature: Oneprovider Data view
     And user of browser sees that the modal has disappeared
 
     Then user of browser sees that files named ["file1", "file2", "file3"] have disappeared from files list
+
+
+
+
+
+  Scenario: User sees that after going to Oneprovider, without having any home space, the first one alphabetically is loaded into view
+    When user of browser sees that displayed directory tree in sidebar panel belongs to space named "space1"
+    And user of browser uses spaces select to change data space to "A"
+    Then user of browser sees that displayed directory tree in sidebar panel belongs to space named "A"
+
+
+  Scenario: User changes directory using breadcrumbs
+    When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that directory named "dir1" has appeared on files list
+
+    # create dir2 in space1/dir1
+    And user of browser double clicks on directory named "dir1" of files list
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir2" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that directory named "dir2" has appeared on files list
+
+    # create dir3 in space1/dir1/dir2
+    And user of browser double clicks on directory named "dir2" of files list
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir3" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that directory named "dir3" has appeared on files list
+
+    And user of browser double clicks on directory named "dir3" of files list
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2/dir3
+
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser sees that current working directory displayed in directory tree is /
+    And user of browser sees directory named "dir1" on files list
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser does not see any shared directory named "dir1" on files list
+
+
+  Scenario: User changes directory using directory tree
+    When user of browser uses spaces select to change data space to "space1"
+
+    # create dir1 in space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that directory named "dir1" has appeared on files list
+
+    # create dir2 in space1/dir1
+    And user of browser double clicks on directory named "dir1" of files list
+    And user of browser sees that current working directory displayed in directory tree is /dir1/
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir2" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that directory named "dir2" has appeared on files list
+
+    # create dir3 in space1/dir1/dir2
+    And user of browser double clicks on directory named "dir2" of files list
+    And user of browser sees that current working directory displayed in directory tree is /dir1/dir2/
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir3" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that directory named "dir3" has appeared on files list
+
+    And user of browser double clicks on directory named "dir3" of files list
+    And user of browser sees that current working directory displayed in directory tree is /dir1/dir2/dir3/
+
+    And user of browser changes current working directory to / using directory tree
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser sees that current working directory displayed in directory tree is /
+    And user of browser sees directory named "dir1" on files list
+    And user of browser refreshes site
+    And user of browser changes current working directory to /dir1/dir2/dir3/ using directory tree
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2/dir3
+    And user of browser sees that current working directory displayed in directory tree is /dir1/dir2/dir3/
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # TODO rm after integrating with swagger
+    And user of browser changes current working directory to / using directory tree
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser does not see any directory named "dir1" on files list

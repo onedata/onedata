@@ -15,6 +15,37 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser seen that Oneprovider session has started
 
 
+    # 'space1' supported by 'p1' defined in env.json
+  Scenario: User uploads 5 files at once
+    Given user of browser has 5 files in directory named "my_files"
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir10" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that directory named "dir10" has appeared on files list
+    And user of browser double clicks on directory named "dir10" of files list
+    And user of browser sees that current working directory displayed in directory tree is /dir10/
+    And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
+    Then user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*5.*
+    And user of browser sees that file browser contains 5 file(s)
+
+    # TODO rm after integrating with swagger
+    # in order to change cwd to root dir change space to other than change back
+    And user of browser changes current working directory to / using directory tree
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser selects "dir10" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser does not see any directory named "dir10" on files list
+
+
   # 'space1' supported by 'p1' defined in env.json
   Scenario: User uploads 5 files at once
     Given user of browser has 5 files in directory named "my_files"

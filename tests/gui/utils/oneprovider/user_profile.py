@@ -3,7 +3,7 @@
 
 from tests.gui.utils.common.common import PageObject, ExpandableMixin
 from tests.gui.utils.common.web_elements import ToggleWebElement, ButtonWithTextWebElement
-from tests.gui.utils.generic import click_on_web_elem, find_web_elem_with_text
+from tests.gui.utils.generic import click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
