@@ -1,7 +1,7 @@
 """Steps used for handling of data tab elements (e.g. toolbar)
 in various GUI testing scenarios
 """
-
+import pytest
 from pytest_bdd import given, when, then, parsers
 
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
@@ -119,6 +119,18 @@ def change_cwd_using_dir_tree_in_data_tab_in_op(selenium, browser_id,
             cwd.expand()
         cwd = cwd[directory]
         cwd.click()
+
+
+@when(parsers.parse('user of {browser_id} does not see {path} in directory tree'))
+@then(parsers.parse('user of {browser_id} does not see {path} in directory tree'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_absence_of_path_in_dir_tree(selenium, browser_id, path, op_page):
+    driver = select_browser(selenium, browser_id)
+    curr_dir = op_page(driver).data.sidebar.root_dir
+    with pytest.raises(RuntimeError):
+        for directory in (dir for dir in path.split('/') if dir != ''):
+            with implicit_wait(driver, 0.05, SELENIUM_IMPLICIT_WAIT):
+                curr_dir = curr_dir[directory]
 
 
 @repeat(attempts=WAIT_BACKEND, timeout=True)

@@ -1,12 +1,15 @@
 """Utils and fixtures to facilitate operations on file browser in oneprovider web GUI.
 """
 
+from contextlib import contextmanager
 from itertools import islice
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement
+from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, IconWebElement, TextLabelWebElement
 from tests.gui.utils.generic import iter_ahead
 from tests.gui.utils.oneprovider.file_browser.file_row import FileRow
 from tests.gui.utils.oneprovider.file_browser.metadata_row import MetadataRow
@@ -18,9 +21,11 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class FileBrowser(PageObject):
+    empty_dir_msg = TextLabelWebElement('.empty-model-message')
     _files = ItemListWebElement('tbody tr.file-row')
     _files_with_metadata = ItemListWebElement('tbody tr.first-level')
     _bottom = WebElement('.file-row-load-more')
+    _empty_dir_icon = IconWebElement('.empty-dir-image')
 
     def __str__(self):
         return 'file browser in {}'.format(self._parent)
@@ -51,13 +56,12 @@ class FileBrowser(PageObject):
         return len(self._files)
 
     def is_empty(self):
-        css_sel = 'table.files-table'
         try:
-            self.web_elem.find_element_by_css_selector(css_sel)
+            self._empty_dir_icon
         except NoSuchElementException:
-            return True
-        else:
             return False
+        else:
+            return True
 
     def get_metadata_for(self, name):
         for item1, item2 in iter_ahead(self._files_with_metadata):
@@ -72,3 +76,17 @@ class FileBrowser(PageObject):
     def scroll_to_bottom(self):
         self._driver.execute_script('arguments[0].scrollIntoView();',
                                     self._bottom)
+
+    @contextmanager
+    def select_files(self):
+        action = ActionChains(self._driver)
+
+        action.shift_down = lambda: action.key_down(Keys.LEFT_SHIFT)
+        action.shift_up = lambda: action.key_up(Keys.LEFT_SHIFT)
+        action.ctrl_down = lambda: action.key_down(Keys.LEFT_CONTROL)
+        action.ctrl_up = lambda: action.key_up(Keys.LEFT_CONTROL)
+        action.select = lambda item: action.click(item.web_elem)
+
+        yield action
+
+        action.perform()

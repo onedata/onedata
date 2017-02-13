@@ -211,11 +211,10 @@ Feature: Oneprovider Data view
     And user of browser sees that directory named "dir3" has appeared on files list
 
     And user of browser double clicks on directory named "dir3" of files list
-    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2/dir3
+    Then user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2/dir3
 
     And user of browser changes current working directory to space1 using breadcrumbs
     And user of browser sees that current working directory displayed in breadcrumbs is space1
-    And user of browser sees that current working directory displayed in directory tree is /
     And user of browser sees directory named "dir1" on files list
 
     # TODO rm after integrating with swagger
@@ -228,7 +227,7 @@ Feature: Oneprovider Data view
     And user of browser does not see any shared directory named "dir1" on files list
 
 
-  Scenario: User changes directory using directory tree
+  Scenario: User changes directory (forward and backward ) using directory tree
     When user of browser uses spaces select to change data space to "space1"
 
     # create dir1 in space1
@@ -263,15 +262,14 @@ Feature: Oneprovider Data view
     And user of browser sees that directory named "dir3" has appeared on files list
 
     And user of browser double clicks on directory named "dir3" of files list
-    And user of browser sees that current working directory displayed in directory tree is /dir1/dir2/dir3/
+    Then user of browser sees that current working directory displayed in directory tree is /dir1/dir2/dir3/
 
     And user of browser changes current working directory to / using directory tree
-    And user of browser sees that current working directory displayed in breadcrumbs is space1
     And user of browser sees that current working directory displayed in directory tree is /
     And user of browser sees directory named "dir1" on files list
     And user of browser refreshes site
+    And user of browser does not see /dir1/dir2/dir3/ in directory tree
     And user of browser changes current working directory to /dir1/dir2/dir3/ using directory tree
-    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2/dir3
     And user of browser sees that current working directory displayed in directory tree is /dir1/dir2/dir3/
     And user of browser sees empty file browser in data tab in Oneprovider page
 

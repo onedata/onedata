@@ -1,354 +1,312 @@
-"""Steps used for file browser handling in various GUI testing scenarios
+"""Steps used for file list handling in various GUI testing scenarios
 """
 
+from datetime import datetime
+
+import pytest
+from pytest_bdd import when, then, parsers
+from pytest_selenium_multi import select_browser
+
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.utils.generic import parse_seq, repeat, implicit_wait
+
 __author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from pytest_bdd import when, then, parsers
-
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait as Wait
-
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
-
-from tests.gui.conftest import WAIT_FRONTEND, SELENIUM_IMPLICIT_WAIT
-from tests.gui.utils.generic import parse_seq, repeat_failed, implicit_wait
-
-tool_type_to_icon = {'share': 'oneicon-share',
-                     'metadata': 'oneicon-metadata'}
-
-
-type_to_icon = {'shared directory': 'oneicon-folder-share',
-                'directory': 'oneicon-folder',
-                'file': 'oneicon-file'}
-
-
-def _pack_content_into_rows(items):
-    items_num = len(items)
-    index = 0
-    while index < items_num:
-        row, label, icon, tools, size, mod = (items[index], items[index+2],
-                                              items[index+1], items[index+3],
-                                              items[index+4], items[index+5])
-        meta = None
-        meta_index = index + 6
-        if meta_index < items_num and 'metadata-panel' in items[meta_index].get_attribute('class'):
-            meta = items[meta_index]
-            index += 7
-        else:
-            index += 6
-
-        yield (row, label, icon, tools, size, mod, meta)
-
-
-@repeat_failed(attempts=10, interval=0.1)
-def _get_items_from_file_list(driver):
-    items = driver.find_elements_by_css_selector('table.files-table '
-                                                 'tr.file-row, '
-                                                 'table.files-table '
-                                                 'tr.file-row '
-                                                 'td.file-list-col-file '
-                                                 '.file-icon .oneicon, '
-                                                 'table.files-table '
-                                                 'tr.file-row '
-                                                 'td.file-list-col-file '
-                                                 '.file-label, '
-                                                 'table.files-table '
-                                                 'tr.file-row '
-                                                 'td.file-list-col-file '
-                                                 '.file-row-tools, '
-                                                 'table.files-table '
-                                                 'tr.file-row '
-                                                 'td.file-list-col-size, '
-                                                 'table.files-table '
-                                                 'tr.file-row '
-                                                 'td.file-list-col-modification, '
-                                                 'table.files-table '
-                                                 'tr:not([class~=file-row]) '
-                                                 '.metadata-panel')
-
-    return {label.text: (row, label, icon, tools, size, modification, meta)
-            for row, label, icon, tools, size, modification, meta
-            in _pack_content_into_rows(items)}
-
-
-def _not_in_file_list(driver, items, items_type, file_list=None):
-    file_list = file_list if file_list else _get_items_from_file_list(driver)
-    icon = type_to_icon[items_type]
-    for item_name in parse_seq(items):
-        item = file_list.get(item_name)
-        if item and icon in item[2].get_attribute('class'):
-                return False
-    return True
-
-
-def _double_click_on_item(driver, item_name, item_type, items=None):
-    items = items if items else _get_items_from_file_list(driver)
-    item = items.get(item_name)
-    if item and type_to_icon[item_type] in item[2].get_attribute('class'):
-        ActionChains(driver).double_click(item[1]).perform()
-    else:
-        raise RuntimeError('no {} named {} found'. format(item_type, item_name))
-
-
-def _is_file_selected(file_item):
-    return file_item and 'active' in file_item[0].get_attribute('class')
-
-
-def _is_not_file_selected(file_item):
-    return file_item and 'active' not in file_item[0].get_attribute('class')
-
-
-def _select_items_from_file_list_upon_cond(driver, item_list, keys,
-                                           cond=_is_file_selected,
-                                           all_items=None):
-    all_items = all_items if all_items else _get_items_from_file_list(driver)
-    actions = ActionChains(driver)
-    for key in keys:
-        actions.key_down(key)
-
-    for item_name in parse_seq(item_list):
-        item = all_items.get(item_name)
-        if cond(item):
-                actions.click(item[0])
-
-    for key in keys:
-        actions.key_up(key)
-    actions.perform()
-
-
-def _get_tool_icon(driver, item_name, item_type, tool_type,
-                   items=None, css_path=None):
-    items = items if items else _get_items_from_file_list(driver)
-    item = items.get(item_name)
-    if item and type_to_icon[item_type] in item[2].get_attribute('class'):
-        if not css_path:
-            css_path = '.{}'.format(tool_type_to_icon[tool_type])
-        return item[3].find_element_by_css_selector(css_path)
-    else:
-        return None
-
-
-def _click_on_tool_icon_for_file(driver, item_name, item_type,
-                                 tool_type, items=None):
-    item = _get_tool_icon(driver, item_name, item_type, tool_type, items)
-    if item:
-        item.click()
-
-
-def _is_tool_icon_displayed(driver, item_name, item_type,
-                            tool_type):
-    item = _get_tool_icon(driver, item_name, item_type, tool_type,
-                          css_path='.file-tool-{}'.format(tool_type))
-    if item:
-        return 'visible-on-parent-hover-25p' in item.get_attribute('class')
-    else:
-        return False
-
-
-@when(parsers.parse('user of {browser_id} should not see {tool_type} '
-                    'icon for {item_type} named "{item_name}"'))
-@then(parsers.parse('user of {browser_id} should not see {tool_type} '
-                    'icon for {item_type} named "{item_name}"'))
-def is_tool_icon_hidden(selenium, browser_id, tool_type, item_name, item_type):
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until_not(
-        lambda _: _is_tool_icon_displayed(driver, item_name,
-                                          item_type, tool_type),
-        message='checking if {tool_type} icon for {item_type} named '
-                '"{item_name}" is hidden'.format(tool_type=tool_type,
-                                                 item_type=item_type,
-                                                 item_name=item_name)
-    )
+@when(parsers.parse('user of {browser_id} sees "{msg}" '
+                    'instead of file browser'))
+@then(parsers.parse('user of {browser_id} sees "{msg}" '
+                    'instead of file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_msg_instead_of_browser(browser_id, msg, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    displayed_msg = browser.empty_dir_msg
+    assert displayed_msg == msg, 'displayed {} does not match expected ' \
+                                 '{}'.format(displayed_msg, msg)
 
 
 @when(parsers.parse('user of {browser_id} sees {tool_type} icon for '
                     '{item_type} named "{item_name}"'))
 @then(parsers.parse('user of {browser_id} sees {tool_type} icon for '
                     '{item_type} named "{item_name}"'))
-def is_tool_icon_displayed(selenium, browser_id, tool_type,
-                           item_type, item_name):
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda s: _is_tool_icon_displayed(driver, item_name,
-                                          item_type, tool_type),
-        message='checking if {tool_type} icon for {item_type} named '
-                '"{item_name}" is displayed'.format(tool_type=tool_type,
-                                                    item_type=item_type,
-                                                    item_name=item_name)
-    )
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
+                                              item_name, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    err_msg = '{} tool for {} in file browser visible, ' \
+              'while should not be'.format(tool_type, item_name)
+    assert not browser[item_name].is_tool_visible(tool_type), err_msg
 
 
-@then(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} named "{item_name}" of files list'))
-@when(parsers.parse('user of {browser_id} double clicks '
-                    'on {item_type} named "{item_name}" of files list'))
-def double_click_on_file_item(selenium, browser_id, item_name,
-                              item_type):
-    driver = select_browser(selenium, browser_id)
-    _double_click_on_item(driver, item_name, item_type)
-
-
-@when(parsers.parse('user of {browser_id} clicks once on '
-                    '{item_type} named "{item_name}" of files list'))
-@then(parsers.parse('user of {browser_id} clicks once on '
-                    '{item_type} named "{item_name}" of files list'))
-def click_on_file_item(selenium, browser_id, item_name,
-                       item_type):
-    driver = select_browser(selenium, browser_id)
-    all_items = _get_items_from_file_list(driver)
-    item = all_items.get(item_name)
-    if item and type_to_icon[item_type] in item[2].get_attribute('class'):
-        item[0].click()
-    else:
-        raise RuntimeError('no {} named {} found'.format(item_type, item_name))
-
-
-@when(parsers.parse('user of {browser_id} selects {item_list} '
-                    'from files list'))
-@then(parsers.parse('user of {browser_id} selects {item_list} '
-                    'from files list'))
-def select_files_from_file_list(selenium, browser_id, item_list):
-    driver = select_browser(selenium, browser_id)
-    _select_items_from_file_list_upon_cond(driver, item_list,
-                                           keys=(Keys.LEFT_CONTROL, ),
-                                           cond=_is_not_file_selected)
-
-
-@when(parsers.parse('user of {browser_id} deselects {item_list} '
-                    'from files list'))
-@then(parsers.parse('user of {browser_id} deselects {item_list} '
-                    'from files list'))
-def deselect_files_from_file_list(selenium, browser_id, item_list):
-    driver = select_browser(selenium, browser_id)
-    _select_items_from_file_list_upon_cond(driver, item_list,
-                                           keys=(Keys.LEFT_CONTROL, ),
-                                           cond=_is_file_selected)
-
-
-@when(parsers.parse('user of {browser_id} deselects all '
-                    'selected items from files list'))
-@then(parsers.parse('user of {browser_id} deselects all '
-                    'selected items from files list'))
-def deselect_all_items_from_file_list(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    all_items = _get_items_from_file_list(driver)
-    items_list = ', '.join(item for item in all_items.iterkeys())
-    _select_items_from_file_list_upon_cond(driver, items_list,
-                                           keys=(Keys.LEFT_CONTROL, ),
-                                           cond=_is_file_selected)
+@when(parsers.parse('user of {browser_id} sees {tool_type} icon for '
+                    '{item_type} named "{item_name}"'))
+@then(parsers.parse('user of {browser_id} sees {tool_type} icon for '
+                    '{item_type} named "{item_name}"'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
+                                              item_name, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    err_msg = '{} tool for {} in file browser not visible'.format(tool_type,
+                                                                  item_name)
+    assert browser[item_name].is_tool_visible(tool_type), err_msg
 
 
 @when(parsers.parse('user of {browser_id} clicks on {tool_type} '
-                    'icon in file row for {file_type} named "{file_name}" '
+                    'tool icon in file row for item named "{item_name}" '
                     'in file browser'))
 @then(parsers.parse('user of {browser_id} clicks on {tool_type} '
-                    'icon in file row for {file_type} named "{file_name}" '
+                    'tool icon in file row for item named "{item_name}" '
                     'in file browser'))
-def click_on_file_icon_tool(selenium, browser_id, tool_type,
-                            file_name, file_type):
-    driver = select_browser(selenium, browser_id)
-    _click_on_tool_icon_for_file(driver, file_name, file_type, tool_type)
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def click_on_tool_icon_for_file_in_file_browser(browser_id, tool_type,
+                                                item_name, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    browser[item_name].click_on_tool(tool_type)
 
 
-@when(parsers.parse('user of {browser_id} sees that file browser '
-                    'contains {num:d} file(s)'))
-@then(parsers.parse('user of {browser_id} sees that file browser '
-                    'contains {num:d} file(s)'))
-def assert_num_of_files_are_displayed_in_file_browser(selenium, browser_id,
-                                                      num):
+@when(parsers.parse('user of {browser_id} sees that item(s) named {item_list} '
+                    'has(have) disappeared from files browser'))
+@then(parsers.parse('user of {browser_id} sees that item(s) named {item_list} '
+                    'has(have) disappeared from files browser'))
+@when(parsers.parse('user of {browser_id} does not see any item(s) named '
+                    '{item_list} in file browser'))
+@then(parsers.parse('user of {browser_id} does not see any item(s) named '
+                    '{item_list} in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_items_absence_in_file_browser(selenium, browser_id, item_list,
+                                         tmp_memory):
     driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda _: len(_get_items_from_file_list(driver)) == num,
-        message='displayed number of files {} does not match expected {}'
-                ''.format(len(_get_items_from_file_list(driver)), num)
-    )
+    browser = tmp_memory[browser_id]['file_browser']
+    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
+        for item_name in parse_seq(item_list):
+            with pytest.raises(RuntimeError):
+                _ = browser[item_name]
+
+
+@when(parsers.parse('user of {browser_id} sees item(s) '
+                    'named {item_list} in file browser'))
+@then(parsers.parse('user of {browser_id} sees item(s) '
+                    'named {item_list} in file browser'))
+@when(parsers.parse('user of {browser_id} sees that item(s) named '
+                    '{item_list} has(have) appeared in file browser'))
+@then(parsers.parse('user of {browser_id} sees that item(s) named '
+                    '{item_list} has(have) appeared in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_items_presence_in_file_browser(browser_id, item_list, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    for item_name in parse_seq(item_list):
+        _ = browser[item_name]
+
+
+@when(parsers.parse('user of {browser_id} sees item(s) named '
+                    '{item_list} in file browser in given order'))
+@then(parsers.parse('user of {browser_id} sees item(s) named '
+                    '{item_list} in file browser in given order'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_presence_in_file_browser_with_order(browser_id, item_list,
+                                               tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    items = list(reversed(parse_seq(item_list)))
+    for item in browser:
+        if item.name == items[-1]:
+            items.pop()
+    assert items == [], 'item(s) not in browser or not in given order ' \
+                        'starting from {}'.format(list(reversed(items)))
+
+
+@when(parsers.parse('user of {browser_id} sees that modification date of item '
+                    'named "{item_name}" is {date} with possible error of '
+                    '{err_time:int} seconds in file browser'))
+@then(parsers.parse('user of {browser_id} sees that modification date of item '
+                    'named "{item_name}" is {date} with possible error of '
+                    '{err_time:int} seconds in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_item_in_file_browser_is_of_size(browser_id, item_name, date,
+                                           err_time, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    date_fmt = '%Y-%m-%d %H:%M'
+    item_date = datetime.strptime(browser[item_name].modification_date, date_fmt)
+    expected_date = datetime.strptime(date, date_fmt)
+    err_msg = 'displayed mod time {} for {} does not match expected {}'
+    assert abs(expected_date - item_date).seconds < err_time, \
+        err_msg.format(item_date, item_name, expected_date)
+
+
+@when(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
+                    'is of {size} size in file browser'))
+@then(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
+                    'is of {size} size in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_item_in_file_browser_is_of_size(browser_id, item_name, size,
+                                           tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    item_size = browser[item_name].size
+    err_msg = 'displayed size {} for {} does not match expected {}'
+    assert size == item_size, err_msg.format(item_size, item_name, size)
 
 
 @when(parsers.parse('user of {browser_id} scrolls to the bottom '
-                    'of file list in file browser'))
+                    'of file browser'))
 @then(parsers.parse('user of {browser_id} scrolls to the bottom '
-                    'of file list in file browser'))
-def scroll_to_the_bottom_of_file_browser(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
-    bottom = driver.find_element_by_css_selector('table.files-table '
-                                                 'tr.file-row-load-more')
-    driver.execute_script('arguments[0].scrollIntoView();', bottom)
+                    'of file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def scroll_to_bottom_of_file_browser(browser_id, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    browser.scroll_to_bottom()
 
 
+@when(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
+                    'item(s) in file browser'))
+@then(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
+                    'item(s) in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_num_of_files_are_displayed_in_file_browser(browser_id, num,
+                                                      tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    err_msg = 'displayed number of files {} does not match expected {}'
+    files_num = browser.files_count
+    assert browser.files_count == num, err_msg.format(files_num, num)
 
 
+@when(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
+                    'is {item_attr} in file browser'))
+@then(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
+                    'is {item_attr} in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_item_in_file_browser_is_of_type(browser_id, item_name, item_attr,
+                                           tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    action = getattr(browser[item_name], 'is_{}'.format(item_attr))
+    assert action(), '"{}" is not {}, while it should'.format(item_name,
+                                                              item_attr)
 
 
-
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
-                 r'named (?P<item_list>.*?) (has|have) disappeared from files list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
-                 r'named (?P<item_list>.*?) (has|have) disappeared from files list'))
-@when(parsers.re(r'user of (?P<browser_id>.*?) does not see any '
-                 r'(?P<item_type>.*?)s? named (?P<item_list>.*?) on files list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) does not see any '
-                 r'(?P<item_type>.*?)s? named (?P<item_list>.*?) on files list'))
-def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
-    driver = select_browser(selenium, browser_id)
-    item_type = item_type.replace('directorie', 'directory')
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda _: _not_in_file_list(driver, item_list, item_type),
-        message='waiting for {:s} item/items '
-                'to disappear from file list'.format(item_list)
-    )
+@when(parsers.parse('user of {browser_id} double clicks on item '
+                    'named "{item_name}" in file browser'))
+@then(parsers.parse('user of {browser_id} double clicks on item '
+                    'named "{item_name}" in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def double_click_on_item_in_file_browser(browser_id, item_name, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    browser[item_name].double_click()
 
 
+@when(parsers.parse('user of {browser_id} clicks once on item '
+                    'named "{item_name}" in file browser'))
+@then(parsers.parse('user of {browser_id} clicks once on item '
+                    'named "{item_name}" in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def click_on_item_in_file_browser(browser_id, item_name, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    browser[item_name].click()
 
 
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_type>.*?)s? '
-                 r'named (?P<item_list>.*?) on files list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees (?P<item_type>.*?)s? '
-                 r'named (?P<item_list>.*?) on files list'))
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
-                 r'named (?P<item_list>.*?) (has|have) appeared on files list'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
-                 r'named (?P<item_list>.*?) (has|have) appeared on files list'))
-def is_present_in_file_list(selenium, browser_id, item_list, item_type, tmp_memory):
-    driver = select_browser(selenium, browser_id)
-    item_type = item_type.replace('directorie', 'directory')
-    Wait(driver, WAIT_FRONTEND).until_not(
-        lambda _: _not_in_file_list(driver, item_list, item_type),
-        message='waiting for {:s} item/items '
-                'to appear in file list'.format(item_list)
-    )
+@when(parsers.parse('user of {browser_id} selects {item_list} '
+                    'item(s) from file browser with pressed shift'))
+@then(parsers.parse('user of {browser_id} selects {item_list} '
+                    'item(s) from file browser with pressed shift'))
+def select_files_from_file_list_using_shift(browser_id, item_list, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    with browser.select_files() as selector:
+        selector.shift_down()
+        _select_files(browser, selector, item_list)
+        selector.shift_up()
 
 
+@when(parsers.parse('user of {browser_id} selects {item_list} '
+                    'item(s) from file browser with pressed ctrl'))
+@then(parsers.parse('user of {browser_id} selects {item_list} '
+                    'item(s) from file browser with pressed ctrl'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def select_files_from_file_list_using_ctrl(browser_id, item_list,
+                                           tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    with browser.select_files() as selector:
+        selector.ctrl_down()
+        _select_files(browser, selector, item_list)
+        selector.ctrl_up()
 
 
+@when(parsers.parse('user of {browser_id} deselects {item_list} '
+                    'item(s) from file browser'))
+@then(parsers.parse('user of {browser_id} deselects {item_list} '
+                    'item(s) from file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def deselect_items_from_file_browser(browser_id, item_list, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    with browser.select_files() as selector:
+        selector.ctrl_down()
+        _deselect_files(browser, selector, item_list)
+        selector.ctrl_up()
 
 
+def _select_files(browser, selector, item_list):
+    for item_name in parse_seq(item_list):
+        item = browser[item_name]
+        if not item.is_selected():
+            selector.select(item)
 
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees that '
-                 r'(?P<item_type>file|directory) named (?P<item_name>.*?) '
-                 r'is shared'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees that '
-                 r'(?P<item_type>file|directory) named (?P<item_name>.*?) '
-                 r'is shared'))
-@when(parsers.re(r'user of (?P<browser_id>.*?) sees that '
-                 r'(?P<item_type>file|directory) named (?P<item_name>.*?) '
-                 r'became shared'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) sees that '
-                 r'(?P<item_type>file|directory) named (?P<item_name>.*?) '
-                 r'became shared'))
-def assert_item_is_shared_in_file_browser(browser_id, item_name,
-                                          item_type, tmp_memory):
-    file_browser = tmp_memory[browser_id]['file_browser']
-    item = file_browser[item_name]
 
-    @repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
-    def assert_shared_item(elem, elem_type, msg):
-        assert getattr(elem, 'is_{}'.format(elem_type)) and elem.is_shared, msg
+def _deselect_files(browser, selector, item_list):
+    for item_name in parse_seq(item_list):
+        item = browser[item_name]
+        if item.is_selected():
+            selector.select(item)
 
-    err_msg = 'shared {type} named "{name}" not found in ' \
-              'file browser'.format(type=item_type, name=item_name)
-    assert_shared_item(item, item_type, err_msg)
+
+@when(parsers.parse('user of {browser_id} deselects all '
+                    'selected items from file browser'))
+@then(parsers.parse('user of {browser_id} deselects all '
+                    'selected items from file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def deselect_all_items_from_file_browser(browser_id, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    item = browser[0]
+    item.click()
+    if item.is_selected():
+        item.click()
+
+
+@when(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'item(s) is(are) selected in file browser'))
+@then(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'item(s) is(are) selected in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_items_are_selected_in_file_browser(browser_id, item_list,
+                                              tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    err_msg = 'item "{name}" is not selected while it should be'
+    for item_name in parse_seq(item_list):
+        item = browser[item_name]
+        assert item.is_selected(), err_msg.format(name=item_name)
+
+
+@when(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'item(s) is(are) not selected in file browser'))
+@then(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'item(s) is(are) not selected in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_items_are_not_selected_in_file_browser(browser_id, item_list,
+                                                  tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    err_msg = 'item "{name}" is selected while it should not be'
+    for item_name in parse_seq(item_list):
+        item = browser[item_name]
+        assert not item.is_selected(), err_msg.format(name=item_name)
+
+
+@when(parsers.parse('user of {browser_id} sees that none '
+                    'item is selected in file browser'))
+@then(parsers.parse('user of {browser_id} sees that none '
+                    'item is selected in file browser'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_none_item_is_selected_in_file_browser(browser_id, item_list,
+                                                 tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    err_msg = 'item "{name}" is selected while it should not be'
+    for item_name in parse_seq(item_list):
+        item = browser[item_name]
+        assert not item.is_selected(), err_msg.format(name=item_name)

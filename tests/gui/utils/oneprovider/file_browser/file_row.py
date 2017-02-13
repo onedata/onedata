@@ -2,9 +2,7 @@
 in oneprovider web GUI.
 """
 
-from decorator import contextmanager
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import Keys
 
 from tests.gui.utils.generic import click_on_web_elem
 from tests.gui.utils.common.common import PageObject
@@ -55,18 +53,3 @@ class FileRow(PageObject):
 
     def double_click(self):
         ActionChains(self._driver).double_click(self.web_elem).perform()
-
-
-@contextmanager
-def select_files(driver):
-    action = ActionChains(driver)
-
-    action.shift_down = lambda: action.key_down(Keys.LEFT_SHIFT)
-    action.shift_up = lambda: action.key_up(Keys.LEFT_SHIFT)
-    action.ctrl_down = lambda: action.key_down(Keys.LEFT_CONTROL)
-    action.ctrl_up = lambda: action.key_up(Keys.LEFT_CONTROL)
-    action.select = lambda item: action.click(item.web_elem)
-
-    yield action
-
-    action.perform()
