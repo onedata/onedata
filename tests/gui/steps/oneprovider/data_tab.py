@@ -48,9 +48,10 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  btn_list, op_page):
     driver = select_browser(selenium, browser_id)
     toolbar = op_page(driver).data.toolbar
-    err_msg = '{} btn should be disabled but is not in toolbar in op data tab'
+    err_msg = '{} should be disabled but is not'
     for btn in parse_seq(btn_list):
-        assert toolbar[btn].is_enabled() is True, err_msg.format(btn)
+        item = toolbar[btn]
+        assert item.is_enabled() is True, err_msg.format(item)
 
 
 @when(parsers.parse('user of {browser_id} sees that {btn_list} button(s) is(are) '

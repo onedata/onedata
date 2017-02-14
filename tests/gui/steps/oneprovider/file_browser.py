@@ -1,6 +1,7 @@
 """Steps used for file list handling in various GUI testing scenarios
 """
 
+from time import time
 from datetime import datetime
 
 import pytest
@@ -118,18 +119,18 @@ def assert_presence_in_file_browser_with_order(browser_id, item_list,
 
 
 @when(parsers.parse('user of {browser_id} sees that modification date of item '
-                    'named "{item_name}" is {date} with possible error of '
-                    '{err_time:d} seconds in file browser'))
+                    'named "{item_name}" is not earlier than {err_time:d} '
+                    'seconds ago'))
 @then(parsers.parse('user of {browser_id} sees that modification date of item '
-                    'named "{item_name}" is {date} with possible error of '
-                    '{err_time:d} seconds in file browser'))
+                    'named "{item_name}" is not earlier than {err_time:d} '
+                    'seconds ago'))
 @repeat(attempts=WAIT_BACKEND, timeout=True)
-def assert_item_in_file_browser_is_of_size(browser_id, item_name, date,
-                                           err_time, tmp_memory):
+def assert_item_in_file_browser_is_of_mdate(browser_id, item_name,
+                                            err_time, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     date_fmt = '%Y-%m-%d %H:%M'
     item_date = datetime.strptime(browser[item_name].modification_date, date_fmt)
-    expected_date = datetime.strptime(date, date_fmt)
+    expected_date = datetime.fromtimestamp(time())
     err_msg = 'displayed mod time {} for {} does not match expected {}'
     assert abs(expected_date - item_date).seconds < err_time, \
         err_msg.format(item_date, item_name, expected_date)

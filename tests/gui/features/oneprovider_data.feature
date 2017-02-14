@@ -607,18 +607,19 @@ Feature: Oneprovider Data view
 
   Scenario: User changes directory using breadcrumbs
     When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
 
     # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
     And user of browser types "dir1" on keyboard
-    And user of browser presses enter on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that directory named "dir1" has appeared on files list
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
 
     # create dir2 in space1/dir1
-    And user of browser double clicks on directory named "dir1" of files list
+    And user of browser double clicks on item named "dir1" in file browser
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
@@ -626,10 +627,10 @@ Feature: Oneprovider Data view
     And user of browser types "dir2" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that directory named "dir2" has appeared on files list
+    And user of browser sees that item(s) named "dir2" has(have) appeared in file browser
 
     # create dir3 in space1/dir1/dir2
-    And user of browser double clicks on directory named "dir2" of files list
+    And user of browser double clicks on item named "dir2" in file browser
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
@@ -637,9 +638,9 @@ Feature: Oneprovider Data view
     And user of browser types "dir3" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that directory named "dir3" has appeared on files list
+    And user of browser sees that item(s) named "dir3" has(have) appeared in file browser
 
-    And user of browser double clicks on directory named "dir3" of files list
+    And user of browser double clicks on item named "dir3" in file browser
     Then user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2/dir3
 
     And user of browser changes current working directory to space1 using breadcrumbs
@@ -647,17 +648,18 @@ Feature: Oneprovider Data view
     And user of browser sees directory named "dir1" on files list
 
     # TODO rm after integrating with swagger
-    And user of browser selects "dir1" from files list
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
-    And user of browser does not see any shared directory named "dir1" on files list
+    And user of browser sees that item(s) named "dir1" has(have) disappeared from files browser
 
 
   Scenario: User changes directory using sidebar directory tree view (with unfolding of folded directories)
     When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
 
     # create dir1 in space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
@@ -666,10 +668,10 @@ Feature: Oneprovider Data view
     And user of browser types "dir1" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that directory named "dir1" has appeared on files list
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
 
     # create dir2 in space1/dir1
-    And user of browser double clicks on directory named "dir1" of files list
+    And user of browser double clicks on item named "dir1" in file browser
     And user of browser sees that current working directory displayed in directory tree is /dir1/
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
@@ -677,10 +679,10 @@ Feature: Oneprovider Data view
     And user of browser types "dir2" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that directory named "dir2" has appeared on files list
+    And user of browser sees that item(s) named "dir2" has(have) appeared in file browser
 
     # create dir3 in space1/dir1/dir2
-    And user of browser double clicks on directory named "dir2" of files list
+    And user of browser double clicks on item named "dir2" in file browser
     And user of browser sees that current working directory displayed in directory tree is /dir1/dir2/
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
@@ -688,9 +690,9 @@ Feature: Oneprovider Data view
     And user of browser types "dir3" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that directory named "dir3" has appeared on files list
+    And user of browser sees that item(s) named "dir3" has(have) appeared in file browser
 
-    And user of browser double clicks on directory named "dir3" of files list
+    And user of browser double clicks on item named "dir3" in file browser
     Then user of browser sees that current working directory displayed in directory tree is /dir1/dir2/dir3/
 
     And user of browser changes current working directory to / using directory tree
@@ -704,10 +706,333 @@ Feature: Oneprovider Data view
 
     # TODO rm after integrating with swagger
     And user of browser changes current working directory to / using directory tree
-    And user of browser selects "dir1" from files list
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
-    And user of browser does not see any directory named "dir1" on files list
+    And user of browser sees that item(s) named "dir1" has(have) disappeared from files browser
+
+
+  Scenario: User sees that without any file selected only ["Create directory", "Create file", "Upload file"] buttons from toolbar are enabled
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    Then user of browser sees that ["Create directory", "Create file", "Upload file"] button(s) is(are) enabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Change element permissions", "Copy element", "Cut element", "Remove element"] button(s) is(are) disabled in toolbar in data tab in Oneprovider gui
+
+
+  Scenario: User sees that with only one file selected only ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show file distribution"] buttons from toolbar are enabled
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    Then user of browser sees that ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show file distribution"] button(s) is(are) enabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Share element", "Copy element", "Cut element"] button(s) is(are) disabled in toolbar in data tab in Oneprovider gui
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) disappeared from files browser
+
+
+  Scenario: User sees that with only one directory selected only ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element"] buttons from toolbar are enabled
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    Then user of browser sees that ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element"] button(s) is(are) enabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Copy element", "Cut element", "Show file distribution"] button(s) is(are) disabled in toolbar in data tab in Oneprovider gui
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) disappeared from files browser
+
+
+  Scenario: User sees that with several files selected only ["Create directory", "Create file", "Upload file", "Change element permissions", "Remove element"] buttons from toolbar are enabled
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    And user of browser selects ["file1", "file2"] item(s) from file browser with pressed ctrl
+    Then user of browser sees that ["Create directory", "Create file", "Upload file", "Change element permissions", "Remove element"] button(s) is(are) enabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Edit metadata", "Share element", "Rename element", "Copy element", "Cut element", "Show file distribution"] button(s) is(are) disabled in toolbar in data tab in Oneprovider gui
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["file1", "file2"] has(have) disappeared from files browser
+
+
+  Scenario: User sees that with several directories selected only ["Create directory", "Create file", "Upload file", "Change element permissions", "Remove element"] buttons from toolbar are enabled
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
+
+    # create dir2
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir2" has(have) appeared in file browser
+
+    And user of browser selects ["dir1", "dir2"] item(s) from file browser with pressed ctrl
+    Then user of browser sees that ["Create directory", "Create file", "Upload file", "Change element permissions", "Remove element"] button(s) is(are) enabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Copy element", "Cut element", "Show file distribution"] button(s) is(are) disabled in toolbar in data tab in Oneprovider gui
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["dir1", "dir2"] has(have) disappeared from files browser
+
+
+  Scenario: User sees that with directory and file selected only ["Create directory", "Create file", "Upload file", "Remove element"] buttons from toolbar are enabled
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    And user of browser selects ["dir1", "file1"] item(s) from file browser with pressed ctrl
+    Then user of browser sees that ["Create directory", "Create file", "Upload file", "Remove element"] button(s) is(are) enabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Change element permissions", "Copy element", "Cut element", "Show file distribution"] button(s) is(are) disabled in toolbar in data tab in Oneprovider gui
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["dir1", "file1"] has(have) disappeared from files browser
+
+
+  Scenario: User removes several files
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    # create file3
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file3" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+
+    And user of browser selects ["file1", "file2", "file3"] item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["file1", "file2", "file3"] has(have) disappeared from files browser
+
+
+  Scenario: User removes directory containing several files
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create dir1 in space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
+
+    # create file1
+    And user of browser double clicks on item named "dir1" in file browser
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    # create file3
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file3" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) disappeared from files browser
+
+
+  Scenario: User sees file size after upload and after site refresh
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
+    And user of browser sees that item(s) named "20B-0.txt" has(have) appeared in file browser
+
+    Then user of browser sees that item named "20B-0.txt" is of 20 B size in file browser
+    And user of browser refreshes site
+    And user of browser sees nonempty file browser in data tab in Oneprovider page
+    And user of browser sees that item named "20B-0.txt" is of 20 B size in file browser
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks once on item named "20B-0.txt" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "20B-0.txt" has(have) disappeared from files browser
+
+
+  Scenario: User sees modification date after uploading file
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
+    And user of browser sees that item(s) named "20B-0.txt" has(have) appeared in file browser
+    Then user of browser sees that modification date of item named "20B-0.txt" is not earlier than 120 seconds ago
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks once on item named "20B-0.txt" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "20B-0.txt" has(have) disappeared from files browser
+
+
+  Scenario: User sees modification date after creating file
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+    Then user of browser sees that modification date of item named "file1" is not earlier than 120 seconds ago
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks once on item named "file1" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) disappeared from files browser
