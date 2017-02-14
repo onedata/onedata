@@ -140,8 +140,7 @@ def repeat(attempts, interval=0.1, timeout=False, exceptions=(Exception,)):
         while i < limit:
             try:
                 result = fun(*args, **kwargs)
-            except exceptions as ex:
-                print ex
+            except exceptions:
                 sleep(interval)
                 i = time() if timeout else i+1
                 continue

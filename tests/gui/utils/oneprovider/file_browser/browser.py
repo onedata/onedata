@@ -58,7 +58,7 @@ class FileBrowser(PageObject):
     def is_empty(self):
         try:
             self._empty_dir_icon
-        except NoSuchElementException:
+        except RuntimeError:
             return False
         else:
             return True

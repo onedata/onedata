@@ -174,7 +174,7 @@ def assert_nonempty_file_browser_in_data_tab_in_op(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
     file_browser = op_page(driver).data.file_browser
 
-    with implicit_wait(driver, 2, SELENIUM_IMPLICIT_WAIT):
+    with implicit_wait(driver, 1, SELENIUM_IMPLICIT_WAIT):
         assert not file_browser.is_empty(), 'file browser in data tab in op' \
                                             'should not be empty but is'
 
@@ -191,7 +191,7 @@ def assert_empty_file_browser_in_data_tab_in_op(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
     file_browser = op_page(driver).data.file_browser
 
-    with implicit_wait(driver, 2, SELENIUM_IMPLICIT_WAIT):
+    with implicit_wait(driver, 1, SELENIUM_IMPLICIT_WAIT):
         assert file_browser.is_empty(), 'file browser in data tab in op' \
                                         'should be empty but is not'
 
