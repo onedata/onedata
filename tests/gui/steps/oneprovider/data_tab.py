@@ -178,7 +178,7 @@ def assert_nonempty_file_browser_in_data_tab_in_op(selenium, browser_id,
         assert not file_browser.is_empty(), 'file browser in data tab in op' \
                                             'should not be empty but is'
 
-    tmp_memory['file_browser'] = file_browser
+    tmp_memory[browser_id]['file_browser'] = file_browser
 
 
 @when(parsers.parse('user of {browser_id} sees empty file browser '
@@ -195,4 +195,4 @@ def assert_empty_file_browser_in_data_tab_in_op(selenium, browser_id,
         assert file_browser.is_empty(), 'file browser in data tab in op' \
                                         'should be empty but is not'
 
-    tmp_memory['file_browser'] = file_browser
+    tmp_memory[browser_id]['file_browser'] = file_browser

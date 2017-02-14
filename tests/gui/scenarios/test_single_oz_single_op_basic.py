@@ -20,6 +20,9 @@ from tests.gui.steps.onezone.data_space_management import *
 from tests.gui.steps.onezone.providers import *
 from tests.gui.steps.onezone.manage_account import *
 
+from tests.gui.steps.oneprovider.data_tab import *
+from tests.gui.steps.oneprovider.file_browser import *
+
 
 from tests.gui.steps.onezone_before_login import *
 from tests.gui.steps.onezone_provider_popup import *

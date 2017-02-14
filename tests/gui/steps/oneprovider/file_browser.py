@@ -119,10 +119,10 @@ def assert_presence_in_file_browser_with_order(browser_id, item_list,
 
 @when(parsers.parse('user of {browser_id} sees that modification date of item '
                     'named "{item_name}" is {date} with possible error of '
-                    '{err_time:int} seconds in file browser'))
+                    '{err_time:d} seconds in file browser'))
 @then(parsers.parse('user of {browser_id} sees that modification date of item '
                     'named "{item_name}" is {date} with possible error of '
-                    '{err_time:int} seconds in file browser'))
+                    '{err_time:d} seconds in file browser'))
 @repeat(attempts=WAIT_BACKEND, timeout=True)
 def assert_item_in_file_browser_is_of_size(browser_id, item_name, date,
                                            err_time, tmp_memory):
