@@ -396,31 +396,29 @@ Feature: Oneprovider Data view
     And user of browser sees that item(s) named "new_dir1" has(have) disappeared from files browser
 
 
-
-
-
-
   # 'space1' supported by 'p1' defined in env.json
   Scenario: User creates file and checks if provider name is displayed in the file distribution panel
     When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
     And user of browser sees that current working directory displayed in breadcrumbs is space1
-    And user of browser clicks the button from top menu bar with tooltip "Create file"
-    And user of browser sees that "New file" modal has appeared
-    And user of browser clicks on input box in active modal
-    And user of browser types "file3" on keyboard
-    And user of browser presses enter on keyboard
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that file named "file3" has appeared on files list
-    And user of browser clicks once on file named "file3" of files list
+    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    Then user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
+    And user of browser sees that item(s) named "20B-0.txt" has(have) appeared in file browser
+
+    And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees modal with name of provider supporting space in providers column
+    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
 
-
-
-
+    # TODO rm after integrating with swagger
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "20B-0.txt" has(have) disappeared from files browser
 
 
   Scenario: User selects bunch of files using ctrl
@@ -1321,3 +1319,52 @@ Feature: Oneprovider Data view
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that item(s) named "dir1" has(have) disappeared from files browser
+
+
+  Scenario: User sees that after uploading file with name of already existing file, the uploaded file appeared with suffix
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
+    And user of browser sees that item(s) named "20B-0.txt" has(have) appeared in file browser
+
+    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
+    Then user of browser sees that item(s) named "20B-0(1).txt" has(have) appeared in file browser
+
+    # TODO rm after integrating with swagger
+    And user of browser selects ["20B-0.txt", "20B-0(1).txt"] item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["20B-0.txt", "20B-0(1).txt"] has(have) disappeared from files browser
+
+
+  Scenario: User sees that too long directory name is truncated with elipsis in directory tree sidebar
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create dir1 in space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab" has(have) appeared in file browser
+
+    And user of browser sees displayed name length for /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab/ in directory tree sidebar
+    And user of browser expands data tab sidebar to the right of approximately 200px
+    Then user of browser sees that displayed name length for /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab/ in directory tree sidebar is larger than before
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab" has(have) disappeared from files browser

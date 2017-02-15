@@ -10,7 +10,7 @@ __license__ = "This software is released under the MIT license cited in " \
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path
+from tests.gui.utils.generic import upload_file_path, repeat
 from pytest_bdd import when, then, parsers, given
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
@@ -110,3 +110,41 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
         message='check file distribution, focusing on {:s} provide'
                 ''.format(tmp_memory[browser_id]['supporting_provider'])
     )
+
+
+@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely filled'))
+@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely filled'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
+                                                      provider):
+    driver = select_browser(selenium, browser_id)
+    css_sel = '#file-chunks-modal table.file-blocks-table td.provider-name, ' \
+              '#file-chunks-modal table.file-blocks-table td.chunks canvas'
+    name, canvas = driver.find_elements_by_css_selector(css_sel)
+    assert name.text == provider, \
+        'provider name displayed {} instead of expected {}'.format(name.text,
+                                                                   provider)
+    assert driver.execute_script(is_canvas_filled, canvas), \
+        'canvas not filled entirely for provider named {}'.format(provider)
+
+
+is_canvas_filled = """
+function is_canvas_filled(cvs){
+    var ctx = cvs.getContext("2d");
+    var fillColorHex = ctx.fillStyle;
+    var fillColor = [parseInt(fillColorHex.slice(1, 3), 16),
+                     parseInt(fillColorHex.slice(3, 5), 16),
+                     parseInt(fillColorHex.slice(5, 7), 16)];
+    img = ctx.getImageData(0, 0, cvs.width, cvs.height);
+    pix = img.data;
+    for(var i = 0; i < pix.length; i += 4)
+        if(pix[i] != fillColor[0] || pix[i+1] != fillColor[1] || pix[i+2] != fillColor[2])
+            return false;
+
+    return true;
+}
+
+return is_canvas_filled(arguments[0]);
+"""

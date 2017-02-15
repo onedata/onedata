@@ -198,3 +198,50 @@ def assert_empty_file_browser_in_data_tab_in_op(selenium, browser_id,
                                         'should be empty but is not'
 
     tmp_memory[browser_id]['file_browser'] = file_browser
+
+
+@when(parsers.parse('user of {browser_id} sees displayed name length for '
+                    '{path} in directory tree sidebar'))
+@when(parsers.parse('user of {browser_id} sees displayed name length for '
+                    '{path} in directory tree sidebar'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def check_displayed_dir_name_len_in_dir_tree(selenium, browser_id, path,
+                                             op_page, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    cwd = op_page(driver).data.sidebar.root_dir
+    cwd.click()
+    for directory in (dir for dir in path.split('/') if dir != ''):
+        cwd = cwd[directory]
+
+    tmp_memory[browser_id][path] = cwd.displayed_name_width
+
+
+@when(parsers.parse('user of {browser_id} sees that displayed name length for '
+                    '{path} in directory tree sidebar is larger than before'))
+@then(parsers.parse('user of {browser_id} sees that displayed name length for '
+                    '{path} in directory tree sidebar is larger than before'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def assert_diff_in_len_of_dir_name_before_and_now(selenium, browser_id, path,
+                                                  op_page, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    cwd = op_page(driver).data.sidebar.root_dir
+    cwd.click()
+    for directory in (dir for dir in path.split('/') if dir != ''):
+        cwd = cwd[directory]
+
+    prev_len = tmp_memory[browser_id][path]
+    curr_len = cwd.displayed_name_width
+    assert prev_len != curr_len, \
+        'name len of {} is the same as before {}'.format(path, curr_len)
+
+
+@when(parsers.re(r'user of (?P<browser_id>.+?) expands data tab sidebar to the '
+                 r'(?P<direction>right|left) of approximately (?P<offset>\d+)px'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) expands data tab sidebar to the '
+                 r'(?P<direction>right|left) of approximately (?P<offset>\d+)px'))
+@repeat(attempts=WAIT_BACKEND, timeout=True)
+def resize_data_tab_sidebar(selenium, browser_id, direction, offset, op_page):
+    driver = select_browser(selenium, browser_id)
+    sidebar = op_page(driver).data.sidebar
+    offset = (-1 if direction == 'left' else 1) * int(offset)
+    sidebar.width += offset

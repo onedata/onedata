@@ -1,4 +1,3 @@
-# coding=utf-8
 """Utils and fixtures to facilitate operations on sidebar in
 data tab in oneprovider web GUI.
 """
@@ -70,6 +69,8 @@ class DirectoryTree(PageObject, ExpandableMixin):
     _header = HeaderWebElement('.secondary-sidebar-item.dir-item')
     _click_area = WebElement('.secondary-sidebar-item.dir-item '
                              '.item-click-area')
+    _header_label = HeaderWebElement('.secondary-sidebar-item.dir-item '
+                                     '.truncate-secondary-sidebar-item')
 
     def __init__(self, *args, **kwargs):
         self._children = kwargs.pop('children')
@@ -107,42 +108,6 @@ class DirectoryTree(PageObject, ExpandableMixin):
                                          dir=self.name)
 
     @property
-    def displayed_name(self):
-        css_id = self._header.get_attribute('id')
-        self._driver.execute_script(_jquery_fun)
-        js_get_name = "return $('#{}').getShowingText();".format(css_id)
-        return self._driver.execute_script(js_get_name).strip()
-
-
-_jquery_fun = """
-jQuery.fn.getShowingText = function () {
-    // Add temporary element for measuring character widths
-    $('body').append('<div id="Test" style="padding:0;border:0;height:auto;width:auto;position:absolute;display:none;"></div>');
-    var longString = $(this).text();
-    var eleWidth = $(this).innerWidth();
-    var totalWidth = 0;
-    var totalString = '';
-    var finished = false;
-    var ellipWidth = $('#Test').html('&hellip;').innerWidth();
-    var offset = 7; // seems to differ based on browser (6 for Chrome and 7 for Firefox?)
-    for (var i = 0;
-    (i < longString.length) && ((totalWidth) < (eleWidth-offset)); i++) {
-        $('#Test').text(longString.charAt(i));
-        totalWidth += $('#Test').innerWidth();
-        totalString += longString.charAt(i);
-        if(i+1 === longString.length)
-        {
-            finished = true;
-        }
-    }
-    $('body').remove('#Test'); // Clean up temporary element
-    if(finished === false)
-    {
-        return totalString.substring(0,totalString.length-3)+"…";
-    }
-    else
-    {
-        return longString;
-    }
-}
-"""
+    def displayed_name_width(self):
+        return self._driver.execute_script("return $(arguments[0]).width();",
+                                           self._header_label)
