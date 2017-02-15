@@ -1036,3 +1036,288 @@ Feature: Oneprovider Data view
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that item(s) named "file1" has(have) disappeared from files browser
+
+
+  Scenario: User creates files and see their ordering
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    # create file3
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file3" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+
+    # create file4
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file4" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file4" has(have) appeared in file browser
+
+    # create file5
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file5" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file5" has(have) appeared in file browser
+
+    And user of browser sees item(s) named ["file5", "file4", "file3", "file2", "file1"] in file browser in given order
+    And user of browser refreshes site
+    And user of browser sees nonempty file browser in data tab in Oneprovider page
+    Then user of browser sees item(s) named ["file1", "file2", "file3", "file4", "file5"] in file browser in given order
+
+    # TODO rm after integrating with swagger
+    And user of browser selects ["file1", "file2", "file3", "file4", "file5"] item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["file5", "file4", "file3", "file2", "file1"] has(have) disappeared from files browser
+
+
+  Scenario: User upload files and see their ordering (uploads one file at time)
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    # create file3
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file3" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+
+    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    And user of browser uses upload button in toolbar to upload file "20B-1.txt" to current dir
+
+    And user of browser sees item(s) named ["20B-1.txt", "file3", "file2", "file1"] in file browser in given order
+    And user of browser sees item(s) named ["20B-0.txt", "file3", "file2", "file1"] in file browser in given order
+    And user of browser refreshes site
+    And user of browser sees nonempty file browser in data tab in Oneprovider page
+    Then user of browser sees item(s) named ["20B-0.txt", "20B-1.txt", "file1", "file2", "file3"] in file browser in given order
+
+    # TODO rm after integrating with swagger
+    And user of browser selects ["20B-0.txt", "20B-1.txt", "file1", "file2", "file3"] item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["20B-0.txt", "20B-1.txt", "file1", "file2", "file3"] has(have) disappeared from files browser
+
+
+  Scenario: User upload files and see their ordering (uploads bunch of files at once)
+    Given user of browser has 2 files in directory named "my_files"
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    # create file3
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file3" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+
+    And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
+
+    And user of browser sees item(s) named ["file_10.txt", "file3", "file2", "file1"] in file browser in given order
+    And user of browser sees item(s) named ["file_11.txt", "file3", "file2", "file1"] in file browser in given order
+    And user of browser refreshes site
+    And user of browser sees nonempty file browser in data tab in Oneprovider page
+    Then user of browser sees item(s) named ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] in file browser in given order
+
+    # TODO rm after integrating with swagger
+    And user of browser selects ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] has(have) disappeared from files browser
+
+
+  Scenario: User enters directory and views files in it
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create dir1 in space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
+
+    # create file1
+    And user of browser double clicks on item named "dir1" in file browser
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    # create file3
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file3" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser refreshes site
+    And user of browser sees nonempty file browser in data tab in Oneprovider page
+    And user of browser double clicks on item named "dir1" in file browser
+    Then user of browser sees item(s) named ["file1", "file2", "file3"] in file browser in given order
+
+    # TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) disappeared from files browser
+
+
+  Scenario: User opens nested directory via url and see expanded directory tree in sidebar
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+
+    # create dir1 in space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) appeared in file browser
+
+    # create dir2 in space1/dir1
+    And user of browser double clicks on item named "dir1" in file browser
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir2" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir2" has(have) appeared in file browser
+
+    # create dir3 in space1/dir1/dir2
+    And user of browser double clicks on item named "dir2" in file browser
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir3" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir3" has(have) appeared in file browser
+
+    And user of browser double clicks on item named "dir3" in file browser
+    And user of browser sees that current working directory displayed in breadcrumbs is space1/dir1/dir2/dir3
+    And user of browser copies url from browser's location bar
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser refreshes site
+    And user of browser sees directory named "dir1" on files list
+    And user of browser does not see /dir1/dir2/dir3/ in directory tree
+    And user of browser opens copied item in browser's location bar
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    Then user of browser sees that current working directory displayed in directory tree is /dir1/dir2/dir3/
+
+    # TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "dir1" has(have) disappeared from files browser

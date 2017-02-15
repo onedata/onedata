@@ -116,3 +116,21 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
                                            item=item)
 
     driver.get(url)
+
+
+@when(parsers.parse('user of {browser_id} copies url '
+                    'from browser\'s location bar'))
+@then(parsers.parse('user of {browser_id} copies url '
+                    'from browser\'s location bar'))
+def copy_site_url(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    pyperclip.copy(driver.current_url)
+
+
+@when(parsers.parse('user of {browser_id} opens copied item '
+                    'in browser\'s location bar'))
+@then(parsers.parse('user of {browser_id} opens copied item '
+                    'in browser\'s location bar'))
+def open_site_url(selenium, browser_id):
+    driver = select_browser(selenium, browser_id)
+    driver.get(pyperclip.paste())

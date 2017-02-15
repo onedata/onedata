@@ -1,6 +1,7 @@
 """Steps used for handling of data tab elements (e.g. toolbar)
 in various GUI testing scenarios
 """
+
 import pytest
 from pytest_bdd import given, when, then, parsers
 
