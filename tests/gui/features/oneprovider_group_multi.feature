@@ -16,7 +16,9 @@ Feature: Oneprovider Group functionality using multiple browsers
   # TODO rm leave from group at the end of test
   Scenario: User successfully invites other user to join his group (presses ENTER after entering token)
     # group 'group1' defined in env.json
-    When user of browser1 clicks on settings icon displayed for "group1" item on the groups sidebar list
+    # TODO remove after loader will be added to sidebar list
+    When user of browser1 refreshes site
+    And user of browser1 clicks on settings icon displayed for "group1" item on the groups sidebar list
     And user of browser1 clicks on the "INVITE USER" item in settings dropdown for group named "group1"
     And user of browser1 sees that "Invite user to the group" modal has appeared
     And user of browser1 sees non-empty token in active modal

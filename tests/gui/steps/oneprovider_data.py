@@ -30,7 +30,7 @@ def _upload_files_to_cwd(driver, files):
     driver.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
     upload_panel = driver.find_element_by_css_selector('.file-upload-panel')
-    Wait(driver, WAIT_BACKEND).until_not(
+    Wait(driver, WAIT_BACKEND*3).until_not(
         lambda _: upload_panel.is_displayed(),
         message='waiting for files to get uploaded'
     )

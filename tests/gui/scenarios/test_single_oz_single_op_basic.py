@@ -67,10 +67,9 @@ scenarios('../features/oneprovider_space.feature')
 scenarios('../features/oneprovider_shares.feature')
 scenarios('../features/oneprovider_shares_multi.feature')
 scenarios('../features/oneprovider_metadata.feature')
+scenarios('../features/oneprovider_group_multi.feature')
+scenarios('../features/onezone_gui_multi.feature')
 
 # limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
 if BROWSER == 'Chrome':
     scenarios('../features/oneprovider_upload_multi_files.feature')
-    # TODO VFS-3000 currently not working for firefox due to unknown reason (access denied which should not happen)
-    scenarios('../features/oneprovider_group_multi.feature')
-    scenarios('../features/onezone_gui_multi.feature')

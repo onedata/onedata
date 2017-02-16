@@ -43,7 +43,7 @@ Feature: Oneprovider Group functionality
     And user of browser clicks on the "INVITE GROUP" item in settings dropdown for group named "group1"
     And user of browser sees that "Invite group to the group" modal has appeared
     Then user of browser sees non-empty token in active modal
-    
+
 
   Scenario: User fails to join group to space because of using invalid token (presses ENTER after entering token)
     # group 'group1' defined in env.json
@@ -173,6 +173,7 @@ Feature: Oneprovider Group functionality
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
     Then user of browser sees an info notify with text matching to: .*group1.*left
+    And user of browser is idle for 4 seconds
     And user of browser sees that group1 has disappeared from groups sidebar list
 
     # TODO rm code below after REST API become available
@@ -186,25 +187,33 @@ Feature: Oneprovider Group functionality
 
 
   Scenario: User fails to view group after leaving it
-    # group 'group1' defined in env.json
-    When user of browser selects "group1" from groups sidebar list
+    # TODO rm after integration with swagger
+    When user of browser clicks on the "Create" button in sidebar list's header
+    And user of browser sees that "Create a new group" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "tmp_group" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+
+    And user of browser selects "tmp_group" from groups sidebar list
     And user of browser copies a first resource ID from URL
-    And user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
-    And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "group1"
+    And user of browser clicks on settings icon displayed for "tmp_group" item on the groups sidebar list
+    And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "tmp_group"
     And user of browser sees that "Leave the group" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees an info notify with text matching to: .*group1.*left
-    And user of browser sees that group1 has disappeared from groups sidebar list
+    And user of browser sees an info notify with text matching to: .*tmp_group.*left
+    And user of browser is idle for 4 seconds
+    And user of browser sees that tmp_group has disappeared from groups sidebar list
     And user of browser changes webapp path to /#/onedata/groups concatenated with copied item
     Then user of browser sees an error notify with text matching to: .*?[Cc]annot load requested resource.*?
-    And user of browser does not see group1 in groups sidebar list
+    And user of browser does not see tmp_group in groups sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on the "Create" button in sidebar list's header
     And user of browser sees that "Create a new group" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "group1" on keyboard
+    And user of browser types "tmp_group" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that group1 has appeared on groups sidebar list
+    And user of browser sees that tmp_group has appeared on groups sidebar list
