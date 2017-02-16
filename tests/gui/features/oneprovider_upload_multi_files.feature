@@ -19,7 +19,7 @@ Feature: Oneprovider Data upload more than 1 file
   Scenario: User uploads small number of files
     Given user of browser has 5 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
-    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees that current working directory displayed in breadcrumbs is space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
@@ -51,7 +51,7 @@ Feature: Oneprovider Data upload more than 1 file
   Scenario: User uploads more than 50 files and uses files list lazy loading
     Given user of browser has 70 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
-    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees that current working directory displayed in breadcrumbs is space1
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
@@ -89,7 +89,7 @@ Feature: Oneprovider Data upload more than 1 file
   Scenario: User changes directory while uploading bunch of files
     Given user of browser has 70 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
-    And user of browser sees empty file browser in data tab in Oneprovider page
+    And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees that current working directory displayed in breadcrumbs is space1
 
     # create dir20
@@ -138,3 +138,54 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that item(s) named "dir20" has(have) disappeared from files browser
+
+
+  Scenario: User upload files and see their ordering (uploads bunch of files at once)
+    Given user of browser has 2 files in directory named "my_files"
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+
+    # create file2
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file2" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+
+    # create file3
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file3" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+
+    And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
+
+    And user of browser sees item(s) named ["file_10.txt", "file3", "file2", "file1"] in file browser in given order
+    And user of browser sees item(s) named ["file_11.txt", "file3", "file2", "file1"] in file browser in given order
+    And user of browser refreshes site
+    And user of browser sees nonempty file browser in data tab in Oneprovider page
+    Then user of browser sees item(s) named ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] in file browser in given order
+
+    # TODO rm after integrating with swagger
+    And user of browser selects ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item(s) named ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] has(have) disappeared from files browser

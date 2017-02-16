@@ -105,39 +105,7 @@ def implicit_wait(driver, timeout, prev_timeout):
         driver.implicitly_wait(prev_timeout)
 
 
-def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=Exception):
-    """Returns wrapper on function, which keeps calling it until timeout or
-    for attempts times in case of failure (exception).
-
-    :param attempts: maximum num of attempts if timeout == False else time until timeout
-    :param interval: time between subsequent calls
-    :param timeout: change meaning of attempts arg
-    :param exceptions: in case of which consider failure of call
-    :return: wrapper decorator
-    """
-    def wrapper(function):
-
-        @wraps(function)
-        def repeat_until_limit(*args, **kwargs):
-            now = time()
-            limit, i = (now + attempts, now) if timeout else (attempts, 0)
-
-            while i < limit:
-                try:
-                    result = function(*args, **kwargs)
-                except exceptions:
-                    sleep(interval)
-                    i = time() if timeout else i+1
-                    continue
-                else:
-                    return result
-            return function(*args, **kwargs)
-
-        return repeat_until_limit
-    return wrapper
-
-
-def repeat(attempts, interval=0.1, timeout=False, exceptions=(Exception,)):
+def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=(Exception,)):
     """Returns wrapper on function, which keeps calling it until timeout or
     for attempts times in case of failure (exception).
 

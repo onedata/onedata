@@ -10,7 +10,7 @@ __license__ = "This software is released under the MIT license cited in " \
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path, repeat
+from tests.gui.utils.generic import upload_file_path, repeat_failed
 from pytest_bdd import when, then, parsers, given
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
@@ -116,7 +116,7 @@ def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
                     'named "{provider}" is entirely filled'))
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is entirely filled'))
-@repeat(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
                                                       provider):
     driver = select_browser(selenium, browser_id)

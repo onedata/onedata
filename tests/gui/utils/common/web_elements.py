@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on various web elements in web GUI.
 """
 
-from tests.gui.utils.generic import find_web_elem, repeat, find_web_elem_with_text
+from tests.gui.utils.generic import find_web_elem, repeat_failed, find_web_elem_with_text
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -75,7 +75,7 @@ class InputWebElement(WebElement):
         item = self._get_input_box(instance, owner)
         return item.get_attribute('value') if instance else item
 
-    @repeat(attempts=10)
+    @repeat_failed(attempts=10)
     def __set__(self, instance, value):
         input_box = self._get_input_box(instance, None)
         input_box.clear()
