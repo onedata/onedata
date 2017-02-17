@@ -4,9 +4,8 @@
 
 import re
 import os
-import itertools
 from time import sleep, time
-from functools import wraps
+from itertools import islice, izip
 from contextlib import contextmanager
 
 from decorator import decorator
@@ -138,7 +137,7 @@ def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=(Exception,)
 def iter_ahead(iterable):
     read_ahead = iter(iterable)
     next(read_ahead)
-    for item, next_item in itertools.izip(iterable, read_ahead):
+    for item, next_item in izip(iterable, read_ahead):
         yield item, next_item
 
 
@@ -187,3 +186,7 @@ def suppress(*exceptions):
         yield
     except exceptions:
         pass
+
+
+def nth(seq, idx):
+    return next(islice(seq, idx, None), None)

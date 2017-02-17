@@ -110,12 +110,18 @@ def assert_items_presence_in_file_browser(browser_id, item_list, tmp_memory):
 def assert_presence_in_file_browser_with_order(browser_id, item_list,
                                                tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
-    items = list(reversed(parse_seq(item_list)))
+    items = reversed(parse_seq(item_list))
+    curr_item = next(items)
     for item in browser:
-        if item.name == items[-1]:
-            items.pop()
-    assert items == [], 'item(s) not in browser or not in given order ' \
-                        'starting from {}'.format(list(reversed(items)))
+        if item.name == curr_item:
+            try:
+                curr_item = next(items)
+            except StopIteration:
+                return
+
+    raise RuntimeError('item(s) not in browser or not in specified order '
+                       '{order} starting from {item}'.format(order=item_list,
+                                                             item=curr_item))
 
 
 @when(parsers.parse('user of {browser_id} sees that modification date of item '
