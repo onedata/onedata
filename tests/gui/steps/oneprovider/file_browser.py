@@ -110,7 +110,7 @@ def assert_items_presence_in_file_browser(browser_id, item_list, tmp_memory):
 def assert_presence_in_file_browser_with_order(browser_id, item_list,
                                                tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
-    items = reversed(parse_seq(item_list))
+    items = iter(parse_seq(item_list))
     curr_item = next(items)
     for item in browser:
         if item.name == curr_item:
