@@ -317,3 +317,20 @@ def assert_none_item_is_selected_in_file_browser(browser_id, item_list,
     for item_name in parse_seq(item_list):
         item = browser[item_name]
         assert not item.is_selected(), err_msg.format(name=item_name)
+
+
+@when(parsers.parse('user of {browser_id} sees empty directory message '
+                    'in file browser'))
+@then(parsers.parse('user of {browser_id} sees empty directory message '
+                    'in file browser'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def assert_empty_dir_msg_in_file_browser(browser_id, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    expected_msg = 'Nothing here yet.\n' \
+                   'Drop your files here or use the button in toolbar'
+    displayed_msg = browser.empty_dir_msg
+
+    assert expected_msg == displayed_msg, 'Displayed empty dir msg "{}" ' \
+                                          'does not match expected one ' \
+                                          '"{}"'.format(displayed_msg,
+                                                        expected_msg)

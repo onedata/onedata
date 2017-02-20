@@ -2,15 +2,13 @@
 """
 
 from contextlib import contextmanager
-from itertools import islice
 
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 from tests.gui.utils.common.common import PageObject
 from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, IconWebElement, TextLabelWebElement
-from tests.gui.utils.generic import iter_ahead
+from tests.gui.utils.generic import iter_ahead, nth
 from tests.gui.utils.oneprovider.file_browser.file_row import FileRow
 from tests.gui.utils.oneprovider.file_browser.metadata_row import MetadataRow
 
@@ -21,11 +19,11 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class FileBrowser(PageObject):
-    empty_dir_msg = TextLabelWebElement('.empty-model-message')
+    empty_dir_msg = TextLabelWebElement('.empty-model-container')
+    _empty_dir_icon = IconWebElement('.empty-dir-image')
     _files = ItemListWebElement('tbody tr.file-row')
     _files_with_metadata = ItemListWebElement('tbody tr.first-level')
     _bottom = WebElement('.file-row-load-more')
-    _empty_dir_icon = IconWebElement('.empty-dir-image')
 
     def __str__(self):
         return 'file browser in {}'.format(self._parent)
@@ -35,14 +33,13 @@ class FileBrowser(PageObject):
 
     def __getitem__(self, selector):
         if isinstance(selector, int):
-            items_count = self.items_count
+            items_count = self.files_count
             if selector >= items_count:
                 raise RuntimeError('requested index {index} out of bound '
                                    '{limit}'.format(index=selector,
                                                     limit=items_count))
             else:
-                return FileRow(self._driver, next(islice(self._files,
-                                                         selector, None)), self)
+                return FileRow(self._driver, nth(self._files, selector), self)
         elif isinstance(selector, (str, unicode)):
             for item in self:
                 if item.name == selector:

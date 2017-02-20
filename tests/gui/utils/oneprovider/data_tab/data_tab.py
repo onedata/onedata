@@ -4,6 +4,7 @@
 from tests.gui.utils.common.common import PageObject
 from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement
 from tests.gui.utils.oneprovider.breadcrumbs import Breadcrumbs
+from tests.gui.utils.oneprovider.data_tab.file_uploader import FileUploader
 from tests.gui.utils.oneprovider.data_tab.sidebar import DataTabSidebar
 from tests.gui.utils.oneprovider.data_tab.toolbar import DataTopToolBar
 from tests.gui.utils.oneprovider.file_browser.browser import FileBrowser
@@ -18,6 +19,7 @@ class DataTab(PageObject):
     _toolbar = WebElement('header nav.navbar ul.data-files-list-toolbar')
     _breadcrumbs = WebElement('.secondary-top-bar .file-breadcrumbs-list')
     _file_browser = WebElement('.lower-main-content .data-files-list')
+    _file_uploader = WebElement('#main-content + .file-upload .file-upload')
     _sidebar = ItemListWebElement('.lower-main-content nav.secondary-sidebar, '
                                   '#data-sidebar-resize-handler')
 
@@ -41,3 +43,7 @@ class DataTab(PageObject):
     @property
     def file_browser(self):
         return FileBrowser(self._driver, self._file_browser, self)
+
+    @property
+    def file_uploader(self):
+        return FileUploader(self._driver, self._file_uploader, self)

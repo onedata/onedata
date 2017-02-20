@@ -1317,3 +1317,9 @@ Feature: Oneprovider Data view
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
     And user of browser sees that item(s) named "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab" has(have) disappeared from files browser
+
+
+  Scenario: User sees empty directory message
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees empty file browser in data tab in Oneprovider page
+    Then user of browser sees empty directory message in file browser

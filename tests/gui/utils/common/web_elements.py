@@ -9,10 +9,6 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-def web_item(cls):
-    return cls
-
-
 class WebItem(type):
     def __init__(cls, cls_name, bases, cls_dict):
         for key, val in cls_dict.items():

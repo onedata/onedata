@@ -257,3 +257,13 @@ def resize_data_tab_sidebar(selenium, browser_id, direction, offset, op_page):
     sidebar = op_page(driver).data.sidebar
     offset = (-1 if direction == 'left' else 1) * int(offset)
     sidebar.width += offset
+
+
+@when(parsers.parse('user of {browser_id} waits for file upload to finish'))
+@then(parsers.parse('user of {browser_id} waits for file upload to finish'))
+@repeat_failed(attempts=WAIT_BACKEND*3, timeout=True)
+def wait_for_file_upload_to_finish(selenium, browser_id, op_page):
+    driver = select_browser(selenium, browser_id)
+    uploader = op_page(driver).data.file_uploader
+    assert not uploader.is_visible(), \
+        'file upload not finished within given time'

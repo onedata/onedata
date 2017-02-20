@@ -31,6 +31,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser double clicks on item named "dir10" in file browser
     And user of browser sees that current working directory displayed in directory tree is /dir10/
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
+    And user of browser waits for file upload to finish
     Then user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*5.*
     And user of browser sees that there is(are) 5 item(s) in file browser
 
@@ -63,7 +64,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser double clicks on item named "dir100" in file browser
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir100
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
-    And user of browser is idle for 5 seconds
+    And user of browser waits for file upload to finish
     And user of browser sees that there is(are) 70 item(s) in file browser
     And user of browser refreshes site
     And user of browser sees nonempty file browser in data tab in Oneprovider page
@@ -174,7 +175,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser sees that item(s) named "file3" has(have) appeared in file browser
 
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
-
+    And user of browser waits for file upload to finish
     And user of browser sees item(s) named ["file_10.txt", "file3", "file2", "file1"] in file browser in given order
     And user of browser sees item(s) named ["file_11.txt", "file3", "file2", "file1"] in file browser in given order
     And user of browser refreshes site

@@ -29,12 +29,6 @@ def _upload_files_to_cwd(driver, files):
     )
     driver.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
 
-    upload_panel = driver.find_element_by_css_selector('.file-upload-panel')
-    Wait(driver, WAIT_BACKEND*3).until_not(
-        lambda _: upload_panel.is_displayed(),
-        message='waiting for files to get uploaded'
-    )
-
 
 @when(parsers.parse('user of {browser_id} uses upload button in toolbar '
                     'to upload file "{file_name}" to current dir'))
@@ -88,27 +82,6 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
     Wait(driver, WAIT_BACKEND).until(
         lambda _: _check_file_content(),
         message='checking if downloaded file contains {:s}'.format(content)
-    )
-
-
-@then(parsers.parse('user of {browser_id} sees modal with name of provider '
-                    'supporting space in providers column'))
-def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
-
-    def _find_provider(s):
-        providers = s.find_elements_by_css_selector(
-            '#file-chunks-modal .container-fluid '
-            'table.file-blocks-table td.provider-name')
-        for elem in providers:
-            if elem.text == tmp_memory[browser_id]['supporting_provider']:
-                return elem
-        return None
-
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        _find_provider,
-        message='check file distribution, focusing on {:s} provide'
-                ''.format(tmp_memory[browser_id]['supporting_provider'])
     )
 
 
