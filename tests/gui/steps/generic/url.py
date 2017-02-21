@@ -127,9 +127,9 @@ def copy_site_url(selenium, browser_id):
     pyperclip.copy(driver.current_url)
 
 
-@when(parsers.parse('user of {browser_id} opens copied item '
+@when(parsers.parse('user of {browser_id} opens copied URL '
                     'in browser\'s location bar'))
-@then(parsers.parse('user of {browser_id} opens copied item '
+@then(parsers.parse('user of {browser_id} opens copied URL '
                     'in browser\'s location bar'))
 def open_site_url(selenium, browser_id):
     driver = select_browser(selenium, browser_id)

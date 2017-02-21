@@ -16,7 +16,7 @@ Feature: Oneprovider Data upload more than 1 file
 
 
     # 'space1' supported by 'p1' defined in env.json
-  Scenario: User uploads small number of files
+  Scenario: User uploads 5 files at once
     Given user of browser has 5 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -27,13 +27,13 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser types "dir10" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "dir10" has(have) appeared in file browser
+    And user of browser sees that item named "dir10" has appeared in file browser
     And user of browser double clicks on item named "dir10" in file browser
     And user of browser sees that current working directory displayed in directory tree is /dir10/
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
     And user of browser waits for file upload to finish
     Then user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*5.*
-    And user of browser sees that there is(are) 5 item(s) in file browser
+    And user of browser sees that there are 5 items in file browser
 
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back
@@ -45,7 +45,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "dir10" has(have) disappeared from files browser
+    And user of browser sees that item named "dir10" has disappeared from files browser
 
 
   # 'space1' supported by 'p1' defined in env.json
@@ -60,19 +60,19 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser types "dir100" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "dir100" has(have) appeared in file browser
+    And user of browser sees that item named "dir100" has appeared in file browser
     And user of browser double clicks on item named "dir100" in file browser
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir100
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
     And user of browser waits for file upload to finish
-    And user of browser sees that there is(are) 70 item(s) in file browser
+    And user of browser sees that there are 70 items in file browser
     And user of browser refreshes site
     And user of browser sees nonempty file browser in data tab in Oneprovider page
     And user of browser sees that content of current directory has been loaded
-    And user of browser sees that there is(are) 50 item(s) in file browser
+    And user of browser sees that there are 50 items in file browser
     And user of browser scrolls to the bottom of file list in file browser
     And user of browser is idle for 10 seconds
-    Then user of browser sees that there is(are) 70 item(s) in file browser
+    Then user of browser sees that there are 70 items in file browser
 
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back
@@ -84,7 +84,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "dir100" has(have) disappeared from files browser
+    And user of browser sees that item named "dir100" has disappeared from files browser
 
 
   Scenario: User changes directory while uploading bunch of files
@@ -100,7 +100,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser types "dir20" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "dir20" has(have) appeared in file browser
+    And user of browser sees that item named "dir20" has appeared in file browser
     And user of browser double clicks on item named "dir20" in file browser
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir20
 
@@ -111,7 +111,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser types "dir10" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "dir10" has(have) appeared in file browser
+    And user of browser sees that item named "dir10" has appeared in file browser
     And user of browser double clicks on item named "dir10" in file browser
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir20/dir10
 
@@ -121,12 +121,12 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser changes current working directory to space1/dir20 using breadcrumbs
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir20
     And user of browser is idle for 5 seconds
-    And user of browser sees that there is(are) 1 item(s) in file browser
+    And user of browser sees that there is 1 item in file browser
 
     # go to dir 10 and see if every file has benn uploaded
     And user of browser double clicks on item named "dir10" in file browser
     And user of browser sees that current working directory displayed in breadcrumbs is space1/dir20/dir10
-    Then user of browser sees that there is(are) 70 item(s) in file browser
+    Then user of browser sees that there are 70 items in file browser
 
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back
@@ -138,10 +138,10 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "dir20" has(have) disappeared from files browser
+    And user of browser sees that item named "dir20" has disappeared from files browser
 
 
-  Scenario: User upload files and see their ordering (uploads bunch of files at once)
+  Scenario: User uploads files and sees their ordering (uploads a bunch of files at once)
     Given user of browser has 2 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -154,7 +154,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser types "file1" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "file1" has(have) appeared in file browser
+    And user of browser sees that item named "file1" has appeared in file browser
 
     # create file2
     And user of browser clicks the button from top menu bar with tooltip "Create file"
@@ -163,7 +163,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser types "file2" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "file2" has(have) appeared in file browser
+    And user of browser sees that item named "file2" has appeared in file browser
 
     # create file3
     And user of browser clicks the button from top menu bar with tooltip "Create file"
@@ -172,7 +172,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser types "file3" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named "file3" has(have) appeared in file browser
+    And user of browser sees that item named "file3" has appeared in file browser
 
     And user of browser uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
     And user of browser waits for file upload to finish
@@ -189,4 +189,4 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*removed.*
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item(s) named ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] has(have) disappeared from files browser
+    And user of browser sees that items named ["file1", "file2", "file3", "file_10.txt", "file_11.txt"] have disappeared from files browser

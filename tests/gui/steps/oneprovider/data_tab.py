@@ -7,7 +7,7 @@ from pytest_bdd import given, when, then, parsers
 
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, implicit_wait, parse_seq
 
 __author__ = "Bartek Walkowicz"
@@ -33,18 +33,22 @@ def change_space_view_in_data_tab_in_op(selenium, browser_id,
                     'with tooltip "{tooltip_name}"'))
 @then(parsers.parse('user of {browser_id} clicks the button from top menu bar '
                     'with tooltip "{tooltip_name}"'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  tooltip_name, op_page):
     driver = select_browser(selenium, browser_id)
     op_page(driver).data.toolbar[tooltip_name].click()
 
 
-@when(parsers.parse('user of {browser_id} sees that {btn_list} button(s) '
-                    'is(are) enabled in toolbar in data tab in Oneprovider gui'))
-@then(parsers.parse('user of {browser_id} sees that {btn_list} button(s) '
-                    'is(are) enabled in toolbar in data tab in Oneprovider gui'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@when(parsers.parse('user of {browser_id} sees that {btn_list} button '
+                    'is enabled in toolbar in data tab in Oneprovider gui'))
+@then(parsers.parse('user of {browser_id} sees that {btn_list} button '
+                    'is enabled in toolbar in data tab in Oneprovider gui'))
+@when(parsers.parse('user of {browser_id} sees that {btn_list} buttons '
+                    'are enabled in toolbar in data tab in Oneprovider gui'))
+@then(parsers.parse('user of {browser_id} sees that {btn_list} buttons '
+                    'are enabled in toolbar in data tab in Oneprovider gui'))
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  btn_list, op_page):
     driver = select_browser(selenium, browser_id)
@@ -55,11 +59,15 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
         assert item.is_enabled() is True, err_msg.format(item)
 
 
-@when(parsers.parse('user of {browser_id} sees that {btn_list} button(s) is(are) '
+@when(parsers.parse('user of {browser_id} sees that {btn_list} button is '
                     'disabled in toolbar in data tab in Oneprovider gui'))
-@then(parsers.parse('user of {browser_id} sees that {btn_list} button(s) is(are) '
+@then(parsers.parse('user of {browser_id} sees that {btn_list} button is '
                     'disabled in toolbar in data tab in Oneprovider gui'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@when(parsers.parse('user of {browser_id} sees that {btn_list} buttons are '
+                    'disabled in toolbar in data tab in Oneprovider gui'))
+@then(parsers.parse('user of {browser_id} sees that {btn_list} buttons are '
+                    'disabled in toolbar in data tab in Oneprovider gui'))
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  btn_list, op_page):
     driver = select_browser(selenium, browser_id)
@@ -73,7 +81,7 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                     'displayed in breadcrumbs is {path}'))
 @then(parsers.parse('user of {browser_id} sees that current working directory '
                     'displayed in breadcrumbs is {path}'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def is_displayed_breadcrumbs_in_data_tab_in_op_correct(selenium, browser_id,
                                                        path, op_page):
     driver = select_browser(selenium, browser_id)
@@ -97,7 +105,7 @@ def change_cwd_using_breadcrumbs_in_data_tab_in_op(selenium, browser_id,
                     'displayed in directory tree is {path}'))
 @then(parsers.parse('user of {browser_id} sees that current working directory '
                     'displayed in directory tree is {path}'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def is_displayed_dir_tree_in_data_tab_in_op_correct(selenium, browser_id,
                                                     path, op_page):
     driver = select_browser(selenium, browser_id)
@@ -110,7 +118,7 @@ def is_displayed_dir_tree_in_data_tab_in_op_correct(selenium, browser_id,
                     'to {path} using directory tree'))
 @then(parsers.parse('user of {browser_id} changes current working directory '
                     'to {path} using directory tree'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def change_cwd_using_dir_tree_in_data_tab_in_op(selenium, browser_id,
                                                 path, op_page):
     driver = select_browser(selenium, browser_id)
@@ -125,7 +133,7 @@ def change_cwd_using_dir_tree_in_data_tab_in_op(selenium, browser_id,
 
 @when(parsers.parse('user of {browser_id} does not see {path} in directory tree'))
 @then(parsers.parse('user of {browser_id} does not see {path} in directory tree'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_absence_of_path_in_dir_tree(selenium, browser_id, path, op_page):
     driver = select_browser(selenium, browser_id)
     curr_dir = op_page(driver).data.sidebar.root_dir
@@ -135,8 +143,9 @@ def assert_absence_of_path_in_dir_tree(selenium, browser_id, path, op_page):
                 curr_dir = curr_dir[directory]
 
 
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-def _is_space_tree_root(driver, is_home, space_name, op_page):
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
+def _is_space_viewed_space_in_data_tab_in_op(driver, is_home, space_name,
+                                             op_page):
     selector = op_page(driver).data.sidebar.space_selector
     displayed_name = selector.selected_space_name
     err_msg = 'current directory tree is displayed for "{}" instead of "{}"'
@@ -152,7 +161,8 @@ def _is_space_tree_root(driver, is_home, space_name, op_page):
                   'named "(?P<space_name>.+?)'))
 def g_is_space_tree_root(selenium, browser_id, is_home, space_name, op_page):
     driver = select_browser(selenium, browser_id)
-    _is_space_tree_root(driver, True if is_home else False, space_name, op_page)
+    _is_space_viewed_space_in_data_tab_in_op(driver, True if is_home else False,
+                                             space_name, op_page)
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) sees that displayed directory '
@@ -163,7 +173,8 @@ def g_is_space_tree_root(selenium, browser_id, is_home, space_name, op_page):
                  'named "(?P<space_name>.+?)"'))
 def wt_is_space_tree_root(selenium, browser_id, is_home, space_name, op_page):
     driver = select_browser(selenium, browser_id)
-    _is_space_tree_root(driver, True if is_home else False, space_name, op_page)
+    _is_space_viewed_space_in_data_tab_in_op(driver, True if is_home else False,
+                                             space_name, op_page)
 
 
 @when(parsers.parse('user of {browser_id} sees nonempty file browser '
@@ -216,7 +227,7 @@ def assert_file_browser_in_data_tab_in_op(selenium, browser_id,
                     '{path} in directory tree sidebar'))
 @when(parsers.parse('user of {browser_id} sees displayed name length for '
                     '{path} in directory tree sidebar'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def check_displayed_dir_name_len_in_dir_tree(selenium, browser_id, path,
                                              op_page, tmp_memory):
     driver = select_browser(selenium, browser_id)
@@ -232,7 +243,7 @@ def check_displayed_dir_name_len_in_dir_tree(selenium, browser_id, path,
                     '{path} in directory tree sidebar is larger than before'))
 @then(parsers.parse('user of {browser_id} sees that displayed name length for '
                     '{path} in directory tree sidebar is larger than before'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_diff_in_len_of_dir_name_before_and_now(selenium, browser_id, path,
                                                   op_page, tmp_memory):
     driver = select_browser(selenium, browser_id)
@@ -251,7 +262,7 @@ def assert_diff_in_len_of_dir_name_before_and_now(selenium, browser_id, path,
                  r'(?P<direction>right|left) of approximately (?P<offset>\d+)px'))
 @then(parsers.re(r'user of (?P<browser_id>.+?) expands data tab sidebar to the '
                  r'(?P<direction>right|left) of approximately (?P<offset>\d+)px'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def resize_data_tab_sidebar(selenium, browser_id, direction, offset, op_page):
     driver = select_browser(selenium, browser_id)
     sidebar = op_page(driver).data.sidebar

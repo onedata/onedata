@@ -8,11 +8,11 @@ import pytest
 from pytest_bdd import when, then, parsers
 from pytest_selenium_multi import select_browser
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import parse_seq, repeat_failed, implicit_wait
 
 __author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
@@ -30,10 +30,10 @@ def assert_msg_instead_of_browser(browser_id, msg, tmp_memory):
 
 
 @when(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}"'))
+                    '{item_type} named "{item_name}" in file browser'))
 @then(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}"'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+                    '{item_type} named "{item_name}" in file browser'))
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
                                               item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -43,10 +43,10 @@ def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
 
 
 @when(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}"'))
+                    '{item_type} named "{item_name}" in file browser'))
 @then(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}"'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+                    '{item_type} named "{item_name}" in file browser'))
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
                                               item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -61,17 +61,21 @@ def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
 @then(parsers.parse('user of {browser_id} clicks on {tool_type} '
                     'tool icon in file row for item named "{item_name}" '
                     'in file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def click_on_tool_icon_for_file_in_file_browser(browser_id, tool_type,
                                                 item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     browser[item_name].click_on_tool(tool_type)
 
 
-@when(parsers.parse('user of {browser_id} sees that item(s) named {item_list} '
-                    'has(have) disappeared from files browser'))
-@then(parsers.parse('user of {browser_id} sees that item(s) named {item_list} '
-                    'has(have) disappeared from files browser'))
+@when(parsers.parse('user of {browser_id} sees that item named {item_list} '
+                    'has disappeared from files browser'))
+@then(parsers.parse('user of {browser_id} sees that item named {item_list} '
+                    'has disappeared from files browser'))
+@when(parsers.parse('user of {browser_id} sees that items named {item_list} '
+                    'have disappeared from files browser'))
+@then(parsers.parse('user of {browser_id} sees that items named {item_list} '
+                    'have disappeared from files browser'))
 @when(parsers.parse('user of {browser_id} does not see any item(s) named '
                     '{item_list} in file browser'))
 @then(parsers.parse('user of {browser_id} does not see any item(s) named '
@@ -91,10 +95,14 @@ def assert_items_absence_in_file_browser(selenium, browser_id, item_list,
                     'named {item_list} in file browser'))
 @then(parsers.parse('user of {browser_id} sees item(s) '
                     'named {item_list} in file browser'))
-@when(parsers.parse('user of {browser_id} sees that item(s) named '
-                    '{item_list} has(have) appeared in file browser'))
-@then(parsers.parse('user of {browser_id} sees that item(s) named '
-                    '{item_list} has(have) appeared in file browser'))
+@when(parsers.parse('user of {browser_id} sees that item named '
+                    '{item_list} has appeared in file browser'))
+@then(parsers.parse('user of {browser_id} sees that item named '
+                    '{item_list} has appeared in file browser'))
+@when(parsers.parse('user of {browser_id} sees that items named '
+                    '{item_list} have appeared in file browser'))
+@then(parsers.parse('user of {browser_id} sees that items named '
+                    '{item_list} have appeared in file browser'))
 @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def assert_items_presence_in_file_browser(browser_id, item_list, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -126,11 +134,11 @@ def assert_presence_in_file_browser_with_order(browser_id, item_list,
 
 @when(parsers.parse('user of {browser_id} sees that modification date of item '
                     'named "{item_name}" is not earlier than {err_time:d} '
-                    'seconds ago'))
+                    'seconds ago in file browser'))
 @then(parsers.parse('user of {browser_id} sees that modification date of item '
                     'named "{item_name}" is not earlier than {err_time:d} '
-                    'seconds ago'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+                    'seconds ago in file browser'))
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_item_in_file_browser_is_of_mdate(browser_id, item_name,
                                             err_time, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -146,7 +154,7 @@ def assert_item_in_file_browser_is_of_mdate(browser_id, item_name,
                     'is of {size} size in file browser'))
 @then(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
                     'is of {size} size in file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_item_in_file_browser_is_of_size(browser_id, item_name, size,
                                            tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -159,23 +167,28 @@ def assert_item_in_file_browser_is_of_size(browser_id, item_name, size,
                     'of file browser'))
 @then(parsers.parse('user of {browser_id} scrolls to the bottom '
                     'of file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def scroll_to_bottom_of_file_browser(browser_id, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     browser.scroll_to_bottom()
 
 
-@when(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
-                    'item(s) in file browser'))
-@then(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
-                    'item(s) in file browser'))
+# @when(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
+#                     'item(s) in file browser'))
+# @then(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
+#                     'item(s) in file browser'))
+@when(parsers.re('user of (?P<browser_id>.+?) sees that there '
+                 '(is 1|are (?P<num>\d+)) items? in file browser'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that there '
+                 '(is 1|are (?P<num>\d+)) items? in file browser'))
 @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def assert_num_of_files_are_displayed_in_file_browser(browser_id, num,
                                                       tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     err_msg = 'displayed number of files {} does not match expected {}'
     files_num = browser.files_count
-    assert browser.files_count == num, err_msg.format(files_num, num)
+    num = int(num) if num is not None else 1
+    assert files_num == num, err_msg.format(files_num, num)
 
 
 @when(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
@@ -195,7 +208,7 @@ def assert_item_in_file_browser_is_of_type(browser_id, item_name, item_attr,
                     'named "{item_name}" in file browser'))
 @then(parsers.parse('user of {browser_id} double clicks on item '
                     'named "{item_name}" in file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def double_click_on_item_in_file_browser(browser_id, item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     browser[item_name].double_click()
@@ -227,7 +240,7 @@ def select_files_from_file_list_using_shift(browser_id, item_list, tmp_memory):
                     'item(s) from file browser with pressed ctrl'))
 @then(parsers.parse('user of {browser_id} selects {item_list} '
                     'item(s) from file browser with pressed ctrl'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def select_files_from_file_list_using_ctrl(browser_id, item_list,
                                            tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -241,7 +254,7 @@ def select_files_from_file_list_using_ctrl(browser_id, item_list,
                     'item(s) from file browser'))
 @then(parsers.parse('user of {browser_id} deselects {item_list} '
                     'item(s) from file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def deselect_items_from_file_browser(browser_id, item_list, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     with browser.select_files() as selector:
@@ -268,7 +281,7 @@ def _deselect_files(browser, selector, item_list):
                     'selected items from file browser'))
 @then(parsers.parse('user of {browser_id} deselects all '
                     'selected items from file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def deselect_all_items_from_file_browser(browser_id, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     item = browser[0]
@@ -278,10 +291,14 @@ def deselect_all_items_from_file_browser(browser_id, tmp_memory):
 
 
 @when(parsers.parse('user of {browser_id} sees that {item_list} '
-                    'item(s) is(are) selected in file browser'))
+                    'item is selected in file browser'))
 @then(parsers.parse('user of {browser_id} sees that {item_list} '
-                    'item(s) is(are) selected in file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+                    'item is selected in file browser'))
+@when(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'items are selected in file browser'))
+@then(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'items are selected in file browser'))
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_items_are_selected_in_file_browser(browser_id, item_list,
                                               tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -292,10 +309,14 @@ def assert_items_are_selected_in_file_browser(browser_id, item_list,
 
 
 @when(parsers.parse('user of {browser_id} sees that {item_list} '
-                    'item(s) is(are) not selected in file browser'))
+                    'item is not selected in file browser'))
 @then(parsers.parse('user of {browser_id} sees that {item_list} '
-                    'item(s) is(are) not selected in file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+                    'item is not selected in file browser'))
+@when(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'items are not selected in file browser'))
+@then(parsers.parse('user of {browser_id} sees that {item_list} '
+                    'items are not selected in file browser'))
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_items_are_not_selected_in_file_browser(browser_id, item_list,
                                                   tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
@@ -309,7 +330,7 @@ def assert_items_are_not_selected_in_file_browser(browser_id, item_list,
                     'item is selected in file browser'))
 @then(parsers.parse('user of {browser_id} sees that none '
                     'item is selected in file browser'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def assert_none_item_is_selected_in_file_browser(browser_id, item_list,
                                                  tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']

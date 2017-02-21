@@ -6,7 +6,7 @@ from tests.gui.utils.generic import find_web_elem_with_text, click_on_web_elem
 from tests.gui.utils.oneprovider.data_tab.data_tab import DataTab
 from tests.gui.utils.oneprovider.user_profile import UserProfile
 
-__author__ = "Jakub Liput"
+__author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
