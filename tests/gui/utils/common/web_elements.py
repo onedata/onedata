@@ -20,19 +20,23 @@ class WebItem(type):
 class WebElement(object):
     item_not_found_msg = '{item} item not found in {parent}'
 
-    def __init__(self, css_sel, name=None, parent_name=None, **kwargs):
+    def __init__(self, css_sel, name=None, parent_name=None, cls=None):
         self.name = name
         self.parent_name = parent_name
         self.css_sel = css_sel
-        super(WebElement, self).__init__(**kwargs)
+        self.cls = cls
 
     def __get__(self, instance, owner):
         if instance is None:
             return self
 
-        return find_web_elem(instance.web_elem, self.css_sel,
+        elem = find_web_elem(instance.web_elem, self.css_sel,
                              lambda: self._format_msg(self.item_not_found_msg,
                                                       instance))
+        if self.cls is not None:
+            return self.cls(instance._driver, elem, instance)
+        else:
+            return elem
 
     def _format_msg(self, msg_template, parent):
         name = self.name.replace('_', ' ').strip().upper()

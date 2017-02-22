@@ -19,6 +19,10 @@
                 {
                     "type": "posix",
                     "name": "/mnt/st1"
+                },
+                {
+                    "type": "posix",
+                    "name": "/mnt/st2"
                 }
             ],
             "users": [
@@ -64,6 +68,44 @@
                     "sys.config": {
                         "op_worker": {
                             "soft_quota_limit_size": 0,
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "db_nodes": [
+                                "dbnode1"
+                            ],
+                            "verify_oz_cert": false,
+                            "oz_domain": "oz"
+                        }
+                    }
+                }
+            }
+        },
+        "p2": {
+            "db_driver": "couchdb",
+            "os_config": "cfg1",
+            "cluster_manager": {
+                "cm1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "worker_num": 1
+                        }
+                    }
+                }
+            },
+            "op_worker": {
+                "worker1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "op_worker": {
                             "cm_nodes": [
                                 "cm1"
                             ],
@@ -191,6 +233,26 @@
                 "providers": {
                     "p1": {
                         "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "space4": {
+                "displayed_name": "space4",
+                "users": [
+                    "user1",
+                    "user3"
+                ],
+                "groups": [
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    },
+                    "p2": {
+                        "storage": "/mnt/st2",
                         "supported_size": 1000000000
                     }
                 }
