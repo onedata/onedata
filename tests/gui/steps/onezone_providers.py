@@ -1,9 +1,10 @@
 """Steps for features of Onezone login page.
 """
 
+from itertools import izip_longest
 
 from tests.gui.conftest import WAIT_FRONTEND
-from tests.utils.acceptance_utils import list_parser
+from tests.gui.utils.generic import parse_seq
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
@@ -17,11 +18,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-def _click_on_provider(driver, browser_id, name, tmp_memory):
-    if browser_id in tmp_memory:
-        tmp_memory[browser_id]['supporting_provider'] = name
-    else:
-        tmp_memory[browser_id] = {'supporting_provider': name}
+def _click_on_provider(driver, name):
     collapse_providers = driver.find_element_by_css_selector('#collapse-providers')
 
     Wait(driver, WAIT_FRONTEND).until(
@@ -43,9 +40,12 @@ def _click_on_provider(driver, browser_id, name, tmp_memory):
     ).click()
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the "(?P<name>.*)" '
+@given(parsers.re('users? of (?P<browser_id_list>.*) clicked on the (?P<providers>.*) '
                   'provider in Onezone providers sidebar panel'))
-def g_click_on_provider_in_sidebar(selenium, browser_id_list, name, tmp_memory):
-    for browser_id in list_parser(browser_id_list):
+def g_click_on_provider_in_sidebar(selenium, browser_id_list, providers):
+    browser_ids = parse_seq(browser_id_list)
+    providers = parse_seq(providers)
+    for browser_id, provider in izip_longest(browser_ids, providers,
+                                             fillvalue=providers[-1]):
         driver = select_browser(selenium, browser_id)
-        _click_on_provider(driver, browser_id, name, tmp_memory)
+        _click_on_provider(driver, provider)

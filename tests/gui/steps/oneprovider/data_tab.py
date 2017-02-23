@@ -2,15 +2,17 @@
 in various GUI testing scenarios
 """
 
+from itertools import izip
+
 import pytest
 from pytest_bdd import given, when, then, parsers
 
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, implicit_wait, parse_seq
+from tests.gui.utils.generic import repeat_failed, implicit_wait, parse_seq, upload_file_path
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Jakub Liput, Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
@@ -278,3 +280,87 @@ def wait_for_file_upload_to_finish(selenium, browser_id, op_page):
     uploader = op_page(driver).data.file_uploader
     assert not uploader.is_visible(), \
         'file upload not finished within given time'
+
+
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
+                    'to upload file "{file_name}" to current dir'))
+@then(parsers.parse('user of {browser_id} uses upload button in toolbar '
+                    'to upload file "{file_name}" to current dir'))
+def upload_file_to_cwd_in_data_tab(selenium, browser_id, file_name, op_page):
+    driver = select_browser(selenium, browser_id)
+    op_page(driver).data.toolbar.upload_files(upload_file_path(file_name))
+
+
+@when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
+                    'upload files from local directory "{dir_path}" to remote '
+                    'current dir'))
+@then(parsers.parse('user of {browser_id} uses upload button in toolbar to '
+                    'upload files from local directory "{dir_path}" to remote '
+                    'current dir'))
+def upload_files_to_cwd_in_data_tab(selenium, browser_id, dir_path,
+                                    tmpdir, op_page):
+    driver = select_browser(selenium, browser_id)
+    directory = tmpdir.join(browser_id, *dir_path.split('/'))
+    if directory.isdir():
+        op_page(driver).data.toolbar.upload_files('\n'.join(str(item) for item
+                                                            in directory.listdir()
+                                                            if item.isfile()))
+    else:
+        raise RuntimeError('directory {} does not exist'.format(str(directory)))
+
+
+@when(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely filled'))
+@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely filled'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
+                                                      provider, modals):
+    driver = select_browser(selenium, browser_id)
+    distribution = modals(driver).file_distribution[provider].distribution
+    size, _ = distribution.size
+    chunks = distribution.chunks
+    assert len(chunks) == 1, 'distribution for {} is not ' \
+                             'entirely filled'.format(provider)
+    chunk = chunks[0]
+    assert chunk[1] - chunk[0] == size, \
+        'distribution for {} is not filled entirely, but only from ' \
+        '{} to {}'.format(provider, chunk[0], chunk[1])
+
+
+@when(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely empty'))
+@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely empty'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
+                                                     provider, modals):
+    driver = select_browser(selenium, browser_id)
+    distribution = modals(driver).file_distribution[provider].distribution
+    size, _ = distribution.size
+    chunks = distribution.chunks
+    assert not chunks, 'distribution for {} is not entirely empty. ' \
+                       'Visible chunks: {}'.format(provider, chunks)
+
+
+@when(parsers.parse('user of {browser_id} sees {chunks} chunk(s) for provider '
+                    'named "{provider}" in chunk bar'))
+@then(parsers.parse('user of {browser_id} sees {chunks} chunk(s) for provider '
+                    'named "{provider}" in chunk bar'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def assert_provider_chunks_in_file_distribution(selenium, browser_id, chunks,
+                                                provider, modals):
+    driver = select_browser(selenium, browser_id)
+    distribution = modals(driver).file_distribution[provider].distribution
+    size, _ = distribution.size
+    displayed_chunks = distribution.chunks
+    expected_chunks = parse_seq(chunks, pattern=r'\(.+?\)')
+    assert len(displayed_chunks) == len(expected_chunks), \
+        'displayed {} chunks instead of expected {}'.format(len(displayed_chunks),
+                                                            len(expected_chunks))
+    for chunk1, chunk2 in izip(displayed_chunks, expected_chunks):
+        assert all(round(x - z) == 0 for x, z in izip(chunk1,
+                                                      parse_seq(chunk2,
+                                                                pattern='\d+',
+                                                                default=int))), \
+            'displayed chunk {} instead of expected {}'.format(chunk1, chunk2)

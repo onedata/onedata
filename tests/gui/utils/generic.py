@@ -45,8 +45,12 @@ def go_to_relative_url(selenium, relative_url):
     selenium.get(new_url)
 
 
-def parse_seq(seq):
-    return [el.strip().strip('"') for el in seq.strip("[]").split(',') if el != ""]
+def parse_seq(seq, pattern=None, default=str):
+    if pattern is not None:
+        return [default(el.group()) for el in re.finditer(pattern, seq)]
+    else:
+        return [default(el.strip().strip('"'))
+                for el in seq.strip("[]").split(',') if el != ""]
 
 
 # A draft - not tested yet, but can be helpful in the future
@@ -186,6 +190,15 @@ def suppress(*exceptions):
         yield
     except exceptions:
         pass
+
+
+@contextmanager
+def rm_css_cls(driver, web_elem, css_cls):
+    driver.execute_script("$(arguments[0]).removeClass('{}')".format(css_cls),
+                          web_elem)
+    yield web_elem
+    driver.execute_script("$(arguments[0]).addClass('{}')".format(css_cls),
+                          web_elem)
 
 
 def nth(seq, idx):

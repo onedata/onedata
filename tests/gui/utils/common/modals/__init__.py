@@ -1,7 +1,7 @@
-"""Utils and fixtures to facilitate operations on modals.
+"""Utils for operations on modals in GUI tests
 """
 
-from tests.gui.utils.common.modal.file_distribution import FileDistributionModal
+from tests.gui.utils.common.modals.file_distribution import FileDistributionModal
 from tests.gui.utils.common.web_elements import WebElement
 
 __author__ = "Bartosz Walkowicz"

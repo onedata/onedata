@@ -72,6 +72,12 @@ def op_page():
     return OPLoggedIn
 
 
+@pytest.fixture(scope='session')
+def modals():
+    from tests.gui.utils.common.modals import Modals
+    return Modals
+
+
 @pytest.fixture
 def tmp_memory():
     """Dict to use when one wants to store sth between steps.

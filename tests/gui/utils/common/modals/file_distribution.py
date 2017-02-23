@@ -1,23 +1,14 @@
 """Utils and fixtures to facilitate operations on File distribution modal.
 """
 
-from abc import abstractmethod
-
 from tests.gui.utils.common.common import PageObject
+from tests.gui.utils.common.modals.modal import Modal
 from tests.gui.utils.common.web_elements import WebElement, TextLabelWebElement, ItemListWebElement
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
-
-
-class Modal(PageObject):
-    title = TextLabelWebElement('.modal-title')
-
-    @abstractmethod
-    def __str__(self):
-        pass
 
 
 class FileDistributionModal(Modal):
@@ -67,6 +58,7 @@ class Chunk(PageObject):
         end, unit = self.end.split()
         return int(end) - int(self.start), unit
 
+    @property
     def chunks(self):
         file_size, _ = self.size
         chunks = self._driver.execute_script(_canvas_fill, self._canvas)
