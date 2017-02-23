@@ -77,7 +77,7 @@ def oneclient(request, setup_command):
 
 
 @pytest.fixture(scope='module',
-                params=['wily', 'xenial'])
+                params=['xenial'])
 def oneprovider(request, onezone, setup_command):
     distribution = Distribution(request, link={onezone.domain: 'onedata.org'})
     command = setup_command.format(dist=distribution.name)
