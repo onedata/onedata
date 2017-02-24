@@ -72,17 +72,18 @@ def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
 def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
                                        tmp_memory):
     driver = select_browser(selenium, browser_id)
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def click_on_btn(d, elem, msg):
+        click_on_web_elem(d, elem, msg)
+
     button_name = button_name.lower()
     modal = tmp_memory[browser_id]['window']['modal']
     buttons = modal.find_elements_by_css_selector('button')
+    err_msg = 'clicking on {} in displayed modal disabled'.format(button_name)
     for btn in buttons:
         if btn.text.lower() == button_name:
-            Wait(driver, WAIT_FRONTEND).until(
-                lambda _: btn.is_enabled(),
-                message='waiting for button {} to be displayed'
-                        ''.format(button_name)
-            )
-            btn.click()
+            click_on_btn(driver, btn, err_msg)
             break
     else:
         raise RuntimeError('no button named {} found'.format(button_name))

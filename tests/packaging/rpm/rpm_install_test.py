@@ -45,7 +45,7 @@ class Distribution(object):
 
 @pytest.fixture(scope='module')
 def setup_command():
-    return 'yum -y update && ' \
+    return 'yum -y update ; yum clean all && yum -y update && ' \
         'yum -y install ca-certificates python wget && ' \
         'yum -y install epel-release || true && ' \
         'wget -qO- "{url}/yum/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \

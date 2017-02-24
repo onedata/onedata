@@ -3,7 +3,7 @@
 
 from selenium.common.exceptions import NoSuchElementException
 
-from tests.gui.utils.generic import find_web_elem, suppress
+from tests.gui.utils.generic import find_web_elem, suppress, click_on_web_elem
 from tests.gui.utils.onezone.sidebar_panel import OZPanel
 from tests.gui.utils.onezone.edit_box import EditBox
 
@@ -30,6 +30,8 @@ class UserAliasPanel(OZPanel):
         edit_box = find_web_elem(self.web_elem, css_sel, err_msg)
 
         with suppress(NoSuchElementException):
-            edit_box.find_element_by_css_selector('.oneicon-rename').click()
+            elem = edit_box.find_element_by_css_selector('.oneicon-rename')
+            err_msg = 'clicking on rename tool in USER ALIAS panel disabled'
+            click_on_web_elem(self._driver, elem, err_msg)
 
-        return EditBox(edit_box)
+        return EditBox(edit_box, self._driver)
