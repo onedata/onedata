@@ -1,4 +1,4 @@
-# distro for package building (oneof: wily, fedora-23-x86_64)
+# distro for package building (oneof: trusty, wily, xenial, centos-7-x86_64, fedora-23-x86_64)
 DISTRIBUTION        ?= none
 DOCKER_RELEASE      ?= development
 DOCKER_REG_NAME     ?= "docker.onedata.org"
