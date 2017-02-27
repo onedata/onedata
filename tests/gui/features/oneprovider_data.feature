@@ -1292,7 +1292,7 @@ Feature: Oneprovider Data view
     And user of browser sees that items named ["20B-0.txt", "20B-0(1).txt"] have disappeared from files browser
 
 
-  Scenario: User sees that too long directory name is truncated with elipsis in directory tree sidebar
+  Scenario: User sees that text area for directory name gets bigger while resizing directory tree sidebar
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 
@@ -1305,7 +1305,7 @@ Feature: Oneprovider Data view
     And user of browser sees that the modal has disappeared
     And user of browser sees that item named "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab" has appeared in file browser
 
-    And user of browser sees displayed name length for /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab/ in directory tree sidebar
+    And user of browser records displayed name length for /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab/ in directory tree sidebar
     And user of browser expands data tab sidebar to the right of approximately 200px
     Then user of browser sees that displayed name length for /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab/ in directory tree sidebar is larger than before
 

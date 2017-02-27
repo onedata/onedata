@@ -223,9 +223,9 @@ def assert_file_browser_in_data_tab_in_op(selenium, browser_id,
     tmp_memory[browser_id]['file_browser'] = file_browser
 
 
-@when(parsers.parse('user of {browser_id} sees displayed name length for '
+@when(parsers.parse('user of {browser_id} records displayed name length for '
                     '{path} in directory tree sidebar'))
-@when(parsers.parse('user of {browser_id} sees displayed name length for '
+@when(parsers.parse('user of {browser_id} records displayed name length for '
                     '{path} in directory tree sidebar'))
 @repeat_failed(attempts=WAIT_FRONTEND, timeout=True)
 def check_displayed_dir_name_len_in_dir_tree(selenium, browser_id, path,
