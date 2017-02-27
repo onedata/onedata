@@ -25,9 +25,9 @@ class ProviderRecord(PageObject, ExpandableMixin):
                                      '.oneicon-home-outline')
     _home_space_icon = WebElement('.oneicon-provider-home')
     _home_icon = WebElement('.secondary-item-element.star-toggle .oneicon-home')
-    _working_icon = IconWebElement('.provider-icon .color-provider-working')
+    _working_icon = IconWebElement('.provider-icon .color-provider-online')
     _not_working_icon = IconWebElement('.provider-icon '
-                                       '.color-provider-not-working')
+                                       '.color-provider-offline')
     _click_area = WebElement('.secondary-item-container')
 
     def __str__(self):
