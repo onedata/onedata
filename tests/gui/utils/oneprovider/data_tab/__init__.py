@@ -1,8 +1,7 @@
-"""This package contains python test files to run acceptance tests of
-onedata using onezone web GUI.
+"""Utils for data tab in Oneprovider GUI tests
 """
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"

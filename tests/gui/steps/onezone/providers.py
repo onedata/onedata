@@ -67,7 +67,7 @@ def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
     def set_as_home(d, item, msg):
         item_record = oz_page(d)['go to your files'][item]
         item_record.unset_from_home()
-        assert not item_record.is_home, msg.format(item_record.name)
+        assert not item_record.is_home(), msg.format(item_record.name)
 
     err_msg = 'provider named "{}" is still set as home but it should not'
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
@@ -100,7 +100,7 @@ def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
     def assert_not_displayed(d, index, msg):
         world_map = oz_page(d)['world map']
         provider = world_map[index]
-        assert not provider.is_displayed, msg.format(ordinal)
+        assert not provider.is_displayed(), msg.format(ordinal)
 
     err_msg = 'provider popup for {} circle is displayed ' \
               'while it should not be'
@@ -144,7 +144,7 @@ def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
     def assert_provider_popup(d, index, msg):
         world_map = oz_page(d)['world map']
         provider = world_map[index]
-        assert provider.is_displayed, msg.format(ordinal)
+        assert provider.is_displayed(), msg.format(ordinal)
 
     err_msg = 'provider popup for {} circle is not displayed ' \
               'while it should be'
@@ -182,8 +182,7 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
         assert provider_name == prov_popup.name, msg1.format(prov_popup.name,
                                                              provider_name)
 
-        for space1, space2 in itertools.izip(prov_popup.supported_spaces,
-                                             prov_record.supported_spaces):
+        for space1, space2 in itertools.izip(prov_popup, prov_record):
             name1, is_home1 = space1.name, space1.is_home
             name2, is_home2 = space2.name, space2.is_home
             assert (name1, is_home1) == (name2, is_home2), \
@@ -226,7 +225,7 @@ def assert_provider_working_in_oz_panel(selenium, browser_id,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_working(d, provider_name, msg):
         prov_record = oz_page(d)['go to your files'][provider_name]
-        assert prov_record.is_working, msg.format(prov_record.name)
+        assert prov_record.is_working(), msg.format(prov_record.name)
 
     err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
               '"{}" is not green'
@@ -244,7 +243,7 @@ def assert_provider_not_working_in_oz_panel(selenium, browser_id,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_not_working(d, provider_name, msg):
         prov_record = oz_page(d)['go to your files'][provider_name]
-        assert prov_record.is_not_working, msg.format(prov_record.name)
+        assert prov_record.is_not_working(), msg.format(prov_record.name)
 
     err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
               '"{}" is not gray'

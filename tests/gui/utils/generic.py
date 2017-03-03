@@ -4,10 +4,11 @@
 
 import re
 import os
-import itertools
 from time import sleep, time
-from functools import wraps
+from itertools import islice, izip
 from contextlib import contextmanager
+
+from decorator import decorator
 
 from tests import gui
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH
@@ -103,7 +104,7 @@ def implicit_wait(driver, timeout, prev_timeout):
         driver.implicitly_wait(prev_timeout)
 
 
-def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=Exception):
+def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=(Exception,)):
     """Returns wrapper on function, which keeps calling it until timeout or
     for attempts times in case of failure (exception).
 
@@ -113,32 +114,30 @@ def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=Exception):
     :param exceptions: in case of which consider failure of call
     :return: wrapper decorator
     """
-    def wrapper(function):
 
-        @wraps(function)
-        def repeat_until_limit(*args, **kwargs):
-            now = time()
-            limit, i = (now + attempts, now) if timeout else (attempts, 0)
+    @decorator
+    def wrapper(fun, *args, **kwargs):
+        now = time()
+        limit, i = (now + attempts, now) if timeout else (attempts, 0)
 
-            while i < limit:
-                try:
-                    result = function(*args, **kwargs)
-                except exceptions:
-                    sleep(interval)
-                    i = time() if timeout else i+1
-                    continue
-                else:
-                    return result
-            return function(*args, **kwargs)
+        while i < limit:
+            try:
+                result = fun(*args, **kwargs)
+            except exceptions:
+                sleep(interval)
+                i = time() if timeout else i+1
+                continue
+            else:
+                return result
+        return fun(*args, **kwargs)
 
-        return repeat_until_limit
     return wrapper
 
 
 def iter_ahead(iterable):
     read_ahead = iter(iterable)
     next(read_ahead)
-    for item, next_item in itertools.izip(iterable, read_ahead):
+    for item, next_item in izip(iterable, read_ahead):
         yield item, next_item
 
 
@@ -146,6 +145,8 @@ def find_web_elem(web_elem_root, css_sel, err_msg):
     try:
         item = web_elem_root.find_element_by_css_selector(css_sel)
     except NoSuchElementException:
+        with suppress(TypeError):
+            err_msg = err_msg()
         raise RuntimeError(err_msg)
     else:
         return item
@@ -154,9 +155,11 @@ def find_web_elem(web_elem_root, css_sel, err_msg):
 def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
     items = web_elem_root.find_elements_by_css_selector(css_sel)
     for item in items:
-        if item.text.lower() == text:
+        if item.text.lower() == text.lower():
             return item
     else:
+        with suppress(TypeError):
+            err_msg = err_msg()
         raise RuntimeError(err_msg)
 
 
@@ -172,6 +175,8 @@ def click_on_web_elem(driver, web_elem, err_msg, delay=True):
         action.move_to_element(web_elem).click_and_hold(web_elem).release(web_elem)
         action.perform()
     else:
+        with suppress(TypeError):
+            err_msg = err_msg()
         raise RuntimeError(err_msg)
 
 
@@ -181,3 +186,7 @@ def suppress(*exceptions):
         yield
     except exceptions:
         pass
+
+
+def nth(seq, idx):
+    return next(islice(seq, idx, None), None)

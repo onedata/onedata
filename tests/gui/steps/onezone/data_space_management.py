@@ -74,10 +74,10 @@ def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def expand_submenu_for_space(d, space_name):
+    def get_support_for_space(d, space_name):
         oz_page(d)['data space management'][space_name].get_support()
 
-    expand_submenu_for_space(driver, name)
+    get_support_for_space(driver, name)
 
 
 @when(parsers.parse('user of {browser_id} sees that dropright with token for '
@@ -193,15 +193,15 @@ def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
                                               expected_providers_list,
                                               msg1, msg2):
         space_record = oz_page(d)['data space management'][space_name]
-        actual_provs = space_record.supporting_providers
+        actual_provs = list(space_record)
         actual_provs_num = len(actual_provs)
         expected_provs = set(expected_providers_list)
         expected_provs_num = len(expected_provs)
 
         assert expected_provs_num == actual_provs_num, msg1.format(expected_provs_num,
                                                                    actual_provs_num)
-        for provider in expected_provs:
-            assert provider in actual_provs, msg2.format(provider)
+        for provider in actual_provs:
+            assert provider.name in expected_provs, msg2.format(provider)
 
     err_msg1 = 'Expected number of providers {} does not match actual {}'
     err_msg2 = 'space named "{name}" does not have supporting provider ' \
@@ -224,10 +224,11 @@ def assert_no_such_supporting_providers_for_space(selenium, browser_id, space,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_no_such_providers(d, space_name, not_expected_providers, msg):
         space_record = oz_page(d)['data space management'][space_name]
-        supporting_providers = space_record.supporting_providers
+        supporting_providers = list(space_record)
 
-        for provider in not_expected_providers:
-            assert provider not in supporting_providers, msg.format(provider)
+        for provider in supporting_providers:
+            assert provider.name not in not_expected_providers, \
+                msg.format(provider)
 
     err_msg = 'space named "{}" has supporting provider named "{{}}" ' \
               'while it should not have'.format(space)

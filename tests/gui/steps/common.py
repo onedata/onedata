@@ -1,6 +1,5 @@
 """Common steps used in various GUI testing scenarios
 """
-import pytest
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -21,7 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
-from tests.gui.utils.generic import parse_seq, repeat_failed
+from tests.gui.utils.generic import parse_seq
 from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
     is_firefox_logging_enabled

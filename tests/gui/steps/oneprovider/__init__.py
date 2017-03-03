@@ -1,5 +1,5 @@
 """This package contains python test files to run acceptance tests of
-onedata using onezone web GUI.
+onedata using oneprovider web GUI.
 """
 
 __author__ = "Bartek Walkowicz"
