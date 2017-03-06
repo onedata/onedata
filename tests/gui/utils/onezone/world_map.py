@@ -43,7 +43,7 @@ class WorldMap(PageObject):
 
     def get_provider_with_displayed_panel(self):
         for provider in self:
-            if provider.is_displayed:
+            if provider.is_displayed():
                 return provider
 
 

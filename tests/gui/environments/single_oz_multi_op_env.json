@@ -154,7 +154,8 @@
                             "http_domain": {
                                 "string": "127.0.0.1"
                             },
-                            "dev_mode": true
+                            "dev_mode": true,
+                            "minimum_space_support_size": 10
                         }
                     }
                 }

@@ -1,6 +1,11 @@
 """Steps for GO TO YOUR FILES panel and provider popup features of Onezone page.
 """
+
 import itertools
+from time import sleep
+
+import pyperclip
+from pytest_bdd import given
 from pytest_bdd import parsers, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
@@ -96,7 +101,7 @@ def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                      ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
 
-    @repeat_failed(attempts=WAIT_BACKEND)
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_not_displayed(d, index, msg):
         world_map = oz_page(d)['world map']
         provider = world_map[index]
@@ -265,3 +270,17 @@ def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
 
     err_msg = 'alert title {} does not match {}'
     assert_alert(driver, title, err_msg)
+
+
+@given(parsers.parse('user of {browser_id} records providers hostname using '
+                     'copy hostname button in every provider popup'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    world_map = oz_page(driver)['world map']
+    for provider_rec in oz_page(driver)['go to your files']:
+        provider_rec.click()
+        provider_popup = world_map.get_provider_with_displayed_panel()
+        provider_popup.copy_hostname()
+        tmp_memory[provider_popup.name] = pyperclip.paste()
+    print tmp_memory
