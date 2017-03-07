@@ -26,10 +26,10 @@ class FileBrowser(PageObject):
     _bottom = WebElement('.file-row-load-more')
 
     def __str__(self):
-        return 'file browser in {}'.format(self._parent)
+        return 'file browser in {}'.format(self.parent)
 
     def __iter__(self):
-        return (FileRow(self._driver, item, self) for item in self._files)
+        return (FileRow(self.driver, item, self) for item in self._files)
 
     def __getitem__(self, selector):
         if isinstance(selector, int):
@@ -39,7 +39,7 @@ class FileBrowser(PageObject):
                                    '{limit}'.format(index=selector,
                                                     limit=items_count))
             else:
-                return FileRow(self._driver, nth(self._files, selector), self)
+                return FileRow(self.driver, nth(self._files, selector), self)
         elif isinstance(selector, (str, unicode)):
             for item in self:
                 if item.name == selector:
@@ -64,19 +64,19 @@ class FileBrowser(PageObject):
         for item1, item2 in iter_ahead(self._files_with_metadata):
             if 'file-row' in item1.get_attribute('class'):
                 if 'file-row' not in item2.get_attribute('class'):
-                    if FileRow(self._driver, item1, self).name == name:
-                        return MetadataRow(self._driver, item2, self)
+                    if FileRow(self.driver, item1, self).name == name:
+                        return MetadataRow(self.driver, item2, self)
         else:
             raise RuntimeError('no metadata row for "{name}" in {item} '
                                'found'.format(name=name, item=self))
 
     def scroll_to_bottom(self):
-        self._driver.execute_script('arguments[0].scrollIntoView();',
-                                    self._bottom)
+        self.driver.execute_script('arguments[0].scrollIntoView();',
+                                   self._bottom)
 
     @contextmanager
     def select_files(self):
-        action = ActionChains(self._driver)
+        action = ActionChains(self.driver)
 
         action.shift_down = lambda: action.key_down(Keys.LEFT_SHIFT)
         action.shift_up = lambda: action.key_up(Keys.LEFT_SHIFT)

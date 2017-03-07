@@ -28,7 +28,7 @@ def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_popup_appeared(d, provider_name, msg):
-        prov = oz_page(d)['world map'].get_provider_with_displayed_panel()
+        prov = oz_page(d)['world map'].get_provider_with_displayed_popup()
         assert provider_name == prov.name, msg.format(prov.name,
                                                       provider_name)
 
@@ -48,7 +48,7 @@ def click_on_btn_in_provider_popup(selenium, browser_id, btn, provider, oz_page)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def click_on_btn(d, provider_name, msg):
-        prov = oz_page(d)['world map'].get_provider_with_displayed_panel()
+        prov = oz_page(d)['world map'].get_provider_with_displayed_popup()
         assert provider_name == prov.name, msg.format(prov.name, provider_name)
         action = getattr(prov, btn.lower().replace(' ', '_'))
         action()
@@ -183,7 +183,7 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def assert_consistency(d, provider_name, msg1, msg2):
         prov_record = oz_page(d)['go to your files'][provider_name]
-        prov_popup = oz_page(d)['world map'].get_provider_with_displayed_panel()
+        prov_popup = oz_page(d)['world map'].get_provider_with_displayed_popup()
         assert provider_name == prov_popup.name, msg1.format(prov_popup.name,
                                                              provider_name)
 
@@ -280,7 +280,7 @@ def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
     world_map = oz_page(driver)['world map']
     for provider_rec in oz_page(driver)['go to your files']:
         provider_rec.click()
-        provider_popup = world_map.get_provider_with_displayed_panel()
+        provider_popup = world_map.get_provider_with_displayed_popup()
         provider_popup.copy_hostname()
         tmp_memory[provider_popup.name] = pyperclip.paste()
     print tmp_memory

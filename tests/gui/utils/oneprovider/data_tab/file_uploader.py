@@ -21,16 +21,16 @@ class FileUploader(PageObject):
 
     @property
     def progress(self):
-        return ProgressBar(self._driver, self._progress, self)
+        return ProgressBar(self.driver, self._progress, self)
 
     def is_visible(self):
         return 'visible' in self.web_elem.get_attribute('class')
 
     def __str__(self):
-        return 'file uploader in {}'.format(self._parent)
+        return 'file uploader in {}'.format(self.parent)
 
     def __iter__(self):
-        return (FileUploadRow(self._driver, item, self) for item in self._rows)
+        return (FileUploadRow(self.driver, item, self) for item in self._rows)
 
     def __getitem__(self, selector):
         if isinstance(selector, int):
@@ -55,8 +55,8 @@ class FileUploader(PageObject):
         return len(self._rows)
 
     def scroll_to_bottom(self):
-        self._driver.execute_script('arguments[0].scrollIntoView();',
-                                    self._rows[-1])
+        self.driver.execute_script('arguments[0].scrollIntoView();',
+                                   self._rows[-1])
 
 
 class FileUploadRow(PageObject):

@@ -26,7 +26,7 @@ class FileRow(PageObject):
 
     def __str__(self):
         return '{item} in {parent}'.format(item=self.name,
-                                           parent=str(self._parent))
+                                           parent=str(self.parent))
 
     def is_selected(self):
         return 'active' in self.web_elem.get_attribute('class')
@@ -47,9 +47,9 @@ class FileRow(PageObject):
     def click_on_tool(self, name):
         tool = getattr(self, '_{tool}_tool'.format(tool=name))
         tool_icon = tool.find_element_by_css_selector('.oneicon')
-        click_on_web_elem(self._driver, tool_icon,
+        click_on_web_elem(self.driver, tool_icon,
                           lambda: 'cannot click on "{}" in '
                                   '{}'.format(name, self))
 
     def double_click(self):
-        ActionChains(self._driver).double_click(self.web_elem).perform()
+        ActionChains(self.driver).double_click(self.web_elem).perform()

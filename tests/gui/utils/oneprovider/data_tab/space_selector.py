@@ -19,11 +19,11 @@ class SpaceSelector(PageObject, ExpandableMixin):
     _spaces = ItemListWebElement('ul.dropdown-menu-list li')
 
     def __str__(self):
-        return 'space selector in {}'.format(self._parent)
+        return 'space selector in {}'.format(self.parent)
 
     def __iter__(self):
         if self.is_expanded():
-            return (SpaceRecord(self._driver, space, self)
+            return (SpaceRecord(self.driver, space, self)
                     for space in self._spaces)
         else:
             raise RuntimeError('{} is not expanded'.format(self))
@@ -48,7 +48,7 @@ class SpaceRecord(PageObject):
     _icon = IconWebElement('.item-icon .one-icon')
 
     def __str__(self):
-        return '{name} in {parent}'.format(name=self.name, parent=self._parent)
+        return '{name} in {parent}'.format(name=self.name, parent=self.parent)
 
     def is_home(self):
         return 'oneicon-space-home' in self._icon.get_attribute('class')

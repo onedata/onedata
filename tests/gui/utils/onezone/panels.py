@@ -11,7 +11,6 @@ from tests.gui.utils.common.web_elements import ToggleWebElement, \
 from tests.gui.utils.generic import suppress, click_on_web_elem, iter_ahead
 from tests.gui.utils.onezone.edit_box import EditBox
 from tests.gui.utils.onezone.providers import ProviderRecord
-from tests.gui.utils.onezone.tokens import TokenRecord
 from tests.gui.utils.onezone.spaces import SpaceRecord
 
 __author__ = "Bartosz Walkowicz"
@@ -42,33 +41,6 @@ class UserAliasPanel(OZPanel):
             click_on_web_elem(self._driver, elem, err_msg)
 
         return EditBox(self._driver, self._edit_area, self)
-
-
-class AccessTokensPanel(OZPanel):
-    _create_token_btn = ButtonWithTextWebElement('.clickable',
-                                                 text='create new access token')
-    _tokens = ItemListWebElement('.tokens-list-item')
-
-    @property
-    def tokens_count(self):
-        return len(self._tokens)
-
-    def __iter__(self):
-        return (TokenRecord(token, self._driver)
-                for token in self._tokens)
-
-    def __getitem__(self, idx):
-        tokens = self._tokens
-        try:
-            return TokenRecord(self._driver, tokens[idx], self)
-        except IndexError:
-            raise RuntimeError('asked for number {idx} token but there are '
-                               'only {num} tokens in {item}'
-                               ''.format(idx=idx, num=len(tokens),
-                                         item=str(self)))
-
-    def create_new_access_token(self):
-        self._click_on_btn('create_token')
 
 
 class GoToYourFilesPanel(OZPanel):
