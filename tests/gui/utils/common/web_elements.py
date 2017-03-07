@@ -54,7 +54,7 @@ class WebElement(AbstractWebElement):
     item_not_found_msg = '{item} element not found in {parent}'
 
     def __init__(self, *args, **kwargs):
-        self.parent_name = kwargs.get('parent_name', None)
+        self.parent_name = kwargs.pop('parent_name', None)
         super(WebElement, self).__init__(*args, **kwargs)
 
     def __get__(self, instance, owner):

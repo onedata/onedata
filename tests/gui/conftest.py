@@ -62,7 +62,7 @@ is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_lin
 
 @pytest.fixture(scope='session')
 def oz_page():
-    from tests.gui.utils.onezone_gui import OZLoggedIn
+    from tests.gui.utils.onezone import OZLoggedIn
     return OZLoggedIn
 
 

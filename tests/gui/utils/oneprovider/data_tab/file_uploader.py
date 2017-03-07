@@ -40,7 +40,7 @@ class FileUploader(PageObject):
                                    '{limit}'.format(index=selector,
                                                     limit=items_count))
             else:
-                return FileRow(self._driver, nth(self._rows, selector), self)
+                return FileRow(self.driver, nth(self._rows, selector), self)
 
         elif isinstance(selector, (str, unicode)):
             for item in self:
