@@ -14,7 +14,7 @@ class Modals(object):
     file_distribution = WebItem('#file-chunks-modal', cls=FileDistributionModal)
 
     def __init__(self, driver):
-        self._driver = driver
+        self.driver = driver
         self.web_elem = driver
 
     def __str__(self):

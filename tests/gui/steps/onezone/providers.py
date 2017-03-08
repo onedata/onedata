@@ -247,4 +247,3 @@ def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
 
         provider_popup.copy_hostname()
         tmp_memory[provider_popup_name] = pyperclip.paste()
-    print tmp_memory

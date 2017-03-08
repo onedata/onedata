@@ -100,19 +100,24 @@ def create_and_record_access_token_for_cdmi(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
     panel = oz_page(driver)['access tokens']
     panel.expand()
-    panel.create_new_access_token()
 
-    now = time.time()
-    time_limit = now + 10
-    while now < time_limit:
-        try:
+    with implicit_wait(driver, 0.05, SELENIUM_IMPLICIT_WAIT):
+        if panel.tokens.count() > 0:
             panel.tokens[0].copy()
-        except (RuntimeError, Exception) as ex:
-            print ex
-            now = time.time()
         else:
-            break
-    else:
-        raise RuntimeError("couldn't create and copy access token in oz")
+            panel.create_new_access_token()
+            now = time.time()
+            time_limit = now + 10
+            while now < time_limit:
+                try:
+                    panel.tokens[0].copy()
+                except (RuntimeError, Exception) as ex:
+                    print ex
+                    now = time.time()
+                else:
+                    break
+            else:
+                raise RuntimeError("couldn't create and copy "
+                                   "access token in oz")
 
-    tmp_memory['access_token'] = pyperclip.paste()
+    tmp_memory[browser_id]['access_token'] = pyperclip.paste()

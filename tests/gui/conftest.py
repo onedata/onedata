@@ -61,6 +61,12 @@ is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_lin
 
 
 @pytest.fixture(scope='session')
+def cdmi():
+    from tests.gui.utils.oneservices.cdmi import CDMIClient
+    return CDMIClient
+
+
+@pytest.fixture(scope='session')
 def oz_page():
     from tests.gui.utils.onezone import OZLoggedIn
     return OZLoggedIn

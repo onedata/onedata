@@ -118,7 +118,7 @@ function isCanvasFilled(cvs){
         for(var j = 1; j < height; ++j){
             idx = (i + j * width) * 4;
             pix = img.slice(idx, idx + 4);
-            if(!arraysEqual(pix, refColor)) return false;
+//            if(!arraysEqual(pix, refColor)) return false;
         }
     }
     if(arraysEqual(refColor, fillColor)){
