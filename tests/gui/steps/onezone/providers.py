@@ -1,6 +1,7 @@
 """Steps for GO TO YOUR FILES panel and provider popup features of Onezone page.
 """
 
+import time
 import itertools
 
 import pyperclip
@@ -226,9 +227,24 @@ def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
 def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
     driver = select_browser(selenium, browser_id)
     world_map = oz_page(driver)['world map']
-    for provider_rec in oz_page(driver)['go to your files']:
-        provider_rec.click()
-        provider_popup = world_map.get_provider_with_displayed_popup()
+    for provider_rec in oz_page(driver)['go to your files'].providers:
+        provider_popup = None
+        provider_rec_name = provider_rec.name
+        provider_popup_name = ''
+        now = time.time()
+
+        # condition to prevent looping for eternity
+        time_limit = now + 10
+        while (provider_popup_name != provider_rec_name) and now < time_limit:
+            provider_rec.click()
+            with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
+                provider_popup = world_map.get_provider_with_displayed_popup()
+            provider_popup_name = provider_popup.name if provider_popup else ''
+            now = time.time()
+        if now > time and (provider_popup_name != provider_rec_name):
+            raise RuntimeError('unable to get popup for '
+                               '"{}" provider'.format(provider_rec_name))
+
         provider_popup.copy_hostname()
-        tmp_memory[provider_popup.name] = pyperclip.paste()
+        tmp_memory[provider_popup_name] = pyperclip.paste()
     print tmp_memory

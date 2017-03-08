@@ -2,6 +2,7 @@
 """
 
 import pyperclip
+import time
 from pytest_bdd import given
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
@@ -89,3 +90,29 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
             'Displayed tokens in ACCESS TOKENS oz panel: {seen} ' \
             'instead of excepted: {excepted}'.format(seen=displayed,
                                                      excepted=num)
+
+
+@given(parsers.parse('user of {browser_id} created and recorded access token '
+                     'for later use with CDMI API'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def create_and_record_access_token_for_cdmi(selenium, browser_id,
+                                            oz_page, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    panel = oz_page(driver)['access tokens']
+    panel.expand()
+    panel.create_new_access_token()
+
+    now = time.time()
+    time_limit = now + 10
+    while now < time_limit:
+        try:
+            panel.tokens[0].copy()
+        except (RuntimeError, Exception) as ex:
+            print ex
+            now = time.time()
+        else:
+            break
+    else:
+        raise RuntimeError("couldn't create and copy access token in oz")
+
+    tmp_memory['access_token'] = pyperclip.paste()

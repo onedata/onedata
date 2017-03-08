@@ -19,7 +19,7 @@ class FileDistributionModal(Modal):
         return 'File distribution modal for "{}"'.format(self.file_name)
 
     def __iter__(self):
-        return (FileDistributionRecord(self._driver, prov, self)
+        return (FileDistributionRecord(self.driver, prov, self)
                 for prov in self._providers)
 
     def __getitem__(self, name):
@@ -38,11 +38,11 @@ class FileDistributionRecord(PageObject):
 
     def __str__(self):
         return 'file distribution record for {0} provider in ' \
-               '{1}'.format(self.provider, self._parent)
+               '{1}'.format(self.provider, self.parent)
 
     @property
     def distribution(self):
-        return Chunk(self._driver, self._distribution, self)
+        return Chunk(self.driver, self._distribution, self)
 
 
 class Chunk(PageObject):
@@ -51,7 +51,7 @@ class Chunk(PageObject):
     _canvas = WebElement('canvas')
 
     def __str__(self):
-        return 'file blocks for {}'.format(self._parent)
+        return 'file blocks for {}'.format(self.parent)
 
     @property
     def size(self):
@@ -61,7 +61,7 @@ class Chunk(PageObject):
     @property
     def chunks(self):
         file_size, _ = self.size
-        chunks = self._driver.execute_script(_canvas_fill, self._canvas)
+        chunks = self.driver.execute_script(_canvas_fill, self._canvas)
         if chunks is not False:
             return [(chunk[0]*file_size, chunk[1]*file_size)
                     for chunk in chunks]
