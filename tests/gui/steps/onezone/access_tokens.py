@@ -18,7 +18,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 def _click_on_btn_for_token(driver, oz_page, ordinal, btn):
-    token = oz_page(driver)['access tokens'][int(ordinal[:-2]) - 1]
+    token = oz_page(driver)['access tokens'].tokens[int(ordinal[:-2]) - 1]
     action = getattr(token, btn)
     action()
 
@@ -69,7 +69,7 @@ def g_record_copied_access_token(browser_id, tmp_memory):
 def assert_oz_access_token_has_been_copied_correctly(selenium, browser_id,
                                                      ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
-    val = oz_page(driver)['access tokens'][int(ordinal[:-2]) - 1].value
+    val = oz_page(driver)['access tokens'].tokens[int(ordinal[:-2]) - 1].value
     copied_val = pyperclip.paste()
     assert val == copied_val, 'Access Token has been copied incorrectly. ' \
                               'Expected {}, got {}'.format(val, copied_val)
@@ -84,7 +84,7 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
                                                 num, oz_page):
     driver = select_browser(selenium, browser_id)
     with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-        displayed = oz_page(driver)['access tokens'].tokens_count
+        displayed = oz_page(driver)['access tokens'].tokens.count()
         assert displayed == num, \
             'Displayed tokens in ACCESS TOKENS oz panel: {seen} ' \
             'instead of excepted: {excepted}'.format(seen=displayed,

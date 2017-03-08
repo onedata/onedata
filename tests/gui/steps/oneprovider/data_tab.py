@@ -28,7 +28,7 @@ def change_space_view_in_data_tab_in_op(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
     selector = op_page(driver).data.sidebar.space_selector
     selector.expand()
-    selector[space_name].click()
+    selector.spaces[space_name].click()
 
 
 @when(parsers.parse('user of {browser_id} clicks the button from top menu bar '

@@ -2,7 +2,7 @@
 """
 
 from tests.gui.utils.common.modals.file_distribution import FileDistributionModal
-from tests.gui.utils.common.web_elements import WebElement
+from tests.gui.utils.common.web_elements import WebItem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -11,7 +11,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class Modals(object):
-    file_distribution = WebElement('#file-chunks-modal', cls=FileDistributionModal)
+    file_distribution = WebItem('#file-chunks-modal', cls=FileDistributionModal)
 
     def __init__(self, driver):
         self._driver = driver

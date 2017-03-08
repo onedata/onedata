@@ -130,4 +130,4 @@ class DataSpaceManagementPanel(OZPanel):
                 return EditBox(self.driver, item, self)
         else:
             raise RuntimeError('no edit box for create new space found '
-                               'in "{panel}" oz panel'.format(panel=self.name))
+                               'in {item}'.format(item=self))
