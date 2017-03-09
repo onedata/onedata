@@ -5,182 +5,109 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser opened Onezone URL
     And user of browser clicked on the "plgrid" login button
     And user of browser logged as user1
-    And user of browser created and recorded access token for later use with CDMI API
-    And user of browser records providers hostname using copy hostname button in every provider popup
     And user of browser expanded the "go to your files" Onezone sidebar panel
     And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
     And user of browser clicked on the "Go to your files" button in provider popup
     And user of browser seen that Oneprovider session has started
 
 
-  Scenario: User uploads file on one provider, sees it's distribution, writes to it using cdmi on other provider and sees it's distribution
-    When user of browser uses spaces select to change data space to "space4"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that current working directory displayed in breadcrumbs is space4
-    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
-    And user of browser sees that item named "20B-0.txt" has appeared in file browser
-
-    And user of browser is idle for 15 seconds
-    And user of browser refreshes site
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser sees that chunk bar for provider named "p2" is entirely empty
-    And user of browser clicks "Close" confirmation button in displayed modal
+  Scenario: User create space in one provider and sees that it was created also in other provider
+    When user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser clicks on the "Create" button in sidebar list's header
+    And user of browser sees that "Create a new space" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "multiprov" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
+    Then user of browser sees that "multiprov" has appeared on spaces sidebar list
 
-    And user of browser writes "ABCD" to "/space4/20B-0.txt" starting at offset 20 in "p2" provider using cdmi api
-    And user of browser is idle for 15 seconds
-    And user of browser refreshes site
-    And user of browser sees file browser in data tab in Oneprovider page
-
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees (0, 20) chunk(s) for provider named "p1" in chunk bar
-    And user of browser sees (20, 24) chunk(s) for provider named "p2" in chunk bar
-
-    And user of browser clicks "Close" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-
-    # TODO rm after integrating with swagger
-    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees an info notify with text matching to: .*removed.*
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "20B-0.txt" has disappeared from files browser
     And user of browser clicks on the "providers" tab in main menu sidebar
-    And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "multiprov" in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
+    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+    And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser clicks on the "Go to your files" button in provider popup
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser sees "multiprov" in spaces sidebar list
 
-  Scenario: User uploads file, sees it's size, writes to it using cdmi and sees that size has grown
-    When user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that current working directory displayed in breadcrumbs is space1
-    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
-    And user of browser sees that item named "20B-0.txt" has appeared in file browser
-
-    Then user of browser sees that item named "20B-0.txt" is of 20 B size in file browser
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees that chunk bar for provider named "p1" is of 20 B size
-    And user of browser sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser clicks "Close" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-
-    And user of browser writes "ABCD" to "/space1/20B-0.txt" starting at offset 20 in "p1" provider using cdmi api
-    And user of browser is idle for 15 seconds
-    And user of browser refreshes site
-    And user of browser sees file browser in data tab in Oneprovider page
-
-    And user of browser sees that item named "20B-0.txt" is of 24 B size in file browser
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees that chunk bar for provider named "p1" is of 24 B size
-    And user of browser sees that chunk bar for provider named "p1" is entirely filled
-
-    # TODO rm after integrating with swagger
-    And user of browser clicks "Close" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser sees that "Remove files" modal has appeared
+    # TODO rm code below after REST API become available
+    And user of browser clicks on settings icon displayed for "multiprov" item on the spaces sidebar list
+    And user of browser clicks on the "LEAVE SPACE" item in settings dropdown for space named "multiprov"
+    And user of browser sees that "Leave a space" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees an info notify with text matching to: .*multiprov.*left
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "20B-0.txt" has disappeared from files browser
+    And user of browser is idle for 4 seconds
+    And user of browser sees that "multiprov" has disappeared from spaces sidebar list
+
+
+  Scenario: User change name of space in one provider and sees that it was changed also in other provider
+    When user of browser clicks on the "spaces" tab in main menu sidebar
+
+    And user of browser clicks on settings icon displayed for "space1" item on the spaces sidebar list
+    And user of browser clicks on the "RENAME" item in settings dropdown for space named "space1"
+    And user of browser sees that "Rename a space" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "NewNameSpace" on keyboard
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
+    And user of browser sees that the modal has disappeared
+    Then user of browser sees that space1 has disappeared from spaces sidebar list
+    And user of browser sees that NewNameSpace has appeared on spaces sidebar list
+
     And user of browser clicks on the "providers" tab in main menu sidebar
-    And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is space named "NewNameSpace" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that there is no space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
+    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+    And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser clicks on the "Go to your files" button in provider popup
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser sees "NewNameSpace" in spaces sidebar list
+    And user of browser does not see "space1" in spaces sidebar list
 
-  Scenario: User uploads file on one provider, sees it's distribution, reads half of file on other provider using cdmi and again sees it's distribution
-    When user of browser uses spaces select to change data space to "space4"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that current working directory displayed in breadcrumbs is space4
-    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
-    And user of browser sees that item named "20B-0.txt" has appeared in file browser
-
-    And user of browser is idle for 15 seconds
-    And user of browser refreshes site
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser sees that chunk bar for provider named "p2" is entirely empty
-    And user of browser clicks "Close" confirmation button in displayed modal
+    # TODO rm code below after REST API become available
+    And user of browser clicks on settings icon displayed for "NewNameSpace" item on the spaces sidebar list
+    And user of browser clicks on the "RENAME" item in settings dropdown for space named "NewNameSpace"
+    And user of browser sees that "Rename a space" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "space1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees an info notify with text matching to: .*NewNameSpace.*renamed.*space1.*
     And user of browser sees that the modal has disappeared
+    And user of browser sees that NewNameSpace has disappeared from spaces sidebar list
+    And user of browser sees that space1 has appeared on spaces sidebar list
 
-    And user of browser reads from "/space4/20B-0.txt" in range 10 to 20 in "p2" provider using cdmi api
-    And user of browser is idle for 15 seconds
-    And user of browser refreshes site
-    And user of browser sees file browser in data tab in Oneprovider page
 
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser sees (10, 20) chunk(s) for provider named "p2" in chunk bar
+  Scenario: User leave space in one provider and sees that it was leaved from also in other provider
+    When user of browser clicks on the "spaces" tab in main menu sidebar
 
-    And user of browser clicks "Close" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-
-    # TODO rm after integrating with swagger
-    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks on settings icon displayed for "spaceC" item on the spaces sidebar list
+    And user of browser clicks on the "LEAVE SPACE" item in settings dropdown for space named "spaceC"
+    And user of browser sees that "Leave a space" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees an info notify with text matching to: .*removed.*
+    Then user of browser sees an info notify with text matching to: .*C.*left
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "20B-0.txt" has disappeared from files browser
+    And user of browser is idle for 4 seconds
+    And user of browser sees that "spaceC" has disappeared from spaces sidebar list
+
     And user of browser clicks on the "providers" tab in main menu sidebar
-    And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser sees that there is no space named "spaceC" in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
+    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+    And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser clicks on the "Go to your files" button in provider popup
+    And user of browser clicks on the "spaces" tab in main menu sidebar
+    And user of browser does not see "spaceC" in spaces sidebar list
 
-  Scenario: User uploads file, sees it's distribution, writes to it beyond the end of file using cdmi and sees it's distribution again
-    When user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that current working directory displayed in breadcrumbs is space1
-    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
-    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
-    And user of browser sees that item named "20B-0.txt" has appeared in file browser
-
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser clicks "Close" confirmation button in displayed modal
+    # TODO rm code below after REST API become available
+    And user of browser clicks on the "Create" button in sidebar list's header
+    And user of browser sees that "Create a new space" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "spaceC" on keyboard
+    And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-
-    And user of browser writes "ABCD" to "/space1/20B-0.txt" starting at offset 40 in "p1" provider using cdmi api
-    And user of browser is idle for 15 seconds
-    And user of browser refreshes site
-    And user of browser sees file browser in data tab in Oneprovider page
-
-    And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees [(0, 20), (40, 44)] chunk(s) for provider named "p1" in chunk bar
-
-    And user of browser clicks "Close" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-
-    # TODO rm after integrating with swagger
-    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser sees that "Remove files" modal has appeared
-    And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees an info notify with text matching to: .*removed.*
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "20B-0.txt" has disappeared from files browser
-    And user of browser clicks on the "providers" tab in main menu sidebar
-    And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees that "spaceC" has appeared on spaces sidebar list
