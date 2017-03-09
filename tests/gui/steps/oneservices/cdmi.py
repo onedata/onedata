@@ -23,3 +23,16 @@ def partial_upload_to_file_using_cdmi(browser_id, text, path, offset,
                                       provider, cdmi, tmp_memory):
     client = cdmi(tmp_memory[provider], tmp_memory[browser_id]['access_token'])
     client.write_to_file(path, text, offset)
+
+
+@when(parsers.parse('user of {browser_id} reads from "{path}" in range '
+                    '{start:d} to {end:d} in "{provider}" provider '
+                    'using cdmi api'))
+@then(parsers.parse('user of {browser_id} reads from "{path}" in range '
+                    '{start:d} to {end:d} in "{provider}" provider '
+                    'using cdmi api'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def partial_read_from_file_using_cdmi(browser_id, path, start, end,
+                                      provider, cdmi, tmp_memory):
+    client = cdmi(tmp_memory[provider], tmp_memory[browser_id]['access_token'])
+    print client.read_from_file(path, read_range=(start, end))
