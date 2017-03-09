@@ -310,6 +310,22 @@ def upload_files_to_cwd_in_data_tab(selenium, browser_id, dir_path,
 
 
 @when(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is of {size} size'))
+@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is of {size} size'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def assert_provider_chunk_in_file_distribution_size(selenium, browser_id,
+                                                    size, provider, modals):
+    driver = select_browser(selenium, browser_id)
+    prov_rec = modals(driver).file_distribution.providers[provider]
+    distribution = prov_rec.distribution
+    displayed_size = distribution.end
+    assert displayed_size == size, 'displayed chunk size {} in file ' \
+                                   'distribution modal does not match expected ' \
+                                   '{}'.format(displayed_size, size)
+
+
+@when(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is entirely filled'))
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is entirely filled'))
@@ -317,7 +333,8 @@ def upload_files_to_cwd_in_data_tab(selenium, browser_id, dir_path,
 def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
                                                       provider, modals):
     driver = select_browser(selenium, browser_id)
-    distribution = modals(driver).file_distribution[provider].distribution
+    prov_rec = modals(driver).file_distribution.providers[provider]
+    distribution = prov_rec.distribution
     size, _ = distribution.size
     chunks = distribution.chunks
     assert len(chunks) == 1, 'distribution for {} is not ' \
@@ -336,7 +353,8 @@ def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
 def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
                                                      provider, modals):
     driver = select_browser(selenium, browser_id)
-    distribution = modals(driver).file_distribution[provider].distribution
+    prov_rec = modals(driver).file_distribution.providers[provider]
+    distribution = prov_rec.distribution
     size, _ = distribution.size
     chunks = distribution.chunks
     assert not chunks, 'distribution for {} is not entirely empty. ' \
@@ -351,7 +369,8 @@ def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
 def assert_provider_chunks_in_file_distribution(selenium, browser_id, chunks,
                                                 provider, modals):
     driver = select_browser(selenium, browser_id)
-    distribution = modals(driver).file_distribution[provider].distribution
+    prov_rec = modals(driver).file_distribution.providers[provider]
+    distribution = prov_rec.distribution
     size, _ = distribution.size
     displayed_chunks = distribution.chunks
     expected_chunks = parse_seq(chunks, pattern=r'\(.+?\)')

@@ -56,3 +56,46 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
     And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+
+
+  Scenario: User uploads file, sees it's size, writes to it using cdmi and sees that size has grown
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
+    And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
+    And user of browser sees that item named "20B-0.txt" has appeared in file browser
+
+    Then user of browser sees that item named "20B-0.txt" is of 20 B size in file browser
+    And user of browser clicks once on file named "20B-0.txt" of files list
+    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
+    And user of browser sees that "File distribution" modal has appeared
+    And user of browser sees that chunk bar for provider named "p1" is of 20 B size
+    And user of browser sees that chunk bar for provider named "p1" is entirely filled
+    And user of browser clicks "Close" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+
+    And user of browser writes "ABCD" to "/space1/20B-0.txt" starting at offset 20 in "p1" provider using cdmi api
+    And user of browser is idle for 15 seconds
+    And user of browser refreshes site
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    And user of browser sees that item named "20B-0.txt" is of 24 B size in file browser
+    And user of browser clicks once on file named "20B-0.txt" of files list
+    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
+    And user of browser sees that "File distribution" modal has appeared
+    And user of browser sees that chunk bar for provider named "p1" is of 24 B size
+    And user of browser sees that chunk bar for provider named "p1" is entirely filled
+
+    # TODO rm after integrating with swagger
+    And user of browser clicks "Close" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "20B-0.txt" has disappeared from files browser
+    And user of browser clicks on the "providers" tab in main menu sidebar
+    And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
+    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel

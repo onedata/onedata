@@ -11,7 +11,7 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And users of [browser1, browser2] seen that Oneprovider session has started
 
 
-  Scenario: User uploads a small file to space that accepts large files
+  Scenario: User uploads file on one provider, sees it's distribution, downloads on other provider and again sees it's distribution
     When user of browser1 uses spaces select to change data space to "space4"
     And user of browser1 sees file browser in data tab in Oneprovider page
     And user of browser1 sees that current working directory displayed in breadcrumbs is space4
