@@ -67,6 +67,12 @@ def type_text_into_active_edit_box(browser_id, text, tmp_memory):
 @then(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
                  r'"(?P<btn>Create new space|Join space)" button in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
+                 r'"(?P<btn>Join a group)" button in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
+                 r'"(?P<btn>Join a group)" button in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
 @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -98,6 +104,18 @@ def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
 @then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>space) '
                  r'named "(?P<item_name>.+?)" has appeared in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'(?P<item_type>group) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is '
+                 r'(?P<item_type>group) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>group) '
+                 r'named "(?P<item_name>.+?)" has appeared in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>group) '
+                 r'named "(?P<item_name>.+?)" has appeared in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
 @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
                                                 item_name, oz_panel, oz_page):
@@ -132,15 +150,28 @@ def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
 @then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
                  r'(?P<item_type>space) named "(?P<item_name>.+?)" in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>group) '
+                 r'named "(?P<item_name>.+?)" has disappeared from expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>group) '
+                 r'named "(?P<item_name>.+?)" has disappeared from expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
+@when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
+                 r'(?P<item_type>group) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
+@then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
+                 r'(?P<item_type>group) named "(?P<item_name>.+?)" in expanded '
+                 r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
 @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
                                                    item_type, item_name,
                                                    oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
-    items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
-    assert item_name not in items, \
-        '{} named "{}" found in {} oz panel while it should not be ' \
-        'found'.format(item_type, item_name, oz_panel)
+    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
+        items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
+        assert item_name not in items, \
+            '{} named "{}" found in {} oz panel while it should not be ' \
+            'found'.format(item_type, item_name, oz_panel)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '

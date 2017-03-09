@@ -4,6 +4,7 @@
 from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, HeaderWebElement
 from .access_tokens import AccessTokensPanel
 from .data_space_management import DataSpaceManagementPanel
+from .group_management import GroupManagementPanel
 from .go_to_your_files import GoToYourFilesPanel
 from .user_alias import UserAliasPanel
 from .manage_account import ManageAccount
@@ -22,6 +23,7 @@ class OZLoggedIn(object):
     _panels = ItemListWebElement('.main-accordion-group')
 
     panels = {'data space management': DataSpaceManagementPanel,
+              'group management': GroupManagementPanel,
               'go to your files': GoToYourFilesPanel,
               'access tokens': AccessTokensPanel,
               'user alias': UserAliasPanel}
