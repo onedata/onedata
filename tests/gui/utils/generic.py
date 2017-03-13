@@ -108,25 +108,22 @@ def implicit_wait(driver, timeout, prev_timeout):
         driver.implicitly_wait(prev_timeout)
 
 
-def repeat_failed(attempts=None, timeout=None, interval=0.1,
+def repeat_failed(attempts=10, timeout=None, interval=0.1,
                   exceptions=(Exception,)):
     """Returns wrapper on function, which keeps calling it until timeout or
     for attempts times in case of failure (exception).
 
-    :param attempts: maximum num of attempts
-    :type attempts: int | None
+    :param attempts: maximum num of attempts, defaults to 10
+    :type attempts: int
     :param interval: time between subsequent calls
     :type interval: float
-    :param timeout: time limit of now when to stop repeating fun
+    :param timeout: time limit of now when to stop repeating fun,
+                    if set alongside attempts take precedence
     :type timeout: float | None
     :param exceptions: in case of which consider failure of call
     :type exceptions: list[Exception]
     :return: wrapper decorator
     """
-    if not isinstance(attempts, int) and not isinstance(timeout, float):
-        raise ValueError('none of attempts or timeout set')
-    elif isinstance(attempts, int) and isinstance(timeout, float):
-        raise ValueError('both attempts and timeout set')
 
     @decorator
     def wrapper(fun, *args, **kwargs):
