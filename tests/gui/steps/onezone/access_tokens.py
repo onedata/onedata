@@ -28,7 +28,7 @@ def _click_on_btn_for_token(driver, oz_page, ordinal, btn):
                   r'icon for (?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|\d*?11th|'
                   r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                   r'item on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def g_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
                                        ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -43,7 +43,7 @@ def g_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
                  r'icon for (?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|\d*?11th|'
                  r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                  r'item on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def wt_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
                                         ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -52,7 +52,7 @@ def wt_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
 
 @given(parsers.parse(r'user of {browser_id} recorded copied access token '
                      r'for future use'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def g_record_copied_access_token(browser_id, tmp_memory):
     tmp_memory[browser_id]['access_token'] = pyperclip.paste()
 
@@ -80,7 +80,7 @@ def assert_oz_access_token_has_been_copied_correctly(selenium, browser_id,
                     'on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
 @then(parsers.parse('user of {browser_id} sees exactly {num:d} item(s) '
                     'on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
                                                 num, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -94,7 +94,7 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
 
 @given(parsers.parse('user of {browser_id} created and recorded access token '
                      'for later use with CDMI API'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def create_and_record_access_token_for_cdmi(selenium, browser_id,
                                             oz_page, tmp_memory):
     driver = select_browser(selenium, browser_id)

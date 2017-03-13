@@ -17,7 +17,7 @@ __license__ = "This software is released under the MIT license cited in " \
                     'displayed in "USER ALIAS" Onezone panel'))
 @then(parsers.parse('user of {browser_id} records his current alias '
                     'displayed in "USER ALIAS" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
     usr_alias = oz_page(driver)['user alias'].alias
@@ -28,7 +28,7 @@ def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
                     'the user alias in expanded "USER ALIAS" Onezone panel'))
 @then(parsers.parse('user of {browser_id} activates edit box by clicking on '
                     'the user alias in expanded "USER ALIAS" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
     alias = oz_page(driver)['user alias']
@@ -49,7 +49,7 @@ def type_usr_alias_into_usr_alias_edit_box(browser_id, tmp_memory):
                     'in "USER ALIAS" Onezone panel is "{usr_alias}"'))
 @then(parsers.parse('user of {browser_id} sees that the user alias displayed '
                     'in "USER ALIAS" Onezone panel is "{usr_alias}"'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def user_alias_equals_to_text(selenium, browser_id, usr_alias, oz_page):
     driver = select_browser(selenium, browser_id)
     displayed_alias = oz_page(driver)['user alias'].alias
@@ -62,7 +62,7 @@ def user_alias_equals_to_text(selenium, browser_id, usr_alias, oz_page):
                     'in "USER ALIAS" Onezone panel is as recorded one'))
 @then(parsers.parse('user of {browser_id} sees that the user alias displayed '
                     'in "USER ALIAS" Onezone panel is as recorded one'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def user_alias_equals_recorded_alias(selenium, browser_id,
                                      tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)

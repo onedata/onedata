@@ -31,7 +31,7 @@ def get_create_space_edit_box(selenium, browser_id, tmp_memory, oz_page):
 @then(parsers.parse('user of {browser_id} expands settings dropdown for space '
                     'named "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel by clicking on settings icon'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
                                                 name, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -46,7 +46,7 @@ def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
                  r'"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
                  r'settings dropdown for space named "(?P<name>.+?)" '
                  r'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def click_on_settings_option_for_space_in_panel(selenium, browser_id,
                                                 option, name, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -61,7 +61,7 @@ def click_on_settings_option_for_space_in_panel(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} clicks on "Get support" button in '
                     'submenu for "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
                                                    name, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -74,7 +74,7 @@ def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that dropright with token for '
                     'space named "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel has appeared'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_dropright_witk_token_for_space_appeared(selenium, browser_id,
                                                    name, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -88,7 +88,7 @@ def assert_dropright_witk_token_for_space_appeared(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that dropright contains '
                     'non-empty token for space named "{name}" in expanded '
                     '"DATA SPACE MANAGEMENT" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_dropright_has_nonempty_token_for_space_appeared(selenium, browser_id,
                                                            name, tmp_memory,
                                                            oz_page):
@@ -106,7 +106,7 @@ def assert_dropright_has_nonempty_token_for_space_appeared(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} copy token from dropright for '
                     'space named "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def copy_token_from_droprigth_for_space(selenium, browser_id, name, oz_page):
     driver = select_browser(selenium, browser_id)
     item = oz_page(driver)['data space management'].spaces[name]
@@ -119,7 +119,7 @@ def copy_token_from_droprigth_for_space(selenium, browser_id, name, oz_page):
 @then(parsers.parse('user of {browser_id} clicks on "{provider}" provider '
                     'in submenu of space named "{space}" in expanded '
                     '"DATA SPACE MANAGEMENT" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def click_on_supporting_provider_for_space_in_space_submenu(selenium, browser_id,
                                                             provider, space,
                                                             oz_page):
@@ -134,7 +134,7 @@ def click_on_supporting_provider_for_space_in_space_submenu(selenium, browser_id
 @then(parsers.parse('user of {browser_id} clicks on unsupport space for provider '
                     'named "{provider}" in submenu of space named "{space}" '
                     'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def click_on_unsupport_space_for_supporting_provider(selenium, browser_id,
                                                      provider, space, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -150,7 +150,7 @@ def click_on_unsupport_space_for_supporting_provider(selenium, browser_id,
                     'providers for space named "{name}" in expanded "DATA '
                     'SPACE MANAGEMENT" Onezone panel contains only: '
                     '{providers_list}'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
                                                    providers_list, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -173,7 +173,7 @@ def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
 @then(parsers.parse('user of {browser_id} sees that there is/are no supporting '
                     'provider(s) named {providers_list} for space named '
                     '"{space}" in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_no_such_supporting_providers_for_space(selenium, browser_id, space,
                                                   providers_list, oz_page):
     driver = select_browser(selenium, browser_id)

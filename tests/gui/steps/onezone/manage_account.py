@@ -17,7 +17,7 @@ __license__ = "This software is released under the MIT license cited in " \
                     'dropdown in "ACCOUNT MANAGE" Onezone top bar'))
 @then(parsers.parse('user of {browser_id} expands account settings '
                     'dropdown in "ACCOUNT MANAGE" Onezone top bar'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def expand_account_settings_in_oz(selenium, browser_id, oz_page):
     driver = select_browser(selenium, browser_id)
     oz_page(driver)['manage account'].expand()

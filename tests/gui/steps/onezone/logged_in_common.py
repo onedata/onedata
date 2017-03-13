@@ -15,7 +15,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def _expand_oz_panel(oz_page, driver, panel):
     oz_page(driver)[panel].expand()
 
@@ -73,7 +73,7 @@ def type_text_into_active_edit_box(browser_id, text, tmp_memory):
 @then(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
                  r'"(?P<btn>Join a group)" button in expanded '
                  r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
     action = getattr(oz_page(driver)[oz_panel], btn.lower().replace(' ', '_'))
@@ -116,7 +116,7 @@ def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
 @then(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<item_type>group) '
                  r'named "(?P<item_name>.+?)" has appeared in expanded '
                  r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
                                                 item_name, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -162,7 +162,7 @@ def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
 @then(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
                  r'(?P<item_type>group) named "(?P<item_name>.+?)" in expanded '
                  r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
                                                    item_type, item_name,
                                                    oz_panel, oz_page):
@@ -190,7 +190,7 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
                  r'counter for (?P<item_type>space) named "(?P<item_name>.+?)" '
                  r'displays (?P<number>\d+) in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
                                         item_type, item_name, number,
                                         oz_panel, oz_page):
@@ -225,7 +225,7 @@ def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
                  r'named "(?P<item_name>.+?)" is set as home (?P=item_type) '
                  r'in expanded "(?P<oz_panel>DATA SPACE MANAGEMENT)" '
                  r'Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
                                          item_name, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -254,7 +254,7 @@ def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
                  r'"(?P<item_name>.+?)" as home by clicking on home outline '
                  r'in that (?P=item_type) record in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
                                                        item_type, item_name,
                                                        oz_panel, oz_page):
@@ -285,7 +285,7 @@ def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
                  r'supporting providers in expanded submenu '
                  r'of given (?P<item_type>space) in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
                                                item_type, counter_type, oz_panel,
                                                oz_page):
@@ -318,7 +318,7 @@ def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
                  r'(?P<item_type>space) named "(?P<item_name>.+?)" '
                  r'by clicking on space record in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
                                      item_name, oz_panel, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -341,7 +341,7 @@ def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
                  r'"(?P<item_name>.+?)" in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel '
                  r'is set as home'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
                                   subitem_name, item_type, item_name,
                                   oz_panel, oz_page):
@@ -377,7 +377,7 @@ def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
                  r'(?P<subitem_type>space) named "(?P<subitem_name>.+?)" '
                  r'in submenu of (?P<item_type>provider) named "(?P<item_name>.+?)" '
                  r'in expanded "(?P<oz_panel>GO TO YOUR FILES)" Onezone panel'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+@repeat_failed(timeout=WAIT_BACKEND)
 def assert_item_in_submenu_of_item_in_oz_panel(selenium, browser_id, subitem_type,
                                                subitem_name, item_type, item_name,
                                                oz_panel, oz_page):
