@@ -64,11 +64,11 @@ class _ProviderRecord(PageObject, ExpandableMixin):
                               '{parent}'.format(item=self, parent=self.parent))
 
     def is_working(self):
-        return 'color-provider-working' \
+        return 'color-provider-online' \
                in self._provider_icon.get_attribute('class')
 
     def is_not_working(self):
-        return 'color-provider-not-working' \
+        return 'color-provider-offline' \
                in self._provider_icon.get_attribute('class')
 
 
