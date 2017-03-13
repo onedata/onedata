@@ -324,7 +324,7 @@ def assert_copied_token_does_not_match_displayed_one(browser_id, tmp_memory):
 @given(parsers.parse('there are no working provider(s) named {provider_list}'))
 def kill_providers(persistent_environment, provider_list):
     for provider in parse_seq(provider_list):
-        regexp = r'worker@(.*?{name}.*)'.format(name=provider)
         for node in persistent_environment["op_worker_nodes"]:
-            container_name = re.match(regexp, node).groups(0)[0]
-            subprocess.call(['docker', 'kill', container_name])
+            if provider in node:
+                container_name = node.split('@')[1]
+                subprocess.call(['docker', 'rm', '-f', container_name])
