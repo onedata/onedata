@@ -241,6 +241,8 @@ def config_driver(config_driver, browser_width, browser_height):
         driver = config_driver(driver)
         driver.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
         driver.set_window_size(browser_width, browser_height)
+        # possible solution to chromedriver cruches: Timed out receiving message from renderer
+        driver.set_page_load_timeout(60)
         # currenlty, we rather set window size
         # driver.maximize_window()
         return driver

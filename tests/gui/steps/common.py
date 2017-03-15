@@ -328,3 +328,4 @@ def kill_providers(persistent_environment, provider_list):
             if provider in node:
                 container_name = node.split('@')[1]
                 subprocess.call(['docker', 'kill', container_name])
+                time.sleep(10)
