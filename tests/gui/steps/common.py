@@ -21,6 +21,7 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
 from tests.gui.utils.generic import parse_seq
+from tests.gui.utils.user import User
 from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
     is_firefox_logging_enabled
@@ -328,3 +329,20 @@ def kill_providers(persistent_environment, provider_list):
             if provider in node:
                 container_name = node.split('@')[1]
                 subprocess.call(['docker', 'kill', container_name])
+
+
+@given(parsers.re('there (?:is|are) users? named (?P<users_list>.*?) '
+                  'in the system'))
+def create_users(request, users_list, tmp_memory):
+    credentials = (user_cred.split(':') for user_cred
+                   in request.config.getoption('--users'))
+    existing_users = {username: password for username, password in credentials}
+    users = {}
+    for user in parse_seq(users_list):
+        password = existing_users.get(user, None)
+        if password:
+            users[user] = User(user, password)
+        else:
+            # TODO if not exist create user using REST API
+            pass
+    tmp_memory['users'] = users

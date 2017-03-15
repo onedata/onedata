@@ -2,6 +2,8 @@
 """
 import itertools
 
+from pytest_bdd import given
+
 from tests.gui.utils.generic import click_on_web_elem, repeat_failed
 
 __author__ = "Bartek Walkowicz"
@@ -41,22 +43,28 @@ def _find_modal(driver, modal_name):
     )
 
 
-@when(parsers.parse('user of {browser_id} sees that '
-                    '"{modal_name}" modal has appeared'))
-@then(parsers.parse('user of {browser_id} sees that '
-                    '"{modal_name}" modal has appeared'))
-def wait_for_modal_to_appear(selenium, browser_id, modal_name, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+def _wait_for_modal_to_appear(driver, browser_id, modal_name, tmp_memory):
     modal = _find_modal(driver, modal_name)
     tmp_memory[browser_id]['window']['modal'] = modal
 
 
 @when(parsers.parse('user of {browser_id} sees that '
-                    'the modal has disappeared'))
+                    '"{modal_name}" modal has appeared'))
 @then(parsers.parse('user of {browser_id} sees that '
-                    'the modal has disappeared'))
-def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
+                    '"{modal_name}" modal has appeared'))
+def wt_wait_for_modal_to_appear(selenium, browser_id, modal_name, tmp_memory):
     driver = select_browser(selenium, browser_id)
+    _wait_for_modal_to_appear(driver, browser_id, modal_name, tmp_memory)
+
+
+@given(parsers.parse('user of {browser_id} seen that '
+                     '"{modal_name}" modal has appeared'))
+def g_wait_for_modal_to_appear(selenium, browser_id, modal_name, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _wait_for_modal_to_appear(driver, browser_id, modal_name, tmp_memory)
+
+
+def _wait_for_modal_to_disappear(driver, browser_id, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
     Wait(driver, WAIT_FRONTEND).until_not(
         lambda _: not staleness_of(modal) or modal.is_displayed(),
@@ -65,14 +73,24 @@ def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
     tmp_memory[browser_id]['window']['modal'] = None
 
 
-@when(parsers.parse('user of {browser_id} clicks "{button_name}" '
-                    'confirmation button in displayed modal'))
-@then(parsers.parse('user of {browser_id} clicks "{button_name}" '
-                    'confirmation button in displayed modal'))
-def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
-                                       tmp_memory):
+@when(parsers.parse('user of {browser_id} sees that '
+                    'the modal has disappeared'))
+@then(parsers.parse('user of {browser_id} sees that '
+                    'the modal has disappeared'))
+def wt_wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
     driver = select_browser(selenium, browser_id)
+    _wait_for_modal_to_disappear(driver, browser_id, tmp_memory)
 
+
+@given(parsers.parse('user of {browser_id} seen that '
+                     'the modal has disappeared'))
+def g_wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _wait_for_modal_to_disappear(driver, browser_id, tmp_memory)
+
+
+def _click_on_confirmation_btn_in_modal(driver, browser_id, button_name,
+                                        tmp_memory):
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def click_on_btn(d, elem, msg):
         click_on_web_elem(d, elem, msg)
@@ -87,6 +105,26 @@ def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
             break
     else:
         raise RuntimeError('no button named {} found'.format(button_name))
+
+
+@when(parsers.parse('user of {browser_id} clicks "{button_name}" '
+                    'confirmation button in displayed modal'))
+@then(parsers.parse('user of {browser_id} clicks "{button_name}" '
+                    'confirmation button in displayed modal'))
+def wt_click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
+                                          tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _click_on_confirmation_btn_in_modal(driver, browser_id, button_name,
+                                        tmp_memory)
+
+
+@given(parsers.parse('user of {browser_id} clicked "{button_name}" '
+                     'confirmation button in displayed modal'))
+def g_click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
+                                         tmp_memory):
+    driver = select_browser(selenium, browser_id)
+    _click_on_confirmation_btn_in_modal(driver, browser_id, button_name,
+                                        tmp_memory)
 
 
 @when(parsers.parse('user of {browser_id} sees that message '
