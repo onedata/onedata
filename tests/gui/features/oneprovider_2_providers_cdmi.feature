@@ -56,6 +56,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
     And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
 
 
   Scenario: User uploads file, sees it's size, writes to it using cdmi and sees that size has grown
@@ -99,6 +100,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
     And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
 
 
   Scenario: User uploads file on one provider, sees it's distribution, reads half of file on other provider using cdmi and again sees it's distribution
@@ -144,6 +146,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
     And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
 
 
   Scenario: User uploads file, sees it's distribution, writes to it beyond the end of file using cdmi and sees it's distribution again
@@ -184,6 +187,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
     And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
 
 
   Scenario: User uploads file, appends some text to it, downlaods it and sees it's content
@@ -212,3 +216,4 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
     And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
+    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel

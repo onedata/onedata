@@ -49,6 +49,6 @@ class CDMIClient(object):
                                                       path=path)
         headers = {'X-Auth-Token': self.auth_token}
         if read_range:
-            headers['Range'] = '{start}-{end}'.format(start=read_range[0],
-                                                      end=read_range[1])
+            headers['Range'] = 'bytes={start}-{end}'.format(start=read_range[0],
+                                                            end=read_range[1])
         return requests.get(url, headers=headers, verify=False).content
