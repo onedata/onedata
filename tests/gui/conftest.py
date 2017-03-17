@@ -316,8 +316,3 @@ def pytest_collection_modifyitems(items):
     first.extend(rest)
     first.extend(last)
     items[:] = first
-
-
-def pytest_addoption(parser):
-    parser.addoption('--users', nargs='*',
-                     help='user credentials in form username:password')
