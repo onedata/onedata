@@ -400,7 +400,7 @@ Feature: Oneprovider Data view
     And user of browser sees that item named "new_dir1" has disappeared from files browser
 
 
-  # 'space1' supported by 'p1' defined in env.json
+  # 'space1' supported by 'Example Provider' defined in env.json
   Scenario: User creates file and checks if provider name is displayed in the file distribution panel
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
