@@ -2,12 +2,15 @@ Feature: Oneprovider space functionality
   Various operations on spaces
 
   Background:
-    Given user opened browser window
+    Given there is user named "user1" in the system
+    And user opened browser window
     And user of browser opened Onezone URL
-    And user of browser clicked on the "plgrid" login button
-    And user of browser clicked on the "user1" link
+    And user of browser clicked on the "username" login button
+    And user of browser seen that "Login with username and password" modal has appeared
+    And user of browser entered credentials of user1 in "Login with username and password" modal
+    And user of browser clicked "Sign In" confirmation button in displayed modal
     And user of browser expanded the "go to your files" Onezone sidebar panel
-    And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
+    And user of browser clicked on the "Example Provider" provider in Onezone providers sidebar panel
     And user of browser clicked on the "Go to your files" button in provider popup
     And user of browser seen that Oneprovider session has started
     And user of browser clicked on the "spaces" tab in main menu sidebar
