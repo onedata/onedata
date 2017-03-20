@@ -3,13 +3,11 @@
 
 import re
 
-from tests.gui.utils.generic import find_web_elem
-from tests.gui.utils.onezone.access_tokens import AccessTokensPanel
-from tests.gui.utils.onezone.data_space_management import DataSpaceManagementPanel
 from tests.gui.utils.onezone.manage_account import ManageAccount
-from tests.gui.utils.onezone.providers import GoToYourFilesPanel
-from tests.gui.utils.onezone.user_alias import UserAliasPanel
+from tests.gui.utils.onezone.panels import UserAliasPanel, AccessTokensPanel, \
+    GoToYourFilesPanel, OZPanel, DataSpaceManagementPanel
 from tests.gui.utils.onezone.world_map import WorldMap
+from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, HeaderWebElement
 
 __author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -21,33 +19,35 @@ RE_DATA_URL = re.compile(r'(?P<lang>/.*)?/data/(?P<space>.*)/(?P<dir>.*)')
 
 
 class OZLoggedIn(object):
+    _atlas = WebElement('.onezone-atlas')
+    _manage_account = HeaderWebElement('header.onezone-top-bar')
+    _panels = ItemListWebElement('.main-accordion-group')
+
     panels = {'data space management': DataSpaceManagementPanel,
               'go to your files': GoToYourFilesPanel,
               'access tokens': AccessTokensPanel,
               'user alias': UserAliasPanel}
 
-    def __init__(self, web_elem):
-        self.web_elem = web_elem
+    def __init__(self, driver):
+        self.web_elem = driver
 
-    def __getitem__(self, panel):
-        panel = panel.lower()
-        cls = self.panels.get(panel, None)
+    def __str__(self):
+        return 'Onezone page'
+
+    def __getitem__(self, item):
+        item = item.lower()
+        cls = self.panels.get(item, None)
         if cls:
-            panel = panel.replace('_', ' ').lower()
-            css_sel = '.main-accordion-group, a.main-accordion-toggle'
-            items = self.web_elem.find_elements_by_css_selector(css_sel)
-            for group, toggle in zip(items[::2], items[1::2]):
-                if panel == toggle.text.lower():
-                    return cls(group)
+            item = item.replace('_', ' ').lower()
+            for panel in (OZPanel(self.web_elem, panel, self)
+                          for panel in self._panels):
+                if item == panel.name.lower():
+                    panel.__class__ = cls
+                    return panel
 
-        elif panel == 'manage account':
-            css_sel = 'header.onezone-top-bar'
-            err_msg = 'no header for oz page found'
-            header = find_web_elem(self.web_elem, css_sel, err_msg)
-            return ManageAccount(header)
-
-        elif panel == 'world map':
-            css_sel = '.onezone-atlas'
-            err_msg = 'no world map found on oz page'
-            world_map = find_web_elem(self.web_elem, css_sel, err_msg)
-            return WorldMap(world_map)
+        elif item == 'manage account':
+            return ManageAccount(self.web_elem, self._manage_account, self)
+        elif item == 'world map':
+            return WorldMap(self.web_elem, self._atlas, self)
+        else:
+            raise RuntimeError('no "{}" on {} found'.format(item, str(self)))

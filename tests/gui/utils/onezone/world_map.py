@@ -1,10 +1,14 @@
 """Utils and fixtures to facilitate operations on world map in Onezone web GUI.
 """
 
-from selenium.common.exceptions import NoSuchElementException
+from itertools import islice
 
-from tests.gui.utils.generic import find_web_elem
+from tests.gui.utils.common.common import PageObject
+from tests.gui.utils.common.web_elements import TextLabelWebElement, \
+    ModalWebElement, ItemListWebElement, InputWebElement, ButtonWebElement, \
+    WebElement
 from tests.gui.utils.onezone.providers import SpaceRecordInProvidersPanel
+
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -12,146 +16,85 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class WorldMap(object):
+class WorldMap(PageObject):
+    _msg_modal = ModalWebElement('.panel-onezone-alert')
+    _providers_circles = ItemListWebElement('.provider-place')
 
-    def __init__(self, web_elem):
-        self.web_elem = web_elem
+    def __str__(self):
+        return 'World Map on {}'.format(self._parent)
 
-    def click(self):
-        self.web_elem.click()
+    def __iter__(self):
+        return (ProviderPopup(self._driver, provider, self)
+                for provider in self._providers_circles)
 
-    @property
-    def message(self):
-        css_sel = '.panel-onezone-alert'
-        err_msg = 'no alert on world map in oz found'
-        alert = find_web_elem(self.web_elem, css_sel, err_msg)
-        return Message(alert)
-
-    @property
-    def providers(self):
-        css_sel = '.provider-place'
-        return [ProviderPopup(provider) for provider in
-                self.web_elem.find_elements_by_css_selector(css_sel)]
-
-    def __getitem__(self, index):
-        providers = self.providers
+    def __getitem__(self, idx):
+        providers = islice(self, idx, None)
         try:
-            provider = providers[index]
-        except IndexError:
-            raise RuntimeError('asked for {index} provider but there are only '
-                               '{num} providers on map'.format(index=index,
-                                                               num=len(providers)))
+            provider = providers.next()
+        except StopIteration:
+            raise RuntimeError('there is no {index} provider '
+                               'provider on map'.format(index=idx))
         else:
             return provider
 
+    @property
+    def message(self):
+        return Message(self._driver, self._msg_modal, self)
+
     def get_provider_with_displayed_panel(self):
-        for provider in self.providers:
+        for provider in self:
             if provider.is_displayed:
                 return provider
 
 
-class ProviderPopup(object):
+class ProviderPopup(PageObject):
+    hostname = InputWebElement('input.provider-host-text')
+    name = TextLabelWebElement('.title-label',
+                               parent_name='given provider popup')
+    _supported_spaces = ItemListWebElement('ul li.provider-place-drop-space')
+    _cp_hostname_btn = ButtonWebElement('.provider-host-copy-btn')
+    _go_to_files_btn = ButtonWebElement('.drop-body button')
+    _provider_popup = WebElement('.provider-place-drop')
 
-    def __init__(self, web_elem):
-        self.web_elem = web_elem
+    def __str__(self):
+        return 'provider popup named "{}" on {}'.format(self.name,
+                                                        str(self._parent))
 
-    def click(self):
-        self.web_elem.click()
-
-    @property
     def is_working(self):
         return 'working' in self.web_elem.get_attribute('class')
 
-    @property
     def is_displayed(self):
-        css_sel = '.provider-place-drop'
         try:
-            self.web_elem.find_element_by_css_selector(css_sel)
-        except NoSuchElementException:
+            _ = self._provider_popup
+        except RuntimeError:
             return False
         else:
             return True
 
-    @property
-    def name(self):
-        if self.is_displayed:
-            css_sel = '.title-label'
-            err_msg = 'no name found in displayed provider drop panel'
-            header = find_web_elem(self.web_elem, css_sel, err_msg)
-            return header.text
-        else:
-            raise RuntimeError('no displayed panel found for given provider')
-
-    @property
-    def hostname(self):
-        if self.is_displayed:
-            css_sel = 'input.provider-host-text'
-            err_msg = 'no hostname found in displayed provider drop panel'
-            header = find_web_elem(self.web_elem, css_sel, err_msg)
-            return header.get_attribute('value')
-        else:
-            raise RuntimeError('no displayed panel found for given provider')
-
     def copy_hostname(self):
-        if self.is_displayed:
-            css_sel = '.provider-host-copy-btn'
-            err_msg = 'no copy hostname btn found in displayed provider drop panel'
-            btn = find_web_elem(self.web_elem, css_sel, err_msg)
-            btn.click()
-        else:
-            raise RuntimeError('no displayed panel found for given provider')
+        self._click_on_btn('cp_hostname')
 
     def go_to_your_files(self):
-        if self.is_displayed:
-            css_sel = '.drop-body button'
-            err_msg = "no 'Go to your files' btn found " \
-                      "in displayed provider drop panel"
-            btn = find_web_elem(self.web_elem, css_sel, err_msg)
-            btn.click()
-        else:
-            raise RuntimeError('no displayed panel found for given provider')
+        self._click_on_btn('go_to_files')
 
-    @property
-    def supported_spaces(self):
-        if self.is_displayed:
-            css_sel = 'ul li.provider-place-drop-space'
-            return [SpaceRecordInProvidersPanel(space,
-                                                name_css='.space-label',
-                                                size_css='.space-size')
-                    for space
-                    in self.web_elem.find_elements_by_css_selector(css_sel)]
-        else:
-            raise RuntimeError('no displayed panel found for given provider')
+    def __iter__(self):
+        return (SpaceRecordInProvidersPanel(space, name_css='.space-label',
+                                            size_css='.space-size')
+                for space in self._supported_spaces)
 
     def __getitem__(self, space_name):
-        if self.is_displayed:
-            for space in self.supported_spaces:
-                if space_name == space.name:
-                    return space
-            else:
-                raise RuntimeError('no supported space named "{space}" '
-                                   'for provider named "{provider}" in displayed '
-                                   'drop panel found'.format(provider=self.name,
-                                                             space=space_name))
+        for space in self:
+            if space_name == space.name:
+                return space
         else:
-            raise RuntimeError('no displayed panel found for given provider')
+            raise RuntimeError('no supported space named "{space}" '
+                               'for {item} found'.format(space=space_name,
+                                                         item=str(self)))
 
 
-class Message(object):
+class Message(PageObject):
+    title = TextLabelWebElement('.panel-heading')
+    msg = TextLabelWebElement('.panel-body')
 
-    def __init__(self, web_elem):
-        self.web_elem = web_elem
-
-    @property
-    def title(self):
-        css_sel = '.panel-heading'
-        err_msg = 'no heading for alert on world map in oz found'
-        title = find_web_elem(self.web_elem, css_sel, err_msg)
-        return title.text
-
-    @property
-    def msg(self):
-        css_sel = '.panel-body'
-        err_msg = 'no msg in alert on world map in oz found'
-        msg = find_web_elem(self.web_elem, css_sel, err_msg)
-        return msg.text
+    def __str__(self):
+        return 'Message modal on {}'.format(self._parent)

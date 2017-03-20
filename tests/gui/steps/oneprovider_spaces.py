@@ -7,9 +7,8 @@ from selenium.common.exceptions import NoSuchElementException
 from pytest_bdd import parsers, given, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
-from tests.gui.utils.generic import implicit_wait
-from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
-
+from tests.gui.utils.generic import implicit_wait, repeat_failed
+from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_BACKEND
 
 __author__ = "Michal Cwiertnia, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -17,6 +16,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
 def _is_home_space(driver, space_name):
     spaces = driver.find_elements_by_css_selector('ul.spaces-list '
                                                   'li:not([class~="clickable"])')

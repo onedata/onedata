@@ -1,52 +1,20 @@
+# coding=utf-8
 """Steps for features of Onezone login page.
 """
-from selenium.common.exceptions import StaleElementReferenceException
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import re
 import time
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path
-from tests.gui.utils.oneprovider_gui import assert_breadcrumbs_correctness, \
-    chdir_using_breadcrumbs
-
+from tests.gui.utils.generic import upload_file_path, repeat_failed
 from pytest_bdd import when, then, parsers, given
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
-
-@when(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
-                 r'data space to "(?P<space_name>.+)"'))
-@then(parsers.re(r'user of (?P<browser_id>.+) uses spaces select to change '
-                 r'data space to "(?P<space_name>.+)"'))
-def change_space(selenium, browser_id, space_name):
-    driver = select_browser(selenium, browser_id)
-    # HACK: because Firefox driver have buggy EC.element_to_be_clickable,
-    # we wait for loader to disappear
-    Wait(driver, WAIT_FRONTEND).until(
-        EC.invisibility_of_element_located((By.CSS_SELECTOR, '.common-loader-spinner'))
-    )
-    Wait(driver, WAIT_FRONTEND).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, '.data-spaces-select a[data-toggle=dropdown]'))
-    ).click()
-    spaces = driver.find_elements_by_css_selector('.data-spaces-select .dropdown-menu a')
-
-    def space_by_name(_):
-        named_spaces = [s for s in spaces if re.match(space_name, s.text.strip(), re.I)]
-        if len(named_spaces) > 0 and named_spaces[0].is_enabled():
-            return named_spaces[0]
-        else:
-            return None
-
-    Wait(driver, WAIT_FRONTEND).until(space_by_name).click()
 
 
 def _upload_files_to_cwd(driver, files):
@@ -60,12 +28,6 @@ def _upload_files_to_cwd(driver, files):
         files
     )
     driver.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
-
-    upload_panel = driver.find_element_by_css_selector('.file-upload-panel')
-    Wait(driver, WAIT_BACKEND).until_not(
-        lambda _: upload_panel.is_displayed(),
-        message='waiting for files to get uploaded'
-    )
 
 
 @when(parsers.parse('user of {browser_id} uses upload button in toolbar '
@@ -123,115 +85,39 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
     )
 
 
-@then(parsers.parse('user of {browser_id} clicks the button from top menu bar '
-                    'with tooltip "{tooltip_name}"'))
-@when(parsers.parse('user of {browser_id} clicks the button from top menu bar '
-                    'with tooltip "{tooltip_name}"'))
-def op_click_tooltip_from_top_menu_bar(selenium, browser_id, tooltip_name):
+@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely filled'))
+@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
+                    'named "{provider}" is entirely filled'))
+@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
+                                                      provider):
     driver = select_browser(selenium, browser_id)
-    btn = driver.find_element_by_css_selector('ul.toolbar-group '
-                                              'a[data-original-title="{:s}"]'
-                                              ''.format(tooltip_name))
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda d: btn.is_enabled(),
-        message='waiting for {} tooltip from top menu bar in '
-                'data tab in op to become active'.format(tooltip_name)
-    )
-    btn.click()
+    css_sel = '#file-chunks-modal table.file-blocks-table td.provider-name, ' \
+              '#file-chunks-modal table.file-blocks-table td.chunks canvas'
+    name, canvas = driver.find_elements_by_css_selector(css_sel)
+    assert name.text == provider, \
+        'provider name displayed {} instead of expected {}'.format(name.text,
+                                                                   provider)
+    assert driver.execute_script(is_canvas_filled, canvas), \
+        'canvas not filled entirely for provider named {}'.format(provider)
 
 
-@then(parsers.parse('user of {browser_id} sees modal with name of provider '
-                    'supporting space in providers column'))
-def op_check_if_provider_name_is_in_tab(selenium, browser_id, tmp_memory):
+is_canvas_filled = """
+function is_canvas_filled(cvs){
+    var ctx = cvs.getContext("2d");
+    var fillColorHex = ctx.fillStyle;
+    var fillColor = [parseInt(fillColorHex.slice(1, 3), 16),
+                     parseInt(fillColorHex.slice(3, 5), 16),
+                     parseInt(fillColorHex.slice(5, 7), 16)];
+    img = ctx.getImageData(0, 0, cvs.width, cvs.height);
+    pix = img.data;
+    for(var i = 0; i < pix.length; i += 4)
+        if(pix[i] != fillColor[0] || pix[i+1] != fillColor[1] || pix[i+2] != fillColor[2])
+            return false;
 
-    def _find_provider(s):
-        providers = s.find_elements_by_css_selector(
-            '#file-chunks-modal .container-fluid '
-            'table.file-blocks-table td.provider-name')
-        for elem in providers:
-            if elem.text == tmp_memory[browser_id]['supporting_provider']:
-                return elem
-        return None
+    return true;
+}
 
-    driver = select_browser(selenium, browser_id)
-    Wait(driver, WAIT_FRONTEND).until(
-        _find_provider,
-        message='check file distribution, focusing on {:s} provide'
-                ''.format(tmp_memory[browser_id]['supporting_provider'])
-    )
-
-
-def _is_space_tree_root(driver, is_home, space_name):
-    space_select = driver.find_element_by_css_selector('nav.secondary-sidebar '
-                                                       '.data-spaces-select')
-    icon, label = space_select.find_elements_by_css_selector('.dropdown > a '
-                                                             '.item-icon'
-                                                             ':not(.select-arrow) '
-                                                             '.oneicon, '
-                                                             '.dropdown > a '
-                                                             '.item-label')
-    displayed_name = label.text
-    assert displayed_name == space_name, 'current directory tree is displayed ' \
-                                         'for "{}" instead of "{}"'.format(displayed_name,
-                                                                           space_name)
-    if is_home:
-        assert 'oneicon-space-home' in icon.get_attribute('class'), \
-            'space {} is not home space'.format(displayed_name)
-
-
-@given(parsers.re('user of (?P<browser_id>.+?) seen that displayed directory '
-                  'tree in sidebar panel belonged to (?P<is_home>(home )?)space '
-                  'named "(?P<space_name>.+?)'))
-def g_is_space_tree_root(selenium, browser_id, is_home, space_name):
-    driver = select_browser(selenium, browser_id)
-    _is_space_tree_root(driver, True if is_home else False, space_name)
-
-
-@when(parsers.re('user of (?P<browser_id>.+?) sees that displayed directory '
-                 'tree in sidebar panel belongs to (?P<is_home>(home )?)space '
-                 'named "(?P<space_name>.+?)"'))
-@then(parsers.re('user of (?P<browser_id>.+?) sees that displayed directory '
-                 'tree in sidebar panel belongs to (?P<is_home>(home )?)space '
-                 'named "(?P<space_name>.+?)"'))
-def wt_is_space_tree_root(selenium, browser_id, is_home, space_name):
-    driver = select_browser(selenium, browser_id)
-    _is_space_tree_root(driver, True if is_home else False, space_name)
-
-
-# TODO implement better checking dir tree
-@when(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in breadcrumbs is {path}'))
-@then(parsers.parse('user of {browser_id} sees that current working directory '
-                    'displayed in breadcrumbs is {path}'))
-def is_displayed_path_correct(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
-    breadcrumbs = driver.find_element_by_css_selector('#main-content '
-                                                      '.secondary-top-bar '
-                                                      '.file-breadcrumbs-list')
-    assert_breadcrumbs_correctness(path, breadcrumbs)
-
-
-@when(parsers.parse('user of {browser_id} changes current working directory '
-                    'to {path} using breadcrumbs'))
-@then(parsers.parse('user of {browser_id} changes current working directory '
-                    'to {path} using breadcrumbs'))
-def change_cwd_using_breadcrumbs(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
-    # HACK: a workaround for fast multiple breadcrumbs re-computations leading to
-    # quick DOM changes between find elements and chdir_using_breadcrumbs
-    tries = 10
-    while tries > 0:
-        breadcrumbs = driver.find_elements_by_css_selector('#main-content '
-                                                           '.secondary-top-bar '
-                                                           '.file-breadcrumbs-list '
-                                                           '.file-breadcrumbs-item '
-                                                           'a')
-        try:
-            chdir_using_breadcrumbs(path, breadcrumbs)
-        except StaleElementReferenceException:
-            tries -= 1
-            if tries <= 0:
-                raise RuntimeError(('A StaleElementReferenceException has been thrown %s times. ' % tries) +
-                                   'Breadcrumbs was probably rendered multiple times between find_elements and elements usage.')
-        else:
-            tries = 0
+return is_canvas_filled(arguments[0]);
+"""

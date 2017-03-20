@@ -1,6 +1,7 @@
 """
 Define fixtures used in web GUI acceptance/behavioral tests.
 """
+
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -59,12 +60,16 @@ is_firefox_logging_enabled = re.match(r'.*--firefox-logs.*', cmd_line)
 is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_line)
 
 
-from tests.gui.utils.onezone_gui import OZLoggedIn
+@pytest.fixture(scope='session')
+def oz_page():
+    from tests.gui.utils.onezone_gui import OZLoggedIn
+    return OZLoggedIn
 
 
 @pytest.fixture(scope='session')
-def oz_page():
-    return OZLoggedIn
+def op_page():
+    from tests.gui.utils.oneprovider_gui import OPLoggedIn
+    return OPLoggedIn
 
 
 @pytest.fixture

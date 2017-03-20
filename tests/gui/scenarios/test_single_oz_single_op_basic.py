@@ -11,12 +11,17 @@ from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
 
 
+from tests.gui.steps.generic.url import *
+
 from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *
 from tests.gui.steps.onezone.access_tokens import *
 from tests.gui.steps.onezone.data_space_management import *
 from tests.gui.steps.onezone.providers import *
 from tests.gui.steps.onezone.manage_account import *
+
+from tests.gui.steps.oneprovider.data_tab import *
+from tests.gui.steps.oneprovider.file_browser import *
 
 
 from tests.gui.steps.onezone_before_login import *
@@ -45,6 +50,7 @@ for arg in sys.argv:
 
 SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environment)'
 
+
 @pytest.mark.skipif(USING_BASE_URL, reason=SKIP_REASON_BASE_URL)
 @scenario('../features/onezone_gui.feature',
           'User sees that when no provider is working appropriate msg is shown')
@@ -53,16 +59,16 @@ def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/oneprovider_group_multi.feature')
 scenarios('../features/oneprovider_group.feature')
 scenarios('../features/onezone_login.feature')
 scenarios('../features/onezone_gui.feature')
-scenarios('../features/onezone_gui_multi.feature')
 scenarios('../features/oneprovider_data.feature')
 scenarios('../features/oneprovider_space.feature')
 scenarios('../features/oneprovider_shares.feature')
 scenarios('../features/oneprovider_shares_multi.feature')
 scenarios('../features/oneprovider_metadata.feature')
+scenarios('../features/oneprovider_group_multi.feature')
+scenarios('../features/onezone_gui_multi.feature')
 
 # limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
 if BROWSER == 'Chrome':

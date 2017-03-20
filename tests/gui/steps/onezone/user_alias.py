@@ -36,8 +36,12 @@ def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
                     'user alias in expanded "USER ALIAS" Onezone panel'))
 def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
-    edit_box = oz_page(driver)['user alias'].edit_alias()
-    tmp_memory[browser_id]['edit_box'] = edit_box
+
+    @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
+    def activate_edit_box(d):
+        return oz_page(d)['user alias'].edit_alias()
+
+    tmp_memory[browser_id]['edit_box'] = activate_edit_box(driver)
 
 
 @when(parsers.parse('user of {browser_id} types recorded alias to user '
@@ -58,13 +62,13 @@ def user_alias_equals_to_text(selenium, browser_id, usr_alias, oz_page):
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_usr_alias(d, alias):
+    def assert_usr_alias(d, alias, msg):
         displayed_alias = oz_page(d)['user alias'].alias
-        err_msg = 'displayed user alias in USER ALIAS oz panel is "{}" ' \
-                  'instead of "{}"'.format(displayed_alias, usr_alias)
-        assert displayed_alias == alias, err_msg
+        assert displayed_alias == alias, msg.format(displayed_alias, usr_alias)
 
-    assert_usr_alias(driver, usr_alias)
+    err_msg = 'displayed usr alias in USER ALIAS oz panel is "{}" ' \
+              'instead of "{}"'
+    assert_usr_alias(driver, usr_alias, err_msg)
 
 
 @when(parsers.parse('user of {browser_id} sees that the user alias displayed '
@@ -76,10 +80,11 @@ def user_alias_equals_recorded_alias(selenium, browser_id, tmp_memory, oz_page):
     recorded_usr_alias = tmp_memory[browser_id]['user_alias']
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_usr_alias(d, alias):
+    def assert_usr_alias(d, alias, msg):
         displayed_alias = oz_page(d)['user alias'].alias
-        err_msg = 'displayed user alias in USER ALIAS oz panel is "{}" ' \
-                  'instead of "{}"'.format(displayed_alias, recorded_usr_alias)
-        assert displayed_alias == alias, err_msg
+        assert displayed_alias == alias, msg.format(displayed_alias,
+                                                    recorded_usr_alias)
 
-    assert_usr_alias(driver, recorded_usr_alias)
+    err_msg = 'displayed user alias in USER ALIAS oz panel is "{}" ' \
+              'instead of "{}"'
+    assert_usr_alias(driver, recorded_usr_alias, err_msg)

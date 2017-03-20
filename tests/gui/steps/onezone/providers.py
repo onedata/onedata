@@ -22,13 +22,14 @@ def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_popup_appeared(d, provider_name):
+    def assert_popup_appeared(d, provider_name, msg):
         prov = oz_page(d)['world map'].get_provider_with_displayed_panel()
-        err_msg = 'Popup displayed for provider named "{}" ' \
-                  'instead of "{}"'.format(prov.name, provider_name)
-        assert provider_name == prov.name, err_msg
+        assert provider_name == prov.name, msg.format(prov.name,
+                                                      provider_name)
 
-    assert_popup_appeared(driver, provider)
+    err_msg = 'Popup displayed for provider named "{}" ' \
+              'instead of "{}"'
+    assert_popup_appeared(driver, provider, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
@@ -41,15 +42,15 @@ def click_on_btn_in_provider_popup(selenium, browser_id, btn, provider, oz_page)
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def click_on_btn(d, provider_name):
+    def click_on_btn(d, provider_name, msg):
         prov = oz_page(d)['world map'].get_provider_with_displayed_panel()
-        err_msg = 'Popup displayed for provider named "{}" ' \
-                  'instead of "{}"'.format(prov.name, provider_name)
-        assert provider_name == prov.name, err_msg
+        assert provider_name == prov.name, msg.format(prov.name, provider_name)
         action = getattr(prov, btn.lower().replace(' ', '_'))
         action()
 
-    click_on_btn(driver, provider)
+    err_msg = 'Popup displayed for provider named "{}" ' \
+              'instead of "{}"'
+    click_on_btn(driver, provider, err_msg)
 
 
 @when(parsers.parse(r'user of {browser_id} unsets provider named "{provider}" '
@@ -63,14 +64,14 @@ def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def set_as_home(d, item):
+    def set_as_home(d, item, msg):
         item_record = oz_page(d)['go to your files'][item]
         item_record.unset_from_home()
-        err_msg = 'provider named "{}" is still set as home but it should not'
-        assert not item_record.is_home, err_msg.format(item_record.name)
+        assert not item_record.is_home(), msg.format(item_record.name)
 
+    err_msg = 'provider named "{}" is still set as home but it should not'
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        set_as_home(driver, provider)
+        set_as_home(driver, provider, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
@@ -96,15 +97,15 @@ def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND)
-    def assert_not_displayed(d, index):
+    def assert_not_displayed(d, index, msg):
         world_map = oz_page(d)['world map']
         provider = world_map[index]
-        err_msg = 'provider popup for {} circle is displayed ' \
-                  'while it should not be'.format(ordinal)
-        assert not provider.is_displayed, err_msg
+        assert not provider.is_displayed(), msg.format(ordinal)
 
+    err_msg = 'provider popup for {} circle is displayed ' \
+              'while it should not be'
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        assert_not_displayed(driver, int(ordinal[:-2]) - 1)
+        assert_not_displayed(driver, int(ordinal[:-2]) - 1, err_msg)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
@@ -140,15 +141,15 @@ def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_provider_popup(d, index):
+    def assert_provider_popup(d, index, msg):
         world_map = oz_page(d)['world map']
         provider = world_map[index]
-        err_msg = 'provider popup for {} circle is not displayed ' \
-                  'while it should be'.format(ordinal)
-        assert provider.is_displayed, err_msg
+        assert provider.is_displayed(), msg.format(ordinal)
 
+    err_msg = 'provider popup for {} circle is not displayed ' \
+              'while it should be'
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        assert_provider_popup(driver, int(ordinal[:-2]) - 1)
+        assert_provider_popup(driver, int(ordinal[:-2]) - 1, err_msg)
 
 
 @when(parsers.parse('user of {browser_id} clicks on Onezone world map'))
@@ -175,26 +176,26 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_consistency(d, provider_name):
+    def assert_consistency(d, provider_name, msg1, msg2):
         prov_record = oz_page(d)['go to your files'][provider_name]
         prov_popup = oz_page(d)['world map'].get_provider_with_displayed_panel()
-        err_msg = 'Popup displayed for provider named "{}" ' \
-                  'instead of "{}"'.format(prov_popup.name, provider_name)
-        assert provider_name == prov_popup.name, err_msg
+        assert provider_name == prov_popup.name, msg1.format(prov_popup.name,
+                                                             provider_name)
 
-        for space1, space2 in itertools.izip(prov_popup.supported_spaces,
-                                             prov_record.supported_spaces):
+        for space1, space2 in itertools.izip(prov_popup, prov_record):
             name1, is_home1 = space1.name, space1.is_home
             name2, is_home2 = space2.name, space2.is_home
-            err_msg = 'mismatch between provider popup ({name1}, {is_home1}) ' \
-                      'and provider record ({name2}, {is_home2}) ' \
-                      'in GO TO YOUR FILES panel in space list ' \
-                      'found'.format(name1=name1, is_home1=is_home1,
-                                     name2=name2, is_home2=is_home2)
-            assert (name1, is_home1) == (name2, is_home2), err_msg
+            assert (name1, is_home1) == (name2, is_home2), \
+                msg2.format(name1=name1, is_home1=is_home1,
+                            name2=name2, is_home2=is_home2)
 
+    err_msg1 = 'Popup displayed for provider named "{}" ' \
+               'instead of "{}"'
+    err_msg2 = 'mismatch between provider popup ({name1}, {is_home1}) ' \
+               'and provider record ({name2}, {is_home2}) ' \
+               'in GO TO YOUR FILES panel in space list found'
     with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-        assert_consistency(driver, provider)
+        assert_consistency(driver, provider, err_msg1, err_msg2)
 
 
 @when(parsers.parse('user of {browser_id} clicks on "{provider}" provider '
@@ -222,13 +223,13 @@ def assert_provider_working_in_oz_panel(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_working(d, provider_name):
+    def assert_working(d, provider_name, msg):
         prov_record = oz_page(d)['go to your files'][provider_name]
-        err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
-                  '"{}" is not green'.format(prov_record.name)
-        assert prov_record.is_working, err_msg
+        assert prov_record.is_working(), msg.format(prov_record.name)
 
-    assert_working(driver, provider)
+    err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
+              '"{}" is not green'
+    assert_working(driver, provider, err_msg)
 
 
 @when(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
@@ -240,13 +241,13 @@ def assert_provider_not_working_in_oz_panel(selenium, browser_id,
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_not_working(d, provider_name):
+    def assert_not_working(d, provider_name, msg):
         prov_record = oz_page(d)['go to your files'][provider_name]
-        err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
-                  '"{}" is not gray'.format(prov_record.name)
-        assert prov_record.is_not_working, err_msg
+        assert prov_record.is_not_working(), msg.format(prov_record.name)
 
-    assert_not_working(driver, provider)
+    err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
+              '"{}" is not gray'
+    assert_not_working(driver, provider, err_msg)
 
 
 @when(parsers.parse('user of {browser_id} sees alert with title "{title}" '
@@ -257,10 +258,10 @@ def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
     driver = select_browser(selenium, browser_id)
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-    def assert_alert(d, alert_title):
+    def assert_alert(d, alert_title, msg):
         alert = oz_page(d)['world map'].message
-        err_msg = 'alert title {} does not match {}'.format(alert.title,
-                                                            alert_title)
-        assert alert.title.lower() == alert_title.lower(), err_msg
+        assert alert.title.lower() == alert_title.lower(), msg.format(alert.title,
+                                                                      alert_title)
 
-    assert_alert(driver, title)
+    err_msg = 'alert title {} does not match {}'
+    assert_alert(driver, title, err_msg)

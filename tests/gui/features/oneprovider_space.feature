@@ -137,13 +137,14 @@ Feature: Oneprovider space functionality
     And user of browser sees that home space icon has appeared next to displayed name of space "space1" in spaces list
 
   # 'space2' defined in env.json
-  Scenario: Leave existing space and then create space with the same name
+  Scenario: Leave existing space
     When user of browser clicks on settings icon displayed for "spaceC" item on the spaces sidebar list
     And user of browser clicks on the "LEAVE SPACE" item in settings dropdown for space named "spaceC"
     And user of browser sees that "Leave a space" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     Then user of browser sees an info notify with text matching to: .*C.*left
     And user of browser sees that the modal has disappeared
+    And user of browser is idle for 4 seconds
     And user of browser sees that "spaceC" has disappeared from spaces sidebar list
 
     # TODO rm code below after REST API become available
