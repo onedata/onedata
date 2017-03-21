@@ -19,7 +19,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser types "multiprov" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    Then user of browser sees that "multiprov" has appeared on spaces sidebar list
+    And user of browser sees that "multiprov" has appeared on spaces sidebar list
 
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
@@ -29,7 +29,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "spaces" tab in main menu sidebar
-    And user of browser sees "multiprov" in spaces sidebar list
+    Then user of browser sees "multiprov" in spaces sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on settings icon displayed for "multiprov" item on the spaces sidebar list
@@ -53,7 +53,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks "OK" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*space1.*renamed.*NewNameSpace.*
     And user of browser sees that the modal has disappeared
-    Then user of browser sees that space1 has disappeared from spaces sidebar list
+    And user of browser sees that space1 has disappeared from spaces sidebar list
     And user of browser sees that NewNameSpace has appeared on spaces sidebar list
 
     And user of browser clicks on the "providers" tab in main menu sidebar
@@ -66,7 +66,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "spaces" tab in main menu sidebar
     And user of browser sees "NewNameSpace" in spaces sidebar list
-    And user of browser does not see "space1" in spaces sidebar list
+    Then user of browser does not see "space1" in spaces sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on settings icon displayed for "NewNameSpace" item on the spaces sidebar list
@@ -88,7 +88,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on the "LEAVE SPACE" item in settings dropdown for space named "spaceC"
     And user of browser sees that "Leave a space" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    Then user of browser sees an info notify with text matching to: .*C.*left
+    And user of browser sees an info notify with text matching to: .*C.*left
     And user of browser sees that the modal has disappeared
     And user of browser is idle for 4 seconds
     And user of browser sees that "spaceC" has disappeared from spaces sidebar list
@@ -101,7 +101,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "spaces" tab in main menu sidebar
-    And user of browser does not see "spaceC" in spaces sidebar list
+    Then user of browser does not see "spaceC" in spaces sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on the "Create" button in sidebar list's header
@@ -121,7 +121,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser types "multiprov" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    Then user of browser sees that "multiprov" has appeared on groups sidebar list
+    And user of browser sees that "multiprov" has appeared on groups sidebar list
 
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "GROUP MANAGEMENT" Onezone sidebar panel
@@ -131,7 +131,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "groups" tab in main menu sidebar
-    And user of browser sees "multiprov" in groups sidebar list
+    Then user of browser sees "multiprov" in groups sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on settings icon displayed for "multiprov" item on the groups sidebar list
@@ -155,7 +155,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks "OK" confirmation button in displayed modal
     And user of browser sees an info notify with text matching to: .*group1.*renamed.*NewNameGroup.*
     And user of browser sees that the modal has disappeared
-    Then user of browser sees that group1 has disappeared from groups sidebar list
+    And user of browser sees that group1 has disappeared from groups sidebar list
     And user of browser sees that NewNameGroup has appeared on groups sidebar list
 
     And user of browser clicks on the "providers" tab in main menu sidebar
@@ -168,7 +168,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "groups" tab in main menu sidebar
     And user of browser sees "NewNameGroup" in groups sidebar list
-    And user of browser does not see "group1" in groups sidebar list
+    Then user of browser does not see "group1" in groups sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on settings icon displayed for "NewNameGroup" item on the groups sidebar list
@@ -190,7 +190,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "group3"
     And user of browser sees that "Leave the group" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    Then user of browser sees an info notify with text matching to: .*group3.*left
+    And user of browser sees an info notify with text matching to: .*group3.*left
     And user of browser sees that the modal has disappeared
     And user of browser is idle for 4 seconds
     And user of browser sees that "group3" has disappeared from groups sidebar list
@@ -203,7 +203,7 @@ Feature: Oneprovider functionality using multiple providers
     And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "groups" tab in main menu sidebar
-    And user of browser does not see "group3" in groups sidebar list
+    Then user of browser does not see "group3" in groups sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on the "Create" button in sidebar list's header

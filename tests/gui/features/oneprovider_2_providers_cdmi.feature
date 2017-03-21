@@ -27,7 +27,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
+    And user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser sees that chunk bar for provider named "p2" is entirely empty
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
@@ -40,7 +40,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees (0, 20) chunk(s) for provider named "p1" in chunk bar
+    Then user of browser sees (0, 20) chunk(s) for provider named "p1" in chunk bar
     And user of browser sees (20, 24) chunk(s) for provider named "p2" in chunk bar
 
     And user of browser clicks "Close" confirmation button in displayed modal
@@ -67,7 +67,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser sees that item named "20B-0.txt" has appeared in file browser
 
-    Then user of browser sees that item named "20B-0.txt" is of 20 B size in file browser
+    And user of browser sees that item named "20B-0.txt" is of 20 B size in file browser
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
@@ -85,7 +85,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees that chunk bar for provider named "p1" is of 24 B size
+    Then user of browser sees that chunk bar for provider named "p1" is of 24 B size
     And user of browser sees that chunk bar for provider named "p1" is entirely filled
 
     # TODO rm after integrating with swagger
@@ -117,7 +117,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
+    And user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser sees that chunk bar for provider named "p2" is entirely empty
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
@@ -131,7 +131,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
     And user of browser sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser sees (10, 20) chunk(s) for provider named "p2" in chunk bar
+    Then user of browser sees (10, 20) chunk(s) for provider named "p2" in chunk bar
 
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
@@ -160,7 +160,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
+    And user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
 
@@ -172,7 +172,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    And user of browser sees [(0, 20), (40, 44)] chunk(s) for provider named "p1" in chunk bar
+    Then user of browser sees [(0, 20), (40, 44)] chunk(s) for provider named "p1" in chunk bar
 
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
@@ -204,7 +204,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees file browser in data tab in Oneprovider page
 
     And user of browser double clicks on item named "20B-0.txt" in file browser
-    And user of browser sees that content of downloaded file "20B-0.txt" is equal to: "00000000000000000000ABCD"
+    Then user of browser sees that content of downloaded file "20B-0.txt" is equal to: "00000000000000000000ABCD"
 
     # TODO rm after integrating with swagger
     And user of browser clicks the button from top menu bar with tooltip "Remove element"

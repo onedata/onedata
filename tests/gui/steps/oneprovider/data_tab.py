@@ -313,7 +313,7 @@ def upload_files_to_cwd_in_data_tab(selenium, browser_id, dir_path,
                     'named "{provider}" is of {size} size'))
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is of {size} size'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunk_in_file_distribution_size(selenium, browser_id,
                                                     size, provider, modals):
     driver = select_browser(selenium, browser_id)
@@ -329,7 +329,7 @@ def assert_provider_chunk_in_file_distribution_size(selenium, browser_id,
                     'named "{provider}" is entirely filled'))
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is entirely filled'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
                                                       provider, modals):
     driver = select_browser(selenium, browser_id)
@@ -349,7 +349,7 @@ def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
                     'named "{provider}" is entirely empty'))
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is entirely empty'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
                                                      provider, modals):
     driver = select_browser(selenium, browser_id)
@@ -365,7 +365,7 @@ def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
                     'named "{provider}" in chunk bar'))
 @then(parsers.parse('user of {browser_id} sees {chunks} chunk(s) for provider '
                     'named "{provider}" in chunk bar'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunks_in_file_distribution(selenium, browser_id, chunks,
                                                 provider, modals):
     driver = select_browser(selenium, browser_id)
