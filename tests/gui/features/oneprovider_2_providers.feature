@@ -186,30 +186,30 @@ Feature: Oneprovider functionality using multiple providers
   Scenario: User leaves group in one provider and sees that it was leaved from also in other provider
     When user of browser clicks on the "groups" tab in main menu sidebar
 
-    And user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
-    And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "group1"
+    And user of browser clicks on settings icon displayed for "group3" item on the groups sidebar list
+    And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "group3"
     And user of browser sees that "Leave the group" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    Then user of browser sees an info notify with text matching to: .*group1.*left
+    Then user of browser sees an info notify with text matching to: .*group3.*left
     And user of browser sees that the modal has disappeared
     And user of browser is idle for 4 seconds
-    And user of browser sees that "group1" has disappeared from groups sidebar list
+    And user of browser sees that "group3" has disappeared from groups sidebar list
 
     And user of browser clicks on the "providers" tab in main menu sidebar
     And user of browser expands the "GROUP MANAGEMENT" Onezone sidebar panel
-    And user of browser sees that there is no group named "group1" in expanded "GROUP MANAGEMENT" Onezone panel
+    And user of browser sees that there is no group named "group3" in expanded "GROUP MANAGEMENT" Onezone panel
 
     And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
     And user of browser clicks on "p2" provider in expanded "GO TO YOUR FILES" Onezone panel
     And user of browser clicks on the "Go to your files" button in provider popup
     And user of browser clicks on the "groups" tab in main menu sidebar
-    And user of browser does not see "group1" in groups sidebar list
+    And user of browser does not see "group3" in groups sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on the "Create" button in sidebar list's header
     And user of browser sees that "Create a new group" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "group1" on keyboard
+    And user of browser types "group3" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that "group1" has appeared on groups sidebar list
+    And user of browser sees that "group3" has appeared on groups sidebar list

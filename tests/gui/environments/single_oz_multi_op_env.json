@@ -186,6 +186,11 @@
                     "user2",
                     "user3"
                 ]
+            },
+            "group3": {
+                "users": [
+                    "user1"
+                ]
             }
         },
         "spaces": {
