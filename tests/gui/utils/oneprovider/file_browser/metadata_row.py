@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operation on metadata row in file browser in oneprovider web GUI.
 """
 
-from tests.gui.utils.common.web_elements import InputWebElement, TextLabelWebElement
+from tests.gui.utils.core.web_elements import InputWebElement, TextLabelWebElement
 from tests.gui.utils.generic import click_on_web_elem, find_web_elem, \
     find_web_elem_with_text
 

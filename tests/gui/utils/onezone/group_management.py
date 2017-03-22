@@ -2,8 +2,8 @@
 in Onezone web GUI.
 """
 
-from tests.gui.utils.common.common import ExpandableMixin, PageObject
-from tests.gui.utils.common.web_elements import TextLabelWebElement, WebItemsSequence, ButtonWithTextWebElement
+from tests.gui.utils.core.common import ExpandableMixin, PageObject
+from tests.gui.utils.core.web_elements import TextLabelWebElement, WebItemsSequence, ButtonWithTextWebElement
 from .common import OZPanel
 
 __author__ = "Bartosz Walkowicz"

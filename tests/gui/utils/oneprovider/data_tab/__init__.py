@@ -1,13 +1,13 @@
 """Utils for data tab in Oneprovider GUI tests
 """
 
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import ItemListWebElement, WebItem
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import ItemListWebElement, WebItem
+from .file_uploader import FileUploader
+from .sidebar import DataTabSidebar
 from .toolbar import DataTopToolBar
 from ..breadcrumbs import Breadcrumbs
 from ..file_browser.browser import FileBrowser
-from .file_uploader import FileUploader
-from .sidebar import DataTabSidebar
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

@@ -2,9 +2,9 @@
 in Onezone web GUI.
 """
 
-from ..common.common import PageObject, ExpandableMixin
-from ..common.web_elements import ToggleWebElement, TextLabelWebElement, \
-    InputWebElement, ButtonWebElement
+from tests.gui.utils.core.common import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import ToggleWebElement, TextLabelWebElement, \
+    InputWebElement, ButtonWebItem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -23,14 +23,8 @@ class OZPanel(PageObject, ExpandableMixin):
 
 class EditBox(PageObject):
     value = InputWebElement('input')
-    _confirm_btn = ButtonWebElement('.oneicon-checkbox-check')
-    _cancel_btn = ButtonWebElement('.oneicon-checkbox-x')
+    confirm = ButtonWebItem('.oneicon-checkbox-check')
+    cancel = ButtonWebItem('.oneicon-checkbox-x')
 
     def __str__(self):
         return 'edit box in {}'.format(self.parent)
-
-    def confirm(self):
-        self._click_on_btn('confirm')
-
-    def cancel(self):
-        self._click_on_btn('cancel')

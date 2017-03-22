@@ -6,8 +6,8 @@ from contextlib import contextmanager
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, IconWebElement, TextLabelWebElement
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import WebElement, ItemListWebElement, IconWebElement, TextLabelWebElement
 from tests.gui.utils.generic import iter_ahead, nth
 from tests.gui.utils.oneprovider.file_browser.file_row import FileRow
 from tests.gui.utils.oneprovider.file_browser.metadata_row import MetadataRow

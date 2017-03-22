@@ -3,8 +3,8 @@
 
 import re
 
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import ItemListWebElement, TextLabelWebElement, WebElement
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import ItemListWebElement, TextLabelWebElement, WebElement
 from tests.gui.utils.generic import nth
 from tests.gui.utils.oneprovider.file_browser.file_row import FileRow
 

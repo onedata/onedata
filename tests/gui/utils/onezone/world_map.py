@@ -1,8 +1,8 @@
 """Utils and fixtures to facilitate operations on world map in Onezone web GUI.
 """
 
-from ..common.common import PageObject
-from ..common.web_elements import TextLabelWebElement, InputWebElement, \
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import TextLabelWebElement, InputWebElement, \
     ButtonWebElement, WebElement, WebItemsSequence, WebItem, IconWebElement
 
 __author__ = "Bartosz Walkowicz"

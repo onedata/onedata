@@ -1,10 +1,10 @@
 """Utils and fixtures to facilitate operations on File distribution modal.
 """
 
-from .modal import Modal
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import WebElement, \
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import WebElement, \
     TextLabelWebElement, WebItemsSequence, WebItem
+from .modal import Modal
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
