@@ -19,7 +19,7 @@ __license__ = "This software is released under the MIT license cited in " \
                     'starting at offset {offset:d} in "{provider}" provider '
                     'using cdmi api'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def partial_upload_to_file_using_cdmi(browser_id, text, path, offset,
+def partial_write_to_file_using_cdmi(browser_id, text, path, offset,
                                       provider, cdmi, tmp_memory):
     client = cdmi(tmp_memory[provider], tmp_memory[browser_id]['access_token'])
     client.write_to_file(path, text, offset)

@@ -4,7 +4,7 @@
 from pytest_bdd import given, when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, implicit_wait
 from tests.utils.acceptance_utils import list_parser
 
@@ -190,7 +190,7 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
                  r'counter for (?P<item_type>space) named "(?P<item_name>.+?)" '
                  r'displays (?P<number>\d+) in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
                                         item_type, item_name, number,
                                         oz_panel, oz_page):
@@ -254,7 +254,7 @@ def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
                  r'"(?P<item_name>.+?)" as home by clicking on home outline '
                  r'in that (?P=item_type) record in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
                                                        item_type, item_name,
                                                        oz_panel, oz_page):
@@ -341,7 +341,7 @@ def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
                  r'"(?P<item_name>.+?)" in expanded '
                  r'"(?P<oz_panel>GO TO YOUR FILES)" Onezone panel '
                  r'is set as home'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
                                   subitem_name, item_type, item_name,
                                   oz_panel, oz_page):

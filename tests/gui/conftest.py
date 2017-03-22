@@ -26,11 +26,11 @@ from environment import docker
 from pytest_selenium_multi.drivers.utils import factory
 
 
-SELENIUM_IMPLICIT_WAIT = 8
+SELENIUM_IMPLICIT_WAIT = 1
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
-WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
+WAIT_FRONTEND = 4
 
 # use this const when using: WebDriverWait(selenium, WAIT_BACKEND).until(lambda s: ...)
 # when waiting for backend changes

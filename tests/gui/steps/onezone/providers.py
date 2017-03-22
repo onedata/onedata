@@ -9,7 +9,7 @@ from pytest_bdd import given
 from pytest_bdd import parsers, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, implicit_wait
 
 __author__ = "Bartosz Walkowicz"
@@ -22,7 +22,7 @@ __license__ = "This software is released under the MIT license cited in " \
                     'named "{provider}" has appeared on world map'))
 @then(parsers.parse('user of {browser_id} sees that provider popup for provider '
                     'named "{provider}" has appeared on world map'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
                                               provider, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -84,7 +84,7 @@ def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
                  r'(?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|\d*?11th|'
                  r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                  r'provider circle on Onezone world map has disappeared'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                      ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -103,7 +103,7 @@ def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
                  r'(?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|\d*?11th|'
                  r'\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|\d*?[^1]3rd) '
                  r'provider circle on Onezone world map'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_provider_circle(selenium, browser_id, ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
     item = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
@@ -118,7 +118,7 @@ def click_on_provider_circle(selenium, browser_id, ordinal, oz_page):
                  r'appeared next to (?P<ordinal>1st|2nd|3rd|\d*?[4567890]th|'
                  r'\d*?11th|\d*?12th|\d*?13th|\d*?[^1]1st|\d*?[^1]2nd|'
                  r'\d*?[^1]3rd) provider circle on Onezone world map'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                   ordinal, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -143,7 +143,7 @@ def click_on_world_map(selenium, browser_id, oz_page):
 @then(parsers.parse('user of {browser_id} sees that the list of spaces '
                     'in provider popup and in expanded "GO TO YOUR FILES" '
                     'Onezone panel are the same for provider named "{provider}"'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
                                                   provider, oz_page):
     driver = select_browser(selenium, browser_id)

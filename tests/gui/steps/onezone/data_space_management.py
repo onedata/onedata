@@ -4,7 +4,7 @@
 from pytest_bdd import parsers, when, then
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, parse_seq, implicit_wait
 
 __author__ = "Bartosz Walkowicz"
@@ -31,7 +31,7 @@ def get_create_space_edit_box(selenium, browser_id, tmp_memory, oz_page):
 @then(parsers.parse('user of {browser_id} expands settings dropdown for space '
                     'named "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel by clicking on settings icon'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
                                                 name, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -46,7 +46,7 @@ def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
                  r'"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
                  r'settings dropdown for space named "(?P<name>.+?)" '
                  r'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_settings_option_for_space_in_panel(selenium, browser_id,
                                                 option, name, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -61,7 +61,7 @@ def click_on_settings_option_for_space_in_panel(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} clicks on "Get support" button in '
                     'submenu for "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
                                                    name, oz_page):
     driver = select_browser(selenium, browser_id)
@@ -75,7 +75,7 @@ def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
                     'space named "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel has appeared'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def assert_dropright_witk_token_for_space_appeared(selenium, browser_id,
+def assert_dropright_with_token_for_space_appeared(selenium, browser_id,
                                                    name, oz_page):
     driver = select_browser(selenium, browser_id)
     # noinspection PyStatementEffect
@@ -106,7 +106,7 @@ def assert_dropright_has_nonempty_token_for_space_appeared(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} copy token from dropright for '
                     'space named "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def copy_token_from_droprigth_for_space(selenium, browser_id, name, oz_page):
     driver = select_browser(selenium, browser_id)
     item = oz_page(driver)['data space management'].spaces[name]
