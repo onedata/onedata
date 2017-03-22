@@ -56,6 +56,7 @@ class FileDistributionModal(Modal):
         return 'File distribution modal for "{}"'.format(self.file_name)
 
 
+# TODO fix not working commented code
 # In case when fill color of canvas is changed,
 # variable fillColor must also change to new value
 _canvas_fill = """
@@ -76,34 +77,34 @@ function isCanvasFilled(cvs){
     var height = cvs.height;
 
     var ctx = cvs.getContext("2d");
-    var strokeColor = [0, 0, 0, 0];
+    var backgroundColor = [0, 0, 0, 0];
     var fillColor = [85, 225, 145, 255];
-    var img = ctx.getImageData(0, 0, width, height).data;
+    var img_data = ctx.getImageData(0, 0, width, height).data;
 
     var idx = 0
     var pix = [];
-    var refColor = strokeColor;
+    var refColor = backgroundColor;
     var chunk = [];
     var filled = [];
 
-    for(var i = 0; i < width; ++i){
-        idx = i * 4;
-        pix = img.slice(idx, idx + 4);
+    for(var x = 0; x < width; ++x){
+        idx = x * 4;
+        pix = img_data.slice(idx, idx + 4);
 
-        if(arraysEqual(pix, strokeColor) && arraysEqual(refColor, fillColor)){
-            chunk[1] = i / width;
+        if(arraysEqual(pix, backgroundColor) && arraysEqual(refColor, fillColor)){
+            chunk[1] = x / width;
             filled.push(chunk);
             chunk = [];
-            refColor = strokeColor;
+            refColor = backgroundColor;
         }
-        else if(arraysEqual(pix, fillColor) && arraysEqual(refColor, strokeColor)){
-            chunk[0] = i / width;
+        else if(arraysEqual(pix, fillColor) && arraysEqual(refColor, backgroundColor)){
+            chunk[0] = x / width;
             refColor = fillColor;
         }
 
-        for(var j = 1; j < height; ++j){
-            idx = (i + j * width) * 4;
-            pix = img.slice(idx, idx + 4);
+        for(var y = 1; y < height; ++y){
+            idx = (x + y * width) * 4;
+            pix = img_data.slice(idx, idx + 4);
 //            if(!arraysEqual(pix, refColor)) return false;
         }
     }

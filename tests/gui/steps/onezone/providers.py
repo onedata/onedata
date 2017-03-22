@@ -223,7 +223,7 @@ def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
 
 @given(parsers.parse('user of {browser_id} records providers hostname using '
                      'copy hostname button in every provider popup'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
     driver = select_browser(selenium, browser_id)
     world_map = oz_page(driver)['world map']

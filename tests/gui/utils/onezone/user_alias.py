@@ -4,7 +4,7 @@ in Onezone web GUI.
 
 from selenium.common.exceptions import NoSuchElementException
 
-from ..common.web_elements import TextLabelWebElement, ButtonWebElement, WebElement
+from ..common.web_elements import TextLabelWebElement, ButtonWebElement, WebItem
 from ..generic import suppress, click_on_web_elem
 from .common import OZPanel, EditBox
 
@@ -16,12 +16,11 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class UserAliasPanel(OZPanel):
     alias = TextLabelWebElement('.alias-text')
-    _edit_area = WebElement('.alias-accordion-toggle.clickable')
+    edit_box = WebItem('.alias-accordion-toggle.clickable', cls=EditBox)
+
     _rename_btn = ButtonWebElement('.oneicon-rename')
 
-    def edit_alias(self):
+    def edit(self):
         with suppress(NoSuchElementException):
             err_msg = 'clicking on rename btn in {} disabled'.format(self)
             click_on_web_elem(self.driver, self._rename_btn, err_msg)
-
-        return EditBox(self.driver, self._edit_area, self)
