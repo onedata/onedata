@@ -144,6 +144,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that "share1" has been renamed to "helloworld"
 
+    And user of browser2 is idle for 2 seconds
     And user of browser2 refreshes site
     And user of browser2 sees that public share is named "helloworld"
 
@@ -221,6 +222,7 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that share named "share1" has disappeared from the shares list
 
+    And user of browser2 is idle for 2 seconds
     And user of browser2 refreshes site
     And user of browser2 sees that he no longer can view the share
 
