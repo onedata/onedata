@@ -55,7 +55,8 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 
 @pytest.mark.skipif(USING_BASE_URL, reason=SKIP_REASON_BASE_URL)
 @scenario('../features/onezone_gui.feature',
-          'User sees that when no provider is working appropriate msg is shown')
+          'User sees that non working providers have gray icon in '
+          '"GO TO YOR FILES" panel and appropriate msg is shown')
 def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
     pass
 
