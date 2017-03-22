@@ -299,8 +299,8 @@ def pytest_collection_modifyitems(items):
     run_first = ('test_user_can_unsupport_space',
                  'test_user_sees_that_after_unsupporting_space'
                  )
-    run_last = ('test_user_sees_that_non_working_providers_have_gray_icon_in_'
-                'go_to_your_files_panel_and_appropriate_msg_is_shown',)
+    run_last = ('test_user_sees_that_when_no_provider_is_working_'
+                'appropriate_msg_is_shown',)
 
     for item in items:
         for test in run_first:
