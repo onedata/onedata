@@ -293,7 +293,6 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that file named "file2" has appeared on files list
 
-    And user of browser2 is idle for 10 seconds
     And user of browser2 refreshes site
     And user of browser2 sees that file named "file2" has appeared on files list
 
@@ -368,7 +367,6 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that file named "20B-0.txt" has disappeared from files list
 
-    And user of browser2 is idle for 10 seconds
     And user of browser2 refreshes site
     And user of browser2 sees that file named "file2" has disappeared from files list
 
