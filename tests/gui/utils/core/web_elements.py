@@ -103,6 +103,18 @@ class WebItemsSequence(AbstractWebItem, WebElementsSequence):
                                       instance, self.cls)
 
 
+class WebElementsSequenceItemWithText(object):
+    def __init__(self, seq, text, cls):
+        self.seq = seq
+        self.text = text.lower()
+        self.cls = cls
+
+    def __get__(self, instance, owner):
+        for item in self.seq.__get__(instance, owner):
+            if item.text.lower() == self.text:
+                return self.cls(instance.driver, item, instance)
+
+
 class InputWebElement(WebElement):
     item_not_found_msg = '{item} input box not found in {parent}'
     typing_text_failed_msg = 'entering {value} to {item} input box in ' \

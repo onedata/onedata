@@ -35,11 +35,11 @@ class ButtonWebObject(AbstractWebObject):
                           lambda: 'cannot click on {btn}'.format(btn=self))
 
 
-# class _ButtonWithTextObject(object):
-#     text = ''
-#
-#     def __str__(self):
-#         return 'button with "{}" text in {}'.format(self.text, self.parent)
+class NavigationButtonWebObject(ButtonWebObject):
+    name = 'button'
+
+    def is_active(self):
+        return 'active' in self.web_elem.get_attribute('class')
 
 
 class WebObjectsSequence(object):

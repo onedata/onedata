@@ -3,9 +3,9 @@
 
 from tests.gui.utils.core.common import PageObject
 from tests.gui.utils.core.web_elements import InputWebElement, TextLabelWebElement, WebItem, WebItemsSequence, \
-    ButtonWebItem
-from tests.gui.utils.generic import click_on_web_elem, find_web_elem, \
-    find_web_elem_with_text
+    ButtonWebItem, WebElementsSequence, WebElementsSequenceItemWithText
+from tests.gui.utils.core.web_objects import ButtonWebObject
+from tests.gui.utils.generic import click_on_web_elem, find_web_elem_with_text
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -14,7 +14,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class _BasicMetadataEntry(PageObject):
-    attribute = TextLabelWebElement('th')
+    attribute = id = TextLabelWebElement('th')
     value = TextLabelWebElement('td')
     remove = ButtonWebItem('.oneicon-close')
 
@@ -29,6 +29,9 @@ class _BasicMetadataNewEntry(PageObject):
 
     def __str__(self):
         return 'metadata basic new entry in {}'.format(self.parent)
+
+    def is_valid(self):
+        return 'invalid' not in self.web_elem.get_attribute('class')
 
 
 class _BasicMetadataPanel(PageObject):
@@ -48,8 +51,18 @@ class _MetadataEditPanel(PageObject):
         return 'metadata edit panel in {}'.format(self.parent)
 
 
+class _NavigationHeader(PageObject):
+    _tabs = WebElementsSequence('li')
+    basic = WebElementsSequenceItemWithText(seq=_tabs, text='BASIC',
+                                            cls=ButtonWebObject)
+    json = WebElementsSequenceItemWithText(seq=_tabs, text='JSON',
+                                           cls=ButtonWebObject)
+    rdf = WebElementsSequenceItemWithText(seq=_tabs, text='RDF',
+                                          cls=ButtonWebObject)
+
+
 class MetadataRow(PageObject):
-    __buttons__ = 'asd'
+    navigation = WebItem('ul.nav-tabs', cls=_NavigationHeader)
 
     basic = WebItem('table.metadata-basic-table', cls=_BasicMetadataPanel)
     json = WebItem('.metadata-json-editor', cls=_MetadataEditPanel)
@@ -58,33 +71,7 @@ class MetadataRow(PageObject):
     def __str__(self):
         return 'metadata row in {}'.format(self.parent)
 
-    @property
-    def json(self):
-        self._change_tab('json')
-        css_sel = '.metadata-json-editor'
-        err_msg = 'edit panel for JSON not found in metadata row'
-        return _MetadataEditPanel(self.driver,
-                                  find_web_elem(self.web_elem, css_sel, err_msg),
-                                  'JSON')
-
-    @property
-    def rdf(self):
-        self._change_tab('rdf')
-        css_sel = '.metadata-xml-editor'
-        err_msg = 'edit panel for RDF not found in metadata row'
-        return _MetadataEditPanel(self.driver,
-                                  find_web_elem(self.web_elem, css_sel, err_msg),
-                                  'RDF')
-
-    def _change_tab(self, name):
-        css_sel = 'ul.nav-tabs li'
-        err_msg = '{} tab not found in metadata row'.format(name)
-        tab = find_web_elem_with_text(self.web_elem, css_sel, name, err_msg)
-        if 'active' not in tab.get_attribute('class'):
-            click_on_web_elem(self.driver, tab, 'clicking on {} tab in metadata '
-                                                'row disabled'.format(name))
-
-    def save_changes(self):
+    def save_all_changes(self):
         self._click_btn('save all changes')
 
     def discard_changes(self):
