@@ -72,18 +72,16 @@ class MetadataRow(PageObject):
         return 'metadata row in {}'.format(self.parent)
 
     def save_all_changes(self):
-        self._click_btn('save all changes')
+        return self._get_btn('save all changes')
 
     def discard_changes(self):
-        self._click_btn('discard changes')
+        return self._get_btn('discard changes')
 
     def remove_metadata(self):
-        self._click_btn('remove metadata')
+        return self._get_btn('remove metadata')
 
-    def _click_btn(self, name):
+    def _get_btn(self, name):
         css_sel = '.save-metadata-row button'
         err_msg = '{} btn not found in metadata row'.format(name)
         btn = find_web_elem_with_text(self.web_elem, css_sel, name, err_msg)
-
-        err_msg = 'clicking on {} btn in metadata row disabled'.format(name)
-        click_on_web_elem(self.driver, btn, err_msg)
+        return ButtonWebObject(self.driver, btn, self)

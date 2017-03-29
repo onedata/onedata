@@ -29,23 +29,23 @@ def assert_msg_instead_of_browser(browser_id, msg, tmp_memory):
                                  '{}'.format(displayed_msg, msg)
 
 
-@when(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}" in file browser'))
-@then(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}" in file browser'))
+@when(parsers.parse('user of {browser_id} does not see {tool_type} '
+                    'icon for "{item_name}" in file browser'))
+@then(parsers.parse('user of {browser_id} does not see {tool_type} '
+                    'icon for "{item_name}" in file browser'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
-                                              item_name, tmp_memory):
+def assert_not_tool_icon_for_file_in_file_browser(browser_id, tool_type,
+                                                  item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     err_msg = '{} tool for {} in file browser visible, ' \
               'while should not be'.format(tool_type, item_name)
     assert not browser[item_name].is_tool_visible(tool_type), err_msg
 
 
-@when(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}" in file browser'))
-@then(parsers.parse('user of {browser_id} sees {tool_type} icon for '
-                    '{item_type} named "{item_name}" in file browser'))
+@when(parsers.parse('user of {browser_id} sees {tool_type} '
+                    'icon for "{item_name}" in file browser'))
+@then(parsers.parse('user of {browser_id} sees {tool_type} '
+                    'icon for "{item_name}" in file browser'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
                                               item_name, tmp_memory):
@@ -55,12 +55,10 @@ def assert_tool_icon_for_file_in_file_browser(browser_id, tool_type,
     assert browser[item_name].is_tool_visible(tool_type), err_msg
 
 
-@when(parsers.parse('user of {browser_id} clicks on {tool_type} '
-                    'tool icon in file row for item named "{item_name}" '
-                    'in file browser'))
-@then(parsers.parse('user of {browser_id} clicks on {tool_type} '
-                    'tool icon in file row for item named "{item_name}" '
-                    'in file browser'))
+@when(parsers.parse('user of {browser_id} clicks on {tool_type} tool icon '
+                    'in file row for "{item_name}" in file browser'))
+@then(parsers.parse('user of {browser_id} clicks on {tool_type} tool icon '
+                    'in file row for "{item_name}" in file browser'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_tool_icon_for_file_in_file_browser(browser_id, tool_type,
                                                 item_name, tmp_memory):

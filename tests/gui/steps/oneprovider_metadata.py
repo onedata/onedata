@@ -49,9 +49,9 @@ def assert_not_files_metadata_panel_displayed(browser_id, item_name, tmp_memory)
 
 
 @when(parsers.parse('user of {browser_id} sees {tab_list} navigation tabs in '
-                    'metadata panel opened for {item_type} named "{item_name}"'))
+                    'metadata panel opened for "{item_name}"'))
 @then(parsers.parse('user of {browser_id} sees {tab_list} navigation tabs in '
-                    'metadata panel opened for {item_type} named "{item_name}"'))
+                    'metadata panel opened for "{item_name}"'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def are_nav_tabs_for_metadata_panel_displayed(browser_id, tab_list, item_name,
                                               tmp_memory):
@@ -97,8 +97,21 @@ def click_on_button_in_metadata_panel(browser_id, button_name,
                                       item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     metadata_row = browser.get_metadata_for(item_name)
-    btn = getattr(metadata_row, button_name.lower().replace(' ', '_'))
+    btn = getattr(metadata_row, button_name.lower().replace(' ', '_'))()
     btn()
+
+
+@when(parsers.parse('user of {browser_id} sees that "{button_name}" button '
+                    'in metadata panel opened for "{item_name}" is disabled'))
+@then(parsers.parse('user of {browser_id} sees that "{button_name}" button '
+                    'in metadata panel opened for "{item_name}" is disabled'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def assert_btn_disabled_in_metadata_footer(browser_id, button_name,
+                                           item_name, tmp_memory):
+    browser = tmp_memory[browser_id]['file_browser']
+    metadata_row = browser.get_metadata_for(item_name)
+    btn = getattr(metadata_row, button_name.lower().replace(' ', '_'))()
+    assert not btn.is_enabled()
 
 
 @when(parsers.parse('user of {browser_id} should not see basic metadata entry '
@@ -178,7 +191,7 @@ def click_on_add_meta_rec_btn_in_metadata_panel(browser_id, item_name,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_entered_attr_key_is_invalid(browser_id, item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
-    entry = browser.get_metadata_for(item_name).basic.new_entry.add()
+    entry = browser.get_metadata_for(item_name).basic.new_entry
     assert not entry.is_valid(), \
         'basic metadata new entry for "{}" is valid, ' \
         'while it should not'.format(item_name)
