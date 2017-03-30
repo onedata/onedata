@@ -223,7 +223,7 @@ def assert_textarea_contains_record(browser_id, metadata_record, tab,
     metadata_row = browser.get_metadata_for(item_name)
     tab = getattr(metadata_row, tab.lower())
     assert metadata_record in tab.text_area, \
-        'text in textarea : {} does not contain {}'.format(tab.textarea,
+        'text in textarea : {} does not contain {}'.format(tab.text_area,
                                                            metadata_record)
 
 
@@ -241,7 +241,7 @@ def assert_textarea_content_is_eq_to(browser_id, item_name, content,
     tab = getattr(metadata_row, tab.lower())
     assert tab.text_area == content, \
         'expected: {}, got: {} in textarea for ' \
-        'metadata in {}'.format(content, tab.textarea, tab)
+        'metadata in {}'.format(content, tab.text_area, tab)
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) types "(?P<text>.+?)" '

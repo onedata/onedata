@@ -845,327 +845,333 @@ Feature: Oneprovider Metadata view
     And user of browser sees that item named "dir1" has disappeared from files browser
 
 
-#  Scenario: Discard changes while entering metadata for file in JSON format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create file1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create file"
-#    And user of browser sees that "New file" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "file1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has appeared on files list
-#
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
-#    And user of browser clears textarea placed in metadata panel opened for file named "file1"
-#    And user of browser types "{"id": 1}" on keyboard
-#    And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
-#    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
-#
-#    Then user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "JSON" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: "{}"
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has disappeared from files browser
-#
-#
-#  Scenario: Discard changes while entering metadata for directory in JSON format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create dir1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-#    And user of browser sees that "New directory" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "dir1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has appeared on files list
-#
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser types "{"id": 1}" on keyboard
-#    And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-#
-#    Then user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "JSON" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: "{}"
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has disappeared from files browser
-#
-#
-#  Scenario: Add valid metadata to file in XML format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create file1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create file"
-#    And user of browser sees that "New file" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "file1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has appeared on files list
-#
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
-#    And user of browser clears textarea placed in metadata panel opened for file named "file1"
-#    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-#    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
-#    Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-#    And user of browser refreshes site
-#    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has disappeared from files browser
-#
-#
-#  Scenario: Add valid metadata to directory in RDF format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create dir1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-#    And user of browser sees that "New directory" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "dir1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has appeared on files list
-#
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-#    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
-#    Then user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-#    And user of browser refreshes site
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has disappeared from files browser
-#
-#
-#  Scenario: Delete file metadata in XML format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create file1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create file"
-#    And user of browser sees that "New file" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "file1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has appeared on files list
-#
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
-#    And user of browser clears textarea placed in metadata panel opened for file named "file1"
-#    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-#    And user of browser clicks on "Save all changes" button in metadata panel opened for file named "file1"
-#    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-#    And user of browser refreshes site
-#    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser sees that textarea placed in metadata panel opened for file named "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
-#    And user of browser clicks on "Remove metadata" button in metadata panel opened for file named "file1"
-#    Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
-#    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
-#
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: ""
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has disappeared from files browser
-#
-#
-#  Scenario: Delete directory metadata in XML format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create dir1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-#    And user of browser sees that "New directory" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "dir1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has appeared on files list
-#
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-#    And user of browser clicks on "Save all changes" button in metadata panel opened for directory named "dir1"
-#    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
-#    And user of browser refreshes site
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser sees that textarea placed in metadata panel opened for directory named "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
-#    And user of browser clicks on "Remove metadata" button in metadata panel opened for directory named "dir1"
-#    Then user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-#
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has disappeared from files browser
-#
-#
-#  Scenario: Discard changes while entering metadata for file in XML format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create dir1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create file"
-#    And user of browser sees that "New file" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "file1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has appeared on files list
-#
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser clicks on textarea placed in metadata panel opened for file named "file1"
-#    And user of browser clears textarea placed in metadata panel opened for file named "file1"
-#    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-#    And user of browser clicks on "Discard changes" button in metadata panel opened for file named "file1"
-#    And user of browser sees that metadata panel for file named "file1" in files list has disappeared
-#
-#    Then user of browser selects "file1" from files list
-#    And user of browser clicks on metadata icon in file row for file named "file1" in file browser
-#    And user of browser sees that metadata panel for file named "file1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for file named "file1"
-#    And user of browser sees that content of textarea placed in metadata panel opened for file named "file1" is equal to: ""
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that file named "file1" has disappeared from files browser
-#
-#
-#  Scenario: Discard changes while entering metadata for directory in XML format
-#    When user of browser uses spaces select to change data space to "space1"
-#
-#    # create dir1 in space1
-#    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-#    And user of browser sees that "New directory" modal has appeared
-#    And user of browser clicks on input box in active modal
-#    And user of browser types "dir1" on keyboard
-#    And user of browser presses enter on keyboard
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has appeared on files list
-#
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser clicks on textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser clears textarea placed in metadata panel opened for directory named "dir1"
-#    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" on keyboard
-#    And user of browser clicks on "Discard changes" button in metadata panel opened for directory named "dir1"
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has disappeared
-#
-#    Then user of browser selects "dir1" from files list
-#    And user of browser clicks on metadata icon in file row for directory named "dir1" in file browser
-#    And user of browser sees that metadata panel for directory named "dir1" in files list has appeared
-#    And user of browser clicks on "RDF" navigation tab in metadata panel opened for directory named "dir1"
-#    And user of browser sees that content of textarea placed in metadata panel opened for directory named "dir1" is equal to: ""
-#
-#    # TODO rm after integrating with swagger
-#    And user of browser selects "dir1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees an info notify with text matching to: .*removed.*
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that directory named "dir1" has disappeared from files browser
+  Scenario: Discard changes while entering metadata for file in JSON format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has appeared in file browser
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+
+    And user of browser clicks on JSON navigation tab in metadata panel opened for "file1"
+    And user of browser types "{"id": 1}" to JSON textarea placed in metadata panel opened for "file1"
+    And user of browser clicks on "Discard changes" button in metadata panel opened for "file1"
+    And user of browser sees that metadata panel for "file1" in files list has disappeared
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+    And user of browser clicks on JSON navigation tab in metadata panel opened for "file1"
+    Then user of browser sees that content of JSON textarea placed in metadata panel opened for "file1" is equal to: "{}"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
+
+
+  Scenario: Discard changes while entering metadata for directory in JSON format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has appeared in file browser
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+
+    And user of browser clicks on JSON navigation tab in metadata panel opened for "dir1"
+    And user of browser types "{"id": 1}" to JSON textarea placed in metadata panel opened for "dir1"
+    And user of browser clicks on "Discard changes" button in metadata panel opened for "dir1"
+    And user of browser sees that metadata panel for "dir1" in files list has disappeared
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+    And user of browser clicks on JSON navigation tab in metadata panel opened for "dir1"
+    Then user of browser sees that content of JSON textarea placed in metadata panel opened for "dir1" is equal to: "{}"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
+
+
+  Scenario: Add valid metadata to file in XML format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has appeared in file browser
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "file1"
+    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" to RDF textarea placed in metadata panel opened for "file1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for "file1"
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
+    And user of browser refreshes site
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that metadata panel for "file1" in files list has disappeared
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "file1"
+    Then user of browser sees that RDF textarea placed in metadata panel opened for "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
+
+
+  Scenario: Add valid metadata to directory in RDF format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has appeared in file browser
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "dir1"
+    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" to RDF textarea placed in metadata panel opened for "dir1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for "dir1"
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
+    And user of browser refreshes site
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that metadata panel for "dir1" in files list has disappeared
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "dir1"
+    Then user of browser sees that RDF textarea placed in metadata panel opened for "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
+
+
+  Scenario: Delete file metadata in XML format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has appeared in file browser
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "file1"
+    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" to RDF textarea placed in metadata panel opened for "file1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for "file1"
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
+    And user of browser refreshes site
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that metadata panel for "file1" in files list has disappeared
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "file1"
+    And user of browser sees that RDF textarea placed in metadata panel opened for "file1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for "file1"
+    And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*file1.*
+    Then user of browser sees that metadata panel for "file1" in files list has disappeared
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "file1"
+    And user of browser sees that content of RDF textarea placed in metadata panel opened for "file1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
+
+
+  Scenario: Delete directory metadata in XML format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has appeared in file browser
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "dir1"
+    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" to RDF textarea placed in metadata panel opened for "dir1"
+    And user of browser clicks on "Save all changes" button in metadata panel opened for "dir1"
+    And user of browser sees an info notify with text matching to: .*[Mm]etadata.*saved.*successfully.*
+    And user of browser refreshes site
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that metadata panel for "dir1" in files list has disappeared
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "dir1"
+    And user of browser sees that RDF textarea placed in metadata panel opened for "dir1" contains "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>"
+    And user of browser clicks on "Remove metadata" button in metadata panel opened for "dir1"
+    And user of browser sees an info notify with text matching to: .*[Dd]eleted.*metadata.*dir1.*
+    Then user of browser sees that metadata panel for "dir1" in files list has disappeared
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "dir1"
+    And user of browser sees that content of RDF textarea placed in metadata panel opened for "dir1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
+
+
+  Scenario: Discard changes while entering metadata for file in XML format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has appeared in file browser
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "file1"
+    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" to RDF textarea placed in metadata panel opened for "file1"
+    And user of browser clicks on "Discard changes" button in metadata panel opened for "file1"
+    And user of browser sees that metadata panel for "file1" in files list has disappeared
+
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "file1" in file browser
+    And user of browser sees that metadata panel for "file1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "file1"
+    Then user of browser sees that content of RDF textarea placed in metadata panel opened for "file1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "file1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
+
+
+  Scenario: Discard changes while entering metadata for directory in XML format
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # create dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has appeared in file browser
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "dir1"
+    And user of browser types "<rdf:XML xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:XML>" to RDF textarea placed in metadata panel opened for "dir1"
+    And user of browser clicks on "Discard changes" button in metadata panel opened for "dir1"
+    And user of browser sees that metadata panel for "dir1" in files list has disappeared
+
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks on metadata tool icon in file row for "dir1" in file browser
+    And user of browser sees that metadata panel for "dir1" in files list has appeared
+    And user of browser clicks on RDF navigation tab in metadata panel opened for "dir1"
+    Then user of browser sees that content of RDF textarea placed in metadata panel opened for "dir1" is equal to: ""
+
+    # TODO rm after integrating with swagger
+    And user of browser selects "dir1" item(s) from file browser with pressed ctrl
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
