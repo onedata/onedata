@@ -4,8 +4,8 @@ data tab in oneprovider web GUI.
 
 from selenium.webdriver import ActionChains
 
-from tests.gui.utils.common.common import PageObject, ExpandableMixin
-from tests.gui.utils.common.web_elements import ToggleWebElement, TextLabelWebElement, \
+from tests.gui.utils.core.common import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import ToggleWebElement, TextLabelWebElement, \
     WebElement, ItemListWebElement, HeaderWebElement
 from tests.gui.utils.oneprovider.data_tab.space_selector import SpaceSelector
 

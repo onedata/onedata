@@ -4,9 +4,9 @@ in Onezone web GUI.
 
 from selenium.common.exceptions import NoSuchElementException
 
-from ..common.web_elements import TextLabelWebElement, ButtonWebElement, WebItem
-from ..generic import suppress, click_on_web_elem
+from tests.gui.utils.core.web_elements import TextLabelWebElement, ButtonWebElement, WebItem
 from .common import OZPanel, EditBox
+from ..generic import suppress, click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

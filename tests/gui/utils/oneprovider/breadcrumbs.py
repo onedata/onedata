@@ -3,8 +3,8 @@
 
 from itertools import izip
 
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import ItemListWebElement
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import ItemListWebElement
 from tests.gui.utils.generic import click_on_web_elem
 
 

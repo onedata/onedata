@@ -1,8 +1,8 @@
 """Utils and fixtures to facilitate operation on page objects.
 """
 
+from tests.gui.utils.core.web_elements import WebObject
 from tests.gui.utils.generic import click_on_web_elem
-from tests.gui.utils.common.web_elements import WebObject
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

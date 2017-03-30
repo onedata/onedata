@@ -3,7 +3,8 @@
 
 from abc import abstractmethod, ABCMeta
 
-from tests.gui.utils.generic import find_web_elem, repeat_failed, find_web_elem_with_text, nth
+from tests.gui.utils.core.web_objects import ButtonWebObject, WebObjectsSequence
+from tests.gui.utils.generic import find_web_elem, repeat_failed, find_web_elem_with_text
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -98,69 +99,20 @@ class WebItemsSequence(AbstractWebItem, WebElementsSequence):
         if instance is None:
             return items
         else:
-            return _WebItemsSequence(instance.driver, items,
-                                     instance, self.cls)
+            return WebObjectsSequence(instance.driver, items,
+                                      instance, self.cls)
 
 
-class _WebItemsSequence(object):
-    def __init__(self, driver, items, parent, cls):
-        self.driver = driver
-        self.items = items
-        self.parent = parent
+class WebElementsSequenceItemWithText(object):
+    def __init__(self, seq, text, cls):
+        self.seq = seq
+        self.text = text.lower()
         self.cls = cls
 
-    def _getitem_by_id(self, sel):
-        for item in self:
-            if item.id == sel:
-                return item
-        return None
-
-    def _getitem_by_idx(self, idx):
-        return nth(self.items, idx) if idx < len(self) else None
-
-    def __iter__(self):
-        return (self.cls(self.driver, item, self.parent)
-                for item in self.items)
-
-    def __reversed__(self):
-        return (self.cls(self.driver, item, self.parent)
-                for item in reversed(self.items))
-
-    def __getitem__(self, sel):
-        if isinstance(sel, int):
-            item = self._getitem_by_idx(sel)
-            if item:
-                return self.cls(self.driver, item, self.parent)
-            else:
-                raise RuntimeError('Index out of bound. Requested item at '
-                                   '{idx} while limit is {limit} in '
-                                   '{parent}'.format(idx=sel, limit=len(self),
-                                                     parent=self.parent))
-        elif isinstance(sel, (str, unicode)):
-            item = self._getitem_by_id(sel)
-            if item:
-                return item
-            else:
-                raise RuntimeError('no "{id}" found in '
-                                   '{parent}'.format(id=sel,
-                                                     parent=self.parent))
-        else:
-            return None
-
-    def __contains__(self, item):
-        return False if self._getitem_by_id(item) is None else True
-
-    def __len__(self):
-        return len(self.items)
-
-    def count(self):
-        return len(self)
-
-    def index(self, item_for_idx):
-        for i, item in enumerate(self):
-            if item is item_for_idx:
-                return i
-        return None
+    def __get__(self, instance, owner):
+        for item in self.seq.__get__(instance, owner):
+            if item.text.lower() == self.text:
+                return self.cls(instance.driver, item, instance)
 
 
 class InputWebElement(WebElement):
@@ -188,6 +140,18 @@ class TextLabelWebElement(WebElement):
     def __get__(self, instance, owner):
         item = super(TextLabelWebElement, self).__get__(instance, owner)
         return item.text if instance else item
+
+
+class ButtonWebItem(WebItem):
+    item_not_found_msg = '{text} btn not found in {parent}'
+
+    def __init__(self, *args, **kwargs):
+        super(ButtonWebItem, self).__init__(cls=ButtonWebObject, *args, **kwargs)
+
+    def __get__(self, instance, owner):
+        btn = super(ButtonWebItem, self).__get__(instance, owner)
+        btn.name = self.name
+        return btn
 
 
 class IconWebElement(WebElement):

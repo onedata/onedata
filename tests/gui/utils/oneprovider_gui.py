@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on Oneprovider web GUI.
 """
 
-from tests.gui.utils.common.web_elements import WebElement
+from tests.gui.utils.core.web_elements import WebElement
 from tests.gui.utils.generic import find_web_elem_with_text, click_on_web_elem
 from tests.gui.utils.oneprovider.data_tab import DataTab
 from tests.gui.utils.oneprovider.user_profile import UserProfile

@@ -2,7 +2,7 @@
 """
 
 from tests.gui.utils.common.modals.file_distribution import FileDistributionModal
-from tests.gui.utils.common.web_elements import WebItem
+from tests.gui.utils.core.web_elements import WebItem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

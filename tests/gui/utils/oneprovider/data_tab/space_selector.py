@@ -2,8 +2,8 @@
 data tab in oneprovider web GUI.
 """
 
-from tests.gui.utils.common.common import PageObject, ExpandableMixin
-from tests.gui.utils.common.web_elements import TextLabelWebElement, \
+from tests.gui.utils.core.common import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import TextLabelWebElement, \
     IconWebElement, ToggleWebElement, WebItemsSequence
 
 __author__ = "Bartosz Walkowicz"

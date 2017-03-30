@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on tokens in Onezone gui"""
 
-from ..common.common import PageObject
-from ..common.web_elements import InputWebElement, ButtonWebElement, WebItemsSequence, \
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import InputWebElement, ButtonWebElement, WebItemsSequence, \
     ButtonWithTextWebElement
 from .common import OZPanel
 

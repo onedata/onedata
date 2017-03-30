@@ -4,10 +4,10 @@ in oneprovider web GUI.
 
 from selenium.webdriver import ActionChains
 
-from tests.gui.utils.generic import click_on_web_elem
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import TextLabelWebElement, \
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import TextLabelWebElement, \
     IconWebElement
+from tests.gui.utils.generic import click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

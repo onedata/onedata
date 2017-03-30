@@ -3,8 +3,8 @@
 
 from abc import abstractmethod
 
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import TextLabelWebElement
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import TextLabelWebElement
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

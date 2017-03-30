@@ -1,15 +1,15 @@
 """Utils and fixtures to facilitate operations on Onezone web GUI.
 """
 
-from tests.gui.utils.common.web_elements import WebElement, ItemListWebElement, HeaderWebElement
+from tests.gui.utils.core.web_elements import WebElement, ItemListWebElement, HeaderWebElement
 from .access_tokens import AccessTokensPanel
-from .data_space_management import DataSpaceManagementPanel
-from .group_management import GroupManagementPanel
-from .go_to_your_files import GoToYourFilesPanel
-from .user_alias import UserAliasPanel
-from .manage_account import ManageAccount
-from .world_map import WorldMap
 from .common import OZPanel
+from .data_space_management import DataSpaceManagementPanel
+from .go_to_your_files import GoToYourFilesPanel
+from .group_management import GroupManagementPanel
+from .manage_account import ManageAccount
+from .user_alias import UserAliasPanel
+from .world_map import WorldMap
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

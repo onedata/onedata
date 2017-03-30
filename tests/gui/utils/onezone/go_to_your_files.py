@@ -1,8 +1,8 @@
 """Utils and fixtures to facilitate operations on world map in Onezone web GUI.
 """
 
-from tests.gui.utils.common.common import PageObject, ExpandableMixin
-from tests.gui.utils.common.web_elements import TextLabelWebElement, ToggleWebElement, \
+from tests.gui.utils.core.common import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import TextLabelWebElement, ToggleWebElement, \
     WebElement, ButtonWebElement, IconWebElement, WebItemsSequence
 from tests.gui.utils.generic import click_on_web_elem
 from .common import OZPanel
