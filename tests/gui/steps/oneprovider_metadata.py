@@ -197,31 +197,32 @@ def assert_entered_attr_key_is_invalid(browser_id, item_name, tmp_memory):
         'while it should not'.format(item_name)
 
 
-@when(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation '
+@when(parsers.parse('user of {browser_id} clicks on {tab_name} navigation '
                     'tab in metadata panel opened for "{item_name}"'))
-@then(parsers.parse('user of {browser_id} clicks on "{tab_name}" navigation '
+@then(parsers.parse('user of {browser_id} clicks on {tab_name} navigation '
                     'tab in metadata panel opened for "{item_name}"'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_navigation_tab_in_metadata_panel(browser_id, tab_name,
                                               item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
-    tab = getattr(browser.get_metadata_for(item_name).navigation, tab_name)
+    tab = getattr(browser.get_metadata_for(item_name).navigation,
+                  tab_name.lower())
     tab()
 
 
-@when(parsers.parse('user of {browser_id} sees that (?P<tab>JSON|RDF) textarea '
-                    'placed in metadata panel opened for "{item_name}" '
-                    'contains "{metadata_record}"'))
-@then(parsers.parse('user of {browser_id} sees that (?P<tab>JSON|RDF) textarea '
-                    'placed in metadata panel opened for "{item_name}" '
-                    'contains "{metadata_record}"'))
+@when(parsers.re('user of (?P<browser_id>.+?) sees that (?P<tab>JSON|RDF) '
+                 'textarea placed in metadata panel opened for '
+                 '"(?P<item_name>.+?)" contains "(?P<metadata_record>.+?)"'))
+@then(parsers.re('user of (?P<browser_id>.+?) sees that (?P<tab>JSON|RDF) '
+                 'textarea placed in metadata panel opened for '
+                 '"(?P<item_name>.+?)" contains "(?P<metadata_record>.+?)"'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_textarea_contains_record(browser_id, metadata_record, tab,
                                     item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     metadata_row = browser.get_metadata_for(item_name)
-    tab = getattr(metadata_row, tab)
-    assert metadata_record in tab.textarea, \
+    tab = getattr(metadata_row, tab.lower())
+    assert metadata_record in tab.text_area, \
         'text in textarea : {} does not contain {}'.format(tab.textarea,
                                                            metadata_record)
 
@@ -237,20 +238,22 @@ def assert_textarea_content_is_eq_to(browser_id, item_name, content,
                                      tab, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     metadata_row = browser.get_metadata_for(item_name)
-    tab = getattr(metadata_row, tab)
-    assert tab.textarea == content, \
+    tab = getattr(metadata_row, tab.lower())
+    assert tab.text_area == content, \
         'expected: {}, got: {} in textarea for ' \
         'metadata in {}'.format(content, tab.textarea, tab)
 
 
-@when(parsers.re('user of (?P<browser_id>.+?) types "{text}" to (?P<tab>JSON|RDF) '
-                 'textarea placed in metadata panel opened for "(?P<item_name>.+?)"'))
-@then(parsers.re('user of (?P<browser_id>.+?) types "{text}" to (?P<tab>JSON|RDF) '
-                 'textarea placed in metadata panel opened for "(?P<item_name>.+?)"'))
+@when(parsers.re('user of (?P<browser_id>.+?) types "(?P<text>.+?)" '
+                 'to (?P<tab>JSON|RDF) textarea placed in metadata panel '
+                 'opened for "(?P<item_name>.+?)"'))
+@then(parsers.re('user of (?P<browser_id>.+?) types "(?P<text>.+?)" '
+                 'to (?P<tab>JSON|RDF) textarea placed in metadata panel '
+                 'opened for "(?P<item_name>.+?)"'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def type_text_to_metadata_textarea(browser_id, item_name, text, tab,
                                    tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     metadata_row = browser.get_metadata_for(item_name)
-    tab = getattr(metadata_row, tab)
-    tab.textarea = text
+    tab = getattr(metadata_row, tab.lower())
+    tab.text_area = text
