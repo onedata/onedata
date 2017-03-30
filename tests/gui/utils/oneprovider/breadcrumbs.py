@@ -19,7 +19,7 @@ class Breadcrumbs(PageObject):
 
     def __str__(self):
         return 'Breadcrumbs({path}) in {parent}'.format(path=self.pwd(),
-                                                        parent=self._parent)
+                                                        parent=self.parent)
 
     def pwd(self):
         return '/'.join(directory.text
@@ -33,6 +33,6 @@ class Breadcrumbs(PageObject):
         for i, (dir1, dir2) in enumerate(izip(path.split('/'), breadcrumbs)):
             assert dir1 == dir2.text, err_msg.format(dir=dir1, idx=i, item=self)
 
-        click_on_web_elem(self._driver, dir2,
+        click_on_web_elem(self.driver, dir2,
                           lambda: 'cannot click on {idx}th element in '
                                   '{item}'.format(idx=i, item=self))

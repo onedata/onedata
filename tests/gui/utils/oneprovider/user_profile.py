@@ -19,7 +19,7 @@ class UserProfile(PageObject, ExpandableMixin):
                                                    text='manage account')
 
     def __str__(self):
-        return 'USER PROFILE in {}'.format(self._parent)
+        return 'USER PROFILE in {}'.format(self.parent)
 
     def log_out(self):
         self._click_on_dropdown_item('log out')
@@ -30,7 +30,7 @@ class UserProfile(PageObject, ExpandableMixin):
     def _click_on_dropdown_item(self, name):
         if self.is_expanded():
             btn = getattr(self, '_{}_btn'.format(name.replace(' ', '_')))
-            click_on_web_elem(self._driver, btn,
+            click_on_web_elem(self.driver, btn,
                               lambda: 'cannot click on {} in '
                                       '{}'.format(name, self))
         else:

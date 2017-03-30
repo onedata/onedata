@@ -277,6 +277,8 @@ Feature: Onezone GUI elements
     And user of browser sees that provider popup for provider named "p1" has appeared on world map
     And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
     And user of browser sees that Oneprovider session has started
+    And user of browser is idle for 4 seconds
+    And user of browser refreshes site
     Then user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space1"
 
 
@@ -429,27 +431,27 @@ Feature: Onezone GUI elements
 
 
   Scenario: User sees that after clicking on provider's circle on world map, provider's popup appears
-    When user of browser sees that there is no displayed provider popup next to 1st provider circle on Onezone world map
-    And user of browser clicks on 1st provider circle on Onezone world map
-    Then user of browser sees that provider popup has appeared next to 1st provider circle on Onezone world map
+    When user of browser sees that there is no displayed provider popup next to 2nd provider circle on Onezone world map
+    And user of browser clicks on 2nd provider circle on Onezone world map
+    Then user of browser sees that provider popup has appeared next to 2nd provider circle on Onezone world map
 
 
   # TODO clicking on other provider do when there will be other providers
   Scenario: User sees that provider popup can be closed with clicking the same or other provider circle
-    When user of browser sees that there is no displayed provider popup next to 1st provider circle on Onezone world map
-    And user of browser clicks on 1st provider circle on Onezone world map
-    And user of browser sees that provider popup has appeared next to 1st provider circle on Onezone world map
-    And user of browser clicks on 1st provider circle on Onezone world map
-    Then user of browser sees that provider popup next to 1st provider circle on Onezone world map has disappeared
+    When user of browser sees that there is no displayed provider popup next to 2nd provider circle on Onezone world map
+    And user of browser clicks on 2nd provider circle on Onezone world map
+    And user of browser sees that provider popup has appeared next to 2nd provider circle on Onezone world map
+    And user of browser clicks on 2nd provider circle on Onezone world map
+    Then user of browser sees that provider popup next to 2nd provider circle on Onezone world map has disappeared
 
 
   # TODO now it is not possible to close by clicking outside map, try it when it will be possible
   Scenario: User sees that provider popup can be closed with clicking on map
-    When user of browser sees that there is no displayed provider popup next to 1st provider circle on Onezone world map
-    And user of browser clicks on 1st provider circle on Onezone world map
-    And user of browser sees that provider popup has appeared next to 1st provider circle on Onezone world map
+    When user of browser sees that there is no displayed provider popup next to 2nd provider circle on Onezone world map
+    And user of browser clicks on 2nd provider circle on Onezone world map
+    And user of browser sees that provider popup has appeared next to 2nd provider circle on Onezone world map
     And user of browser clicks on Onezone world map
-    Then user of browser sees that provider popup next to 1st provider circle on Onezone world map has disappeared
+    Then user of browser sees that provider popup next to 2nd provider circle on Onezone world map has disappeared
 
 
   Scenario: User sees that home space of provider should have "cloud with home" icon
@@ -468,10 +470,12 @@ Feature: Onezone GUI elements
     Then user of browser sees that the list of spaces in provider popup and in expanded "GO TO YOUR FILES" Onezone panel are the same for provider named "p1"
 
 
-  Scenario: User sees that when no provider is working appropriate msg is shown
-    Given there are no working provider(s) named "p1"
-    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+  Scenario: User sees that non working providers have gray icon in "GO TO YOR FILES" panel and appropriate msg is shown
+    Given there are no working provider(s) named ["p1", "p2"]
+    When user of browser refreshes site
+    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
     Then user of browser sees that provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel is not working
+    And user of browser sees that provider named "p2" in expanded "GO TO YOUR FILES" Onezone panel is not working
     And user of browser sees alert with title "All your providers are offline" on world map in Onezone gui
 
 

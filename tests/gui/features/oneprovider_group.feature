@@ -167,23 +167,23 @@ Feature: Oneprovider Group functionality
 
   Scenario: User can leave existing group and then create group with the same name
     # group 'group1' defined in env.json
-    When user of browser clicks on settings icon displayed for "group1" item on the groups sidebar list
-    And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "group1"
+    When user of browser clicks on settings icon displayed for "group3" item on the groups sidebar list
+    And user of browser clicks on the "LEAVE THIS GROUP" item in settings dropdown for group named "group3"
     And user of browser sees that "Leave the group" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    Then user of browser sees an info notify with text matching to: .*group1.*left
+    Then user of browser sees an info notify with text matching to: .*group3.*left
     And user of browser is idle for 4 seconds
-    And user of browser sees that group1 has disappeared from groups sidebar list
+    And user of browser sees that group3 has disappeared from groups sidebar list
 
     # TODO rm code below after REST API become available
     And user of browser clicks on the "Create" button in sidebar list's header
     And user of browser sees that "Create a new group" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "group1" on keyboard
+    And user of browser types "group3" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    And user of browser sees that group1 has appeared on groups sidebar list
+    And user of browser sees that group3 has appeared on groups sidebar list
 
 
   Scenario: User fails to view group after leaving it

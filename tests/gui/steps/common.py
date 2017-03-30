@@ -20,7 +20,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
-from tests.gui.utils.generic import parse_seq
+from tests.gui.utils.generic import parse_seq, suppress
 from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND, set_global_browser_being_created, \
     is_firefox_logging_enabled
@@ -323,8 +323,20 @@ def assert_copied_token_does_not_match_displayed_one(browser_id, tmp_memory):
 
 @given(parsers.parse('there are no working provider(s) named {provider_list}'))
 def kill_providers(persistent_environment, provider_list):
+    kill_cmd = ['docker', 'kill']
+    inspect_cmd = ['docker', 'inspect', '-f', '{{.State.Running}}']
     for provider in parse_seq(provider_list):
-        regexp = r'worker@(.*?{name}.*)'.format(name=provider)
         for node in persistent_environment["op_worker_nodes"]:
-            container_name = re.match(regexp, node).groups(0)[0]
-            subprocess.call(['docker', 'kill', container_name])
+            if provider in node:
+                container_name = node.split('@')[1]
+                subprocess.call(kill_cmd + [container_name])
+                for _ in xrange(10):
+                    is_alive = subprocess.Popen(inspect_cmd + [container_name],
+                                                stdout=subprocess.PIPE)
+                    with suppress(Exception):
+                        if is_alive.communicate()[0] == 'false\n':
+                            break
+                    time.sleep(1)
+                else:
+                    raise RuntimeError('container {} still alive, while it '
+                                       'should not be'.format(container_name))

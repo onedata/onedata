@@ -1,4 +1,3 @@
-# coding=utf-8
 """Steps for features of Onezone login page.
 """
 
@@ -9,46 +8,11 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import time
 
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import upload_file_path, repeat_failed
-from pytest_bdd import when, then, parsers, given
+from tests.gui.conftest import WAIT_BACKEND
+from pytest_bdd import when, then, parsers
 from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-
-
-def _upload_files_to_cwd(driver, files):
-    """This interaction is very hacky, because uploading files with Selenium
-    needs to use input element, but we do not use it directly in frontend.
-    So we unhide an input element for a while and pass a local file path to it.
-    """
-    # HACK: for Firefox driver - because we cannot interact with hidden elements
-    driver.execute_script("$('input#toolbar-file-browse').removeClass('hidden')")
-    driver.find_element_by_css_selector('input#toolbar-file-browse').send_keys(
-        files
-    )
-    driver.execute_script("$('input#toolbar-file-browse').addClass('hidden')")
-
-
-@when(parsers.parse('user of {browser_id} uses upload button in toolbar '
-                    'to upload file "{file_name}" to current dir'))
-def upload_file_to_cwd(selenium, browser_id, file_name):
-    driver = select_browser(selenium, browser_id)
-    _upload_files_to_cwd(driver, upload_file_path(file_name))
-
-
-@when(parsers.parse('user of {browser_id} uses upload button in toolbar to '
-                    'upload files from local directory "{dir_path}" to remote '
-                    'current dir'))
-def upload_files_to_cwd(selenium, browser_id, dir_path, tmpdir):
-    driver = select_browser(selenium, browser_id)
-    directory = tmpdir.join(browser_id, *dir_path.split('/'))
-    if directory.isdir():
-        _upload_files_to_cwd(driver, '\n'.join(str(item) for item
-                                               in directory.listdir()
-                                               if item.isfile()))
-    else:
-        raise RuntimeError('directory {} does not exist'.format(str(directory)))
 
 
 # TODO currently every browser in test download to that same dir,
@@ -83,41 +47,3 @@ def has_downloaded_file_content(selenium, tmpdir, file_name,
         lambda _: _check_file_content(),
         message='checking if downloaded file contains {:s}'.format(content)
     )
-
-
-@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
-                    'named "{provider}" is entirely filled'))
-@then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
-                    'named "{provider}" is entirely filled'))
-@repeat_failed(attempts=WAIT_BACKEND, timeout=True)
-def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
-                                                      provider):
-    driver = select_browser(selenium, browser_id)
-    css_sel = '#file-chunks-modal table.file-blocks-table td.provider-name, ' \
-              '#file-chunks-modal table.file-blocks-table td.chunks canvas'
-    name, canvas = driver.find_elements_by_css_selector(css_sel)
-    assert name.text == provider, \
-        'provider name displayed {} instead of expected {}'.format(name.text,
-                                                                   provider)
-    assert driver.execute_script(is_canvas_filled, canvas), \
-        'canvas not filled entirely for provider named {}'.format(provider)
-
-
-is_canvas_filled = """
-function is_canvas_filled(cvs){
-    var ctx = cvs.getContext("2d");
-    var fillColorHex = ctx.fillStyle;
-    var fillColor = [parseInt(fillColorHex.slice(1, 3), 16),
-                     parseInt(fillColorHex.slice(3, 5), 16),
-                     parseInt(fillColorHex.slice(5, 7), 16)];
-    img = ctx.getImageData(0, 0, cvs.width, cvs.height);
-    pix = img.data;
-    for(var i = 0; i < pix.length; i += 4)
-        if(pix[i] != fillColor[0] || pix[i+1] != fillColor[1] || pix[i+2] != fillColor[2])
-            return false;
-
-    return true;
-}
-
-return is_canvas_filled(arguments[0]);
-"""

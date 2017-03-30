@@ -16,7 +16,7 @@ class ManageAccount(PageObject, ExpandableMixin):
                                            text='logout')
 
     def __str__(self):
-        return 'Manage Account in {}'.format(self._parent)
+        return 'Manage Account in {}'.format(self.parent)
 
     def logout(self):
         self._click_on_btn('logout')

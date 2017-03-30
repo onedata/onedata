@@ -26,11 +26,11 @@ from environment import docker
 from pytest_selenium_multi.drivers.utils import factory
 
 
-SELENIUM_IMPLICIT_WAIT = 8
+SELENIUM_IMPLICIT_WAIT = 4
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
-WAIT_FRONTEND = SELENIUM_IMPLICIT_WAIT
+WAIT_FRONTEND = 4
 
 # use this const when using: WebDriverWait(selenium, WAIT_BACKEND).until(lambda s: ...)
 # when waiting for backend changes
@@ -61,8 +61,14 @@ is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_lin
 
 
 @pytest.fixture(scope='session')
+def cdmi():
+    from tests.gui.utils.oneservices.cdmi import CDMIClient
+    return CDMIClient
+
+
+@pytest.fixture(scope='session')
 def oz_page():
-    from tests.gui.utils.onezone_gui import OZLoggedIn
+    from tests.gui.utils.onezone import OZLoggedIn
     return OZLoggedIn
 
 
@@ -70,6 +76,12 @@ def oz_page():
 def op_page():
     from tests.gui.utils.oneprovider_gui import OPLoggedIn
     return OPLoggedIn
+
+
+@pytest.fixture(scope='session')
+def modals():
+    from tests.gui.utils.common.modals import Modals
+    return Modals
 
 
 @pytest.fixture
@@ -229,6 +241,8 @@ def config_driver(config_driver, browser_width, browser_height):
         driver = config_driver(driver)
         driver.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
         driver.set_window_size(browser_width, browser_height)
+        # possible solution to chromedriver cruches: Timed out receiving message from renderer
+        driver.set_page_load_timeout(60)
         # currenlty, we rather set window size
         # driver.maximize_window()
         return driver
