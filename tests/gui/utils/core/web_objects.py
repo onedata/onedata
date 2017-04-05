@@ -3,7 +3,7 @@
 
 from abc import abstractmethod, ABCMeta
 
-from tests.gui.utils.generic import nth, click_on_web_elem
+from tests.gui.utils.generic import nth, click_on_web_elem, repeat_failed
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -14,14 +14,37 @@ __license__ = "This software is released under the MIT license cited in " \
 class AbstractWebObject(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, driver, web_elem, parent):
+    def __init__(self, driver, web_elem, parent=None, name=''):
         self.driver = driver
         self.web_elem = web_elem
         self.parent = parent
+        if name != '':
+            self.name = name
 
     @abstractmethod
     def __str__(self):
         pass
+
+
+class InputWebObject(AbstractWebObject):
+    name = 'input'
+
+    def __str__(self):
+        return '{} in {}'.format(self.name, self.parent)
+
+    @property
+    def value(self):
+        return self.web_elem.get_attribute('value')
+
+    @value.setter
+    @repeat_failed(attempts=10)
+    def value(self, val):
+        self.clear()
+        self.web_elem.send_keys(val)
+        assert self.value == val, 'entering "{}" to {} failed'.format(val, self)
+
+    def clear(self):
+        self.web_elem.clear()
 
 
 class ButtonWebObject(AbstractWebObject):
@@ -37,21 +60,29 @@ class ButtonWebObject(AbstractWebObject):
     def is_enabled(self):
         return self.web_elem.is_enabled()
 
-
-class NavigationButtonWebObject(ButtonWebObject):
-    name = 'button'
-
     def is_active(self):
         return 'active' in self.web_elem.get_attribute('class')
 
 
+class ButtonWithTextWebObject(ButtonWebObject):
+    def __str__(self):
+        return '{} btn with "{}" text in {}'.format(self.name, self.text,
+                                                    self.parent)
+
+    @property
+    def text(self):
+        return self.web_elem.text
+
+    id = text
+
+
 class WebObjectsSequence(object):
 
-    def __init__(self, driver, items, parent, cls):
+    def __init__(self, driver, items, cls, parent=None):
         self.driver = driver
         self.items = items
-        self.parent = parent
         self.cls = cls
+        self.parent = parent
 
     def _getitem_by_id(self, sel):
         for item in self:
@@ -92,6 +123,8 @@ class WebObjectsSequence(object):
             return None
 
     def __contains__(self, item):
+        if isinstance(item, self.cls):
+            item = item.id
         return False if self._getitem_by_id(item) is None else True
 
     def __len__(self):
@@ -101,7 +134,12 @@ class WebObjectsSequence(object):
         return len(self)
 
     def index(self, item_for_idx):
+        if isinstance(item_for_idx, self.cls):
+            item_searched = item_for_idx.id
+        else:
+            item_searched = item_for_idx
+
         for i, item in enumerate(self):
-            if item is item_for_idx:
+            if item.id == item_searched:
                 return i
         return None
