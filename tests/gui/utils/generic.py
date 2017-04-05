@@ -209,3 +209,10 @@ def rm_css_cls(driver, web_elem, css_cls):
 
 def nth(seq, idx):
     return next(islice(seq, idx, None), None)
+
+
+def keyword_only_arg(kwargs, arg):
+    try:
+        return kwargs.pop(arg)
+    except KeyError:
+        raise ValueError('{} argument not specified'.format(arg))

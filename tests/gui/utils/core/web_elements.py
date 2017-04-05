@@ -1,52 +1,17 @@
 """Utils and fixtures to facilitate operations on various web elements in web GUI.
 """
 
-from abc import abstractmethod, ABCMeta
 from functools import partial
 
-from .web_objects import ButtonWebObject, WebObjectsSequence, InputWebObject, \
-    ButtonWithTextWebObject
-from tests.gui.utils.generic import find_web_elem, find_web_elem_with_text
+from .base import AbstractWebElement, AbstractWebItem
+from .web_objects import ButtonPageObject, PageObjectsSequence, ButtonWithTextPageObject
+from tests.gui.utils.generic import find_web_elem, find_web_elem_with_text, \
+    repeat_failed, keyword_only_arg
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
-
-
-class WebObject(type):
-    def __init__(cls, cls_name, bases, cls_dict):
-        for key, val in cls_dict.items():
-            if isinstance(val, AbstractWebElement) and \
-                    (val.name in ('id', '')):
-                val.name = key
-        super(WebObject, cls).__init__(cls_name, bases, cls_dict)
-
-
-class AbstractWebElement(object):
-    __metaclass__ = ABCMeta
-
-    def __init__(self, css_sel, name=''):
-        self.css_sel = css_sel
-        self.name = name
-
-    def __delete__(self, instance):
-        raise AttributeError("can't delete attribute")
-
-    def __set__(self, instance, value):
-        raise AttributeError("can't set attribute")
-
-    @abstractmethod
-    def __get__(self, instance, owner):
-        pass
-
-
-class AbstractWebItem(AbstractWebElement):
-    __metaclass__ = ABCMeta
-
-    def __init__(self, *args, **kwargs):
-        self.cls = keyword_only_arg(kwargs, 'cls')
-        super(AbstractWebItem, self).__init__(*args, **kwargs)
 
 
 class WebElement(AbstractWebElement):
@@ -92,43 +57,32 @@ class WebItem(AbstractWebItem, WebElement):
                                                       name=self.name)
 
 
-Input = partial(WebItem, cls=InputWebObject)
-Button = partial(WebItem, cls=ButtonWebObject)
-
-
 class WebItemWithText(WebItem, WebElementWithText):
     pass
 
 
-NamedButton = partial(WebItemWithText, cls=ButtonWithTextWebObject)
+Button = partial(WebItem, cls=ButtonPageObject)
+NamedButton = partial(WebItemWithText, cls=ButtonWithTextPageObject)
 
 
-def keyword_only_arg(kwargs, arg):
-    try:
-        return kwargs.pop(arg)
-    except KeyError:
-        raise ValueError('{} argument not specified'.format(arg))
-
-
-class ButtonWithTextWebElement(WebElement):
-    item_not_found_msg = '{text} btn not found in {parent}'
-
-    def __init__(self, *args, **kwargs):
-        if 'text' in kwargs:
-            self._text = kwargs.pop('text')
-        else:
-            raise ValueError('text argument not specified')
-
-        super(ButtonWithTextWebElement, self).__init__(*args, **kwargs)
-
+class Label(WebElement):
     def __get__(self, instance, owner):
-        if instance is None:
-            return self
+        item = super(Label, self).__get__(instance, owner)
+        return item.text if instance else item
 
-        msg = self.item_not_found_msg
-        return find_web_elem_with_text(instance.web_elem, self.css_sel,
-                                       self._text,
-                                       lambda: self._format_msg(msg, instance))
+
+class Input(WebElement):
+    def __get__(self, instance, owner):
+        item = super(Input, self).__get__(instance, owner)
+        return item.get_attribute('value') if instance else item
+
+    @repeat_failed(attempts=10)
+    def __set__(self, instance, val):
+        input_box = super(Input, self).__get__(instance, type(instance))
+        input_box.clear()
+        input_box.send_keys(val)
+        assert input_box.get_attribute('value') == val, \
+            'entering "{}" to {} in {} failed'.format(val, self.name, instance)
 
 
 class WebElementsSequence(AbstractWebElement):
@@ -141,37 +95,7 @@ class WebElementsSequence(AbstractWebElement):
 
 class WebItemsSequence(AbstractWebItem, WebElementsSequence):
     def __get__(self, instance, owner):
-        items = super(WebItemsSequence, self).__get__(instance, owner)
-        if instance is None:
-            return items
-        else:
-            return WebObjectsSequence(instance.driver, items,
-                                      instance, self.cls)
-
-
-class ItemListWebElement(WebElement):
-    def __get__(self, instance, owner):
-        if instance is None:
-            return self
-
-        return instance.web_elem.find_elements_by_css_selector(self.css_sel)
-
-
-class WebElementsSequenceItemWithText(object):
-    def __init__(self, seq, text, cls):
-        self.seq = seq
-        self.text = text.lower()
-        self.cls = cls
-
-    def __get__(self, instance, owner):
-        for item in self.seq.__get__(instance, owner):
-            if item.text.lower() == self.text:
-                return self.cls(instance.driver, item, instance)
-
-
-class TextLabelWebElement(WebElement):
-    item_not_found_msg = '{item} label not found in {parent}'
-
-    def __get__(self, instance, owner):
-        item = super(TextLabelWebElement, self).__get__(instance, owner)
-        return item.text if instance else item
+        seq = super(WebItemsSequence, self).__get__(instance, owner)
+        return seq if instance is None else PageObjectsSequence(instance.driver,
+                                                                seq, instance,
+                                                                self.cls)

@@ -1,9 +1,8 @@
 """Utils and fixtures to facilitate operations on various web objects in web GUI.
 """
 
-from abc import abstractmethod, ABCMeta
-
-from tests.gui.utils.generic import nth, click_on_web_elem, repeat_failed
+from .base import PageObject
+from tests.gui.utils.generic import nth
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -11,51 +10,14 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class AbstractWebObject(object):
-    __metaclass__ = ABCMeta
-
-    def __init__(self, driver, web_elem, parent=None, name=''):
-        self.driver = driver
-        self.web_elem = web_elem
-        self.parent = parent
-        if name != '':
-            self.name = name
-
-    @abstractmethod
-    def __str__(self):
-        pass
-
-
-class InputWebObject(AbstractWebObject):
-    name = 'input'
-
-    def __str__(self):
-        return '{} in {}'.format(self.name, self.parent)
-
-    @property
-    def value(self):
-        return self.web_elem.get_attribute('value')
-
-    @value.setter
-    @repeat_failed(attempts=10)
-    def value(self, val):
-        self.clear()
-        self.web_elem.send_keys(val)
-        assert self.value == val, 'entering "{}" to {} failed'.format(val, self)
-
-    def clear(self):
-        self.web_elem.clear()
-
-
-class ButtonWebObject(AbstractWebObject):
+class ButtonPageObject(PageObject):
     name = 'button'
 
     def __str__(self):
         return '{} btn in {}'.format(self.name, self.parent)
 
-    def __call__(self, *args, **kwargs):
-        click_on_web_elem(self.driver, self.web_elem,
-                          lambda: 'cannot click on {btn}'.format(btn=self))
+    def __call__(self):
+        self.click()
 
     def is_enabled(self):
         return self.web_elem.is_enabled()
@@ -64,7 +26,7 @@ class ButtonWebObject(AbstractWebObject):
         return 'active' in self.web_elem.get_attribute('class')
 
 
-class ButtonWithTextWebObject(ButtonWebObject):
+class ButtonWithTextPageObject(ButtonPageObject):
     def __str__(self):
         return '{} btn with "{}" text in {}'.format(self.name, self.text,
                                                     self.parent)
@@ -76,7 +38,7 @@ class ButtonWithTextWebObject(ButtonWebObject):
     id = text
 
 
-class WebObjectsSequence(object):
+class PageObjectsSequence(object):
 
     def __init__(self, driver, items, cls, parent=None):
         self.driver = driver
