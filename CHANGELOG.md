@@ -4,6 +4,19 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc14
+
+* VFS-3101 change Then steps in metadata scenarios
+* VFS-3101 refactor metadata steps
+* VFS-3101 add ButtonWebObject class
+* VFS-3050 add test for 2 providers
+* VFS-3050 add steps creating access token and copying providers ip for cdmi use
+* VFS-3050 add provisional api for handling cdmi service from tests
+* VFS-3050 refactor web_elements.py
+* VFS-3050 add test user upload file on 1 provider and download on other
+* VFS-3050 add utils for handling of file distribution modal and canvas
+
+
 ### 3.0.0-rc13
 
 * Releasing new version 3.0.0-rc13
