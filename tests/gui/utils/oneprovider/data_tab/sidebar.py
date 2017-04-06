@@ -4,8 +4,8 @@ data tab in oneprovider web GUI.
 
 from selenium.webdriver import ActionChains
 
-from tests.gui.utils.common.common import PageObject, ExpandableMixin
-from tests.gui.utils.common.web_elements import ToggleWebElement, TextLabelWebElement, \
+from tests.gui.utils.core.common import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import ToggleWebElement, TextLabelWebElement, \
     WebElement, ItemListWebElement, HeaderWebElement
 from tests.gui.utils.oneprovider.data_tab.space_selector import SpaceSelector
 
@@ -24,11 +24,11 @@ class DataTabSidebar(PageObject):
         super(DataTabSidebar, self).__init__(*args, **kwargs)
 
     def __str__(self):
-        return 'sidebar in {}'.format(self._parent)
+        return 'sidebar in {}'.format(self.parent)
 
     @property
     def space_selector(self):
-        return SpaceSelector(self._driver, self._space_selector, self)
+        return SpaceSelector(self.driver, self._space_selector, self)
 
     @property
     def width(self):
@@ -37,14 +37,14 @@ class DataTabSidebar(PageObject):
     @width.setter
     def width(self, value):
         offset = value - self.width
-        action = ActionChains(self._driver)
+        action = ActionChains(self.driver)
         action.drag_and_drop_by_offset(self._resize_handler, offset, 0)
         action.perform()
 
     @property
     def root_dir(self):
         root, root_content = self._root_dir[:2]
-        return DirectoryTree(self._driver, root, self, children=root_content)
+        return DirectoryTree(self.driver, root, self, children=root_content)
 
     @property
     def cwd(self):
@@ -78,11 +78,11 @@ class DirectoryTree(PageObject, ExpandableMixin):
 
     def __str__(self):
         return 'DirectoryTree({path}) in {parent}'.format(path=self.pwd(),
-                                                          parent=self._parent)
+                                                          parent=self.parent)
 
     def __iter__(self):
         css_sel = 'ul.data-files-tree-list li'
-        return (DirectoryTree(self._driver, dir_tree, self, children=dir_tree)
+        return (DirectoryTree(self.driver, dir_tree, self, children=dir_tree)
                 for dir_tree in
                 self._children.find_elements_by_css_selector(css_sel))
 
@@ -101,13 +101,13 @@ class DirectoryTree(PageObject, ExpandableMixin):
         return 'active' in self._header.get_attribute('class')
 
     def pwd(self):
-        if not isinstance(self._parent, DirectoryTree):
+        if not isinstance(self.parent, DirectoryTree):
             return '/'
         else:
-            return '{path}{dir}/'.format(path=self._parent.pwd(),
+            return '{path}{dir}/'.format(path=self.parent.pwd(),
                                          dir=self.name)
 
     @property
     def displayed_name_width(self):
-        return self._driver.execute_script("return $(arguments[0]).width();",
-                                           self._header_label)
+        return self.driver.execute_script("return $(arguments[0]).width();",
+                                          self._header_label)

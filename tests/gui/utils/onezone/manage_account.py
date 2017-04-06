@@ -1,8 +1,8 @@
 """Utils and fixtures to facilitate operations on MANAGE ACCOUNT Onezone top bar.
 """
 
-from tests.gui.utils.common.common import PageObject, ExpandableMixin
-from tests.gui.utils.common.web_elements import ToggleWebElement, ButtonWithTextWebElement
+from tests.gui.utils.core.common import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import ToggleWebElement, ButtonWithTextWebElement
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -16,7 +16,7 @@ class ManageAccount(PageObject, ExpandableMixin):
                                            text='logout')
 
     def __str__(self):
-        return 'Manage Account in {}'.format(self._parent)
+        return 'Manage Account in {}'.format(self.parent)
 
     def logout(self):
         self._click_on_btn('logout')

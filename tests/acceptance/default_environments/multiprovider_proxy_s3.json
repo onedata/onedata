@@ -27,6 +27,11 @@
                 {
                     "type": "posix",
                     "name": "/mnt/st1"
+                },
+                {
+                    "type": "s3",
+                    "name": "s3",
+                    "bucket": "onedata"
                 }
             ],
             "users": [
@@ -276,7 +281,7 @@
                 ],
                 "providers": {
                     "p1": {
-                        "storage": "/mnt/st1",
+                        "storage": "s3",
                         "supported_size": 1000000000
                     }
                 }

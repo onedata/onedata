@@ -45,8 +45,12 @@ def go_to_relative_url(selenium, relative_url):
     selenium.get(new_url)
 
 
-def parse_seq(seq):
-    return [el.strip().strip('"') for el in seq.strip("[]").split(',') if el != ""]
+def parse_seq(seq, pattern=None, default=str):
+    if pattern is not None:
+        return [default(el.group()) for el in re.finditer(pattern, seq)]
+    else:
+        return [default(el.strip().strip('"'))
+                for el in seq.strip("[]").split(',') if el != ""]
 
 
 # A draft - not tested yet, but can be helpful in the future
@@ -104,21 +108,27 @@ def implicit_wait(driver, timeout, prev_timeout):
         driver.implicitly_wait(prev_timeout)
 
 
-def repeat_failed(attempts, interval=0.1, timeout=False, exceptions=(Exception,)):
+def repeat_failed(attempts=10, timeout=None, interval=0.1,
+                  exceptions=(Exception,)):
     """Returns wrapper on function, which keeps calling it until timeout or
     for attempts times in case of failure (exception).
 
-    :param attempts: maximum num of attempts if timeout == False else time until timeout
+    :param attempts: maximum num of attempts, defaults to 10
+    :type attempts: int
     :param interval: time between subsequent calls
-    :param timeout: change meaning of attempts arg
+    :type interval: float
+    :param timeout: time limit of now when to stop repeating fun,
+                    if set alongside attempts take precedence
+    :type timeout: float | None
     :param exceptions: in case of which consider failure of call
+    :type exceptions: list[Exception]
     :return: wrapper decorator
     """
 
     @decorator
     def wrapper(fun, *args, **kwargs):
         now = time()
-        limit, i = (now + attempts, now) if timeout else (attempts, 0)
+        limit, i = (now + timeout, now) if timeout else (attempts, 0)
 
         while i < limit:
             try:
@@ -186,6 +196,15 @@ def suppress(*exceptions):
         yield
     except exceptions:
         pass
+
+
+@contextmanager
+def rm_css_cls(driver, web_elem, css_cls):
+    driver.execute_script("$(arguments[0]).removeClass('{}')".format(css_cls),
+                          web_elem)
+    yield web_elem
+    driver.execute_script("$(arguments[0]).addClass('{}')".format(css_cls),
+                          web_elem)
 
 
 def nth(seq, idx):

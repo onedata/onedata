@@ -38,6 +38,10 @@
                     "u1",
                     "u2"
                 ],
+                "s2": [
+                    "u1",
+                    "u2"
+                ],
                 "fuse": [
                     "u1",
                     "u2"
@@ -60,6 +64,10 @@
                     "u1",
                     "u2"
                 ],
+                "s2": [
+                    "u1",
+                    "u2"
+                ],
                 "fuse": [
                     "u1",
                     "u2"
@@ -74,6 +82,10 @@
             ],
             "groups": {
                 "s1": [
+                    "u1",
+                    "u2"
+                ],
+                "s2": [
                     "u1",
                     "u2"
                 ],
@@ -277,6 +289,30 @@
                 "providers": {
                     "p1": {
                         "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    },
+                    "p2":{
+                        "storage": "/mnt/st2",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
+            "s2": {
+                "displayed_name": "s2",
+                "users": [
+                    "u1",
+                    "u2"
+                ],
+                "groups": [
+                    "g1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    },
+                    "p2":{
+                        "storage": "/mnt/st2",
                         "supported_size": 1000000000
                     }
                 }

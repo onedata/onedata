@@ -3,8 +3,8 @@
 
 import re
 
-from tests.gui.utils.common.common import PageObject
-from tests.gui.utils.common.web_elements import ItemListWebElement, TextLabelWebElement, WebElement
+from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.web_elements import ItemListWebElement, TextLabelWebElement, WebElement
 from tests.gui.utils.generic import nth
 from tests.gui.utils.oneprovider.file_browser.file_row import FileRow
 
@@ -21,16 +21,16 @@ class FileUploader(PageObject):
 
     @property
     def progress(self):
-        return ProgressBar(self._driver, self._progress, self)
+        return ProgressBar(self.driver, self._progress, self)
 
     def is_visible(self):
         return 'visible' in self.web_elem.get_attribute('class')
 
     def __str__(self):
-        return 'file uploader in {}'.format(self._parent)
+        return 'file uploader in {}'.format(self.parent)
 
     def __iter__(self):
-        return (FileUploadRow(self._driver, item, self) for item in self._rows)
+        return (FileUploadRow(self.driver, item, self) for item in self._rows)
 
     def __getitem__(self, selector):
         if isinstance(selector, int):
@@ -40,7 +40,7 @@ class FileUploader(PageObject):
                                    '{limit}'.format(index=selector,
                                                     limit=items_count))
             else:
-                return FileRow(self._driver, nth(self._rows, selector), self)
+                return FileRow(self.driver, nth(self._rows, selector), self)
 
         elif isinstance(selector, (str, unicode)):
             for item in self:
@@ -55,8 +55,8 @@ class FileUploader(PageObject):
         return len(self._rows)
 
     def scroll_to_bottom(self):
-        self._driver.execute_script('arguments[0].scrollIntoView();',
-                                    self._rows[-1])
+        self.driver.execute_script('arguments[0].scrollIntoView();',
+                                   self._rows[-1])
 
 
 class FileUploadRow(PageObject):
