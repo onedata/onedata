@@ -32,7 +32,7 @@ def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
 def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
     driver = select_browser(selenium, browser_id)
     alias = oz_page(driver)['user alias']
-    alias.edit()
+    alias.rename()
     tmp_memory[browser_id]['edit_box'] = alias.edit_box
 
 

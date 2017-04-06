@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on Onezone web GUI.
 """
 
-from tests.gui.utils.core.web_elements import WebElement, ItemListWebElement, HeaderWebElement
+from tests.gui.utils.core.web_elements import WebElement, WebElementsSequence
 from .access_tokens import AccessTokensPanel
 from .common import OZPanel
 from .data_space_management import DataSpaceManagementPanel
@@ -19,8 +19,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class OZLoggedIn(object):
     _atlas = WebElement('.onezone-atlas')
-    _manage_account = HeaderWebElement('header.onezone-top-bar')
-    _panels = ItemListWebElement('.main-accordion-group')
+    _manage_account = WebElement('header.onezone-top-bar')
+    _panels = WebElementsSequence('.main-accordion-group')
 
     panels = {'data space management': DataSpaceManagementPanel,
               'group management': GroupManagementPanel,

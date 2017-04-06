@@ -97,5 +97,5 @@ class WebItemsSequence(AbstractWebItem, WebElementsSequence):
     def __get__(self, instance, owner):
         seq = super(WebItemsSequence, self).__get__(instance, owner)
         return seq if instance is None else PageObjectsSequence(instance.driver,
-                                                                seq, instance,
-                                                                self.cls)
+                                                                seq, self.cls,
+                                                                instance)

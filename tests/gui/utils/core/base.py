@@ -62,9 +62,9 @@ class AbstractPageObject(object):
 
 class PageObject(AbstractPageObject):
     def __init__(self, driver, web_elem, parent, **kwargs):
+        super(PageObject, self).__init__(driver, web_elem, parent, **kwargs)
         if not hasattr(self, '_click_area'):
             self._click_area = web_elem
-        super(PageObject, self).__init__(driver, web_elem, parent, **kwargs)
 
     def __str__(self):
         return 'web object'
