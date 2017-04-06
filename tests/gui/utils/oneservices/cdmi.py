@@ -32,16 +32,14 @@ class CDMIClient(object):
     def write_to_file(self, path, text, offset=0):
         start = offset
         end = start + len(text) - 1
-        text = b64encode(text)
-        url_template = 'https://{ip}:{port}/cdmi{path}?value:{start}-{end}'
-        url = url_template.format(ip=self.provider_ip, port=self.port,
-                                  path=path, start=start, end=end)
-        headers = {'X-CDMI-Specification-Version': self.cdmi_version,
-                   'X-Auth-Token': self.auth_token,
-                   'content-type': 'application/cdmi-object',
-                   'X-CDMI-Partial': 'true'}
-        return requests.put(url, headers=headers, verify=False,
-                            json={"value": text})
+        url = 'https://{ip}:{port}/cdmi{path}'.format(ip=self.provider_ip,
+                                                      port=self.port,
+                                                      path=path)
+        headers = {'X-Auth-Token': self.auth_token,
+                   'Content-Type': 'application/binary',
+                   'content-range': 'bytes {start}-{end}/*'.format(start=start,
+                                                                   end=end)}
+        return requests.put(url, headers=headers, verify=False, data=text)
 
     def read_from_file(self, path, read_range=None):
         url = 'https://{ip}:{port}/cdmi{path}'.format(ip=self.provider_ip,
