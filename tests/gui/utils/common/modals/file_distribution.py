@@ -1,9 +1,8 @@
 """Utils and fixtures to facilitate operations on File distribution modal.
 """
 
-from tests.gui.utils.core.common import PageObject
-from tests.gui.utils.core.web_elements import WebElement, \
-    TextLabelWebElement, WebItemsSequence, WebItem
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import WebElement, Label, WebItemsSequence, WebItem
 from .modal import Modal
 
 __author__ = "Bartosz Walkowicz"
@@ -13,8 +12,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class _Chunk(PageObject):
-    start = TextLabelWebElement('.file-size .start')
-    end = TextLabelWebElement('.file-size .end')
+    start = Label('.file-size .start')
+    end = Label('.file-size .end')
     _canvas = WebElement('canvas')
 
     def __str__(self):
@@ -38,8 +37,7 @@ class _Chunk(PageObject):
 
 
 class _FileDistributionRecord(PageObject):
-    name = id = TextLabelWebElement('.provider-name',
-                                    parent_name='given provider')
+    name = id = Label('.provider-name', parent_name='given provider')
     distribution = WebItem('.chunks', cls=_Chunk)
 
     def __str__(self):
@@ -48,7 +46,7 @@ class _FileDistributionRecord(PageObject):
 
 
 class FileDistributionModal(Modal):
-    file_name = TextLabelWebElement('.modal-row strong')
+    file_name = Label('.modal-row strong')
     providers = WebItemsSequence('table.file-blocks-table tbody tr',
                                  cls=_FileDistributionRecord)
 

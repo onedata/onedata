@@ -4,9 +4,8 @@ in oneprovider web GUI.
 
 from selenium.webdriver import ActionChains
 
-from tests.gui.utils.core.common import PageObject
-from tests.gui.utils.core.web_elements import TextLabelWebElement, \
-    IconWebElement
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import Label, WebElement
 from tests.gui.utils.generic import click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
@@ -16,13 +15,13 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class FileRow(PageObject):
-    name = TextLabelWebElement('.file-label', parent_name='given file row')
-    size = TextLabelWebElement('.file-list-col-size')
-    modification_date = TextLabelWebElement('.file-list-col-modification')
+    name = id = Label('.file-label', parent_name='given file row')
+    size = Label('.file-list-col-size')
+    modification_date = Label('.file-list-col-modification')
 
-    _icon = IconWebElement('.file-icon .one-icon')
-    _metadata_tool = IconWebElement('.file-tool-metadata')
-    _share_tool = IconWebElement('.file-tool-share')
+    _icon = WebElement('.file-icon .one-icon')
+    _metadata_tool = WebElement('.file-tool-metadata')
+    _share_tool = WebElement('.file-tool-share')
 
     def __str__(self):
         return '{item} in {parent}'.format(item=self.name,

@@ -6,9 +6,10 @@ from contextlib import contextmanager
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from tests.gui.utils.core.common import PageObject
-from tests.gui.utils.core.web_elements import WebElement, ItemListWebElement, IconWebElement, TextLabelWebElement
-from tests.gui.utils.generic import iter_ahead, nth
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import WebElement, WebElementsSequence, Label, \
+    WebItemsSequence
+from tests.gui.utils.generic import iter_ahead
 from tests.gui.utils.oneprovider.file_browser.file_row import FileRow
 from tests.gui.utils.oneprovider.file_browser.metadata_row import MetadataRow
 
@@ -19,38 +20,14 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class FileBrowser(PageObject):
-    empty_dir_msg = TextLabelWebElement('.empty-model-container')
-    _empty_dir_icon = IconWebElement('.empty-dir-image')
-    _files = ItemListWebElement('tbody tr.file-row')
-    _files_with_metadata = ItemListWebElement('tbody tr.first-level')
+    empty_dir_msg = Label('.empty-model-container')
+    files = WebItemsSequence('tbody tr.file-row', cls=FileRow)
+    _empty_dir_icon = WebElement('.empty-dir-image')
+    _files_with_metadata = WebElementsSequence('tbody tr.first-level')
     _bottom = WebElement('.file-row-load-more')
 
     def __str__(self):
         return 'file browser in {}'.format(self.parent)
-
-    def __iter__(self):
-        return (FileRow(self.driver, item, self) for item in self._files)
-
-    def __getitem__(self, selector):
-        if isinstance(selector, int):
-            items_count = self.files_count
-            if selector >= items_count:
-                raise RuntimeError('requested index {index} out of bound '
-                                   '{limit}'.format(index=selector,
-                                                    limit=items_count))
-            else:
-                return FileRow(self.driver, nth(self._files, selector), self)
-        elif isinstance(selector, (str, unicode)):
-            for item in self:
-                if item.name == selector:
-                    return item
-            else:
-                raise RuntimeError('unable to find "{name}" in '
-                                   '{item}'.format(name=selector, item=self))
-
-    @property
-    def files_count(self):
-        return len(self._files)
 
     def is_empty(self):
         try:

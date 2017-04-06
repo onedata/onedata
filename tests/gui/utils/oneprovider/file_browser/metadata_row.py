@@ -1,11 +1,11 @@
 """Utils and fixtures to facilitate operation on metadata row in file browser in oneprovider web GUI.
 """
 
-from tests.gui.utils.core.common import PageObject
-from tests.gui.utils.core.web_elements import InputWebElement, TextLabelWebElement, WebItem, WebItemsSequence, \
-    ButtonWebItem, WebElementsSequence, WebElementsSequenceItemWithText
-from tests.gui.utils.core.web_objects import ButtonWebObject
-from tests.gui.utils.generic import click_on_web_elem, find_web_elem_with_text
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import Input, Label, WebItem, WebItemsSequence, \
+    Button, NamedButton
+from tests.gui.utils.core.web_objects import ButtonPageObject
+from tests.gui.utils.generic import find_web_elem_with_text
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -14,18 +14,18 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class _BasicMetadataEntry(PageObject):
-    attribute = id = TextLabelWebElement('th')
-    value = TextLabelWebElement('td')
-    remove = ButtonWebItem('.oneicon-close')
+    attribute = id = Label('th')
+    value = Label('td')
+    remove = Button('.oneicon-close')
 
     def __str__(self):
         return 'metadata basic entry'
 
 
 class _BasicMetadataNewEntry(PageObject):
-    attribute = InputWebElement('th input[placeholder=Attribute]')
-    value = InputWebElement('td input[placeholder=Value]')
-    add = ButtonWebItem('.oneicon-add')
+    attribute = Input('th input[placeholder=Attribute]')
+    value = Input('td input[placeholder=Value]')
+    add = Button('.oneicon-add')
 
     def __str__(self):
         return 'metadata basic new entry in {}'.format(self.parent)
@@ -44,21 +44,20 @@ class _BasicMetadataPanel(PageObject):
 
 
 class _MetadataEditPanel(PageObject):
-    text_area = InputWebElement('textarea')
-    status = TextLabelWebElement('.parse-status-panel')
+    text_area = Input('textarea')
+    status = Label('.parse-status-panel')
 
     def __str__(self):
         return 'metadata edit panel in {}'.format(self.parent)
 
 
 class _NavigationHeader(PageObject):
-    _tabs = WebElementsSequence('li')
-    basic = WebElementsSequenceItemWithText(seq=_tabs, text='BASIC',
-                                            cls=ButtonWebObject)
-    json = WebElementsSequenceItemWithText(seq=_tabs, text='JSON',
-                                           cls=ButtonWebObject)
-    rdf = WebElementsSequenceItemWithText(seq=_tabs, text='RDF',
-                                          cls=ButtonWebObject)
+    basic = NamedButton('li', text='BASIC')
+    json = NamedButton('li', text='JSON')
+    rdf = NamedButton('li', text='RDF')
+
+    def __str__(self):
+        return 'navigation header in {}'.format(self.parent)
 
 
 class MetadataRow(PageObject):
@@ -84,4 +83,4 @@ class MetadataRow(PageObject):
         css_sel = '.save-metadata-row button'
         err_msg = '{} btn not found in metadata row'.format(name)
         btn = find_web_elem_with_text(self.web_elem, css_sel, name, err_msg)
-        return ButtonWebObject(self.driver, btn, self)
+        return ButtonPageObject(self.driver, btn, self)

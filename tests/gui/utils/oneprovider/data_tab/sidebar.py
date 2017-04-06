@@ -4,9 +4,8 @@ data tab in oneprovider web GUI.
 
 from selenium.webdriver import ActionChains
 
-from tests.gui.utils.core.common import PageObject, ExpandableMixin
-from tests.gui.utils.core.web_elements import ToggleWebElement, TextLabelWebElement, \
-    WebElement, ItemListWebElement, HeaderWebElement
+from tests.gui.utils.core.base import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import Label, WebElement, WebItem, WebElementsSequence
 from tests.gui.utils.oneprovider.data_tab.space_selector import SpaceSelector
 
 __author__ = "Bartosz Walkowicz"
@@ -16,8 +15,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class DataTabSidebar(PageObject):
-    _space_selector = WebElement('.data-spaces-select')
-    _root_dir = ItemListWebElement('.data-files-tree ul li')
+    space_selector = WebItem('.data-spaces-select', cls=SpaceSelector)
+    _root_dir = WebElementsSequence('.data-files-tree ul li')
 
     def __init__(self, *args, **kwargs):
         self._resize_handler = kwargs.pop('resize_handler')
@@ -25,10 +24,6 @@ class DataTabSidebar(PageObject):
 
     def __str__(self):
         return 'sidebar in {}'.format(self.parent)
-
-    @property
-    def space_selector(self):
-        return SpaceSelector(self.driver, self._space_selector, self)
 
     @property
     def width(self):
@@ -64,13 +59,13 @@ class DataTabSidebar(PageObject):
 
 
 class DirectoryTree(PageObject, ExpandableMixin):
-    name = TextLabelWebElement('.item-label')
-    _toggle = ToggleWebElement('.item-icon .one-icon')
-    _header = HeaderWebElement('.secondary-sidebar-item.dir-item')
+    name = Label('.item-label')
+    _toggle = WebElement('.item-icon .one-icon')
+    _header = WebElement('.secondary-sidebar-item.dir-item')
     _click_area = WebElement('.secondary-sidebar-item.dir-item '
                              '.item-click-area')
-    _header_label = HeaderWebElement('.secondary-sidebar-item.dir-item '
-                                     '.truncate-secondary-sidebar-item')
+    _header_label = WebElement('.secondary-sidebar-item.dir-item '
+                               '.truncate-secondary-sidebar-item')
 
     def __init__(self, *args, **kwargs):
         self._children = kwargs.pop('children')

@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on Oneprovider web GUI.
 """
 
-from tests.gui.utils.core.web_elements import WebElement
+from tests.gui.utils.core.web_elements import WebItem
 from tests.gui.utils.generic import find_web_elem_with_text, click_on_web_elem
 from tests.gui.utils.oneprovider.data_tab import DataTab
 from tests.gui.utils.oneprovider.user_profile import UserProfile
@@ -42,7 +42,7 @@ def chdir_using_breadcrumbs(path, breadcrumbs):
 
 
 class OPLoggedIn(object):
-    _user_profile = WebElement('li.profile-dropdown')
+    user_profile = WebItem('li.profile-dropdown', cls=UserProfile)
 
     tabs = {'data': DataTab}
 
@@ -54,10 +54,6 @@ class OPLoggedIn(object):
 
     def __getattr__(self, item):
         return self.tabs[item](self.web_elem, self.web_elem, self)
-
-    @property
-    def user_profile(self):
-        return UserProfile(self.web_elem, self._user_profile, self)
 
     def click_on_tab(self, name):
         css_sel = 'nav.primary-sidebar li a'

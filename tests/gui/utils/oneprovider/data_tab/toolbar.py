@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on toolbar in data tab in oneprovider web GUI.
 """
 
-from tests.gui.utils.core.common import PageObject
+from tests.gui.utils.core.base import PageObject
 from tests.gui.utils.core.web_elements import WebElement
 from tests.gui.utils.generic import find_web_elem, rm_css_cls
 

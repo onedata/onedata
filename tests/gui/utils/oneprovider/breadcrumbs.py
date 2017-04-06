@@ -3,8 +3,8 @@
 
 from itertools import izip
 
-from tests.gui.utils.core.common import PageObject
-from tests.gui.utils.core.web_elements import ItemListWebElement
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import WebElementsSequence
 from tests.gui.utils.generic import click_on_web_elem
 
 
@@ -15,15 +15,14 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class Breadcrumbs(PageObject):
-    _breadcrumbs = ItemListWebElement('a.file-breadcrumb-item-link')
+    _breadcrumbs = WebElementsSequence('a.file-breadcrumb-item-link')
 
     def __str__(self):
         return 'Breadcrumbs({path}) in {parent}'.format(path=self.pwd(),
                                                         parent=self.parent)
 
     def pwd(self):
-        return '/'.join(directory.text
-                        for directory in self._breadcrumbs)
+        return '/'.join(directory.text for directory in self._breadcrumbs)
 
     def chdir(self, path):
         breadcrumbs = self._breadcrumbs

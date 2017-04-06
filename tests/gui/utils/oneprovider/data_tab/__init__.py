@@ -1,8 +1,8 @@
 """Utils for data tab in Oneprovider GUI tests
 """
 
-from tests.gui.utils.core.common import PageObject
-from tests.gui.utils.core.web_elements import ItemListWebElement, WebItem
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import WebElementsSequence, WebItem
 from .file_uploader import FileUploader
 from .sidebar import DataTabSidebar
 from .toolbar import DataTopToolBar
@@ -24,14 +24,14 @@ class DataTab(PageObject):
                            cls=FileBrowser)
     file_uploader = WebItem('#main-content + .file-upload .file-upload',
                             cls=FileUploader)
-    _sidebar = ItemListWebElement('.lower-main-content nav.secondary-sidebar, '
-                                  '#data-sidebar-resize-handler')
+    _sidebar = WebElementsSequence('.lower-main-content nav.secondary-sidebar, '
+                                   '#data-sidebar-resize-handler')
 
     def __str__(self):
         return 'DATA tab in {}'.format(self.parent)
 
     @property
     def sidebar(self):
-        sidebar, resize_handler = self._sidebar
-        return DataTabSidebar(self.web_elem, sidebar, self,
+        sidebar_, resize_handler = self._sidebar
+        return DataTabSidebar(self.web_elem, sidebar_, self,
                               resize_handler=resize_handler)
