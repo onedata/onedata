@@ -4,6 +4,24 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc14
+
+* VFS-3101 change Then steps in metadata scenarios
+* VFS-3101 refactor metadata steps
+* VFS-3101 add ButtonWebObject class
+* VFS-3050 add test for 2 providers
+* VFS-3050 add steps creating access token and copying providers ip for cdmi use
+* VFS-3050 add provisional api for handling cdmi service from tests
+* VFS-3050 refactor web_elements.py
+* VFS-3050 add test user upload file on 1 provider and download on other
+* VFS-3050 add utils for handling of file distribution modal and canvas
+
+
+### 3.0.0-rc13
+
+* Releasing new version 3.0.0-rc13
+
+
 ### 3.0.0-rc12
 
 * Enable graceful stop on SIGTERM
@@ -11,7 +29,6 @@ CHANGELOG
 * Update refs to origin/release/3.0.0-rc12.
 * VFS-2910 Adjust tests to LUMA refactoring
 * VFS-2725 improve logging in acceptance tests, all tests in directory_CRUD addapted to new logging, all of them pass successfully
-* restrict tests of uploading many files to chrome only
 * VFS-2551 add test to set space as home in oz
 * VFS-2551 add tests for data space management
 * VFS-2551 add tests for user alies and access tokens

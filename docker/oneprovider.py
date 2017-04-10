@@ -16,12 +16,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 ROOT = '/volumes/persistence'
-DIRS = ['/etc/op_panel', '/etc/op_worker', '/etc/cluster_manager',
-        '/etc/init.d', '/var/lib/op_panel', '/var/lib/op_worker',
-        '/var/lib/cluster_manager', '/usr/lib/cluster_manager',
+DIRS = ['/etc/init.d', '/etc/op_worker/certs', '/var/lib/op_panel/mnesia',
         '/opt/couchbase/var/lib/couchbase', '/var/log/op_panel',
         '/var/log/op_worker', '/var/log/cluster_manager']
-EXCLUDED_DIRS = ['/etc/op_panel/cacerts', '/etc/op_worker/cacerts']
 
 
 def log(message, end='\n'):
@@ -38,19 +35,13 @@ def replace(file_path, pattern, value):
         f.write(content)
 
 
-def excluded_dir(path):
-    for prefix in EXCLUDED_DIRS:
-        if path.startswith(prefix):
-            return True
-    return False
-
-
 def copy_missing_files():
     for rootdir in DIRS:
+        if not os.path.exists(rootdir):
+            os.makedirs(rootdir)
+
         for subdir, _, files in os.walk(rootdir):
             subdir_path = os.path.join(ROOT, subdir[1:])
-            if excluded_dir(subdir) and os.path.exists(subdir_path):
-                continue
 
             if not os.path.exists(subdir_path):
                 stat = os.stat(subdir)
