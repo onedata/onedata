@@ -67,6 +67,18 @@ def cdmi():
 
 
 @pytest.fixture(scope='session')
+def oz_panel():
+    from tests.gui.utils.ozpanel import OZPanel
+    return OZPanel
+
+
+@pytest.fixture(scope='session')
+def login_page():
+    from tests.gui.utils.common.login import LoginPage
+    return LoginPage
+
+
+@pytest.fixture(scope='session')
 def oz_page():
     from tests.gui.utils.onezone import OZLoggedIn
     return OZLoggedIn

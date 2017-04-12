@@ -4,7 +4,8 @@
 from functools import partial
 
 from .base import AbstractWebElement, AbstractWebItem
-from .web_objects import ButtonPageObject, PageObjectsSequence, ButtonWithTextPageObject
+from .web_objects import ButtonPageObject, PageObjectsSequence, \
+    ButtonWithTextPageObject, TogglePageObject
 from tests.gui.utils.generic import find_web_elem, find_web_elem_with_text, \
     repeat_failed, keyword_only_arg
 
@@ -62,6 +63,7 @@ class WebItemWithText(WebItem, WebElementWithText):
 
 
 Button = partial(WebItem, cls=ButtonPageObject)
+Toggle = partial(WebItem, cls=TogglePageObject)
 NamedButton = partial(WebItemWithText, cls=ButtonWithTextPageObject)
 
 
