@@ -27,22 +27,6 @@ class ButtonPageObject(PageObject):
         return 'active' in self.web_elem.get_attribute('class')
 
 
-class TogglePageObject(PageObject):
-    def __str__(self):
-        return 'toggle switch in {}'.format(self.parent)
-
-    def is_checked(self):
-        return self.web_elem.find_element_by_css_selector('input').is_selected()
-
-    def check(self):
-        if not self.is_checked():
-            self.click()
-
-    def uncheck(self):
-        if self.is_checked():
-            self.click()
-
-
 class ButtonWithTextPageObject(ButtonPageObject):
     def __str__(self):
         return '{} btn with "{}" text in {}'.format(self.name, self.text,

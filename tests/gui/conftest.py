@@ -7,24 +7,21 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.utils.utils import set_dns
-from tests.utils.path_utils import make_logdir
-from tests.conftest import map_test_type_to_logdir
-
-from pytest import fixture
-from selenium import webdriver
+import os
+import re
+import subprocess as sp
+import sys
 
 import pytest
-
-import re
-import sys
-from tests import gui
-import os
-import subprocess as sp
-
 from environment import docker
+from pytest import fixture
 from pytest_selenium_multi.drivers.utils import factory
+from selenium import webdriver
 
+from tests import gui
+from tests.conftest import map_test_type_to_logdir
+from tests.utils.path_utils import make_logdir
+from tests.utils.utils import set_dns
 
 SELENIUM_IMPLICIT_WAIT = 4
 
@@ -68,8 +65,14 @@ def cdmi():
 
 @pytest.fixture(scope='session')
 def oz_panel():
-    from tests.gui.utils.ozpanel import OZPanel
+    from tests.gui.utils.onepanel.zone import OZPanel
     return OZPanel
+
+
+@pytest.fixture(scope='session')
+def op_panel():
+    from tests.gui.utils.onepanel.provider import OPPanel
+    return OPPanel
 
 
 @pytest.fixture(scope='session')
