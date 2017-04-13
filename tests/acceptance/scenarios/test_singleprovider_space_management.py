@@ -14,8 +14,6 @@ from tests.acceptance.steps.multi_file_steps import *
 from tests.acceptance.steps.multi_reg_file_steps import *
 from tests.acceptance.steps.multi_dir_steps import *
 from tests.utils.acceptance_utils import *
-from tests.utils.path_utils import env_file
-from tests import CUSTOM_ACCEPTANCE_ENV_DIR
 
 from pytest_bdd import scenario
 from functools import partial
@@ -24,11 +22,6 @@ import pytest
 
 scenario = partial(scenario,
                    '../features/singleprovider_space_management.feature')
-
-
-@pytest.fixture(scope="module", params=["singleprovider_space_management"])
-def env_description_file(request):
-    return env_file(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
 
 
 @scenario('Create space and don\'t support it')

@@ -1,0 +1,4 @@
+{
+  "test_dd": ["env"],
+  "test_sysbench": ["env"]
+}

@@ -5,28 +5,18 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import pytest
-from pytest_bdd import scenario
-
-from tests import *
-
 from tests.utils.acceptance_utils import *
 from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.multi_auth_steps import *
 from tests.acceptance.steps.multi_dir_steps import *
 from tests.acceptance.steps.multi_file_steps import *
 from tests.acceptance.steps.multi_reg_file_steps import *
+
 from functools import partial
+from pytest_bdd import scenario
 
 
 scenario = partial(scenario, '../features/multiprovider_replication.feature')
-
-
-@pytest.fixture(scope="module", params=["multiprovider_directio_env.json",
-                                        "multiprovider_env.json"])
-def env_description_file(request):
-    absolute_path = os.path.join(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
-    return absolute_path
 
 
 @scenario('Create files and see them on external provider')

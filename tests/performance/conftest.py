@@ -48,8 +48,8 @@ class AbstractPerformanceTest:
         return report
 
     @pytest.fixture(scope="module")
-    def env_report(self, request, json_output, env_description_file):
-        name = env_description_file.split(os.path.sep)[-1]
+    def env_report(self, request, json_output, env_description_abs_path):
+        name = env_description_abs_path.split(os.path.sep)[-1]
         report = EnvironmentReport(name)
 
         def fin():
@@ -60,9 +60,9 @@ class AbstractPerformanceTest:
 
     @pytest.fixture()
     def clients(self, request, onedata_environment, context, client_dockers,
-                env_description_file, providers):
+                env_description_abs_path, providers):
         mount_users(request, onedata_environment, context, client_dockers,
-                    env_description_file, providers,
+                    env_description_abs_path, providers,
                     **get_users(onedata_environment))
 
 
