@@ -9,7 +9,6 @@ from tests.gui.utils.generic import parse_seq
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
 from pytest_bdd import given, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 __author__ = "Jakub Liput"
@@ -47,5 +46,5 @@ def g_click_on_provider_in_sidebar(selenium, browser_id_list, providers):
     providers = parse_seq(providers)
     for browser_id, provider in izip_longest(browser_ids, providers,
                                              fillvalue=providers[-1]):
-        driver = select_browser(selenium, browser_id)
+        driver = selenium[browser_id]
         _click_on_provider(driver, provider)

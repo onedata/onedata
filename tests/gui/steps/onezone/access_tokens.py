@@ -9,7 +9,6 @@ from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
 from tests.gui.utils.generic import repeat_failed, implicit_wait
 
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 __author__ = "Bartek Walkowicz"
@@ -31,7 +30,7 @@ def _click_on_btn_for_token(driver, oz_page, ordinal, btn):
 @repeat_failed(timeout=WAIT_BACKEND)
 def g_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
                                        ordinal, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _click_on_btn_for_token(driver, oz_page, ordinal, btn)
 
 
@@ -46,7 +45,7 @@ def g_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
 @repeat_failed(timeout=WAIT_BACKEND)
 def wt_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
                                         ordinal, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _click_on_btn_for_token(driver, oz_page, ordinal, btn)
 
 
@@ -69,7 +68,7 @@ def g_record_copied_access_token(browser_id, tmp_memory):
                  r'panel has been copied correctly'))
 def assert_oz_access_token_has_been_copied_correctly(selenium, browser_id,
                                                      ordinal, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     val = oz_page(driver)['access tokens'].tokens[int(ordinal[:-2]) - 1].value
     copied_val = pyperclip.paste()
     assert val == copied_val, 'Access Token has been copied incorrectly. ' \
@@ -83,7 +82,7 @@ def assert_oz_access_token_has_been_copied_correctly(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
                                                 num, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
         displayed = oz_page(driver)['access tokens'].tokens.count()
         assert displayed == num, \
@@ -97,7 +96,7 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def create_and_record_access_token_for_cdmi(selenium, browser_id,
                                             oz_page, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     panel = oz_page(driver)['access tokens']
     panel.expand()
 

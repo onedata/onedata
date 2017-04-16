@@ -14,7 +14,6 @@ from tests.gui.utils.generic import refresh_and_call
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from pytest_bdd import parsers, when, then
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 def _get_items_from_sidebar_list(driver, ul_type):
@@ -57,7 +56,7 @@ def _not_in_sidebar_list(driver, items_names, items_type, items=None):
                     'from {item_type} sidebar list'))
 def select_item_from_sidebar_list(selenium, browser_id, item_name,
                                   item_type, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _select_items_from_sidebar_list(driver, browser_id, tmp_memory,
                                     item_name, item_type)
 
@@ -67,7 +66,7 @@ def select_item_from_sidebar_list(selenium, browser_id, item_name,
 @then(parsers.parse('user of {browser_id} clicks on settings icon displayed '
                     'for "{item_name}" item on the {item_type} sidebar list'))
 def click_settings_icon_for_item(selenium, browser_id, item_name, item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = _get_items_from_sidebar_list(driver, item_type)
     item = items.get(item_name)
     if not item:
@@ -92,7 +91,7 @@ def click_settings_icon_for_item(selenium, browser_id, item_name, item_type):
                     'in settings dropdown for {item_type} named "{item_name}"'))
 def click_on_item_in_settings_dropdown(selenium, browser_id, option_name,
                                        item_name, item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = _get_items_from_sidebar_list(driver, '{}s'.format(item_type))
     item = items.get(item_name)
     if not item:
@@ -121,7 +120,7 @@ def click_on_item_in_settings_dropdown(selenium, browser_id, option_name,
 @then(parsers.re(r'user of (?P<browser_id>.*?) does not see (?P<item_list>.*?) '
                  r'in (?P<item_type>.*?) sidebar list'))
 def is_not_present_in_sidebar_list(selenium, browser_id, item_list, item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda d: refresh_and_call(d, _not_in_sidebar_list,
                                    item_list, item_type),
@@ -142,7 +141,7 @@ def is_not_present_in_sidebar_list(selenium, browser_id, item_list, item_type):
                  r'in (?P<item_type>.*?) sidebar list'))
 def is_present_in_sidebar_list(selenium, browser_id, item_list,
                                item_type, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
         lambda d: refresh_and_call(d, lambda _, n, t: not _not_in_sidebar_list(d, n, t),
                                    tmp_memory[browser_id]['gen_str']
@@ -160,7 +159,7 @@ def is_present_in_sidebar_list(selenium, browser_id, item_list,
 @then(parsers.parse('user of {browser_id} clicks on the "{btn_name}" '
                     'button in sidebar list\'s header'))
 def click_on_button_in_sidebar_header(selenium, browser_id, btn_name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     buttons = driver.find_elements_by_css_selector('.secondary-sidebar-header '
                                                    'figure.icon')
     btn_name = btn_name.lower()

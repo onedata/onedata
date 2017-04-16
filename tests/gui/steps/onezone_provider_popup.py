@@ -12,7 +12,6 @@ from tests.utils.acceptance_utils import list_parser
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
 from pytest_bdd import given, when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 def _click_on_button_in_provider_popup(driver, name):
@@ -33,7 +32,7 @@ def _click_on_button_in_provider_popup(driver, name):
                   '"(?P<btn_name>.+?)" button in provider popup'))
 def g_click_on_go_to_files_provider(selenium, browser_id_list, btn_name):
     for browser_id in list_parser(browser_id_list):
-        driver = select_browser(selenium, browser_id)
+        driver = selenium[browser_id]
         _click_on_button_in_provider_popup(driver, btn_name)
 
 
@@ -43,5 +42,5 @@ def g_click_on_go_to_files_provider(selenium, browser_id_list, btn_name):
                  '"(?P<btn_name>.+?)" button in provider popup'))
 def wt_click_on_go_to_files_provider(selenium, browser_id_list, btn_name):
     for browser_id in list_parser(browser_id_list):
-        driver = select_browser(selenium, browser_id)
+        driver = selenium[browser_id]
         _click_on_button_in_provider_popup(driver, btn_name)
