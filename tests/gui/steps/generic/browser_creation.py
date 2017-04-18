@@ -44,25 +44,25 @@ def create_instances_of_webdriver(selenium, driver, browser_id_list, tmpdir,
                                       'oz': {},
                                       'window': {'modal': None}}
 
-            temp_dir = str(tmpdir)
-            download_dir = os.path.join(temp_dir, browser_id, 'download')
-
-            if driver_type.lower() == 'chrome':
-                options = driver_kwargs['desired_capabilities']['chromeOptions']
-                prefs = {"download.default_directory": download_dir}
-                options['prefs'].update(prefs)
-
-            elif driver_type.lower() == 'firefox':
-                options = Options()
-                profile = FirefoxProfile()
-                log_path = _set_firefox_profile(profile, browser_id, temp_dir,
-                                                firefox_logging)
-                options.profile = profile
-                if firefox_path is not None:
-                    options.binary = FirefoxBinary(firefox_path)
-                driver_kwargs['firefox_options'] = options
-
             with redirect_display(display):
+                temp_dir = str(tmpdir)
+                download_dir = os.path.join(temp_dir, browser_id, 'download')
+
+                if driver_type.lower() == 'chrome':
+                    options = driver_kwargs['desired_capabilities']['chromeOptions']
+                    prefs = {"download.default_directory": download_dir}
+                    options['prefs'].update(prefs)
+
+                elif driver_type.lower() == 'firefox':
+                    options = Options()
+                    profile = FirefoxProfile()
+                    log_path = _set_firefox_profile(profile, browser_id,
+                                                    temp_dir, firefox_logging)
+                    options.profile = profile
+                    if firefox_path is not None:
+                        options.binary = FirefoxBinary(firefox_path)
+                    driver_kwargs['firefox_options'] = options
+
                 browser = driver(driver_kwargs)
                 if driver_type.lower() == 'firefox' and firefox_logging:
                     browser.get_log = _firefox_logger(log_path)

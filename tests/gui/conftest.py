@@ -5,7 +5,6 @@ import os
 import re
 import sys
 from itertools import chain
-from base64 import b64encode
 
 from py.xml import html
 from pytest import fixture, UsageError, skip
@@ -17,7 +16,7 @@ from tests.utils.path_utils import make_logdir
 from tests.conftest import map_test_type_to_logdir
 
 
-__author__ = "Jakub Liput"
+__author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
@@ -55,10 +54,6 @@ def pytest_addoption(parser):
     group.addoption('--firefox-logs',
                     action='store_true',
                     help='enable firefox console logs using firebug')
-    group.addoption('--embedded-movies',
-                    action='store_true',
-                    help='if set movies will be embedded to report.html '
-                         'in base64 format')
 
 
 def pytest_configure(config):
@@ -76,16 +71,10 @@ def pytest_selenium_capture_debug(item, report, extra):
         return
 
     log_dir = os.path.dirname(item.config.option.htmlpath)
-    embedded = item.config.getoption('--embedded-movies')
     pytest_html = item.config.pluginmanager.getplugin('html')
     for movie_path in item._movies:
-        if not embedded:
-            source = os.path.relpath(movie_path, log_dir)
-        else:
-            with open(movie_path, 'rb') as f:
-                source = b64encode(f.read())
-
-        src_attrs = {'src': source, 'type': 'video/mp4'}
+        src_attrs = {'src': os.path.relpath(movie_path, log_dir),
+                     'type': 'video/mp4'}
         video_html = str(html.video(html.source(**src_attrs), **VIDEO_ATTRS))
         extra.append(pytest_html.extras.html(video_html))
 
