@@ -4,6 +4,7 @@
 import os
 import re
 import time
+from itertools import cycle
 
 from pytest_bdd import given, parsers
 from selenium.webdriver import Firefox, FirefoxProfile
@@ -13,6 +14,7 @@ from selenium.webdriver.firefox.options import Options
 from tests import gui
 from tests.gui.utils.generic import parse_seq
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
+from tests.gui.utils.generic import redirect_display
 
 
 __author__ = "Bartosz Walkowicz"
@@ -28,10 +30,10 @@ Firefox.log_types = ['browser']
 @given(parsers.parse("users opened {browser_id_list} browsers' windows"))
 def create_instances_of_webdriver(selenium, driver, browser_id_list, tmpdir,
                                   tmp_memory, driver_kwargs, driver_type,
-                                  firefox_logging, firefox_path,
-                                  browser_width, browser_height):
+                                  firefox_logging, firefox_path, xvfb,
+                                  screen_width, screen_height):
 
-    for browser_id in parse_seq(browser_id_list):
+    for browser_id, display in zip(parse_seq(browser_id_list), cycle(xvfb)):
         if browser_id in selenium:
             raise AttributeError('{:s} already in use'.format(browser_id))
         else:
@@ -60,11 +62,12 @@ def create_instances_of_webdriver(selenium, driver, browser_id_list, tmpdir,
                     options.binary = FirefoxBinary(firefox_path)
                 driver_kwargs['firefox_options'] = options
 
-            browser = driver(driver_kwargs)
-            if driver_type.lower() == 'firefox' and firefox_logging:
-                browser.get_log = _firefox_logger(log_path)
+            with redirect_display(display):
+                browser = driver(driver_kwargs)
+                if driver_type.lower() == 'firefox' and firefox_logging:
+                    browser.get_log = _firefox_logger(log_path)
+                _config_driver(browser, screen_width, screen_height)
 
-            _config_driver(browser, browser_width, browser_height)
             selenium[browser_id] = browser
 
 

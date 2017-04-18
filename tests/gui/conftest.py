@@ -1,28 +1,26 @@
+"""Define fixtures used in web GUI acceptance/behavioral tests.
 """
-Define fixtures used in web GUI acceptance/behavioral tests.
-"""
+
+import os
+import re
+import sys
+from itertools import chain
+from base64 import b64encode
+
+from py.xml import html
+from pytest import fixture, UsageError, skip
+from selenium import webdriver
+
+from environment import docker
+from tests.utils.utils import set_dns
+from tests.utils.path_utils import make_logdir
+from tests.conftest import map_test_type_to_logdir
+
 
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
-
-from tests.utils.utils import set_dns
-from tests.utils.path_utils import make_logdir
-from tests.conftest import map_test_type_to_logdir
-
-from pytest import fixture
-from selenium import webdriver
-
-import pytest
-
-import re
-import sys
-from tests import gui
-import os
-import subprocess as sp
-
-from environment import docker
 
 
 SELENIUM_IMPLICIT_WAIT = 4
@@ -39,9 +37,17 @@ WAIT_BACKEND = 15
 WAIT_REFRESH = WAIT_BACKEND
 MAX_REFRESH_COUNT = 6
 
+html.__tagspec__.update({x: 1 for x in ('video', 'source')})
+VIDEO_ATTRS = {'controls': '',
+               'poster': '',
+               'play-pause-on-click': '',
+               'style': 'border:1px solid #e6e6e6; '
+                        'float:right; height:240px; '
+                        'margin-left:5px; overflow:hidden; '
+                        'width:320px'}
 
-cmd_line = ' '.join(sys.argv)
-is_base_url_provided = re.match(r'.*--base-url=.*', cmd_line)
+
+is_base_url_provided = re.match(r'.*--base-url=.*', ' '.join(sys.argv))
 
 
 def pytest_addoption(parser):
@@ -49,57 +55,111 @@ def pytest_addoption(parser):
     group.addoption('--firefox-logs',
                     action='store_true',
                     help='enable firefox console logs using firebug')
+    group.addoption('--embedded-movies',
+                    action='store_true',
+                    help='if set movies will be embedded to report.html '
+                         'in base64 format')
 
 
-@pytest.fixture(scope='session')
+def pytest_configure(config):
+    """Set default path for Selenium HTML report if explicit '--html=' not specified"""
+    htmlpath = config.option.htmlpath
+    if htmlpath is None:
+        import os
+        logdir = make_logdir(map_test_type_to_logdir('gui'), 'report')
+        config.option.htmlpath = os.path.join(logdir, 'report.html')
+
+
+def pytest_selenium_capture_debug(item, report, extra):
+    recording = item.config.getoption('--xvfb-recording')
+    if recording == 'none' or (recording == 'fail' and not report.failed):
+        return
+
+    log_dir = os.path.dirname(item.config.option.htmlpath)
+    embedded = item.config.getoption('--embedded-movies')
+    pytest_html = item.config.pluginmanager.getplugin('html')
+    for movie_path in item._movies:
+        if not embedded:
+            source = os.path.relpath(movie_path, log_dir)
+        else:
+            with open(movie_path, 'rb') as f:
+                source = b64encode(f.read())
+
+        src_attrs = {'src': source, 'type': 'video/mp4'}
+        video_html = str(html.video(html.source(**src_attrs), **VIDEO_ATTRS))
+        extra.append(pytest_html.extras.html(video_html))
+
+
+@fixture(scope='session')
 def driver_type(request):
     return request.config.getoption('--driver')
 
 
-@pytest.fixture(scope='session')
+@fixture(scope='session')
 def firefox_logging(request, driver_type):
     enabled = request.config.getoption('--firefox-logs')
     if enabled and driver_type.lower() != 'firefox':
-        raise pytest.UsageError('--driver=Firefox must be specified '
-                                'if --firefox-logs option is given')
+        raise UsageError('--driver=Firefox must be specified '
+                         'if --firefox-logs option is given')
     return enabled
 
 
-@pytest.fixture(scope='session')
+@fixture(scope='session')
 def cdmi():
     from tests.gui.utils.oneservices.cdmi import CDMIClient
     return CDMIClient
 
 
-@pytest.fixture(scope='session')
+@fixture(scope='session')
 def oz_page():
     from tests.gui.utils.onezone import OZLoggedIn
     return OZLoggedIn
 
 
-@pytest.fixture(scope='session')
+@fixture(scope='session')
 def op_page():
     from tests.gui.utils.oneprovider_gui import OPLoggedIn
     return OPLoggedIn
 
 
-@pytest.fixture(scope='session')
+@fixture(scope='session')
 def modals():
     from tests.gui.utils.common.modals import Modals
     return Modals
 
 
-@pytest.fixture
-def browser_width():
+@fixture(scope='module')
+def screen_width():
     return 1280
 
 
-@pytest.fixture
-def browser_height():
+@fixture(scope='module')
+def screen_height():
     return 1024
 
 
-@pytest.fixture
+@fixture(scope='module')
+def movie_dir(request):
+    log_dir = os.path.dirname(request.config.option.htmlpath)
+    movie_subdir = os.path.join(log_dir, 'movies')
+    if not os.path.exists(movie_subdir):
+        os.makedirs(movie_subdir)
+    return movie_subdir
+
+
+@fixture(scope='module')
+def screens(request):
+    _, mod = os.path.split(request.node.name)
+    match = re.match(r'\w+\[browsers:(?P<num>\d+)\].py$', mod)
+    try:
+        num = int(match.group('num'))
+    except AttributeError:
+        return [0]
+    else:
+        return [i for i in range(num)]
+
+
+@fixture
 def tmp_memory():
     """Dict to use when one wants to store sth between steps.
 
@@ -107,20 +167,6 @@ def tmp_memory():
      {'browser1': {...}, 'browser2': {...}, ...}
     """
     return {}
-
-
-@pytest.fixture(scope='module', autouse=True)
-def _verify_url(request, base_url):
-    """Override original fixture to change scope to module (we can have different base_urls for each module)"""
-    from pytest_base_url.plugin import _verify_url as orig_verify_url
-    return orig_verify_url(request, base_url)
-
-
-@pytest.fixture(scope='module', autouse=True)
-def sensitive_url(request, base_url):
-    """Override original fixture to change scope to module (we can have different base_urls for each module)"""
-    from pytest_selenium.safety import sensitive_url as orig_sensitive_url
-    return orig_sensitive_url(request, base_url)
 
 
 if not is_base_url_provided:
@@ -135,30 +181,34 @@ if not is_base_url_provided:
         return "https://{oz_host}".format(oz_host=oz_host)
 
 
-def pytest_configure(config):
-    """Set default path for Selenium HTML report if explicit '--html=' not specified"""
-    htmlpath = config.option.htmlpath
-    if htmlpath is None:
-        import os
-        logdir = make_logdir(map_test_type_to_logdir('gui'), 'report')
-        config.option.htmlpath = os.path.join(logdir, 'report.html')
+@fixture(scope='module', autouse=True)
+def _verify_url(request, base_url):
+    """Override original fixture to change scope to module (we can have different base_urls for each module)"""
+    from pytest_base_url.plugin import _verify_url as orig_verify_url
+    return orig_verify_url(request, base_url)
 
 
-@pytest.fixture(scope='function', autouse=True)
+@fixture(scope='module', autouse=True)
+def sensitive_url(request, base_url):
+    """Override original fixture to change scope to module (we can have different base_urls for each module)"""
+    from pytest_selenium.safety import sensitive_url as orig_sensitive_url
+    return orig_sensitive_url(request, base_url)
+
+
+@fixture(scope='function', autouse=True)
 def _skip_sensitive(request, sensitive_url):
     """Invert the default sensitivity behaviour: consider the test as destructive
     only if it has marker "destructive".
     """
     destructive = 'destructive' in request.node.keywords
     if sensitive_url and destructive:
-        pytest.skip(
-            'This test is destructive and the target URL is '
-            'considered a sensitive environment. If this test is '
-            'not destructive, add the \'nondestructive\' marker to '
-            'it. Sensitive URL: {0}'.format(sensitive_url))
+        skip('This test is destructive and the target URL is '
+             'considered a sensitive environment. If this test is '
+             'not destructive, add the \'nondestructive\' marker to '
+             'it. Sensitive URL: {0}'.format(sensitive_url))
 
 
-@pytest.fixture
+@fixture
 def capabilities(request, capabilities, tmpdir):
     """Add --no-sandbox argument for Chrome headless
     Should be the same as adding capability: 'chromeOptions': {'args': ['--no-sandbox'], 'extensions': []}
@@ -167,14 +217,12 @@ def capabilities(request, capabilities, tmpdir):
         capabilities = {}
 
     if 'browserName' in capabilities and capabilities['browserName'] == 'chrome' or request.config.option.driver == 'Chrome':
-        chrome_options = webdriver.ChromeOptions()
-        # TODO: use --no-sandbox only in headless mode, support for Chrome in Docker and XVFB can be buggy now: https://jira.plgrid.pl/jira/browse/VFS-2204
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("enable-popup-blocking")
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")
+        options.add_argument("enable-popup-blocking")
         prefs = {"download.default_directory": str(tmpdir)}
-
-        chrome_options.add_experimental_option("prefs", prefs)
-        capabilities.update(chrome_options.to_capabilities())
+        options.add_experimental_option("prefs", prefs)
+        capabilities.update(options.to_capabilities())
     # TODO: use Firefox Marionette driver (geckodriver) for Firefox 47: https://jira.plgrid.pl/jira/browse/VFS-2203
     # but currently this driver is buggy...
     # elif 'browserName' in capabilities and capabilities['browserName'] == 'firefox' or request.config.option.driver == 'Firefox':
@@ -183,8 +231,8 @@ def capabilities(request, capabilities, tmpdir):
 
     # currently there are no problems with invalid SSL certs in built-in FF driver and Chrome
     # but some drivers could need it
-    capabilities['loggingPrefs'] = {'browser': 'ALL'}
     capabilities['acceptSslCerts'] = True
+    capabilities['loggingPrefs'] = {'browser': 'ALL'}
 
     # uncomment to debug selenium browser init
     # print "DEBUG: Current capabilities: ", capabilities
@@ -194,17 +242,14 @@ def capabilities(request, capabilities, tmpdir):
 
 # TODO discover why chrome logs even without this setup using test_run, but doesn't when using ./bamboos/.../env_up.py
 if not is_base_url_provided:
-    @pytest.fixture(scope="module", autouse=True)
-    def logging_environment(persistent_environment):
+    @fixture(scope="module", autouse=True)
+    def _logging_environment(persistent_environment):
         cmd = r'echo {\"debug\": true} > ' \
               r'/root/bin/node/data/gui_static/app-config.json'
 
-        for op_worker in persistent_environment['op_worker_nodes']:
-            docker_name = op_worker.split('@')[1]
-            docker.exec_(docker_name, cmd)
-
-        for oz_worker in persistent_environment['oz_worker_nodes']:
-            docker_name = oz_worker.split('@')[1]
+        for worker in chain(persistent_environment['op_worker_nodes'],
+                            persistent_environment['oz_worker_nodes']):
+            docker_name = worker.split('@')[1]
             docker.exec_(docker_name, cmd)
 
 
