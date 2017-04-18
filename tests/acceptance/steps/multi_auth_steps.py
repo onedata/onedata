@@ -18,9 +18,9 @@ from pytest_bdd import given
                      'using {tokens}'))
 def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
                 request, onedata_environment, context, client_dockers,
-                env_description_file, providers):
+                env_description_abs_path, providers):
     mount_users(request, onedata_environment, context, client_dockers,
-                env_description_file, providers, user_names=list_parser(users),
+                env_description_abs_path, providers, user_names=list_parser(users),
                 client_instances=list_parser(client_instances),
                 mount_paths=list_parser(mount_paths),
                 client_hosts=list_parser(client_hosts),

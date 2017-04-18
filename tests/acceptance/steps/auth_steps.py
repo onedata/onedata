@@ -14,9 +14,9 @@ from pytest_bdd import given
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
 def default_mount(user, mount_path, token, request, onedata_environment,
-                  context, client_dockers, env_description_file, providers):
+                  context, client_dockers, env_description_abs_path, providers):
     mount_users(request, onedata_environment, context, client_dockers,
-                env_description_file, providers, user_names=[user],
+                env_description_abs_path, providers, user_names=[user],
                 client_instances=["client1"], mount_paths=[mount_path],
                 client_hosts=['client-host1'], tokens=[token])
 

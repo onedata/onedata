@@ -9,19 +9,9 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests import *
 from pytest_bdd import scenario
 from tests.utils.acceptance_utils import *
 from tests.acceptance.steps.env_steps import *
-from tests.utils.path_utils import env_file
-
-import pytest
-
-
-@pytest.fixture(scope="module",
-                params=["singleprovider_singleclient_directio"])
-def env_description_file(request):
-    return env_file(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
 
 
 @scenario('../features/example.feature', 'Hello world')

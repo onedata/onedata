@@ -1,8 +1,6 @@
 """Test suite for CRUD operations on directories in onedata,
 in multi-client environment.
 """
-from tests import DEFAULT_ACCEPTANCE_ENV_DIR
-from tests.utils.path_utils import env_file
 
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
@@ -17,7 +15,6 @@ from tests.acceptance.steps.multi_file_steps import *
 from pytest_bdd import scenario
 import pytest
 from functools import partial
-
 
 scenario = partial(scenario, '../features/multi_directory_CRUD.feature')
 

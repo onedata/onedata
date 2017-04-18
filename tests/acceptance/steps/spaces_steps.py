@@ -35,12 +35,12 @@ def request_spaces_support(user, spaces, onedata_environment, context):
 
 
 @when(parsers.parse('{space} is supported with {size} MB for {user} by provider {provider_id}'))
-def support_spaces(space, user, provider_id, size, env_description_file,
+def support_spaces(space, user, provider_id, size, env_description_abs_path,
                    onedata_environment, context, providers):
     user = context.get_user(user)
     provider = providers[provider_id]
     size = 1024 * 1024 * int(size)
-    space_id = support_space(user, space, provider, size, env_description_file, onedata_environment)
+    space_id = support_space(user, space, provider, size, env_description_abs_path, onedata_environment)
     provider.spaces.update({space: space_id})
 
 
