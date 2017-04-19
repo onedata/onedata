@@ -31,7 +31,7 @@ Firefox.log_types = ['browser']
 def create_instances_of_webdriver(selenium, driver, browser_id_list, tmpdir,
                                   tmp_memory, driver_kwargs, driver_type,
                                   firefox_logging, firefox_path, xvfb,
-                                  screen_width, screen_height):
+                                  screen_width, screen_height, displays):
 
     for browser_id, display in zip(parse_seq(browser_id_list), cycle(xvfb)):
         if browser_id in selenium:
@@ -68,6 +68,7 @@ def create_instances_of_webdriver(selenium, driver, browser_id_list, tmpdir,
                     browser.get_log = _firefox_logger(log_path)
                 _config_driver(browser, screen_width, screen_height)
 
+            displays[browser_id] = display
             selenium[browser_id] = browser
 
 

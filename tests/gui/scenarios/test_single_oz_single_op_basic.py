@@ -13,6 +13,7 @@ from tests.gui.steps.modal import *
 
 from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
+from tests.gui.steps.generic.copy_paste import *
 
 from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *

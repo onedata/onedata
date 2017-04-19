@@ -12,8 +12,6 @@ import random
 import stat
 import subprocess
 
-import pyperclip
-
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,7 +19,7 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
 from tests.gui.utils.generic import parse_seq, suppress
-from tests.gui.utils.generic import parse_url, enter_text
+from tests.gui.utils.generic import parse_url, enter_text, redirect_display
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
 from pytest_bdd import given, when, then, parsers
@@ -219,16 +217,6 @@ def refresh_site(selenium, browser_id):
     driver.get(parse_url(driver.current_url).group('base_url'))
 
 
-@when(parsers.re('user of (?P<browser_id>.*?) sends copied (?P<item_type>.*?) '
-                 'to users? of (?P<browser_list>.*)'))
-@then(parsers.re('user of (?P<browser_id>.*?) sends copied (?P<item_type>.*?) '
-                 'to users? of (?P<browser_list>.*)'))
-def send_copied_item_to_other_users(item_type, browser_list, tmp_memory):
-    item = pyperclip.paste()
-    for browser in parse_seq(browser_list):
-        tmp_memory[browser]['mailbox'][item_type.lower()] = item
-
-
 # Below functions are currently unused and should not be used,
 # because it involves a knowledge about internals...
 
@@ -271,28 +259,6 @@ def create_temp_dir_with_files(browser_id, num, dir_path, tmpdir):
     directory = _create_temp_dir(tmpdir, path, recursive=True)
     for i in range(10, num + 10):
         _create_temp_file(directory, 'file_{}.txt'.format(i), '1' * i)
-
-
-@when(parsers.parse('user of browser sees that copied token matches displayed one'))
-@then(parsers.parse('user of browser sees that copied token matches displayed one'))
-def assert_copied_token_match_displayed_one(browser_id, tmp_memory):
-    displayed_token = tmp_memory[browser_id]['token']
-    copied_token = pyperclip.paste()
-    err_msg = 'Displayed token: {} does not match copied one: ' \
-              '{}'.format(displayed_token, copied_token)
-    assert copied_token == displayed_token, err_msg
-
-
-@when(parsers.parse('user of browser sees that copied token '
-                    'does not match displayed one'))
-@then(parsers.parse('user of browser sees that copied token '
-                    'does not match displayed one'))
-def assert_copied_token_does_not_match_displayed_one(browser_id, tmp_memory):
-    displayed_token = tmp_memory[browser_id]['token']
-    copied_token = pyperclip.paste()
-    err_msg = 'Displayed token: {} match copied one: {} ' \
-              'while it should not be'.format(displayed_token, copied_token)
-    assert copied_token != displayed_token, err_msg
 
 
 @given(parsers.parse('there are no working provider(s) named {provider_list}'))

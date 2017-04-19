@@ -8,14 +8,14 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 import re
-import pyperclip
 
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
 
-from tests.gui.utils.generic import parse_seq, repeat_failed, parse_url
+from tests.gui.utils.generic import parse_seq, repeat_failed, \
+    parse_url, redirect_display
 from tests.gui.conftest import WAIT_BACKEND
 
 
@@ -93,12 +93,13 @@ def open_received_url(selenium, browser_id, tmp_memory, base_url):
                  r'(?P<path>.+?) concatenated with copied item'))
 @then(parsers.re(r'user of (?P<browser_id>.*?) changes webapp path to '
                  r'(?P<path>.+?) concatenated with copied item'))
-def change_app_path_with_copied_item(selenium, browser_id, path):
+def change_app_path_with_copied_item(selenium, browser_id, path,
+                                     displays, clipboard):
     driver = selenium[browser_id]
     base_url = parse_url(driver.current_url).group('base_url')
+    item = clipboard.paste(display=displays[browser_id])
     url = '{base_url}{path}/{item}'.format(base_url=base_url,
-                                           path=path,
-                                           item=pyperclip.paste())
+                                           path=path, item=item)
     driver.get(url)
 
 
@@ -122,15 +123,15 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
                     'from browser\'s location bar'))
 @then(parsers.parse('user of {browser_id} copies url '
                     'from browser\'s location bar'))
-def copy_site_url(selenium, browser_id):
+def copy_site_url(selenium, browser_id, displays, clipboard):
     driver = selenium[browser_id]
-    pyperclip.copy(driver.current_url)
+    clipboard.copy(driver.current_url, display=displays[browser_id])
 
 
 @when(parsers.parse('user of {browser_id} opens copied URL '
                     'in browser\'s location bar'))
 @then(parsers.parse('user of {browser_id} opens copied URL '
                     'in browser\'s location bar'))
-def open_site_url(selenium, browser_id):
+def open_site_url(selenium, browser_id, displays, clipboard):
     driver = selenium[browser_id]
-    driver.get(pyperclip.paste())
+    driver.get(clipboard.paste(display=displays[browser_id]))

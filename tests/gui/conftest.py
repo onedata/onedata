@@ -5,6 +5,7 @@ import os
 import re
 import sys
 from itertools import chain
+import subprocess as sp
 
 from py.xml import html
 from pytest import fixture, UsageError, skip
@@ -139,7 +140,7 @@ def movie_dir(request):
 @fixture(scope='module')
 def screens(request):
     _, mod = os.path.split(request.node.name)
-    match = re.match(r'\w+\[browsers:(?P<num>\d+)\].py$', mod)
+    match = re.match(r'\w+_browsers_(?P<num>\d+).py$', mod)
     try:
         num = int(match.group('num'))
     except AttributeError:
@@ -156,6 +157,32 @@ def tmp_memory():
      {'browser1': {...}, 'browser2': {...}, ...}
     """
     return {}
+
+
+@fixture
+def displays():
+    """Dict mapping browser to used display (e.g. {'browser1': ':0.0'} )"""
+    return {}
+
+
+@fixture(scope='session')
+def clipboard():
+    """utility simulating os clipboard"""
+    from collections import namedtuple
+    cls = namedtuple('Clipboard', ['copy', 'paste'])
+
+    def copy(text, display):
+        p = sp.Popen(['xclip', '-d', display, '-selection', 'c'],
+                     stdin=sp.PIPE, close_fds=True)
+        p.communicate(input=text.encode('utf-8'))
+
+    def paste(display):
+        p = sp.Popen(['xclip', '-d', display, '-selection', 'c', '-o'],
+                     stdout=sp.PIPE, close_fds=True)
+        stdout, _ = p.communicate()
+        return stdout.decode('utf-8')
+
+    return cls(copy, paste)
 
 
 if not is_base_url_provided:

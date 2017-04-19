@@ -4,12 +4,11 @@
 import time
 import itertools
 
-import pyperclip
 from pytest_bdd import given
 from pytest_bdd import parsers, when, then
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, implicit_wait
+from tests.gui.utils.generic import repeat_failed, implicit_wait, redirect_display
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -223,7 +222,8 @@ def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
 @given(parsers.parse('user of {browser_id} records providers hostname using '
                      'copy hostname button in every provider popup'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
+def record_providers_hostname_oz(selenium, browser_id, oz_page,
+                                 tmp_memory, displays, clipboard):
     driver = selenium[browser_id]
     world_map = oz_page(driver)['world map']
     for provider_rec in oz_page(driver)['go to your files'].providers:
@@ -245,4 +245,6 @@ def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
                                '"{}" provider'.format(provider_rec_name))
 
         provider_popup.copy_hostname()
-        tmp_memory[provider_popup_name] = pyperclip.paste()
+
+        prov_name = clipboard.paste(display=displays[browser_id])
+        tmp_memory[provider_popup_name] = prov_name

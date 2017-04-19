@@ -6,11 +6,9 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-import pyperclip
-
 from tests.gui.utils.generic import parse_seq
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
-from tests.gui.utils.generic import refresh_and_call, parse_url
+from tests.gui.utils.generic import refresh_and_call, parse_url, redirect_display
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.common.exceptions import NoSuchElementException
@@ -139,9 +137,10 @@ def wt_wait_for_op_session_to_start(selenium, browser_id_list):
                     'resource {item} from URL'))
 @then(parsers.parse('user of {browser_id} copies a first '
                     'resource {item} from URL'))
-def cp_part_of_url(selenium, browser_id, item):
+def cp_part_of_url(selenium, browser_id, item, displays, clipboard):
     driver = selenium[browser_id]
-    pyperclip.copy(parse_url(driver.current_url).group(item.lower()))
+    clipboard.copy(parse_url(driver.current_url).group(item.lower()),
+                   display=displays[browser_id])
 
 
 def _wait_for_tab_main_content_to_load(driver):

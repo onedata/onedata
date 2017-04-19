@@ -1,7 +1,6 @@
 """Steps for access tokens features in Onezone login page.
 """
 
-import pyperclip
 import time
 from pytest_bdd import given
 
@@ -52,8 +51,9 @@ def wt_click_on_btn_for_oz_access_token(selenium, browser_id, btn,
 @given(parsers.parse(r'user of {browser_id} recorded copied access token '
                      r'for future use'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def g_record_copied_access_token(browser_id, tmp_memory):
-    tmp_memory[browser_id]['access_token'] = pyperclip.paste()
+def g_record_copied_access_token(browser_id, tmp_memory, displays, clipboard):
+    token = clipboard.paste(display=displays[browser_id])
+    tmp_memory[browser_id]['access_token'] = token
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that token for '
@@ -67,10 +67,11 @@ def g_record_copied_access_token(browser_id, tmp_memory):
                  r'item on tokens list in expanded "ACCESS TOKENS" Onezone '
                  r'panel has been copied correctly'))
 def assert_oz_access_token_has_been_copied_correctly(selenium, browser_id,
-                                                     ordinal, oz_page):
+                                                     ordinal, oz_page,
+                                                     displays, clipboard):
     driver = selenium[browser_id]
     val = oz_page(driver)['access tokens'].tokens[int(ordinal[:-2]) - 1].value
-    copied_val = pyperclip.paste()
+    copied_val = clipboard.paste(display=displays[browser_id])
     assert val == copied_val, 'Access Token has been copied incorrectly. ' \
                               'Expected {}, got {}'.format(val, copied_val)
 
@@ -95,7 +96,8 @@ def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
                      'for later use with CDMI API'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def create_and_record_access_token_for_cdmi(selenium, browser_id,
-                                            oz_page, tmp_memory):
+                                            oz_page, tmp_memory,
+                                            displays, clipboard):
     driver = selenium[browser_id]
     panel = oz_page(driver)['access tokens']
     panel.expand()
@@ -118,5 +120,5 @@ def create_and_record_access_token_for_cdmi(selenium, browser_id,
             else:
                 raise RuntimeError("couldn't create and copy "
                                    "access token in oz")
-
-    tmp_memory[browser_id]['access_token'] = pyperclip.paste()
+    token = clipboard.paste(display=displays[browser_id])
+    tmp_memory[browser_id]['access_token'] = token
