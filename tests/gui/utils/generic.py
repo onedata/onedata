@@ -213,6 +213,7 @@ def nth(seq, idx):
 
 @contextmanager
 def redirect_display(new_display):
+    """Replace DISPLAY environment variable with new value"""
     old_display = os.environ.get('DISPLAY', None)
     os.environ['DISPLAY'] = new_display
     try:
