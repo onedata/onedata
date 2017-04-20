@@ -720,7 +720,7 @@ Feature: Oneprovider Data view
     And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Change element permissions", "Copy element", "Cut element", "Remove element"] buttons are disabled in toolbar in data tab in Oneprovider gui
 
 
-  Scenario: User sees that with only one file selected only ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show file distribution"] buttons from toolbar are enabled
+  Scenario: User sees that with one file selected only ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show file distribution"] buttons from toolbar are enabled
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 

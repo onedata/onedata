@@ -209,3 +209,17 @@ def rm_css_cls(driver, web_elem, css_cls):
 
 def nth(seq, idx):
     return next(islice(seq, idx, None), None)
+
+
+@contextmanager
+def redirect_display(new_display):
+    """Replace DISPLAY environment variable with new value"""
+    old_display = os.environ.get('DISPLAY', None)
+    os.environ['DISPLAY'] = new_display
+    try:
+        yield
+    finally:
+        if old_display is not None:
+            os.environ['DISPLAY'] = old_display
+        else:
+            del os.environ['DISPLAY']

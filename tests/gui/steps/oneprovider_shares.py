@@ -15,7 +15,6 @@ from tests.gui.utils.oneprovider_gui import assert_breadcrumbs_correctness, \
     chdir_using_breadcrumbs
 
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
@@ -33,7 +32,7 @@ def _get_share_from_shares_list(driver, name):
 @then(parsers.parse('user of {browser_id} sees that share named '
                     '"{name}" has appeared in the shared list'))
 def is_present_on_share_list(selenium, browser_id, name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     assert len(_get_share_from_shares_list(driver, name)) == 1, \
         'there is no {} on shares list'.format(name)
 
@@ -43,7 +42,7 @@ def is_present_on_share_list(selenium, browser_id, name):
 @then(parsers.parse('user of {browser_id} sees that share named '
                     '"{name}" has disappeared from the shares list'))
 def is_not_present_in_share_list(selenium, browser_id, name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     assert len(_get_share_from_shares_list(driver, name)) == 0, \
         '{} still not disappeared from shares list'.format(name)
 
@@ -53,7 +52,7 @@ def is_not_present_in_share_list(selenium, browser_id, name):
 @then(parsers.parse('user of {browser_id} sees that '
                     '"{prev_name}" has been renamed to "{next_name}"'))
 def has_share_been_renamed(selenium, browser_id, prev_name, next_name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     assert len(_get_share_from_shares_list(driver, prev_name)) == 0, \
         '{} still not disappeared from shares list'.format(prev_name)
     assert len(_get_share_from_shares_list(driver, next_name)) == 1, \
@@ -65,7 +64,7 @@ def has_share_been_renamed(selenium, browser_id, prev_name, next_name):
 @then(parsers.parse('user of {browser_id} sees that absolute share path '
                     'visible in share\'s info header is as follows: {path}'))
 def is_share_abs_path_correct(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     abs_path = driver.find_element_by_css_selector('#content-scroll '
                                                    '.share-info-head '
                                                    '.file-breadcrumbs-list')
@@ -77,7 +76,7 @@ def is_share_abs_path_correct(selenium, browser_id, path):
 @then(parsers.parse('user of {browser_id} sees that current working directory '
                     'path visible in share\'s file browser is as follows: {path}'))
 def is_cwd_correct(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     cwd = driver.find_element_by_css_selector('.files-list '
                                               '.file-breadcrumbs-list')
     assert_breadcrumbs_correctness(path, cwd)
@@ -88,7 +87,7 @@ def is_cwd_correct(selenium, browser_id, path):
 @then(parsers.parse('user of {browser_id} changes current working directory '
                     'to {path} using breadcrumbs from share\'s file browser'))
 def change_cwd_using_breadcrumbs(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     # HACK: a workaround for fast multiple breadcrumbs re-computations leading to
     # quick DOM changes between find elements and chdir_using_breadcrumbs
     tries = 10
@@ -113,7 +112,7 @@ def change_cwd_using_breadcrumbs(selenium, browser_id, path):
 @then(parsers.parse('user of {browser_id} clicks on {path} '
                     'using breadcrumbs from share\'s info header'))
 def click_on_dir_in_abs_path(selenium, browser_id, path):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     breadcrumbs = driver.find_elements_by_css_selector('#content-scroll '
                                                        '.share-info-head '
                                                        '.file-breadcrumbs-list '
@@ -127,7 +126,7 @@ def click_on_dir_in_abs_path(selenium, browser_id, path):
 @then(parsers.parse('user of {browser_id} sees that selected share '
                     'is named "{share_name}"'))
 def is_selected_share_named(selenium, browser_id, share_name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     name = driver.find_element_by_css_selector('#content-scroll '
                                                '.share-info-head '
                                                '.share-name').text
@@ -140,7 +139,7 @@ def is_selected_share_named(selenium, browser_id, share_name):
 @then(parsers.parse('user of {browser_id} sees that '
                     'public share is named "{share_name}"'))
 def is_public_share_named(selenium, browser_id, share_name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     name = driver.find_element_by_css_selector('.share-name').text
     assert name == share_name, 'share is named {} instead of {}' \
                                ''.format(name, share_name)
@@ -149,7 +148,7 @@ def is_public_share_named(selenium, browser_id, share_name):
 @when(parsers.parse('user of {browser_id} does not see any share'))
 @then(parsers.parse('user of {browser_id} does not see any share'))
 def is_not_any_share(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     shares = driver.find_elements_by_css_selector('.shares-list '
                                                   '.secondary-sidebar-item, '
                                                   '#content-scroll '
@@ -162,7 +161,7 @@ def is_not_any_share(selenium, browser_id):
 @then(parsers.parse('user of {browser_id} sees that he '
                     'no longer can view the share'))
 def is_share_not_viewable(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     old_page = driver.find_element_by_css_selector('html')
     Wait(driver, WAIT_BACKEND).until(
         staleness_of(old_page),

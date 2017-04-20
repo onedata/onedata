@@ -7,7 +7,6 @@ from itertools import izip
 import pytest
 from pytest_bdd import given, when, then, parsers
 
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, implicit_wait, parse_seq, upload_file_path
@@ -25,7 +24,7 @@ __license__ = "This software is released under the MIT license cited in " \
 @repeat_failed(timeout=WAIT_BACKEND)
 def change_space_view_in_data_tab_in_op(selenium, browser_id,
                                         space_name, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     selector = op_page(driver).data.sidebar.space_selector
     selector.expand()
     selector.spaces[space_name].click()
@@ -38,7 +37,7 @@ def change_space_view_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  tooltip_name, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     op_page(driver).data.toolbar[tooltip_name].click()
 
 
@@ -53,7 +52,7 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  btn_list, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     toolbar = op_page(driver).data.toolbar
     err_msg = '{} should be disabled but is not'
     for btn in parse_seq(btn_list):
@@ -72,7 +71,7 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  btn_list, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     toolbar = op_page(driver).data.toolbar
     err_msg = '{} btn should be disabled but is not in toolbar in op data tab'
     for btn in parse_seq(btn_list):
@@ -86,7 +85,7 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def is_displayed_breadcrumbs_in_data_tab_in_op_correct(selenium, browser_id,
                                                        path, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     breadcrumbs = op_page(driver).data.breadcrumbs.pwd()
     assert path == breadcrumbs, \
         'expected breadcrumbs {}; displayed: {}'.format(path, breadcrumbs)
@@ -99,7 +98,7 @@ def is_displayed_breadcrumbs_in_data_tab_in_op_correct(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def change_cwd_using_breadcrumbs_in_data_tab_in_op(selenium, browser_id,
                                                    path, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     op_page(driver).data.breadcrumbs.chdir(path)
 
 
@@ -110,7 +109,7 @@ def change_cwd_using_breadcrumbs_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def is_displayed_dir_tree_in_data_tab_in_op_correct(selenium, browser_id,
                                                     path, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     with implicit_wait(driver, 0.05, SELENIUM_IMPLICIT_WAIT):
         pwd = op_page(driver).data.sidebar.cwd.pwd()
     assert path == pwd, 'expected path {}\n got: {}'.format(path, pwd)
@@ -123,7 +122,7 @@ def is_displayed_dir_tree_in_data_tab_in_op_correct(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def change_cwd_using_dir_tree_in_data_tab_in_op(selenium, browser_id,
                                                 path, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     cwd = op_page(driver).data.sidebar.root_dir
     cwd.click()
     for directory in (dir for dir in path.split('/') if dir != ''):
@@ -137,7 +136,7 @@ def change_cwd_using_dir_tree_in_data_tab_in_op(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} does not see {path} in directory tree'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_absence_of_path_in_dir_tree(selenium, browser_id, path, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     curr_dir = op_page(driver).data.sidebar.root_dir
     with pytest.raises(RuntimeError):
         for directory in (dir for dir in path.split('/') if dir != ''):
@@ -162,7 +161,7 @@ def _is_space_viewed_space_in_data_tab_in_op(driver, is_home, space_name,
                   'tree in sidebar panel belonged to (?P<is_home>(home )?)space '
                   'named "(?P<space_name>.+?)'))
 def g_is_space_tree_root(selenium, browser_id, is_home, space_name, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _is_space_viewed_space_in_data_tab_in_op(driver, True if is_home else False,
                                              space_name, op_page)
 
@@ -174,7 +173,7 @@ def g_is_space_tree_root(selenium, browser_id, is_home, space_name, op_page):
                  'tree in sidebar panel belongs to (?P<is_home>(home )?)space '
                  'named "(?P<space_name>.+?)"'))
 def wt_is_space_tree_root(selenium, browser_id, is_home, space_name, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _is_space_viewed_space_in_data_tab_in_op(driver, True if is_home else False,
                                              space_name, op_page)
 
@@ -186,7 +185,7 @@ def wt_is_space_tree_root(selenium, browser_id, is_home, space_name, op_page):
 @repeat_failed(timeout=WAIT_BACKEND*2)
 def assert_nonempty_file_browser_in_data_tab_in_op(selenium, browser_id,
                                                    op_page, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     file_browser = op_page(driver).data.file_browser
 
     with implicit_wait(driver, 1, SELENIUM_IMPLICIT_WAIT):
@@ -203,7 +202,7 @@ def assert_nonempty_file_browser_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_empty_file_browser_in_data_tab_in_op(selenium, browser_id,
                                                 op_page, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     file_browser = op_page(driver).data.file_browser
 
     with implicit_wait(driver, 1, SELENIUM_IMPLICIT_WAIT):
@@ -220,7 +219,7 @@ def assert_empty_file_browser_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_file_browser_in_data_tab_in_op(selenium, browser_id,
                                           op_page, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     file_browser = op_page(driver).data.file_browser
     tmp_memory[browser_id]['file_browser'] = file_browser
 
@@ -232,7 +231,7 @@ def assert_file_browser_in_data_tab_in_op(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def check_displayed_dir_name_len_in_dir_tree(selenium, browser_id, path,
                                              op_page, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     cwd = op_page(driver).data.sidebar.root_dir
     cwd.click()
     for directory in (dir for dir in path.split('/') if dir != ''):
@@ -248,7 +247,7 @@ def check_displayed_dir_name_len_in_dir_tree(selenium, browser_id, path,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_diff_in_len_of_dir_name_before_and_now(selenium, browser_id, path,
                                                   op_page, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     cwd = op_page(driver).data.sidebar.root_dir
     cwd.click()
     for directory in (dir for dir in path.split('/') if dir != ''):
@@ -266,7 +265,7 @@ def assert_diff_in_len_of_dir_name_before_and_now(selenium, browser_id, path,
                  r'(?P<direction>right|left) of approximately (?P<offset>\d+)px'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def resize_data_tab_sidebar(selenium, browser_id, direction, offset, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     sidebar = op_page(driver).data.sidebar
     offset = (-1 if direction == 'left' else 1) * int(offset)
     sidebar.width += offset
@@ -276,7 +275,7 @@ def resize_data_tab_sidebar(selenium, browser_id, direction, offset, op_page):
 @then(parsers.parse('user of {browser_id} waits for file upload to finish'))
 @repeat_failed(timeout=WAIT_BACKEND*3)
 def wait_for_file_upload_to_finish(selenium, browser_id, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     uploader = op_page(driver).data.file_uploader
     assert not uploader.is_visible(), \
         'file upload not finished within given time'
@@ -287,7 +286,7 @@ def wait_for_file_upload_to_finish(selenium, browser_id, op_page):
 @then(parsers.parse('user of {browser_id} uses upload button in toolbar '
                     'to upload file "{file_name}" to current dir'))
 def upload_file_to_cwd_in_data_tab(selenium, browser_id, file_name, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     op_page(driver).data.toolbar.upload_files(upload_file_path(file_name))
 
 
@@ -299,7 +298,7 @@ def upload_file_to_cwd_in_data_tab(selenium, browser_id, file_name, op_page):
                     'current dir'))
 def upload_files_to_cwd_in_data_tab(selenium, browser_id, dir_path,
                                     tmpdir, op_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     directory = tmpdir.join(browser_id, *dir_path.split('/'))
     if directory.isdir():
         op_page(driver).data.toolbar.upload_files('\n'.join(str(item) for item
@@ -316,7 +315,7 @@ def upload_files_to_cwd_in_data_tab(selenium, browser_id, dir_path,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunk_in_file_distribution_size(selenium, browser_id,
                                                     size, provider, modals):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_rec = modals(driver).file_distribution.providers[provider]
     distribution = prov_rec.distribution
     displayed_size = distribution.end
@@ -332,7 +331,7 @@ def assert_provider_chunk_in_file_distribution_size(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
                                                       provider, modals):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_rec = modals(driver).file_distribution.providers[provider]
     distribution = prov_rec.distribution
     size, _ = distribution.size
@@ -352,7 +351,7 @@ def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
                                                      provider, modals):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_rec = modals(driver).file_distribution.providers[provider]
     distribution = prov_rec.distribution
     size, _ = distribution.size
@@ -368,7 +367,7 @@ def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_chunks_in_file_distribution(selenium, browser_id, chunks,
                                                 provider, modals):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_rec = modals(driver).file_distribution.providers[provider]
     distribution = prov_rec.distribution
     size, _ = distribution.size

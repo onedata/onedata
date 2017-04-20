@@ -2,7 +2,6 @@
 """
 
 from pytest_bdd import given, when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, implicit_wait
@@ -24,7 +23,7 @@ def _expand_oz_panel(oz_page, driver, panel):
                   r'"(?P<panel_name>.*)" Onezone sidebar panel'))
 def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
-        driver = select_browser(selenium, browser_id)
+        driver = selenium[browser_id]
         _expand_oz_panel(oz_page, driver, panel_name)
 
 
@@ -34,7 +33,7 @@ def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
                  r'"(?P<panel_name>.*)" Onezone sidebar panel'))
 def wt_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
-        driver = select_browser(selenium, browser_id)
+        driver = selenium[browser_id]
         _expand_oz_panel(oz_page, driver, panel_name)
 
 
@@ -75,7 +74,7 @@ def type_text_into_active_edit_box(browser_id, text, tmp_memory):
                  r'"(?P<oz_panel>GROUP MANAGEMENT)" Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     action = getattr(oz_page(driver)[oz_panel], btn.lower().replace(' ', '_'))
     action()
 
@@ -119,7 +118,7 @@ def click_on_btn_in_oz_panel(selenium, browser_id, btn, oz_panel, oz_page):
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
                                                 item_name, oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     assert item_name in items, \
         'no {} named "{}" found in {} oz panel'.format(item_type, item_name,
@@ -166,7 +165,7 @@ def assert_there_is_item_named_in_oz_panel_list(selenium, browser_id, item_type,
 def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
                                                    item_type, item_name,
                                                    oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
         items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
         assert item_name not in items, \
@@ -194,7 +193,7 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
 def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
                                         item_type, item_name, number,
                                         oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     item = items[item_name]
     item_counter = int(getattr(item, '{}s_count'.format(counter_type)))
@@ -228,7 +227,7 @@ def assert_item_counter_match_given_num(selenium, browser_id, counter_type,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
                                          item_name, oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     item = items[item_name]
 
@@ -258,7 +257,7 @@ def assert_item_is_home_item_in_oz_panel(selenium, browser_id, item_type,
 def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
                                                        item_type, item_name,
                                                        oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     item = items[item_name]
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
@@ -289,7 +288,7 @@ def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
 def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
                                                item_type, counter_type, oz_panel,
                                                oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     item = items[item_name]
     subitems = getattr(item, '{}s'.format(counter_type))
@@ -321,7 +320,7 @@ def assert_number_of_items_match_items_counter(selenium, browser_id, item_name,
 @repeat_failed(timeout=WAIT_BACKEND)
 def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
                                      item_name, oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     item = items[item_name]
     item.expand()
@@ -345,7 +344,7 @@ def expand_items_submenu_in_oz_panel(selenium, browser_id, item_type,
 def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
                                   subitem_name, item_type, item_name,
                                   oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     item = items[item_name]
     subitems = getattr(item, '{}s'.format(subitem_type))
@@ -381,7 +380,7 @@ def assert_subitem_is_set_as_home(selenium, browser_id, subitem_type,
 def assert_item_in_submenu_of_item_in_oz_panel(selenium, browser_id, subitem_type,
                                                subitem_name, item_type, item_name,
                                                oz_panel, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
     item = items[item_name]
     subitems = getattr(item, '{}s'.format(subitem_type))

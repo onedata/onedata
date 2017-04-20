@@ -13,7 +13,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.utils.generic import parse_seq, repeat_failed
@@ -156,7 +155,7 @@ def _is_tool_icon_displayed(driver, item_name, item_type,
 @then(parsers.parse('user of {browser_id} should not see {tool_type} '
                     'icon for {item_type} named "{item_name}"'))
 def is_tool_icon_hidden(selenium, browser_id, tool_type, item_name, item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     Wait(driver, WAIT_FRONTEND).until_not(
         lambda _: _is_tool_icon_displayed(driver, item_name,
                                           item_type, tool_type),
@@ -173,7 +172,7 @@ def is_tool_icon_hidden(selenium, browser_id, tool_type, item_name, item_type):
                     '{item_type} named "{item_name}"'))
 def is_tool_icon_displayed(selenium, browser_id, tool_type,
                            item_type, item_name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     Wait(driver, WAIT_FRONTEND).until(
         lambda s: _is_tool_icon_displayed(driver, item_name,
                                           item_type, tool_type),
@@ -193,7 +192,7 @@ def is_tool_icon_displayed(selenium, browser_id, tool_type,
 @then(parsers.re(r'user of (?P<browser_id>.*?) does not see any '
                  r'(?P<item_type>.*?)s? named (?P<item_list>.*?) on files list'))
 def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     item_type = item_type.replace('directorie', 'directory')
     Wait(driver, WAIT_FRONTEND).until(
         lambda _: _not_in_file_list(driver, item_list, item_type),
@@ -211,7 +210,7 @@ def is_not_present_in_file_list(selenium, browser_id, item_list, item_type):
 @then(parsers.re(r'user of (?P<browser_id>.*?) sees that (?P<item_type>.*?)s? '
                  r'named (?P<item_list>.*?) (has|have) appeared on files list'))
 def is_present_in_file_list(selenium, browser_id, item_list, item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     item_type = item_type.replace('directorie', 'directory')
     Wait(driver, WAIT_FRONTEND).until_not(
         lambda _: _not_in_file_list(driver, item_list, item_type),
@@ -226,7 +225,7 @@ def is_present_in_file_list(selenium, browser_id, item_list, item_type):
                     'on {item_type} named "{item_name}" of files list'))
 def double_click_on_file_item(selenium, browser_id, item_name,
                               item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _double_click_on_item(driver, item_name, item_type)
 
 
@@ -236,7 +235,7 @@ def double_click_on_file_item(selenium, browser_id, item_name,
                     '{item_type} named "{item_name}" of files list'))
 def click_on_file_item(selenium, browser_id, item_name,
                        item_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     all_items = _get_items_from_file_list(driver)
     item = all_items.get(item_name)
     if item and type_to_icon[item_type] in item[2].get_attribute('class'):
@@ -250,7 +249,7 @@ def click_on_file_item(selenium, browser_id, item_name,
 @then(parsers.parse('user of {browser_id} selects {item_list} '
                     'from files list'))
 def select_files_from_file_list(selenium, browser_id, item_list):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _select_items_from_file_list_upon_cond(driver, item_list,
                                            keys=(Keys.LEFT_CONTROL, ),
                                            cond=_is_not_file_selected)
@@ -261,7 +260,7 @@ def select_files_from_file_list(selenium, browser_id, item_list):
 @then(parsers.parse('user of {browser_id} deselects {item_list} '
                     'from files list'))
 def deselect_files_from_file_list(selenium, browser_id, item_list):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _select_items_from_file_list_upon_cond(driver, item_list,
                                            keys=(Keys.LEFT_CONTROL, ),
                                            cond=_is_file_selected)
@@ -272,7 +271,7 @@ def deselect_files_from_file_list(selenium, browser_id, item_list):
 @then(parsers.parse('user of {browser_id} deselects all '
                     'selected items from files list'))
 def deselect_all_items_from_file_list(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     all_items = _get_items_from_file_list(driver)
     items_list = ', '.join(item for item in all_items.iterkeys())
     _select_items_from_file_list_upon_cond(driver, items_list,
@@ -288,7 +287,7 @@ def deselect_all_items_from_file_list(selenium, browser_id):
                     'in file browser'))
 def click_on_file_icon_tool(selenium, browser_id, tool_type,
                             file_name, file_type):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _click_on_tool_icon_for_file(driver, file_name, file_type, tool_type)
 
 
@@ -298,7 +297,7 @@ def click_on_file_icon_tool(selenium, browser_id, tool_type,
                     'contains {num:d} file(s)'))
 def assert_num_of_files_are_displayed_in_file_browser(selenium, browser_id,
                                                       num):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     Wait(driver, WAIT_FRONTEND).until(
         lambda _: len(_get_items_from_file_list(driver)) == num,
         message='displayed number of files {} does not match expected {}'
@@ -311,7 +310,7 @@ def assert_num_of_files_are_displayed_in_file_browser(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} scrolls to the bottom '
                     'of file list in file browser'))
 def scroll_to_the_bottom_of_file_browser(selenium, browser_id):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     bottom = driver.find_element_by_css_selector('table.files-table '
                                                  'tr.file-row-load-more')
     driver.execute_script('arguments[0].scrollIntoView();', bottom)

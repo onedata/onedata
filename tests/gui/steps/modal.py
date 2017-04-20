@@ -19,7 +19,6 @@ from selenium.webdriver.support.expected_conditions import staleness_of
 from selenium.webdriver.common.keys import Keys
 
 from pytest_bdd import parsers, when, then
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 
 in_type_to_id = {'username': 'login-form-username-input',
@@ -46,7 +45,7 @@ def _find_modal(driver, modal_name):
 @then(parsers.parse('user of {browser_id} sees that '
                     '"{modal_name}" modal has appeared'))
 def wait_for_modal_to_appear(selenium, browser_id, modal_name, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     modal = _find_modal(driver, modal_name)
     tmp_memory[browser_id]['window']['modal'] = modal
 
@@ -56,7 +55,7 @@ def wait_for_modal_to_appear(selenium, browser_id, modal_name, tmp_memory):
 @then(parsers.parse('user of {browser_id} sees that '
                     'the modal has disappeared'))
 def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     modal = tmp_memory[browser_id]['window']['modal']
     Wait(driver, WAIT_FRONTEND).until_not(
         lambda _: not staleness_of(modal) or modal.is_displayed(),
@@ -71,7 +70,7 @@ def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
                     'confirmation button in displayed modal'))
 def click_on_confirmation_btn_in_modal(selenium, browser_id, button_name,
                                        tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
 
     @repeat_failed(attempts=WAIT_BACKEND, timeout=True)
     def click_on_btn(d, elem, msg):
@@ -106,7 +105,7 @@ def is_modal_msg_matching(browser_id, regexp, tmp_memory):
 @then(parsers.parse('user of {browser_id} sees '
                     'non-empty token in active modal'))
 def get_token_from_modal(selenium, browser_id, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     modal = tmp_memory[browser_id]['window']['modal']
     token_box = modal.find_element_by_css_selector('input[readonly]')
     token = Wait(driver, WAIT_BACKEND).until(
@@ -133,7 +132,7 @@ def activate_input_box_in_modal(browser_id, in_type, tmp_memory):
 @then(parsers.parse('user of {browser_id} clicks on '
                     'copy button in active modal'))
 def click_on_copy_btn_in_modal(selenium, browser_id, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     modal = tmp_memory[browser_id]['window']['modal']
     copy_btn = modal.find_element_by_css_selector('button.copy-btn')
 

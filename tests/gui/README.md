@@ -37,7 +37,9 @@ Used parameters:
 * ``--driver=<Firefox|Chrome>`` - set the browser to test in (will be launched in headless mode)
 * ``--self-contained-html`` - optional, if used generated report will be contained in 1 html file
 * ``--firefox-logs`` - optional, if used and driver is Firefox generated report will contain console logs from browser
+* ``--xvfb`` - starts xvfb, necessary if used with headless tests
 * ``--xvfb-recording=<all|none|failed>`` - optional, record all or none or failed tests as movies and save them to <logdir>/movies
+* ``--no-mosaic-filter`` - optional, if set videos of tests using multiple browsers will be recorded as different video for each browser (mosaic video created by default) 
 
 ### Headless using existing Onedata installation
 
@@ -62,20 +64,17 @@ Required Python packages to install (e.g. using ``pip install``):
 
 * pytest
 * pytest_bdd
-* git+git://github.com/bwalkowi/pytest-selenium-multi
-* pytest_xvfb
-* pyperclip
+* git+git://github.com/bwalkowi/pytest-selenium-multi@orig-master
+* git+https://github.com/bwalkowi/pytest-xvfb-recorder.git
 * decorator
 
 A browser selected for tests (with ``--driver``) should be also installed.
-
-Note, that ``--no-xvfb`` option is used to force to not use Xvfb even if it is installed in local system.
 
 ### Non-headless using existing Onedata installation
 
 Example: (invoke from onedata repo root dir)
 ```
-py.test --test-type=gui tests/gui --driver=Firefox --no-xvfb --base-url=https://veilfsdev.com --self-contained-html
+py.test --test-type=gui tests/gui --driver=Firefox --base-url=https://veilfsdev.com --self-contained-html
 ```
 
 

@@ -4,13 +4,11 @@
 import time
 import itertools
 
-import pyperclip
 from pytest_bdd import given
 from pytest_bdd import parsers, when, then
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, implicit_wait
+from tests.gui.utils.generic import repeat_failed, implicit_wait, redirect_display
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -25,7 +23,7 @@ __license__ = "This software is released under the MIT license cited in " \
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
                                               provider, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     err_msg = 'Popup displayed for provider named "{}" ' \
               'instead of "{}"'
     prov = oz_page(driver)['world map'].get_provider_with_displayed_popup()
@@ -40,7 +38,7 @@ def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
                  r'"(?P<provider>.+?)" provider\'s popup displayed on world map'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def click_on_btn_in_provider_popup(selenium, browser_id, btn, provider, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     err_msg = 'Popup displayed for provider named "{}" ' \
               'instead of "{}"'
     prov = oz_page(driver)['world map'].get_provider_with_displayed_popup()
@@ -58,7 +56,7 @@ def click_on_btn_in_provider_popup(selenium, browser_id, btn, provider, oz_page)
 @repeat_failed(timeout=WAIT_BACKEND)
 def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
                                                         provider, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     item = oz_page(driver)['go to your files'].providers[provider]
     err_msg = 'provider named "{}" is still set as home but it should not'
     with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
@@ -87,7 +85,7 @@ def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                      ordinal, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     item = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
     err_msg = 'provider popup for {} circle is displayed ' \
               'while it should not be'
@@ -105,7 +103,7 @@ def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
                  r'provider circle on Onezone world map'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_provider_circle(selenium, browser_id, ordinal, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     item = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
     item.click()
 
@@ -121,7 +119,7 @@ def click_on_provider_circle(selenium, browser_id, ordinal, oz_page):
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                   ordinal, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     item = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
     err_msg = 'provider popup for {} circle is not displayed ' \
               'while it should be'
@@ -133,7 +131,7 @@ def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} clicks on Onezone world map'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def click_on_world_map(selenium, browser_id, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     oz_page(driver)['world map'].click()
 
 
@@ -146,7 +144,7 @@ def click_on_world_map(selenium, browser_id, oz_page):
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
                                                   provider, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_record = oz_page(driver)['go to your files'].providers[provider]
     prov_popup = oz_page(driver)['world map'].get_provider_with_displayed_popup()
     err_msg1 = 'Popup displayed for provider named "{}" ' \
@@ -174,7 +172,7 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
                                                    provider, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_rec = oz_page(driver)['go to your files'].providers[provider]
     prov_rec.click()
 
@@ -186,7 +184,7 @@ def click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_provider_working_in_oz_panel(selenium, browser_id,
                                         provider, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_rec = oz_page(driver)['go to your files'].providers[provider]
 
     err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
@@ -201,7 +199,7 @@ def assert_provider_working_in_oz_panel(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_provider_not_working_in_oz_panel(selenium, browser_id,
                                             provider, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     prov_rec = oz_page(driver)['go to your files'].providers[provider]
     err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
               '"{}" is not gray'
@@ -214,7 +212,7 @@ def assert_provider_not_working_in_oz_panel(selenium, browser_id,
                     'on world map in Onezone gui'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     err_msg = 'alert title {} does not match {}'
     alert = oz_page(driver)['world map'].message
     assert alert.title.lower() == title.lower(), err_msg.format(alert.title,
@@ -224,8 +222,9 @@ def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
 @given(parsers.parse('user of {browser_id} records providers hostname using '
                      'copy hostname button in every provider popup'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
-    driver = select_browser(selenium, browser_id)
+def record_providers_hostname_oz(selenium, browser_id, oz_page,
+                                 tmp_memory, displays, clipboard):
+    driver = selenium[browser_id]
     world_map = oz_page(driver)['world map']
     for provider_rec in oz_page(driver)['go to your files'].providers:
         provider_popup = None
@@ -246,4 +245,6 @@ def record_providers_hostname_oz(selenium, browser_id, oz_page, tmp_memory):
                                '"{}" provider'.format(provider_rec_name))
 
         provider_popup.copy_hostname()
-        tmp_memory[provider_popup_name] = pyperclip.paste()
+
+        prov_name = clipboard.paste(display=displays[browser_id])
+        tmp_memory[provider_popup_name] = prov_name

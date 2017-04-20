@@ -2,7 +2,6 @@
 """
 
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND
 from tests.gui.utils.generic import repeat_failed
@@ -19,7 +18,7 @@ __license__ = "This software is released under the MIT license cited in " \
                     'displayed in "USER ALIAS" Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     usr_alias = oz_page(driver)['user alias'].alias
     tmp_memory[browser_id]['user_alias'] = usr_alias
 
@@ -30,7 +29,7 @@ def record_oz_usr_alias(selenium, browser_id, tmp_memory, oz_page):
                     'the user alias in expanded "USER ALIAS" Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def click_user_alias_edit(selenium, browser_id, tmp_memory, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     alias = oz_page(driver)['user alias']
     alias.edit()
     tmp_memory[browser_id]['edit_box'] = alias.edit_box
@@ -52,7 +51,7 @@ def type_usr_alias_into_usr_alias_edit_box(browser_id, tmp_memory):
                     'in "USER ALIAS" Onezone panel is "{usr_alias}"'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def user_alias_equals_to_text(selenium, browser_id, usr_alias, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     displayed_alias = oz_page(driver)['user alias'].alias
     assert displayed_alias == usr_alias, \
         'displayed "{}" as usr alias in USER ALIAS oz panel ' \
@@ -66,7 +65,7 @@ def user_alias_equals_to_text(selenium, browser_id, usr_alias, oz_page):
 @repeat_failed(timeout=WAIT_BACKEND)
 def user_alias_equals_recorded_alias(selenium, browser_id,
                                      tmp_memory, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     recorded_alias = tmp_memory[browser_id]['user_alias']
     displayed_alias = oz_page(driver)['user alias'].alias
     assert displayed_alias == recorded_alias, \

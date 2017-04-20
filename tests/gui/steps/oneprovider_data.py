@@ -10,7 +10,6 @@ import time
 
 from tests.gui.conftest import WAIT_BACKEND
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
@@ -23,8 +22,8 @@ from selenium.webdriver.support.ui import WebDriverWait as Wait
                     'file "{file_name}" is equal to: "{content}"'))
 def has_downloaded_file_content(selenium, tmpdir, file_name,
                                 content, browser_id):
-    driver = select_browser(selenium, browser_id)
-    downloaded_file = tmpdir.join(file_name)
+    driver = selenium[browser_id]
+    downloaded_file = tmpdir.join(browser_id, 'download', file_name)
 
     # sleep waiting for file to finish downloading
     exist = False
