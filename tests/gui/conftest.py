@@ -57,6 +57,45 @@ is_firefox_logging_enabled = re.match(r'.*--firefox-logs.*', cmd_line)
 is_recording_enabled = re.match(r'.*--xvfb-recording(?!\s*=?\s*none).*', cmd_line)
 
 
+def pytest_addoption(parser):
+    group = parser.getgroup('onedata', description='option specific '
+                                                   'to onedata tests')
+    group.addoption('--user', action='append', default=[], nargs=2,
+                    help='user credentials in form: -u username password',
+                    metavar=('username', 'password'), dest='users')
+
+    group.addoption('--oneprovider-host', action='append', default=[], nargs=2,
+                    help='IP address of oneprovider in form: alias address',
+                    metavar=('alias', 'address'), dest='oneprovider')
+    group.addoption('--op-panel-host', action='append', default=[], nargs=2,
+                    help='IP address of op-panel in form: alias address',
+                    metavar=('alias', 'address'), dest='oneprovider_panel')
+    group.addoption('--onezone-host', action='append', default=[], nargs=2,
+                    help='IP address of onezone in form: alias address',
+                    metavar=('alias', 'address'), dest='onezone')
+    group.addoption('--oz-panel-host', action='append', default=[], nargs=2,
+                    help='IP address of oz-panel in form: alias address',
+                    metavar=('alias', 'address'), dest='onezone_panel')
+
+
+@pytest.fixture(scope='module')
+def hosts(request):
+    """Dict to use to store ip addresses of services."""
+    hosts = {}
+    for service in ('oneprovider', 'oneprovider_panel',
+                    'onezone', 'onezone_panel'):
+        hosts[service] = {alias: ip for alias, ip in
+                          request.config.getoption(service)}
+    return hosts
+
+
+@pytest.fixture(scope='module')
+def users(request):
+    """Dict to use to store user credentials."""
+    credentials = request.config.getoption('users')
+    return {user: password for user, password in credentials}
+
+
 @pytest.fixture(scope='session')
 def cdmi():
     from tests.gui.utils.oneservices.cdmi import CDMIClient

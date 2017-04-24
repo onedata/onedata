@@ -53,7 +53,7 @@ class BasicDeployment(PageObject):
 
 
 class BasicClusterRecord(ButtonWithTextPageObject, SidebarRecord):
-    title = Label('.item-header', parent_name='clusters sidebar')
+    title = id = Label('.item-header', parent_name='clusters sidebar')
 
     @property
     def welcome_page(self):

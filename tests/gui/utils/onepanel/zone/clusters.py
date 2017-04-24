@@ -26,8 +26,6 @@ class Deployment(BasicDeployment):
 
 
 class ClusterRecord(BasicClusterRecord):
-    title = Label('.item-header', parent_name='clusters sidebar')
-
     @property
     def deployment(self):
         return Deployment(self.driver, self._content, self)
