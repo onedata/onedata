@@ -13,6 +13,7 @@ from tests.gui.steps.modal import *
 
 
 from tests.gui.steps.generic.url import *
+from tests.gui.steps.generic.login import *
 
 from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *
@@ -23,6 +24,7 @@ from tests.gui.steps.onezone.manage_account import *
 
 from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
+from tests.gui.steps.oneprovider.metadata import *
 
 from tests.gui.steps.oneservices.cdmi import *
 
@@ -35,7 +37,6 @@ from tests.gui.steps.oneprovider_common import *
 from tests.gui.steps.oneprovider_data import *
 from tests.gui.steps.oneprovider_spaces import *
 from tests.gui.steps.oneprovider_shares import *
-from tests.gui.steps.oneprovider_metadata import *
 from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
@@ -63,6 +64,7 @@ def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
+scenarios('../features/onepanel_deployment.feature')
 scenarios('../features/oneprovider_group.feature')
 scenarios('../features/onezone_login.feature')
 scenarios('../features/onezone_gui.feature')

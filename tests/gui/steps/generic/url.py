@@ -1,15 +1,10 @@
 """Steps for features of url handling.
 """
 
-__author__ = "Jakub Liput, Bartosz WAlkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
-
-
 import re
-import pyperclip
+from itertools import izip
 
+import pyperclip
 from pytest_bdd import given, when, then, parsers
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
@@ -17,6 +12,23 @@ from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.utils.generic import parse_seq, repeat_failed, parse_url
 from tests.gui.conftest import WAIT_BACKEND
+
+
+__author__ = "Jakub Liput, Bartosz WAlkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+
+@given(parsers.parse("user of {browser_id_list} opened {hosts_list} page"))
+@given(parsers.parse("users of {browser_id_list} opened {hosts_list} page"))
+def g_open_onedata_service_page(selenium, browser_id_list, hosts_list, hosts):
+    for browser_id, host in izip(parse_seq(browser_id_list),
+                                 parse_seq(hosts_list)):
+        driver = select_browser(selenium, browser_id)
+        host = host.split()
+        alias, service = host[0], '_'.join(host[1:])
+        driver.get(hosts[service][alias])
 
 
 @given(parsers.re("users? of (?P<browser_id_list>.*) opened Onezone URL"))

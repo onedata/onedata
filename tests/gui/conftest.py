@@ -69,24 +69,22 @@ def pytest_addoption(parser):
                     metavar=('alias', 'address'), dest='oneprovider')
     group.addoption('--op-panel-host', action='append', default=[], nargs=2,
                     help='IP address of op-panel in form: alias address',
-                    metavar=('alias', 'address'), dest='oneprovider_panel')
+                    metavar=('alias', 'address'), dest='provider_panel')
     group.addoption('--onezone-host', action='append', default=[], nargs=2,
                     help='IP address of onezone in form: alias address',
                     metavar=('alias', 'address'), dest='onezone')
     group.addoption('--oz-panel-host', action='append', default=[], nargs=2,
                     help='IP address of oz-panel in form: alias address',
-                    metavar=('alias', 'address'), dest='onezone_panel')
+                    metavar=('alias', 'address'), dest='zone_panel')
 
 
 @pytest.fixture(scope='module')
 def hosts(request):
     """Dict to use to store ip addresses of services."""
-    hosts = {}
-    for service in ('oneprovider', 'oneprovider_panel',
-                    'onezone', 'onezone_panel'):
-        hosts[service] = {alias: ip for alias, ip in
-                          request.config.getoption(service)}
-    return hosts
+    return {service: {alias: ip for alias, ip
+                      in request.config.getoption(service)}
+            for service in ('oneprovider', 'provider_panel',
+                            'onezone', 'zone_panel')}
 
 
 @pytest.fixture(scope='module')
