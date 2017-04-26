@@ -80,9 +80,11 @@ class Input(WebElement):
     def __set__(self, instance, val):
         input_box = super(Input, self).__get__(instance, type(instance))
         input_box.clear()
-        input_box.send_keys(val)
-        assert input_box.get_attribute('value') == val, \
-            'entering "{}" to {} in {} failed'.format(val, self.name, instance)
+        if val != '':
+            input_box.send_keys(val)
+            assert input_box.get_attribute('value') == val, \
+                'entering "{}" to {} in {} failed'.format(val, self.name,
+                                                          instance)
 
 
 class WebElementsSequence(AbstractWebElement):

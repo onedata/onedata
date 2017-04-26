@@ -102,13 +102,13 @@ def cdmi():
 
 @pytest.fixture(scope='session')
 def oz_panel():
-    from tests.gui.utils.onepanel.zone import OZPanel
+    from tests.gui.utils.onepanel import OZPanel
     return OZPanel
 
 
 @pytest.fixture(scope='session')
 def op_panel():
-    from tests.gui.utils.onepanel.provider import OPPanel
+    from tests.gui.utils.onepanel import OPPanel
     return OPPanel
 
 
