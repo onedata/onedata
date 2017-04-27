@@ -278,12 +278,12 @@ def firefox_profile(firefox_profile, tmpdir):
 
 @pytest.fixture
 def browser_width():
-    return 1280
+    return 1366
 
 
 @pytest.fixture
 def browser_height():
-    return 1024
+    return 768
 
 
 # TODO: configure different window sizes for responsiveness tests: https://jira.plgrid.pl/jira/browse/VFS-2205

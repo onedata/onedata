@@ -40,6 +40,7 @@ class Step1(PageObject):
     """Used in both provider and zone panel"""
     hosts = WebItemsSequence('tr.cluster-host-table-row', cls=HostRecord)
     deploy = NamedButton('button', text='Deploy')
+    zone_name = Input('input.field-name')
 
     def __str__(self):
         return str(self.parent)
@@ -133,7 +134,7 @@ class Deployment(PageObject):
     step1 = WebItem(_deployment_step_css, cls=Step1)
     step2 = WebItem(_deployment_step_css, cls=Step2)
     step3 = WebItem(_deployment_step_css, cls=Step3)
-    last_step = WebItem(_deployment_step_css, cls=LastStep)
+    laststep = WebItem(_deployment_step_css, cls=LastStep)
 
     def __str__(self):
         return '{} deployment step in {}'.format(self.title, self.parent)

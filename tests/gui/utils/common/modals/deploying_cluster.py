@@ -10,7 +10,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class DeployingClusterModal(Modal):
+class ClusterDeploymentModal(Modal):
     msg = Label('.new-cluster-deploy-progress h1')
     progress = Label('.progress-bar')
 
