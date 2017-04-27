@@ -23,4 +23,17 @@ Feature: Deployment process using panel of zone and provider
     And user of browser2 types ip address of "z1" zone to Onezone domain field in step 2 of deployment process for "New cluster" in op panel
     And user of browser2 types redirection point of "p1" provider to Redirection point field in step 2 of deployment process for "New cluster" in op panel
     And user of browser2 clicks on Register button in step 2 of deployment process for "New cluster" in op panel
+    And user of browser2 selects POSIX from storage selector in step 3 of deployment process for "p1" in op panel
+    And user of browser2 types "onestorage" to Storage name field in add storage form in step 3 of deployment process for "p1" in op panel
+    And user of browser2 types "/mnt/st1" to Mount point field in add storage form in step 3 of deployment process for "p1" in op panel
+    And user of browser2 clicks on Add button in add storage form in step 3 of deployment process for "p1" in op panel
 
+    And user of browser2 clicks on Finish button in step 3 of deployment process for "p1" in oz panel
+    And user of browser2 clicks on Manage the cluster button in last step of deployment process for "p1" in op panel
+
+
+  Scenario: Support space
+    Given users opened [browser1, browser2] browsers' windows
+    And users of [browser1, browser2] opened [z1 zone panel, z1 zone] page
+    And user of browser1 entered credentials for admin in login form
+    And users of browser1 pressed Sign in button

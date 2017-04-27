@@ -118,3 +118,49 @@ def wt_await_finish_of_cluster_deployment(selenium, browser_id, timeout, modals)
         else:
             raise RuntimeError('cluster deployment exceeded '
                                'time limit: {}'.format(timeout))
+
+
+@when(parsers.parse('user of {browser_id} selects {storage_type} from storage '
+                    'selector in step 3 of deployment process for "{cluster}" '
+                    'in op panel'))
+@then(parsers.parse('user of {browser_id} selects {storage_type} from storage '
+                    'selector in step 3 of deployment process for "{cluster}" '
+                    'in op panel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
+                                               storage_type, op_panel,
+                                               cluster):
+    driver = select_browser(selenium, browser_id)
+    step = op_panel(driver).sidebar.records[cluster].deployment.step3
+    selector = step.add_form.storage_selector
+    if not selector.is_expanded():
+        selector.expand()
+    selector.storages[storage_type].click()
+
+
+@when(parsers.parse('user of {browser_id} types "{text}" to {input_box} '
+                    'field in add storage form in step 3 of deployment '
+                    'process for "{cluster}" in op panel'))
+@then(parsers.parse('user of {browser_id} types "{text}" to {input_box} '
+                    'field in add storage form in step 3 of deployment '
+                    'process for "{cluster}" in op panel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_type_text_to_in_box_in_deployment_step3(selenium, browser_id, text,
+                                               op_panel, input_box, cluster):
+    driver = select_browser(selenium, browser_id)
+    step = op_panel(driver).sidebar.records[cluster].deployment.step3
+    setattr(step.add_form.form, input_box.strip().lower().replace(' ', '_'),
+            text)
+
+
+@when(parsers.parse('user of {browser_id} clicks on Add button in add storage '
+                    'form in step 3 of deployment process for "{cluster}" '
+                    'in op panel'))
+@then(parsers.parse('user of {browser_id} clicks on Add button in add storage '
+                    'form in step 3 of deployment process for "{cluster}" '
+                    'in op panel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
+                                               op_panel, cluster):
+    driver = select_browser(selenium, browser_id)
+    op_panel(driver).sidebar.records[cluster].deployment.step3.add_form.add()
