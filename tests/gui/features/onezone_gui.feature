@@ -8,8 +8,10 @@ Feature: Onezone GUI elements
     Given user opened browser window
     And user of browser opened Onezone URL
     # not used in non-homepage tests
-    And user of browser clicked on the "plgrid" login button
-    And user of browser clicked on the "user1" link
+    And user of browser clicked on the "username" login button
+    And user of browser seen that "Login with username and password" modal has appeared
+    And user of browser entered credentials of user1 in "Login with username and password" modal
+    And user of browser clicked "Sign In" confirmation button in displayed modal
 
 
   Scenario: User successfully changes his alias (presses ENTER after entering text)
@@ -470,12 +472,10 @@ Feature: Onezone GUI elements
     Then user of browser sees that the list of spaces in provider popup and in expanded "GO TO YOUR FILES" Onezone panel are the same for provider named "p1"
 
 
-  Scenario: User sees that non working providers have gray icon in "GO TO YOR FILES" panel and appropriate msg is shown
-    Given there are no working provider(s) named ["p1", "p2"]
-    When user of browser refreshes site
-    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
+  Scenario: User sees that when no provider is working appropriate msg is shown
+    Given there are no working provider(s) named "p1"
+    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
     Then user of browser sees that provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel is not working
-    And user of browser sees that provider named "p2" in expanded "GO TO YOUR FILES" Onezone panel is not working
     And user of browser sees alert with title "All your providers are offline" on world map in Onezone gui
 
 

@@ -13,10 +13,4 @@ Feature: Onezone login page
 
 
   Scenario: Login button of provider is rendered on the login Homepage page
-    Then user of browser should see login button for plgrid
-
-
-  Scenario: The development mode login page should show links to login
-    When user of browser clicks on the "plgrid" login button
-    Then user of browser should see a page with "Developer mode login:" header
-    And user of browser should see [user1,user2,user3] links
+    Then user of browser should see login button for username

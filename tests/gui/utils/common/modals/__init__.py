@@ -4,6 +4,7 @@
 from tests.gui.utils.core.web_elements import WebItem
 
 from .file_distribution import FileDistributionModal
+from .login import LoginFormModal
 from .deploying_cluster import ClusterDeploymentModal
 
 __author__ = "Bartosz Walkowicz"
@@ -16,6 +17,7 @@ class Modals(object):
     file_distribution = WebItem('#file-chunks-modal', cls=FileDistributionModal)
     cluster_deployment = WebItem('#cluster-deploy-progress-modal',
                                  cls=ClusterDeploymentModal)
+    login = WebItem('#login-form-modal', cls=LoginFormModal)
 
     def __init__(self, driver):
         self.driver = driver

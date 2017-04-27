@@ -1,6 +1,5 @@
 """Test suite for features of Onezone login page.
 """
-
 __author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -24,6 +23,7 @@ from tests.gui.steps.onezone.access_tokens import *
 from tests.gui.steps.onezone.data_space_management import *
 from tests.gui.steps.onezone.providers import *
 from tests.gui.steps.onezone.manage_account import *
+from tests.gui.steps.onezone.login_page import *
 
 from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *

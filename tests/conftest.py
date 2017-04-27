@@ -24,6 +24,8 @@ def pytest_addoption(parser):
                           "performance, packaging, gui)")
     parser.addoption("--ignore-xfail", action="store_true",
                      help="Ignores xfail mark")
+    parser.addoption('--users', nargs='*',
+                     help='user credentials in form username:password')
 
 
 def pytest_generate_tests(metafunc):
