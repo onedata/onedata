@@ -1,4 +1,4 @@
-"""Steps used in login page"""
+"""Steps used in clusters deployment process"""
 
 import re
 import time

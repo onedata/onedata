@@ -13,19 +13,34 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-@when(parsers.re('user of (?P<browser_id_list>.+?) clicked on (?P<btn>.+?) '
+@when(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on (?P<btn>.+?) '
                  'button in (?P<content>.+?) for "(?P<record>.+?)" sidebar '
-                 'item in (?P<panel>op panel|oz panel)'))
-@then(parsers.re('user of (?P<browser_id_list>.+?) clicked on (?P<btn>.+?) '
+                 'item in (?P<panel>op|oz) panel'))
+@then(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on (?P<btn>.+?) '
                  'button in (?P<content>.+?) for "(?P<record>.+?)" sidebar '
-                 'item in (?P<panel>op panel|oz panel)'))
+                 'item in (?P<panel>op|oz) panel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_btn_for_record(selenium, browser_id_list, btn, content,
                                record, panel, op_panel, oz_panel):
     for browser_id in parse_seq(browser_id_list):
-        cls = op_panel if panel == 'op panel' else oz_panel
+        cls = op_panel if panel == 'op' else oz_panel
         panel = cls(select_browser(selenium, browser_id))
         content = content.strip().lower().replace(' ', '_')
         btn = btn.strip().lower().replace(' ', '_')
         button = getattr(getattr(panel.sidebar.records[record], content), btn)
         button.click()
+
+
+@when(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on '
+                 '(?P<sub_item>.+?) item in submenu of "(?P<record>.+?)" '
+                 'item in (?P<panel>op|oz) panel'))
+@then(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on '
+                 '(?P<sub_item>.+?) item in submenu of "(?P<record>.+?)" '
+                 'item in (?P<panel>op|oz) panel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_click_on_subitem_for_record(selenium, browser_id_list, sub_item,
+                                   record, panel, op_panel, oz_panel):
+    for browser_id in parse_seq(browser_id_list):
+        cls = op_panel if panel == 'op' else oz_panel
+        panel = cls(select_browser(selenium, browser_id))
+        panel.sidebar.records[record].submenu[sub_item].click()

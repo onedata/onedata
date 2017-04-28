@@ -7,14 +7,14 @@ Feature: Deployment process using panel of zone and provider
     And users of [browser1, browser2] entered credentials for [admin, admin] in login form
     And users of [browser1, browser2] pressed Sign in button
 
-    When user of browser1 clicked on Create new cluster button in welcome page for "New cluster" sidebar item in oz panel
+    When user of browser1 clicks on Create new cluster button in welcome page for "New cluster" sidebar item in oz panel
     And user of browser1 enables [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options for .*onezone.* host in hosts table in step 1 of deployment process for "New cluster" in oz panel
     And user of browser1 types "z1" to Zone name field in step 1 of deployment process for "New cluster" in oz panel
     And user of browser1 clicks on Deploy button in step 1 of deployment process for "New cluster" in oz panel
     And user of browser1 waits 60 seconds for cluster deployment to finish
     And user of browser1 clicks on Manage the cluster button in last step of deployment process for "z1" in oz panel
 
-    And user of browser2 clicked on Create new cluster button in welcome page for "New cluster" sidebar item in oz panel
+    And user of browser2 clicks on Create new cluster button in welcome page for "New cluster" sidebar item in oz panel
     And user of browser2 enables [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options for .*oneprovider.* host in hosts table in step 1 of deployment process for "New cluster" in op panel
     And user of browser2 clicks on Deploy button in step 1 of deployment process for "New cluster" in op panel
     And user of browser2 waits 60 seconds for cluster deployment to finish
@@ -42,4 +42,34 @@ Feature: Deployment process using panel of zone and provider
     And user of browser2 entered credentials of admin in "Login with username and password" modal
     And user of browser2 clicked "Sign In" confirmation button in displayed modal
 
-    When user of browser2 is idle for 5 seconds
+    # create space
+    When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser2 sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 types "helloworld" in active edit box
+    And user of browser2 presses enter on keyboard
+    And user of browser2 sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 refreshes site
+
+    # receive support token
+    And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser2 expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser2 clicks on the "GET SUPPORT" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that dropright with token for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
+    And user of browser2 sees that dropright contains non-empty token for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 copy token from dropright for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees an info notify with text matching to: .*copied.*
+    And user of browser2 sees that copied token matches displayed one
+    And user of browser2 sends copied token to user of browser1
+
+    And user of browser1 clicks on Spaces item in submenu of "p1" item in op panel
+    And user of browser1 clicks on Support space button in spaces for "p1" sidebar item in op panel
+
+    # TODO remove after integrate with swagger
+    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that "Leave a space" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
