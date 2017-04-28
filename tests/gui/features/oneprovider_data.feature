@@ -15,7 +15,7 @@ Feature: Oneprovider Data view
     And user of browser clicked "Sign In" confirmation button in displayed modal
 
     And user of browser expanded the "go to your files" Onezone sidebar panel
-    And user of browser clicked on the "Example Provider" provider in Onezone providers sidebar panel
+    And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
     And user of browser clicked on the "Go to your files" button in provider popup
     And user of browser seen that Oneprovider session has started
 
@@ -400,7 +400,7 @@ Feature: Oneprovider Data view
     And user of browser sees that item named "new_dir1" has disappeared from files browser
 
 
-  # 'space1' supported by 'Example Provider' defined in env.json
+  # 'space1' supported by 'p1' defined in env.json
   Scenario: User creates file and checks if provider name is displayed in the file distribution panel
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -412,7 +412,7 @@ Feature: Oneprovider Data view
     And user of browser clicks once on file named "20B-0.txt" of files list
     And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser sees that "File distribution" modal has appeared
-    Then user of browser sees that chunk bar for provider named "Example Provider" is entirely filled
+    Then user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
 

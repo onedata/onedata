@@ -340,3 +340,12 @@ def kill_providers(persistent_environment, provider_list):
                 else:
                     raise RuntimeError('container {} still alive, while it '
                                        'should not be'.format(container_name))
+
+
+@given(parsers.re('there (?:is|are) users? named (?P<users_list>.*?) '
+                  'in the system'))
+def create_users(users_list, users):
+    for user in parse_seq(users_list):
+        if user not in users:
+            # TODO if not exist create user using REST API
+            pass

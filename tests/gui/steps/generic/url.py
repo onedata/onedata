@@ -28,7 +28,7 @@ def g_open_onedata_service_page(selenium, browser_id_list, hosts_list, hosts):
         driver = select_browser(selenium, browser_id)
         host = host.split()
         alias, service = host[0], '_'.join(host[1:])
-        driver.get(hosts[service][alias])
+        driver.get('https://{}'.format(hosts[service][alias]))
 
 
 @given(parsers.re("users? of (?P<browser_id_list>.*) opened Onezone URL"))

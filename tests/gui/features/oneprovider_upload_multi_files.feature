@@ -11,12 +11,12 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser entered credentials of user1 in "Login with username and password" modal
     And user of browser clicked "Sign In" confirmation button in displayed modal
     And user of browser expanded the "go to your files" Onezone sidebar panel
-    And user of browser clicked on the "Example Provider" provider in Onezone providers sidebar panel
+    And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
     And user of browser clicked on the "Go to your files" button in provider popup
     And user of browser seen that Oneprovider session has started
 
 
-    # 'space1' supported by 'Example Provider' defined in env.json
+    # 'space1' supported by 'p1' defined in env.json
   Scenario: User uploads 5 files at once
     Given user of browser has 5 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"
@@ -49,7 +49,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser sees that item named "dir10" has disappeared from files browser
 
 
-  # 'space1' supported by 'Example Provider' defined in env.json
+  # 'space1' supported by 'p1' defined in env.json
   Scenario: User uploads more than 50 files and uses files list lazy loading
     Given user of browser has 70 files in directory named "my_files"
     When user of browser uses spaces select to change data space to "space1"

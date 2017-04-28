@@ -34,6 +34,12 @@ Feature: Deployment process using panel of zone and provider
 
   Scenario: Support space
     Given users opened [browser1, browser2] browsers' windows
-    And users of [browser1, browser2] opened [z1 zone panel, z1 zone] page
+    And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
     And user of browser1 entered credentials for admin in login form
     And users of browser1 pressed Sign in button
+    And user of browser2 clicked on the "username" login button
+    And user of browser2 seen that "Login with username and password" modal has appeared
+    And user of browser2 entered credentials of admin in "Login with username and password" modal
+    And user of browser2 clicked "Sign In" confirmation button in displayed modal
+
+    When user of browser2 is idle for 5 seconds
