@@ -160,7 +160,7 @@ def wt_type_text_to_in_box_in_deployment_step3(selenium, browser_id, text,
                     'form in step 3 of deployment process for "{cluster}" '
                     'in op panel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
-                                               op_panel, cluster):
+def wt_click_on_add_btn_in_storage_add_form(selenium, browser_id,
+                                            op_panel, cluster):
     driver = select_browser(selenium, browser_id)
     op_panel(driver).sidebar.records[cluster].deployment.step3.add_form.add()

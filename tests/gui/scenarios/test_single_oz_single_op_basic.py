@@ -16,6 +16,7 @@ from tests.gui.steps.generic.login import *
 
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
+from tests.gui.steps.onepanel.space_support import *
 
 from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *

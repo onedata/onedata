@@ -63,13 +63,25 @@ Feature: Deployment process using panel of zone and provider
     And user of browser2 sees that copied token matches displayed one
     And user of browser2 sends copied token to user of browser1
 
+    # support space
     And user of browser1 clicks on Spaces item in submenu of "p1" item in op panel
     And user of browser1 clicks on Support space button in spaces for "p1" sidebar item in op panel
+    And user of browser1 selects "onestorage" from storage selector in support space form for "p1" in op panel
+    And user of browser1 types received token to Support token field in support space form for "p1" in op panel
+    And user of browser1 types "1" to Size input field in support space form for "p1" in op panel
+    And user of browser1 selects GB radio button in support space form for "p1" in op panel
+    And user of browser1 clicks on Support space button in support space form for "p1" in op panel
+
+    # confirm support of space
+    And user of browser2 refreshes site
+    And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser2 expands submenu of space named "helloworld" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that list of supporting providers for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel contains only: "p1"
 
     # TODO remove after integrate with swagger
-    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser sees that "Leave a space" modal has appeared
-    And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser2 clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that "Leave a space" modal has appeared
+    And user of browser2 clicks "Yes" confirmation button in displayed modal
+    And user of browser2 sees that the modal has disappeared
+    And user of browser2 sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
