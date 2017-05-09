@@ -3,7 +3,6 @@
 from itertools import izip
 
 from pytest_bdd import given, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, parse_seq
@@ -24,7 +23,7 @@ def g_enter_user_credentials_to_login_form(selenium, browser_id_list,
                                            users_list, users, login_page):
     for browser_id, username in izip(parse_seq(browser_id_list),
                                      parse_seq(users_list)):
-        login = login_page(select_browser(selenium, browser_id))
+        login = login_page(selenium[browser_id])
         login.username = username
         login.password = users[username]
 
@@ -36,4 +35,4 @@ def g_press_sign_in_btn_on_login_page(selenium, browser_id_list,
                                       users_list, login_page):
     for browser_id, username in izip(parse_seq(browser_id_list),
                                      parse_seq(users_list)):
-        login_page(select_browser(selenium, browser_id)).sign_in()
+        login_page(selenium[browser_id]).sign_in()

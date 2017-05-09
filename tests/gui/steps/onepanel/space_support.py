@@ -1,7 +1,6 @@
 """Steps used in space support"""
 
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed
@@ -22,7 +21,7 @@ __license__ = "This software is released under the MIT license cited in " \
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_select_storage_in_support_space_form(selenium, browser_id, storage,
                                             op_panel, cluster):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     form = op_panel(driver).sidebar.records[cluster].spaces.add_support_form
     selector = form.storage_selector
     if not selector.is_expanded():
@@ -45,7 +44,7 @@ def wt_select_storage_in_support_space_form(selenium, browser_id, storage,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_btn_in_space_support_add_form(selenium, browser_id, btn,
                                               op_panel, cluster):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     form = op_panel(driver).sidebar.records[cluster].spaces.add_support_form
     getattr(form, btn.strip().lower().replace(' ', '_')).click()
 
@@ -58,7 +57,7 @@ def wt_click_on_btn_in_space_support_add_form(selenium, browser_id, btn,
 def wt_type_received_token_to_support_token_field(selenium, browser_id,
                                                   op_panel, cluster,
                                                   tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     form = op_panel(driver).sidebar.records[cluster].spaces.add_support_form
     form.token = tmp_memory[browser_id]['mailbox']['token']
 
@@ -71,6 +70,6 @@ def wt_type_received_token_to_support_token_field(selenium, browser_id,
 def wt_type_text_to_input_box_in_space_support_form(selenium, browser_id,
                                                     text, input_box,
                                                     op_panel, cluster):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     form = op_panel(driver).sidebar.records[cluster].spaces.add_support_form
     setattr(form, input_box.strip().lower().replace(' ', '_'), text)

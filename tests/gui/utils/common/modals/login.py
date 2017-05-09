@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on Login modal.
 """
 
-from tests.gui.utils.common.web_elements import InputWebElement
+from tests.gui.utils.core.web_elements import Input
 from .modal import Modal
 
 __author__ = "Bartosz Walkowicz"
@@ -11,8 +11,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class LoginFormModal(Modal):
-    username = InputWebElement('input#login-form-username-input')
-    password = InputWebElement('input#login-form-password-input')
+    username = Input('input#login-form-username-input')
+    password = Input('input#login-form-password-input')
 
     def __str__(self):
         return 'Login modal'

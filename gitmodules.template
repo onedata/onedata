@@ -34,3 +34,7 @@
 	path = luma
 	url = ONEDATA_GIT_URL/luma.git
 	branch = develop
+[submodule "getting_started"]
+	path = getting_started
+	url = https://github.com/onedata/getting-started.git
+	branch = VFS-3190-onepanel-ember

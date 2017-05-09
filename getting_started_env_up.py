@@ -1,0 +1,1 @@
+bamboos/docker/getting_started_env_up.py

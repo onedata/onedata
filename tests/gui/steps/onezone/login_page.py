@@ -2,7 +2,6 @@
 """
 
 from pytest_bdd import given, parsers, then, when
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND
 from tests.gui.utils.generic import repeat_failed
@@ -26,7 +25,7 @@ def _enter_user_credentials_in_login_modal(driver, modals, user, users):
 @repeat_failed(timeout=WAIT_BACKEND)
 def wt_enter_user_credentials_in_login_modal(selenium, browser_id, user,
                                              users, modals):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _enter_user_credentials_in_login_modal(driver, modals, user, users)
 
 
@@ -35,5 +34,5 @@ def wt_enter_user_credentials_in_login_modal(selenium, browser_id, user,
 @repeat_failed(timeout=WAIT_BACKEND)
 def g_enter_user_credentials_in_login_modal(selenium, browser_id, user,
                                             users, modals):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _enter_user_credentials_in_login_modal(driver, modals, user, users)

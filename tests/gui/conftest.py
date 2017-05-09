@@ -102,7 +102,6 @@ def users(request):
     return {user: password for user, password in credentials}
 
 
-@fixture(scope='session')
 def pytest_selenium_capture_debug(item, report, extra):
     recording = item.config.getoption('--xvfb-recording')
     if recording == 'none' or (recording == 'fail' and not report.failed):
@@ -175,12 +174,12 @@ def modals():
 
 @fixture(scope='module')
 def screen_width():
-    return 1280
+    return 1366
 
 
 @fixture(scope='module')
 def screen_height():
-    return 1024
+    return 768
 
 
 @fixture(scope='module')

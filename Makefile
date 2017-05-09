@@ -161,6 +161,12 @@ test_gui_firefox:
 test_gui_chrome:
 	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
 
+test_gui_acceptance_release_chrome:
+	./test_run_gui.py --env=getting_started -t tests/gui --test-type gui --driver=Chrome -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=failed
+
+test_gui_acceptance_release_firefox:
+	./test_run_gui.py --env=getting_started -t tests/gui --test-type gui --driver=Firefox -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=failed
+
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
 

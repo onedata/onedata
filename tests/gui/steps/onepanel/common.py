@@ -1,7 +1,6 @@
 """Steps used in login page"""
 
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, parse_seq
@@ -24,7 +23,7 @@ def wt_click_on_btn_for_record(selenium, browser_id_list, btn, content,
                                record, panel, op_panel, oz_panel):
     for browser_id in parse_seq(browser_id_list):
         cls = op_panel if panel == 'op' else oz_panel
-        panel = cls(select_browser(selenium, browser_id))
+        panel = cls(selenium[browser_id])
         content = content.strip().lower().replace(' ', '_')
         btn = btn.strip().lower().replace(' ', '_')
         button = getattr(getattr(panel.sidebar.records[record], content), btn)
@@ -42,5 +41,5 @@ def wt_click_on_subitem_for_record(selenium, browser_id_list, sub_item,
                                    record, panel, op_panel, oz_panel):
     for browser_id in parse_seq(browser_id_list):
         cls = op_panel if panel == 'op' else oz_panel
-        panel = cls(select_browser(selenium, browser_id))
+        panel = cls(selenium[browser_id])
         panel.sidebar.records[record].submenu[sub_item].click()

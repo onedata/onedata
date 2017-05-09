@@ -4,7 +4,6 @@ import re
 import time
 
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_FRONTEND, SELENIUM_IMPLICIT_WAIT
 from tests.gui.utils.generic import repeat_failed, parse_seq, implicit_wait
@@ -27,7 +26,7 @@ def wt_check_host_options_in_deployment_step1(selenium, browser_id, options,
                                               host_regexp, cluster, panel,
                                               op_panel, oz_panel):
     cls = op_panel if panel == 'op panel' else oz_panel
-    panel = cls(select_browser(selenium, browser_id))
+    panel = cls(selenium[browser_id])
     hosts = panel.sidebar.records[cluster].deployment.step1.hosts
     for host in hosts:
         if re.match(host_regexp, host.name):
@@ -45,7 +44,7 @@ def wt_check_host_options_in_deployment_step1(selenium, browser_id, options,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_type_zone_ip_to_zone_domain_in_deployment_step2(selenium, browser_id,
                                                        host, hosts, op_panel):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     step = op_panel(driver).sidebar.records['New cluster'].deployment.step2
     step.oz_domain = hosts['onezone'][host]
 
@@ -59,7 +58,7 @@ def wt_type_zone_ip_to_zone_domain_in_deployment_step2(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_enter_redirection_point_in_deployment_step2(selenium, browser_id,
                                                    host, hosts, op_panel):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     step = op_panel(driver).sidebar.records['New cluster'].deployment.step2
     step.redirection_point = 'https://{}'.format(hosts['oneprovider'][host])
 
@@ -77,7 +76,7 @@ def wt_type_text_to_in_box_in_deployment_step(selenium, browser_id, text,
                                               panel, op_panel, oz_panel,
                                               input_box, step, cluster):
     cls = op_panel if panel == 'op' else oz_panel
-    panel = cls(select_browser(selenium, browser_id))
+    panel = cls(selenium[browser_id])
     step = getattr(panel.sidebar.records[cluster].deployment,
                    step.replace(' ', ''))
     setattr(step, input_box.strip().lower().replace(' ', '_'), text)
@@ -93,7 +92,7 @@ def wt_type_text_to_in_box_in_deployment_step(selenium, browser_id, text,
 def wt_click_on_btn_in_deployment_step(selenium, browser_id, btn, step,
                                        panel, op_panel, oz_panel, cluster):
     cls = op_panel if panel == 'op panel' else oz_panel
-    panel = cls(select_browser(selenium, browser_id))
+    panel = cls(selenium[browser_id])
     step = getattr(panel.sidebar.records[cluster].deployment,
                    step.replace(' ', ''))
     getattr(step, btn.strip().lower().replace(' ', '_')).click()
@@ -104,7 +103,7 @@ def wt_click_on_btn_in_deployment_step(selenium, browser_id, btn, step,
 @then(parsers.parse('user of {browser_id} waits {timeout:d} seconds '
                     'for cluster deployment to finish'))
 def wt_await_finish_of_cluster_deployment(selenium, browser_id, timeout, modals):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     limit = time.time() + timeout
     with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
         while time.time() < limit:
@@ -130,7 +129,7 @@ def wt_await_finish_of_cluster_deployment(selenium, browser_id, timeout, modals)
 def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
                                                storage_type, op_panel,
                                                cluster):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     step = op_panel(driver).sidebar.records[cluster].deployment.step3
     selector = step.add_form.storage_selector
     if not selector.is_expanded():
@@ -147,7 +146,7 @@ def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_type_text_to_in_box_in_deployment_step3(selenium, browser_id, text,
                                                op_panel, input_box, cluster):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     step = op_panel(driver).sidebar.records[cluster].deployment.step3
     setattr(step.add_form.form, input_box.strip().lower().replace(' ', '_'),
             text)
@@ -162,5 +161,5 @@ def wt_type_text_to_in_box_in_deployment_step3(selenium, browser_id, text,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_add_btn_in_storage_add_form(selenium, browser_id,
                                             op_panel, cluster):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     op_panel(driver).sidebar.records[cluster].deployment.step3.add_form.add()
