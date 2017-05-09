@@ -6,7 +6,7 @@ from functools import partial
 from .base import AbstractWebElement, AbstractWebItem
 from .web_objects import ButtonPageObject, PageObjectsSequence, ButtonWithTextPageObject
 from tests.gui.utils.generic import find_web_elem, find_web_elem_with_text, \
-    repeat_failed, keyword_only_arg
+    repeat_failed
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -35,7 +35,9 @@ class WebElement(AbstractWebElement):
 
 class WebElementWithText(WebElement):
     def __init__(self, *args, **kwargs):
-        self.text = keyword_only_arg(kwargs, 'text')
+        self.text = kwargs.pop('text', None)
+        if self.text is None:
+            raise ValueError('text not specified')
         super(WebElementWithText, self).__init__(*args, **kwargs)
 
     def __get__(self, instance, owner):

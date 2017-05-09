@@ -6,7 +6,6 @@ from datetime import datetime
 
 import pytest
 from pytest_bdd import when, then, parsers
-from pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import parse_seq, repeat_failed, implicit_wait
@@ -81,7 +80,7 @@ def click_on_tool_icon_for_file_in_file_browser(browser_id, tool_type,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_items_absence_in_file_browser(selenium, browser_id, item_list,
                                          tmp_memory):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     browser = tmp_memory[browser_id]['file_browser']
     with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
         for item_name in parse_seq(item_list):

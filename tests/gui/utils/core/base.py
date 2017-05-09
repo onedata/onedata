@@ -3,7 +3,7 @@
 
 from abc import abstractmethod, ABCMeta
 
-from tests.gui.utils.generic import click_on_web_elem, keyword_only_arg
+from tests.gui.utils.generic import click_on_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -33,20 +33,22 @@ class AbstractWebItem(AbstractWebElement):
     __metaclass__ = ABCMeta
 
     def __init__(self, *args, **kwargs):
-        self.cls = keyword_only_arg(kwargs, 'cls')
+        self.cls = kwargs.pop('cls', None)
+        if self.cls is None:
+            raise ValueError('cls not specified')
         super(AbstractWebItem, self).__init__(*args, **kwargs)
 
 
-class AbstractPageObjectMeta(ABCMeta):
+class PageObjectMeta(ABCMeta):
     def __init__(cls, cls_name, bases, cls_dict):
         for key, val in cls_dict.items():
             if isinstance(val, AbstractWebElement) and val.name in ('id', ''):
                 val.name = key
-        super(AbstractPageObjectMeta, cls).__init__(cls_name, bases, cls_dict)
+        super(PageObjectMeta, cls).__init__(cls_name, bases, cls_dict)
 
 
 class AbstractPageObject(object):
-    __metaclass__ = AbstractPageObjectMeta
+    __metaclass__ = PageObjectMeta
 
     def __init__(self, driver, web_elem, parent=None, name=''):
         self.driver = driver

@@ -1,0 +1,52 @@
+{
+  "test_authorization": ["singleclient_authorization"],
+  "test_directory_CRUD": ["singleprovider_singleclient_directio"],
+  "test_directory_stat": ["singleprovider_singleclient_directio"],
+  "test_example": ["singleprovider_singleclient_directio"],
+  "test_luma_provider": ["env_luma_provider"],
+  "test_luma_proxy": ["env_luma_proxy"],
+  "test_multi_authorization": ["multiclient_authorization"],
+  "test_multi_directory_CRUD": [
+    "multiprovider_directio",
+    "multiprovider_proxy",
+    "multiprovider_proxy_s3",
+    "singleprovider_multiclient_directio"
+  ],
+  "test_multi_directory_stat": [
+    "multiprovider_directio",
+    "multiprovider_proxy",
+    "multiprovider_proxy_s3",
+    "singleprovider_multiclient_directio"
+  ],
+  "test_multi_reg_file_CRUD": [
+    "multiprovider_directio",
+    "multiprovider_proxyio",
+    "multiprovider_proxy",
+    "multiprovider_proxy_s3",
+    "singleprovider_multiclient_proxyio",
+    "singleprovider_multiclient_directio"
+  ],
+  "test_multi_reg_file_stat": [
+    "multiprovider_directio",
+    "multiprovider_proxyio",
+    "multiprovider_proxy",
+    "multiprovider_proxy_s3",
+    "singleprovider_multiclient_proxyio",
+    "singleprovider_multiclient_directio"
+  ],
+  "test_multiprovider_replication": [
+    "multiprovider_directio_env",
+    "multiprovider_env"
+  ],
+  "test_multiprovider_space_management": ["multiprovider_space_management"],
+  "test_reg_file_CRUD": [
+    "singleprovider_singleclient_directio",
+    "singleprovider_singleclient_proxyio"
+  ],
+  "test_reg_file_stat": [
+    "singleprovider_singleclient_directio",
+    "singleprovider_singleclient_proxyio"
+  ],
+  "test_singleprovider_space_management": ["singleprovider_space_management"],
+  "test_profiling": ["singleclient_authorization"]
+}

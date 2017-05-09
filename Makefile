@@ -35,6 +35,10 @@ else
 TEST_RUN := ./test_run.py
 endif
 
+ifdef ENV_FILE
+TEST_RUN := $(TEST_RUN) --env-file $(ENV_FILE)
+endif
+
 
 GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
 GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
@@ -146,16 +150,16 @@ test_packaging:
 	${TEST_RUN} --test-type packaging -vvv --test-dir tests/packaging -s
 
 test:
-	${TEST_RUN} --test-type acceptance -vvv  --test-dir tests/acceptance/scenarios/${SUITE}
+	${TEST_RUN} --test-type acceptance -vvv  --test-dir tests/acceptance/scenarios/${SUITE}.py
 
 test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
 test_gui_firefox:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --xvfb-recording=failed
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
 
 test_gui_chrome:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --xvfb-recording=failed
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling

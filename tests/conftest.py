@@ -7,11 +7,13 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from tests import *
-from tests.utils.path_utils import make_logdir, get_file_name, get_json_files
+from tests.utils.path_utils import (make_logdir, get_file_name, get_json_files,
+                                    absolute_path_to_env_file)
 from tests.utils.utils import run_env_up_script, hostname, get_domain
 
 from environment import docker
 
+import json
 import pytest
 import os
 import tempfile
@@ -19,61 +21,61 @@ import shutil
 
 
 def pytest_addoption(parser):
-    parser.addoption("--test-type", action="store", default=None,
+    parser.addoption("--test-type", action="store", default="acceptance",
                      help="type of test (acceptance, env_up,"
                           "performance, packaging, gui)")
     parser.addoption("--ignore-xfail", action="store_true",
                      help="Ignores xfail mark")
-    parser.addoption('--users', nargs='*',
-                     help='user credentials in form username:password')
+    parser.addoption("--env-file", action="store", default=None,
+                     help="description of environment that will be tested")
 
 
 def pytest_generate_tests(metafunc):
-    if 'test_type' in metafunc.fixturenames:
+    if metafunc.config.option.test_type:
         test_type = metafunc.config.option.test_type
-        if test_type in ['acceptance', 'performance', 'gui']:
+        if test_type == 'gui':
             envs = get_json_files(map_test_type_to_env_dir(test_type),
                                   relative=True)
-            metafunc.parametrize(
-                    ("test_type", 'env'),
-                    [(test_type, env) for env in envs],
-                    scope='module')
+            metafunc.parametrize('env_description_file', envs, scope='module')
+
+        elif test_type in ['acceptance', 'performance']:
+            env_file = metafunc.config.getoption("env_file")
+            if env_file:
+                metafunc.parametrize('env_description_file', [env_file],
+                                     scope='module')
+            else:
+                with open(map_test_type_to_test_config_file(test_type), 'r') as f:
+                    test_config = json.load(f)
+
+                test_file = metafunc.module.__name__.split('.')[-1]
+                if test_file in test_config:
+                    metafunc.parametrize(
+                        'env_description_file',
+                        [env_file for env_file in test_config[test_file]],
+                        scope='module'
+                    )
 
 
 @pytest.fixture(scope="module")
-def test_type():
-    pass
-
-
-@pytest.fixture(scope="module")
-def env_description_file(request, test_type, env):
-    """NOTE: If you want to start tests in given suite with environments
-    different than all .json files from DEFAULT_ACCEPTANCE_ENV_DIR or
-    PERFORMANCE_ENV_DIR (acceptance and performance tests respectively)
-    this fixture must be overridden in that test module. As params
-    for overridden fixture you must specify .json files with description
-    of test environment for which you want tests to be started.
-    This fixture must return absolute path to given .json.
-    """
-    absolute_path = os.path.join(map_test_type_to_env_dir(test_type), env)
+def env_description_abs_path(request, env_description_file):
+    env_dir = map_test_type_to_env_dir(get_test_type(request))
+    absolute_path = absolute_path_to_env_file(env_dir, env_description_file)
     return absolute_path
 
 
 @pytest.fixture(scope="module")
-def persistent_environment(request, test_type, env_description_file):
+def persistent_environment(request, env_description_abs_path):
     """
     Sets up environment and returns environment description.
     """
-    curr_path = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(curr_path, '..', '..', 'environments',
-                            env_description_file)
-
-    logdir_path = map_test_type_to_logdir(test_type)
-
+    logdir_path = map_test_type_to_logdir(get_test_type(request))
     feature_name = request.module.__name__.split('.')[-1]
+
     logdir = make_logdir(logdir_path, os.path
-                         .join(get_file_name(env_description_file), feature_name))
-    env_desc = run_env_up_script("env_up.py", config=env_path, logdir=logdir, skip=False)
+                         .join(get_file_name(env_description_abs_path),
+                               feature_name))
+    env_desc = run_env_up_script("env_up.py", config=env_description_abs_path,
+                                 logdir=logdir, skip=False)
 
     def fin():
         docker.remove(request.onedata_environment['docker_ids'],
@@ -87,10 +89,10 @@ def persistent_environment(request, test_type, env_description_file):
 
 @pytest.fixture()
 def onedata_environment(persistent_environment, request):
-
     def fin():
         if 'posix' in persistent_environment['storages'].keys():
-            for storage_name, storage in persistent_environment['storages']['posix'].items():
+            for storage_name, storage in \
+                    persistent_environment['storages']['posix'].items():
                 clear_storage(storage['host_path'])
 
     request.addfinalizer(fin)
@@ -146,8 +148,8 @@ def skip_by_env(request, env_description_file):
         reason = args['reason']
         arg_envs = [get_file_name(e) for e in args['envs']]
         if env in arg_envs:
-                pytest.skip('skipped on env: {env} with reason: {reason}'
-                            .format(env=env, reason=reason))
+            pytest.skip('skipped on env: {env} with reason: {reason}'
+                        .format(env=env, reason=reason))
 
 
 @pytest.fixture()
@@ -171,13 +173,13 @@ def xfail_by_env(request, env_description_file):
         ignore = request.config.getoption("--ignore-xfail")
         if env in arg_envs and not ignore:
             request.node.add_marker(pytest.mark.xfail(
-                    reason='xfailed on env: {env} with reason: {reason}'
-                        .format(env=env, reason=reason)))
+                reason='xfailed on env: {env} with reason: {reason}'
+                    .format(env=env, reason=reason)))
 
 
 def map_test_type_to_env_dir(test_type):
     return {
-        'acceptance': DEFAULT_ACCEPTANCE_ENV_DIR,
+        'acceptance': ACCEPTANCE_ENV_DIR,
         'performance': PERFORMANCE_ENV_DIR,
         'gui': GUI_ENV_DIR
     }[test_type]
@@ -188,6 +190,13 @@ def map_test_type_to_logdir(test_type):
         'acceptance': ACCEPTANCE_LOGDIR,
         'performance': PERFORMANCE_LOGDIR,
         'gui': GUI_LOGDIR
+    }.get(test_type, ACCEPTANCE_LOGDIR)
+
+
+def map_test_type_to_test_config_file(test_type):
+    return {
+        'acceptance': ACCEPTANCE_TEST_CONFIG,
+        'performance': PERFORMANCE_TEST_CONFIG
     }.get(test_type, ACCEPTANCE_LOGDIR)
 
 
@@ -245,3 +254,7 @@ class Provider:
 
     def delete_certs(self):
         shutil.rmtree(self.cert_dir)
+
+
+def get_test_type(request):
+    return request.config.getoption("test_type")

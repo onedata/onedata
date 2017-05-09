@@ -5,24 +5,16 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests import *
-from tests.utils.path_utils import env_file
 from tests.acceptance.steps.reg_file_steps import *
 from tests.acceptance.steps.file_steps import *
 from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.auth_steps import *
 
 from pytest_bdd import scenario
-import pytest
 from functools import partial
 
 
 scenario = partial(scenario, '../features/luma_provider.feature')
-
-
-@pytest.fixture(scope="module", params=["env_luma_provider"])
-def env_description_file(request):
-    return env_file(CUSTOM_ACCEPTANCE_ENV_DIR, request.param)
 
 
 @scenario('Operations on POSIX storage')
