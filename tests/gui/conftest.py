@@ -172,6 +172,12 @@ def modals():
     return Modals
 
 
+@fixture(scope='session')
+def popups():
+    from tests.gui.utils.common.popups import Popups
+    return Popups
+
+
 @fixture(scope='module')
 def screen_width():
     return 1366

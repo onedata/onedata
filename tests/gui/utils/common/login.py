@@ -11,7 +11,7 @@ __license__ = "This software is released under the MIT license cited in " \
 class LoginPage(object):
     username = Input('input[placeholder="Username"]')
     password = Input('input[placeholder="Password"]')
-    sign_in = NamedButton('button[type="submit"]', text='Sign in')
+    sign_in = NamedButton('button', text='Sign in')
 
     def __init__(self, driver):
         self.web_elem = self.driver = driver

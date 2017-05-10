@@ -37,7 +37,7 @@ class StorageAddForm(PageObject):
     selected_storage = Label('.ember-power-select-selected-item')
     storage_selector = WebItem('.ember-basic-dropdown', cls=StorageSelector)
     add = NamedButton('button', text='Add')
-    posix = WebItem('form', POSIX)
+    posix = WebItem('form', cls=POSIX)
 
     def __str__(self):
         return 'add storage form in {}'.format(self.parent)
