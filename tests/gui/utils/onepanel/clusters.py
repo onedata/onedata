@@ -84,23 +84,3 @@ class Clusters(Sidebar):
     search_box = Input('ul.one-list li.search-bar-item input')
     records = WebItemsSequence('ul.one-list li.one-list-item',
                                cls=ClusterRecord)
-
-
-class HostRecord(PageObject):
-    name = id = Label('td[data-th="Hosts"]',
-                      parent_name='hosts table in cluster deployment step')
-    database = WebItem('td[data-th="Database"]', cls=Toggle)
-    cluster_worker = WebItem('td[data-th="Cluster Worker"]', cls=Toggle)
-    cluster_manager = WebItem('td[data-th="Cluster Manager"]', cls=Toggle)
-    primary_cluster_manager = WebItem('td[data-th="Primary Cluster Manager"]',
-                                      cls=Toggle)
-
-    def __str__(self):
-        return '{} record in {}'.format(self.name, self.parent)
-
-
-class Nodes(PageObject):
-    hosts = WebItemsSequence('tr.cluster-host-table-row', cls=HostRecord)
-
-    def __str__(self):
-        return 'Nodes page in {}'.format(self.parent)
