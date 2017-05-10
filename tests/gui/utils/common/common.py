@@ -4,11 +4,11 @@ common operations between various services.
 
 from abc import ABCMeta, abstractmethod
 
-from tests.gui.utils.core.web_elements import WebItemsSequence, Label, WebElement
+from tests.gui.utils.core.web_elements import WebItemsSequence, Label, WebElement, Button, WebItem
 from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
 from tests.gui.utils.core.base import PageObject
 
-from tests.gui.utils.generic import find_web_elem
+from .account_management import AccountManagementContentPage
 
 
 __author__ = "Bartosz Walkowicz"
@@ -25,6 +25,7 @@ class OnePage(object):
     main_menu = WebItemsSequence('#main-menu-container ul.main-menu '
                                  'li.main-menu-item',
                                  cls=ButtonWithTextPageObject)
+    account = Button('.row-account-button')
 
     def __init__(self, driver):
         self.driver = self.web_elem = driver
@@ -34,18 +35,10 @@ class OnePage(object):
         pass
 
 
-class Sidebar(PageObject):
-    title = Label('.col-title')
-
-    def __str__(self):
-        return '{} sidebar in {}'.format(self.title, self.parent)
-
-
-class SidebarRecord(PageObject):
-    @property
-    def _content(self):
-        return find_web_elem(self.driver, '.col-content',
-                             lambda: '{} not found'.format(self))
+class BaseContent(PageObject):
+    _main_content = '.main-content'
+    account_management = WebItem(_main_content,
+                                 cls=AccountManagementContentPage)
 
 
 class Toggle(PageObject):
