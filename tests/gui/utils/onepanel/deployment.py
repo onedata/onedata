@@ -1,14 +1,14 @@
 """Utils and fixtures to facilitate deployment steps in panel GUI.
 """
 
+from tests.gui.utils.common.common import Toggle
 from tests.gui.utils.core.base import PageObject, ExpandableMixin
 from tests.gui.utils.core.web_elements import (WebItemsSequence, Label,
-                                               NamedButton, Input,
+                                               Button, NamedButton, Input,
                                                WebItem, WebElement)
 from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
 
-from tests.gui.utils.common.common import Toggle
-
+from .clusters import HostRecord
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -16,30 +16,10 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class HostRecord(PageObject):
-    name = id = Label('td[data-th="Hosts"]',
-                      parent_name='hosts table in cluster deployment step')
-    database = WebItem('td[data-th="Database"]', cls=Toggle)
-    cluster_worker = WebItem('td[data-th="Cluster Worker"]', cls=Toggle)
-    cluster_manager = WebItem('td[data-th="Cluster Manager"]', cls=Toggle)
-    primary_cluster_manager = WebItem('td[data-th="Primary Cluster Manager"]',
-                                      cls=Toggle)
-
-    def __str__(self):
-        return '{} record in {}'.format(self.name, self.parent)
-
-
-class Nodes(PageObject):
-    hosts = WebItemsSequence('tr.cluster-host-table-row', cls=HostRecord)
-
-    def __str__(self):
-        return 'Nodes page in {}'.format(self.parent)
-
-
 class Step1(PageObject):
     """Used in both provider and zone panel"""
     hosts = WebItemsSequence('tr.cluster-host-table-row', cls=HostRecord)
-    deploy = NamedButton('button', text='Deploy')
+    deploy = Button('button.btn-deploy-cluster')
     zone_name = Input('input.field-name')
 
     def __str__(self):
@@ -82,32 +62,28 @@ class StorageAddForm(PageObject):
     selected_storage = Label('.ember-power-select-selected-item')
     storage_selector = WebItem('.ember-basic-dropdown', cls=StorageTypeSelector)
     add = NamedButton('button', text='Add')
-
-    @property
-    def form(self):
-        curr_storage = self.selected_storage
-        cls = globals().get(curr_storage, None)
-        if cls is not None:
-            return cls(self.driver, self.web_elem, self)
-        else:
-            raise RuntimeError('no {} storage found'.format(curr_storage))
+    posix = WebItem('form', POSIX)
 
     def __str__(self):
         return 'add storage form in {}'.format(self.parent)
 
 
 class StorageRecord(PageObject, ExpandableMixin):
-    # TODO name
-    name = id = Label('')
-    storage_type = Label('td.item-table-content-cell .content-row:first-child')
-    mount_point = Label('td.item-table-content-cell .content-row:nth-child(2)')
+    name = id = Label('.oneicon-provider + .one-label')
+    storage_type = Label('td.item-table-content-cell .content-row:first-child '
+                         '.one-label')
+    mount_point = Label('td.item-table-content-cell .content-row:nth-child(2) '
+                        '.one-label')
+    _toggle = WebElement('.one-collapsible-list-item-header')
+
+    def is_expanded(self):
+        return True if 'opened' in self._toggle.get_attribute('class') else False
 
 
 class Step3(PageObject):
-    add_form = WebItem('.cluster-storage-add-form', cls=StorageAddForm)
-    storages = WebItemsSequence('ul li.one-collapsible-list-item',
-                                cls=StorageRecord)
-
+    """Used only in provider panel"""
+    form = WebItem('.cluster-storage-add-form', cls=StorageAddForm)
+    storages = WebItemsSequence('ul li.storage-item', cls=StorageRecord)
     add_storage = NamedButton('button', text='Add storage')
     cancel = NamedButton('button', text='Cancel')
     finish = NamedButton('button', text='Finish')

@@ -4,7 +4,7 @@ common operations between various services.
 
 from abc import ABCMeta, abstractmethod
 
-from tests.gui.utils.core.web_elements import WebElement, WebItemsSequence, Label
+from tests.gui.utils.core.web_elements import WebItemsSequence, Label, WebElement
 from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
 from tests.gui.utils.core.base import PageObject
 
@@ -25,16 +25,6 @@ class OnePage(object):
     main_menu = WebItemsSequence('#main-menu-container ul.main-menu '
                                  'li.main-menu-item',
                                  cls=ButtonWithTextPageObject)
-    _sidebar = WebElement('.col-sidebar')
-
-    @property
-    def sidebar(self):
-        tab = self.opened_tab
-        cls = self._sidebars.get(tab, None)
-        if cls is not None:
-            return cls(self.driver, self._sidebar, self)
-        else:
-            raise RuntimeError('no {} sidebar found'.format(tab))
 
     def __init__(self, driver):
         self.driver = self.web_elem = driver
@@ -59,6 +49,8 @@ class SidebarRecord(PageObject):
 
 
 class Toggle(PageObject):
+    _lock = WebElement('.one-way-toggle-readonly-icon')
+
     def __str__(self):
         return 'toggle switch in {}'.format(self.parent)
 
@@ -72,3 +64,11 @@ class Toggle(PageObject):
     def uncheck(self):
         if self.is_checked():
             self.click()
+
+    def is_enabled(self):
+        try:
+            self._lock
+        except RuntimeError:
+            return True
+        else:
+            return False
