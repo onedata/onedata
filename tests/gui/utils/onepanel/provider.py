@@ -40,8 +40,8 @@ class ProviderForm(ProviderDescription):
 
 
 class ProviderContentPage(PageObject):
-    provider_details = WebItem('.content-row', cls=ProviderDetails)
-    modify_form = WebItem('.content-row', cls=ProviderForm)
+    details = WebItem('.content-row', cls=ProviderDetails)
+    form = WebItem('.content-row', cls=ProviderForm)
     modify_provider_details = NamedButton('.btn-modify-provider',
                                           text='Modify provider details')
     cancel_modifying = NamedButton('.btn-modify-provider',

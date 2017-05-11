@@ -1,7 +1,7 @@
 """Utils and fixtures to facilitate operations on Onepanel of zone web GUI.
 """
 from tests.gui.utils.core.base import PageObject
-from tests.gui.utils.core.web_elements import WebItem, Label
+from tests.gui.utils.core.web_elements import WebItem, Label, WebElement
 
 from tests.gui.utils.common.common import OnePage, BaseContent
 from .clusters import Clusters, WelcomePage
@@ -33,11 +33,20 @@ class Content(BaseContent):
     nodes = WebItem(_main_content, cls=NodesContentPage)
     provider = WebItem(_main_content, cls=ProviderContentPage)
     storages = WebItem(_main_content, cls=StorageContentPage)
+    spaces = WebItem(_main_content, cls=SpacesContentPage)
 
 
 class Onepanel(OnePage):
-    sidebar = WebItem('#col-sidebar', cls=Sidebar)
     content = WebItem('.col-content', cls=Content)
+    _main_sidebar = WebElement('#col-sidebar')
+    _sub_sidebar = WebElement('#sidenav-sidebar')
+
+    @property
+    def sidebar(self):
+        sidebar = self._sub_sidebar
+        if 'ps-active-x' not in sidebar.get_attribute('class'):
+            sidebar = self._main_sidebar
+        return Sidebar(self.driver, sidebar, self)
 
     def __str__(self):
         return 'Onepanel page'

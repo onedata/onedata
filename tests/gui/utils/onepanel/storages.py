@@ -1,6 +1,8 @@
 """Utils and fixtures to facilitate storages control in panel GUI.
 """
 
+import re
+
 from tests.gui.utils.common.common import Toggle
 from tests.gui.utils.core.base import PageObject, ExpandableMixin
 from tests.gui.utils.core.web_elements import (WebItemsSequence, Label,
@@ -52,7 +54,8 @@ class StorageRecord(PageObject, ExpandableMixin):
     _toggle = WebElement('.one-collapsible-list-item-header')
 
     def is_expanded(self):
-        return True if 'opened' in self._toggle.get_attribute('class') else False
+        return bool(re.match(r'.*\b(?<!-)opened\b.*',
+                             self._toggle.get_attribute('class')))
 
 
 class StorageContentPage(PageObject):
