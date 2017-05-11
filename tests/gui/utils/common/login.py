@@ -1,6 +1,6 @@
 """Utils and fixtures to facilitate operations on login page"""
 
-from ..core.web_elements import Input, NamedButton
+from ..core.web_elements import Input, NamedButton, Label
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -12,6 +12,7 @@ class LoginPage(object):
     username = Input('input[placeholder="Username"]')
     password = Input('input[placeholder="Password"]')
     sign_in = NamedButton('button', text='Sign in')
+    err_msg = Label('.login-error-message')
 
     def __init__(self, driver):
         self.web_elem = self.driver = driver

@@ -50,13 +50,3 @@ class Onepanel(OnePage):
 
     def __str__(self):
         return 'Onepanel page'
-
-
-class OZPanel(Onepanel):
-    def __str__(self):
-        return 'Onepanel zone page'
-
-
-class OPPanel(Onepanel):
-    def __str__(self):
-        return 'Onepanel provider page'

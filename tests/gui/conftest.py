@@ -137,15 +137,9 @@ def cdmi():
 
 
 @fixture(scope='session')
-def oz_panel():
-    from tests.gui.utils.onepanel import OZPanel
-    return OZPanel
-
-
-@fixture(scope='session')
-def op_panel():
-    from tests.gui.utils.onepanel import OPPanel
-    return OPPanel
+def onepanel():
+    from tests.gui.utils.onepanel import Onepanel
+    return Onepanel
 
 
 @fixture(scope='session')
