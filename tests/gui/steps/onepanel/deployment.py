@@ -18,10 +18,10 @@ __license__ = "This software is released under the MIT license cited in " \
 
 @when(parsers.parse('user of {browser_id} enables {options} options for '
                     '{host_regexp} host in step 1 of deployment process '
-                    'in Onapanel'))
+                    'in Onepanel'))
 @then(parsers.parse('user of {browser_id} enables {options} options for '
                     '{host_regexp} host in step 1 of deployment process '
-                    'in Onapanel'))
+                    'in Onepanel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_check_host_options_in_deployment_step1(selenium, browser_id, options,
                                               host_regexp, onepanel):
@@ -119,23 +119,24 @@ def wt_await_finish_of_cluster_deployment(selenium, browser_id,
 def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
                                                storage_type, onepanel):
     step = onepanel(selenium[browser_id]).content.deployment.step3
-    selector = step.add_form.storage_selector
+    selector = step.form.storage_selector
     if not selector.is_expanded():
         selector.expand()
     selector.storages[storage_type].click()
 
 
-@when(parsers.parse('user of {browser_id} types "{text}" to {input_box} '
-                    'field in add storage form in step 3 of deployment '
-                    'process in Onepanel'))
-@then(parsers.parse('user of {browser_id} types "{text}" to {input_box} '
-                    'field in add storage form in step 3 of deployment '
-                    'process in Onepanel'))
+@when(parsers.re('user of (?P<browser_id>.*?) types "(?P<text>.*?)" to '
+                 '(?P<input_box>.*?) field in (?P<form>POSIX) form '
+                 'in step 3 of deployment process in Onepanel'))
+@then(parsers.re('user of (?P<browser_id>.*?) types "(?P<text>.*?)" to '
+                 '(?P<input_box>.*?) field in (?P<form>POSIX) form '
+                 'in step 3 of deployment process in Onepanel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_type_text_to_in_box_in_deployment_step3(selenium, browser_id, text,
-                                               onepanel, input_box):
-    setattr(onepanel(selenium[browser_id]).content.deployment.step3.form,
-            transform(input_box), text)
+                                               form, onepanel, input_box):
+    form = getattr(onepanel(selenium[browser_id]).content.deployment.step3.form,
+                   transform(form))
+    setattr(form, transform(input_box), text)
 
 
 @when(parsers.parse('user of {browser_id} clicks on Add button in add storage '

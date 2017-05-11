@@ -37,9 +37,9 @@ def wt_select_unit_in_space_support_add_form(selenium, browser_id,
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) clicks on Support space '
-                 'button in support space form for in Onepanel'))
+                 'button in support space form in Onepanel'))
 @then(parsers.re('user of (?P<browser_id>.+?) clicks on Support space '
-                 'button in support space form for in Onepanel'))
+                 'button in support space form in Onepanel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_btn_in_space_support_add_form(selenium, browser_id, onepanel):
     onepanel(selenium[browser_id]).content.spaces.form.support_space()

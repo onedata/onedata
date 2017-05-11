@@ -23,8 +23,8 @@ Feature: Deployment process using panel of zone and provider
     And user of browser2 types redirection point of "p1" provider to Redirection point field in step 2 of deployment process in Onepanel
     And user of browser2 clicks on Register button in step 2 of deployment process in Onepanel
     And user of browser2 selects POSIX from storage selector in step 3 of deployment process in Onepanel
-    And user of browser2 types "onestorage" to Storage name field in add storage form in step 3 of deployment process in Onepanel
-    And user of browser2 types "/mnt/st1" to Mount point field in add storage form in step 3 of deployment process in Onepanel
+    And user of browser2 types "onestorage" to Storage name field in POSIX form in step 3 of deployment process in Onepanel
+    And user of browser2 types "/mnt/st1" to Mount point field in POSIX form in step 3 of deployment process in Onepanel
     And user of browser2 clicks on Add button in add storage form in step 3 of deployment process in Onepanel
     And user of browser2 clicks on Finish button in step 3 of deployment process in Onepanel
     And user of browser2 clicks on Manage the cluster button in last step of deployment process in Onepanel
@@ -63,7 +63,7 @@ Feature: Deployment process using panel of zone and provider
 
     # support space
     And user of browser1 clicks on Spaces item in submenu of "p1" item in CLUSTERS sidebar in Onepanel
-    And user of browser1 clicks on Support space button in spaces sidebar item in Onepanel
+    And user of browser1 clicks on Support space button in spaces page in Onepanel
     And user of browser1 selects "onestorage" from storage selector in support space form in onepanel
     And user of browser1 types received token to Support token field in support space form in Onepanel
     And user of browser1 types "1" to Size input field in support space form in Onepanel

@@ -13,14 +13,15 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 @when(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on (?P<btn>.+?) '
-                 'button in (?P<content>.+?) in Onepanel'))
+                 'button in (?P<content>welcome|spaces) page in Onepanel'))
 @then(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on (?P<btn>.+?) '
-                 'button in (?P<content>.+?) in Onepanel'))
+                 'button in (?P<content>welcome|spaces) page in Onepanel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_btn_in_content(selenium, browser_id_list,
                                btn, content, onepanel):
     for browser_id in parse_seq(browser_id_list):
-        content = getattr(onepanel(selenium[browser_id]), transform(content))
+        content = getattr(onepanel(selenium[browser_id]).content,
+                          transform(content))
         getattr(content, transform(btn)).click()
 
 
@@ -34,5 +35,6 @@ def wt_click_on_btn_in_content(selenium, browser_id_list,
 def wt_click_on_subitem_for_record(selenium, browser_id_list, sidebar,
                                    sub_item, record, onepanel):
     for browser_id in parse_seq(browser_id_list):
-        nav = getattr(onepanel(selenium[browser_id]), transform(sidebar))
+        nav = getattr(onepanel(selenium[browser_id]).sidebar,
+                      transform(sidebar))
         nav.items[record].submenu[sub_item].click()

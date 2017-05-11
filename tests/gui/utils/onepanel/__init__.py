@@ -28,7 +28,7 @@ class Sidebar(PageObject):
 
 class Content(BaseContent):
     _main_content = '.main-content'
-    welcome_page = WebItem(_main_content, cls=WelcomePage)
+    welcome = WebItem(_main_content, cls=WelcomePage)
     deployment = WebItem(_main_content, cls=Deployment)
     nodes = WebItem(_main_content, cls=NodesContentPage)
     provider = WebItem(_main_content, cls=ProviderContentPage)
