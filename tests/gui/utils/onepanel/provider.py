@@ -11,8 +11,6 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class ProviderDescription(PageObject):
-    title = Label('.form-title')
-    description = Label('.form-description')
     id = Label('.field-id')
     redirection_point = Label('.field-redirectionPoint')
 
@@ -40,8 +38,8 @@ class ProviderForm(ProviderDescription):
 
 
 class ProviderContentPage(PageObject):
-    details = WebItem('.content-row', cls=ProviderDetails)
-    form = WebItem('.content-row', cls=ProviderForm)
+    details = WebItem('.provider-registration-form', cls=ProviderDetails)
+    form = WebItem('.provider-registration-form', cls=ProviderForm)
     modify_provider_details = NamedButton('.btn-modify-provider',
                                           text='Modify provider details')
     cancel_modifying = NamedButton('.btn-modify-provider',
