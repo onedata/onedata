@@ -65,3 +65,21 @@ def wt_type_text_to_input_box_in_space_support_form(selenium, browser_id, text,
                                                     input_box, onepanel):
     form = onepanel(selenium[browser_id]).content.spaces.form
     setattr(form, transform(input_box), text)
+
+
+@when(parsers.parse('user of {browser_id} clicks on revoke support icon for '
+                    '"{space}" space support item in Spaces page in Onepanel'))
+@then(parsers.parse('user of {browser_id} clicks on revoke support icon for '
+                    '"{space}" space support item in Spaces page in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_revoke_support_for_space(selenium, browser_id, space, onepanel):
+    onepanel(selenium[browser_id]).content.spaces.spaces[space].revoke_support()
+
+
+@when(parsers.parse('user of {browser_id} sees that space support record for '
+                    '"{space}" has appeared in Spaces page in Onepanel'))
+@then(parsers.parse('user of {browser_id} sees that space support record for '
+                    '"{space}" has appeared in Spaces page in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_assert_existence_of_space_support_record(selenium, browser_id, space, onepanel):
+    _ = onepanel(selenium[browser_id]).content.spaces.spaces[space]

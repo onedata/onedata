@@ -40,6 +40,9 @@ class BaseContent(PageObject):
     account_management = WebItem(_main_content,
                                  cls=AccountManagementContentPage)
 
+    def __str__(self):
+        return 'content in {}'.format(self.parent)
+
 
 class Toggle(PageObject):
     _lock = WebElement('.one-way-toggle-readonly-icon')

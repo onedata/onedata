@@ -18,7 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
-from tests.gui.utils.generic import parse_seq, suppress, repeat_failed
+from tests.gui.utils.generic import parse_seq, suppress, repeat_failed, transform
 from tests.gui.utils.generic import parse_url, enter_text, redirect_display
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
@@ -182,6 +182,15 @@ def close_visible_notifies(selenium, browser_id):
                 staleness_of(notify_cls),
                 message='waiting for notify to disappear'
             )
+
+
+@when(parsers.parse('user of {browser_id} clicks on {btn} button '
+                    'in {popup} popup'))
+@then(parsers.parse('user of {browser_id} clicks on {btn} button '
+                    'in {popup} popup'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def click_on_btn_in_popup(selenium, browser_id, btn, popup, popups):
+    getattr(popups(selenium[browser_id]), transform(popup)).buttons[btn].click()
 
 
 @when(parsers.parse('user of {browser_id} refreshes site'))
