@@ -18,7 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
-from tests.gui.utils.generic import parse_seq, suppress
+from tests.gui.utils.generic import parse_seq, suppress, repeat_failed
 from tests.gui.utils.generic import parse_url, enter_text, redirect_display
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
@@ -145,62 +145,43 @@ def page_with_header(selenium, browser_id, text):
     Wait(driver, WAIT_BACKEND).until(header_with_text_presence)
 
 
-@when(parsers.parse('user of {browser_id} sees an {notify_type} notify '
+@when(parsers.parse('user of {browser_id} sees an {notify} notify '
                     'with text matching to: {text_regexp}'))
-@then(parsers.parse('user of {browser_id} sees an {notify_type} notify '
+@then(parsers.parse('user of {browser_id} sees an {notify} notify '
                     'with text matching to: {text_regexp}'))
-def notify_visible_with_text(selenium, browser_id, notify_type, text_regexp):
-    text_regexp = re.compile(text_regexp)
-
-    def notify_with_text_present(s):
-        try:
-            notifiers = s.find_elements_by_css_selector(
-                '.ember-notify.ember-notify-show.{t} .message'.format(t=notify_type)
-            )
-            if len(notifiers) > 0:
-                matching_elements = [e for e in notifiers if text_regexp.match(e.text)]
-                return len(matching_elements) > 0
-            else:
-                return None
-        # TODO currently we ignore stalement because some old notify may have disappeared
-        #  and probability of new notify to disappear is small
-        except (NoSuchElementException, StaleElementReferenceException):
-            return None
-
+def notify_visible_with_text(selenium, browser_id, notify, text_regexp):
     driver = selenium[browser_id]
-    Wait(driver, 2*WAIT_BACKEND).until(
-        notify_with_text_present,
-        message='waiting for notify matching: {}'.format(text_regexp.pattern)
-    )
+    css_sel = '.ember-notify-show[class*={}] .message'.format(notify)
+
+    @repeat_failed(timeout=2 * WAIT_BACKEND)
+    def notify_with_text_present(d, sel, regexp):
+        notifiers = d.find_elements_by_css_selector(sel)
+        if notifiers:
+            with suppress(NoSuchElementException, StaleElementReferenceException):
+                matching_elements = [e for e in notifiers if regexp.match(e.text)]
+                if len(matching_elements) > 0:
+                    return
+        else:
+            raise AssertionError('no {} notify with "{}" msg '
+                                 'found'.format(notify, text_regexp))
+
+    notify_with_text_present(driver, css_sel, re.compile(text_regexp))
 
 
 @when(parsers.parse('user of {browser_id} closes all notifies'))
 @then(parsers.parse('user of {browser_id} closes all notifies'))
-def close_notifies(selenium, browser_id):
+@repeat_failed(timeout=WAIT_FRONTEND)
+def close_visible_notifies(selenium, browser_id):
     driver = selenium[browser_id]
-    notify = driver.find_elements_by_css_selector('.ember-notify '
-                                                  'a.close-button, '
-                                                  '.ember-notify '
-                                                  '.message')
-    notify = notify[:2] if notify else None
-
-    while notify:
-        cls_btn, msg = notify
-        try:
-            msg = msg.text
-            cls_btn.click()
+    notifies = driver.find_elements_by_css_selector('.ember-notify '
+                                                    'a.close-button')
+    for notify_cls in notifies:
+        with suppress(StaleElementReferenceException):
+            notify_cls.click()
             Wait(driver, WAIT_BACKEND).until(
-                staleness_of(cls_btn),
-                message='waiting for notify "{:s}" to disappear'.format(msg)
+                staleness_of(notify_cls),
+                message='waiting for notify to disappear'
             )
-        except StaleElementReferenceException:
-            pass
-
-        notify = driver.find_elements_by_css_selector('.ember-notify '
-                                                      'a.close-button, '
-                                                      '.ember-notify '
-                                                      '.message')
-        notify = notify[:2] if notify else None
 
 
 @when(parsers.parse('user of {browser_id} refreshes site'))

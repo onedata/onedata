@@ -4,6 +4,7 @@ __author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
 from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
 
@@ -16,6 +17,7 @@ from tests.gui.steps.generic.login import *
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
 from tests.gui.steps.onepanel.space_support import *
+from tests.gui.steps.onepanel.nodes import *
 
 from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *

@@ -146,3 +146,31 @@ def wt_type_text_to_in_box_in_deployment_step3(selenium, browser_id, text,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_add_btn_in_storage_add_form(selenium, browser_id, onepanel):
     onepanel(selenium[browser_id]).content.deployment.step3.form.add()
+
+
+@when(parsers.parse('user of {browser_id} expands "{storage}" record on '
+                    'storages list in step 3 of deployment process '
+                    'in Onepanel'))
+@then(parsers.parse('user of {browser_id} expands "{storage}" record on '
+                    'storages list in step 3 of deployment process '
+                    'in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_expand_storage_item_in_deployment_step3(selenium, browser_id,
+                                               storage, onepanel):
+    storages = onepanel(selenium[browser_id]).content.deployment.step3.storages
+    storages[storage].expand()
+
+
+@when(parsers.re('user of (?P<browser_id>.*?) sees that "(?P<st>.*?)" '
+                 '(?P<attr>Storage type|Mount point) is (?P<val>.*?) '
+                 'in step 3 of deployment process in Onepanel'))
+@then(parsers.re('user of (?P<browser_id>.*?) sees that "(?P<st>.*?)" '
+                 '(?P<attr>Storage type|Mount point) is (?P<val>.*?) '
+                 'in step 3 of deployment process in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_assert_storage_attr_in_deployment_step3(selenium, browser_id, st,
+                                               attr, val, onepanel):
+    storages = onepanel(selenium[browser_id]).content.deployment.step3.storages
+    displayed_val = getattr(storages[st], transform(attr)).lower()
+    assert displayed_val == val.lower(), \
+        'expected {} as storage attribute; got {}'.format(displayed_val, val)
