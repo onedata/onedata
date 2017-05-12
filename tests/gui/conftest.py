@@ -327,7 +327,8 @@ def pytest_collection_modifyitems(items):
     first = []
     last = []
     rest = []
-    run_first = ('test_user_can_unsupport_space',
+    run_first = ('test_cluster_deployment',
+                 'test_user_can_unsupport_space',
                  'test_user_sees_that_after_unsupporting_space'
                  )
     run_last = ('test_user_sees_that_when_no_provider_is_working_'
