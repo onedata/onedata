@@ -98,6 +98,34 @@ Feature: Deployment process using panel of zone and provider
     Then user of browser2 sees that list of supporting providers for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel contains only: "p1"
 
 
+  Scenario: Resign from revoking space support
+    Given users opened [browser1, browser2] browsers' windows
+    And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
+    And user of browser1 entered credentials for admin in login form
+    And users of browser1 pressed Sign in button
+    And user of browser2 clicked on the "username" login button
+    And user of browser2 seen that "Login with username and password" modal has appeared
+    And user of browser2 entered credentials of admin in "Login with username and password" modal
+    And user of browser2 clicked "Sign In" confirmation button in displayed modal
+
+    # assert space existence and support
+    When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser2 sees that there is space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 expands submenu of space named "helloworld" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that list of supporting providers for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel contains only: "p1"
+
+    # start unsupporting space but resign
+    And user of browser1 clicks on Spaces item in submenu of "p1" item in CLUSTERS sidebar in Onepanel
+    And user of browser1 clicks on revoke support icon for "helloworld" space support item in Spaces page in Onepanel
+    And user of browser1 clicks on No, keep the support button in Revoke space support popup
+
+    # confirm support of space
+    And user of browser2 refreshes site
+    And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser2 expands submenu of space named "helloworld" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser2 sees that list of supporting providers for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel contains only: "p1"
+
+
   Scenario: Revoke space support
     Given users opened [browser1, browser2] browsers' windows
     And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
