@@ -3,10 +3,11 @@
 from itertools import izip
 
 from pytest_bdd import given, parsers
+from pytest_bdd import then
+from pytest_bdd import when
 
 from tests.gui.conftest import WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, parse_seq
-
+from tests.gui.utils.generic import repeat_failed, parse_seq, transform
 
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -35,3 +36,18 @@ def g_press_sign_in_btn_on_login_page(selenium, browser_id_list,
         login_page(selenium[browser_id]).sign_in()
 
 
+@when(parsers.re(r'user of (?P<browser_id>.*?) types (?P<text>.*?) to '
+                 r'(?P<in_box>Username|Password) in login form'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) types (?P<text>.*?) to '
+                 r'(?P<in_box>Username|Password) in login form'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_enter_text_to_field_in_login_form(selenium, browser_id, in_box,
+                                         text, login_page):
+    setattr(login_page(selenium[browser_id]), transform(in_box), text)
+
+
+@when(parsers.parse('user of {browser_id} presses Sign in button'))
+@then(parsers.parse('user of {browser_id} presses Sign in button'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_press_sign_in_btn_on_login_page(selenium, browser_id, login_page):
+    login_page(selenium[browser_id]).sign_in()

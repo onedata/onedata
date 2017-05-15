@@ -32,7 +32,7 @@ class UserAccountsForm(PageObject):
 
 class AccountManagementContentPage(PageObject):
     user_details = WebItem('.user-credentials-form', cls=UserAccountDetails)
-    modify_form = WebItem('.user-credentials-form', cls=UserAccountsForm)
+    chpasswd_form = WebItem('.user-credentials-form', cls=UserAccountsForm)
     change_password = NamedButton('.btn-change-password',
                                   text='Change password')
     cancel_password_change = NamedButton('.btn-change-password',
