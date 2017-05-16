@@ -9,6 +9,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class LoginPage(object):
+    header = Label('.row-login-header')
     username = Input('input[placeholder="Username"]')
     password = Input('input[placeholder="Password"]')
     sign_in = NamedButton('button', text='Sign in')

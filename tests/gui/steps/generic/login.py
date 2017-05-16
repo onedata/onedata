@@ -62,3 +62,10 @@ def wt_assert_successful_login(selenium, browser_id, onepage, service):
     logged_in_service = onepage(selenium[browser_id]).service
     assert logged_in_service.lower() == service.lower(), \
         'logged in {} instead of {}'.format(logged_in_service, service)
+
+
+@when(parsers.parse('user of {browser_id} sees that he was logged out'))
+@then(parsers.parse('user of {browser_id} sees that he was logged out'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_assert_login_page(selenium, browser_id, login_page):
+    _ = login_page(selenium[browser_id]).header
