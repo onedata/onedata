@@ -36,10 +36,10 @@ def g_press_sign_in_btn_on_login_page(selenium, browser_id_list,
         login_page(selenium[browser_id]).sign_in()
 
 
-@when(parsers.re(r'user of (?P<browser_id>.*?) types (?P<text>.*?) to '
-                 r'(?P<in_box>Username|Password) in login form'))
-@then(parsers.re(r'user of (?P<browser_id>.*?) types (?P<text>.*?) to '
-                 r'(?P<in_box>Username|Password) in login form'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) types "(?P<text>.*?)" to '
+                 r'(?P<in_box>Username|Password) input in login form'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) types "(?P<text>.*?)" to '
+                 r'(?P<in_box>Username|Password) input in login form'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_enter_text_to_field_in_login_form(selenium, browser_id, in_box,
                                          text, login_page):
@@ -51,3 +51,14 @@ def wt_enter_text_to_field_in_login_form(selenium, browser_id, in_box,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_press_sign_in_btn_on_login_page(selenium, browser_id, login_page):
     login_page(selenium[browser_id]).sign_in()
+
+
+@when(parsers.parse('user of {browser_id} sees that he successfully '
+                    'logged in {service}'))
+@then(parsers.parse('user of {browser_id} sees that he successfully '
+                    'logged in {service}'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_assert_successful_login(selenium, browser_id, onepage, service):
+    logged_in_service = onepage(selenium[browser_id]).service
+    assert logged_in_service.lower() == service.lower(), \
+        'logged in {} instead of {}'.format(logged_in_service, service)

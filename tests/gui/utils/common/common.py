@@ -17,24 +17,6 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class OnePage(object):
-    __metaclass__ = ABCMeta
-
-    opened_tab = Label('#main-menu-container ul.main-menu '
-                       'li.main-menu-item.active')
-    main_menu = WebItemsSequence('#main-menu-container ul.main-menu '
-                                 'li.main-menu-item',
-                                 cls=ButtonWithTextPageObject)
-    account = Button('.row-account-button')
-
-    def __init__(self, driver):
-        self.driver = self.web_elem = driver
-
-    @abstractmethod
-    def __str__(self):
-        pass
-
-
 class BaseContent(PageObject):
     _main_content = '.main-content'
     account_management = WebItem(_main_content,
@@ -42,6 +24,23 @@ class BaseContent(PageObject):
 
     def __str__(self):
         return 'content in {}'.format(self.parent)
+
+
+class OnePage(object):
+    service = Label('.brand-info')
+    account = Button('.row-account-button')
+    content = WebItem('.col-content', cls=BaseContent)
+    opened_tab = Label('#main-menu-container ul.main-menu '
+                       'li.main-menu-item.active')
+    main_menu = WebItemsSequence('#main-menu-container ul.main-menu '
+                                 'li.main-menu-item',
+                                 cls=ButtonWithTextPageObject)
+
+    def __init__(self, driver):
+        self.driver = self.web_elem = driver
+
+    def __str__(self):
+        return self.service
 
 
 class Toggle(PageObject):

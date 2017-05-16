@@ -47,6 +47,3 @@ class Onepanel(OnePage):
         if 'ps-active-x' not in sidebar.get_attribute('class'):
             sidebar = self._main_sidebar
         return Sidebar(self.driver, sidebar, self)
-
-    def __str__(self):
-        return 'Onepanel page'

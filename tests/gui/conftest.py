@@ -137,6 +137,12 @@ def cdmi():
 
 
 @fixture(scope='session')
+def onepage():
+    from tests.gui.utils.common.common import OnePage
+    return OnePage
+
+
+@fixture(scope='session')
 def onepanel():
     from tests.gui.utils.onepanel import Onepanel
     return Onepanel

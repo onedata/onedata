@@ -15,6 +15,7 @@ from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
 from tests.gui.steps.generic.copy_paste import *
 from tests.gui.steps.generic.login import *
+from tests.gui.steps.generic.account_management import *
 
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
@@ -70,6 +71,7 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 #
 #
 # # --- FEATURES: all non-destructive (does not change state) ---
+scenarios('../features/common/account_management.feature')
 # scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/onezone_login.feature')
 # scenarios('../features/onezone_gui.feature')
