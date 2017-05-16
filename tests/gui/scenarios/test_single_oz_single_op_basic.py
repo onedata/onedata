@@ -72,6 +72,7 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 #
 # # --- FEATURES: all non-destructive (does not change state) ---
 scenarios('../features/common/account_management.feature')
+scenarios('../features/common/login.feature')
 # scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/onezone_login.feature')
 # scenarios('../features/onezone_gui.feature')

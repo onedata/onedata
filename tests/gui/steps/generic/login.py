@@ -69,3 +69,13 @@ def wt_assert_successful_login(selenium, browser_id, onepage, service):
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_assert_login_page(selenium, browser_id, login_page):
     _ = login_page(selenium[browser_id]).header
+
+
+@when(parsers.parse('user of {browser_id} sees error message '
+                    'about invalid credentials'))
+@then(parsers.parse('user of {browser_id} sees error message '
+                    'about invalid credentials'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_assert_err_msg_about_credentials(selenium, browser_id, login_page):
+    assert login_page(selenium[browser_id]).err_msg, \
+        'no err msg about invalid credentials found'

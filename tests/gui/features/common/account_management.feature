@@ -7,16 +7,6 @@ Feature: Space utilities using onepanel
     And users of browser pressed Sign in button
 
 
-  Scenario: User successfully login to Zone panel
-    Then user of browser sees that he successfully logged in zone panel
-
-
-  Scenario: User successfully logout
-    When user of browser clicks on user account button in main menu
-    And user of browser clicks on Logout button in user account popover
-    Then user of browser sees that he was logged out
-
-
   Scenario: User resign from password change
     # fill change password form but resign from it
     When user of browser clicks on user account button in main menu
