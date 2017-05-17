@@ -185,7 +185,7 @@ def screen_width():
 
 @fixture(scope='module')
 def screen_height():
-    return 768
+    return 1024
 
 
 @fixture(scope='module')
