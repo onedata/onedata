@@ -338,7 +338,8 @@ def pytest_collection_modifyitems(items):
                  'test_user_sees_that_after_unsupporting_space'
                  )
     run_last = ('test_user_sees_that_when_no_provider_is_working_'
-                'appropriate_msg_is_shown',)
+                'appropriate_msg_is_shown',
+                'test_revoke_space_support')
 
     for item in items:
         for test in run_first:

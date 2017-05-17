@@ -4,7 +4,7 @@
 from pytest_bdd import given, parsers, then, when
 
 from tests.gui.conftest import WAIT_BACKEND
-from tests.gui.utils.generic import repeat_failed
+from tests.gui.utils.generic import repeat_failed, find_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -36,3 +36,13 @@ def g_enter_user_credentials_in_login_modal(selenium, browser_id, user,
                                             users, modals):
     driver = selenium[browser_id]
     _enter_user_credentials_in_login_modal(driver, modals, user, users)
+
+
+@given(parsers.parse('user of {browser_id} seen {zone_name} '
+                     'zone name in login page'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def g_assert_zone_name_in_login_page(selenium, browser_id, zone_name):
+    driver = selenium[browser_id]
+    name = find_web_elem(driver, '.zone-company-name', 'no zone name found').text
+    assert name.lower() == zone_name.lower(), \
+        'found {} zone name instead of expected {}'.format(name, zone_name)
