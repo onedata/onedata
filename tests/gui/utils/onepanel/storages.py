@@ -60,7 +60,7 @@ class StorageRecord(PageObject, ExpandableMixin):
 
 class StorageContentPage(PageObject):
     form = WebItem('.cluster-storage-add-form', cls=StorageAddForm)
-    storages = WebItemsSequence('ul li.storage-item', cls=StorageRecord)
+    storages = WebItemsSequence('ul li .storage-item', cls=StorageRecord)
     add_storage = NamedButton('button', text='Add storage')
     cancel = NamedButton('button', text='Cancel')
 

@@ -24,25 +24,25 @@ Feature: Storage utilities using onepanel
     And user of browser1 sees an info notify with text matching to: .*[Ss]torage.*added.*
     And user of browser1 expands "new_storage" record on storages list in storages page in Onepanel
     And user of browser1 sees that "new_storage" Storage type is posix in storages page in Onepanel
-    And user of browser1 sees that "new_storage" Mount point is /mnt/st2 in storages page in Onepanel
+#    And user of browser1 sees that "new_storage" Mount point is /mnt/st2 in storages page in Onepanel
 
     # create space
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser2 sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that there is no space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "helloworld" in active edit box
+    And user of browser2 types "hello_world2" in active edit box
     And user of browser2 presses enter on keyboard
-    And user of browser2 sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that space named "hello_world2" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 refreshes site
 
     # receive support token
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser2 expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser2 clicks on the "GET SUPPORT" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 sees that dropright with token for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
-    And user of browser2 sees that dropright contains non-empty token for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 copy token from dropright for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 expands settings dropdown for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
+    And user of browser2 clicks on the "GET SUPPORT" item in settings dropdown for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that dropright with token for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
+    And user of browser2 sees that dropright contains non-empty token for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 copy token from dropright for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 sees an info notify with text matching to: .*copied.*
     And user of browser2 sees that copied token matches displayed one
     And user of browser2 sends copied token to user of browser1
@@ -56,21 +56,21 @@ Feature: Storage utilities using onepanel
     And user of browser1 selects GB radio button in support space form in Onepanel
     And user of browser1 clicks on Support space button in support space form in Onepanel
     And user of browser1 sees an info notify with text matching to: .*[Aa]dded.*support.*space.*
-    And user of browser1 sees that space support record for "helloworld" has appeared in Spaces page in Onepanel
+    And user of browser1 sees that space support record for "hello_world2" has appeared in Spaces page in Onepanel
 
     # confirm support of space
     And user of browser2 refreshes site
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser2 expands submenu of space named "helloworld" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 clicks on "p1" provider in submenu of space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 expands submenu of space named "hello_world2" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 clicks on "p1" provider in submenu of space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 sees that provider popup for provider named "p1" has appeared on world map
     And user of browser2 clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
     And user of browser2 sees that Oneprovider session has started
 
     # create tmp dir and upload there 70 files
-    And user of browser2 uses spaces select to change data space to "helloworld"
+    And user of browser2 uses spaces select to change data space to "hello_world2"
     And user of browser2 sees file browser in data tab in Oneprovider page
-    And user of browser2 sees that current working directory displayed in breadcrumbs is helloworld
+    And user of browser2 sees that current working directory displayed in breadcrumbs is hello_world2
     And user of browser2 clicks the button from top menu bar with tooltip "Create directory"
     And user of browser2 sees that "New directory" modal has appeared
     And user of browser2 clicks on input box in active modal
@@ -79,7 +79,7 @@ Feature: Storage utilities using onepanel
     And user of browser2 sees that the modal has disappeared
     And user of browser2 sees that item named "dir100" has appeared in file browser
     And user of browser2 double clicks on item named "dir100" in file browser
-    And user of browser2 sees that current working directory displayed in breadcrumbs is helloworld/dir100
+    And user of browser2 sees that current working directory displayed in breadcrumbs is hello_world2/dir100
     And user of browser2 uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
     And user of browser2 waits for file upload to finish
     Then user of browser2 sees that there are 70 items in file browser
@@ -87,7 +87,7 @@ Feature: Storage utilities using onepanel
     # TODO rm after integrating with swagger
     # in order to change cwd to root dir change space to other than change back
     And user of browser2 changes current working directory to / using directory tree
-    And user of browser2 sees that current working directory displayed in breadcrumbs is helloworld
+    And user of browser2 sees that current working directory displayed in breadcrumbs is hello_world2
     And user of browser2 selects "dir100" item(s) from file browser with pressed ctrl
     And user of browser2 clicks the button from top menu bar with tooltip "Remove element"
     And user of browser2 sees that "Remove files" modal has appeared

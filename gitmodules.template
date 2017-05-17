@@ -13,7 +13,7 @@
 [submodule "bamboos"]
 	path = bamboos
 	url = ONEDATA_GIT_URL/bamboos.git
-	branch = develop
+	branch = feature/VFS-3133-introduction-to-onepanel-new-gui
 [submodule "onepanel"]
 	path = onepanel
 	url = ONEDATA_GIT_URL/onepanel.git

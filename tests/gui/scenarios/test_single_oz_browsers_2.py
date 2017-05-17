@@ -50,10 +50,10 @@ from pytest_bdd import scenarios, scenario
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/onepanel/storages.feature')
 # scenarios('../features/onepanel/provider.feature')
 
-# scenarios('../features/onepanel/deployment.feature')
+# scenarios('../features/onepanel/storages.feature')
+scenarios('../features/onepanel/deployment.feature')
 # scenarios('../features/onepanel/spaces.feature')
 # scenarios('../features/oneprovider_2_providers_multi.feature')
 # scenarios('../features/oneprovider_shares_multi.feature')
