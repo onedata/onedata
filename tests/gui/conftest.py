@@ -339,7 +339,8 @@ def pytest_collection_modifyitems(items):
                  )
     run_last = ('test_user_sees_that_when_no_provider_is_working_'
                 'appropriate_msg_is_shown',
-                'test_revoke_space_support')
+                'test_revoke_space_support',
+                'test_user_deregisters_provider')
 
     for item in items:
         for test in run_first:

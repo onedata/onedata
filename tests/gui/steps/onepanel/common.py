@@ -13,11 +13,11 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 @when(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on (?P<btn>.+?) '
-                 'button in (?P<content>welcome|spaces|account management|storages) '
-                 'page in Onepanel'))
+                 'button in (?P<content>welcome|spaces|account management|'
+                 'storages|provider) page in Onepanel'))
 @then(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on (?P<btn>.+?) '
-                 'button in (?P<content>welcome|spaces|account management|storages) '
-                 'page in Onepanel'))
+                 'button in (?P<content>welcome|spaces|account management|'
+                 'storages|provider) page in Onepanel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_btn_in_content(selenium, browser_id_list,
                                btn, content, onepanel):

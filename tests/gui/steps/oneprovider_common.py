@@ -6,7 +6,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-from tests.gui.utils.generic import parse_seq
+from tests.gui.utils.generic import parse_seq, find_web_elem
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
 from tests.gui.utils.generic import refresh_and_call, parse_url, redirect_display
 
@@ -65,6 +65,18 @@ def wt_click_on_the_given_main_menu_tab(selenium, browser_id_list,
     for browser_id in parse_seq(browser_id_list):
         driver = selenium[browser_id]
         _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
+
+
+@when(parsers.parse('user of {browser_id} sees that provider name displayed in '
+                    'Oneprovider page has value of "{val}"'))
+@then(parsers.parse('user of {browser_id} sees that provider name displayed in '
+                    'Oneprovider page has value of "{val}"'))
+def wt_assert_provider_name_in_op(selenium, browser_id, val):
+    css_sel = '.provider-name-container .provider-name'
+    name = find_web_elem(selenium[browser_id], css_sel,
+                         'no provider name found').text
+    assert name == val, \
+        'displayed {} provider name instead of expected {}'.format(name, val)
 
 
 @when(parsers.parse('user of {browser_id} refreshes Oneprovider site'))

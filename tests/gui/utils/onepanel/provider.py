@@ -12,12 +12,12 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class ProviderDescription(PageObject):
     id = Label('.field-id')
-    redirection_point = Label('.field-redirectionPoint')
+    urls = Label('.field-urls')
 
 
 class ProviderDetails(ProviderDescription):
     provider_name = Label('.field-name')
-    urls = Label('.field-urls')
+    redirection_point = Label('.field-redirectionPoint')
     latitude = Label('.field-geoLatitude')
     longitude = Label('.field-geoLongitude')
 
@@ -27,7 +27,7 @@ class ProviderDetails(ProviderDescription):
 
 class ProviderForm(ProviderDescription):
     provider_name = Input('input.field-name')
-    urls = Input('input.field-urls')
+    redirection_point = Input('input.field-redirectionPoint')
     latitude = Input('input.field-geoLatitude')
     longitude = Input('input.field-geoLongitude')
     modify_provider_details = NamedButton('button',

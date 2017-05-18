@@ -30,6 +30,36 @@ def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
     assert provider == prov.name, err_msg.format(prov.name, provider)
 
 
+@when(parsers.parse('user of {browser_id} sees that hostname in displayed '
+                    'provider popup matches that of "{host}" provider'))
+@then(parsers.parse('user of {browser_id} sees that hostname in displayed '
+                    'provider popup matches that of "{host}" provider'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def assert_provider_hostname_matches_known_ip(selenium, browser_id,
+                                              host, oz_page, hosts):
+    driver = selenium[browser_id]
+    prov = oz_page(driver)['world map'].get_provider_with_displayed_popup()
+    ip = hosts['oneprovider'][host]
+    displayed_ip = prov.hostname
+    assert displayed_ip == ip, \
+        'displayed {} provider hostname instead ' \
+        'of expected {}'.format(displayed_ip, ip)
+
+
+@when(parsers.parse('user of {browser_id} sees that hostname in displayed '
+                    'provider popup matches {ip} ip address'))
+@then(parsers.parse('user of {browser_id} sees that hostname in displayed '
+                    'provider popup matches {ip} ip address'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def assert_provider_hostname_matches_given_ip(selenium, browser_id, ip, oz_page):
+    driver = selenium[browser_id]
+    prov = oz_page(driver)['world map'].get_provider_with_displayed_popup()
+    displayed_ip = prov.hostname
+    assert displayed_ip == ip, \
+        'displayed {} provider hostname instead ' \
+        'of expected {}'.format(displayed_ip, ip)
+
+
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
                  r'"(?P<btn>Go to your files|copy hostname)" button in '
                  r'"(?P<provider>.+?)" provider\'s popup displayed on world map'))
