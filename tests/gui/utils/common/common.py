@@ -27,7 +27,7 @@ class BaseContent(PageObject):
 
 
 class OnePage(object):
-    service = Label('.brand-info')
+    service = Label('#main-menu-container .brand-info')
     account = Button('.row-account-button')
     content = WebItem('.col-content', cls=BaseContent)
     opened_tab = Label('#main-menu-container ul.main-menu '

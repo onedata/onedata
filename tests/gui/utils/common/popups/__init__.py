@@ -15,7 +15,7 @@ __license__ = "This software is released under the MIT license cited in " \
 class Popups(object):
     deregister_provider = WebItem('.popover-deregister-provider',
                                   cls=DeregisterProvider)
-    revoke_space_support = WebItem('.popover-revoke-space',
+    revoke_space_support = WebItem('.webui-popover.in .popover-revoke-space',
                                    cls=RevokeSpaceSupport)
     user_account_menu = WebItem('.webui-popover-content .user-account-menu',
                                 cls=UserAccountPopup)

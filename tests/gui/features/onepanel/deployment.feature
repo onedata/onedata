@@ -40,7 +40,7 @@ Feature: Deployment process using panel of zone and provider
     And user of browser2 sees an info notify with text matching to: .*[Ss]torage.*added.*
     And user of browser2 expands "onestorage" record on storages list in step 3 of deployment process in Onepanel
     And user of browser2 sees that "onestorage" Storage type is posix in step 3 of deployment process in Onepanel
-#    And user of browser2 sees that "onestorage" Mount point is /mnt/st1 in step 3 of deployment process in Onepanel
+    And user of browser2 sees that "onestorage" Mount point is /mnt/st1 in step 3 of deployment process in Onepanel
 
     And user of browser2 clicks on Finish button in step 3 of deployment process in Onepanel
     And user of browser2 sees an info notify with text matching to: .*[Ss]torage.*added.*
