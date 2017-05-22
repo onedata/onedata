@@ -8,10 +8,10 @@ function stop_service {
 function stop_oneprovider {
   echo -e "\nGracefully stopping oneprovider...\n"
 
+  stop_service op_panel
   stop_service op_worker
   stop_service cluster_manager
   stop_service couchbase-server couchbase
-  stop_service op_panel
 
   echo -e "\nAll services stopped. Exiting..."
 

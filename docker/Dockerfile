@@ -18,8 +18,8 @@ RUN groupadd -g 110 onedata && \
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get -y install ca-certificates curl net-tools python python-setuptools \
-                       python-yaml traceroute vim && \
+    apt-get -y install ca-certificates curl locales net-tools \
+                       python python-setuptools python-yaml traceroute vim && \
     easy_install requests && \
     apt-get clean
 
