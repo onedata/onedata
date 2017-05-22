@@ -89,6 +89,15 @@ def wt_click_on_btn_in_deployment_step(selenium, browser_id, btn,
     getattr(step, transform(btn)).click()
 
 
+@when(parsers.parse('user of {browser_id} sees that cluster '
+                    'deployment has started'))
+@then(parsers.parse('user of {browser_id} sees that cluster '
+                    'deployment has started'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_assert_begin_of_cluster_deployment(selenium, browser_id, modals):
+    _ = modals(selenium[browser_id]).cluster_deployment
+
+
 @when(parsers.parse('user of {browser_id} waits {timeout:d} seconds '
                     'for cluster deployment to finish'))
 @then(parsers.parse('user of {browser_id} waits {timeout:d} seconds '
