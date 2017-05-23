@@ -5,6 +5,7 @@ Define fixtures used in web GUI acceptance/behavioral tests.
 import os
 import re
 import sys
+from collections import namedtuple
 from itertools import chain
 import subprocess as sp
 
@@ -68,9 +69,9 @@ def pytest_addoption(parser):
 
     group = parser.getgroup('onedata', description='option specific '
                                                    'to onedata tests')
-    group.addoption('--user', action='append', default=[], nargs=2,
-                    help='user credentials in form: -u username password',
-                    metavar=('username', 'password'), dest='users')
+    group.addoption('--admin', default=['admin', 'password'], nargs=2,
+                    help='admin credentials in form: -u username password',
+                    metavar=('username', 'password'), dest='admin')
 
     group.addoption('--oneprovider-host', action='append', default=[], nargs=2,
                     help='IP address of oneprovider in form: alias address',
@@ -86,7 +87,7 @@ def pytest_addoption(parser):
                     metavar=('alias', 'address'), dest='zone_panel')
 
 
-@fixture(scope='module')
+@fixture(scope='session')
 def hosts(request):
     """Dict to use to store ip addresses of services."""
     return {service: {alias: ip for alias, ip
@@ -95,11 +96,19 @@ def hosts(request):
                             'onezone', 'zone_panel')}
 
 
-@fixture(scope='module')
-def users(request):
-    """Dict to use to store user credentials."""
-    credentials = request.config.getoption('users')
-    return {user: password for user, password in credentials}
+@fixture(scope='session')
+def admin_credentials(request):
+    AdminCred = namedtuple('AdminCred', ['username', 'password'])
+    return AdminCred(*request.config.getoption('admin'))
+
+
+@fixture
+def users():
+    """Mapping user of browser to user credentials.
+
+    {browser1: UserCred(username='bob', password='asd')}
+    """
+    return {}
 
 
 def pytest_selenium_capture_debug(item, report, extra):

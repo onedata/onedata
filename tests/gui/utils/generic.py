@@ -7,6 +7,7 @@ import os
 from time import sleep, time
 from itertools import islice, izip
 from contextlib import contextmanager
+from urllib3.util import make_headers
 
 from decorator import decorator
 
@@ -227,3 +228,7 @@ def redirect_display(new_display):
 
 def transform(val):
     return val.strip().lower().replace(' ', '_')
+
+
+def get_basic_auth_token(username, password):
+    return make_headers(basic_auth=username + ':' + password).get('authorization')

@@ -2,6 +2,7 @@ Feature: Space utilities using onepanel
 
   Background:
     Given user opened browser window
+    And user of browser has account for "z1" Onezone service
     And user of browser opened z1 zone panel page
     And user of browser entered credentials for admin in login form
     And users of browser pressed Sign in button
