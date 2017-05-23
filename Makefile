@@ -306,3 +306,11 @@ docker:
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
                       --name oneprovider \
                       --publish --remove docker
+
+##
+## Build python REST clients generated from swaggers. (used in gui tests)
+##
+
+build_swaggers:
+	cd onezone_swagger && ./build.sh && cd generated/python && mv onezone_client ../../../tests/gui/utils
+	cd onepanel_swagger && ./build.sh && cd generated/python && mv onepanel_client ../../../tests/gui/utils
