@@ -12,30 +12,30 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-def _enter_user_credentials_in_login_modal(driver, modals, user, users):
+def _enter_user_credentials_in_login_modal(driver, modals, credentials):
     modal = modals(driver).login
-    modal.username = user
-    modal.password = users[user]
+    modal.username = credentials.username
+    modal.password = credentials.password
 
 
-@when(parsers.parse('user of {browser_id} enters credentials of {user} '
+@when(parsers.parse('user of {browser_id} enters his credentials '
                     'in "Login with username and password" modal'))
-@then(parsers.parse('user of {browser_id} enters credentials of {user} '
+@then(parsers.parse('user of {browser_id} enters his credentials '
                     'in "Login with username and password" modal'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def wt_enter_user_credentials_in_login_modal(selenium, browser_id, user,
+def wt_enter_user_credentials_in_login_modal(selenium, browser_id,
                                              users, modals):
     driver = selenium[browser_id]
-    _enter_user_credentials_in_login_modal(driver, modals, user, users)
+    _enter_user_credentials_in_login_modal(driver, modals, users[browser_id])
 
 
-@given(parsers.parse('user of {browser_id} entered credentials of {user} '
+@given(parsers.parse('user of {browser_id} entered his credentials '
                      'in "Login with username and password" modal'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def g_enter_user_credentials_in_login_modal(selenium, browser_id, user,
+def g_enter_user_credentials_in_login_modal(selenium, browser_id,
                                             users, modals):
     driver = selenium[browser_id]
-    _enter_user_credentials_in_login_modal(driver, modals, user, users)
+    _enter_user_credentials_in_login_modal(driver, modals, users[browser_id])
 
 
 @given(parsers.parse('user of {browser_id} seen {zone_name} '

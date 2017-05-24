@@ -33,7 +33,9 @@ from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 
-from tests.gui.steps.oneservices.cdmi import *
+from tests.gui.steps.rest.cdmi import *
+from tests.gui.steps.rest.users import *
+from tests.gui.steps.rest.spaces import *
 
 
 from tests.gui.steps.onezone_before_login import *
@@ -54,7 +56,7 @@ from pytest_bdd import scenarios, scenario
 # scenarios('../features/onepanel/provider.feature')
 # scenarios('../features/onepanel/storages.feature')
 # scenarios('../features/onepanel/deployment.feature')
-# scenarios('../features/onepanel/spaces.feature')
+scenarios('../features/onepanel/spaces.feature')
 
 # scenarios('../features/oneprovider_2_providers_multi.feature')
 # scenarios('../features/oneprovider_shares_multi.feature')

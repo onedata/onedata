@@ -2,12 +2,13 @@ Feature: Storage utilities using onepanel
 
   Background:
     Given users opened [browser1, browser2] browsers' windows
+    And user of browser2 has account in "z1" Onezone service
     And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
-    And user of browser1 entered credentials for admin in login form
+    And user of browser1 entered admin credentials in login form
     And users of browser1 pressed Sign in button
     And user of browser2 clicked on the "username" login button
     And user of browser2 seen that "Login with username and password" modal has appeared
-    And user of browser2 entered credentials of admin in "Login with username and password" modal
+    And user of browser2 entered his credentials in "Login with username and password" modal
     And user of browser2 clicked "Sign In" confirmation button in displayed modal
 
 
@@ -19,7 +20,7 @@ Feature: Storage utilities using onepanel
     And user of browser1 clicks on Add storage button in storages page in Onepanel
     And user of browser1 selects POSIX from storage selector in storages page in Onepanel
     And user of browser1 types "new_storage" to Storage name field in POSIX form in storages page in Onepanel
-    And user of browser1 types "/volumes/storage" to Mount point field in POSIX form in storages page in Onepanel
+    And user of browser1 types "/mnt/st1" to Mount point field in POSIX form in storages page in Onepanel
     And user of browser1 clicks on Add button in add storage form in storages page in Onepanel
     And user of browser1 sees an info notify with text matching to: .*[Ss]torage.*added.*
     And user of browser1 expands "new_storage" record on storages list in storages page in Onepanel

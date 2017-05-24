@@ -15,24 +15,34 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-@given(parsers.re('users? of (?P<browser_id_list>.*?) entered credentials for '
-                  '(?P<users_list>.*?) in login form'))
+@given(parsers.re('users? of (?P<browser_id_list>.*?) entered '
+                  'admin credentials in login form'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def g_enter_admin_credentials_to_login_form(selenium, browser_id_list,
+                                            admin_credentials, login_page):
+    for browser_id in parse_seq(browser_id_list):
+        login = login_page(selenium[browser_id])
+        login.username = admin_credentials.username
+        login.password = admin_credentials.password
+
+
+@given(parsers.parse('user of {browser_id_list} entered his '
+                     'credentials in login form'))
+@given(parsers.parse('users of {browser_id_list} entered their '
+                     'credentials in login form'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def g_enter_user_credentials_to_login_form(selenium, browser_id_list,
-                                           users_list, users, login_page):
-    for browser_id, username in izip(parse_seq(browser_id_list),
-                                     parse_seq(users_list)):
+                                           users, login_page):
+    for browser_id in parse_seq(browser_id_list):
         login = login_page(selenium[browser_id])
-        login.username = username
-        login.password = users[username]
+        login.username = users[browser_id].username
+        login.password = users[browser_id].password
 
 
 @given(parsers.re(r'users? of (?P<browser_id_list>.*?) pressed Sign in button'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def g_press_sign_in_btn_on_login_page(selenium, browser_id_list,
-                                      users_list, login_page):
-    for browser_id, username in izip(parse_seq(browser_id_list),
-                                     parse_seq(users_list)):
+def g_press_sign_in_btn_on_login_page(selenium, browser_id_list, login_page):
+    for browser_id in parse_seq(browser_id_list):
         login_page(selenium[browser_id]).sign_in()
 
 

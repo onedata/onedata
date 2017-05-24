@@ -33,8 +33,9 @@ from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 
-from tests.gui.steps.oneservices.cdmi import *
-from tests.gui.steps.oneservices.onepanel import *
+from tests.gui.steps.rest.cdmi import *
+from tests.gui.steps.rest.users import *
+from tests.gui.steps.rest.spaces import *
 
 
 from tests.gui.steps.onezone_before_login import *
@@ -72,7 +73,7 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 #
 #
 # # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/common/account_management.feature')
+# scenarios('../features/common/account_management.feature')
 # scenarios('../features/common/login.feature')
 # scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/onezone_login.feature')
