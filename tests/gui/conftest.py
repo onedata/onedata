@@ -111,6 +111,12 @@ def users():
     return {}
 
 
+@fixture
+def groups():
+    """Mapping group name to group id, e.g. {name: id}"""
+    return {}
+
+
 def pytest_selenium_capture_debug(item, report, extra):
     recording = item.config.getoption('--xvfb-recording')
     if recording == 'none' or (recording == 'fail' and not report.failed):

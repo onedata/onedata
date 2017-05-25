@@ -36,6 +36,7 @@ from tests.gui.steps.oneprovider.metadata import *
 from tests.gui.steps.rest.cdmi import *
 from tests.gui.steps.rest.users import *
 from tests.gui.steps.rest.spaces import *
+from tests.gui.steps.rest.groups import *
 
 
 from tests.gui.steps.onezone_before_login import *
