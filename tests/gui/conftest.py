@@ -113,7 +113,13 @@ def users():
 
 @fixture
 def groups():
-    """Mapping group name to group id, e.g. {name: id}"""
+    """Mapping group name to group id, e.g. {group1: ASUDJXCBJshdfsh983475y}"""
+    return {}
+
+
+@fixture
+def spaces():
+    """Mapping space name to space id, e.g. {space1: UEIH743856sjgsdfjKEUgr}"""
     return {}
 
 

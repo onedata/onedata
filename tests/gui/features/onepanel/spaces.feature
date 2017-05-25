@@ -2,7 +2,7 @@ Feature: Space utilities using onepanel
 
   Background:
     Given users opened [browser1, browser2, browser3, browser4] browsers' windows
-    And users of [browser2, browser3] have accounts in "z1" Onezone service
+    And users of [browser2, browser3, browser4] have accounts in "z1" Onezone service
     And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
     And user of browser1 entered admin credentials in login form
     And users of browser1 pressed Sign in button
@@ -63,14 +63,17 @@ Feature: Space utilities using onepanel
                         - group_remove_user
                 - browser4
 
-#    And initial spaces configuration:
-#        space1:
-#            owner: browser2
-#            users:
-#                - browser2
-#                - browser3
-#            groups:
-#                - group1
+    And initial spaces configuration in "z1" Onezone service:
+        space1:
+            owner: browser2
+            users:
+                - browser3:
+                    privileges:
+                      - space_invite_user
+                      - space_remove_user
+                - browser4
+            groups:
+                - group1
 #            providers:
 #                - p1:
 #                    storage: /mnt/st1

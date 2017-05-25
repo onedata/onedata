@@ -9,7 +9,8 @@ from tests.gui.utils.onepanel_client import ApiClient as OnepanelClient, Onepane
 from tests.gui.utils.onezone_client.configuration import Configuration as OnezoneConf
 from tests.gui.utils.onezone_client import (ApiClient as OnezoneClient,
                                             UserApi as OzUserApi,
-                                            GroupApi as OzGroupApi)
+                                            GroupApi as OzGroupApi,
+                                            SpaceApi as OzSpaceApi)
 
 
 __author__ = "Bartek Walkowicz"
@@ -60,6 +61,11 @@ def get_panel_api(username, password, host):
 def get_oz_group_api(username, password, host):
     return get_rest_api_client(username, password, host,
                                Service.ONEZONE, OzGroupApi)
+
+
+def get_oz_space_api(username, password, host):
+    return get_rest_api_client(username, password, host,
+                               Service.ONEZONE, OzSpaceApi)
 
 
 def get_oz_user_api(username, password, host):

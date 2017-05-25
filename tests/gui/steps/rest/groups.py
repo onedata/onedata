@@ -58,7 +58,7 @@ def create_groups_according_to_given_configuration(config, service,
     for name, description in yaml.load(config).items():
         owner_cred = users[description['owner']]
         user_client = get_oz_user_api(owner_cred.username,
-                                      owner_cred.pasword, host)
+                                      owner_cred.password, host)
         user_client.create_group_for_user(Group(name=name))
         group_id = _get_id_of_users_group_with_given_name(name, user_client)
         groups[name] = group_id
