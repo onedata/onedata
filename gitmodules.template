@@ -41,7 +41,7 @@
 [submodule "onepanel_swagger"]
 	path = onepanel_swagger
 	url = ONEDATA_GIT_URL/onepanel-swagger.git
-	branch = release/3.0.0-rc14
+	branch = release/future
 [submodule "onezone_swagger"]
 	path = onezone_swagger
 	url = ONEDATA_GIT_URL/onezone-swagger.git

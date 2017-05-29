@@ -123,6 +123,12 @@ def spaces():
     return {}
 
 
+@fixture
+def storages():
+    """Mapping storage name to storage id, e.g. {st1: UEIHSdft743dfjKEUgr}"""
+    return {}
+
+
 def pytest_selenium_capture_debug(item, report, extra):
     recording = item.config.getoption('--xvfb-recording')
     if recording == 'none' or (recording == 'fail' and not report.failed):

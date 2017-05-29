@@ -4,7 +4,8 @@
 from enum import Enum
 
 from tests.gui.utils.onepanel_client.configuration import Configuration as OnepanelConf
-from tests.gui.utils.onepanel_client import ApiClient as OnepanelClient, OnepanelApi
+from tests.gui.utils.onepanel_client import (ApiClient as OnepanelClient,
+                                             OnepanelApi, OneproviderApi, SpaceSupportRequest)
 
 from tests.gui.utils.onezone_client.configuration import Configuration as OnezoneConf
 from tests.gui.utils.onezone_client import (ApiClient as OnezoneClient,
@@ -51,6 +52,11 @@ SERVICES_DETAILS = {
     Service.ONEZONE: (OnezoneConf(), OnezoneClient,
                       'https://{}/api/v3/onezone')
 }
+
+
+def get_op_panel_api(username, password, host):
+    return get_rest_api_client(username, password, host,
+                               Service.ONEPANEL, OneproviderApi)
 
 
 def get_panel_api(username, password, host):
