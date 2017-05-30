@@ -103,15 +103,6 @@ def admin_credentials(request):
 
 
 @fixture
-def users():
-    """Mapping user of browser to user credentials.
-
-    {browser1: UserCred(username='bob', password='asd')}
-    """
-    return {}
-
-
-@fixture
 def groups():
     """Mapping group name to group id, e.g. {group1: ASUDJXCBJshdfsh983475y}"""
     return {}
