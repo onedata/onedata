@@ -75,8 +75,8 @@ def g_create_unique_users(browser_id_list, host, admin_credentials,
     password = 'password'
     for browser_id, suffix in izip(parse_seq(browser_id_list),
                                    available_usernames):
-        # username = browser_id + '_' + suffix
-        user_id = _create_user(admin_client, suffix, password,
+        username = browser_id + '_' + suffix
+        user_id = _create_user(admin_client, username, password,
                                hosts['onezone'][host])
-        users[browser_id] = UserCred(username=suffix, password=password,
+        users[browser_id] = UserCred(username=username, password=password,
                                      id=user_id)

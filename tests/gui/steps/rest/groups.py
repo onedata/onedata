@@ -6,6 +6,7 @@ import yaml
 from tests.gui.utils.onezone_client import Group, GroupPrivileges
 from pytest_bdd import given, parsers
 
+from tests.gui.utils.onezone_client.rest import ApiException
 from .common import get_oz_user_api, get_oz_group_api
 
 
@@ -15,9 +16,9 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-def _get_id_of_users_group_with_given_name(group_name, client):
-    for group_id in client.list_user_groups().groups:
-        group = client.get_user_group(group_id)
+def _get_id_of_users_group_with_given_name(group_name, rest_client):
+    for group_id in rest_client.list_user_groups().groups:
+        group = rest_client.get_user_group(group_id)
         if group.name == group_name:
             return group.group_id
 
@@ -55,13 +56,13 @@ def create_groups_according_to_given_configuration(config, service,
                 - browser4
     """
     host = hosts['onezone'][service]
-    for name, description in yaml.load(config).items():
+    for group_name, description in yaml.load(config).items():
         owner_cred = users[description['owner']]
         user_client = get_oz_user_api(owner_cred.username,
                                       owner_cred.password, host)
-        user_client.create_group_for_user(Group(name=name))
-        group_id = _get_id_of_users_group_with_given_name(name, user_client)
-        groups[name] = group_id
+        user_client.create_group_for_user(Group(name=group_name))
+        group_id = _get_id_of_users_group_with_given_name(group_name, user_client)
+        groups[group_name] = group_id
 
         admin_client = get_oz_group_api(admin_credentials.username,
                                         admin_credentials.password, host)
@@ -69,8 +70,18 @@ def create_groups_according_to_given_configuration(config, service,
             try:
                 [(user, options)] = user.items()
             except AttributeError:
-                admin_client.add_group_user(group_id, users[user].id)
+                privileges = None
             else:
                 privileges = GroupPrivileges(privileges=options['privileges'])
-                admin_client.add_group_user(group_id, users[user].id,
+
+            user_info = users[user]
+            try:
+                admin_client.add_group_user(group_id, user_info.id,
                                             privileges=privileges)
+            except ApiException as ex:
+                raise RuntimeError('failed to add {user} user to {group} group '
+                                   'because of: \n{status}: {reason}'
+                                   ''.format(user=user_info.username,
+                                             group=group_name,
+                                             status=ex.status,
+                                             reason=ex.reason))

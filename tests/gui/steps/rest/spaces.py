@@ -17,16 +17,16 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-def _get_storage_id_with_given_name(storage_name, client):
-    for storage_id in client.get_storages().ids:
-        storage = client.get_storage_details(storage_id)
+def _get_storage_id_with_given_name(storage_name, rest_client):
+    for storage_id in rest_client.get_storages().ids:
+        storage = rest_client.get_storage_details(storage_id)
         if storage.name == storage_name:
             return storage.id
 
 
-def _get_id_of_users_space_with_given_name(space_name, client):
-    for space_id in client.list_user_spaces().spaces:
-        space = client.get_user_space(space_id)
+def _get_id_of_users_space_with_given_name(space_name, rest_client):
+    for space_id in rest_client.list_user_spaces().spaces:
+        space = rest_client.get_user_space(space_id)
         if space.name == space_name:
             return space.space_id
 
@@ -58,7 +58,7 @@ def create_spaces_according_to_given_configuration(config, service,
                 - group_name_2
             [providers]:                    ---> optional
                 - provider_name_1:
-                    storage: path
+                    storage: name
                     size: size in bits
         space_name_2:
             ...
@@ -74,7 +74,7 @@ def create_spaces_according_to_given_configuration(config, service,
                - group1
            providers:
                - p1:
-                   storage: /mnt/st1
+                   storage: onestorage
                    size: 1000000000
     """
     host = hosts['onezone'][service]
@@ -127,34 +127,7 @@ def create_spaces_according_to_given_configuration(config, service,
                                                     op_panel_client)
 
             token = user_space_client.create_space_support_token(space_id)
-            support_request = SpaceSupportRequest(name=space_name,
-                                                  token=token.token,
+            support_request = SpaceSupportRequest(token=token.token,
                                                   size=int(options['size']),
                                                   storage_id=storage_id)
             op_panel_client.support_space(support_request)
-            a = 5
-
-# @given(parsers.parse('created supported spaces: {create_supported_space_records}'))
-# def created_spaces_supported_by_provider(create_supported_space_records,
-#                                          op_panel_url, onezone_rest_url,
-#                                          tmp_memory, admin_credentials):
-
-#         user_client = login_to_oz_with_given_username_and_password(username,
-#                                                                    password,
-#                                                                    onezone_rest_url)
-#         oneprovider_client = login_to_op_with_given_username_and_password(admin_credentials['username'],
-#                                                                           admin_credentials['password'],
-#                                                                           op_panel_url)
-#
-#         # Create needed API's
-#         space_api = SpaceApi(user_client)
-#         oneprovider_api = OneproviderApi(oneprovider_client)
-#
-#             # Get space support token
-#             space_support_token = space_api.get_space_provider_token(space_to_support_id)
-#             space_support_request = SpaceSupportRequest(token=space_support_token.token,
-#                                                         size=1024,
-#                                                         storage_name='NFS')
-#
-#             # Support space
-#             oneprovider_api.put_provider_spaces(space_support_request=space_support_request)
