@@ -92,7 +92,7 @@ def create_spaces_according_to_given_configuration(config, service,
         user_space_client = get_oz_space_api(owner_cred.username,
                                              owner_cred.password, host)
 
-        for user in description['users']:
+        for user in description.get('users', {}):
             try:
                 [(user, options)] = user.items()
             except AttributeError:
@@ -102,7 +102,7 @@ def create_spaces_according_to_given_configuration(config, service,
                 admin_oz_client.add_user_to_space(space_id, users[user].id,
                                                   privileges=privileges)
 
-        for group in description['groups']:
+        for group in description.get('groups', {}):
             try:
                 [(group, options)] = group.items()
             except AttributeError:
@@ -112,7 +112,7 @@ def create_spaces_according_to_given_configuration(config, service,
                 admin_oz_client.add_group_to_space(space_id, groups[group],
                                                    privileges=privileges)
 
-        for provider in description['providers']:
+        for provider in description.get('providers', {}):
             [(provider, options)] = provider.items()
             op_panel_client = get_op_panel_api(admin_credentials.username,
                                                admin_credentials.password,

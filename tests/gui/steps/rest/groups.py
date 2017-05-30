@@ -66,7 +66,7 @@ def create_groups_according_to_given_configuration(config, service,
 
         admin_client = get_oz_group_api(admin_credentials.username,
                                         admin_credentials.password, host)
-        for user in description['users']:
+        for user in description.get('users', {}):
             try:
                 [(user, options)] = user.items()
             except AttributeError:

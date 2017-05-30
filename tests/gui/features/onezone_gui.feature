@@ -14,34 +14,6 @@ Feature: Onezone GUI elements
     And user of browser clicked "Sign In" confirmation button in displayed modal
 
 
-  Scenario: User successfully changes his alias (presses ENTER after entering text)
-    When user of browser expands the "USER ALIAS" Onezone sidebar panel
-    And user of browser records his current alias displayed in "USER ALIAS" Onezone panel
-    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser presses enter on keyboard
-    Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is "helloworld"
-    # TODO remove after integrate with swagger
-    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types recorded alias to user alias edit box in "USER ALIAS" Onezone panel
-    And user of browser presses enter on keyboard
-    And user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one
-
-
-  Scenario: User successfully changes his alias (clicks on confirm button after entering text)
-    When user of browser expands the "USER ALIAS" Onezone sidebar panel
-    And user of browser records his current alias displayed in "USER ALIAS" Onezone panel
-    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser clicks on confirm button displayed next to active edit box
-    Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is "helloworld"
-    # TODO remove after integrate with swagger
-    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types recorded alias to user alias edit box in "USER ALIAS" Onezone panel
-    And user of browser presses enter on keyboard
-    And user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one
-
-
   Scenario: User sees that his alias remains unchanged after resigning from renaming it (clicks cancel button after entering alias)
     When user of browser expands the "USER ALIAS" Onezone sidebar panel
     And user of browser records his current alias displayed in "USER ALIAS" Onezone panel
@@ -49,85 +21,6 @@ Feature: Onezone GUI elements
     And user of browser types "helloworld" in active edit box
     And user of browser clicks on cancel button displayed next to active edit box
     Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one
-
-
-  Scenario: User successfully creates access token
-    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
-    Then user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    # TODO remove after integrate with swagger
-    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-
-
-  Scenario: User successfully removes access token
-    # TODO remove after integrate with swagger
-    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
-
-    And user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-
-
-  Scenario: User successfully copies access token
-    # TODO remove after integrate with swagger
-    When user of browser expands the "ACCESS TOKENS" Onezone sidebar panel
-    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser clicks on "Create new access token" button in expanded "ACCESS TOKENS" Onezone panel
-
-    And user of browser sees exactly 1 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser clicks on copy icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser sees that token for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel has been copied correctly
-    # TODO remove after integrate with swagger
-    And user of browser clicks on remove icon for 1st item on tokens list in expanded "ACCESS TOKENS" Onezone panel
-    And user of browser sees exactly 0 item(s) on tokens list in expanded "ACCESS TOKENS" Onezone panel
-
-
-  Scenario: User successfully creates space (presses ENTER after entering text)
-    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser presses enter on keyboard
-    Then user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    # TODO remove after integrate with swagger
-    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser sees that "Leave a space" modal has appeared
-    And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
-
-
-  Scenario: User successfully creates space (clicks on confirm button after entering text)
-    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser clicks on confirm button displayed next to active edit box
-    Then user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    # TODO remove after integrate with swagger
-    And user of browser expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser sees that "Leave a space" modal has appeared
-    And user of browser clicks "Yes" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
-
-
-  Scenario: User sees that no space has been created after resigning from creating it (clicks cancel button after entering space name)
-    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser clicks on cancel button displayed next to active edit box
-    Then user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
   Scenario: User successfully leaves space
