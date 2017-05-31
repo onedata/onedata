@@ -27,17 +27,17 @@ Feature: Onezone GUI elements featuring alias
     Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is "alias2"
 
 
-  Scenario: User successfully changes his alias (presses ENTER after entering text)
-    When user of browser expands the "USER ALIAS" Onezone sidebar panel
-    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "alias1" in active edit box
-    And user of browser presses enter on keyboard
-    Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is "alias1"
-
-
-  Scenario: User sees that his alias remains unchanged after resigning from renaming it (clicks cancel button after entering alias)
-    When user of browser expands the "USER ALIAS" Onezone sidebar panel
-    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser clicks on cancel button displayed next to active edit box
-    Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one
+#  Scenario: User successfully changes his alias (presses ENTER after entering text)
+#    When user of browser expands the "USER ALIAS" Onezone sidebar panel
+#    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
+#    And user of browser types "alias1" in active edit box
+#    And user of browser presses enter on keyboard
+#    Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is "alias1"
+#
+#
+#  Scenario: User sees that his alias remains unchanged after resigning from renaming it (clicks cancel button after entering alias)
+#    When user of browser expands the "USER ALIAS" Onezone sidebar panel
+#    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
+#    And user of browser types "helloworld" in active edit box
+#    And user of browser clicks on cancel button displayed next to active edit box
+#    Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one

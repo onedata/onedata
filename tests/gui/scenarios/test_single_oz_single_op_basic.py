@@ -73,11 +73,11 @@ def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
 
 
 # # --- FEATURES: all non-destructive (does not change state) ---
-# scenarios('../features/onezone/access_tokens.feature')
-# scenarios('../features/onezone/login.feature')
-# scenarios('../features/onezone/space_creation.feature')
-# scenarios('../features/onezone/space_management.feature')
-# scenarios('../features/onezone/spaces_management.feature')
+scenarios('../features/onezone/access_tokens.feature')
+scenarios('../features/onezone/login.feature')
+scenarios('../features/onezone/space_creation.feature')
+scenarios('../features/onezone/space_management.feature')
+scenarios('../features/onezone/spaces_management.feature')
 scenarios('../features/onezone/providers.feature')
 
 # scenarios('../features/onezone/alias.feature')
