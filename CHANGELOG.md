@@ -4,6 +4,18 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc15
+
+* Update refs to origin/release/3.0.0-rc15.
+* VFS-3197 Enable release docker to log to stdout
+* Update refs to origin/feature/VFS-3213-change-storage-verification-mechanism.
+* VFS-3051 add clipboard fixture and replace pyperclip uses with it
+* VFS-3051 enhance logging capabilities
+* VFS-3051 add support for recording tests with multiple browsers
+* implement changes to allow splitting acceptance tests on bamboo
+* VFS-3051 add support for logs from multiple browsers
+
+
 ### 3.0.0-rc14
 
 * VFS-3101 change Then steps in metadata scenarios
