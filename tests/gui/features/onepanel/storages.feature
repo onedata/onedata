@@ -24,7 +24,7 @@ Feature: Storage utilities using onepanel
     And user of browser1 sees an info notify with text matching to: .*[Ss]torage.*added.*
     And user of browser1 expands "new_storage" record on storages list in storages page in Onepanel
     And user of browser1 sees that "new_storage" Storage type is posix in storages page in Onepanel
-#    And user of browser1 sees that "new_storage" Mount point is /volumes/storage in storages page in Onepanel
+    And user of browser1 sees that "new_storage" Mount point is /volumes/storage in storages page in Onepanel
 
     # create space
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel

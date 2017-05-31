@@ -83,3 +83,14 @@ def wt_revoke_support_for_space(selenium, browser_id, space, onepanel):
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_assert_existence_of_space_support_record(selenium, browser_id, space, onepanel):
     _ = onepanel(selenium[browser_id]).content.spaces.spaces[space]
+
+
+@when(parsers.parse('user of {browser_id} sees that list of supported spaces '
+                    'is empty in Spaces page in Onepanel'))
+@then(parsers.parse('user of {browser_id} sees that list of supported spaces '
+                    'is empty in Spaces page in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_assert_supported_spaces_list_is_empty(selenium, browser_id, onepanel):
+    count = onepanel(selenium[browser_id]).content.spaces.spaces.count()
+    assert count == 0, \
+        'There is(are) {} supported spaces instead of expected none'.format(count)

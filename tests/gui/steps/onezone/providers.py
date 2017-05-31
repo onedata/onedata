@@ -207,6 +207,17 @@ def click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
     prov_rec.click()
 
 
+@when(parsers.parse('user of {browser_id} sees that there is no provider '
+                    'in "GO TO YOUR FILES" Onezone panel'))
+@then(parsers.parse('user of {browser_id} sees that there is no provider '
+                    'in "GO TO YOUR FILES" Onezone panel'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def assert_list_of_providers_is_empty(selenium, browser_id, oz_page):
+    driver = selenium[browser_id]
+    count = oz_page(driver)['go to your files'].providers.count()
+    assert count == 0, 'Providers count is {} instead of expected 0'.format(count)
+
+
 @when(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
                     'in expanded "GO TO YOUR FILES" Onezone panel is working'))
 @then(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
