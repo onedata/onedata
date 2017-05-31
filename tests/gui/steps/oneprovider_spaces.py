@@ -5,7 +5,6 @@
 from selenium.common.exceptions import NoSuchElementException
 
 from pytest_bdd import parsers, given, when, then
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.utils.generic import implicit_wait, repeat_failed
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_BACKEND
@@ -39,7 +38,7 @@ def _is_home_space(driver, space_name):
                      'was displayed next to name of space "{space_name}" '
                      'in spaces list'))
 def g_assert_home_space_is_space_named(selenium, browser_id, space_name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _is_home_space(driver, space_name)
 
 
@@ -56,5 +55,5 @@ def g_assert_home_space_is_space_named(selenium, browser_id, space_name):
                     'has appeared next to displayed '
                     'name of space "{space_name}" in spaces list'))
 def wt_assert_home_space_is_space_named(selenium, browser_id, space_name):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     _is_home_space(driver, space_name)

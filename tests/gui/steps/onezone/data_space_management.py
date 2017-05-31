@@ -2,7 +2,6 @@
 """
 
 from pytest_bdd import parsers, when, then
-from pytest_selenium_multi.pytest_selenium_multi import select_browser
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, parse_seq, implicit_wait
@@ -20,7 +19,7 @@ __license__ = "This software is released under the MIT license cited in " \
                     'creating new space in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
 def get_create_space_edit_box(selenium, browser_id, tmp_memory, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     edit_box = oz_page(driver)['data space management'].create_space_edit_box
     tmp_memory[browser_id]['edit_box'] = edit_box
 
@@ -34,7 +33,7 @@ def get_create_space_edit_box(selenium, browser_id, tmp_memory, oz_page):
 @repeat_failed(timeout=WAIT_FRONTEND)
 def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
                                                 name, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     oz_page(driver)['data space management'].spaces[name].settings.expand()
 
 
@@ -49,7 +48,7 @@ def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_settings_option_for_space_in_panel(selenium, browser_id,
                                                 option, name, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     settings = oz_page(driver)['data space management'].spaces[name].settings
     action = getattr(settings, option.lower().replace(' ', '_'))
     action()
@@ -64,7 +63,7 @@ def click_on_settings_option_for_space_in_panel(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
                                                    name, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     oz_page(driver)['data space management'].spaces[name].get_support()
 
 
@@ -77,7 +76,7 @@ def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_dropright_with_token_for_space_appeared(selenium, browser_id,
                                                    name, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     # noinspection PyStatementEffect
     oz_page(driver)['data space management'].spaces[name].dropright_with_token
 
@@ -92,7 +91,7 @@ def assert_dropright_with_token_for_space_appeared(selenium, browser_id,
 def assert_dropright_has_nonempty_token_for_space_appeared(selenium, browser_id,
                                                            name, tmp_memory,
                                                            oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     space_rec = oz_page(driver)['data space management'].spaces[name]
     token = space_rec.dropright_with_token.token
     assert token, 'no dropright with nonempty token for space named "{}" ' \
@@ -108,7 +107,7 @@ def assert_dropright_has_nonempty_token_for_space_appeared(selenium, browser_id,
                     'Onezone panel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def copy_token_from_droprigth_for_space(selenium, browser_id, name, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     item = oz_page(driver)['data space management'].spaces[name]
     item.dropright_with_token.copy_token()
 
@@ -123,7 +122,7 @@ def copy_token_from_droprigth_for_space(selenium, browser_id, name, oz_page):
 def click_on_supporting_provider_for_space_in_space_submenu(selenium, browser_id,
                                                             provider, space,
                                                             oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     space_rec = oz_page(driver)['data space management'].spaces[space]
     space_rec.providers[provider].click()
 
@@ -137,7 +136,7 @@ def click_on_supporting_provider_for_space_in_space_submenu(selenium, browser_id
 @repeat_failed(timeout=WAIT_BACKEND)
 def click_on_unsupport_space_for_supporting_provider(selenium, browser_id,
                                                      provider, space, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     space_rec = oz_page(driver)['data space management'].spaces[space]
     space_rec.providers[provider].unsupport_space()
 
@@ -153,7 +152,7 @@ def click_on_unsupport_space_for_supporting_provider(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
                                                    providers_list, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     space_rec = oz_page(driver)['data space management'].spaces[name]
     providers = space_rec.providers
     expected_providers = set(parse_seq(providers_list))
@@ -176,7 +175,7 @@ def assert_supporting_providers_for_space_in_panel(selenium, browser_id, name,
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_no_such_supporting_providers_for_space(selenium, browser_id, space,
                                                   providers_list, oz_page):
-    driver = select_browser(selenium, browser_id)
+    driver = selenium[browser_id]
     space_rec = oz_page(driver)['data space management'].spaces[space]
     providers = space_rec.providers
     err_msg = 'space named "{}" has supporting provider named "{{}}" ' \
