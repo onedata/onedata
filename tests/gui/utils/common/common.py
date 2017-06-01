@@ -6,7 +6,7 @@ from abc import ABCMeta, abstractmethod
 
 from tests.gui.utils.core.web_elements import WebItemsSequence, Label, WebElement, Button, WebItem
 from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
-from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.base import PageObject, ExpandableMixin
 
 from .account_management import AccountManagementContentPage
 
@@ -67,3 +67,12 @@ class Toggle(PageObject):
             return True
         else:
             return False
+
+
+class DropdownSelector(PageObject, ExpandableMixin):
+    selected = Label('.ember-power-select-selected-item')
+    options = WebItemsSequence('ul li', cls=ButtonWithTextPageObject)
+    _toggle = WebElement('.ember-basic-dropdown-trigger[role="button"]')
+
+    def __str__(self):
+        return 'options selector in {}'.format(self.parent)
