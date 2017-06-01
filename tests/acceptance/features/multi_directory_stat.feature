@@ -81,8 +81,8 @@ Feature: Multi_directory_stat
     When u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     When u1 renames s1/dir1 to s1/dir2 on client1
-    Then status-change time of u2's s1/dir2 is greater than modification time on client2
-    Then status-change time of u2's s1/dir2 is greater than access time on client2
+    Then status-change time of u2's s1/dir2 is equal to modification time on client2
+    Then status-change time of u2's s1/dir2 is equal to access time on client2
 
   Scenario: Status-change time when changing mode
     When u1 creates directories [s1/dir1] on client1

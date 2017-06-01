@@ -248,3 +248,17 @@ Feature: Multi_regular_file_CRUD
     And u1 deletes files [s1/file1] on client1
     And s1 is empty for u1 on client1
 
+  Scenario: Create nonempty file then copy it and remove source file
+    When u1 creates regular files [s1/file1] on client1
+    And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
+    And u1 copies regular file s1/file1 to s1/file1_copy on client1
+    And u1 deletes files [s1/file1] on client1
+    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1_copy on client1
+    And u2 reads "TEST TEXT ONEDATA" from file s1/file1_copy on client2
+
+  Scenario: Create nonempty file then move it to another space
+    When u1 creates regular files [s1/file1] on client1
+    And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
+    And u1 renames s1/file1 to s2/file1_moved on client1
+    Then u1 reads "TEST TEXT ONEDATA" from file s2/file1_moved on client1
+    And u2 reads "TEST TEXT ONEDATA" from file s2/file1_moved on client2
