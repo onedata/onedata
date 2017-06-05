@@ -144,3 +144,14 @@ def test_delete_right_after_close(env_description_file):
 @scenario("Create many children")
 def test_create_many(env_description_file):
     pass
+
+
+@scenario('Create nonempty file then copy it and remove source file')
+def test_copy_delete(env_description_file):
+    pass
+
+
+@scenario('Create nonempty file then move it to another space')
+def test_move_between_spaces(env_description_file):
+    pass
+
