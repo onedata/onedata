@@ -256,3 +256,14 @@ def wt_assert_proper_space_configuration_in_panel(selenium, browser_id, conf,
         assert val.lower() == displayed_val.lower(), \
             'Displayed {} as {} instead of expected {} in {} of ' \
             '"{}" configuration'.format(displayed_val, attr, val, conf, space)
+
+
+@when(parsers.parse('user of {browser_id} copies Id of "{space}" space '
+                    'in Spaces page in Onepanel'))
+@then(parsers.parse('user of {browser_id} copies Id of "{space}" space '
+                    'in Spaces page in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_copy_space_id_in_spaces_page_in_onepanel(selenium, browser_id,
+                                                space, onepanel, tmp_memory):
+    space_id = onepanel(selenium[browser_id]).content.spaces.spaces[space].Id
+    tmp_memory['spaces'][space] = space_id

@@ -134,6 +134,20 @@ def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
     selector.storages[storage_type].click()
 
 
+@when(parsers.re('user of (?P<browser_id>.*?) enables "(?P<option>.*?)" '
+                 'in (?P<form>POSIX) form in step 3 of deployment process '
+                 'in Onepanel'))
+@then(parsers.re('user of (?P<browser_id>.*?) enables "(?P<option>.*?)" '
+                 ' in (?P<form>POSIX) form in step 3 of deployment process '
+                 'in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_enable_storage_option_in_deployment_step3(selenium, browser_id, option,
+                                                 form, onepanel):
+    form = getattr(onepanel(selenium[browser_id]).content.deployment.step3.form,
+                   transform(form))
+    getattr(form, transform(option)).check()
+
+
 @when(parsers.re('user of (?P<browser_id>.*?) types "(?P<text>.*?)" to '
                  '(?P<input_box>.*?) field in (?P<form>POSIX) form '
                  'in step 3 of deployment process in Onepanel'))
