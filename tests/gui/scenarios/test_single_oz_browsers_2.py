@@ -16,7 +16,7 @@ from tests.gui.steps.generic.login import *
 
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
-from tests.gui.steps.onepanel.space_support import *
+from tests.gui.steps.onepanel.spaces import *
 from tests.gui.steps.onepanel.nodes import *
 from tests.gui.steps.onepanel.storages import *
 from tests.gui.steps.onepanel.provider import *
@@ -51,9 +51,9 @@ from pytest_bdd import scenarios, scenario
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/onepanel/provider.feature')
-scenarios('../features/onepanel/storages.feature')
-scenarios('../features/onepanel/deployment.feature')
+# scenarios('../features/onepanel/deployment.feature')
+# scenarios('../features/onepanel/provider.feature')
+# scenarios('../features/onepanel/storages.feature')
 scenarios('../features/onepanel/spaces.feature')
 
 # scenarios('../features/oneprovider_2_providers_multi.feature')

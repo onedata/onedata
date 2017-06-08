@@ -19,7 +19,7 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
 from tests.gui.utils.generic import parse_seq, suppress, repeat_failed, transform
-from tests.gui.utils.generic import parse_url, enter_text, redirect_display
+from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
 from pytest_bdd import given, when, then, parsers

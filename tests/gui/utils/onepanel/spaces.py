@@ -9,6 +9,7 @@ from tests.gui.utils.core.web_elements import (Label, NamedButton, Button,
                                                WebElement)
 from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
 
+
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -35,6 +36,7 @@ class SpaceSupportAddForm(PageObject):
     size = Input('input.field-main-size')
     units = WebItemsSequence('.field-main-sizeUnit label.clickable',
                              cls=ButtonWithTextPageObject)
+    mount_in_root = WebItem('.toggle-field-main-mountInRoot', cls=Toggle)
     import_storage_data = WebItem('.toggle-field-main-_importEnabled',
                                   cls=Toggle)
     import_configuration = WebItem('.import-configuration-section',

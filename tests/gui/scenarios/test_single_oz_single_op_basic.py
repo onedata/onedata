@@ -19,7 +19,7 @@ from tests.gui.steps.generic.account_management import *
 
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
-from tests.gui.steps.onepanel.space_support import *
+from tests.gui.steps.onepanel.spaces import *
 
 from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *
@@ -71,8 +71,8 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 #
 #
 # # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/common/account_management.feature')
-scenarios('../features/common/login.feature')
+# scenarios('../features/common/account_management.feature')
+# scenarios('../features/common/login.feature')
 # scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/onezone_login.feature')
 # scenarios('../features/onezone_gui.feature')
