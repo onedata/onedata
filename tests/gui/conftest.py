@@ -8,6 +8,7 @@ import sys
 from itertools import chain
 import subprocess as sp
 
+from collections import defaultdict
 from py.xml import html
 from pytest import fixture, UsageError, skip
 from selenium import webdriver
@@ -216,7 +217,7 @@ def tmp_memory():
     Because of use of multiple browsers, the correct format would be:
      {'browser1': {...}, 'browser2': {...}, ...}
     """
-    return {}
+    return defaultdict(dict)
 
 
 @fixture

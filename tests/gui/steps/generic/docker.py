@@ -16,13 +16,21 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-PROVIDER_CONTAINER_NAME = 'node1.oneprovider.1496901721.dev'
+PROVIDER_CONTAINER_NAME = 'node1.oneprovider.1497345428.dev'
 MOUNT_POINT = '/mnt/st1/'
 
 
-def _docker_cp(src_path, dst_path, container):
-    cmd = ["docker", "cp"]
-    cmd.extend([src_path, "{0}:{1}".format(container, dst_path)])
+def _docker_cp(tmpdir, browser_id, src_path, dst_path=None):
+    src_path = os.path.join(str(tmpdir), browser_id, src_path)
+    if dst_path:
+        cmd = ['docker', 'exec', PROVIDER_CONTAINER_NAME,
+               'mkdir', '-p', dst_path]
+        subprocess.call(cmd)
+    else:
+        dst_path = MOUNT_POINT
+
+    cmd = ["docker", "cp", src_path, "{0}:{1}".format(PROVIDER_CONTAINER_NAME,
+                                                      dst_path)]
     subprocess.check_call(cmd)
 
 
@@ -30,10 +38,29 @@ def _docker_cp(src_path, dst_path, container):
                     'to provider\'s storage mount point'))
 @then(parsers.parse('user of {browser_id} copies {src_path} '
                     'to provider\'s storage mount point'))
-def wt_user_copies_files_to_docker(browser_id, src_path, tmpdir):
-    src_path = os.path.join(str(tmpdir), browser_id, src_path)
-    dst_path = os.path.join(MOUNT_POINT, os.path.basename(src_path))
-    _docker_cp(src_path, dst_path, PROVIDER_CONTAINER_NAME)
+def wt_cp_files_to_storage_mount_point(browser_id, src_path, tmpdir):
+    _docker_cp(tmpdir, browser_id, src_path)
+
+
+@when(parsers.parse('user of {browser_id} copies {src_path} '
+                    'to the root directory of "{space}" space'))
+@then(parsers.parse('user of {browser_id} copies {src_path} '
+                    'to the root directory of "{space}" space'))
+def wt_cp_files_to_space_root_dir(browser_id, src_path, space,
+                                  tmpdir, tmp_memory):
+    _docker_cp(tmpdir, browser_id, src_path,
+               os.path.join(MOUNT_POINT, tmp_memory['spaces'][space]))
+
+
+@when(parsers.parse('user of {browser_id} copies {src_path} '
+                    'to {dst_path} directory of "{space}" space'))
+@then(parsers.parse('user of {browser_id} copies {src_path} '
+                    'to {dst_path} directory of "{space}" space'))
+def wt_cp_files_to_dst_path_in_space(browser_id, src_path, dst_path,
+                                     space, tmpdir, tmp_memory):
+    _docker_cp(tmpdir, browser_id, src_path,
+               os.path.join(MOUNT_POINT, tmp_memory['spaces'][space],
+                            dst_path))
 
 
 @given(parsers.parse('there is no working provider named {provider_list}'))
