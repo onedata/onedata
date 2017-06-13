@@ -4,6 +4,12 @@
 CHANGELOG
 ---------
 
+### 3.0.0-rc16
+
+* VFS-3184 Add copy/remove tests.
+* VFS-3017 Check if mtime and ctime are equal after rename (in previous implemetation of rename they were greater).
+
+
 ### 3.0.0-rc15
 
 * Update refs to origin/release/3.0.0-rc15.
