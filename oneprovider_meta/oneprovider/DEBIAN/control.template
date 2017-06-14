@@ -6,7 +6,7 @@ Architecture: all
 Depends: cluster-manager (= {{cluster_manager_version}}-1),
     op-worker (= {{op_worker_version}}-1),
     op-panel (= {{op_panel_version}}-1),
-    couchbase-server-community (>= 4.0.0)
+    couchbase-server-community (= {{couchbase_version}}-1)
 Maintainer: Onedata Package Maintainer <support@onedata.org>
 Homepage: https://onedata.org
 Description: Oneprovider cluster
