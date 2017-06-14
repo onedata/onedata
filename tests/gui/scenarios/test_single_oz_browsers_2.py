@@ -13,6 +13,8 @@ from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
 from tests.gui.steps.generic.copy_paste import *
 from tests.gui.steps.generic.login import *
+from tests.gui.steps.generic.docker import *
+from tests.gui.steps.generic.local_file_system import *
 
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
@@ -54,7 +56,8 @@ from pytest_bdd import scenarios, scenario
 # scenarios('../features/onepanel/deployment.feature')
 # scenarios('../features/onepanel/provider.feature')
 # scenarios('../features/onepanel/storages.feature')
-scenarios('../features/onepanel/spaces.feature')
+# scenarios('../features/onepanel/spaces.feature')
+scenarios('../features/onepanel/import.feature')
 
 # scenarios('../features/oneprovider_2_providers_multi.feature')
 # scenarios('../features/oneprovider_shares_multi.feature')
