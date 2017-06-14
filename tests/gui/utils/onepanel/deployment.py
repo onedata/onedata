@@ -19,6 +19,7 @@ class Step1(PageObject):
     hosts = WebItemsSequence('tr.cluster-host-table-row', cls=HostRecord)
     deploy = Button('button.btn-deploy-cluster')
     zone_name = Input('input.field-name')
+    zone_domain_name = Input('input.field-domainName')
 
     def __str__(self):
         return str(self.parent)
