@@ -29,7 +29,7 @@ class SpaceSupportAddForm(PageObject):
 
 
 class SpaceSupportRecord(PageObject, ExpandableMixin):
-    name = id = Label('.oneicon-space + .one-label')
+    name = id = Label('.item-icon-container + .one-label')
     Name = Label('td.item-table-content-cell .content-row:first-child '
                  '.one-label')
     Id = Label('td.item-table-content-cell .content-row:nth-child(2) '
