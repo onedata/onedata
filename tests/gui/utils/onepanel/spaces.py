@@ -50,7 +50,11 @@ class SpaceSupportAddForm(PageObject):
 
 
 class SpaceSupportRecord(PageObject, ExpandableMixin):
-    name = id = Label('.oneicon-space + .one-label')
+    name = id = Label('.item-icon-container + .one-label')
+    Name = Label('td.item-table-content-cell .content-row:first-child '
+                 '.one-label')
+    Id = Label('td.item-table-content-cell .content-row:nth-child(2) '
+               '.one-label')
     _toggle = WebElement('.one-collapsible-list-item-header')
 
     def is_expanded(self):
@@ -64,11 +68,6 @@ class SpaceSupportRecord(PageObject, ExpandableMixin):
     update_configuration = WebItem('.update-configuration-section',
                                    cls=UpdateConfiguration)
     save_configuration = NamedButton('button', text='Save configuration')
-
-    Name = Label('td.item-table-content-cell .content-row:first-child '
-                 '.one-label')
-    Id = Label('td.item-table-content-cell .content-row:nth-child(2) '
-               '.one-label')
 
     _import_strategy = WebElement('td.item-table-content-cell '
                                   '.content-row:nth-child(4)')

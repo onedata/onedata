@@ -11,6 +11,7 @@ Feature: Deployment process using panel of zone and provider
     When user of browser1 clicks on Create new cluster button in welcome page in Onepanel
     And user of browser1 enables [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options for .*onezone.* host in step 1 of deployment process in Onepanel
     And user of browser1 types "z1" to Zone name field in step 1 of deployment process in Onepanel
+    And user of browser1 types "z1" zone ip to Zone domain name field in step 1 of deployment process in Onepanel
     And user of browser1 clicks on Deploy button in step 1 of deployment process in Onepanel
     And user of browser1 sees that cluster deployment has started
 

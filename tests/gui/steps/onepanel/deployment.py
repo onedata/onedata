@@ -46,6 +46,19 @@ def wt_type_zone_ip_to_zone_domain_in_deployment_step2(selenium, browser_id,
     step.oz_domain = hosts['onezone'][host]
 
 
+@when(parsers.parse('user of {browser_id} types "{host}" zone ip to '
+                    'Zone domain name field in step 1 of deployment '
+                    'process in Onepanel'))
+@then(parsers.parse('user of {browser_id} types "{host}" zone ip to '
+                    'Zone domain name field in step 1 of deployment '
+                    'process in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_type_zone_ip_to_zone_domain_in_deployment_step1(selenium, browser_id,
+                                                       host, hosts, onepanel):
+    step = onepanel(selenium[browser_id]).content.deployment.step1
+    step.zone_domain_name = hosts['onezone'][host]
+
+
 @when(parsers.parse('user of {browser_id} types redirection point of "{host}" '
                     'provider to Redirection point field in step 2 of '
                     'deployment process in Onepanel'))
