@@ -10,13 +10,13 @@ from tests.gui.utils.generic import parse_seq, suppress
 from pytest_bdd import given, when, then, parsers
 
 
-__author__ = "Jakub Liput, Bartosz WAlkowicz"
+__author__ = "Bartosz WAlkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-PROVIDER_CONTAINER_NAME = 'node1.oneprovider.1497345428.dev'
+PROVIDER_CONTAINER_NAME = 'node1.oneprovider.1498038518.dev'
 MOUNT_POINT = '/mnt/st1/'
 
 
@@ -31,6 +31,11 @@ def _docker_cp(tmpdir, browser_id, src_path, dst_path=None):
 
     cmd = ["docker", "cp", src_path, "{0}:{1}".format(PROVIDER_CONTAINER_NAME,
                                                       dst_path)]
+    subprocess.check_call(cmd)
+
+
+def _docker_rm(path):
+    cmd = ['docker', 'exec', PROVIDER_CONTAINER_NAME, 'rm', '-rf', path]
     subprocess.check_call(cmd)
 
 
@@ -61,6 +66,23 @@ def wt_cp_files_to_dst_path_in_space(browser_id, src_path, dst_path,
     _docker_cp(tmpdir, browser_id, src_path,
                os.path.join(MOUNT_POINT, tmp_memory['spaces'][space],
                             dst_path))
+
+
+@when(parsers.parse('user of {browser_id} removes {src_path} '
+                    'from provider\'s storage mount point'))
+@then(parsers.parse('user of {browser_id} removes {src_path} '
+                    'from provider\'s storage mount point'))
+def wt_rm_files_to_storage_mount_point(src_path):
+    _docker_rm(os.path.join(MOUNT_POINT, src_path))
+
+
+@when(parsers.parse('user of {browser_id} removes {src_path} '
+                    'from the root directory of "{space}" space'))
+@then(parsers.parse('user of {browser_id} removes {src_path} '
+                    'from the root directory of "{space}" space'))
+def wt_rm_files_to_space_root_dir(src_path, space, tmp_memory):
+    _docker_rm(os.path.join(MOUNT_POINT, tmp_memory['spaces'][space],
+                            src_path))
 
 
 @given(parsers.parse('there is no working provider named {provider_list}'))

@@ -57,7 +57,7 @@ from pytest_bdd import scenarios, scenario
 # scenarios('../features/onepanel/provider.feature')
 # scenarios('../features/onepanel/storages.feature')
 # scenarios('../features/onepanel/spaces.feature')
-scenarios('../features/onepanel/import.feature')
+scenarios('../features/onepanel/storage_sync.feature')
 
 # scenarios('../features/oneprovider_2_providers_multi.feature')
 # scenarios('../features/oneprovider_shares_multi.feature')
