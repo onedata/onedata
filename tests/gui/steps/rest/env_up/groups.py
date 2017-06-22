@@ -1,5 +1,10 @@
-"""Steps for groups management using REST API.
+"""Steps for groups creation using REST API.
 """
+
+__author__ = "Bartek Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
 
 import yaml
 
@@ -7,34 +12,19 @@ from tests.gui.utils.onezone_client import Group, GroupPrivileges
 from pytest_bdd import given, parsers
 
 from tests.gui.utils.onezone_client.rest import ApiException
-from .common import get_oz_user_api, get_oz_group_api
-
-
-__author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
-
-
-def _get_id_of_users_group_with_given_name(group_name, rest_client):
-    for group_id in rest_client.list_user_groups().groups:
-        group = rest_client.get_user_group(group_id)
-        if group.name == group_name:
-            return group.group_id
+from ..common import get_oz_user_api, get_oz_group_api
 
 
 @given(parsers.parse('initial groups configuration in "{service}" '
                      'Onezone service:\n{config}'))
-def create_groups_according_to_given_configuration(config, service,
-                                                   admin_credentials,
-                                                   users, hosts, groups):
+def groups_creation(config, service, admin_credentials,
+                    users, hosts, groups):
     """Create and configure groups according to given config.
 
     Config format given in yaml is as follow:
 
         group_name_1:
-            owner: user_name                ---> currently we identify user account with concrete
-                                                 browser so user_name == browser_id
+            owner: user_name
             [users]:                        ---> optional
                 - user_name_2
                 - user_name_3:
@@ -47,25 +37,24 @@ def create_groups_according_to_given_configuration(config, service,
     Example configuration:
 
         group1:
-            owner: browser2
+            owner: user1
             users:
-                - browser3:
+                - user2:
                     privileges:
                         - group_invite_user
                         - group_remove_user
-                - browser4
+                - user3
     """
-    host = hosts['onezone'][service]
+    zone_host = hosts['onezone'][service]
+    admin_client = get_oz_group_api(admin_credentials.username,
+                                    admin_credentials.password,
+                                    zone_host)
+
     for group_name, description in yaml.load(config).items():
-        owner_cred = users[description['owner']]
-        user_client = get_oz_user_api(owner_cred.username,
-                                      owner_cred.password, host)
-        user_client.create_group_for_user(Group(name=group_name))
-        group_id = _get_id_of_users_group_with_given_name(group_name, user_client)
+        group_id = _create_group(users[description['owner']],
+                                 group_name, zone_host)
         groups[group_name] = group_id
 
-        admin_client = get_oz_group_api(admin_credentials.username,
-                                        admin_credentials.password, host)
         for user in description.get('users', {}):
             try:
                 [(user, options)] = user.items()
@@ -85,3 +74,13 @@ def create_groups_according_to_given_configuration(config, service,
                                              group=group_name,
                                              status=ex.status,
                                              reason=ex.reason))
+
+
+def _create_group(owner, group_name, zone_host):
+    oz_client = get_oz_user_api(owner.username, owner.password, zone_host)
+    oz_client.create_group_for_user(Group(name=group_name))
+
+    for group_id in oz_client.list_user_groups().groups:
+        group = oz_client.get_user_group(group_id)
+        if group.name == group_name:
+            return group.group_id

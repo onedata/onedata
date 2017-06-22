@@ -104,13 +104,13 @@ def admin_credentials(request):
 
 @fixture
 def groups():
-    """Mapping group name to group id, e.g. {group1: ASUDJXCBJshdfsh983475y}"""
+    """Mapping group name to group id, e.g. {group1: UEIHSdft743dfjKEUgr}"""
     return {}
 
 
 @fixture
 def spaces():
-    """Mapping space name to space id, e.g. {space1: UEIH743856sjgsdfjKEUgr}"""
+    """Mapping space name to space id, e.g. {space1: UEIHSdft743dfjKEUgr}"""
     return {}
 
 
