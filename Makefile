@@ -314,3 +314,4 @@ docker:
 build_swaggers:
 	cd onezone_swagger && ./build.sh && cd generated/python && mv onezone_client ../../../tests/gui/utils
 	cd onepanel_swagger && ./build.sh && cd generated/python && mv onepanel_client ../../../tests/gui/utils
+	cd cdmi_swagger && ./build.sh && cd generated/python && mv cdmi_client ../../../tests/gui/utils

@@ -8,7 +8,9 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import yaml
 
-from tests.gui.utils.onezone_client import SpaceCreateRequest, SpacePrivileges
+from tests.gui.utils.onezone_client import (SpaceCreateRequest,
+                                            SpacePrivileges,
+                                            DefaultSpace)
 from tests.gui.utils.onepanel_client import SpaceSupportRequest
 
 from pytest_bdd import given, parsers
@@ -103,6 +105,8 @@ def spaces_creation(config, host, admin_credentials, hosts,
 
         _add_users_to_space(admin_client, space_id, users,
                             description.get('users', {}))
+        _set_as_home_for_users(space_id, users, host,
+                               description.get('home space for', []))
         _add_groups_to_space(admin_client, space_id, groups,
                              description.get('groups', {}))
         _get_support(admin_credentials, user_client, space_id, storages,
@@ -129,6 +133,13 @@ def _add_users_to_space(admin_client, space_id, users, users_conf):
             privileges = SpacePrivileges(privileges=options['privileges'])
             admin_client.add_user_to_space(space_id, users[user].id,
                                            privileges=privileges)
+
+
+def _set_as_home_for_users(space_id, users, oz_host, users_conf):
+    for user in (users[user] for user in users_conf):
+        oz_client = get_oz_user_api(user.username, user.password, oz_host)
+        default_space = DefaultSpace(space_id)
+        oz_client.set_default_space(default_space)
 
 
 def _add_groups_to_space(admin_client, space_id, groups, groups_conf):
