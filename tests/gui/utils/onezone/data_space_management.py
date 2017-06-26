@@ -4,7 +4,7 @@ in Onezone web GUI.
 
 from tests.gui.utils.core.common import ExpandableMixin, PageObject
 from tests.gui.utils.core.web_elements import TextLabelWebElement, WebElement, ButtonWebElement, \
-    InputWebElement, ToggleWebElement, WebItemsSequence, ButtonWithTextWebElement, WebItem
+    ToggleWebElement, WebItemsSequence, ButtonWithTextWebElement, WebItem
 from tests.gui.utils.generic import find_web_elem_with_text, click_on_web_elem, iter_ahead
 from .common import OZPanel, EditBox
 
@@ -27,17 +27,6 @@ class _ProviderRecord(PageObject):
         self._click_on_btn('unsupport_space')
 
 
-class _TokenDropdownMenu(PageObject):
-    token = InputWebElement('input')
-    _copy_btn = ButtonWebElement('button')
-
-    def __str__(self):
-        return 'token dropright in {}'.format(self.parent)
-
-    def copy_token(self):
-        self._click_on_btn('copy')
-
-
 class _SettingsDropdown(PageObject, ExpandableMixin):
 
     def __init__(self, driver, web_elem, *args, **kwargs):
@@ -53,8 +42,8 @@ class _SettingsDropdown(PageObject, ExpandableMixin):
     def rename(self):
         self._click_on_btn('rename')
 
-    def get_support(self):
-        self._click_on_btn('get support')
+    def add_storage(self):
+        self._click_on_btn('add storage')
 
     def leave(self):
         self._click_on_btn('leave')
@@ -80,11 +69,8 @@ class _SpaceRecord(PageObject, ExpandableMixin):
     settings = WebItem('.settings-tool .settings-dropdown', cls=_SettingsDropdown)
     providers = WebItemsSequence('ul.tertiary-list li.sidebar-space-provide',
                                  cls=_ProviderRecord)
-    dropright_with_token = WebItem('ul.tertiary-list li.get-support '
-                                   '.dropdown-menu', cls=_TokenDropdownMenu)
     _toggle = ToggleWebElement('.secondary-item-container .clickable')
-    _get_support_btn = ButtonWebElement('ul.tertiary-list '
-                                        'li.get-support .dropdown')
+    _add_storage_btn = ButtonWebElement('ul.tertiary-list li.get-support')
     _set_home_btn = ButtonWebElement('.secondary-item-element.star-toggle '
                                      '.oneicon-home-outline')
     _home_space_icon = WebElement('.oneicon-space-home')
@@ -101,8 +87,8 @@ class _SpaceRecord(PageObject, ExpandableMixin):
         else:
             return True
 
-    def get_support(self):
-        self._click_on_btn('get_support')
+    def add_storage(self):
+        self._click_on_btn('add_storage')
 
     def set_as_home(self):
         if not self.is_home():
