@@ -144,8 +144,6 @@ Feature: Oneprovider Share view
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that "share1" has been renamed to "helloworld"
 
-    And user of browser2 is idle for 10 seconds
-    And user of browser2 refreshes site
     And user of browser2 sees that public share is named "helloworld"
 
     # TODO rm after integrating with swagger
