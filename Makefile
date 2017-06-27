@@ -9,7 +9,7 @@ ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
 endif
 ifeq ($(strip $(COUCHBASE_VERSION)),)
-COUCHBASE_VERSION       := 4.1.0-5005
+COUCHBASE_VERSION       := 4.5.1-2844
 endif
 ifeq ($(strip $(CLUSTER_MANAGER_VERSION)),)
 CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always)
