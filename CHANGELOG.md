@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 17.06.0-beta2
+
+* VFS-3348 Update couchbase version to 4.5.1
+
+
 ### 3.0.0-rc16
 
 * VFS-3184 Add copy/remove tests.
