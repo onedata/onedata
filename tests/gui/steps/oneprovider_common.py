@@ -113,6 +113,7 @@ def _wait_for_op_session_to_start(selenium, browser_id_list):
 
     for browser_id in parse_seq(browser_id_list):
         driver = selenium[browser_id]
+        # TODO rm *4 when provider session starts becomes faster
         Wait(driver, WAIT_BACKEND*4).until(
             lambda _: _check_url(),
             message='waiting for session to start'

@@ -281,7 +281,7 @@ Feature: Onezone GUI elements
     And user of browser sees that provider popup for provider named "p1" has appeared on world map
     And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
     And user of browser sees that Oneprovider session has started
-    And user of browser is idle for 4 seconds
+    And user of browser is idle for 10 seconds
     And user of browser refreshes site
     Then user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space1"
 
