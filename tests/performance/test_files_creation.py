@@ -56,8 +56,6 @@ class TestFilesCreation(AbstractPerformanceTest):
                                  dir=client_proxy.absolute_path('s1'))
         dir_path_host = mkdtemp(client_proxy, dir=user_home_dir(user_proxy))
 
-        # import pdb; pdb.set_trace()
-
         test_result1 = execute_file_creation_test(client_directio, user_directio,
                                                   files_number, empty_files,
                                                   dir_path_directio, 'direct IO')
@@ -90,7 +88,7 @@ def execute_file_creation_test(client, user, files_number, empty_files,
         Result('[{}] {} files creation'.format(description, files_number),
                1,
                '{} files creation using oneclient with {} content'
-               ''.format(files_number, 'no' if empty_files else 'some'),
+               ''.format(files_number, ('no' if empty_files else 'some')),
                'boolean')
     ]
 
