@@ -1,4 +1,5 @@
 {
   "test_dd": ["env"],
-  "test_sysbench": ["env"]
+  "test_sysbench": ["env"],
+  "test_files_creation": ["env"]
 }
