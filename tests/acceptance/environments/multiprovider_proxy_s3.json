@@ -285,6 +285,22 @@
                         "supported_size": 1000000000
                     }
                 }
+            },
+            "s2": {
+                "displayed_name": "s2",
+                "users": [
+                    "u1",
+                    "u2"
+                ],
+                "groups": [
+                    "g1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "s3",
+                        "supported_size": 1000000000
+                    }
+                }
             }
         }
     }

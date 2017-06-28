@@ -90,5 +90,5 @@ Feature: Regular_file_stat
     Then u1 sees file2 in s1
     And u1 doesn't see file1 in s1
     And u1 waits 2 second
-    And status-change time of u1's s1/file2 is greater than modification time
-    And status-change time of u1's s1/file2 is greater than access time
+    And status-change time of u1's s1/file2 is equal to modification time
+    And status-change time of u1's s1/file2 is equal to access time

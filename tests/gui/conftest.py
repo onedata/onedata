@@ -36,7 +36,7 @@ WAIT_BACKEND = 15
 
 # waiting for backend to load after refresh
 WAIT_REFRESH = WAIT_BACKEND
-MAX_REFRESH_COUNT = 6
+MAX_REFRESH_COUNT = 8
 
 html.__tagspec__.update({x: 1 for x in ('video', 'source')})
 VIDEO_ATTRS = {'controls': '',

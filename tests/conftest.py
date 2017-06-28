@@ -33,7 +33,7 @@ def pytest_addoption(parser):
 def pytest_generate_tests(metafunc):
     if metafunc.config.option.test_type:
         test_type = metafunc.config.option.test_type
-        if test_type == 'gui':
+        if test_type == 'gui' and not metafunc.config.option.base_url:
             envs = get_json_files(map_test_type_to_env_dir(test_type),
                                   relative=True)
             metafunc.parametrize('env_description_file', envs, scope='module')

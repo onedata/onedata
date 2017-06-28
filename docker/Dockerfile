@@ -4,6 +4,7 @@ MAINTAINER Krzysztof Trzepla <krzysztof.trzepla@gmail.com>
 # Build arguments
 ARG RELEASE
 ARG OP_PANEL_VERSION
+ARG COUCHBASE_VERSION
 ARG CLUSTER_MANAGER_VERSION
 ARG OP_WORKER_VERSION
 ARG ONEPROVIDER_VERSION
@@ -18,8 +19,8 @@ RUN groupadd -g 110 onedata && \
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get -y install ca-certificates curl net-tools python python-setuptools \
-                       python-yaml traceroute vim && \
+    apt-get -y install ca-certificates curl locales net-tools \
+                       python python-setuptools python-yaml traceroute vim && \
     easy_install requests && \
     apt-get clean
 
@@ -36,6 +37,7 @@ RUN case ${RELEASE} in \
             ;; \
     esac && \
     sh oneprovider.sh op-panel=${OP_PANEL_VERSION}-1 && \
+    sh oneprovider.sh couchbase-server-community=${COUCHBASE_VERSION}-1 && \
     sh oneprovider.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1 && \
     sh oneprovider.sh op-worker=${OP_WORKER_VERSION}-1 && \
     sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1 && \

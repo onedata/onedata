@@ -8,6 +8,9 @@ DOCKER_REG_PASSWORD ?= ""
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
 endif
+ifeq ($(strip $(COUCHBASE_VERSION)),)
+COUCHBASE_VERSION       := 4.5.1-2844
+endif
 ifeq ($(strip $(CLUSTER_MANAGER_VERSION)),)
 CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always)
 endif
@@ -156,10 +159,10 @@ test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
 test_gui_firefox:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
 
 test_gui_chrome:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
 
 test_gui_acceptance_release_chrome:
 	./test_run_gui.py --env=getting_started -t tests/gui --test-type guiv -vvv --driver=Chrome -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=failed
@@ -214,6 +217,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
+	sed -i 's/{{couchbase_version}}/$(COUCHBASE_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider.spec
@@ -258,6 +262,7 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider/DEBIAN/control
+	sed -i 's/{{couchbase_version}}/$(COUCHBASE_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
@@ -301,6 +306,7 @@ docker:
                       --password $(DOCKER_REG_PASSWORD) \
                       --build-arg RELEASE=$(DOCKER_RELEASE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
+											--build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
                       --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
