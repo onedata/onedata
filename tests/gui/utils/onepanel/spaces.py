@@ -18,9 +18,9 @@ __license__ = "This software is released under the MIT license cited in " \
 class SpaceSupportAddForm(PageObject):
     selected_storage = Label('.ember-power-select-selected-item')
     storage_selector = WebItem('.ember-basic-dropdown', cls=StorageSelector)
-    token = Input('input.field-token')
-    size = Input('input.field-size')
-    units = WebItemsSequence('.field-sizeUnit label.clickable',
+    token = Input('input.field-main-token')
+    size = Input('input.field-main-size')
+    units = WebItemsSequence('.field-main-sizeUnit label.clickable',
                              cls=ButtonWithTextPageObject)
     support_space = NamedButton('button', text='Support space')
 

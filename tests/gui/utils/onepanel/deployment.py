@@ -18,8 +18,8 @@ class Step1(PageObject):
     """Used in both provider and zone panel"""
     hosts = WebItemsSequence('tr.cluster-host-table-row', cls=HostRecord)
     deploy = Button('button.btn-deploy-cluster')
-    zone_name = Input('input.field-name')
-    zone_domain_name = Input('input.field-domainName')
+    zone_name = Input('input.field-main-name')
+    zone_domain_name = Input('input.field-main-domainName')
 
     def __str__(self):
         return str(self.parent)
@@ -27,12 +27,11 @@ class Step1(PageObject):
 
 class Step2(PageObject):
     """Used only in provider panel"""
-    msg = Label('.content-row')
-    provider_name = Input('input.field-name')
-    oz_domain = Input('input.field-onezoneDomainName')
-    redirection_point = Input('input.field-redirectionPoint')
-    latitude = Input('input.field-geoLatitude')
-    longitude = Input('input.field-geoLongitude')
+    provider_name = Input('input.field-main-name')
+    oz_domain = Input('input.field-main-onezoneDomainName')
+    redirection_point = Input('input.field-main-redirectionPoint')
+    latitude = Input('input.field-main-geoLatitude')
+    longitude = Input('input.field-main-geoLongitude')
     register = NamedButton('button', text='Register')
 
     def __str__(self):
@@ -49,7 +48,6 @@ class Step3(StorageContentPage):
 
 class LastStep(PageObject):
     """Used in both provider and zone panel"""
-    msg = Label('.row.text-center')
     manage_the_cluster = NamedButton('button', text='Manage the cluster')
 
     def __str__(self):

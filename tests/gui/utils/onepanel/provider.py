@@ -11,25 +11,25 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class ProviderDescription(PageObject):
-    id = Label('.field-id')
-    urls = Label('.field-urls')
+    id = Label('.field-main-id')
+    urls = Label('.field-main-urls')
 
 
 class ProviderDetails(ProviderDescription):
-    provider_name = Label('.field-name')
-    redirection_point = Label('.field-redirectionPoint')
-    latitude = Label('.field-geoLatitude')
-    longitude = Label('.field-geoLongitude')
+    provider_name = Label('.field-main-name')
+    redirection_point = Label('.field-main-redirectionPoint')
+    latitude = Label('.field-main-geoLatitude')
+    longitude = Label('.field-main-geoLongitude')
 
     def __str__(self):
         return 'Provider details in {}'.format(self.parent)
 
 
-class ProviderForm(ProviderDescription):
-    provider_name = Input('input.field-name')
-    redirection_point = Input('input.field-redirectionPoint')
-    latitude = Input('input.field-geoLatitude')
-    longitude = Input('input.field-geoLongitude')
+class ModifyProviderDetailsForm(ProviderDescription):
+    provider_name = Input('input.field-main-name')
+    redirection_point = Input('input.field-main-redirectionPoint')
+    latitude = Input('input.field-main-geoLatitude')
+    longitude = Input('input.field-main-geoLongitude')
     modify_provider_details = NamedButton('button',
                                           text='Modify provider details')
 
@@ -39,7 +39,7 @@ class ProviderForm(ProviderDescription):
 
 class ProviderContentPage(PageObject):
     details = WebItem('.provider-registration-form', cls=ProviderDetails)
-    form = WebItem('.provider-registration-form', cls=ProviderForm)
+    form = WebItem('.provider-registration-form', cls=ModifyProviderDetailsForm)
     modify_provider_details = NamedButton('.btn-modify-provider',
                                           text='Modify provider details')
     cancel_modifying = NamedButton('.btn-modify-provider',

@@ -26,10 +26,10 @@ class StorageSelector(PageObject, ExpandableMixin):
 
 
 class POSIX(PageObject):
-    storage_name = Input('input.field-name')
-    mount_point = Input('input.field-mountPoint')
-    timeout = Input('input.field-timeout')
-    read_only = WebItem('.toggle-field-readonly', cls=Toggle)
+    storage_name = Input('input.field-generic-name')
+    mount_point = Input('input.field-posix-mountPoint')
+    timeout = Input('input.field-posix-timeout')
+    read_only = WebItem('.toggle-field-posix-readonly', cls=Toggle)
 
     def __str__(self):
         return 'POSIX {}'.format(self.parent)
@@ -46,7 +46,7 @@ class StorageAddForm(PageObject):
 
 
 class StorageRecord(PageObject, ExpandableMixin):
-    name = id = Label('.oneicon-provider + .one-label')
+    name = id = Label('.item-icon-container + .one-label')
     storage_type = Label('td.item-table-content-cell .content-row:first-child '
                          '.one-label')
     mount_point = Label('td.item-table-content-cell .content-row:nth-child(2) '
