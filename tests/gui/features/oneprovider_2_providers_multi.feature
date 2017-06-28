@@ -19,7 +19,7 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser1 sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser1 sees that item named "20B-0.txt" has appeared in file browser
 
-    And user of browser1 is idle for 40 seconds
+    And user of browser1 is idle for 90 seconds
     And user of browser1 refreshes site
     And user of browser1 sees file browser in data tab in Oneprovider page
     And user of browser1 clicks once on file named "20B-0.txt" of files list
@@ -49,7 +49,7 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
     And user of browser2 sees that chunk bar for provider named "p2" is entirely filled
 
-    And user of browser1 is idle for 40 seconds
+    And user of browser1 is idle for 90 seconds
     And user of browser1 refreshes site
     And user of browser1 sees file browser in data tab in Oneprovider page
     And user of browser1 clicks once on file named "20B-0.txt" of files list

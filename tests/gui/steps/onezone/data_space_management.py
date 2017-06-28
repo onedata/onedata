@@ -38,11 +38,11 @@ def expand_settings_dropdown_for_space_in_panel(selenium, browser_id,
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
-                 r'"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
+                 r'"(?P<option>LEAVE|RENAME|ADD STORAGE|SET AS HOME)" item in '
                  r'settings dropdown for space named "(?P<name>.+?)" '
                  r'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
 @then(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
-                 r'"(?P<option>LEAVE|RENAME|GET SUPPORT|SET AS HOME)" item in '
+                 r'"(?P<option>LEAVE|RENAME|ADD STORAGE|SET AS HOME)" item in '
                  r'settings dropdown for space named "(?P<name>.+?)" '
                  r'in expanded "DATA SPACE MANAGEMENT" Onezone panel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
@@ -54,17 +54,17 @@ def click_on_settings_option_for_space_in_panel(selenium, browser_id,
     action()
 
 
-@when(parsers.parse('user of {browser_id} clicks on "Get support" button in '
+@when(parsers.parse('user of {browser_id} clicks on "Add storage" button in '
                     'submenu for "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
-@then(parsers.parse('user of {browser_id} clicks on "Get support" button in '
+@then(parsers.parse('user of {browser_id} clicks on "Add storage" button in '
                     'submenu for "{name}" in expanded "DATA SPACE MANAGEMENT" '
                     'Onezone panel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_get_support_btn_for_space_in_oz_panel(selenium, browser_id,
                                                    name, oz_page):
     driver = selenium[browser_id]
-    oz_page(driver)['data space management'].spaces[name].get_support()
+    oz_page(driver)['data space management'].spaces[name].add_storage()
 
 
 @when(parsers.parse('user of {browser_id} sees that dropright with token for '

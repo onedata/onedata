@@ -185,14 +185,14 @@ Feature: Onezone GUI elements
     Then user of browser sees that providers counter for "space1" match number of displayed supporting providers in expanded submenu of given space in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
-  Scenario: User successfully receives support token for space (clicking on Get support button in space's submenu)
+  Scenario: User successfully receives support token for space (clicking on Add storage button in space's submenu)
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser expands submenu of space named "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser clicks on "Get support" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    Then user of browser sees that dropright with token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
-    And user of browser sees that dropright contains non-empty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser copy token from dropright for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Add storage" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that modal "Add storage" has appeared
+    And user of browser sees non-empty token in "Add storage" modal
+    And user of browser copies token from "Add storage" modal
     And user of browser sees an info notify with text matching to: .*copied.*
     And user of browser sees that copied token matches displayed one
 
@@ -201,10 +201,10 @@ Feature: Onezone GUI elements
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser expands settings dropdown for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser clicks on the "GET SUPPORT" item in settings dropdown for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    Then user of browser sees that dropright with token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
-    And user of browser sees that dropright contains non-empty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser copy token from dropright for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on the "ADD STORAGE" item in settings dropdown for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    Then user of browser sees that modal "Add storage" has appeared
+    And user of browser sees non-empty token in "Add storage" modal
+    And user of browser copies token from "Add storage" modal
     And user of browser sees an info notify with text matching to: .*copied.*
     And user of browser sees that copied token matches displayed one
 
@@ -213,11 +213,15 @@ Feature: Onezone GUI elements
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser expands submenu of space named "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser clicks on "Get support" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser sees that dropright contains non-empty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser copy token from dropright for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser clicks on "Get support" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser sees that dropright contains non-empty token for space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "Add storage" button in submenu for "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+
+    And user of browser sees that modal "Add storage" has appeared
+    And user of browser sees non-empty token in "Add storage" modal
+    And user of browser copies token from "Add storage" modal
+    And user of browser sees an info notify with text matching to: .*copied.*
+
+    And user of browser generate another token in "Add storage" modal
+    And user of browser sees non-empty token in "Add storage" modal
     Then user of browser sees that copied token does not match displayed one
 
 
@@ -277,7 +281,7 @@ Feature: Onezone GUI elements
     And user of browser sees that provider popup for provider named "p1" has appeared on world map
     And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
     And user of browser sees that Oneprovider session has started
-    And user of browser is idle for 4 seconds
+    And user of browser is idle for 10 seconds
     And user of browser refreshes site
     Then user of browser sees that displayed directory tree in sidebar panel belongs to home space named "space1"
 

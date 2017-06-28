@@ -25,6 +25,46 @@ in_type_to_id = {'username': 'login-form-username-input',
                  'password': 'login-form-password-input'}
 
 
+@when(parsers.parse('user of {browser_id} sees that '
+                    'modal "Add storage" has appeared'))
+@then(parsers.parse('user of {browser_id} sees that '
+                    'modal "Add storage" has appeared'))
+def wait_for_add_storage_modal_to_appear(selenium, browser_id, tmp_memory,
+                                         modals):
+    driver = selenium[browser_id]
+    modal = modals(driver).add_storage
+    tmp_memory[browser_id]['window']['modal'] = modal
+
+
+@when(parsers.parse('user of {browser_id} copies token from '
+                    '"Add storage" modal'))
+@then(parsers.parse('user of {browser_id} copies token from '
+                    '"Add storage" modal'))
+def cp_token_from_add_storage_modal(browser_id, tmp_memory):
+    modal = tmp_memory[browser_id]['window']['modal']
+    modal.copy()
+
+
+@when(parsers.parse('user of {browser_id} generate another token '
+                    'in "Add storage" modal'))
+@then(parsers.parse('user of {browser_id} generate another token '
+                    'in "Add storage" modal'))
+def gen_another_token_in_add_storage_modal(browser_id, tmp_memory):
+    modal = tmp_memory[browser_id]['window']['modal']
+    modal.generate_another_token()
+
+
+@when(parsers.parse('user of {browser_id} sees non-empty token '
+                    'in "Add storage" modal'))
+@then(parsers.parse('user of {browser_id} sees non-empty token '
+                    'in "Add storage" modal'))
+def assert_non_empty_token_in_add_storage_modal(browser_id, tmp_memory):
+    token = tmp_memory[browser_id]['window']['modal'].token
+    assert len(token) > 0, 'expected token in Add storage modal, ' \
+                           'but token field is empty'
+    tmp_memory[browser_id]['token'] = token
+
+
 def _find_modal(driver, modal_name):
     def _find():
         for name, modal in zip(modals[1::2], modals[::2]):
