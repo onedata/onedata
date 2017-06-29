@@ -48,7 +48,7 @@ GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgr
 ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
 export ONEDATA_GIT_URL
 
-.PHONY: docker package.tar.gz
+.PHONY: docker docker-dev package.tar.gz
 
 all: build
 
@@ -294,15 +294,29 @@ package.tar.gz:
 ## Docker artifact
 ##
 
-docker:
+docker: docker-dev
 	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
                       --build-arg RELEASE=$(DOCKER_RELEASE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
-											--build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
+                      --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
                       --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
                       --name oneprovider \
                       --publish --remove docker
+
+docker-dev:
+	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
+                      --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
+                      --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
+                      --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
+                      --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
+                      --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
+                      --build-arg ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
+                      --report docker-dev-build-report.txt \
+                      --short-report docker-dev-build-list.json \
+                      --name oneprovider-dev \
+                      --publish --remove docker-dev
