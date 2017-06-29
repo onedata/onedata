@@ -40,12 +40,22 @@ def users(host, config, admin_credentials, hosts):
         except AttributeError:
             options = {}
 
-        users_info[user] = _create_user(admin_client, user, options,
-                                        hosts['onezone'][host])
+        try:
+            user_info = _create_user(admin_client, user, options,
+                                     hosts['onezone'][host])
+        except Exception as ex:
+            _rm_users(admin_client, users_info, zone_host)
+            raise ex
+        else:
+            users_info[user] = user_info
 
     yield users_info
 
     # after test is done, remove created users
+    _rm_users(admin_client, users_info, zone_host)
+
+
+def _rm_users(admin_client, users_info, zone_host):
     for user in users_info.values():
         zone_client = get_oz_user_api(user.username, user.password,
                                       zone_host)

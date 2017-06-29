@@ -45,6 +45,12 @@ def groups_creation(config, service, admin_credentials,
                         - group_remove_user
                 - user3
     """
+    _groups_creation(config, service, admin_credentials,
+                     users, hosts, groups)
+
+
+def _groups_creation(config, service, admin_credentials,
+                     users, hosts, groups):
     zone_host = hosts['onezone'][service]
     admin_client = get_oz_group_api(admin_credentials.username,
                                     admin_credentials.password,

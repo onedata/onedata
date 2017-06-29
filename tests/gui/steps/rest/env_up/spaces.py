@@ -7,6 +7,9 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import yaml
+from functools import partial
+
+import requests
 
 from tests.gui.utils.onezone_client import (SpaceCreateRequest,
                                             SpacePrivileges,
@@ -16,6 +19,7 @@ from tests.gui.utils.onepanel_client import SpaceSupportRequest
 from pytest_bdd import given, parsers
 
 from ..common import get_oz_user_api, get_oz_space_api, get_op_panel_api
+from ..exceptions import checked_call
 
 
 @given(parsers.parse('initial spaces configuration in "{host}" '
@@ -52,13 +56,13 @@ def spaces_creation(config, host, admin_credentials, hosts,
                 defaults:
                     provider: provider_name         --> default provider on whose storage
                                                         files will be created
-                    [random file prefix]: prefix
                 directory tree:
-                    - dir0
+                    - dir0                  ---> name starting with 'dir' prefix
+                                                 is treated as directory
                     - dir2:
                         - file0: text
                         - file1:
-                            provider: p2
+                            provider: p2    ---> mandatory if dict form is used
                             content: text
                         - file2
 
@@ -92,6 +96,13 @@ def spaces_creation(config, host, admin_credentials, hosts,
                             provider: 2
                             content: 22222
     """
+    _spaces_creation(config, host, admin_credentials, hosts,
+                     users, groups, storages, spaces)
+
+
+def _spaces_creation(config, host, admin_credentials, hosts,
+                     users, groups, storages, spaces):
+
     host = hosts['onezone'][host]
     admin_client = get_oz_space_api(admin_credentials.username,
                                     admin_credentials.password, host)
@@ -111,6 +122,8 @@ def spaces_creation(config, host, admin_credentials, hosts,
                              description.get('groups', {}))
         _get_support(admin_credentials, user_client, space_id, storages,
                      hosts, description.get('providers', {}))
+        _init_storage(owner, space_name, hosts['oneprovider'],
+                      description.get('storage', {}))
 
 
 def _create_space(owner, space_name, oz_host):
@@ -182,3 +195,63 @@ def _get_storage_id_with_given_name(storage_name, rest_client):
         storage = rest_client.get_storage_details(storage_id)
         if storage.name == storage_name:
             return storage.id
+
+
+def _init_storage(owner, space_name, hosts, storage_conf):
+    if not storage_conf:
+        return
+
+    auth = (owner.username, owner.password)
+    defaults = storage_conf['defaults']
+    provider_ip = hosts[defaults['provider']]
+    default_url = 'https://{}:8443/cdmi/'.format(provider_ip)
+    register_fun = partial(register_user_in_provider, user=owner)
+    register_fun(provider_ip=provider_ip)
+    _mkdirs(lambda path, data=None,
+                   url=default_url: checked_call(requests.put, url + path,
+                                                 auth=auth, data=data,
+                                                 verify=False),
+            space_name, register_fun, hosts, storage_conf['directory tree'])
+
+
+def _mkdirs(http_put, cwd, register_user_fun, hosts, dir_content=None):
+    if not dir_content:
+        return
+
+    for item in dir_content:
+        try:
+            [(name, content)] = item.items()
+        except AttributeError:
+            name = item
+            content = None
+
+        path = cwd + '/' + name
+        if name.startswith('dir'):
+            http_put(path + '/')
+            _mkdirs(http_put, path, register_user_fun, hosts, content)
+        else:
+            _mkfile(http_put, path, register_user_fun, hosts, content)
+
+
+def _mkfile(http_put, file_path, register_user_fun, hosts,
+            file_content=None):
+    if file_content:
+        try:
+            provider = file_content['provider']
+        except TypeError:
+            http_put(file_path, str(file_content))
+        else:
+            content = file_content.get('content', None)
+            provider_ip = hosts[provider]
+            url = 'https://{}:8443/cdmi/'.format(provider_ip)
+            register_user_fun(provider_ip=provider_ip)
+            http_put(file_path, content, url)
+    else:
+        http_put(file_path)
+
+
+def register_user_in_provider(user, provider_ip):
+    """Make call to provider service in order to create user in it."""
+    auth = (user.username, user.password)
+    url = 'https://{}:8443/api/v3/oneprovider/spaces'.format(provider_ip)
+    checked_call(requests.get, url, auth=auth, verify=False)

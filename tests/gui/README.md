@@ -67,6 +67,8 @@ Required Python packages to install (e.g. using ``pip install``):
 * git+git://github.com/bwalkowi/pytest-selenium-multi@orig-master
 * git+https://github.com/bwalkowi/pytest-xvfb-recorder.git
 * decorator
+* certifi
+* urllib3
 
 A browser selected for tests (with ``--driver``) should be also installed.
 
