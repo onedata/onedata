@@ -6,6 +6,8 @@ __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import re
+
 from pytest import fail
 
 from tests.utils.docker_utils import run_cmd
@@ -80,9 +82,11 @@ class TestFilesCreation(AbstractPerformanceTest):
 def execute_file_creation_test(client, user, files_number, empty_files,
                                dir_path, description):
     cmd = prepare_command(files_number, empty_files, dir_path)
-    result = run_cmd(user, client, [cmd])
-    if result == 1:
-        fail()
+    result = run_cmd(user, client, [cmd], output=True)
+
+    failed = re.search(r'(?P<reason>.*?failed with code \d+)\n', result)
+    if failed:
+        fail(failed.group('reason'))
 
     return [
         Result('[{}] {} files creation'.format(description, files_number),
@@ -93,17 +97,17 @@ def execute_file_creation_test(client, user, files_number, empty_files,
     ]
 
 
-def prepare_command(file_number, empty_files, dir_path):
-    task, check = (('touch file_$i.txt', '')
-                   if empty_files
-                   else ('echo "asd" > file_$i.txt',
-                         '&& (`cat file_$i.txt` == asd)'))
-    return ('cd {dir} && '
-            'for i in {{1..{range}}}; do {creation_task}; done && '
-            'for i in {{1..{range}}}; do if [[ -f file_$i.txt {content_check} ]]; '
-            'then continue; else false && break; fi; done').format(
-            dir=dir_path,
-            range=file_number,
-            creation_task=task,
-            content_check=check
+def prepare_command(files_num, empty_files, dir_path):
+    method = ('touch file_$i.txt'
+              if empty_files
+              else 'echo "asd" > file_$i.txt')
+    return (
+        'cd {dir} && '
+        'for i in {{1..{range}}}; do {creation_method}; '
+        'let a=$?; '
+        'if [[ $a != 0 ]]; '
+        'then printf "\n{creation_method} failed with code %d\n" $i $a && '
+        'break; fi; done'.format(dir=dir_path,
+                                 range=files_num,
+                                 creation_method=method)
     )
