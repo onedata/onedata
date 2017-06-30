@@ -58,7 +58,7 @@ Feature: Space utilities using onepanel
 
     # unsupport space
     And user of browser1 clicks on Spaces item in submenu of "p1" item in CLUSTERS sidebar in Onepanel
-    And user of browser1 clicks on revoke support icon for "helloworld" space support item in Spaces page in Onepanel
+    And user of browser1 clicks on revoke support icon for "helloworld" space record in Spaces page in Onepanel
     And user of browser1 clicks on Yes, revoke button in Revoke space support popup
     And user of browser1 sees an info notify with text matching to: .*[Ss]upport.*revoked.*
 
