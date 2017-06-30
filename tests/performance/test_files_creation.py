@@ -6,17 +6,18 @@ __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import re
+import time
+import os.path
+from functools import partial
 
-from pytest import fail
-
-from tests.utils.docker_utils import run_cmd
 from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import (Result, generate_configs, performance)
-from tests.utils.client_utils import user_home_dir, rm, mkdtemp
+from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 
 REPEATS = 1
 SUCCESS_RATE = 100
+
+TEXT = "asd"
 
 
 class TestFilesCreation(AbstractPerformanceTest):
@@ -58,17 +59,25 @@ class TestFilesCreation(AbstractPerformanceTest):
                                  dir=client_proxy.absolute_path('s1'))
         dir_path_host = mkdtemp(client_proxy, dir=user_home_dir(user_proxy))
 
-        test_result1 = execute_file_creation_test(client_directio, user_directio,
-                                                  files_number, empty_files,
-                                                  dir_path_directio, 'direct IO')
+        test_result1 = execute_file_creation_test(client_directio, files_number,
+                                                  empty_files, dir_path_directio,
+                                                  'direct IO')
+        test_result2 = execute_file_creation_test(client_proxy, files_number,
+                                                  empty_files, dir_path_proxy,
+                                                  'cluster-proxy')
+        test_result3 = execute_file_creation_test(client_proxy, files_number,
+                                                  empty_files, dir_path_host,
+                                                  'host system')
 
-        test_result2 = execute_file_creation_test(client_proxy, user_proxy,
-                                                  files_number, empty_files,
-                                                  dir_path_proxy, 'cluster-proxy')
-
-        test_result3 = execute_file_creation_test(client_proxy, user_proxy,
-                                                  files_number, empty_files,
-                                                  dir_path_host, 'host system')
+        # removal of entire directory tree can takes several minutes so as to
+        # evade connection timeout while removing everything at once,
+        # rm files one at time instead
+        teardown_after_file_creation_test(client_directio, files_number,
+                                          dir_path_directio)
+        teardown_after_file_creation_test(client_proxy, files_number,
+                                          dir_path_proxy)
+        teardown_after_file_creation_test(client_proxy, files_number,
+                                          dir_path_host)
 
         rm(client_directio, dir_path_directio, recursive=True, force=True)
         rm(client_proxy, dir_path_proxy, recursive=True, force=True)
@@ -79,35 +88,26 @@ class TestFilesCreation(AbstractPerformanceTest):
 ################################################################################
 
 
-def execute_file_creation_test(client, user, files_number, empty_files,
+def execute_file_creation_test(client, files_number, empty_files,
                                dir_path, description):
-    cmd = prepare_command(files_number, empty_files, dir_path)
-    result = run_cmd(user, client, [cmd], output=True)
+    start = time.time()
 
-    failed = re.search(r'(?P<reason>.*?failed with code \d+)\n', result)
-    if failed:
-        fail(failed.group('reason'))
+    fun = partial(truncate, size=0) if empty_files else partial(write,
+                                                                text=TEXT)
+    for i in xrange(files_number):
+        fun(client, file_path=os.path.join(dir_path, 'file{}'.format(i)))
+
+    end = time.time()
 
     return [
         Result('[{}] {} files creation'.format(description, files_number),
-               1,
-               '{} files creation using oneclient with {} content'
+               end - start,
+               '{} files creation time using oneclient with {} content'
                ''.format(files_number, ('no' if empty_files else 'some')),
-               'boolean')
+               'seconds')
     ]
 
 
-def prepare_command(files_num, empty_files, dir_path):
-    method = ('touch file_$i.txt'
-              if empty_files
-              else 'echo "asd" > file_$i.txt')
-    return (
-        'cd {dir} && '
-        'for i in {{1..{range}}}; do {creation_method}; '
-        'let a=$?; '
-        'if [[ $a != 0 ]]; '
-        'then printf "\n{creation_method} failed with code %d\n" $i $a && '
-        'break; fi; done'.format(dir=dir_path,
-                                 range=files_num,
-                                 creation_method=method)
-    )
+def teardown_after_file_creation_test(client, files_number, dir_path):
+    for i in xrange(files_number):
+        rm(client, os.path.join(dir_path, 'file{}'.format(i)))
