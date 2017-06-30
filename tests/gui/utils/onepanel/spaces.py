@@ -49,7 +49,7 @@ class SpaceSupportAddForm(PageObject):
         return 'support space form in {}'.format(self.parent)
 
 
-class SpaceSupportRecord(PageObject, ExpandableMixin):
+class SpaceRecord(PageObject, ExpandableMixin):
     name = id = Label('.item-icon-container + .one-label')
     Name = Label('td.item-table-content-cell .content-row:first-child '
                  '.one-label')
@@ -100,7 +100,7 @@ class SpaceSupportRecord(PageObject, ExpandableMixin):
 
 class SpacesContentPage(PageObject):
     spaces = WebItemsSequence('ul.one-collapsible-list li',
-                              cls=SpaceSupportRecord)
+                              cls=SpaceRecord)
     support_space = NamedButton('.btn-support-space', text='Support space')
     cancel_supporting_space = NamedButton('.btn-support-space',
                                           text='Cancel supporting space')

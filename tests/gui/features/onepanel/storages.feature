@@ -39,12 +39,10 @@ Feature: Storage utilities using onepanel
     # receive support token
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 expands settings dropdown for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser2 clicks on the "GET SUPPORT" item in settings dropdown for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 sees that dropright with token for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
-    And user of browser2 sees that dropright contains non-empty token for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 copy token from dropright for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 sees an info notify with text matching to: .*copied.*
-    And user of browser2 sees that copied token matches displayed one
+    And user of browser2 clicks on the "ADD STORAGE" item in settings dropdown for space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that modal "Add storage" has appeared
+    And user of browser2 sees non-empty token in "Add storage" modal
+    And user of browser2 copies token from "Add storage" modal
     And user of browser2 sends copied token to user of browser1
 
     # support space
@@ -59,6 +57,7 @@ Feature: Storage utilities using onepanel
     And user of browser1 sees that space support record for "hello_world2" has appeared in Spaces page in Onepanel
 
     # confirm support of space
+    And user of browser2 is idle for 10 seconds
     And user of browser2 refreshes site
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 expands submenu of space named "hello_world2" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel

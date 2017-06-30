@@ -72,12 +72,10 @@ Feature: Provider details in onepanel
     # receive support token
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 expands settings dropdown for space named "tmp_space" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser2 clicks on the "GET SUPPORT" item in settings dropdown for space named "tmp_space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 sees that dropright with token for space named "tmp_space" in expanded "DATA SPACE MANAGEMENT" Onezone panel has appeared
-    And user of browser2 sees that dropright contains non-empty token for space named "tmp_space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 copy token from dropright for space named "tmp_space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 sees an info notify with text matching to: .*copied.*
-    And user of browser2 sees that copied token matches displayed one
+    And user of browser2 clicks on the "ADD STORAGE" item in settings dropdown for space named "tmp_space" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser2 sees that modal "Add storage" has appeared
+    And user of browser2 sees non-empty token in "Add storage" modal
+    And user of browser2 copies token from "Add storage" modal
     And user of browser2 sends copied token to user of browser1
 
     # support space

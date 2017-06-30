@@ -16,8 +16,8 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-PROVIDER_CONTAINER_NAME = 'node1.oneprovider.1498038518.dev'
-MOUNT_POINT = '/mnt/st1/'
+PROVIDER_CONTAINER_NAME = 'oneprovider-1'
+MOUNT_POINT = '/volumes/storage'
 
 
 def _docker_cp(tmpdir, browser_id, src_path, dst_path=None):

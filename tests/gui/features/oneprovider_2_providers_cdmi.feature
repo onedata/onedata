@@ -21,7 +21,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser sees that item named "20B-0.txt" has appeared in file browser
 
-    And user of browser is idle for 30 seconds
+    And user of browser is idle for 90 seconds
     And user of browser refreshes site
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser clicks once on file named "20B-0.txt" of files list
@@ -33,7 +33,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees that the modal has disappeared
 
     And user of browser writes "ABCD" to "/space4/20B-0.txt" starting at offset 20 in "p2" provider using cdmi api
-    And user of browser is idle for 30 seconds
+    And user of browser is idle for 90 seconds
     And user of browser refreshes site
     And user of browser sees file browser in data tab in Oneprovider page
 
@@ -77,7 +77,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees that the modal has disappeared
 
     And user of browser writes "ABCD" to "/space1/20B-0.txt" starting at offset 20 in "p1" provider using cdmi api
-    And user of browser is idle for 30 seconds
+    And user of browser is idle for 90 seconds
     And user of browser refreshes site
     And user of browser sees file browser in data tab in Oneprovider page
 
@@ -111,7 +111,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees an info notify with text matching to: .*[Cc]ompleted upload.*1.*
     And user of browser sees that item named "20B-0.txt" has appeared in file browser
 
-    And user of browser is idle for 30 seconds
+    And user of browser is idle for 90 seconds
     And user of browser refreshes site
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser clicks once on file named "20B-0.txt" of files list
@@ -123,7 +123,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees that the modal has disappeared
 
     And user of browser reads from "/space4/20B-0.txt" in range 10 to 20 in "p2" provider using cdmi api
-    And user of browser is idle for 30 seconds
+    And user of browser is idle for 90 seconds
     And user of browser refreshes site
     And user of browser sees file browser in data tab in Oneprovider page
 
@@ -165,7 +165,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees that the modal has disappeared
 
     And user of browser writes "ABCD" to "/space1/20B-0.txt" starting at offset 40 in "p1" provider using cdmi api
-    And user of browser is idle for 30 seconds
+    And user of browser is idle for 90 seconds
     And user of browser refreshes site
     And user of browser sees file browser in data tab in Oneprovider page
 
@@ -199,7 +199,7 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees that item named "20B-0.txt" has appeared in file browser
 
     And user of browser writes "ABCD" to "/space1/20B-0.txt" starting at offset 20 in "p1" provider using cdmi api
-    And user of browser is idle for 30 seconds
+    And user of browser is idle for 90 seconds
     And user of browser refreshes site
     And user of browser sees file browser in data tab in Oneprovider page
 
