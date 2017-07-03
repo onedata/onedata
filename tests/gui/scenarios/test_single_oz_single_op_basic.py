@@ -34,8 +34,9 @@ from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 
 from tests.gui.steps.rest.cdmi import *
-from tests.gui.steps.rest.users import *
-from tests.gui.steps.rest.spaces import *
+from tests.gui.steps.rest.env_up.users import *
+from tests.gui.steps.rest.env_up.groups import *
+from tests.gui.steps.rest.env_up.spaces import *
 from tests.gui.steps.rest.access_tokens import *
 
 
@@ -65,13 +66,13 @@ for arg in sys.argv:
 SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environment)'
 
 
-@pytest.mark.skipif(USING_BASE_URL, reason=SKIP_REASON_BASE_URL)
-@scenario('../features/onezone/providers.feature',
-          'User sees that when no provider is working appropriate msg is shown')
-def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
-    pass
-
-
+# @pytest.mark.skipif(USING_BASE_URL, reason=SKIP_REASON_BASE_URL)
+# @scenario('../features/onezone/providers.feature',
+#           'User sees that when no provider is working appropriate msg is shown')
+# def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
+#     pass
+#
+#
 # # --- FEATURES: all non-destructive (does not change state) ---
 scenarios('../features/onezone/access_tokens.feature')
 scenarios('../features/onezone/login.feature')

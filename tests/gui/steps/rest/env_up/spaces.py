@@ -6,8 +6,8 @@ __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import time
 import yaml
-from functools import partial
 
 import requests
 
@@ -19,7 +19,7 @@ from tests.gui.utils.onepanel_client import SpaceSupportRequest
 from pytest_bdd import given, parsers
 
 from ..common import get_oz_user_api, get_oz_space_api, get_op_panel_api
-from ..exceptions import checked_call
+from ..exceptions import checked_call, HTTPNotFound
 
 
 @given(parsers.parse('initial spaces configuration in "{host}" '
@@ -201,20 +201,31 @@ def _init_storage(owner, space_name, hosts, storage_conf):
     if not storage_conf:
         return
 
-    auth = (owner.username, owner.password)
     defaults = storage_conf['defaults']
     provider_ip = hosts[defaults['provider']]
-    default_url = 'https://{}:8443/cdmi/'.format(provider_ip)
-    register_fun = partial(register_user_in_provider, user=owner)
-    register_fun(provider_ip=provider_ip)
-    _mkdirs(lambda path, data=None,
-                   url=default_url: checked_call(requests.put, url + path,
-                                                 auth=auth, data=data,
-                                                 verify=False),
-            space_name, register_fun, hosts, storage_conf['directory tree'])
+
+    def create_cdmi_object(path, data=None, repeats=10,
+                           auth=(owner.username, owner.password),
+                           url='https://{}:8443/cdmi/'.format(provider_ip)):
+        result = None
+        for _ in xrange(repeats):
+            try:
+                result = checked_call(requests.put, url + path, auth=auth,
+                                      data=data, verify=False)
+            except HTTPNotFound:
+                # because user may not yet exist in provider first call will fail
+                # as such wait some time and try again
+                time.sleep(1)
+            else:
+                break
+
+        return result
+
+    _mkdirs(create_cdmi_object, space_name, hosts,
+            storage_conf['directory tree'])
 
 
-def _mkdirs(http_put, cwd, register_user_fun, hosts, dir_content=None):
+def _mkdirs(http_put, cwd, hosts, dir_content=None):
     if not dir_content:
         return
 
@@ -228,30 +239,19 @@ def _mkdirs(http_put, cwd, register_user_fun, hosts, dir_content=None):
         path = cwd + '/' + name
         if name.startswith('dir'):
             http_put(path + '/')
-            _mkdirs(http_put, path, register_user_fun, hosts, content)
+            _mkdirs(http_put, path, hosts, content)
         else:
-            _mkfile(http_put, path, register_user_fun, hosts, content)
+            _mkfile(http_put, path, hosts, content)
 
 
-def _mkfile(http_put, file_path, register_user_fun, hosts,
-            file_content=None):
+def _mkfile(http_put, file_path, hosts, file_content=None):
     if file_content:
         try:
             provider = file_content['provider']
         except TypeError:
             http_put(file_path, str(file_content))
         else:
-            content = file_content.get('content', None)
-            provider_ip = hosts[provider]
-            url = 'https://{}:8443/cdmi/'.format(provider_ip)
-            register_user_fun(provider_ip=provider_ip)
-            http_put(file_path, content, url)
+            http_put(file_path, data=file_content.get('content', None),
+                     url='https://{}:8443/cdmi/'.format(hosts[provider]))
     else:
         http_put(file_path)
-
-
-def register_user_in_provider(user, provider_ip):
-    """Make call to provider service in order to create user in it."""
-    auth = (user.username, user.password)
-    url = 'https://{}:8443/api/v3/oneprovider/spaces'.format(provider_ip)
-    checked_call(requests.get, url, auth=auth, verify=False)
