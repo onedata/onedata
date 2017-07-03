@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 17.06.0-beta4
+
+* VFS-3347 Add docker-dev build
+
+
 ### 17.06.0-beta3
 
 * VFS-3353 Enable user name/email set in ``update_refs.sh``
