@@ -6,6 +6,7 @@ import re
 import sys
 from itertools import chain
 import subprocess as sp
+from collections import defaultdict
 
 from py.xml import html
 from pytest import fixture, UsageError, skip
@@ -78,6 +79,11 @@ def pytest_selenium_capture_debug(item, report, extra):
                      'type': 'video/mp4'}
         video_html = str(html.video(html.source(**src_attrs), **VIDEO_ATTRS))
         extra.append(pytest_html.extras.html(video_html))
+
+
+@fixture(scope='session')
+def has_logged_to_op(request):
+    return defaultdict(bool)
 
 
 @fixture(scope='session')
