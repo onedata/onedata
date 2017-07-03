@@ -4,6 +4,13 @@
 CHANGELOG
 ---------
 
+### 17.06.0-beta3
+
+* VFS-3353 Enable user name/email set in ``update_refs.sh``
+* VFS-3340 GUI acceptance tests update: changed timeouts, get support modal tests
+* Releasing new version 17.06.0-beta3
+
+
 ### 17.06.0-beta2
 
 * VFS-3348 Update couchbase version to 4.5.1
