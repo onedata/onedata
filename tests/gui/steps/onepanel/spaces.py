@@ -32,6 +32,20 @@ def wt_select_storage_in_support_space_form(selenium, browser_id,
     _select_option_from_selector(selector, storage)
 
 
+@when(parsers.parse('user of {browser_id} clicks on Support space button '
+                    'in spaces page in Onepanel if there are some spaces '
+                    'already supported'))
+@then(parsers.parse('user of {browser_id} clicks on Support space button '
+                    'in spaces page in Onepanel if there are some spaces '
+                    'already supported'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_click_on_support_space_btn_on_condition(selenium, browser_id, onepanel):
+    driver = selenium[browser_id]
+    page = onepanel(driver).content.spaces
+    if page.spaces.count() > 0:
+        page.support_space()
+
+
 @when(parsers.re('user of (?P<browser_id>.+?) selects (?P<btn>MB|GB|TB) radio '
                  'button in support space form in Onepanel'))
 @then(parsers.re('user of (?P<browser_id>.+?) selects (?P<btn>MB|GB|TB) radio '
