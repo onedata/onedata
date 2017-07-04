@@ -12,6 +12,20 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+@when(parsers.parse('user of {browser_id} clicks on Support space button '
+                    'in spaces page in Onepanel if there are some spaces '
+                    'already supported'))
+@then(parsers.parse('user of {browser_id} clicks on Support space button '
+                    'in spaces page in Onepanel if there are some spaces '
+                    'already supported'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_click_on_support_space_btn_on_condition(selenium, browser_id, onepanel):
+    driver = selenium[browser_id]
+    page = onepanel(driver).content.spaces
+    if page.spaces.count() > 0:
+        page.support_space()
+
+
 @when(parsers.parse('user of {browser_id} selects "{storage}" from storage '
                     'selector in support space form in Onepanel'))
 @then(parsers.parse('user of {browser_id} selects "{storage}" from storage '

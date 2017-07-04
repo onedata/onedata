@@ -149,6 +149,12 @@ def onepanel():
 
 
 @fixture(scope='session')
+def oz_login_page():
+    from tests.gui.utils.common.oz_login import OnezoneLoginPage
+    return OnezoneLoginPage
+
+
+@fixture(scope='session')
 def login_page():
     from tests.gui.utils.common.login import LoginPage
     return LoginPage
@@ -332,6 +338,7 @@ if not is_base_url_provided:
 def pytest_collection_modifyitems(items):
     first = []
     last = []
+    last2 = []
     rest = []
     run_first = ('test_cluster_deployment',
                  'test_user_can_unsupport_space',
@@ -339,8 +346,9 @@ def pytest_collection_modifyitems(items):
                  )
     run_last = ('test_user_sees_that_when_no_provider_is_working_'
                 'appropriate_msg_is_shown',
-                'test_revoke_space_support',
-                'test_user_deregisters_provider')
+                'test_revoke_space_support')
+
+    run_last2 = ('test_user_deregisters_provider',)
 
     for item in items:
         for test in run_first:
@@ -353,8 +361,14 @@ def pytest_collection_modifyitems(items):
                     last.append(item)
                     break
             else:
-                rest.append(item)
+                for test in run_last2:
+                    if test in item.nodeid:
+                        last2.append(item)
+                        break
+                else:
+                    rest.append(item)
 
     first.extend(rest)
     first.extend(last)
+    first.extend(last2)
     items[:] = first
