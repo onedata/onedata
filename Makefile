@@ -158,6 +158,18 @@ test:
 test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
+test_performance_rest:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k "not files_creation and not sysbench"
+
+test_performance_sysbench:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k sysbench
+
+test_performance_files_creation:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k test_files_creation
+
+test_performance_concurrent_files_creation:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k concurrent_files_creation
+
 test_gui_firefox:
 	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
 

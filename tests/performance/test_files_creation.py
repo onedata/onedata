@@ -1,4 +1,5 @@
-"""This module contains creating 10000 files performance tests of oneclient.
+"""This module contains performance tests of oneclient,
+testing creation of 10000 files.
 """
 
 __author__ = "Bartek Walkowicz"
@@ -17,6 +18,7 @@ from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 REPEATS = 1
 SUCCESS_RATE = 100
 
+# value written to files at their creation
 TEXT = "asd"
 
 
@@ -32,7 +34,8 @@ class TestFilesCreation(AbstractPerformanceTest):
                     'unit': 'int'
                 },
                 'empty_files': {
-                    'description': 'if true files will be created with no content',
+                    'description': 'if true, files will be '
+                                   'created with no content',
                     'unit': 'boolean'
                 }
             },
@@ -69,7 +72,7 @@ class TestFilesCreation(AbstractPerformanceTest):
                                                   empty_files, dir_path_host,
                                                   'host system')
 
-        # removal of entire directory tree can takes several minutes so as to
+        # removal of entire directory tree can take several minutes, so as to
         # evade connection timeout while removing everything at once,
         # rm files one at time instead
         teardown_after_file_creation_test(client_directio, files_number,
