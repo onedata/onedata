@@ -82,11 +82,6 @@ def pytest_selenium_capture_debug(item, report, extra):
 
 
 @fixture(scope='session')
-def has_logged_to_op(request):
-    return defaultdict(bool)
-
-
-@fixture(scope='session')
 def driver_type(request):
     return request.config.getoption('--driver')
 

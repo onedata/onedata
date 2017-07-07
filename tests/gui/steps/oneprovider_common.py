@@ -104,8 +104,7 @@ def op_check_if_row_of_name_appeared_in_table(selenium, browser_id,
     )
 
 
-def _wait_for_op_session_to_start(selenium, browser_id_list,
-                                  has_logged_to_op):
+def _wait_for_op_session_to_start(selenium, browser_id_list):
     def _check_url():
         try:
             found = parse_url(driver.current_url).group('access')
@@ -118,14 +117,9 @@ def _wait_for_op_session_to_start(selenium, browser_id_list,
         driver = selenium[browser_id]
 
         # because of current subscription it is necessary
-        # to wait first time user logs to op
-        # if not has_logged_to_op[browser_id]:
-        time.sleep(15)
+        # to wait under certain circumstances for things to properly work
+        time.sleep(12)
         driver.get(parse_url(driver.current_url).group('base_url'))
-        time.sleep(4)
-        # if 'login' in driver.current_url:
-        #     import pdb; pdb.set_trace()
-        # has_logged_to_op[browser_id] = True
 
         # TODO rm *4 when provider session starts becomes faster
         Wait(driver, WAIT_BACKEND*4).until(
@@ -136,20 +130,16 @@ def _wait_for_op_session_to_start(selenium, browser_id_list,
 
 @given(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
                   'Oneprovider session has started'))
-def g_wait_for_op_session_to_start(selenium, browser_id_list,
-                                   has_logged_to_op):
-    _wait_for_op_session_to_start(selenium, browser_id_list,
-                                  has_logged_to_op)
+def g_wait_for_op_session_to_start(selenium, browser_id_list):
+    _wait_for_op_session_to_start(selenium, browser_id_list)
 
 
 @when(parsers.re('users? of (?P<browser_id_list>.*?) sees that '
                  'Oneprovider session has started'))
 @then(parsers.re('users? of (?P<browser_id_list>.*?) sees that '
                  'Oneprovider session has started'))
-def wt_wait_for_op_session_to_start(selenium, browser_id_list,
-                                    has_logged_to_op):
-    _wait_for_op_session_to_start(selenium, browser_id_list,
-                                  has_logged_to_op)
+def wt_wait_for_op_session_to_start(selenium, browser_id_list):
+    _wait_for_op_session_to_start(selenium, browser_id_list)
 
 
 @when(parsers.parse('user of {browser_id} copies a first '
