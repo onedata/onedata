@@ -4,6 +4,12 @@
 CHANGELOG
 ---------
 
+### 17.06.0-beta5
+
+* VFS-3322 reimplement file creation test to use rpyc instead of run_cmd
+* VFS-3284 GUI tests: using new go to your files button
+
+
 ### 17.06.0-beta4
 
 * VFS-3347 Add docker-dev build
