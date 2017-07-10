@@ -22,10 +22,10 @@ from ..common import get_oz_user_api, get_oz_space_api, get_op_panel_api
 from ..exceptions import checked_call, HTTPNotFound
 
 
-@given(parsers.parse('initial spaces configuration in "{host}" '
+@given(parsers.parse('initial spaces configuration in "{zone_host}" '
                      'Onezone service:\n{config}'))
-def spaces_creation(config, host, admin_credentials, hosts,
-                    users, groups, storages, spaces):
+def create_and_configure_spaces(config, zone_host, admin_credentials, hosts,
+                                users, groups, storages, spaces):
     """Create and configure spaces according to given config.
 
     Config format given in yaml is as follow:
@@ -96,125 +96,131 @@ def spaces_creation(config, host, admin_credentials, hosts,
                             provider: 2
                             content: 22222
     """
-    _spaces_creation(config, host, admin_credentials, hosts,
-                     users, groups, storages, spaces)
+    _create_and_configure_spaces(config, zone_host, admin_credentials, hosts,
+                                 users, groups, storages, spaces)
 
 
-def _spaces_creation(config, host, admin_credentials, hosts,
-                     users, groups, storages, spaces):
+def _create_and_configure_spaces(config, zone_name, admin_credentials, hosts,
+                                 users_db, groups_db, storages_db, spaces_db):
 
-    host = hosts['onezone'][host]
-    admin_client = get_oz_space_api(admin_credentials.username,
-                                    admin_credentials.password, host)
+    zone_hostname = hosts['onezone'][zone_name]
+    admin_panel_api = get_oz_space_api(admin_credentials.username,
+                                       admin_credentials.password,
+                                       zone_hostname)
 
     for space_name, description in yaml.load(config).items():
-        owner = users[description['owner']]
-        user_client = get_oz_space_api(owner.username, owner.password, host)
+        owner = users_db[description['owner']]
+        user_zone_api = get_oz_space_api(owner.username, owner.password,
+                                         zone_hostname)
 
-        space_id = _create_space(owner, space_name, host)
-        spaces[space_name] = space_id
-
-        _add_users_to_space(admin_client, space_id, users,
+        spaces_db[space_name] = space_id = _create_space(owner, space_name,
+                                                         zone_hostname)
+        _add_users_to_space(admin_panel_api, space_id, users_db,
                             description.get('users', {}))
-        _set_as_home_for_users(space_id, users, host,
+        _set_as_home_for_users(space_id, zone_hostname, users_db,
                                description.get('home space for', []))
-        _add_groups_to_space(admin_client, space_id, groups,
+        _add_groups_to_space(admin_panel_api, space_id, groups_db,
                              description.get('groups', {}))
-        _get_support(admin_credentials, user_client, space_id, storages,
+        _get_support(admin_credentials, user_zone_api, space_id, storages_db,
                      hosts, description.get('providers', {}))
         _init_storage(owner, space_name, hosts['oneprovider'],
                       description.get('storage', {}))
 
 
-def _create_space(owner, space_name, oz_host):
-    oz_client = get_oz_user_api(owner.username, owner.password, oz_host)
-    oz_client.create_user_space(SpaceCreateRequest(name=space_name))
+def _create_space(owner_credentials, space_name, zone_hostname):
+    user_zone_api = get_oz_user_api(owner_credentials.username,
+                                    owner_credentials.password,
+                                    zone_hostname)
+    user_zone_api.create_user_space(SpaceCreateRequest(name=space_name))
 
-    for space_id in oz_client.list_user_spaces().spaces:
-        space = oz_client.get_user_space(space_id)
+    for space_id in user_zone_api.list_user_spaces().spaces:
+        space = user_zone_api.get_user_space(space_id)
         if space.name == space_name:
             return space.space_id
 
 
-def _add_users_to_space(admin_client, space_id, users, users_conf):
-    for user in users_conf:
+def _add_users_to_space(admin_panel_api, space_id, users_db, users_to_add):
+    for user in users_to_add:
         try:
             [(user, options)] = user.items()
         except AttributeError:
-            admin_client.add_user_to_space(space_id, users[user].id)
+            admin_panel_api.add_user_to_space(space_id, users_db[user].id)
         else:
             privileges = SpacePrivileges(privileges=options['privileges'])
-            admin_client.add_user_to_space(space_id, users[user].id,
-                                           privileges=privileges)
+            admin_panel_api.add_user_to_space(space_id, users_db[user].id,
+                                              privileges=privileges)
 
 
-def _set_as_home_for_users(space_id, users, oz_host, users_conf):
-    for user in (users[user] for user in users_conf):
-        oz_client = get_oz_user_api(user.username, user.password, oz_host)
-        default_space = DefaultSpace(space_id)
-        oz_client.set_default_space(default_space)
+def _set_as_home_for_users(space_id, zone_hostname, users_db, users):
+    for user in (users_db[username] for username in users):
+        user_zone_api = get_oz_user_api(user.username, user.password,
+                                        zone_hostname)
+        user_zone_api.set_default_space(DefaultSpace(space_id))
 
 
-def _add_groups_to_space(admin_client, space_id, groups, groups_conf):
-    for group in groups_conf:
+def _add_groups_to_space(admin_panel_api, space_id, groups_db, groups_to_add):
+    for group in groups_to_add:
         try:
             [(group, options)] = group.items()
         except AttributeError:
-            admin_client.add_group_to_space(space_id, groups[group])
+            admin_panel_api.add_group_to_space(space_id, groups_db[group])
         else:
             privileges = SpacePrivileges(privileges=options['privileges'])
-            admin_client.add_group_to_space(space_id, groups[group],
-                                            group_id=privileges)
+            admin_panel_api.add_group_to_space(space_id, groups_db[group],
+                                               group_id=privileges)
 
 
-def _get_support(admin_cred, user_client, space_id,
-                 storages, hosts, providers_conf):
-    for provider in providers_conf:
+def _get_support(admin_credentials, user_client, space_id,
+                 storages_db, hosts, providers):
+    for provider in providers:
         [(provider, options)] = provider.items()
-        op_panel_client = get_op_panel_api(admin_cred.username,
-                                           admin_cred.password,
-                                           hosts['provider_panel'][provider])
+
+        provider_hostname = hosts['provider_panel'][provider]
+        admin_panel_client = get_op_panel_api(admin_credentials.username,
+                                              admin_credentials.password,
+                                              provider_hostname)
 
         storage_name = options['storage']
         try:
-            storage_id = storages[storage_name]
+            storage_id = storages_db[storage_name]
         except KeyError:
-            storage_id = storages[storage_name] = \
-                _get_storage_id_with_given_name(storage_name,
-                                                op_panel_client)
+            storage_id = storages_db[storage_name] = \
+                _get_storage_id(storage_name, admin_panel_client)
 
         token = user_client.create_space_support_token(space_id)
         support_request = SpaceSupportRequest(token=token.token,
                                               size=int(options['size']),
                                               storage_id=storage_id)
-        op_panel_client.support_space(support_request)
+        admin_panel_client.support_space(support_request)
 
 
-def _get_storage_id_with_given_name(storage_name, rest_client):
-    for storage_id in rest_client.get_storages().ids:
-        storage = rest_client.get_storage_details(storage_id)
+def _get_storage_id(storage_name, admin_panel_client):
+    for storage_id in admin_panel_client.get_storages().ids:
+        storage = admin_panel_client.get_storage_details(storage_id)
         if storage.name == storage_name:
             return storage.id
 
 
-def _init_storage(owner, space_name, hosts, storage_conf):
+def _init_storage(owner_credentials, space_name, hosts, storage_conf):
     if not storage_conf:
         return
 
     defaults = storage_conf['defaults']
-    provider_ip = hosts[defaults['provider']]
+    provider_hostname = hosts[defaults['provider']]
 
     def create_cdmi_object(path, data=None, repeats=10,
-                           auth=(owner.username, owner.password),
-                           url='https://{}:8443/cdmi/'.format(provider_ip)):
+                           auth=(owner_credentials.username,
+                                 owner_credentials.password),
+                           url='https://{}:8443/cdmi/'
+                               ''.format(provider_hostname)):
         result = None
         for _ in xrange(repeats):
             try:
                 result = checked_call(requests.put, url + path, auth=auth,
                                       data=data, verify=False)
             except HTTPNotFound:
-                # because user may not yet exist in provider first call will fail
-                # as such wait some time and try again
+                # because user may not yet exist in provider first call
+                # will fail, as such wait some time and try again
                 time.sleep(1)
             else:
                 break

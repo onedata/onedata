@@ -39,14 +39,10 @@
 	url = https://github.com/onedata/getting-started.git
 	branch = VFS-3190-onepanel-ember
 [submodule "onepanel_swagger"]
-	path = onepanel_swagger
+	path = develop
 	url = ONEDATA_GIT_URL/onepanel-swagger.git
 	branch = release/3.0.0-rc16
 [submodule "onezone_swagger"]
 	path = onezone_swagger
 	url = ONEDATA_GIT_URL/onezone-swagger.git
-	branch = release/3.0.0-rc16
-[submodule "cdmi_swagger"]
-	path = cdmi_swagger
-	url = ONEDATA_GIT_URL/cdmi-swagger.git
-	branch = release/1.1.1
+	branch = develop
