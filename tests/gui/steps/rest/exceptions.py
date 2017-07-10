@@ -14,9 +14,9 @@ def checked_call(call_fun, *args, **kwargs):
     response = call_fun(*args, **kwargs)
     if 200 <= response.status_code < 300:
         return response
-
-    ex_cls = _exceptions.get(response.status_code, HTTPError)
-    raise ex_cls(response)
+    else:
+        ex_cls = _exceptions.get(response.status_code, HTTPError)
+        raise ex_cls(response)
 
 
 class HTTPErrorMeta(type):

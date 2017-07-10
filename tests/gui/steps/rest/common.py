@@ -5,7 +5,7 @@ from enum import Enum
 
 from tests.gui.utils.onepanel_client.configuration import Configuration as OnepanelConf
 from tests.gui.utils.onepanel_client import (ApiClient as OnepanelClient,
-                                             OnepanelApi, OneproviderApi, SpaceSupportRequest)
+                                             OnepanelApi, OneproviderApi)
 
 from tests.gui.utils.onezone_client.configuration import Configuration as OnezoneConf
 from tests.gui.utils.onezone_client import (ApiClient as OnezoneClient,
@@ -29,7 +29,6 @@ class Service(Enum):
     OP_PANEL = 2
     OZ_PANEL = 3
     ONEZONE = 4
-    ONEPROVIDER = 5
 
 
 class Api(object):
@@ -55,31 +54,31 @@ SERVICES_DETAILS = {
 
 
 def get_op_panel_api(username, password, host):
-    return get_rest_api_client(username, password, host,
-                               Service.ONEPANEL, OneproviderApi)
+    return get_rest_api(username, password, host,
+                        Service.ONEPANEL, OneproviderApi)
 
 
 def get_panel_api(username, password, host):
-    return get_rest_api_client(username, password, host,
-                               Service.ONEPANEL, OnepanelApi)
+    return get_rest_api(username, password, host,
+                        Service.ONEPANEL, OnepanelApi)
 
 
 def get_oz_group_api(username, password, host):
-    return get_rest_api_client(username, password, host,
-                               Service.ONEZONE, OzGroupApi)
+    return get_rest_api(username, password, host,
+                        Service.ONEZONE, OzGroupApi)
 
 
 def get_oz_space_api(username, password, host):
-    return get_rest_api_client(username, password, host,
-                               Service.ONEZONE, OzSpaceApi)
+    return get_rest_api(username, password, host,
+                        Service.ONEZONE, OzSpaceApi)
 
 
 def get_oz_user_api(username, password, host):
-    return get_rest_api_client(username, password, host,
-                               Service.ONEZONE, OzUserApi)
+    return get_rest_api(username, password, host,
+                        Service.ONEZONE, OzUserApi)
 
 
-def get_rest_api_client(username, password, host, service, api_cls):
+def get_rest_api(username, password, host, service, api_cls):
     config, client, endpoint_template = SERVICES_DETAILS[service]
     config.username = username
     config.password = password
