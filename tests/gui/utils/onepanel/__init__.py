@@ -1,16 +1,5 @@
-"""Utils and fixtures to facilitate operations on Onepanel of zone web GUI.
+"""Utils to facilitate operations on Onepanel of zone web GUI.
 """
-from tests.gui.utils.core.base import PageObject
-from tests.gui.utils.core.web_elements import WebItem, Label, WebElement
-
-from tests.gui.utils.common.common import OnePage, BaseContent
-from .clusters import Clusters, WelcomePage
-from .deployment import Deployment
-from .nodes import NodesContentPage
-from .provider import ProviderContentPage
-from .spaces import SpacesContentPage
-from .storages import StorageContentPage
-
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -18,9 +7,21 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import WebItem, Label, WebElement
+
+from tests.gui.utils.common.common import OnePage, BaseContent
+from .clusters import ClustersSidebar, WelcomePage
+from .deployment import Deployment
+from .nodes import NodesContentPage
+from .provider import ProviderContentPage
+from .spaces import SpacesContentPage
+from .storages import StorageContentPage
+
+
 class Sidebar(PageObject):
     title = Label('.col-title')
-    clusters = WebItem('.one-sidebar', cls=Clusters)
+    clusters = WebItem('.one-sidebar', cls=ClustersSidebar)
 
     def __str__(self):
         return '{} sidebar in {}'.format(self.title, self.parent)

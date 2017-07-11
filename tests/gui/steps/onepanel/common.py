@@ -1,15 +1,15 @@
 """Steps commonly used in Onepanel tests"""
 
-from pytest_bdd import when, then, parsers
-
-from tests.gui.conftest import WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, parse_seq, transform
-
-
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from pytest_bdd import when, then, parsers
+
+from tests.gui.conftest import WAIT_FRONTEND
+from tests.gui.utils.generic import repeat_failed, parse_seq, transform
 
 
 @when(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on (?P<btn>.+?) '

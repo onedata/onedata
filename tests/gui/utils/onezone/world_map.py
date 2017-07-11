@@ -29,7 +29,7 @@ class _ProviderPopup(PageObject):
     copy_hostname = Button('.provider-host-copy-btn')
     spaces = WebItemsSequence('ul li.provider-place-drop-space',
                               cls=_SpaceRecord)
-    go_to_your_files = Button('.drop-body button')
+    go_to_your_files = Button('.drop-body a.btn-go-to-files')
     _popup = WebElement('.provider-place-drop')
 
     def __str__(self):

@@ -1,5 +1,11 @@
 """Steps used in clusters deployment process"""
 
+__author__ = "Bartek Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+
 import re
 import time
 
@@ -8,12 +14,6 @@ from pytest_bdd import when, then, parsers
 from tests.gui.conftest import WAIT_FRONTEND, SELENIUM_IMPLICIT_WAIT
 from tests.gui.utils.generic import (repeat_failed, parse_seq,
                                      implicit_wait, transform)
-
-
-__author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 @when(parsers.parse('user of {browser_id} enables {options} options for '
@@ -29,8 +29,7 @@ def wt_check_host_options_in_deployment_step1(selenium, browser_id, options,
     for host in onepanel(selenium[browser_id]).content.deployment.step1.hosts:
         if re.match(host_regexp, host.name):
             for option in options:
-                toggle = getattr(host, option)
-                toggle.check()
+                getattr(host, option).check()
 
 
 @when(parsers.parse('user of {browser_id} types ip address of "{host}" zone '
@@ -140,11 +139,10 @@ def wt_await_finish_of_cluster_deployment(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
                                                storage_type, onepanel):
-    step = onepanel(selenium[browser_id]).content.deployment.step3
-    selector = step.form.storage_selector
-    if not selector.is_expanded():
-        selector.expand()
-    selector.storages[storage_type].click()
+    storage_selector = (onepanel(selenium[browser_id]).content.deployment.
+                        step3.form.storage_selector)
+    storage_selector.expand()
+    storage_selector.options[storage_type].click()
 
 
 @when(parsers.re('user of (?P<browser_id>.*?) enables "(?P<option>.*?)" '
@@ -156,8 +154,8 @@ def wt_select_storage_type_in_deployment_step3(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_enable_storage_option_in_deployment_step3(selenium, browser_id, option,
                                                  form, onepanel):
-    form = getattr(onepanel(selenium[browser_id]).content.deployment.step3.form,
-                   transform(form))
+    form = getattr(onepanel(selenium[browser_id]).content.deployment.
+                   step3.form, transform(form))
     getattr(form, transform(option)).check()
 
 

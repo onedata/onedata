@@ -1,14 +1,5 @@
-"""Utils and fixtures to facilitate spaces operations in op panel GUI."""
-
-import re
-
-from tests.gui.utils.common.common import Toggle, DropdownSelector
-from tests.gui.utils.core.base import PageObject, ExpandableMixin
-from tests.gui.utils.core.web_elements import (Label, NamedButton, Button,
-                                               Input, WebItem, WebItemsSequence,
-                                               WebElement)
-from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
-
+"""Utils to facilitate spaces operations in op panel GUI.
+"""
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -16,80 +7,95 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class ImportConfiguration(PageObject):
-    strategy_selector = WebItem('.ember-basic-dropdown', cls=DropdownSelector)
+import re
+
+from tests.gui.utils.common.common import Toggle, DropdownSelector
+from tests.gui.utils.core.base import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import (Label, NamedButton, Button,
+                                               Input, WebItem, WebElement,
+                                               WebItemsSequence)
+from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
+
+
+DEFAULT_IMPORT_STRATEGY_CONFIG = {'Import strategy': 'Simple scan',
+                                  'Max depth': '65535'}
+
+DEFAULT_UPDATE_STRATEGY_CONFIG = {'Update strategy': 'Simple scan',
+                                  'Max depth': '65535',
+                                  'Scan interval [s]': '10',
+                                  'Write once': 'false',
+                                  'Delete enabled': 'false'}
+
+
+class ImportConfigurationForm(PageObject):
+    strategy_selector = DropdownSelector('.ember-basic-dropdown')
     max_depth = Input('.field-import_generic-maxDepth')
 
 
-class UpdateConfiguration(PageObject):
-    strategy_selector = WebItem('.ember-basic-dropdown', cls=DropdownSelector)
+class UpdateConfigurationForm(PageObject):
+    strategy_selector = DropdownSelector('.ember-basic-dropdown')
     max_depth = Input('.field-update_generic-maxDepth')
     scan_interval = Input('.field-update_generic-scanInterval')
-    write_once = WebItem('.toggle-field-update_generic-writeOnce', cls=Toggle)
-    delete_enabled = WebItem('.toggle-field-update_generic-deleteEnable',
-                             cls=Toggle)
+    write_once = Toggle('.toggle-field-update_generic-writeOnce')
+    delete_enabled = Toggle('.toggle-field-update_generic-deleteEnable')
 
 
 class SpaceSupportAddForm(PageObject):
-    storage_selector = WebItem('.ember-basic-dropdown', cls=DropdownSelector)
+    storage_selector = DropdownSelector('.ember-basic-dropdown')
     token = Input('input.field-main-token')
     size = Input('input.field-main-size')
     units = WebItemsSequence('.field-main-sizeUnit label.clickable',
                              cls=ButtonWithTextPageObject)
-    mount_in_root = WebItem('.toggle-field-main-mountInRoot', cls=Toggle)
-    import_storage_data = WebItem('.toggle-field-main-_importEnabled',
-                                  cls=Toggle)
-    import_configuration = WebItem('.import-configuration-section',
-                                   cls=ImportConfiguration)
-    update_configuration = WebItem('.update-configuration-section',
-                                   cls=UpdateConfiguration)
-    support_space = NamedButton('button', text='Support space')
+    mount_in_root = Toggle('.toggle-field-main-mountInRoot')
+    import_storage_data = Toggle('.toggle-field-main-_importEnabled')
 
-    def __str__(self):
-        return 'support space form in {}'.format(self.parent)
+    import_configuration = WebItem('.import-configuration-section',
+                                   cls=ImportConfigurationForm)
+    update_configuration = WebItem('.update-configuration-section',
+                                   cls=UpdateConfigurationForm)
+
+    support_space = NamedButton('button', text='Support space')
 
 
 class SpaceRecord(PageObject, ExpandableMixin):
     name = id = Label('.item-icon-container + .one-label')
-    Name = Label('td.item-table-content-cell .content-row:first-child '
-                 '.one-label')
-    Id = Label('td.item-table-content-cell .content-row:nth-child(2) '
-               '.one-label')
+    toolbar = Button('.collapsible-toolbar-toggle')
+
     _toggle = WebElement('.one-collapsible-list-item-header')
 
     def is_expanded(self):
         return bool(re.match(r'.*\b(?<!-)opened\b.*',
                              self._toggle.get_attribute('class')))
 
-    revoke_support = Button('button.btn-revoke-space')
-    configure_data_import = Button('button.btn-import-storage-data')
     import_configuration = WebItem('.import-configuration-section',
-                                   cls=ImportConfiguration)
+                                   cls=ImportConfigurationForm)
     update_configuration = WebItem('.update-configuration-section',
-                                   cls=UpdateConfiguration)
+                                   cls=UpdateConfigurationForm)
     save_configuration = NamedButton('button', text='Save configuration')
 
-    _import_strategy = WebElement('td.item-table-content-cell '
-                                  '.content-row:nth-child(4)')
-    _update_strategy = WebElement('td.item-table-content-cell '
-                                  '.content-row:nth-child(5)')
+    Name = Label('.item-table-cell .content-row:first-child:not(.chart-row)'
+                 ':not(.nested-row) .one-label')
+    Id = Label('.item-table-cell .content-row:nth-child(2):not(.chart-row) '
+               ':not(.nested-row) .one-label')
 
     @property
     def import_strategy(self):
-        default_values = {'Import strategy': 'Simple scan',
-                          'Max depth': 'inf'}
-        default_values.update(self._get_labels(self._import_strategy))
-        return default_values
+        values = DEFAULT_IMPORT_STRATEGY_CONFIG.copy()
+        values.update(self._get_labels(self._import_strategy))
+        return values
 
     @property
     def update_strategy(self):
-        default_values = {'Update strategy': 'Simple scan',
-                          'Max depth': 'inf',
-                          'Scan interval [s]': '10',
-                          'Write once': 'false',
-                          'Delete enabled': 'false'}
-        default_values.update(self._get_labels(self._update_strategy))
-        return default_values
+        values = DEFAULT_UPDATE_STRATEGY_CONFIG.copy()
+        values.update(self._get_labels(self._update_strategy))
+        return values
+
+    _import_strategy = WebElement('.item-table-content-cell .content-row'
+                                  ':nth-child(4):not(.chart-row)'
+                                  ':not(.nested-row)')
+    _update_strategy = WebElement('.item-table-content-cell .content-row'
+                                  ':nth-child(5):not(.chart-row)'
+                                  ':not(.nested-row)')
 
     @staticmethod
     def _get_labels(elem):
@@ -99,12 +105,8 @@ class SpaceRecord(PageObject, ExpandableMixin):
 
 
 class SpacesContentPage(PageObject):
-    spaces = WebItemsSequence('ul.one-collapsible-list li',
-                              cls=SpaceRecord)
+    spaces = WebItemsSequence('ul.one-collapsible-list li', cls=SpaceRecord)
     support_space = NamedButton('.btn-support-space', text='Support space')
+    form = WebItem('.support-space-form', cls=SpaceSupportAddForm)
     cancel_supporting_space = NamedButton('.btn-support-space',
                                           text='Cancel supporting space')
-    form = WebItem('.support-space-form', cls=SpaceSupportAddForm)
-
-    def __str__(self):
-        return 'spaces page in {}'.format(self.parent)

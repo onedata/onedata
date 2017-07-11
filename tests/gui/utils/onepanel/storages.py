@@ -1,15 +1,5 @@
-"""Utils and fixtures to facilitate storages control in panel GUI.
+"""Utils to facilitate storages control in panel GUI.
 """
-
-import re
-
-from tests.gui.utils.common.common import Toggle
-from tests.gui.utils.core.base import PageObject, ExpandableMixin
-from tests.gui.utils.core.web_elements import (WebItemsSequence, Label,
-                                               NamedButton, Input,
-                                               WebItem, WebElement)
-from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
-
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -17,32 +7,26 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class StorageSelector(PageObject, ExpandableMixin):
-    storages = WebItemsSequence('ul li', cls=ButtonWithTextPageObject)
-    _toggle = WebElement('.ember-basic-dropdown-trigger[role="button"]')
+import re
 
-    def __str__(self):
-        return 'storage selector in {}'.format(self.parent)
+from tests.gui.utils.common.common import Toggle, DropdownSelector
+from tests.gui.utils.core.base import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import (WebItemsSequence, Label,
+                                               NamedButton, Input,
+                                               WebItem, WebElement)
 
 
 class POSIX(PageObject):
     storage_name = Input('input.field-generic-name')
     mount_point = Input('input.field-posix-mountPoint')
     timeout = Input('input.field-posix-timeout')
-    read_only = WebItem('.toggle-field-posix-readonly', cls=Toggle)
-
-    def __str__(self):
-        return 'POSIX {}'.format(self.parent)
+    read_only = Toggle('.toggle-field-posix-readonly')
 
 
 class StorageAddForm(PageObject):
-    selected_storage = Label('.ember-power-select-selected-item')
-    storage_selector = WebItem('.ember-basic-dropdown', cls=StorageSelector)
+    storage_selector = DropdownSelector('.ember-basic-dropdown')
     add = NamedButton('button', text='Add')
     posix = WebItem('form', cls=POSIX)
-
-    def __str__(self):
-        return 'add storage form in {}'.format(self.parent)
 
 
 class StorageRecord(PageObject, ExpandableMixin):
@@ -63,6 +47,3 @@ class StorageContentPage(PageObject):
     storages = WebItemsSequence('ul li .storage-item', cls=StorageRecord)
     add_storage = NamedButton('button', text='Add storage')
     cancel = NamedButton('button', text='Cancel')
-
-    def __str__(self):
-        return 'Storages content page in {}'.format(self.parent)

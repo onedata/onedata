@@ -8,6 +8,7 @@ from tests.gui.utils.core.web_elements import WebItem
 from .file_distribution import FileDistributionModal
 from .login import LoginFormModal
 from .deploying_cluster import ClusterDeploymentModal
+from .revoke_space_support import RevokeSpaceSupportModal
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -20,6 +21,8 @@ class Modals(object):
     file_distribution = WebItem('#file-chunks-modal', cls=FileDistributionModal)
     cluster_deployment = WebItem('#cluster-deploy-progress-modal',
                                  cls=ClusterDeploymentModal)
+    revoke_space_support = WebItem('.modal.in .modal-dialog',
+                                   cls=RevokeSpaceSupportModal)
     login = WebItem('#login-form-modal', cls=LoginFormModal)
 
     def __init__(self, driver):
