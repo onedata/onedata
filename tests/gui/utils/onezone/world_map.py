@@ -29,7 +29,7 @@ class _ProviderPopup(PageObject):
     copy_hostname = Button('.provider-host-copy-btn')
     spaces = WebItemsSequence('ul li.provider-place-drop-space',
                               cls=_SpaceRecord)
-    go_to_your_files = Button('.drop-body a.btn-go-to-files')
+    go_to_your_files = Button('.drop-body .btn-go-to-files, .drop-body button')
     _popup = WebElement('.provider-place-drop')
 
     def __str__(self):
@@ -51,16 +51,10 @@ class _Message(PageObject):
     title = Label('.panel-heading')
     msg = Label('.panel-body')
 
-    def __str__(self):
-        return 'Message modal on {}'.format(self.parent)
-
 
 class WorldMap(PageObject):
     message = WebItem('.panel-onezone-alert', cls=_Message)
     providers = WebItemsSequence('.provider-place', cls=_ProviderPopup)
-
-    def __str__(self):
-        return 'World Map on {}'.format(self.parent)
 
     def get_provider_with_displayed_popup(self):
         for provider in self.providers:
