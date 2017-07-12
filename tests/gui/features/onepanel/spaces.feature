@@ -6,7 +6,6 @@ Feature: Space utilities using onepanel
     And user of browser1 entered credentials for admin in login form
     And users of browser1 pressed Sign in button
     And user of browser2 seen Z1 zone name in oz login page
-    And user of browser2 clicked on the "username" login button in oz login page
     And user of browser2 entered credentials of admin in login form in oz login page
     And user of browser2 clicked on the Sign in button in oz login page
 
@@ -20,7 +19,6 @@ Feature: Space utilities using onepanel
     And user of browser2 types "helloworld" in active edit box
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 refreshes site
 
     # receive support token
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
@@ -58,8 +56,9 @@ Feature: Space utilities using onepanel
 
     # unsupport space
     And user of browser1 clicks on Spaces item in submenu of "p1" item in CLUSTERS sidebar in Onepanel
-    And user of browser1 clicks on revoke support icon for "helloworld" space record in Spaces page in Onepanel
-    And user of browser1 clicks on Yes, revoke button in Revoke space support popup
+    And user of browser1 expands toolbar for "helloworld" space record in Spaces page in Onepanel
+    And user of browser1 clicks on Revoke space support option in space's toolbar in Onepanel
+    And user of browser1 clicks on Yes, revoke button in REVOKE SPACE SUPPORT modal in Onepanel
     And user of browser1 sees an info notify with text matching to: .*[Ss]upport.*revoked.*
 
     # confirm lack of support for space

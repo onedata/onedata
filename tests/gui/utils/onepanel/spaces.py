@@ -75,7 +75,7 @@ class SpaceRecord(PageObject, ExpandableMixin):
 
     Name = Label('.item-table-cell .content-row:first-child:not(.chart-row)'
                  ':not(.nested-row) .one-label')
-    Id = Label('.item-table-cell .content-row:nth-child(2):not(.chart-row) '
+    Id = Label('.item-table-cell .content-row:nth-child(2):not(.chart-row)'
                ':not(.nested-row) .one-label')
 
     @property
@@ -105,7 +105,8 @@ class SpaceRecord(PageObject, ExpandableMixin):
 
 
 class SpacesContentPage(PageObject):
-    spaces = WebItemsSequence('ul.one-collapsible-list li', cls=SpaceRecord)
+    spaces = WebItemsSequence('ul.one-collapsible-list '
+                              '.cluster-spaces-table-item', cls=SpaceRecord)
     support_space = NamedButton('.btn-support-space', text='Support space')
     form = WebItem('.support-space-form', cls=SpaceSupportAddForm)
     cancel_supporting_space = NamedButton('.btn-support-space',

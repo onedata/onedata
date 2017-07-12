@@ -71,8 +71,11 @@ class PageObject(AbstractPageObject):
     def __str__(self):
         name = self.__class__.__name__
         if self.parent:
-            name += ' ' + str(self.parent)
+            name += ' in ' + str(self.parent)
         return name
+
+    def is_displayed(self):
+        return self.web_elem.is_displayed()
 
     def click(self):
         click_on_web_elem(self.driver, self._click_area,

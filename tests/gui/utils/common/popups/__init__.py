@@ -10,10 +10,13 @@ __license__ = "This software is released under the MIT license cited in " \
 from tests.gui.utils.core.web_elements import WebItem
 from .user_account_menu import UserAccountPopup
 from .toolbar import ToolbarPopup
+from .deregister_provider import DeregisterProvider
 
 
 class Popups(object):
     toolbar = WebItem('.webui-popover.in ul.dropdown-menu', cls=ToolbarPopup)
+    deregister_provider = WebItem('.popover-deregister-provider',
+                                  cls=DeregisterProvider)
     user_account_menu = WebItem('.webui-popover-content .user-account-menu',
                                 cls=UserAccountPopup)
 

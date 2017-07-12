@@ -36,8 +36,8 @@ class ModifyProviderDetailsForm(ProviderDetailsCommon):
 class ProviderContentPage(PageObject):
     details = WebItem('.provider-registration-form', cls=ProviderDetails)
     form = WebItem('.provider-registration-form', cls=ModifyProviderDetailsForm)
-    modify_provider_details = NamedButton('.btn-modify-provider',
+    modify_provider_details = NamedButton('button.btn-modify-provider',
                                           text='Modify provider details')
-    cancel_modifying = NamedButton('.btn-modify-provider',
+    cancel_modifying = NamedButton('button.btn-modify-provider',
                                    text='Cancel modifying')
-    deregister_provider = Button('.btn-deregister-provider')
+    deregister_provider = Button('button.btn-deregister-provider')

@@ -4,7 +4,7 @@ import yaml
 
 from pytest_bdd import when, then, parsers
 
-from tests.gui.conftest import WAIT_FRONTEND
+from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import repeat_failed, transform
 
 
@@ -98,7 +98,7 @@ def wt_enable_option_box_in_space_support_form(selenium, browser_id,
                     '"{space}" has appeared in Spaces page in Onepanel'))
 @then(parsers.parse('user of {browser_id} sees that space support record for '
                     '"{space}" has appeared in Spaces page in Onepanel'))
-@repeat_failed(timeout=WAIT_FRONTEND)
+@repeat_failed(timeout=WAIT_BACKEND)
 def wt_assert_existence_of_space_support_record(selenium, browser_id,
                                                 space, onepanel):
     _ = onepanel(selenium[browser_id]).content.spaces.spaces[space]
@@ -140,9 +140,9 @@ def wt_select_strategy_in_conf_in_support_space_form(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_type_text_to_input_box_in_conf_in_space_support_form(selenium, browser_id,
                                                             text, input_box,
-                                                            config, onepanel):
+                                                            conf, onepanel):
     config = getattr(onepanel(selenium[browser_id]).content.spaces.form,
-                     config.lower() + '_configuration')
+                     conf.lower() + '_configuration')
     setattr(config, transform(input_box), text)
 
 
@@ -271,10 +271,6 @@ def wt_copy_space_id_in_spaces_page_in_onepanel(selenium, browser_id,
     tmp_memory['spaces'][space] = space_id
 
 
-
-
-
-
 @when(parsers.parse('user of {browser_id} expands toolbar for "{space}" '
                     'space record in Spaces page in Onepanel'))
 @then(parsers.parse('user of {browser_id} expands toolbar for "{space}" '
@@ -299,15 +295,19 @@ def wt_expands_toolbar_icon_for_space_in_onepanel(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_clicks_on_btn_in_space_toolbar_in_panel(selenium, browser_id,
                                                option, popups):
-    popups(selenium[browser_id]).toolbar.options[option].click()
+    toolbar = popups(selenium[browser_id]).toolbar
+    if toolbar.is_displayed():
+        toolbar.options[option].click()
+    else:
+        raise RuntimeError('no space toolbar found in Onepanel')
 
 
-@when(parsers.re(r'user of {browser_id} clicks on (?P<button>Yes, revoke|'
-                 r'No, keep the support) button in REVOKE SPACE SUPPORT '
-                 r'modal in Onepanel'))
-@then(parsers.re(r'user of {browser_id} clicks on (?P<button>Yes, revoke|'
-                 r'No, keep the support) button in REVOKE SPACE SUPPORT '
-                 r'modal in Onepanel'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) clicks on '
+                 r'(?P<button>Yes, revoke|No, keep the support) '
+                 r'button in REVOKE SPACE SUPPORT modal in Onepanel'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) clicks on '
+                 r'(?P<button>Yes, revoke|No, keep the support) '
+                 r'button in REVOKE SPACE SUPPORT modal in Onepanel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_clicks_on_btn_in_revoke_space_support(selenium, browser_id,
                                              button, modals):
