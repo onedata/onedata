@@ -48,7 +48,7 @@ GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgr
 ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
 export ONEDATA_GIT_URL
 
-.PHONY: docker package.tar.gz
+.PHONY: docker docker-dev package.tar.gz
 
 all: build
 
@@ -79,11 +79,7 @@ unpack = tar xzf $(1).tar.gz
 branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
 	./onedata_submodules.sh init ${submodule}
-ifeq ($(branch),develop)
-	./onedata_submodules.sh update --remote ${submodule}
-else
 	./onedata_submodules.sh update ${submodule}
-endif
 
 ##
 ## Build
@@ -157,6 +153,18 @@ test:
 
 test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
+
+test_performance_rest:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k "not files_creation and not sysbench"
+
+test_performance_sysbench:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k sysbench
+
+test_performance_files_creation:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k test_files_creation
+
+test_performance_concurrent_files_creation:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k concurrent_files_creation
 
 test_gui_firefox:
 	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
@@ -300,15 +308,29 @@ package.tar.gz:
 ## Docker artifact
 ##
 
-docker:
+docker: docker-dev
 	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
                       --build-arg RELEASE=$(DOCKER_RELEASE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
-											--build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
+                      --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
                       --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
                       --name oneprovider \
                       --publish --remove docker
+
+docker-dev:
+	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
+                      --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
+                      --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
+                      --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
+                      --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
+                      --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
+                      --build-arg ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
+                      --report docker-dev-build-report.txt \
+                      --short-report docker-dev-build-list.json \
+                      --name oneprovider-dev \
+                      --publish --remove docker-dev
