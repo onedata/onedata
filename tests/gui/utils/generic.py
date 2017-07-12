@@ -223,3 +223,7 @@ def redirect_display(new_display):
             os.environ['DISPLAY'] = old_display
         else:
             del os.environ['DISPLAY']
+
+
+def transform(val):
+    return val.strip().lower().replace(' ', '_')

@@ -6,6 +6,7 @@ import re
 import sys
 from itertools import chain
 import subprocess as sp
+from collections import defaultdict
 
 from py.xml import html
 from pytest import fixture, UsageError, skip
