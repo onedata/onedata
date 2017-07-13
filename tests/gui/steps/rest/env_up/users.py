@@ -8,18 +8,16 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import yaml
 from collections import namedtuple
-
-from tests.gui.utils.onezone_client import UserUpdateRequest
-from tests.gui.utils.onezone_client.rest import ApiException as OzApiException
-from tests.gui.utils.onepanel_client import UserCreateRequest
-from tests.gui.utils.onepanel_client.rest import ApiException as OnepanelApiException
+from functools import partial
+import json
 
 from pytest_bdd import given, parsers
-from tests.gui.utils.generic import suppress
-
 from pytest import skip
 
-from ..common import get_panel_api, get_oz_user_api
+from tests import OZ_REST_PORT, PANEL_REST_PORT
+from ..utils import (http_get, http_post, http_delete, http_patch,
+                     get_panel_rest_path, get_zone_rest_path)
+from ..exceptions import HTTPError, HTTPNotFound
 
 
 UserCred = namedtuple('UserCredentials', ['username', 'password', 'id'])
@@ -29,83 +27,106 @@ UserCred = namedtuple('UserCredentials', ['username', 'password', 'id'])
                      'Onezone service:\n{config}'))
 def users(host, config, admin_credentials, hosts):
     zone_hostname = hosts['onezone'][host]
-    admin_client = _get_admin_client(admin_credentials.username,
-                                     admin_credentials.password,
-                                     host, hosts)
 
-    users_info = {}
-    for user in yaml.load(config):
+    users_db = {}
+    for user_config in yaml.load(config):
+        username, options = _parse_user_info(user_config)
         try:
-            [(user, options)] = user.items()
-        except AttributeError:
-            options = {}
-
-        try:
-            user_info = _create_user(admin_client, user, options,
-                                     hosts['onezone'][host])
+            user_cred = _create_user(zone_hostname, admin_credentials,
+                                     username, options)
+            _configure_user(zone_hostname, user_cred, options)
         except Exception as ex:
-            _rm_users(admin_client, users_info, zone_hostname)
+            _rm_users(zone_hostname, admin_credentials, users_db)
             raise ex
         else:
-            users_info[user] = user_info
+            users_db[username] = user_cred
 
-    yield users_info
+    yield users_db
 
-    # after test is done, remove created users
-    _rm_users(admin_client, users_info, zone_hostname)
-
-
-def _get_admin_client(username, password, host, hosts):
-    # make call to oz to create admin user in onezone
-    zone_client = get_oz_user_api(username, password, hosts['onezone'][host])
-    zone_client.get_current_user()
-    return get_panel_api(username, password, hosts['zone_panel'][host])
+    _rm_users(zone_hostname, admin_credentials, users_db)
 
 
-def _create_user(admin_panel_api, username, options, zone_hostname):
-    password = options.get('password', 'password')
-    user_role = options.get('user role', 'regular')
-    alias = options.get('alias', None)
-
-    # assert user does not exist, otherwise skip
+def _parse_user_info(user_config):
     try:
-        admin_panel_api.get_user(username)
-    except OnepanelApiException as ex:
-        if ex.status == 404:
-            admin_panel_api.add_user(UserCreateRequest(username=username,
-                                                       password=password,
-                                                       user_role=user_role))
+        [(username, options)] = user_config.items()
+    except AttributeError:
+        return user_config, {}
+    else:
+        return username, options
 
-            # user is created in zone panel and not zone itself
-            # so for them to be created also in zone
-            # login/rest call to zone using his credentials must be made,
-            # then zone will ask panel for given user and store given info
-            user_zone_api = get_oz_user_api(username, password, zone_hostname)
-            user_id = user_zone_api.get_current_user().user_id
-            if alias:
-                update_user_request = UserUpdateRequest(alias=alias)
-                try:
-                    user_zone_api.modify_current_user(update_user_request)
-                except OzApiException:
-                    _rm_user(admin_panel_api, username,
-                             password, zone_hostname)
-                    skip('"{}" alias is already occupied '
-                         'by other user'.format(alias))
-            return UserCred(username=username, password=password, id=user_id)
-        else:
-            skip('failed to create "{}" user'.format(username))
+
+def _create_user(zone_hostname, admin_credentials, username, options):
+    password = options.get('password', 'password')
+    user_conf_details = {'username': username,
+                         'password': password,
+                         'userRole': options.get('user role', 'regular')}
+    # if user already exist (possible remnants of previous tests) skip test
+    try:
+        http_get(ip=zone_hostname, port=PANEL_REST_PORT,
+                 path=get_panel_rest_path('users', username),
+                 auth=(admin_credentials.username, admin_credentials.password))
+    except HTTPNotFound:
+        http_post(ip=zone_hostname, port=PANEL_REST_PORT,
+                  path=get_panel_rest_path('users'),
+                  auth=(admin_credentials.username, admin_credentials.password),
+                  data=json.dumps(user_conf_details))
+
+        # user is created in zone panel and not zone itself
+        # so for them to be created also in zone
+        # login/rest call to zone using his credentials must be made
+        response = http_get(ip=zone_hostname, port=OZ_REST_PORT,
+                            path=get_zone_rest_path('user'),
+                            auth=(username, password)).json()
+        user_id = response['userId']
+        return UserCred(username=username, password=password, id=user_id)
+
+    except HTTPError:
+        skip('failed to create "{}" user'.format(username))
     else:
         skip('"{}" user already exist'.format(username))
 
 
-def _rm_users(admin_panel_client, users_credentials, zone_hostname):
-    for user in users_credentials.values():
-        _rm_user(admin_panel_client, user.username,
-                 user.password, zone_hostname)
+def _configure_user(zone_hostname, user_cred, options):
+    alias = options.get('alias', None)
+    if alias:
+        try:
+            http_patch(ip=zone_hostname, port=OZ_REST_PORT,
+                       path=get_zone_rest_path('user'),
+                       auth=(user_cred.username, user_cred.password),
+                       data=json.dumps({'alias': alias}))
+        except HTTPError:
+            skip('"{}" alias is already occupied'.format(alias))
 
 
-def _rm_user(admin_panel_api, username, password, zone_hostname):
-    user_zone_api = get_oz_user_api(username, password, zone_hostname)
-    with suppress(OnepanelApiException, OzApiException):
-        user_zone_api.remove_current_user()
-        admin_panel_api.remove_user(username)
+def _rm_users(zone_hostname, admin_credentials, users_db,
+              ignore_http_exceptions=True):
+    for user_credentials in users_db.values():
+        _rm_user(zone_hostname, admin_credentials, user_credentials,
+                 ignore_http_exceptions)
+
+
+def _rm_user(zone_hostname, admin_credentials, user_credentials,
+             ignore_http_exceptions=True):
+    admin_username = admin_credentials.username
+    admin_password = admin_credentials.password
+    rm_zone_user = partial(_rm_zone_user, user_id=user_credentials.id)
+    rm_panel_user = partial(_rm_panel_user, username=user_credentials.username)
+
+    for fun in (rm_zone_user, rm_panel_user):
+        try:
+            fun(zone_hostname, admin_username, admin_password)
+        except HTTPError as ex:
+            if not ignore_http_exceptions:
+                raise ex
+
+
+def _rm_panel_user(zone_hostname, admin_username, admin_password, username):
+    path = get_panel_rest_path('users', username)
+    http_delete(ip=zone_hostname, port=PANEL_REST_PORT, path=path,
+                auth=(admin_username, admin_password))
+
+
+def _rm_zone_user(zone_hostname, admin_username, admin_password, user_id):
+    path = get_zone_rest_path('users', user_id)
+    http_delete(ip=zone_hostname, port=OZ_REST_PORT, path=path,
+                auth=(admin_username, admin_password))

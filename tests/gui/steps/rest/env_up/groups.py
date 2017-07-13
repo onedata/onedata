@@ -7,12 +7,12 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import yaml
+import json
 
-from tests.gui.utils.onezone_client import Group, GroupPrivileges
 from pytest_bdd import given, parsers
 
-from tests.gui.utils.onezone_client.rest import ApiException
-from ..common import get_oz_user_api, get_oz_group_api
+from tests import OZ_REST_PORT
+from ..utils import (http_post, http_put, get_zone_rest_path)
 
 
 @given(parsers.parse('initial groups configuration in "{service}" '
@@ -51,14 +51,12 @@ def groups_creation(config, service, admin_credentials,
 
 def _groups_creation(config, service, admin_credentials,
                      users, hosts, groups):
-    zone_host = hosts['onezone'][service]
-    admin_client = get_oz_group_api(admin_credentials.username,
-                                    admin_credentials.password,
-                                    zone_host)
+    zone_hostname = hosts['onezone'][service]
 
     for group_name, description in yaml.load(config).items():
-        group_id = _create_group(users[description['owner']],
-                                 group_name, zone_host)
+        owner = users[description['owner']]
+        group_id = _create_group(zone_hostname, owner.username,
+                                 owner.password, group_name)
         groups[group_name] = group_id
 
         for user in description.get('users', {}):
@@ -67,26 +65,31 @@ def _groups_creation(config, service, admin_credentials,
             except AttributeError:
                 privileges = None
             else:
-                privileges = GroupPrivileges(privileges=options['privileges'])
+                privileges = options['privileges']
 
-            user_info = users[user]
-            try:
-                admin_client.add_group_user(group_id, user_info.id,
-                                            privileges=privileges)
-            except ApiException as ex:
-                raise RuntimeError('failed to add {user} user to {group} group '
-                                   'because of: \n{status}: {reason}'
-                                   ''.format(user=user_info.username,
-                                             group=group_name,
-                                             status=ex.status,
-                                             reason=ex.reason))
+            _add_user_to_group(zone_hostname, admin_credentials,
+                               group_id, users[user].id, privileges)
 
 
-def _create_group(owner, group_name, zone_host):
-    oz_client = get_oz_user_api(owner.username, owner.password, zone_host)
-    oz_client.create_group_for_user(Group(name=group_name))
+def _create_group(zone_hostname, owner_username, owner_password,
+                  group_name, group_type='role'):
+    group_properties = {'name': group_name, 'type': group_type}
+    response = http_post(ip=zone_hostname, port=OZ_REST_PORT,
+                         path=get_zone_rest_path('groups'),
+                         auth=(owner_username, owner_password),
+                         data=json.dumps(group_properties))
+    return response.headers['location'].split('/')[-1]
 
-    for group_id in oz_client.list_user_groups().groups:
-        group = oz_client.get_user_group(group_id)
-        if group.name == group_name:
-            return group.group_id
+
+def _add_user_to_group(zone_hostname, admin_credentials,
+                       group_id, user_id, privileges):
+    if privileges:
+        data = json.dumps({'operation': 'set',
+                           'privileges': privileges})
+    else:
+        data = None
+
+    http_put(ip=zone_hostname, port=OZ_REST_PORT,
+             path=get_zone_rest_path('groups', group_id, 'users', user_id),
+             auth=(admin_credentials.username, admin_credentials.password),
+             data=data)

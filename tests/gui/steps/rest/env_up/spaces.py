@@ -8,18 +8,14 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import time
 import yaml
-
-import requests
-
-from tests.gui.utils.onezone_client import (SpaceCreateRequest,
-                                            SpacePrivileges,
-                                            DefaultSpace)
-from tests.gui.utils.onepanel_client import SpaceSupportRequest
+import json
 
 from pytest_bdd import given, parsers
 
-from ..common import get_oz_user_api, get_oz_space_api, get_op_panel_api
-from ..exceptions import checked_call, HTTPNotFound
+from tests import OZ_REST_PORT, PANEL_REST_PORT
+from ..utils import (http_get, http_post, http_put,
+                     get_panel_rest_path, get_zone_rest_path)
+from ..exceptions import HTTPNotFound
 
 
 @given(parsers.parse('initial spaces configuration in "{zone_host}" '
@@ -104,101 +100,144 @@ def _create_and_configure_spaces(config, zone_name, admin_credentials, hosts,
                                  users_db, groups_db, storages_db, spaces_db):
 
     zone_hostname = hosts['onezone'][zone_name]
-    admin_panel_api = get_oz_space_api(admin_credentials.username,
-                                       admin_credentials.password,
-                                       zone_hostname)
 
     for space_name, description in yaml.load(config).items():
         owner = users_db[description['owner']]
-        user_zone_api = get_oz_space_api(owner.username, owner.password,
-                                         zone_hostname)
-
-        spaces_db[space_name] = space_id = _create_space(owner, space_name,
-                                                         zone_hostname)
-        _add_users_to_space(admin_panel_api, space_id, users_db,
-                            description.get('users', {}))
+        spaces_db[space_name] = space_id = _create_space(zone_hostname,
+                                                         owner.username,
+                                                         owner.password,
+                                                         space_name)
+        _add_users_to_space(zone_hostname, admin_credentials, space_id,
+                            users_db, description.get('users', {}))
         _set_as_home_for_users(space_id, zone_hostname, users_db,
                                description.get('home space for', []))
-        _add_groups_to_space(admin_panel_api, space_id, groups_db,
-                             description.get('groups', {}))
-        _get_support(admin_credentials, user_zone_api, space_id, storages_db,
-                     hosts, description.get('providers', {}))
+        _add_groups_to_space(zone_hostname, admin_credentials, space_id,
+                             groups_db, description.get('groups', {}))
+        _get_support(zone_hostname, admin_credentials, owner, space_id,
+                     storages_db, hosts, description.get('providers', {}))
         _init_storage(owner, space_name, hosts['oneprovider'],
                       description.get('storage', {}))
 
 
-def _create_space(owner_credentials, space_name, zone_hostname):
-    user_zone_api = get_oz_user_api(owner_credentials.username,
-                                    owner_credentials.password,
-                                    zone_hostname)
-    user_zone_api.create_user_space(SpaceCreateRequest(name=space_name))
-
-    for space_id in user_zone_api.list_user_spaces().spaces:
-        space = user_zone_api.get_user_space(space_id)
-        if space.name == space_name:
-            return space.space_id
+def _create_space(zone_hostname, owner_username, owner_password, space_name):
+    space_properties = {'name': space_name}
+    response = http_post(ip=zone_hostname, port=OZ_REST_PORT,
+                         path=get_zone_rest_path('spaces'),
+                         auth=(owner_username, owner_password),
+                         data=json.dumps(space_properties))
+    return response.headers['location'].split('/')[-1]
 
 
-def _add_users_to_space(admin_panel_api, space_id, users_db, users_to_add):
+def _add_users_to_space(zone_hostname, admin_credentials, space_id,
+                        users_db, users_to_add):
     for user in users_to_add:
         try:
             [(user, options)] = user.items()
         except AttributeError:
-            admin_panel_api.add_user_to_space(space_id, users_db[user].id)
+            privileges = None
         else:
-            privileges = SpacePrivileges(privileges=options['privileges'])
-            admin_panel_api.add_user_to_space(space_id, users_db[user].id,
-                                              privileges=privileges)
+            privileges = options['privileges']
+
+        _add_user_to_space(zone_hostname, admin_credentials.username,
+                           admin_credentials.password, space_id,
+                           users_db[user].id, privileges)
+
+
+def _add_user_to_space(zone_hostname, admin_username, admin_password,
+                       space_id, user_id, privileges):
+    if privileges:
+        data = json.dumps({'operation': 'set',
+                           'privileges': privileges})
+    else:
+        data = None
+
+    http_put(ip=zone_hostname, port=OZ_REST_PORT,
+             path=get_zone_rest_path('spaces', space_id, 'users', user_id),
+             auth=(admin_username, admin_password), data=data)
 
 
 def _set_as_home_for_users(space_id, zone_hostname, users_db, users):
     for user in (users_db[username] for username in users):
-        user_zone_api = get_oz_user_api(user.username, user.password,
-                                        zone_hostname)
-        user_zone_api.set_default_space(DefaultSpace(space_id))
+        http_put(ip=zone_hostname, port=OZ_REST_PORT,
+                 path=get_zone_rest_path('user', 'default_space'),
+                 auth=(user.username, user.password),
+                 data=json.dumps({'spaceId': space_id}))
 
 
-def _add_groups_to_space(admin_panel_api, space_id, groups_db, groups_to_add):
+def _add_groups_to_space(zone_hostname, admin_credentials, space_id,
+                         groups_db, groups_to_add):
     for group in groups_to_add:
         try:
             [(group, options)] = group.items()
         except AttributeError:
-            admin_panel_api.add_group_to_space(space_id, groups_db[group])
+            privileges = None
         else:
-            privileges = SpacePrivileges(privileges=options['privileges'])
-            admin_panel_api.add_group_to_space(space_id, groups_db[group],
-                                               group_id=privileges)
+            privileges = options['privileges']
+
+        _add_group_to_space(zone_hostname, admin_credentials.username,
+                            admin_credentials.password, space_id,
+                            groups_db[group], privileges)
 
 
-def _get_support(admin_credentials, user_client, space_id,
-                 storages_db, hosts, providers):
+def _add_group_to_space(zone_hostname, admin_username, admin_password,
+                        space_id, group_id, privileges):
+    if privileges:
+        data = json.dumps({'operation': 'set',
+                           'privileges': privileges})
+    else:
+        data = None
+
+    http_put(ip=zone_hostname, port=OZ_REST_PORT,
+             path=get_zone_rest_path('spaces', space_id, 'groups', group_id),
+             auth=(admin_username, admin_password), data=data)
+
+
+def _get_support(zone_hostname, admin_credentials, owner_credentials,
+                 space_id, storages_db, hosts, providers):
+    admin_username = admin_credentials.username
+    admin_password = admin_credentials.password
+
     for provider in providers:
         [(provider, options)] = provider.items()
 
-        provider_hostname = hosts['provider_panel'][provider]
-        admin_panel_client = get_op_panel_api(admin_credentials.username,
-                                              admin_credentials.password,
-                                              provider_hostname)
-
+        provider_hostname = hosts['oneprovider'][provider]
         storage_name = options['storage']
+
         try:
             storage_id = storages_db[storage_name]
         except KeyError:
             storage_id = storages_db[storage_name] = \
-                _get_storage_id(storage_name, admin_panel_client)
+                _get_storage_id(provider_hostname, admin_username,
+                                admin_password, storage_name)
 
-        token = user_client.create_space_support_token(space_id)
-        support_request = SpaceSupportRequest(token=token.token,
-                                              size=int(options['size']),
-                                              storage_id=storage_id)
-        admin_panel_client.support_space(support_request)
+        token = http_post(ip=zone_hostname, port=OZ_REST_PORT,
+                          path=get_zone_rest_path('spaces', space_id,
+                                                  'providers', 'token'),
+                          auth=(owner_credentials.username,
+                                owner_credentials.password)).json()['token']
+
+        space_support_details = {'token': token,
+                                 'size': int(options['size']),
+                                 'storageId': storage_id}
+        http_post(ip=provider_hostname, port=PANEL_REST_PORT,
+                  path=get_panel_rest_path('provider', 'spaces'),
+                  auth=(admin_username, admin_password),
+                  data=json.dumps(space_support_details))
 
 
-def _get_storage_id(storage_name, admin_panel_client):
-    for storage_id in admin_panel_client.get_storages().ids:
-        storage = admin_panel_client.get_storage_details(storage_id)
-        if storage.name == storage_name:
-            return storage.id
+def _get_storage_id(provider_hostname, admin_username,
+                    admin_password, storage_name):
+    storages_id = http_get(ip=provider_hostname, port=PANEL_REST_PORT,
+                           path=get_panel_rest_path('provider', 'storages'),
+                           auth=(admin_username, admin_password))
+    for storage_id in storages_id.json()['ids']:
+        storage_details = http_get(ip=provider_hostname, port=PANEL_REST_PORT,
+                                   path=get_panel_rest_path('provider',
+                                                            'storages',
+                                                            storage_id),
+                                   auth=(admin_username, admin_password))
+        if storage_details.json()['name'] == storage_name:
+            return storage_id
 
 
 def _init_storage(owner_credentials, space_name, hosts, storage_conf):
@@ -210,14 +249,13 @@ def _init_storage(owner_credentials, space_name, hosts, storage_conf):
 
     def create_cdmi_object(path, data=None, repeats=10,
                            auth=(owner_credentials.username,
-                                 owner_credentials.password),
-                           url='https://{}:8443/cdmi/'
-                               ''.format(provider_hostname)):
-        result = None
+                                 owner_credentials.password)):
+        response = None
         for _ in xrange(repeats):
             try:
-                result = checked_call(requests.put, url + path, auth=auth,
-                                      data=data, verify=False)
+                response = http_put(ip=provider_hostname, port=8443,
+                                    path='/cdmi/'+path, auth=auth,
+                                    data=data)
             except HTTPNotFound:
                 # because user may not yet exist in provider first call
                 # will fail, as such wait some time and try again
@@ -225,13 +263,13 @@ def _init_storage(owner_credentials, space_name, hosts, storage_conf):
             else:
                 break
 
-        return result
+        return response
 
     _mkdirs(create_cdmi_object, space_name, hosts,
             storage_conf['directory tree'])
 
 
-def _mkdirs(http_put, cwd, hosts, dir_content=None):
+def _mkdirs(create_cdmi_obj, cwd, hosts, dir_content=None):
     if not dir_content:
         return
 
@@ -244,20 +282,20 @@ def _mkdirs(http_put, cwd, hosts, dir_content=None):
 
         path = cwd + '/' + name
         if name.startswith('dir'):
-            http_put(path + '/')
-            _mkdirs(http_put, path, hosts, content)
+            create_cdmi_obj(path + '/')
+            _mkdirs(create_cdmi_obj, path, hosts, content)
         else:
-            _mkfile(http_put, path, hosts, content)
+            _mkfile(create_cdmi_obj, path, hosts, content)
 
 
-def _mkfile(http_put, file_path, hosts, file_content=None):
+def _mkfile(create_cdmi_obj, file_path, hosts, file_content=None):
     if file_content:
         try:
             provider = file_content['provider']
         except TypeError:
-            http_put(file_path, str(file_content))
+            create_cdmi_obj(file_path, str(file_content))
         else:
-            http_put(file_path, data=file_content.get('content', None),
-                     url='https://{}:8443/cdmi/'.format(hosts[provider]))
+            create_cdmi_obj(file_path, data=file_content.get('content', None),
+                            url='https://{}:8443/cdmi/'.format(hosts[provider]))
     else:
-        http_put(file_path)
+        create_cdmi_obj(file_path)

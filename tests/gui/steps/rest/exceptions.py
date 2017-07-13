@@ -10,13 +10,9 @@ __license__ = "This software is released under the MIT license cited in " \
 _exceptions = {}
 
 
-def checked_call(call_fun, *args, **kwargs):
-    response = call_fun(*args, **kwargs)
-    if 200 <= response.status_code < 300:
-        return response
-    else:
-        ex_cls = _exceptions.get(response.status_code, HTTPError)
-        raise ex_cls(response)
+def raise_http_exception(response):
+    ex_cls = _exceptions.get(response.status_code, HTTPError)
+    raise ex_cls(response)
 
 
 class HTTPErrorMeta(type):
