@@ -4,6 +4,13 @@
 CHANGELOG
 ---------
 
+### 17.06.0-beta6
+
+* VFS-3358 fix steps managing btns in toolbar in data tab in op after changes in gui
+* VFS-3284 GUI tests: using new go to your files button
+* VFS-3322 add 10000 files creation performance test
+
+
 ### 17.06.0-beta4
 
 * VFS-3347 Add docker-dev build
