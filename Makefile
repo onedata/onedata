@@ -8,6 +8,9 @@ DOCKER_REG_PASSWORD ?= ""
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
 endif
+ifeq ($(strip $(COUCHBASE_VERSION)),)
+COUCHBASE_VERSION       := 4.5.1-2844
+endif
 ifeq ($(strip $(CLUSTER_MANAGER_VERSION)),)
 CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always)
 endif
@@ -45,7 +48,7 @@ GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgr
 ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
 export ONEDATA_GIT_URL
 
-.PHONY: docker package.tar.gz
+.PHONY: docker docker-dev package.tar.gz
 
 all: build
 
@@ -76,11 +79,7 @@ unpack = tar xzf $(1).tar.gz
 branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
 	./onedata_submodules.sh init ${submodule}
-ifeq ($(branch),develop)
-	./onedata_submodules.sh update --remote ${submodule}
-else
 	./onedata_submodules.sh update ${submodule}
-endif
 
 ##
 ## Build
@@ -155,11 +154,23 @@ test:
 test_performance:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
 
+test_performance_rest:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k "not files_creation and not sysbench"
+
+test_performance_sysbench:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k sysbench
+
+test_performance_files_creation:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k test_files_creation
+
+test_performance_concurrent_files_creation:
+	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k concurrent_files_creation
+
 test_gui_firefox:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
 
 test_gui_chrome:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --full-trace --xvfb --xvfb-recording=failed
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
 
 test_gui_acceptance_release_chrome:
 	./test_run_gui.py --env=getting_started -t tests/gui --test-type guiv -vvv --driver=Chrome -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=failed
@@ -214,6 +225,7 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
+	sed -i 's/{{couchbase_version}}/$(COUCHBASE_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider.spec
@@ -258,6 +270,7 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider/DEBIAN/control
+	sed -i 's/{{couchbase_version}}/$(COUCHBASE_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
@@ -295,22 +308,29 @@ package.tar.gz:
 ## Docker artifact
 ##
 
-docker:
+docker: docker-dev
 	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
                       --build-arg RELEASE=$(DOCKER_RELEASE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
+                      --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
                       --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
                       --name oneprovider \
                       --publish --remove docker
 
-##
-## Build python REST clients generated from swaggers. (used in gui tests)
-##
-
-build_swaggers:
-	cd onezone_swagger && ./build.sh && cd generated/python && mv onezone_client ../../../tests/gui/utils
-	cd onepanel_swagger && ./build.sh && cd generated/python && mv onepanel_client ../../../tests/gui/utils
+docker-dev:
+	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
+                      --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
+                      --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
+                      --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
+                      --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
+                      --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
+                      --build-arg ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
+                      --report docker-dev-build-report.txt \
+                      --short-report docker-dev-build-list.json \
+                      --name oneprovider-dev \
+                      --publish --remove docker-dev

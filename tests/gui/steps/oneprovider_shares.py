@@ -2,6 +2,8 @@
 """
 from selenium.common.exceptions import StaleElementReferenceException
 
+from tests.gui.utils.generic import repeat_failed
+
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -138,8 +140,10 @@ def is_selected_share_named(selenium, browser_id, share_name):
                     'public share is named "{share_name}"'))
 @then(parsers.parse('user of {browser_id} sees that '
                     'public share is named "{share_name}"'))
+@repeat_failed(timeout=60, interval=5)
 def is_public_share_named(selenium, browser_id, share_name):
     driver = selenium[browser_id]
+    driver.refresh()
     name = driver.find_element_by_css_selector('.share-name').text
     assert name == share_name, 'share is named {} instead of {}' \
                                ''.format(name, share_name)

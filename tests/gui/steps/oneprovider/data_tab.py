@@ -2,19 +2,20 @@
 in various GUI testing scenarios
 """
 
+__author__ = "Bartek Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+
 from itertools import izip
 
 import pytest
 from pytest_bdd import given, when, then, parsers
 
-
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, implicit_wait, parse_seq, upload_file_path
-
-__author__ = "Jakub Liput, Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+from tests.gui.utils.generic import (repeat_failed, implicit_wait, parse_seq,
+                                     upload_file_path, transform)
 
 
 @when(parsers.parse('user of {browser_id} uses spaces select to change '
@@ -30,15 +31,24 @@ def change_space_view_in_data_tab_in_op(selenium, browser_id,
     selector.spaces[space_name].click()
 
 
-@when(parsers.parse('user of {browser_id} clicks the button from top menu bar '
-                    'with tooltip "{tooltip_name}"'))
-@then(parsers.parse('user of {browser_id} clicks the button from top menu bar '
-                    'with tooltip "{tooltip_name}"'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) clicks the button '
+                 r'from top menu bar with tooltip '
+                 r'"(?P<tooltip>Create directory|Create file|Share element|'
+                 r'Edit metadata|Rename element|Change element permissions|'
+                 r'Copy element|Cut element|Remove element|'
+                 r'Show file distribution)"'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) clicks the button '
+                 r'from top menu bar with tooltip '
+                 r'"(?P<tooltip>Create directory|Create file|Share element|'
+                 r'Edit metadata|Rename element|Change element permissions|'
+                 r'Copy element|Cut element|Remove element|'
+                 r'Show file distribution)"'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
-                                                 tooltip_name, op_page):
+                                                 tooltip, op_page):
     driver = selenium[browser_id]
-    op_page(driver).data.toolbar[tooltip_name].click()
+    btn = getattr(op_page(driver).data.toolbar, transform(tooltip))
+    btn.click()
 
 
 @when(parsers.parse('user of {browser_id} sees that {btn_list} button '
@@ -56,7 +66,7 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
     toolbar = op_page(driver).data.toolbar
     err_msg = '{} should be disabled but is not'
     for btn in parse_seq(btn_list):
-        item = toolbar[btn]
+        item = getattr(toolbar, transform(btn))
         assert item.is_enabled() is True, err_msg.format(item)
 
 
@@ -75,7 +85,8 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
     toolbar = op_page(driver).data.toolbar
     err_msg = '{} btn should be disabled but is not in toolbar in op data tab'
     for btn in parse_seq(btn_list):
-        assert toolbar[btn].is_enabled() is False, err_msg.format(btn)
+        item = getattr(toolbar, transform(btn))
+        assert item.is_enabled() is False, err_msg.format(btn)
 
 
 @when(parsers.parse('user of {browser_id} sees that current working directory '

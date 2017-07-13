@@ -13,37 +13,55 @@ from tests.gui.conftest import WAIT_BACKEND
 from tests.gui.utils.generic import repeat_failed, find_web_elem
 
 
-def _enter_user_credentials_in_login_modal(driver, modals, credentials):
-    modal = modals(driver).login
-    modal.username = credentials.username
-    modal.password = credentials.password
+def _enter_user_credentials_in_login_modal(login_page, user, users):
+    login_page.username = user
+    login_page.password = users[user]
 
 
-@when(parsers.parse('user of {browser_id} enters credentials of "{user}" '
-                    'in "Login with username and password" modal'))
-@then(parsers.parse('user of {browser_id} enters credentials of "{user}" '
-                    'in "Login with username and password" modal'))
+@when(parsers.parse('user of {browser_id} enters credentials of {user} '
+                    'in login form in oz login page'))
+@when(parsers.parse('user of {browser_id} enters credentials of {user} '
+                    'in login form in oz login page'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def wt_enter_user_credentials_in_login_modal(selenium, browser_id, user,
-                                             users, modals):
+                                             users, oz_login_page):
     driver = selenium[browser_id]
-    _enter_user_credentials_in_login_modal(driver, modals, users[user])
+    _enter_user_credentials_in_login_modal(oz_login_page(driver), user, users)
 
 
-@given(parsers.parse('user of {browser_id} entered credentials of "{user}" '
-                     'in "Login with username and password" modal'))
+@given(parsers.parse('user of {browser_id} entered credentials of {user} '
+                     'in login form in oz login page'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def g_enter_user_credentials_in_login_modal(selenium, browser_id, user,
-                                            users, modals):
+                                            users, oz_login_page):
     driver = selenium[browser_id]
-    _enter_user_credentials_in_login_modal(driver, modals, users[user])
+    _enter_user_credentials_in_login_modal(oz_login_page(driver), user, users)
+
+
+@given(parsers.parse('user of {browser_id} clicked on the "username" '
+                     'login button in oz login page'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def g_click_on_username_login_btn(selenium, browser_id, oz_login_page):
+    driver = selenium[browser_id]
+    oz_login_page(driver).username_login()
+
+
+@given(parsers.parse('user of {browser_id} clicked on the Sign in '
+                     'button in oz login page'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def g_click_on_sign_in_btn_in_oz_login_page(selenium, browser_id,
+                                            oz_login_page):
+    driver = selenium[browser_id]
+    oz_login_page(driver).sign_in()
 
 
 @given(parsers.parse('user of {browser_id} seen {zone_name} '
-                     'zone name in login page'))
+                     'zone name in oz login page'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def g_assert_zone_name_in_login_page(selenium, browser_id, zone_name):
-    driver = selenium[browser_id]
-    name = find_web_elem(driver, '.zone-company-name', 'no zone name found').text
-    assert name.lower() == zone_name.lower(), \
-        'found {} zone name instead of expected {}'.format(name, zone_name)
+def g_assert_zone_name_in_login_page(selenium, browser_id,
+                                     zone_name, oz_login_page):
+    login_page = oz_login_page(selenium[browser_id])
+    displayed_name = login_page.zone_name
+    assert displayed_name.lower() == zone_name.lower(), \
+        'found {} zone name instead of expected {}'.format(displayed_name,
+                                                           zone_name)

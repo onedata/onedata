@@ -8,6 +8,7 @@ import sys
 from collections import namedtuple
 from itertools import chain
 import subprocess as sp
+from collections import defaultdict
 
 from py.xml import html
 from pytest import fixture, UsageError, skip
@@ -37,7 +38,7 @@ WAIT_BACKEND = 15
 
 # waiting for backend to load after refresh
 WAIT_REFRESH = WAIT_BACKEND
-MAX_REFRESH_COUNT = 6
+MAX_REFRESH_COUNT = 8
 
 html.__tagspec__.update({x: 1 for x in ('video', 'source')})
 VIDEO_ATTRS = {'controls': '',
@@ -164,6 +165,12 @@ def onepage():
 def onepanel():
     from tests.gui.utils.onepanel import Onepanel
     return Onepanel
+
+
+@fixture(scope='session')
+def oz_login_page():
+    from tests.gui.utils.common.oz_login import OnezoneLoginPage
+    return OnezoneLoginPage
 
 
 @fixture(scope='session')
@@ -350,6 +357,7 @@ if not is_base_url_provided:
 def pytest_collection_modifyitems(items):
     first = []
     last = []
+    last2 = []
     rest = []
     run_first = ('test_cluster_deployment',
                  'test_user_can_unsupport_space',
@@ -357,8 +365,9 @@ def pytest_collection_modifyitems(items):
                  )
     run_last = ('test_user_sees_that_when_no_provider_is_working_'
                 'appropriate_msg_is_shown',
-                'test_revoke_space_support',
-                'test_user_deregisters_provider')
+                'test_revoke_space_support')
+
+    run_last2 = ('test_user_deregisters_provider',)
 
     for item in items:
         for test in run_first:
@@ -371,8 +380,14 @@ def pytest_collection_modifyitems(items):
                     last.append(item)
                     break
             else:
-                rest.append(item)
+                for test in run_last2:
+                    if test in item.nodeid:
+                        last2.append(item)
+                        break
+                else:
+                    rest.append(item)
 
     first.extend(rest)
     first.extend(last)
+    first.extend(last2)
     items[:] = first

@@ -11,6 +11,7 @@ Feature: Deployment process using panel of zone and provider
     When user of browser1 clicks on Create new cluster button in welcome page in Onepanel
     And user of browser1 enables [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options for .*onezone.* host in step 1 of deployment process in Onepanel
     And user of browser1 types "z1" to Zone name field in step 1 of deployment process in Onepanel
+    And user of browser1 types "z1" zone ip to Zone domain name field in step 1 of deployment process in Onepanel
     And user of browser1 clicks on Deploy button in step 1 of deployment process in Onepanel
     And user of browser1 sees that cluster deployment has started
 
@@ -19,10 +20,8 @@ Feature: Deployment process using panel of zone and provider
     And user of browser2 clicks on Deploy button in step 1 of deployment process in Onepanel
     And user of browser2 sees that cluster deployment has started
     And user of browser2 waits 90 seconds for cluster deployment to finish
-    And user of browser2 sees an info notify with text matching to: .*deployed.*successfully.*
 
     And user of browser1 waits 90 seconds for cluster deployment to finish
-    And user of browser1 sees an info notify with text matching to: .*deployed.*successfully.*
     And user of browser1 clicks on Manage the cluster button in last step of deployment process in Onepanel
     Then user of browser1 sees that [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options are enabled for .*onezone.* host in Nodes page in Onepanel
     And user of browser1 sees that [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options cannot be changed for .*onezone.* host in Nodes page in Onepanel
@@ -42,7 +41,7 @@ Feature: Deployment process using panel of zone and provider
     And user of browser2 sees an info notify with text matching to: .*[Ss]torage.*added.*
     And user of browser2 expands "onestorage" record on storages list in step 3 of deployment process in Onepanel
     And user of browser2 sees that "onestorage" Storage type is posix in step 3 of deployment process in Onepanel
-#    And user of browser2 sees that "onestorage" Mount point is /volumes/storage in step 3 of deployment process in Onepanel
+    And user of browser2 sees that "onestorage" Mount point is /volumes/storage in step 3 of deployment process in Onepanel
 
     And user of browser2 clicks on Finish button in step 3 of deployment process in Onepanel
     And user of browser2 sees an info notify with text matching to: .*[Ss]torage.*added.*

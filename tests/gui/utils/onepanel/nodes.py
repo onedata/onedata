@@ -13,11 +13,11 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class HostRecord(PageObject):
-    name = id = Label('td[data-th="Hosts"]',
+    name = id = Label('td[data-option=name]',
                       parent_name='hosts table in cluster deployment step')
-    database = WebItem('td[data-th="Database"]', cls=Toggle)
-    cluster_worker = WebItem('td[data-th="Cluster Worker"]', cls=Toggle)
-    cluster_manager = WebItem('td[data-th="Cluster Manager"]', cls=Toggle)
+    database = WebItem('td[data-option=database]', cls=Toggle)
+    cluster_worker = WebItem('td[data-option=clusterWorker]', cls=Toggle)
+    cluster_manager = WebItem('td[data-option=clusterManager]', cls=Toggle)
     primary_cluster_manager = WebItem('td[data-th="Primary Cluster Manager"]',
                                       cls=Toggle)
 

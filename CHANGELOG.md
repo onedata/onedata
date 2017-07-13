@@ -4,6 +4,41 @@
 CHANGELOG
 ---------
 
+### 17.06.0-beta4
+
+* VFS-3347 Add docker-dev build
+
+
+### 17.06.0-beta3
+
+* VFS-3353 Enable user name/email set in ``update_refs.sh``
+* VFS-3340 GUI acceptance tests update: changed timeouts, get support modal tests
+* Releasing new version 17.06.0-beta3
+
+
+### 17.06.0-beta2
+
+* VFS-3348 Update couchbase version to 4.5.1
+
+
+### 3.0.0-rc16
+
+* VFS-3184 Add copy/remove tests.
+* VFS-3017 Check if mtime and ctime are equal after rename (in previous implemetation of rename they were greater).
+
+
+### 3.0.0-rc15
+
+* Update refs to origin/release/3.0.0-rc15.
+* VFS-3197 Enable release docker to log to stdout
+* Update refs to origin/feature/VFS-3213-change-storage-verification-mechanism.
+* VFS-3051 add clipboard fixture and replace pyperclip uses with it
+* VFS-3051 enhance logging capabilities
+* VFS-3051 add support for recording tests with multiple browsers
+* implement changes to allow splitting acceptance tests on bamboo
+* VFS-3051 add support for logs from multiple browsers
+
+
 ### 3.0.0-rc14
 
 * VFS-3101 change Then steps in metadata scenarios

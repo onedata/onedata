@@ -11,18 +11,18 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class UserAccountDetails(PageObject):
-    username = Label('.field-username')
-    password = Label('.field-secretPassword')
+    username = Label('.field-generic-username')
+    password = Label('.field-static-secretPassword')
 
     def __str__(self):
         return 'Account details in {}'.format(self.parent)
 
 
 class UserAccountsForm(PageObject):
-    username = Label('.field-username')
-    current_password = Input('input.field-currentPassword')
-    new_password = Input('input.field-newPassword')
-    retype_new_password = Input('input.field-newPasswordRetype')
+    username = Label('.field-generic-username')
+    current_password = Input('input.field-change-currentPassword')
+    new_password = Input('input.field-change-newPassword')
+    retype_new_password = Input('input.field-change-newPasswordRetype')
     confirm_password_change = NamedButton('button',
                                           text='Confirm password change')
 

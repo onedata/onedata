@@ -127,5 +127,5 @@ Feature: Multi_regular_file_stat
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/file1 to s1/file2 on client1
     Then u2 sees [file2] in s1 on client2
-    And status-change time of u2's s1/file2 is greater than modification time on client2
-    And status-change time of u2's s1/file2 is greater than access time on client2
+    And status-change time of u2's s1/file2 is equal to modification time on client2
+    And status-change time of u2's s1/file2 is equal to access time on client2

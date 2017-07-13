@@ -34,9 +34,24 @@ def wt_click_on_btn_in_content(selenium, browser_id_list,
                  '(?P<sub_item>.+?) item in submenu of "(?P<record>.+?)" '
                  'item in (?P<sidebar>CLUSTERS) sidebar in Onepanel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def wt_click_on_subitem_for_record(selenium, browser_id_list, sidebar,
-                                   sub_item, record, onepanel):
+def wt_click_on_subitem_for_item(selenium, browser_id_list, sidebar,
+                                 sub_item, record, onepanel):
     for browser_id in parse_seq(browser_id_list):
         nav = getattr(onepanel(selenium[browser_id]).sidebar,
                       transform(sidebar))
         nav.items[record].submenu[sub_item].click()
+
+
+@when(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on '
+                 '"(?P<record>.+?)" item in (?P<sidebar>CLUSTERS) '
+                 'sidebar in Onepanel'))
+@then(parsers.re('users? of (?P<browser_id_list>.+?) clicks? on '
+                 '"(?P<record>.+?)" item in (?P<sidebar>CLUSTERS) '
+                 'sidebar in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def wt_click_on_sidebar_item(selenium, browser_id_list, sidebar,
+                             record, onepanel):
+    for browser_id in parse_seq(browser_id_list):
+        nav = getattr(onepanel(selenium[browser_id]).sidebar,
+                      transform(sidebar))
+        nav.items[record].click()

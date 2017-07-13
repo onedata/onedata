@@ -24,14 +24,6 @@ class _ProviderRecord(PageObject):
         return '{} provider record in {}'.format(self.name, self.parent)
 
 
-class _TokenDropdownMenu(PageObject):
-    token = Input('input')
-    copy_token = Button('button')
-
-    def __str__(self):
-        return 'token dropright in {}'.format(self.parent)
-
-
 class _SettingsDropdown(PageObject, ExpandableMixin):
 
     def __init__(self, driver, web_elem, *args, **kwargs):
@@ -47,8 +39,8 @@ class _SettingsDropdown(PageObject, ExpandableMixin):
     def rename(self):
         self._click_on_btn('rename')
 
-    def get_support(self):
-        self._click_on_btn('get support')
+    def add_storage(self):
+        self._click_on_btn('add storage')
 
     def leave(self):
         self._click_on_btn('leave')
@@ -78,10 +70,7 @@ class _SpaceRecord(PageObject, ExpandableMixin):
     settings = WebItem('.settings-tool .settings-dropdown', cls=_SettingsDropdown)
     providers = WebItemsSequence('ul.tertiary-list li.sidebar-space-provide',
                                  cls=_ProviderRecord)
-    dropright_with_token = WebItem('ul.tertiary-list li.get-support '
-                                   '.dropdown-menu', cls=_TokenDropdownMenu)
-    get_support = Button('ul.tertiary-list li.get-support .dropdown')
-
+    add_storage = Button('ul.tertiary-list li.get-support')
     _toggle = WebElement('.secondary-item-container .clickable')
     _home_space_icon = WebElement('.oneicon-space-home')
     _home_icon = WebElement('.secondary-item-element.star-toggle .oneicon-home')

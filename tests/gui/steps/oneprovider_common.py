@@ -1,10 +1,12 @@
 """Common steps for Oneprovider.
 """
+
 __author__ = "Jakub Liput"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import time
 
 from tests.gui.utils.generic import parse_seq, find_web_elem
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
@@ -125,7 +127,14 @@ def _wait_for_op_session_to_start(selenium, browser_id_list):
 
     for browser_id in parse_seq(browser_id_list):
         driver = selenium[browser_id]
-        Wait(driver, WAIT_BACKEND).until(
+
+        # because of current subscription it is necessary
+        # to wait under certain circumstances for things to properly work
+        time.sleep(12)
+        driver.get(parse_url(driver.current_url).group('base_url'))
+
+        # TODO rm *4 when provider session starts becomes faster
+        Wait(driver, WAIT_BACKEND*4).until(
             lambda _: _check_url(),
             message='waiting for session to start'
         )

@@ -61,8 +61,8 @@ Feature: Directory_stat
     And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/dir1 to s1/dir2
-    Then status-change time of u1's s1/dir2 is greater than modification time
-    And status-change time of u1's s1/dir2 is greater than access time
+    Then status-change time of u1's s1/dir2 is equal to modification time
+    And status-change time of u1's s1/dir2 is equal to access time
 
   Scenario: Status-change time when changing mode
     When u1 creates directories [s1/dir1]
