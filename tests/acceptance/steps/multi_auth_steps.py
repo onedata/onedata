@@ -12,10 +12,10 @@ from tests.utils.acceptance_utils import *
 from pytest_bdd import given
 
 
-@given(parsers.parse('{users} start oneclients {client_instances} in\n' +
-                     '{mount_paths} on client_hosts\n' +
-                     '{client_hosts} respectively,\n' +
-                     'using {tokens}'))
+@given(parsers.re('(?P<users>.*) start oneclients (?P<client_instances>.*) in\n' +
+                     '(?P<mount_paths>.*) on client_hosts\n' +
+                     '(?P<client_hosts>.*) respectively,\n' +
+                     'using (?P<tokens>.*)'))
 def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
                 request, onedata_environment, context, client_dockers,
                 env_description_abs_path, providers):
@@ -27,7 +27,7 @@ def multi_mount(users, client_instances, mount_paths, client_hosts, tokens,
                 tokens=list_parser(tokens))
 
 
-@then(parsers.parse('{spaces} are mounted for {user} on {client_nodes}'))
+@then(parsers.re('(?P<spaces>.*) are mounted for (?P<user>\w+) on (?P<client_nodes>.*)'))
 def check_spaces(spaces, user, client_nodes, context):
     spaces = list_parser(spaces)
     user = str(user)
@@ -44,8 +44,8 @@ def check_spaces(spaces, user, client_nodes, context):
         assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} remounts oneclient {client_node}'))
-@then(parsers.parse('{user} remounts oneclient {client_node}'))
+@when(parsers.re('(?P<user>\w+) remounts oneclient (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) remounts oneclient (?P<client_node>.*)'))
 def remount_client(user, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)

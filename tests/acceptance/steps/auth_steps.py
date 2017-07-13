@@ -12,7 +12,7 @@ from tests.utils.client_utils import mount_users
 from pytest_bdd import given
 
 
-@given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
+@given(parsers.re('(?P<user>\w+) starts oneclient in (?P<mount_path>.*) using (?P<token>.*)'))
 def default_mount(user, mount_path, token, request, onedata_environment,
                   context, client_dockers, env_description_abs_path, providers):
     mount_users(request, onedata_environment, context, client_dockers,
@@ -21,16 +21,16 @@ def default_mount(user, mount_path, token, request, onedata_environment,
                 client_hosts=['client-host1'], tokens=[token])
 
 
-@when(parsers.parse('{spaces} is mounted for {user}'))
-@then(parsers.parse('{spaces} is mounted for {user}'))
-@when(parsers.parse('{spaces} are mounted for {user}'))
-@then(parsers.parse('{spaces} are mounted for {user}'))
+@when(parsers.re('(?P<spaces>.*) is mounted for (?P<user>\w+)'))
+@then(parsers.re('(?P<spaces>.*) is mounted for (?P<user>\w+)'))
+@when(parsers.re('(?P<spaces>.*) are mounted for (?P<user>\w+)'))
+@then(parsers.re('(?P<spaces>.*) are mounted for (?P<user>\w+)'))
 def check_spaces(spaces, user, context):
     multi_auth_steps.check_spaces(spaces, user, make_arg_list("client1"),
                                   context)
 
 
-@when(parsers.parse('{user} remounts oneclient'))
-@then(parsers.parse('{user} remounts oneclient'))
+@when(parsers.re('(?P<user>\w+) remounts oneclient'))
+@then(parsers.re('(?P<user>\w+) remounts oneclient'))
 def remount_client(user, context):
     multi_auth_steps.remount_client(user, 'client1', context)

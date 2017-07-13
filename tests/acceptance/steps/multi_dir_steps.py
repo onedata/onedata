@@ -12,16 +12,16 @@ from tests.utils.client_utils import ls, rm, rmdir, mkdir, cp
 import os
 
 
-@when(parsers.parse('{user} creates directories {dirs} on {client_node}'))
-@when(parsers.parse('{user} creates directories {dirs}\non {client_node}'))
+@when(parsers.re('(?P<user>\w+) creates directories (?P<dirs>.*) on (?P<client_node>.*)'))
+@when(parsers.re('(?P<user>\w+) creates directories (?P<dirs>.*)\non (?P<client_node>.*)'))
 def create(user, dirs, client_node, context):
     create_base(user, dirs, client_node, context)
 
 
-@when(parsers.parse('{user} fails to create directories {dirs} on {client_node}'))
-@then(parsers.parse('{user} fails to create directories {dirs} on {client_node}'))
-@when(parsers.parse('{user} fails to create directories {dirs}\non {client_node}'))
-@then(parsers.parse('{user} fails to create directories {dirs}\non {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to create directories (?P<dirs>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to create directories (?P<dirs>.*) on (?P<client_node>.*)'))
+@when(parsers.re('(?P<user>\w+) fails to create directories (?P<dirs>.*)\non (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to create directories (?P<dirs>.*)\non (?P<client_node>.*)'))
 def fail_to_create(user, dirs, client_node, context):
     create_base(user, dirs, client_node, context, should_fail=True)
 
@@ -39,10 +39,10 @@ def create_base(user, dirs, client_node, context, should_fail=False):
         assert_generic(client.perform, should_fail, condition)
 
 
-@when(parsers.parse('{user} creates structure of {number} nested directories in'
-                    ' {root_dir} on {client_node}'))
-@then(parsers.parse('{user} creates structure of {number} nested directories in'
-                    ' {root_dir} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) creates structure of (?P<number>.*) nested directories in'
+                    ' (?P<root_dir>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) creates structure of (?P<number>.*) nested directories in'
+                    ' (?P<root_dir>.*) on (?P<client_node>.*)'))
 def create_nested_dirs(user, number, root_dir, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -57,8 +57,8 @@ def create_nested_dirs(user, number, root_dir, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} creates directory and parents {paths} on {client_node}'))
-@when(parsers.parse('{user} creates directory and parents {paths}\non {client_node}'))
+@when(parsers.re('(?P<user>\w+) creates directory and parents (?P<paths>.*) on (?P<client_node>.*)'))
+@when(parsers.re('(?P<user>\w+) creates directory and parents (?P<paths>.*)\non (?P<client_node>.*)'))
 def create_parents(user, paths, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -73,14 +73,14 @@ def create_parents(user, paths, client_node, context):
         assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} deletes empty directories {dirs} on {client_node}'))
-@then(parsers.parse('{user} deletes empty directories {dirs} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) deletes empty directories (?P<dirs>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) deletes empty directories (?P<dirs>.*) on (?P<client_node>.*)'))
 def delete_empty(user, dirs, client_node, context):
     delete_empty_base(user, dirs, client_node, context)
 
 
-@when(parsers.parse('{user} fails to delete empty directories {dirs} on {client_node}'))
-@then(parsers.parse('{user} fails to delete empty directories {dirs} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to delete empty directories (?P<dirs>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to delete empty directories (?P<dirs>.*) on (?P<client_node>.*)'))
 def fail_to_delete_empty(user, dirs, client_node, context):
     delete_empty_base(user, dirs, client_node, context, should_fail=True)
 
@@ -99,8 +99,8 @@ def delete_empty_base(user, dirs, client_node, context, should_fail=False):
         assert_generic(client.perform, should_fail, condition)
 
 
-@when(parsers.parse('{user} deletes non-empty directories {dirs} on {client_node}'))
-@then(parsers.parse('{user} deletes non-empty directories {dirs} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) deletes non-empty directories (?P<dirs>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) deletes non-empty directories (?P<dirs>.*) on (?P<client_node>.*)'))
 def delete_non_empty(user, dirs, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -115,8 +115,8 @@ def delete_non_empty(user, dirs, client_node, context):
         assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} deletes empty directory and parents {paths} on ' +
-                    '{client_node}'))
+@when(parsers.re('(?P<user>\w+) deletes empty directory and parents (?P<paths>.*) on ' +
+                    '(?P<client_node>.*)'))
 def delete_parents(user, paths, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -131,7 +131,7 @@ def delete_parents(user, paths, client_node, context):
         assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} copies directory {dir1} to {dir2} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) copies directory (?P<dir1>.*) to (?P<dir2>.*) on (?P<client_node>.*)'))
 def copy_dir(user, dir1, dir2, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -144,14 +144,14 @@ def copy_dir(user, dir1, dir2, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} can\'t list {dir} on {client_node}'))
-@then(parsers.parse('{user} can\'t list {dir} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) can\'t list (?P<dir>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) can\'t list (?P<dir>.*) on (?P<client_node>.*)'))
 def cannot_list_dir(user, dir, client_node, context):
     list_dir_base(user, dir, client_node, context, should_fail=True)
 
 
-@when(parsers.parse('{user} can list {dir} on {client_node}'))
-@then(parsers.parse('{user} can list {dir} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) can list (?P<dir>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) can list (?P<dir>.*) on (?P<client_node>.*)'))
 def list_dir(user, dir, client_node, context):
     list_dir_base(user, dir, client_node, context)
 
@@ -167,10 +167,10 @@ def list_dir_base(user, dir, client_node, context, should_fail=False):
     assert_generic(client.perform, should_fail, condition)
 
 
-@when(parsers.parse('{user} lists directory nested on level {level} in'
-                    ' {root_dir} on {client_node}'))
-@when(parsers.parse('{user} lists directory nested on level {level} in'
-                    ' {root_dir} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) lists directory nested on level (?P<level>.*) in'
+                    ' (?P<root_dir>.*) on (?P<client_node>.*)'))
+@when(parsers.re('(?P<user>\w+) lists directory nested on level (?P<level>.*) in'
+                    ' (?P<root_dir>.*) on (?P<client_node>.*)'))
 def list_nested_dir(user, level, root_dir, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
