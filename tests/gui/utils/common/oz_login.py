@@ -11,10 +11,10 @@ __license__ = "This software is released under the MIT license cited in " \
 class OnezoneLoginPage(object):
     zone_name = Label('.zone-company-name')
     username_login = Button('.login-icon-box.username')
-    username = Input('input[placeholder="Username"]')
-    password = Input('input[placeholder="Password"]')
+    username = Input('input#-username-input')
+    password = Input('input#-password-input')
     sign_in = NamedButton('button', text='Sign in')
-    err_msg = Label('.login-error-message')
+    err_msg = Label('.login-form-error')
 
     def __init__(self, driver):
         self.web_elem = self.driver = driver

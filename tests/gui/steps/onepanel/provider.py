@@ -1,15 +1,15 @@
 """Steps used in provider page in onepanel"""
 
-from pytest_bdd import when, then, parsers
-
-from tests.gui.conftest import WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, transform
-
-
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from pytest_bdd import when, then, parsers
+
+from tests.gui.conftest import WAIT_FRONTEND
+from tests.gui.utils.generic import repeat_failed, transform
 
 
 @when(parsers.re('user of (?P<browser_id>.*?) sees that (?P<attr>ID|'
@@ -23,10 +23,11 @@ __license__ = "This software is released under the MIT license cited in " \
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_assert_value_of_provider_attribute(selenium, browser_id,
                                           attr, val, onepanel):
-    info = onepanel(selenium[browser_id]).content.provider.details
-    displayed_val = getattr(info, transform(attr))
+    details = onepanel(selenium[browser_id]).content.provider.details
+    displayed_val = getattr(details, transform(attr))
     assert displayed_val == val, \
-        'displayed {} instead of expected {}'.format(displayed_val, val)
+        ('displayed {} instead of expected {} as '
+         'provider\'s {}'.format(displayed_val, val, attr))
 
 
 @when(parsers.parse('user of {browser_id} sees that Redirection point '
@@ -38,11 +39,12 @@ def wt_assert_value_of_provider_attribute(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_assert_value_of_provider_redirection_point(selenium, browser_id,
                                                   host, hosts, onepanel):
-    ip = 'https://{}'.format(hosts['oneprovider'][host])
-    info = onepanel(selenium[browser_id]).content.provider.details
-    displayed_ip = info.redirection_point
-    assert displayed_ip == ip, \
-        'displayed {} instead of expected {}'.format(displayed_ip, ip)
+    expected_ip = 'https://{}'.format(hosts['oneprovider'][host])
+    displayed_ip = (onepanel(selenium[browser_id]).content.
+                    provider.details.redirection_point)
+    assert displayed_ip == expected_ip, \
+        ('displayed {} instead of expected {} '
+         'as provider\'s redirection point'.format(displayed_ip, expected_ip))
 
 
 @when(parsers.re('user of (?P<browser_id>.*?) types "(?P<val>.*?)" to '
@@ -54,8 +56,8 @@ def wt_assert_value_of_provider_redirection_point(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_type_val_to_in_box_in_provider_details_form(selenium, browser_id,
                                                    val, attr, onepanel):
-    setattr(onepanel(selenium[browser_id]).content.provider.form,
-            transform(attr), val)
+    form = onepanel(selenium[browser_id]).content.provider.form
+    setattr(form, transform(attr), val)
 
 
 @when(parsers.parse('user of {browser_id} types "{host}" provider ip to '
@@ -65,8 +67,8 @@ def wt_type_val_to_in_box_in_provider_details_form(selenium, browser_id,
                     'Redirection point input box in modify provider details '
                     'form in Provider panel'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def wt_type_val_to_in_box_in_provider_details_form(selenium, browser_id,
-                                                   host, hosts, onepanel):
+def wt_type_host_ip_to_in_box_in_provider_details_form(selenium, browser_id,
+                                                       host, hosts, onepanel):
     form = onepanel(selenium[browser_id]).content.provider.form
     form.redirection_point = 'https://{}'.format(hosts['oneprovider'][host])
 

@@ -10,7 +10,6 @@ import re
 import time
 import random
 import stat
-import subprocess
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.keys import Keys
@@ -19,7 +18,7 @@ from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
 from tests.gui.utils.generic import parse_seq, suppress, repeat_failed, transform
-from tests.gui.utils.generic import parse_url, enter_text, redirect_display
+from tests.gui.utils.generic import parse_url, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
 from pytest_bdd import given, when, then, parsers
@@ -248,25 +247,4 @@ def create_temp_dir_with_files(browser_id, num, dir_path, tmpdir):
     path.extend(dir_path.split('/'))
     directory = _create_temp_dir(tmpdir, path, recursive=True)
     for i in range(10, num + 10):
-        _create_temp_file(directory, 'file_{}.txt'.format(i), '1' * i)
-
-
-@given(parsers.parse('there are no working provider(s) named {provider_list}'))
-def kill_providers(persistent_environment, provider_list):
-    kill_cmd = ['docker', 'kill']
-    inspect_cmd = ['docker', 'inspect', '-f', '{{.State.Running}}']
-    for provider in parse_seq(provider_list):
-        for node in persistent_environment["op_worker_nodes"]:
-            if provider in node:
-                container_name = node.split('@')[1]
-                subprocess.call(kill_cmd + [container_name])
-                for _ in xrange(10):
-                    is_alive = subprocess.Popen(inspect_cmd + [container_name],
-                                                stdout=subprocess.PIPE)
-                    with suppress(Exception):
-                        if is_alive.communicate()[0] == 'false\n':
-                            break
-                    time.sleep(1)
-                else:
-                    raise RuntimeError('container {} still alive, while it '
-                                       'should not be'.format(container_name))
+        _create_temp_file(directory, 'file_{}.txt'.format(i), '1' * 10)

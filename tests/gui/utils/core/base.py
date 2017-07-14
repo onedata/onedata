@@ -69,7 +69,13 @@ class PageObject(AbstractPageObject):
             self._click_area = web_elem
 
     def __str__(self):
-        return 'web object'
+        name = self.__class__.__name__
+        if self.parent:
+            name += ' in ' + str(self.parent)
+        return name
+
+    def is_displayed(self):
+        return self.web_elem.is_displayed()
 
     def click(self):
         click_on_web_elem(self.driver, self._click_area,

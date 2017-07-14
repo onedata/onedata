@@ -6,7 +6,6 @@ Feature: Storage utilities using onepanel
     And user of browser1 entered credentials for admin in login form
     And users of browser1 pressed Sign in button
     And user of browser2 seen Z1 zone name in oz login page
-    And user of browser2 clicked on the "username" login button in oz login page
     And user of browser2 entered credentials of admin in login form in oz login page
     And user of browser2 clicked on the Sign in button in oz login page
 
@@ -34,7 +33,6 @@ Feature: Storage utilities using onepanel
     And user of browser2 types "hello_world2" in active edit box
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "hello_world2" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 refreshes site
 
     # receive support token
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
@@ -94,3 +92,9 @@ Feature: Storage utilities using onepanel
     And user of browser2 sees an info notify with text matching to: .*removed.*
     And user of browser2 sees that the modal has disappeared
     And user of browser2 sees that item named "dir100" has disappeared from files browser
+
+    # revoke space support
+    And user of browser1 expands toolbar for "hello_world2" space record in Spaces page in Onepanel
+    And user of browser1 clicks on Revoke space support option in space's toolbar in Onepanel
+    And user of browser1 clicks on Yes, revoke button in REVOKE SPACE SUPPORT modal in Onepanel
+    And user of browser1 sees an info notify with text matching to: .*[Ss]upport.*revoked.*

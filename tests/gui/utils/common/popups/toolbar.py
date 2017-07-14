@@ -1,4 +1,4 @@
-"""Utils and fixtures to facilitate operations on revoke space support.
+"""Utils and fixtures to facilitate operations on user account menu popup.
 """
 
 from tests.gui.utils.core.base import PageObject
@@ -11,8 +11,8 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class RevokeSpaceSupport(PageObject):
-    buttons = WebItemsSequence('button', cls=ButtonWithTextPageObject)
+class ToolbarPopup(PageObject):
+    options = WebItemsSequence('li a.clickable', cls=ButtonWithTextPageObject)
 
     def __str__(self):
-        return 'Revoke space support popup'
+        return 'User account popup'

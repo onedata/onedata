@@ -2,19 +2,20 @@
 common operations between various services.
 """
 
-from abc import ABCMeta, abstractmethod
-
-from tests.gui.utils.core.web_elements import WebItemsSequence, Label, WebElement, Button, WebItem
-from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
-from tests.gui.utils.core.base import PageObject
-
-from .account_management import AccountManagementContentPage
-
-
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from functools import partial
+
+from tests.gui.utils.core.web_elements import (WebItemsSequence, Label,
+                                               WebElement, Button, WebItem)
+from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
+from tests.gui.utils.core.base import PageObject, ExpandableMixin
+
+from .account_management import AccountManagementContentPage
 
 
 class BaseContent(PageObject):
@@ -43,7 +44,7 @@ class OnePage(object):
         return self.service
 
 
-class Toggle(PageObject):
+class _Toggle(PageObject):
     _lock = WebElement('.one-way-toggle-readonly-icon')
 
     def __str__(self):
@@ -67,3 +68,13 @@ class Toggle(PageObject):
             return True
         else:
             return False
+
+
+class _DropdownSelector(PageObject, ExpandableMixin):
+    selected = Label('.ember-power-select-selected-item')
+    options = WebItemsSequence('ul li', cls=ButtonWithTextPageObject)
+    _toggle = WebElement('.ember-basic-dropdown-trigger[role="button"]')
+
+
+Toggle = partial(WebItem, cls=_Toggle)
+DropdownSelector = partial(WebItem, cls=_DropdownSelector)
