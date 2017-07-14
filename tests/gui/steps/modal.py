@@ -50,7 +50,7 @@ def cp_token_from_add_storage_modal(browser_id, tmp_memory):
                     'in "Add storage" modal'))
 def gen_another_token_in_add_storage_modal(browser_id, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
-    modal.generate_another_token()
+    modal.generate_token()
 
 
 @when(parsers.parse('user of {browser_id} sees non-empty token '

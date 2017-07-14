@@ -3,21 +3,19 @@ Feature: Onezone GUI elements
 
 
   Background:
-    Given user opened browser window
-    And user of browser has account in "z1" Onezone service
+    Given initial users configuration in "z1" Onezone service:
+            - user1
+    And user opened browser window
     And user of browser opened z1 onezone page
-    And user of browser clicked on the "username" login button
-    And user of browser seen that "Login with username and password" modal has appeared
-    And user of browser entered his credentials in "Login with username and password" modal
-    And user of browser clicked "Sign In" confirmation button in displayed modal
+    And user of browser entered credentials of user1 in login form in oz login page
+    And user of browser clicked on the Sign in button in oz login page
 
 
   Scenario: User successfully creates space (presses ENTER after entering text)
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser types "helloworld" in active edit box
+    And user of browser types "helloworld" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser presses enter on keyboard
     Then user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -26,9 +24,8 @@ Feature: Onezone GUI elements
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser clicks on confirm button displayed next to active edit box
+    And user of browser types "helloworld" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on confirm button displayed next to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     Then user of browser sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
 
@@ -36,7 +33,6 @@ Feature: Onezone GUI elements
     When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser clicks on cancel button displayed next to active edit box
+    And user of browser types "helloworld" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on cancel button displayed next to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     Then user of browser sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel

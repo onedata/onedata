@@ -19,11 +19,3 @@ Feature: Onezone GUI elements
     And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     Then user of browser sees that URL matches: https?://[^/]*/#/home/login
     And user of browser should see that the page title contains "Login"
-
-
-  Scenario: User sees that home space of provider should have "cloud with home" icon
-    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
-    And user of browser sees that there is provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser expands submenu of provider named "p1" by clicking on cloud in provider record in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel
-    Then user of browser sees that space named "space1" in submenu of provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel is set as home

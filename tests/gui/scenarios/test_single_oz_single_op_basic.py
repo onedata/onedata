@@ -74,14 +74,15 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 #
 #
 # # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/onezone/access_tokens.feature')
-scenarios('../features/onezone/login.feature')
-scenarios('../features/onezone/space_creation.feature')
-scenarios('../features/onezone/space_management.feature')
-scenarios('../features/onezone/spaces_management.feature')
-scenarios('../features/onezone/providers.feature')
+# scenarios('../features/onezone/login.feature')
+# scenarios('../features/onezone/user_alias.feature')
+# scenarios('../features/onezone/space_creation.feature')
+# scenarios('../features/onezone/space_management.feature')
+# scenarios('../features/onezone/multiple_spaces_management.feature')
 
-# scenarios('../features/onezone/alias.feature')
+scenarios('../features/onezone/providers.feature')
+# scenarios('../features/onezone/access_tokens.feature')
+
 
 # scenarios('../features/common/account_management.feature')
 # scenarios('../features/common/login.feature')

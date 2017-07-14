@@ -25,7 +25,7 @@ class AddStorage(PageObject):
 
     token = command = Label('textarea.token-input')
     copy = Button('.copy-btn')
-    gen_token = NamedButton('a.clickable', text='generate another token')
+    generate_token = NamedButton('a.clickable', text='generate another token')
 
     def __str__(self):
         return 'Add storage modal for "{}"'.format(self.title)

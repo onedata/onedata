@@ -19,6 +19,7 @@ from tests.gui.utils.generic import repeat_failed
 @then(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
                  r'(?P<btn>confirm|cancel) button displayed next to user alias '
                  r'edit box in expanded "USER ALIAS" Onezone panel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_btn_for_user_alias_edit_box_in_oz(selenium, browser_id,
                                                btn, oz_page):
     getattr(oz_page(selenium[browser_id])['user alias'].edit_box, btn).click()
@@ -28,6 +29,7 @@ def click_on_btn_for_user_alias_edit_box_in_oz(selenium, browser_id,
                     'edit box in expanded "USER ALIAS" Onezone panel'))
 @then(parsers.parse('user of {browser_id} types "{text}" to user alias '
                     'edit box in expanded "USER ALIAS" Onezone panel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def type_text_into_user_alias_edit_box_in_oz(selenium, browser_id,
                                              text, oz_page):
     oz_page(selenium[browser_id])['user alias'].edit_box.value = text

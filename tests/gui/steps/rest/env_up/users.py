@@ -99,14 +99,14 @@ def _configure_user(zone_hostname, user_cred, options):
 
 
 def _rm_users(zone_hostname, admin_credentials, users_db,
-              ignore_http_exceptions=True):
+              ignore_http_exceptions=False):
     for user_credentials in users_db.values():
         _rm_user(zone_hostname, admin_credentials, user_credentials,
                  ignore_http_exceptions)
 
 
 def _rm_user(zone_hostname, admin_credentials, user_credentials,
-             ignore_http_exceptions=True):
+             ignore_http_exceptions=False):
     admin_username = admin_credentials.username
     admin_password = admin_credentials.password
     rm_zone_user = partial(_rm_zone_user, user_id=user_credentials.id)
