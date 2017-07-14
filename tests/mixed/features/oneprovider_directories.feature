@@ -15,6 +15,8 @@ Feature: Basic operations on directories and files
 
   Scenario: User creates directory using oneclient and sees in browser that the directory has appeared
     When user1 creates directories [space1/dir1]
+    And user1 waits 5 seconds
+    Then user of browser refreshes site
     Then user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees that item named "dir1" has appeared in file browser
