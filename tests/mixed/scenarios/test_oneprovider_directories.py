@@ -5,8 +5,7 @@ __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released uner the MIT license cited in " \
               "LICENSE.txt"
 
-from functools import partial
-from pytest_bdd import scenario, scenarios
+from pytest_bdd import scenarios
 
 from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.auth_steps import *
@@ -34,7 +33,6 @@ from tests.gui.steps.oneprovider.file_browser import *
 
 from tests.gui.steps.oneservices.cdmi import *
 
-
 from tests.gui.steps.onezone_before_login import *
 from tests.gui.steps.onezone_provider_popup import *
 from tests.gui.steps.onezone_providers import *
@@ -46,8 +44,6 @@ from tests.gui.steps.oneprovider_shares import *
 from tests.gui.steps.oneprovider_metadata import *
 from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
-
-
 
 
 scenarios('../features/oneprovider_directories.feature')
