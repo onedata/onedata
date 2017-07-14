@@ -36,7 +36,7 @@ Feature: Deployment process using panel of zone and provider
     # step3 in provider panel
     And user of browser2 selects POSIX from storage selector in step 3 of deployment process in Onepanel
     And user of browser2 types "onestorage" to Storage name field in POSIX form in step 3 of deployment process in Onepanel
-    And user of browser2 types "/mnt/st1" to Mount point field in POSIX form in step 3 of deployment process in Onepanel
+    And user of browser2 types "/volumes/storage" to Mount point field in POSIX form in step 3 of deployment process in Onepanel
     And user of browser2 clicks on Add button in add storage form in step 3 of deployment process in Onepanel
     And user of browser2 sees an info notify with text matching to: .*[Ss]torage.*added.*
     And user of browser2 expands "onestorage" record on storages list in step 3 of deployment process in Onepanel

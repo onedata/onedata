@@ -14,15 +14,6 @@ Feature: Onezone GUI elements
     And user of browser clicked "Sign In" confirmation button in displayed modal
 
 
-  Scenario: User sees that his alias remains unchanged after resigning from renaming it (clicks cancel button after entering alias)
-    When user of browser expands the "USER ALIAS" Onezone sidebar panel
-    And user of browser records his current alias displayed in "USER ALIAS" Onezone panel
-    And user of browser activates edit box by clicking on the user alias in expanded "USER ALIAS" Onezone panel
-    And user of browser types "helloworld" in active edit box
-    And user of browser clicks on cancel button displayed next to active edit box
-    Then user of browser sees that the user alias displayed in "USER ALIAS" Onezone panel is as recorded one
-
-
   Scenario: User successfully logout
     When user of browser expands account settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar

@@ -15,7 +15,7 @@ from tests.gui.utils.generic import repeat_failed, find_web_elem
 
 def _enter_user_credentials_in_login_modal(login_page, user, users):
     login_page.username = user
-    login_page.password = users[user]
+    login_page.password = users[user].password
 
 
 @when(parsers.parse('user of {browser_id} enters credentials of {user} '
