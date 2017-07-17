@@ -14,9 +14,9 @@ from tests.gui.steps.modal import *
 from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
 from tests.gui.steps.generic.copy_paste import *
-from tests.gui.steps.generic.login import *
 from tests.gui.steps.generic.account_management import *
 
+from tests.gui.steps.onepanel.login import *
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
 from tests.gui.steps.onepanel.spaces import *
@@ -72,6 +72,9 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 #
 #
 # --- FEATURES: all non-destructive (does not change state) ---
+scenarios('../features/onepanel/account_management.feature')
+scenarios('../features/onepanel/login.feature')
+
 scenarios('../features/onezone/login.feature')
 scenarios('../features/onezone/providers.feature')
 scenarios('../features/onezone/user_alias.feature')
@@ -80,9 +83,6 @@ scenarios('../features/onezone/space_creation.feature')
 scenarios('../features/onezone/space_management.feature')
 scenarios('../features/onezone/multiple_spaces_management.feature')
 
-
-# scenarios('../features/common/account_management.feature')
-# scenarios('../features/common/login.feature')
 # scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/onezone_gui.feature')
 # scenarios('../features/oneprovider_data.feature')

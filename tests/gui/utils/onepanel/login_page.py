@@ -1,6 +1,4 @@
-"""Utils and fixtures to facilitate operations on login page"""
-
-from ..core.web_elements import Input, NamedButton, Label
+"""Utils and fixtures to facilitate operations on onepanel login page"""
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -8,7 +6,10 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class LoginPage(object):
+from ..core.web_elements import Input, NamedButton, Label
+
+
+class OnepanelLoginPage(object):
     header = Label('.row-login-header')
     username = Input('input[placeholder="Username"]')
     password = Input('input[placeholder="Password"]')
@@ -19,4 +20,4 @@ class LoginPage(object):
         self.web_elem = self.driver = driver
 
     def __str__(self):
-        return 'Login page'
+        return 'Onepanel Login page'

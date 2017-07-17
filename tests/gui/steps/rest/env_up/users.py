@@ -26,7 +26,7 @@ UserCred = namedtuple('UserCredentials', ['username', 'password', 'id'])
 
 @given(parsers.parse('initial users configuration in "{host}" '
                      'Onezone service:\n{config}'))
-def users(host, config, admin_credentials, hosts):
+def users_creation(host, config, admin_credentials, hosts, users):
     zone_hostname = hosts['onezone'][host]
 
     users_db = {}
@@ -40,9 +40,9 @@ def users(host, config, admin_credentials, hosts):
             _rm_users(zone_hostname, admin_credentials, users_db)
             raise ex
         else:
-            users_db[username] = user_cred
+            users[username] = users_db[username] = user_cred
 
-    yield users_db
+    yield
 
     _rm_users(zone_hostname, admin_credentials, users_db)
 

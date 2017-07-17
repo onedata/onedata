@@ -1,21 +1,19 @@
 """Utils and fixtures to facilitate provider operations in op panel GUI."""
 
-from tests.gui.utils.core.base import PageObject
-from tests.gui.utils.core.web_elements import (Label, NamedButton,
-                                               Input, WebItem)
-
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import (Label, NamedButton,
+                                               Input, WebItem)
+
+
 class UserAccountDetails(PageObject):
     username = Label('.field-generic-username')
     password = Label('.field-static-secretPassword')
-
-    def __str__(self):
-        return 'Account details in {}'.format(self.parent)
 
 
 class UserAccountsForm(PageObject):
@@ -26,9 +24,6 @@ class UserAccountsForm(PageObject):
     confirm_password_change = NamedButton('button',
                                           text='Confirm password change')
 
-    def __str__(self):
-        return 'User password change form in {}'.format(self.parent)
-
 
 class AccountManagementContentPage(PageObject):
     user_details = WebItem('.user-credentials-form', cls=UserAccountDetails)
@@ -37,6 +32,3 @@ class AccountManagementContentPage(PageObject):
                                   text='Change password')
     cancel_password_change = NamedButton('.btn-change-password',
                                          text='Cancel password change')
-
-    def __str__(self):
-        return 'Account management page in {}'.format(self.parent)

@@ -98,10 +98,20 @@ def hosts(request):
                             'onezone', 'zone_panel')}
 
 
-@fixture(scope='session')
-def admin_credentials(request):
-    AdminCred = namedtuple('AdminCred', ['username', 'password'])
-    return AdminCred(*request.config.getoption('admin'))
+@fixture
+def users():
+    """Dictionary with users credentials"""
+    return {}
+
+
+@fixture(autouse=True)
+def admin_credentials(request, users):
+    AdminCred = namedtuple('AdminCred', ['username', 'password', 'id'])
+    admin_username, admin_password = request.config.getoption('admin')
+    users[admin_username] = admin_cred = AdminCred(admin_username,
+                                                   admin_password,
+                                                   admin_username)
+    return admin_cred
 
 
 @fixture
@@ -170,14 +180,14 @@ def onepanel():
 
 @fixture(scope='session')
 def oz_login_page():
-    from tests.gui.utils.common.oz_login import OnezoneLoginPage
+    from tests.gui.utils.onezone.login_page import OnezoneLoginPage
     return OnezoneLoginPage
 
 
 @fixture(scope='session')
-def login_page():
-    from tests.gui.utils.common.login import LoginPage
-    return LoginPage
+def panel_login_page():
+    from tests.gui.utils.onepanel.login_page import OnepanelLoginPage
+    return OnepanelLoginPage
 
 
 @fixture(scope='session')

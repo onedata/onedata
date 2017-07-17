@@ -1,7 +1,8 @@
 """Test suite for features of Onezone login page.
 """
-__author__ = "Jakub Liput, Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
@@ -12,10 +13,10 @@ from tests.gui.steps.modal import *
 from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
 from tests.gui.steps.generic.copy_paste import *
-from tests.gui.steps.generic.login import *
 from tests.gui.steps.generic.docker import *
 from tests.gui.steps.generic.local_file_system import *
 
+from tests.gui.steps.onepanel.login import *
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
 from tests.gui.steps.onepanel.spaces import *

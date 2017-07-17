@@ -1,11 +1,12 @@
-"""Utils and fixtures to facilitate operations on oz login page"""
-
-from ..core.web_elements import Input, NamedButton, Label, Button
+"""Utils and fixtures to facilitate operations on onezone login page"""
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from ..core.web_elements import Input, NamedButton, Label, Button
 
 
 class OnezoneLoginPage(object):
