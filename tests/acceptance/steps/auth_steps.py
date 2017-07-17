@@ -13,10 +13,10 @@ from pytest_bdd import given
 
 
 @given(parsers.parse('{user} starts oneclient in {mount_path} using {token}'))
-def default_mount(user, mount_path, token, request, onedata_environment, context,
-                  client_dockers, env_description_file, test_type, providers):
+def default_mount(user, mount_path, token, request, onedata_environment,
+                  context, client_dockers, env_description_abs_path, providers):
     mount_users(request, onedata_environment, context, client_dockers,
-                env_description_file, test_type, providers, user_names=[user],
+                env_description_abs_path, providers, user_names=[user],
                 client_instances=["client1"], mount_paths=[mount_path],
                 client_hosts=['client-host1'], tokens=[token])
 
@@ -32,5 +32,5 @@ def check_spaces(spaces, user, context):
 
 @when(parsers.parse('{user} remounts oneclient'))
 @then(parsers.parse('{user} remounts oneclient'))
-def remount_client(user, onedata_environment, context):
-    multi_auth_steps.remount_client(user, 'client1', onedata_environment, context)
+def remount_client(user, context):
+    multi_auth_steps.remount_client(user, 'client1', context)

@@ -87,7 +87,7 @@ def ensure_json(file):
     return file
 
 
-def env_file(dir, file):
+def absolute_path_to_env_file(dir, file):
     """Returns absolute path to environment file from dir. Ensures that file
     has .json extension"""
     return os.path.join(dir, ensure_json(file))

@@ -1,0 +1,35 @@
+cluster:
+  domainName: "dev.local"
+  nodes:
+    n1:
+      hostname: "onedata"
+  managers:
+    mainNode: "n1"
+    nodes:
+      - "n1"
+  workers:
+    nodes:
+      - "n1"
+  databases:
+    nodes:
+      - "n1"
+  storages:
+    "NFS":
+      type: "posix"
+      mountPoint: "/mnt"
+oneprovider:
+  register: true
+  name: "Provider"
+  redirectionPoint: "https://devel.localhost.local"
+  geoLatitude: 10.0
+  geoLongitude: 20.0
+onezone:
+  domainName: "onedata.org"
+onepanel:
+  users:
+    "admin1":
+      password: "Password1"
+      userRole: "admin"
+    "user1":
+      password: "Password2"
+      userRole: "regular"

@@ -11,7 +11,8 @@ from tests.utils.docker_utils import run_cmd
 from tests.utils.path_utils import escape_path
 from tests.utils.user_utils import User
 from tests.utils.utils import (set_dns, get_token, get_oz_cookie,
-                               get_function_name, handle_exception)
+                               log_exception, assert_)
+import errno
 
 import pytest
 import os
@@ -19,7 +20,6 @@ import time
 import rpyc
 import stat as stat_lib
 import hashlib
-
 
 TOKEN_PATH = '/tmp/token'
 
@@ -63,7 +63,8 @@ class Client:
             try:
                 self.rpyc_connection = rpyc.classic.connect(self.docker_name)
                 started = True
-            except:
+            except Exception as e:
+                print e
                 time.sleep(1)
                 timeout -= 1
         if not started:
@@ -75,7 +76,7 @@ class Client:
             self.rpyc_server_pid = None
 
     def perform(self, condition, timeout=None):
-        if not timeout:
+        if timeout is None:
             timeout = self.timeout
         return self._repeat_until(condition, timeout)
 
@@ -94,20 +95,27 @@ class Client:
 
     @staticmethod
     def _repeat_until(condition, timeout):
-        condition_satisfied = condition()
+        condition_satisfied = False
         while not condition_satisfied and timeout >= 0:
-            print "TIMEOUT: ", timeout
-            time.sleep(1)
-            timeout -= 1
-            condition_satisfied = condition()
-        return timeout > 0 or condition_satisfied
+            try:
+                condition_satisfied = condition()
+                if condition_satisfied is None:
+                    condition_satisfied = True
+            except:
+                log_exception()
+                condition_satisfied = False
+            finally:
+                time.sleep(1)
+                timeout -= 1
+
+        return timeout >= 0 or condition_satisfied
 
     def absolute_path(self, path):
         return os.path.join(self.mount_path, str(path))
 
 
 def mount_users(request, environment, context, client_dockers,
-                env_description_file, test_type, providers, user_names=[],
+                env_description_file, providers, user_names=[],
                 client_instances=[], mount_paths=[], client_hosts=[],
                 tokens=[]):
 
@@ -167,7 +175,9 @@ def mount_users(request, environment, context, client_dockers,
         time.sleep(3)
 
         if token != 'bad_token':
-            if not clean_spaces_safe(user_name, client):
+            try:
+                clean_spaces(client)
+            except AssertionError:
                 pytest.fail("Failed to clean spaces")
 
         if ret == 0:
@@ -178,6 +188,10 @@ def mount_users(request, environment, context, client_dockers,
     def fin():
         params = zip(user_names, clients)
         for user_name, client in params:
+            time.sleep(5)
+            for opened_file in client.opened_files.keys():
+                close_file(client, opened_file)
+            client.opened_files.clear()
             clean_mount_path(user_name, client)
         for user_name in user_names:
             user = context.get_user(user_name)
@@ -192,17 +206,11 @@ def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
               client, token_path, token):
 
     cmd = ('mkdir -p {mount_path}'
-           ' && export GLOBAL_REGISTRY_URL={gr_domain}'
-           ' && export PROVIDER_HOSTNAME={op_domain}'
-           ' && export X509_USER_CERT={user_cert}'
-           ' && export X509_USER_KEY={user_key}'
+           ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
            ' && echo {token} > {token_path}'
-           ' && gdb oneclient -batch -return-child-result -ex \'run --authentication token --no_check_certificate {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+           ' && gdb oneclient -batch -return-child-result -ex \'run --log-dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
            ).format(mount_path=mount_path,
-                    gr_domain=oz_domain,
                     op_domain=op_domain,
-                    user_cert=user_cert,
-                    user_key=user_key,
                     token=token,
                     token_path=token_path)
 
@@ -225,12 +233,11 @@ def stat(client, path):
     return client.rpyc_connection.modules.os.stat(path)
 
 
-def rm(client, path, recursive=False, force=False):
-
+def rm(client, path, recursive=False, force=False, onerror=None):
     if recursive and force:
-        client.rpyc_connection.modules.shutil.rmtree(path, ignore_errors=True)
+        client.rpyc_connection.modules.shutil.rmtree(path, ignore_errors=True, onerror=onerror)
     elif recursive:
-        client.rpyc_connection.modules.shutil.rmtree(path)
+        client.rpyc_connection.modules.shutil.rmtree(path, onerror=onerror)
     else:
         client.rpyc_connection.modules.os.remove(path)
 
@@ -251,8 +258,8 @@ def mkdir(client, dir_path, recursive=False):
         client.rpyc_connection.modules.os.mkdir(dir_path)
 
 
-def create_file(client, file_path, mode=0644):
-    client.rpyc_connection.modules.os.mknod(file_path, mode, stat_lib.S_IFREG)
+def create_file(client, file_path, mode=0664):
+    client.rpyc_connection.modules.os.mknod(file_path, mode | stat_lib.S_IFREG)
 
 
 def touch(client, file_path):
@@ -319,7 +326,7 @@ def md5sum(client, file_path):
     m = hashlib.md5()
     with client.rpyc_connection.builtins.open(file_path, 'r') as f:
         m.update(f.read())
-    return m.digest()
+    return m.hexdigest()
 
 
 def mkstemp(client, dir=None):
@@ -348,7 +355,7 @@ def dd(client, block_size, count, output_file, unit='M', input_file="/dev/zero",
                 output="of={}".format(escape_path(output_file)),
                 bs="bs={0}{1}".format(block_size, unit),
                 count="count={}".format(count))
-    return run_cmd(user, client, cmd, output=output, error=True)
+    return run_cmd(user, client, cmd, output=output, error=error)
 
 
 def fusermount(client, path, user='root', unmount=False, lazy=False,
@@ -374,41 +381,35 @@ def create_clients(users, client_hosts, mount_paths, client_dockers):
     return clients
 
 
-def clean_spaces_safe(user, client):
-
-    function_name = get_function_name()
-
-    def condition():
-        try:
-            clean_spaces(user, client)
-            return True
-        except Exception as e:
-            handle_exception(e, function_name)
-            return False
-
-    return client.perform(condition, 5)
-
-
-def clean_spaces(user, client):
+def clean_spaces(client):
     spaces = ls(client, path=client.mount_path)
-    # clean spaces
+
     for space in spaces:
-        rm(client, path=client.absolute_path(space), recursive=True, force=True)
+        space_path = client.absolute_path(space)
+
+        def condition():
+            try:
+                rm(client, path=space_path, recursive=True)
+            except Exception as e:
+                if isinstance(e, OSError):
+                    if e.errno == errno.EACCES:
+                       # ignore EACCES errors during cleaning
+                        return
+                raise
+        assert_(client.perform, condition)
 
 
 def clean_mount_path(user, client):
-    function_name = get_function_name()
-
     try:
-        clean_spaces(user, client)
+        clean_spaces(client)
     except Exception as e:
-        handle_exception(e, function_name)
+        pass
     finally:
         # get pid of running oneclient node
         pid = run_cmd('root', client,
                       " | ".join(
                               ["ps aux",
-                               "grep './oneclient --authentication token --no_check_certificate '" + client.mount_path,
+                               "grep './oneclient --insecure '" + client.mount_path,
                                "grep -v 'grep'",
                                "awk '{print $2}'"]),
                       output=True)
@@ -419,7 +420,6 @@ def clean_mount_path(user, client):
 
         # unmount onedata
         fusermount(client, client.mount_path, user=user, unmount=True)
-
         rm(client, path=client.mount_path, recursive=True, force=True)
 
 

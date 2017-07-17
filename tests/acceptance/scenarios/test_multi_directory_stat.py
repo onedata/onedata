@@ -1,7 +1,6 @@
 """Test suite for reading/changing  metadata of directories in onedata,
 in multi-client environment.
 """
-
 __author__ = "Jakub Kudzia"
 __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
@@ -15,7 +14,6 @@ from tests.acceptance.steps.multi_file_steps import *
 from tests.acceptance.steps.multi_reg_file_steps import *
 
 from pytest_bdd import scenario
-import pytest
 from functools import partial
 
 
@@ -47,12 +45,6 @@ def test_timestamp(env_description_file):
     pass
 
 
-# TODO VFS-1506
-@pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="touch on file without write permission should fail, "
-           "it will be checked in VFS-1506")
 @scenario('Update timestamps without write permission')
 def test_update_timestamp_without_permission(env_description_file):
     pass
@@ -73,11 +65,13 @@ def test_modification_time(env_description_file):
     pass
 
 
+@scenario('Status-change time when renaming')
+def test_stat_change_time_mv(env_description_file):
+    pass
+
+
 @scenario('Status-change time when changing mode')
 def test_stat_change_time_chmod(env_description_file):
     pass
 
 
-@scenario('Status-change time when renaming')
-def test_stat_change_time_mv(env_description_file):
-    pass

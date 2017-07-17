@@ -14,6 +14,7 @@ tests/**/.cache
 tests/acceptance/profiling_data/
 
 package
+pkg-list.json
 docker-build-list.json
 docker-build-report.txt
 oneprovider_meta/package

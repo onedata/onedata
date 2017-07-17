@@ -12,7 +12,7 @@ from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import (Result, generate_configs, performance)
 from tests.utils.client_utils import user_home_dir, rm, mkdtemp
 
-REPEATS = 1
+REPEATS = 3
 SUCCESS_RATE = 95
 DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
 DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)

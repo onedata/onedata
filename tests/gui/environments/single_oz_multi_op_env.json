@@ -19,6 +19,10 @@
                 {
                     "type": "posix",
                     "name": "/mnt/st1"
+                },
+                {
+                    "type": "posix",
+                    "name": "/mnt/st2"
                 }
             ],
             "users": [
@@ -76,6 +80,44 @@
                     }
                 }
             }
+        },
+        "p2": {
+            "db_driver": "couchdb",
+            "os_config": "cfg1",
+            "cluster_manager": {
+                "cm1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "cluster_manager": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "worker_num": 1
+                        }
+                    }
+                }
+            },
+            "op_worker": {
+                "worker1": {
+                    "vm.args": {
+                        "setcookie": "cookie1"
+                    },
+                    "sys.config": {
+                        "op_worker": {
+                            "cm_nodes": [
+                                "cm1"
+                            ],
+                            "db_nodes": [
+                                "dbnode1"
+                            ],
+                            "verify_oz_cert": false,
+                            "oz_domain": "oz"
+                        }
+                    }
+                }
+            }
         }
     },
     "zone_domains": {
@@ -112,7 +154,8 @@
                             "http_domain": {
                                 "string": "127.0.0.1"
                             },
-                            "dev_mode": true
+                            "dev_mode": true,
+                            "minimum_space_support_size": 10
                         }
                     }
                 }
@@ -142,6 +185,11 @@
                 "users": [
                     "user2",
                     "user3"
+                ]
+            },
+            "group3": {
+                "users": [
+                    "user1"
                 ]
             }
         },
@@ -195,6 +243,26 @@
                     }
                 }
             },
+            "space4": {
+                "displayed_name": "space4",
+                "users": [
+                    "user1",
+                    "user3"
+                ],
+                "groups": [
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 1000000000
+                    },
+                    "p2": {
+                        "storage": "/mnt/st2",
+                        "supported_size": 1000000000
+                    }
+                }
+            },
             "small_space": {
                 "displayed_name": "Small space",
                 "users": [
@@ -204,6 +272,69 @@
                 ],
                 "groups": [
                     "group1",
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
+                    }
+                }
+            },
+            "space_to_unsupport": {
+                "displayed_name": "Useless space",
+                "users": [
+                    "user1"
+                ],
+                "groups": [
+                    "group1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
+                    }
+                }
+            },
+            "space_a": {
+                "displayed_name": "A",
+                "users": [
+                    "user1",
+                    "user2",
+                    "user3"
+                ],
+                "groups": [
+                    "group1",
+                    "group2"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
+                    }
+                }
+            },
+            "space_b": {
+                "displayed_name": "spaceB",
+                "users": [
+                    "user1"
+                ],
+                "groups": [
+                    "group1"
+                ],
+                "providers": {
+                    "p1": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
+                    }
+                }
+            },
+            "space_c": {
+                "displayed_name": "spaceC",
+                "users": [
+                    "user1"
+                ],
+                "groups": [
                     "group2"
                 ],
                 "providers": {

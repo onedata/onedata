@@ -24,7 +24,7 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    Then mode of u2's s1/file1 is 644 on client2
+    Then mode of u2's s1/file1 is 664 on client2
 
   Scenario: Change access permissions
     When u1 creates regular files [s1/file1] on client1
@@ -58,8 +58,7 @@ Feature: Multi_regular_file_stat
     And u2 sees [file1] in s1/dir1 on client2
     And u1 changes s1/dir1/file1 mode to 644 on client1
     And mode of u2's s1/dir1/file1 is 644 on client2
-    And u2 changes s1/dir1/file1 size to 1000000 bytes on client2
-    Then last operation by u2 fails
+    And u2 fails to change s1/dir1/file1 size to 1000000 bytes on client2
 
   Scenario: Timestamps at creation
     When u1 creates regular files [s1/file1] on client1
@@ -76,8 +75,7 @@ Feature: Multi_regular_file_stat
     And u2 sees [file1] in s1/dir1 on client2
     And u1 changes s1/dir1/file1 mode to 644 on client1
     And mode of u2's s1/dir1/file1 is 644 on client2
-    And u2 updates [s1/dir1/file1] timestamps on client2
-    Then last operation by u2 fails
+    And u2 fails to update [s1/dir1/file1] timestamps on client2
 
   Scenario: Update timestamps with write permission
     # touch dir1/file1
@@ -94,7 +92,7 @@ Feature: Multi_regular_file_stat
     When u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of write and read is different
     Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
     And access time of u2's s1/file1 is greater than modification time on client2
@@ -104,18 +102,17 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    Then last operation by u1 succeeds
-    And modification time of u2's s1/file1 is greater than access time on client2
+    Then modification time of u2's s1/file1 is greater than access time on client2
     And modification time of u2's s1/file1 is equal to status-change time on client2
 
   Scenario: Status-change time when changing mode
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 changes s1/file1 mode to 211 on client1
     Then mode of u2's s1/file1 is 211 on client2
@@ -126,9 +123,9 @@ Feature: Multi_regular_file_stat
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u1 waits 1 second
+    And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/file1 to s1/file2 on client1
     Then u2 sees [file2] in s1 on client2
-    And status-change time of u2's s1/file2 is greater than modification time on client2
-    And status-change time of u2's s1/file2 is greater than access time on client2
+    And status-change time of u2's s1/file2 is equal to modification time on client2
+    And status-change time of u2's s1/file2 is equal to access time on client2

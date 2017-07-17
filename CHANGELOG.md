@@ -4,6 +4,107 @@
 CHANGELOG
 ---------
 
+### 17.06.0-beta6
+
+* VFS-3358 fix steps managing btns in toolbar in data tab in op after changes in gui
+* VFS-3284 GUI tests: using new go to your files button
+* VFS-3322 add 10000 files creation performance test
+
+
+### 17.06.0-beta4
+
+* VFS-3347 Add docker-dev build
+
+
+### 17.06.0-beta3
+
+* VFS-3353 Enable user name/email set in ``update_refs.sh``
+* VFS-3340 GUI acceptance tests update: changed timeouts, get support modal tests
+* Releasing new version 17.06.0-beta3
+
+
+### 17.06.0-beta2
+
+* VFS-3348 Update couchbase version to 4.5.1
+
+
+### 3.0.0-rc16
+
+* VFS-3184 Add copy/remove tests.
+* VFS-3017 Check if mtime and ctime are equal after rename (in previous implemetation of rename they were greater).
+
+
+### 3.0.0-rc15
+
+* Update refs to origin/release/3.0.0-rc15.
+* VFS-3197 Enable release docker to log to stdout
+* Update refs to origin/feature/VFS-3213-change-storage-verification-mechanism.
+* VFS-3051 add clipboard fixture and replace pyperclip uses with it
+* VFS-3051 enhance logging capabilities
+* VFS-3051 add support for recording tests with multiple browsers
+* implement changes to allow splitting acceptance tests on bamboo
+* VFS-3051 add support for logs from multiple browsers
+
+
+### 3.0.0-rc14
+
+* VFS-3101 change Then steps in metadata scenarios
+* VFS-3101 refactor metadata steps
+* VFS-3101 add ButtonWebObject class
+* VFS-3050 add test for 2 providers
+* VFS-3050 add steps creating access token and copying providers ip for cdmi use
+* VFS-3050 add provisional api for handling cdmi service from tests
+* VFS-3050 refactor web_elements.py
+* VFS-3050 add test user upload file on 1 provider and download on other
+* VFS-3050 add utils for handling of file distribution modal and canvas
+
+
+### 3.0.0-rc13
+
+* Releasing new version 3.0.0-rc13
+
+
+### 3.0.0-rc12
+
+* Enable graceful stop on SIGTERM
+* Add oneprovider users and groups in Dockerfile
+* Update refs to origin/release/3.0.0-rc12.
+* VFS-2910 Adjust tests to LUMA refactoring
+* VFS-2725 improve logging in acceptance tests, all tests in directory_CRUD addapted to new logging, all of them pass successfully
+* VFS-2551 add test to set space as home in oz
+* VFS-2551 add tests for data space management
+* VFS-2551 add tests for user alies and access tokens
+
+
+### 3.0.0-rc11
+
+* VFS-2733 Fix provider key/cert filename
+* VFS-2739 make msg for assertion more descriptive
+* VFS-2739 rewrite msg on assertions
+* VFS-2739 use tmpdir pytest fixture instead of os to crete tmpdir and files
+* VFS-2739 add msg to assertions
+* VFS-2739 change click on file -> select file in shares test
+* VFS-2739 add test to select multiple files witch ctrl
+* VFS-2739 add cleaning to upload many files test
+* VFS-2739 add paging test
+* VFS-2733 Add excluded path to docker entrypoint
+* VFS-2549 fix checking content of downloaded file step
+* VFS-2549 change url->URL, id->ID in gherkin steps
+* VFS-2549 add quotes to files/dirs in shares tests steps in gherkin
+* VFS-2549 add quotes to file/dir names in data and metadata features
+* VFS-2549 add quotation marks to names of groups/spaces/shares/...
+* VFS-2549 fix closing notifies
+* VFS-2549 fix scenario names in group and share tests
+* VFS-2564 add test checking that user can't view left group
+* VFS-2616 add test checking if user can view group having it's id
+* VFS-2549 fix waiting for notifies to disappear and switching spaces
+* VFS-2549 remove import of non existing module file_system
+* VFS-2634 refactor share tests
+* VFS-2634 fix step fun definitions, add new share tests
+* VFS-2634 refactor modals and file list steps, add sidebar list steps
+* VFS-2634 fix modal and file list steps
+
+
 ### 3.0.0-rc10
 
 * Releasing new version 3.0.0-rc10

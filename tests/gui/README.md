@@ -26,7 +26,7 @@ dir with configurations). Setting up environment can take some time.
 
 Example: (invoke from onedata repo root dir)
 ```
-./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --self-contained-html
+./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --self-contained-html --enable-logs
 ```
 
 Used parameters:
@@ -36,16 +36,20 @@ Used parameters:
 * ``--test-type gui`` - set the test type use by core Onedata test helpers to differ from "cucumber" tests etc.
 * ``--driver=<Firefox|Chrome>`` - set the browser to test in (will be launched in headless mode)
 * ``--self-contained-html`` - optional, if used generated report will be contained in 1 html file
-
+* ``--firefox-logs`` - optional, if used and driver is Firefox generated report will contain console logs from browser
+* ``--xvfb`` - starts xvfb, necessary if used with headless tests
+* ``--xvfb-recording=<all|none|failed>`` - optional, record all or none or failed tests as movies and save them to <logdir>/movies
+* ``--no-mosaic-filter`` - optional, if set videos of tests using multiple browsers will be recorded as different video for each browser (mosaic video created by default) 
 
 ### Headless using existing Onedata installation
 
-Using this method, the tests will be run using URL provided with ``--base-url=<url>`` parameter.
+Using this method, the tests will be run using URL provided with ``--base-url=<url>`` parameter,
+which should be url provided by starting environment for oz from env.json.
 The URL should be a main application address of Onezone.
 
 Example: (invoke from onedata repo root dir)
 ```
-./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://veilfsdev.com --self-contained-html
+./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://oz.1485165366.dev --self-contained-html
 ```
 
 New parameters:
@@ -60,19 +64,17 @@ Required Python packages to install (e.g. using ``pip install``):
 
 * pytest
 * pytest_bdd
-* git+git://github.com/bwalkowi/pytest-selenium-multi
-* pytest_xvfb
-* pyperclip
+* git+git://github.com/bwalkowi/pytest-selenium-multi@orig-master
+* git+https://github.com/bwalkowi/pytest-xvfb-recorder.git
+* decorator
 
 A browser selected for tests (with ``--driver``) should be also installed.
-
-Note, that ``--no-xvfb`` option is used to force to not use Xvfb even if it is installed in local system.
 
 ### Non-headless using existing Onedata installation
 
 Example: (invoke from onedata repo root dir)
 ```
-py.test --test-type=gui tests/gui --driver=Firefox --no-xvfb --base-url=https://veilfsdev.com --self-contained-html
+py.test --test-type=gui tests/gui --driver=Firefox --base-url=https://veilfsdev.com --self-contained-html
 ```
 
 

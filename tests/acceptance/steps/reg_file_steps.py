@@ -21,6 +21,12 @@ def write_text(user, text, file, context):
     multi_reg_file_steps.write_text(user, text, file, "client1", context)
 
 
+@when(parsers.parse('{user} fails to write "{text}" to {file}'))
+@then(parsers.parse('{user} fails to write "{text}" to {file}'))
+def write_text_fail(user, text, file, context):
+    multi_reg_file_steps.write_text_fail(user, text, file, "client1", context)
+
+
 @when(parsers.parse('{user} reads "{text}" from file {file}'))
 @then(parsers.parse('{user} reads "{text}" from file {file}'))
 def read(user, text, file, context):
@@ -43,6 +49,12 @@ def execute_script(user, file, context):
     multi_reg_file_steps.execute_script(user, file, "client1", context)
 
 
+@when(parsers.parse('{user} fails to execute {file}'))
+@then(parsers.parse('{user} fails to execute {file}'))
+def execute_script_fail(user, file, context):
+    multi_reg_file_steps.execute_script_fail(user, file, "client1", context)
+
+
 @then(parsers.parse('{user} checks MD5 of {file}'))
 def check_md5(user, file, context):
     multi_reg_file_steps.check_md5(user, file, "client1", context)
@@ -56,6 +68,13 @@ def copy_reg_file(user, file, path, context):
 @when(parsers.parse('{user} changes {file} size to {new_size} bytes'))
 def do_truncate(user, file, new_size, context):
     multi_reg_file_steps.do_truncate(user, file, new_size, "client1", context)
+
+
+@when(parsers.parse('{user} fails to change {file} size to {new_size} bytes'))
+@then(parsers.parse('{user} fails to change {file} size to {new_size} bytes'))
+def do_truncate_fail(user, file, new_size, context):
+    multi_reg_file_steps.do_truncate_fail(user, file, new_size, "client1", context)
+
 
 
 @when(parsers.parse('{user} performs command "{command}" in {path} directory'))

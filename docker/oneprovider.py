@@ -4,22 +4,25 @@
 import json
 import os
 import re
-import requests
 import shutil
 import subprocess as sp
 import sys
-import yaml
 import time
+
+import requests
+import yaml
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 ROOT = '/volumes/persistence'
-DIRS = ['/etc/op_panel', '/etc/op_worker', '/etc/cluster_manager',
-        '/etc/init.d', '/var/lib/op_panel', '/var/lib/op_worker',
-        '/var/lib/cluster_manager', '/usr/lib/cluster_manager',
+DIRS = ['/etc/init.d', '/etc/op_worker/certs', '/var/lib/op_panel/mnesia',
         '/opt/couchbase/var/lib/couchbase', '/var/log/op_panel',
         '/var/log/op_worker', '/var/log/cluster_manager']
+LOGS = [('[op_panel]', '/var/log/op_panel'),
+        ('[cluster_manager]', '/var/log/cluster_manager'),
+        ('[op_worker]', '/var/log/op_worker')]
+LOG_LEVELS = ['debug', 'info', 'error']
 
 
 def log(message, end='\n'):
@@ -38,8 +41,12 @@ def replace(file_path, pattern, value):
 
 def copy_missing_files():
     for rootdir in DIRS:
+        if not os.path.exists(rootdir):
+            os.makedirs(rootdir)
+
         for subdir, _, files in os.walk(rootdir):
             subdir_path = os.path.join(ROOT, subdir[1:])
+
             if not os.path.exists(subdir_path):
                 stat = os.stat(subdir)
                 os.makedirs(subdir_path)
@@ -91,7 +98,6 @@ def format_step(step):
 
 
 def get_users(config):
-    config = yaml.load(config)
     users_config = config.get('onepanel', {}).get('users', {})
     users = [('admin', 'password')]
 
@@ -100,6 +106,17 @@ def get_users(config):
             users.append((username, props.get('password', '')))
 
     return users
+
+
+def get_onezone_domain(config):
+    return config.get('onezone', {}).get('domainName', 'onedata.org')
+
+
+def set_onezone_domain(domain):
+    replace('/etc/op_panel/app.config', r'{onezone_domain, .*}',
+            '{{onezone_domain, "{0}"}}'.format(domain))
+    replace('/etc/op_worker/app.config', r'{oz_domain, .*}',
+            '{{oz_domain, "{0}"}}'.format(domain))
 
 
 def do_request(users, request, *args, **kwargs):
@@ -113,13 +130,20 @@ def do_request(users, request, *args, **kwargs):
                      'in the onepanel.users section of the configuration.')
 
 
+def get_batch_config():
+    batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
+    batch_config = yaml.load(batch_config)
+    if not batch_config:
+        return {}
+    return batch_config
+
+
 def configure(config):
     users = get_users(config)
-
     r = do_request(users, requests.post,
-                   'https://127.0.0.1:9444/api/v3/onepanel/provider/configuration',
+                   'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
                    headers={'content-type': 'application/x-yaml'},
-                   data=config,
+                   data=yaml.dump(config),
                    verify=False)
 
     if r.status_code != 201 and r.status_code != 204:
@@ -134,7 +158,7 @@ def configure(config):
     log('\nConfiguring oneprovider:')
     while status == 'running':
         r = do_request(users, requests.get,
-                       'https://127.0.0.1:9444' + loc,
+                       'https://127.0.0.1:9443' + loc,
                        verify=False)
         if r.status_code != 200:
             raise ValueError('Unexpected configuration error\n{0}'
@@ -154,11 +178,11 @@ def configure(config):
         raise ValueError('Error: {error}\nDescription: {description}\n'
                          'Module: {module}\nFunction: {function}\nHosts: {hosts}\n'
                          'For more information please check the logs.'.format(
-            error=resp.get('error', 'unknown'),
-            description=resp.get('description', '-'),
-            module=resp.get('module', '-'),
-            function=resp.get('function', '-'),
-            hosts=', '.join(resp.get('hosts', []))))
+                             error=resp.get('error', 'unknown'),
+                             description=resp.get('description', '-'),
+                             module=resp.get('module', '-'),
+                             function=resp.get('function', '-'),
+                             hosts=', '.join(resp.get('hosts', []))))
 
 
 def get_container_id():
@@ -170,7 +194,7 @@ def inspect_container(container_id):
     try:
         result = sp.check_output(['curl', '-s', '--unix-socket',
                                   '/var/run/docker.sock', 'http:/containers/{0}/json'.
-                                 format(container_id)])
+                                  format(container_id)])
         return json.loads(result)
     except Exception:
         return {}
@@ -211,9 +235,40 @@ def show_details():
     show_ports(json)
 
 
-def infinite_loop():
+def infinite_loop(log_level):
+    logs = []
+    if log_level in LOG_LEVELS:
+        log('\nLogging on \'{0}\' level:'.format(log_level))
+        for log_prefix, log_dir in LOGS:
+            log_file = os.path.join(log_dir, log_level + '.log')
+            logs.append((log_prefix, log_file, None, None))
+
     while True:
-        time.sleep(60)
+        logs = print_logs(logs)
+        time.sleep(1)
+
+
+def print_logs(logs):
+    new_logs = []
+
+    for log_prefix, log_file, log_fd, log_ino in logs:
+        try:
+            if os.stat(log_file).st_ino != log_ino:
+                if log_fd:
+                    log_fd.close()
+                log_fd = open(log_file, 'r')
+                log_ino = os.stat(log_file).st_ino
+
+            log_line = log_fd.readline()
+            while log_line:
+                log('{0} {1}'.format(log_prefix, log_line), end='')
+                log_line = log_fd.readline()
+
+            new_logs.append((log_prefix, log_file, log_fd, log_ino))
+        except:
+            new_logs.append((log_prefix, log_file, None, None))
+
+    return new_logs
 
 
 if __name__ == '__main__':
@@ -226,13 +281,17 @@ if __name__ == '__main__':
 
         advertise_address = os.environ.get('ONEPANEL_ADVERTISE_ADDRESS')
         if advertise_address:
-            set_advertise_address('/etc/op_panel/app.config', advertise_address)
+            set_advertise_address(
+                '/etc/op_panel/app.config', advertise_address)
+
+        batch_config = get_batch_config()
+        onezone_domain = get_onezone_domain(batch_config)
+        set_onezone_domain(onezone_domain)
 
         start_onepanel()
 
         configured = False
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
-        batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
         if batch_mode.lower() == 'true':
             configure(batch_config)
             configured = True
@@ -248,4 +307,6 @@ if __name__ == '__main__':
         else:
             sys.exit(1)
 
-    infinite_loop()
+    log_level = os.environ.get('ONEPANEL_LOG_LEVEL', 'info').lower()
+
+    infinite_loop(log_level)
