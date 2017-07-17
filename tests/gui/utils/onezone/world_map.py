@@ -1,17 +1,18 @@
 """Utils and fixtures to facilitate operations on world map in Onezone web GUI.
 """
 
-from tests.gui.utils.core.base import PageObject
-from tests.gui.utils.core.web_elements import Label, Input, Button, WebElement, \
-    WebItemsSequence, WebItem
-
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class _SpaceRecord(PageObject):
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import (Label, Input, Button, WebElement,
+                                               WebItemsSequence, WebItem)
+
+
+class SpaceRecord(PageObject):
     name = id = Label('.space-label', parent_name='provider popup')
     size = Label('.space-size')
     _space_icon = WebElement('.space-icon .oneicon')
@@ -23,12 +24,12 @@ class _SpaceRecord(PageObject):
         return 'default' in self._space_icon.get_attribute('class')
 
 
-class _ProviderPopup(PageObject):
+class ProviderPopup(PageObject):
     name = id = Label('.title-label', parent_name='given provider popup')
     hostname = Input('input.provider-host-text')
     copy_hostname = Button('.provider-host-copy-btn')
     spaces = WebItemsSequence('ul li.provider-place-drop-space',
-                              cls=_SpaceRecord)
+                              cls=SpaceRecord)
     go_to_your_files = Button('.drop-body .btn-go-to-files, .drop-body button')
     _popup = WebElement('.provider-place-drop')
 
@@ -47,14 +48,14 @@ class _ProviderPopup(PageObject):
             return True
 
 
-class _Message(PageObject):
+class Message(PageObject):
     title = Label('.panel-heading')
     msg = Label('.panel-body')
 
 
 class WorldMap(PageObject):
-    message = WebItem('.panel-onezone-alert', cls=_Message)
-    providers = WebItemsSequence('.provider-place', cls=_ProviderPopup)
+    message = WebItem('.panel-onezone-alert', cls=Message)
+    providers = WebItemsSequence('.provider-place', cls=ProviderPopup)
 
     def get_provider_with_displayed_popup(self):
         for provider in self.providers:

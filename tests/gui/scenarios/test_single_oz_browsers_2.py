@@ -35,10 +35,12 @@ from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 
-from tests.gui.steps.oneservices.cdmi import *
+from tests.gui.steps.rest.cdmi import *
+from tests.gui.steps.rest.env_up.users import *
+from tests.gui.steps.rest.env_up.groups import *
+from tests.gui.steps.rest.env_up.spaces import *
 
 
-from tests.gui.steps.onezone_before_login import *
 from tests.gui.steps.onezone_provider_popup import *
 from tests.gui.steps.onezone_providers import *
 
@@ -53,13 +55,14 @@ from pytest_bdd import scenarios, scenario
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-# scenarios('../features/onepanel/deployment.feature')
+scenarios('../features/onepanel/deployment.feature')
 # scenarios('../features/onepanel/provider.feature')
 # scenarios('../features/onepanel/storages.feature')
 # scenarios('../features/onepanel/spaces.feature')
 # scenarios('../features/onepanel/storage_sync.feature')
 
+scenarios('../features/onezone/space_join_methods.feature')
+
 # scenarios('../features/oneprovider_2_providers_multi.feature')
 # scenarios('../features/oneprovider_shares_multi.feature')
 # scenarios('../features/oneprovider_group_multi.feature')
-# scenarios('../features/onezone_gui_multi.feature')

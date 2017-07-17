@@ -7,9 +7,9 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 import yaml
-from collections import namedtuple
-from functools import partial
 import json
+from functools import partial
+from collections import namedtuple
 
 from pytest_bdd import given, parsers
 from pytest import skip
@@ -18,6 +18,7 @@ from tests import OZ_REST_PORT, PANEL_REST_PORT
 from ..utils import (http_get, http_post, http_delete, http_patch,
                      get_panel_rest_path, get_zone_rest_path)
 from ..exceptions import HTTPError, HTTPNotFound
+from tests.gui.utils.generic import repeat_failed
 
 
 UserCred = namedtuple('UserCredentials', ['username', 'password', 'id'])
@@ -120,12 +121,14 @@ def _rm_user(zone_hostname, admin_credentials, user_credentials,
                 raise ex
 
 
+@repeat_failed(attempts=5)
 def _rm_panel_user(zone_hostname, admin_username, admin_password, username):
     path = get_panel_rest_path('users', username)
     http_delete(ip=zone_hostname, port=PANEL_REST_PORT, path=path,
                 auth=(admin_username, admin_password))
 
 
+@repeat_failed(attempts=5)
 def _rm_zone_user(zone_hostname, admin_username, admin_password, user_id):
     path = get_zone_rest_path('users', user_id)
     http_delete(ip=zone_hostname, port=OZ_REST_PORT, path=path,

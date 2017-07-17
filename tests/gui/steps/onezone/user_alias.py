@@ -1,4 +1,5 @@
-"""Steps for USER ALIAS panel features of Onezone page.
+"""This module contains gherkin steps to run acceptance tests featuring
+user alias management in onezone web GUI.
 """
 
 __author__ = "Bartek Walkowicz"

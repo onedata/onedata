@@ -1,6 +1,12 @@
 """Utils and fixtures to facilitate operations on Onezone web GUI.
 """
 
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+
 from tests.gui.utils.core.web_elements import WebElement, WebElementsSequence
 from .access_tokens import AccessTokensPanel
 from .common import OZPanel
@@ -10,11 +16,6 @@ from .group_management import GroupManagementPanel
 from .manage_account import ManageAccount
 from .user_alias import UserAliasPanel
 from .world_map import WorldMap
-
-__author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 class OZLoggedIn(object):

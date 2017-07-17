@@ -1,17 +1,18 @@
-"""Steps for features of Onezone login page.
+"""This module contains gherkin steps to run acceptance tests featuring
+common operations in onezone web GUI.
 """
+
+__author__ = "Bartek Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 
 from pytest_bdd import given, when, then, parsers
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import repeat_failed, implicit_wait
 from tests.utils.acceptance_utils import list_parser
-
-
-__author__ = "Jakub Liput, Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 @repeat_failed(timeout=WAIT_BACKEND)
@@ -23,8 +24,7 @@ def _expand_oz_panel(oz_page, driver, panel):
                   r'"(?P<panel_name>.*)" Onezone sidebar panel'))
 def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
-        driver = selenium[browser_id]
-        _expand_oz_panel(oz_page, driver, panel_name)
+        _expand_oz_panel(oz_page, selenium[browser_id], panel_name)
 
 
 @when(parsers.re(r'users? of (?P<browser_id_list>.*) expands? the '
@@ -33,33 +33,20 @@ def g_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
                  r'"(?P<panel_name>.*)" Onezone sidebar panel'))
 def wt_expand_oz_panel(selenium, browser_id_list, panel_name, oz_page):
     for browser_id in list_parser(browser_id_list):
-        driver = selenium[browser_id]
-        _expand_oz_panel(oz_page, driver, panel_name)
+        _expand_oz_panel(oz_page, selenium[browser_id], panel_name)
 
 
-@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
-                 r'button displayed next to active edit box'))
-@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on (?P<btn>confirm|cancel) '
-                 r'button displayed next to active edit box'))
-def click_on_btn_for_edit_box(browser_id, btn, tmp_memory):
-    edit_box = tmp_memory[browser_id]['edit_box']
-    action = getattr(edit_box, btn)
-    action()
+@when(parsers.parse('user of {browser_id} sees alert with title "{title}" '
+                    'on world map in Onezone gui'))
+@then(parsers.parse('user of {browser_id} sees alert with title "{title}" '
+                    'on world map in Onezone gui'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
+    alert = oz_page(selenium[browser_id])['world map'].message
+    assert alert.title.lower() == title.lower(), \
+        'alert title {} does not match expected {}'.format(alert.title, title)
 
 
-@when(parsers.parse('user of {browser_id} types "{text}" in active edit box'))
-@then(parsers.parse('user of {browser_id} types "{text}" in active edit box'))
-def type_text_into_active_edit_box(browser_id, text, tmp_memory):
-    edit_box = tmp_memory[browser_id]['edit_box']
-    edit_box.value = text
-
-
-@when(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
-                 r'"(?P<btn>Create new access token)" button in expanded '
-                 r'"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
-@then(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
-                 r'"(?P<btn>Create new access token)" button in expanded '
-                 r'"(?P<oz_panel>ACCESS TOKENS)" Onezone panel'))
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
                  r'"(?P<btn>Create new space|Join space)" button in expanded '
                  r'"(?P<oz_panel>DATA SPACE MANAGEMENT)" Onezone panel'))

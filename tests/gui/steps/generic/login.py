@@ -1,7 +1,5 @@
 """Steps used in login page"""
 
-from itertools import izip
-
 from pytest_bdd import given, parsers
 from pytest_bdd import then
 from pytest_bdd import when

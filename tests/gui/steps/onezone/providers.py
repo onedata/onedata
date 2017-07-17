@@ -1,19 +1,19 @@
-"""Steps for GO TO YOUR FILES panel and provider popup features of Onezone page.
+"""This module contains gherkin steps to run acceptance tests featuring
+providers management in onezone web GUI.
 """
-
-import time
-import itertools
-
-from pytest_bdd import given
-from pytest_bdd import parsers, when, then
-
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, implicit_wait, redirect_display
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+import itertools
+
+from pytest_bdd import parsers, when, then
+
+from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
+from tests.gui.utils.generic import repeat_failed, implicit_wait
 
 
 @when(parsers.parse('user of {browser_id} sees that provider popup for provider '
@@ -245,47 +245,3 @@ def assert_provider_not_working_in_oz_panel(selenium, browser_id,
     err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
               '"{}" is not gray'
     assert prov_rec.is_not_working(), err_msg.format(provider)
-
-
-@when(parsers.parse('user of {browser_id} sees alert with title "{title}" '
-                    'on world map in Onezone gui'))
-@then(parsers.parse('user of {browser_id} sees alert with title "{title}" '
-                    'on world map in Onezone gui'))
-@repeat_failed(timeout=WAIT_BACKEND)
-def assert_alert_with_title_in_oz(selenium, browser_id, title, oz_page):
-    driver = selenium[browser_id]
-    err_msg = 'alert title {} does not match {}'
-    alert = oz_page(driver)['world map'].message
-    assert alert.title.lower() == title.lower(), err_msg.format(alert.title,
-                                                                title)
-
-
-@given(parsers.parse('user of {browser_id} records providers hostname using '
-                     'copy hostname button in every provider popup'))
-@repeat_failed(timeout=WAIT_FRONTEND)
-def record_providers_hostname_oz(selenium, browser_id, oz_page,
-                                 tmp_memory, displays, clipboard):
-    driver = selenium[browser_id]
-    world_map = oz_page(driver)['world map']
-    for provider_rec in oz_page(driver)['go to your files'].providers:
-        provider_popup = None
-        provider_rec_name = provider_rec.name
-        provider_popup_name = ''
-        now = time.time()
-
-        # condition to prevent looping for eternity
-        time_limit = now + 10
-        while (provider_popup_name != provider_rec_name) and now < time_limit:
-            provider_rec.click()
-            with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-                provider_popup = world_map.get_provider_with_displayed_popup()
-            provider_popup_name = provider_popup.name if provider_popup else ''
-            now = time.time()
-        if now > time and (provider_popup_name != provider_rec_name):
-            raise RuntimeError('unable to get popup for '
-                               '"{}" provider'.format(provider_rec_name))
-
-        provider_popup.copy_hostname()
-
-        prov_name = clipboard.paste(display=displays[browser_id])
-        tmp_memory[provider_popup_name] = prov_name

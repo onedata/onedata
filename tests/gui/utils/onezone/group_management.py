@@ -2,17 +2,18 @@
 in Onezone web GUI.
 """
 
-from tests.gui.utils.core.base import ExpandableMixin, PageObject
-from tests.gui.utils.core.web_elements import Label, WebItemsSequence, NamedButton
-from .common import OZPanel
-
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class _GroupRecord(PageObject, ExpandableMixin):
+from tests.gui.utils.core.base import ExpandableMixin, PageObject
+from tests.gui.utils.core.web_elements import Label, WebItemsSequence, NamedButton
+from .common import OZPanel
+
+
+class GroupRecord(PageObject, ExpandableMixin):
     name = id = Label('.secondary-header', parent_name='given group record')
 
     def __str__(self):
@@ -21,5 +22,5 @@ class _GroupRecord(PageObject, ExpandableMixin):
 
 class GroupManagementPanel(OZPanel):
     groups = WebItemsSequence('.groups-list-list .secondary-accordion-group',
-                              cls=_GroupRecord)
+                              cls=GroupRecord)
     join_group = NamedButton('.clickable', text='join a group')

@@ -1,4 +1,4 @@
-Feature: Onezone GUI elements featuring user alias
+Feature: Management of user alias in Onezone GUI
 
 
   Background:
@@ -7,8 +7,7 @@ Feature: Onezone GUI elements featuring user alias
                 alias: user1
     And user opened browser window
     And user of browser opened z1 onezone page
-    And user of browser entered credentials of user1 in login form in oz login page
-    And user of browser clicked on the Sign in button in oz login page
+    And user of browser logged as user1 to Onezone service
 
 
   Scenario: User successfully changes his alias (clicks on confirm button after entering text)

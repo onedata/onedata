@@ -1,4 +1,4 @@
-Feature: Onezone GUI elements featuring single space management
+Feature: Basic management of space in Onezone GUI
 
 
   Background:
@@ -14,8 +14,7 @@ Feature: Onezone GUI elements featuring single space management
 
     And user opened browser window
     And user of browser opened z1 onezone page
-    And user of browser entered credentials of user1 in login form in oz login page
-    And user of browser clicked on the Sign in button in oz login page
+    And user of browser logged as user1 to Onezone service
 
 
   Scenario: User successfully leaves space

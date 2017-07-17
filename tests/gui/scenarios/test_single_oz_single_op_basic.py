@@ -37,10 +37,8 @@ from tests.gui.steps.rest.cdmi import *
 from tests.gui.steps.rest.env_up.users import *
 from tests.gui.steps.rest.env_up.groups import *
 from tests.gui.steps.rest.env_up.spaces import *
-from tests.gui.steps.rest.access_tokens import *
 
 
-from tests.gui.steps.onezone_before_login import *
 from tests.gui.steps.onezone_provider_popup import *
 from tests.gui.steps.onezone_providers import *
 
@@ -73,15 +71,14 @@ SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environm
 #     pass
 #
 #
-# # --- FEATURES: all non-destructive (does not change state) ---
-# scenarios('../features/onezone/login.feature')
-# scenarios('../features/onezone/user_alias.feature')
-# scenarios('../features/onezone/space_creation.feature')
-# scenarios('../features/onezone/space_management.feature')
-# scenarios('../features/onezone/multiple_spaces_management.feature')
-
+# --- FEATURES: all non-destructive (does not change state) ---
+scenarios('../features/onezone/login.feature')
 scenarios('../features/onezone/providers.feature')
-# scenarios('../features/onezone/access_tokens.feature')
+scenarios('../features/onezone/user_alias.feature')
+scenarios('../features/onezone/access_tokens.feature')
+scenarios('../features/onezone/space_creation.feature')
+scenarios('../features/onezone/space_management.feature')
+scenarios('../features/onezone/multiple_spaces_management.feature')
 
 
 # scenarios('../features/common/account_management.feature')

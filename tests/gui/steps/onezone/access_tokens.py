@@ -1,19 +1,17 @@
-"""Steps for access tokens features in Onezone login page.
+"""This module contains gherkin steps to run acceptance tests featuring
+access tokens management in onezone web GUI.
 """
-
-import time
-from pytest_bdd import given
-
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT
-from tests.gui.utils.generic import repeat_failed, implicit_wait
-
-from pytest_bdd import when, then, parsers
-
 
 __author__ = "Bartek Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from pytest_bdd import given, when, then, parsers
+
+from tests.gui.conftest import WAIT_BACKEND
+from tests.gui.utils.generic import repeat_failed
 
 
 def _click_on_btn_for_token(driver, oz_page, ordinal, btn):
@@ -76,49 +74,28 @@ def assert_oz_access_token_has_been_copied_correctly(selenium, browser_id,
                               'Expected {}, got {}'.format(val, copied_val)
 
 
-@when(parsers.parse('user of {browser_id} sees exactly {num:d} item(s) '
+@when(parsers.parse('user of {browser_id} sees exactly {expected_num:d} item(s) '
                     'on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
-@then(parsers.parse('user of {browser_id} sees exactly {num:d} item(s) '
+@then(parsers.parse('user of {browser_id} sees exactly {expected_num:d} item(s) '
                     'on tokens list in expanded "ACCESS TOKENS" Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_oz_access_tokens_list_has_num_tokens(selenium, browser_id,
-                                                num, oz_page):
+                                                expected_num, oz_page):
     driver = selenium[browser_id]
-    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-        displayed = oz_page(driver)['access tokens'].tokens.count()
-        assert displayed == num, \
-            'Displayed tokens in ACCESS TOKENS oz panel: {seen} ' \
-            'instead of excepted: {excepted}'.format(seen=displayed,
-                                                     excepted=num)
+    displayed_tokens_num = oz_page(driver)['access tokens'].tokens.count()
+    assert displayed_tokens_num == expected_num, \
+        ('Displayed number of tokens in ACCESS TOKENS oz panel: {seen} '
+         'instead of excepted: {excepted}'.format(seen=displayed_tokens_num,
+                                                  excepted=expected_num))
 
 
-@given(parsers.parse('user of {browser_id} created and recorded access token '
-                     'for later use with CDMI API'))
+@when(parsers.parse('user of {browser_id} clicks on "Create new '
+                    'access token" button in expanded "ACCESS TOKENS" '
+                    'Onezone panel'))
+@then(parsers.parse('user of {browser_id} clicks on "Create new '
+                    'access token" button in expanded "ACCESS TOKENS" '
+                    'Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def create_and_record_access_token_for_cdmi(selenium, browser_id,
-                                            oz_page, tmp_memory,
-                                            displays, clipboard):
-    driver = selenium[browser_id]
-    panel = oz_page(driver)['access tokens']
-    panel.expand()
-
-    with implicit_wait(driver, 0.05, SELENIUM_IMPLICIT_WAIT):
-        if panel.tokens.count() > 0:
-            panel.tokens[0].copy()
-        else:
-            panel.create_new_access_token()
-            now = time.time()
-            time_limit = now + 10
-            while now < time_limit:
-                try:
-                    panel.tokens[0].copy()
-                except (RuntimeError, Exception) as ex:
-                    print ex
-                    now = time.time()
-                else:
-                    break
-            else:
-                raise RuntimeError("couldn't create and copy "
-                                   "access token in oz")
-    token = clipboard.paste(display=displays[browser_id])
-    tmp_memory[browser_id]['access_token'] = token
+def click_on_create_new_token_in_oz_access_tokens_panel(selenium, browser_id,
+                                                        oz_page):
+    oz_page(selenium[browser_id])['access tokens'].create_new_access_token()
