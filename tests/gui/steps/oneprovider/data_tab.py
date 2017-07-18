@@ -393,3 +393,20 @@ def assert_provider_chunks_in_file_distribution(selenium, browser_id, chunks,
                                                                 pattern='\d+',
                                                                 default=int))), \
             'displayed chunk {} instead of expected {}'.format(chunk1, chunk2)
+
+
+@when(parsers.parse('user of {browser_id} sees that content of downloaded '
+                    'file "{file_name}" is equal to: "{content}"'))
+@then(parsers.parse('user of {browser_id} sees that content of downloaded '
+                    'file "{file_name}" is equal to: "{content}"'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def has_downloaded_file_content(browser_id, file_name, content, tmpdir):
+    downloaded_file = tmpdir.join(browser_id, 'download', file_name)
+    if downloaded_file.isfile():
+        with downloaded_file.open() as f:
+            file_content = ''.join(f.readlines())
+            assert content == file_content, \
+                ('expected {} as {} content, '
+                 'instead got {}'.format(content, file_name, file_content))
+    else:
+        raise RuntimeError('file {} has not been downloaded'.format(file_name))

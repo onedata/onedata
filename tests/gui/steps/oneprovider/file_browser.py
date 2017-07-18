@@ -1,5 +1,12 @@
-"""Steps used for file list handling in various GUI testing scenarios
+"""This module contains gherkin steps to run acceptance tests featuring
+file browser in oneprovider web GUI.
 """
+
+__author__ = "Bartek Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 
 from time import time
 from datetime import datetime
@@ -9,11 +16,6 @@ from pytest_bdd import when, then, parsers
 
 from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
 from tests.gui.utils.generic import parse_seq, repeat_failed, implicit_wait
-
-__author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 @when(parsers.parse('user of {browser_id} sees "{msg}" '
@@ -171,10 +173,6 @@ def scroll_to_bottom_of_file_browser(browser_id, tmp_memory):
     browser.scroll_to_bottom()
 
 
-# @when(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
-#                     'item(s) in file browser'))
-# @then(parsers.parse('user of {browser_id} sees that there is(are) {num:d} '
-#                     'item(s) in file browser'))
 @when(parsers.re('user of (?P<browser_id>.+?) sees that there '
                  '(is 1|are (?P<num>\d+)) items? in file browser'))
 @then(parsers.re('user of (?P<browser_id>.+?) sees that there '

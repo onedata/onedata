@@ -1,17 +1,17 @@
-# coding=utf-8
-"""Steps for features of Oneprovider metadata.
+"""This module contains gherkin steps to run acceptance tests featuring
+files metadata in oneprovider web GUI.
 """
 
-from tests.gui.conftest import WAIT_FRONTEND
-from tests.gui.utils.generic import parse_seq, repeat_failed
-
-from pytest_bdd import when, then, parsers
-
-
-__author__ = "Michał Ćwiertnia, Bartosz Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from pytest_bdd import when, then, parsers
+
+from tests.gui.conftest import WAIT_FRONTEND
+from tests.gui.utils.generic import parse_seq, repeat_failed
 
 
 @when(parsers.parse('user of {browser_id} sees that metadata panel for '

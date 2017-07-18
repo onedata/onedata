@@ -10,9 +10,10 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import itertools
 
-from pytest_bdd import parsers, when, then
+from pytest_bdd import parsers, given, when, then
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
+from tests.gui.conftest import (WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT,
+                                WAIT_FRONTEND)
 from tests.gui.utils.generic import repeat_failed, implicit_wait
 
 
@@ -60,6 +61,25 @@ def assert_provider_hostname_matches_given_ip(selenium, browser_id, ip, oz_page)
         'of expected {}'.format(displayed_ip, ip)
 
 
+def _click_on_btn_in_provider_popup(driver, btn, provider, oz_page):
+    err_msg = 'Popup displayed for provider named "{}" ' \
+              'instead of "{}"'
+    prov = oz_page(driver)['world map'].get_provider_with_displayed_popup()
+    assert provider == prov.name, err_msg.format(prov.name, provider)
+    getattr(prov, btn.lower().replace(' ', '_')).click()
+
+
+@given(parsers.re(r'user of (?P<browser_id>.+?) clicked on the '
+                  r'"(?P<btn>Go to your files|copy hostname)" button in '
+                  r'"(?P<provider>.+?)" provider\'s popup displayed '
+                  r'on world map'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def g_click_on_btn_in_provider_popup(selenium, browser_id, btn,
+                                     provider, oz_page):
+    _click_on_btn_in_provider_popup(selenium[browser_id], btn,
+                                    provider, oz_page)
+
+
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
                  r'"(?P<btn>Go to your files|copy hostname)" button in '
                  r'"(?P<provider>.+?)" provider\'s popup displayed on world map'))
@@ -67,14 +87,9 @@ def assert_provider_hostname_matches_given_ip(selenium, browser_id, ip, oz_page)
                  r'"(?P<btn>Go to your files|copy hostname)" button in '
                  r'"(?P<provider>.+?)" provider\'s popup displayed on world map'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def click_on_btn_in_provider_popup(selenium, browser_id, btn, provider, oz_page):
-    driver = selenium[browser_id]
-    err_msg = 'Popup displayed for provider named "{}" ' \
-              'instead of "{}"'
-    prov = oz_page(driver)['world map'].get_provider_with_displayed_popup()
-    assert provider == prov.name, err_msg.format(prov.name, provider)
-    action = getattr(prov, btn.lower().replace(' ', '_'))
-    action()
+def wt_click_on_btn_in_provider_popup(selenium, browser_id, btn,
+                                      provider, oz_page):
+    _click_on_btn_in_provider_popup(selenium[browser_id], btn, provider, oz_page)
 
 
 @when(parsers.parse(r'user of {browser_id} unsets provider named "{provider}" '
@@ -195,16 +210,22 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
                                 name2=name2, is_home2=is_home2)
 
 
+@given(parsers.parse('user of {browser_id} clicked on "{provider}" provider '
+                     'in expanded "GO TO YOUR FILES" Onezone panel'))
+@repeat_failed(timeout=WAIT_BACKEND)
+def g_click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
+                                                     provider, oz_page):
+    oz_page(selenium[browser_id])['go to your files'].providers[provider].click()
+
+
 @when(parsers.parse('user of {browser_id} clicks on "{provider}" provider '
                     'in expanded "GO TO YOUR FILES" Onezone panel'))
 @then(parsers.parse('user of {browser_id} clicks on "{provider}" provider '
                     'in expanded "GO TO YOUR FILES" Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
-                                                   provider, oz_page):
-    driver = selenium[browser_id]
-    prov_rec = oz_page(driver)['go to your files'].providers[provider]
-    prov_rec.click()
+def wt_click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
+                                                      provider, oz_page):
+    oz_page(selenium[browser_id])['go to your files'].providers[provider].click()
 
 
 @when(parsers.parse('user of {browser_id} sees that there is no provider '

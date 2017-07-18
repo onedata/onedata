@@ -1,14 +1,15 @@
 """Utils and fixtures to facilitate operations on toolbar in data tab in oneprovider web GUI.
 """
 
-from tests.gui.utils.core.base import PageObject
-from tests.gui.utils.core.web_elements import WebElement, Button
-from tests.gui.utils.generic import rm_css_cls
-
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import WebElement, Button
+from tests.gui.utils.generic import rm_css_cls
 
 
 class DataTopToolBar(PageObject):

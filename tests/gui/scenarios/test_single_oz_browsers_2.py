@@ -6,9 +6,11 @@ __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from tests.gui.steps.common import *
-from tests.gui.steps.modal import *
 
+from tests.gui.steps.rest.cdmi import *
+from tests.gui.steps.rest.env_up.users import *
+from tests.gui.steps.rest.env_up.groups import *
+from tests.gui.steps.rest.env_up.spaces import *
 
 from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
@@ -36,21 +38,16 @@ from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 
-from tests.gui.steps.rest.cdmi import *
-from tests.gui.steps.rest.env_up.users import *
-from tests.gui.steps.rest.env_up.groups import *
-from tests.gui.steps.rest.env_up.spaces import *
-
-
-from tests.gui.steps.onezone_provider_popup import *
-from tests.gui.steps.onezone_providers import *
 
 from tests.gui.steps.oneprovider_common import *
-from tests.gui.steps.oneprovider_data import *
 from tests.gui.steps.oneprovider_spaces import *
 from tests.gui.steps.oneprovider_shares import *
 from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
+
+from tests.gui.steps.common import *
+from tests.gui.steps.modal import *
+
 
 from pytest_bdd import scenarios, scenario
 

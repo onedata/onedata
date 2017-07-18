@@ -1,15 +1,17 @@
 """Utils and fixtures to facilitate operations on file uploader in oneprovider web GUI.
 """
 
-import re
-
-from tests.gui.utils.core.base import PageObject
-from tests.gui.utils.core.web_elements import Label, WebElement, WebItem, WebItemsSequence
-
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+import re
+
+from tests.gui.utils.core.base import PageObject
+from tests.gui.utils.core.web_elements import (Label, WebElement, WebItem,
+                                               WebItemsSequence)
 
 
 class FileUploadRow(PageObject):

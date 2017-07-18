@@ -198,7 +198,7 @@ def oz_page():
 
 @fixture(scope='session')
 def op_page():
-    from tests.gui.utils.oneprovider_gui import OPLoggedIn
+    from tests.gui.utils.oneprovider import OPLoggedIn
     return OPLoggedIn
 
 

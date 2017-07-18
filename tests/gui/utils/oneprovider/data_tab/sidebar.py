@@ -1,17 +1,19 @@
-"""Utils and fixtures to facilitate operations on sidebar in
+"""Utils to facilitate operations on sidebar in
 data tab in oneprovider web GUI.
 """
-
-from selenium.webdriver import ActionChains
-
-from tests.gui.utils.core.base import PageObject, ExpandableMixin
-from tests.gui.utils.core.web_elements import Label, WebElement, WebItem, WebElementsSequence
-from tests.gui.utils.oneprovider.data_tab.space_selector import SpaceSelector
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
+
+
+from selenium.webdriver import ActionChains
+
+from tests.gui.utils.core.base import PageObject, ExpandableMixin
+from tests.gui.utils.core.web_elements import (Label, WebElement, WebItem,
+                                               WebElementsSequence)
+from tests.gui.utils.oneprovider.data_tab.space_selector import SpaceSelector
 
 
 class DataTabSidebar(PageObject):

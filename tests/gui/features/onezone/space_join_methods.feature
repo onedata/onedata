@@ -17,8 +17,8 @@ Feature: Space join methods in Onezone GUI
     And users of [browser1, browser2] opened [z1 onezone, z1 onezone] page
     And users of [browser1, browser2] logged as [user1, user2] to Onezone service
     And user of browser2 expanded the "go to your files" Onezone sidebar panel
-    And user of browser2 clicked on the "p1" provider in Onezone providers sidebar panel
-    And user of browser2 clicked on the "Go to your files" button in provider popup
+    And user of browser2 clicked on "p1" provider in expanded "GO TO YOUR FILES" Onezone panel
+    And user of browser2 clicked on the "Go to your files" button in "p1" provider's popup displayed on world map
     And user of browser2 seen that Oneprovider session has started
     And user of browser2 clicked on the "spaces" tab in main menu sidebar
 

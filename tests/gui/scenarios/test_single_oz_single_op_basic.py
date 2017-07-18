@@ -10,6 +10,10 @@ import sys
 from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
 
+from tests.gui.steps.rest.cdmi import *
+from tests.gui.steps.rest.env_up.users import *
+from tests.gui.steps.rest.env_up.groups import *
+from tests.gui.steps.rest.env_up.spaces import *
 
 from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
@@ -33,17 +37,7 @@ from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 
-from tests.gui.steps.rest.cdmi import *
-from tests.gui.steps.rest.env_up.users import *
-from tests.gui.steps.rest.env_up.groups import *
-from tests.gui.steps.rest.env_up.spaces import *
-
-
-from tests.gui.steps.onezone_provider_popup import *
-from tests.gui.steps.onezone_providers import *
-
 from tests.gui.steps.oneprovider_common import *
-from tests.gui.steps.oneprovider_data import *
 from tests.gui.steps.oneprovider_spaces import *
 from tests.gui.steps.oneprovider_shares import *
 from tests.gui.steps.oneprovider_file_list import *
@@ -83,14 +77,19 @@ scenarios('../features/onezone/space_creation.feature')
 scenarios('../features/onezone/space_management.feature')
 scenarios('../features/onezone/multiple_spaces_management.feature')
 
-# scenarios('../features/oneprovider_group.feature')
-# scenarios('../features/onezone_gui.feature')
+scenarios('../features/oneprovider/data/empty_file_browser.feature')
+scenarios('../features/oneprovider/data/single_file.feature')
+scenarios('../features/oneprovider/data/several_files.feature')
+scenarios('../features/oneprovider/data/single_directory.feature')
+scenarios('../features/oneprovider/data/nested_directories.feature')
+
 # scenarios('../features/oneprovider_data.feature')
+# scenarios('../features/oneprovider_shares.feature')
+# scenarios('../features/oneprovider_metadata.feature')
+# scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/oneprovider_space.feature')
 # scenarios('../features/oneprovider_2_providers_cdmi.feature')
 # scenarios('../features/oneprovider_2_providers.feature')
-# scenarios('../features/oneprovider_shares.feature')
-# scenarios('../features/oneprovider_metadata.feature')
 #
 # # limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
 # if BROWSER == 'Chrome':
