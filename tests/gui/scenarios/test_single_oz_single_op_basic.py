@@ -83,7 +83,7 @@ scenarios('../features/oneprovider/data/single_directory.feature')
 scenarios('../features/oneprovider/data/nested_directories.feature')
 scenarios('../features/oneprovider/data/file_metadata.feature')
 scenarios('../features/oneprovider/data/directory_metadata.feature')
-scenarios('../features/oneprovider/shares.feature')
+scenarios('../features/oneprovider/shares_basic.feature')
 
 # scenarios('../features/oneprovider_data.feature')
 # scenarios('../features/oneprovider_group.feature')

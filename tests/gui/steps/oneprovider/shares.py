@@ -124,14 +124,14 @@ def is_selected_share_named(selenium, browser_id, share_name, op_page):
                     'public share is named "{share_name}"'))
 @then(parsers.parse('user of {browser_id} sees that '
                     'public share is named "{share_name}"'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_BACKEND, interval=0.5)
 def is_public_share_named(selenium, browser_id, share_name, public_share):
     driver = selenium[browser_id]
-    driver.refresh()
     displayed_name = public_share(driver).name
-    assert displayed_name == share_name, \
-        ('displayed public share name is "{}" instead of '
-         'expected "{}"'.format(displayed_name, share_name))
+    if displayed_name != share_name:
+        driver.refresh()
+        raise RuntimeError('displayed public share name is "{}" instead of '
+                           'expected "{}"'.format(displayed_name, share_name))
 
 
 @when(parsers.parse('user of {browser_id} does not see any share'))
@@ -158,8 +158,8 @@ def is_share_not_viewable(selenium, browser_id):
 @then(parsers.parse('user of {browser_id} sees file browser '
                     'in shared tab in Oneprovider page'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def assert_file_browser_in_data_tab_in_op(selenium, browser_id,
-                                          op_page, tmp_memory):
+def assert_file_browser_in_shared_tab_in_op(selenium, browser_id,
+                                            op_page, tmp_memory):
     driver = selenium[browser_id]
     file_browser = op_page(driver).shares.file_browser
     tmp_memory[browser_id]['file_browser'] = file_browser
@@ -191,3 +191,40 @@ def click_on_item_in_share_settings_dropdown(selenium, browser_id, option_name,
      .settings
      .options[option_name]
      .click())
+
+
+@when(parsers.parse('user of {browser_id} sees file browser '
+                    'in public share view'))
+@then(parsers.parse('user of {browser_id} sees file browser '
+                    'in public share view'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def assert_file_browser_in_public_share(selenium, browser_id,
+                                        public_share, tmp_memory):
+    file_browser = public_share(selenium[browser_id]).file_browser
+    tmp_memory[browser_id]['file_browser'] = file_browser
+
+
+@when(parsers.parse('user of {browser_id} sees that current working directory '
+                    'path visible in public share\'s file browser '
+                    'is as follows: {cwd}'))
+@then(parsers.parse('user of {browser_id} sees that current working directory '
+                    'path visible in public share\'s file browser '
+                    'is as follows: {cwd}'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def is_public_share_cwd_correct(selenium, browser_id, cwd, public_share):
+    displayed_cwd = public_share(selenium[browser_id]).breadcrumbs.pwd()
+    assert displayed_cwd == cwd, \
+        ('displayed share cwd in file browser is {} '
+         'instead of expected {}'.format(displayed_cwd, cwd))
+
+
+@when(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs from public share\'s '
+                    'file browser'))
+@then(parsers.parse('user of {browser_id} changes current working directory '
+                    'to {path} using breadcrumbs from public share\'s '
+                    'file browser'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def change_public_share_cwd_using_breadcrumbs(selenium, browser_id, path,
+                                              public_share):
+    public_share(selenium[browser_id]).breadcrumbs.chdir(path)
