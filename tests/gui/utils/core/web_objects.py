@@ -34,8 +34,12 @@ class ButtonWebObject(AbstractWebObject):
         click_on_web_elem(self.driver, self.web_elem,
                           lambda: 'cannot click on {btn}'.format(btn=self))
 
+    def click(self):
+        self.__call__()
+
     def is_enabled(self):
-        return self.web_elem.is_enabled()
+        return (self.web_elem.is_enabled() and
+                'disabled' not in self.web_elem.get_attribute('class'))
 
 
 class NavigationButtonWebObject(ButtonWebObject):

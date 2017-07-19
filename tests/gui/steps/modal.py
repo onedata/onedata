@@ -97,7 +97,7 @@ def wait_for_modal_to_appear(selenium, browser_id, modal_name, tmp_memory):
 def wait_for_modal_to_disappear(selenium, browser_id, tmp_memory):
     driver = selenium[browser_id]
     modal = tmp_memory[browser_id]['window']['modal']
-    Wait(driver, WAIT_FRONTEND).until_not(
+    Wait(driver, WAIT_BACKEND).until_not(
         lambda _: not staleness_of(modal) or modal.is_displayed(),
         message='waiting for modal to disappear'
     )
