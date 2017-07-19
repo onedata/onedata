@@ -66,14 +66,14 @@ def assert_non_empty_token_in_add_storage_modal(browser_id, tmp_memory):
 
 def _find_modal(driver, modal_name):
     def _find():
+        modals = driver.find_elements_by_css_selector('.modal.in, '
+                                                      '.modal.in .modal-title')
         for name, modal in zip(modals[1::2], modals[::2]):
             if name.text.lower() == modal_name:
                 return modal
 
     modal_name = modal_name.lower()
-    modals = driver.find_elements_by_css_selector('.modal.in, '
-                                                  '.modal.in .modal-title')
-    return Wait(driver, WAIT_FRONTEND).until(
+    return Wait(driver, WAIT_BACKEND).until(
         lambda _: _find(),
         message='waiting for {:s} modal to appear'.format(modal_name)
     )

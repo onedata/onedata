@@ -7,6 +7,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
+from functools import partial
 from contextlib import contextmanager
 
 from selenium.webdriver import ActionChains
@@ -14,13 +15,13 @@ from selenium.webdriver.common.keys import Keys
 
 from tests.gui.utils.core.base import PageObject
 from tests.gui.utils.core.web_elements import (WebElement, WebElementsSequence,
-                                               Label, WebItemsSequence)
+                                               Label, WebItemsSequence, WebItem)
 from tests.gui.utils.generic import iter_ahead
 from .file_row import FileRow
 from .metadata_row import MetadataRow
 
 
-class FileBrowser(PageObject):
+class _FileBrowser(PageObject):
     empty_dir_msg = Label('.empty-model-container')
     files = WebItemsSequence('tbody tr.file-row', cls=FileRow)
     _empty_dir_icon = WebElement('.empty-dir-image')
@@ -65,3 +66,6 @@ class FileBrowser(PageObject):
         yield action
 
         action.perform()
+
+
+FileBrowser = partial(WebItem, cls=_FileBrowser)

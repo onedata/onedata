@@ -36,11 +36,10 @@ from tests.gui.steps.onezone.login_page import *
 from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
+from tests.gui.steps.oneprovider.shares import *
 
 from tests.gui.steps.oneprovider_common import *
 from tests.gui.steps.oneprovider_spaces import *
-from tests.gui.steps.oneprovider_shares import *
-from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
 import pytest
@@ -84,13 +83,15 @@ scenarios('../features/oneprovider/data/single_directory.feature')
 scenarios('../features/oneprovider/data/nested_directories.feature')
 scenarios('../features/oneprovider/data/file_metadata.feature')
 scenarios('../features/oneprovider/data/directory_metadata.feature')
+scenarios('../features/oneprovider/shares.feature')
 
 # scenarios('../features/oneprovider_data.feature')
-# scenarios('../features/oneprovider_shares.feature')
 # scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/oneprovider_space.feature')
-# scenarios('../features/oneprovider_2_providers_cdmi.feature')
-# scenarios('../features/oneprovider_2_providers.feature')
+
+# # TODO rewrite scenarios to use env up set by rest when it will be possible to have more than 1 provider
+# scenarios('../features/oneprovider/multiprovider/cdmi.feature')
+# scenarios('../features/oneprovider/multiprovider/basic.feature')
 #
 # # limit some tests to chrome (due to multiple files upload can be simulated in selenium only in Chrome)
 # if BROWSER == 'Chrome':

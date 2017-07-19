@@ -11,13 +11,15 @@ from tests.gui.utils.core.web_elements import WebItem, Label
 from tests.gui.utils.generic import find_web_elem_with_text, click_on_web_elem
 from .data_tab import DataTab
 from .user_profile import UserProfile
+from .shares import SharesContentPage
 
 
 class OPLoggedIn(object):
     provider_name = Label('header .navbar-header .provider-name')
     user_profile = WebItem('li.profile-dropdown', cls=UserProfile)
 
-    tabs = {'data': DataTab}
+    tabs = {'data': DataTab,
+            'shares': SharesContentPage}
 
     def __init__(self, driver):
         self.web_elem = self.driver = driver

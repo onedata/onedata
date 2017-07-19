@@ -9,13 +9,14 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 from itertools import izip
+from functools import partial
 
 from tests.gui.utils.core.base import PageObject
-from tests.gui.utils.core.web_elements import WebItemsSequence
+from tests.gui.utils.core.web_elements import WebItemsSequence, WebItem
 from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
 
 
-class Breadcrumbs(PageObject):
+class _Breadcrumbs(PageObject):
     _breadcrumbs = WebItemsSequence('a.file-breadcrumb-item-link',
                                     cls=ButtonWithTextPageObject)
 
@@ -40,3 +41,6 @@ class Breadcrumbs(PageObject):
             assert dir1 == dir2.text, err_msg.format(dir=dir1, idx=i, item=self)
 
         dir2.click()
+
+
+Breadcrumbs = partial(WebItem, cls=_Breadcrumbs)

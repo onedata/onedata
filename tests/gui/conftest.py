@@ -27,7 +27,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-SELENIUM_IMPLICIT_WAIT = 4
+SELENIUM_IMPLICIT_WAIT = 0
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
@@ -200,6 +200,12 @@ def oz_page():
 def op_page():
     from tests.gui.utils.oneprovider import OPLoggedIn
     return OPLoggedIn
+
+
+@fixture(scope='session')
+def public_share():
+    from tests.gui.utils.oneprovider.shares.public_share import PublicShareView
+    return PublicShareView
 
 
 @fixture(scope='session')

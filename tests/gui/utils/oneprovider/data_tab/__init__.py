@@ -19,10 +19,8 @@ from ..file_browser import FileBrowser
 class DataTab(PageObject):
     toolbar = WebItem('header nav.navbar ul.data-files-list-toolbar',
                       cls=DataTopToolBar)
-    breadcrumbs = WebItem('.secondary-top-bar .file-breadcrumbs-list',
-                          cls=Breadcrumbs)
-    file_browser = WebItem('.lower-main-content .data-files-list',
-                           cls=FileBrowser)
+    breadcrumbs = Breadcrumbs('.secondary-top-bar .file-breadcrumbs-list')
+    file_browser = FileBrowser('.lower-main-content .data-files-list')
     file_uploader = WebItem('#main-content + .file-upload .file-upload',
                             cls=FileUploader)
     _sidebar = WebElementsSequence('.lower-main-content nav.secondary-sidebar, '

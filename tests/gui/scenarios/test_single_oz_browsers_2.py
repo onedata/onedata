@@ -41,8 +41,6 @@ from tests.gui.steps.oneprovider.metadata import *
 
 from tests.gui.steps.oneprovider_common import *
 from tests.gui.steps.oneprovider_spaces import *
-from tests.gui.steps.oneprovider_shares import *
-from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
 from tests.gui.steps.common import *
@@ -61,6 +59,8 @@ scenarios('../features/onepanel/deployment.feature')
 
 scenarios('../features/onezone/space_join_methods.feature')
 
-# scenarios('../features/oneprovider_2_providers_multi.feature')
 # scenarios('../features/oneprovider_shares_multi.feature')
 # scenarios('../features/oneprovider_group_multi.feature')
+
+# # TODO rewrite scenarios to use env up set by rest when it will be possible to have more than 1 provider
+# scenarios('../features/oneprovider/multiprovider/multi_browser.feature')

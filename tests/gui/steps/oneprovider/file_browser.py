@@ -11,11 +11,10 @@ __license__ = "This software is released under the MIT license cited in " \
 from time import time
 from datetime import datetime
 
-import pytest
 from pytest_bdd import when, then, parsers
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import parse_seq, repeat_failed, implicit_wait
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from tests.gui.utils.generic import parse_seq, repeat_failed
 
 
 @when(parsers.parse('user of {browser_id} sees "{msg}" '
@@ -80,14 +79,13 @@ def click_on_tool_icon_for_file_in_file_browser(browser_id, tool_type,
 @then(parsers.parse('user of {browser_id} does not see any item(s) named '
                     '{item_list} in file browser'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def assert_items_absence_in_file_browser(selenium, browser_id, item_list,
-                                         tmp_memory):
-    driver = selenium[browser_id]
-    browser = tmp_memory[browser_id]['file_browser']
-    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-        for item_name in parse_seq(item_list):
-            with pytest.raises(RuntimeError):
-                _ = browser.files[item_name]
+def assert_items_absence_in_file_browser(browser_id, item_list, tmp_memory):
+    file_browser = tmp_memory[browser_id]['file_browser']
+    files = {f.name for f in file_browser.files}
+    for item_name in parse_seq(item_list):
+            assert item_name not in files, \
+                ('found "{}" in file browser, '
+                 'while it should not'.format(item_name))
 
 
 @when(parsers.parse('user of {browser_id} sees item(s) '
@@ -104,9 +102,11 @@ def assert_items_absence_in_file_browser(selenium, browser_id, item_list,
                     '{item_list} have appeared in file browser'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_items_presence_in_file_browser(browser_id, item_list, tmp_memory):
-    browser = tmp_memory[browser_id]['file_browser']
+    file_browser = tmp_memory[browser_id]['file_browser']
+    files = {f.name for f in file_browser.files}
     for item_name in parse_seq(item_list):
-        _ = browser.files[item_name]
+            assert item_name in files, \
+                ('not found "{}" in file browser'.format(item_name))
 
 
 @when(parsers.parse('user of {browser_id} sees item(s) named '
@@ -187,10 +187,12 @@ def assert_num_of_files_are_displayed_in_file_browser(browser_id, num,
     assert files_num == num, err_msg.format(files_num, num)
 
 
-@when(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
-                    'is {item_attr} in file browser'))
-@then(parsers.parse('user of {browser_id} sees that item named "{item_name}" '
-                    'is {item_attr} in file browser'))
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees that item named '
+                 r'"(?P<item_name>.*?)" is (?P<item_attr>file|directory|shared) '
+                 r'in file browser'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees that item named '
+                 r'"(?P<item_name>.*?)" is (?P<item_attr>file|directory|shared) '
+                 r'in file browser'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def assert_item_in_file_browser_is_of_type(browser_id, item_name, item_attr,
                                            tmp_memory):
