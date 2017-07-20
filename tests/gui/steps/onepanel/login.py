@@ -1,9 +1,11 @@
-"""Steps used in onepanel login page"""
+"""This module contains gherkin steps to run acceptance tests featuring
+login page in onepanel web GUI.
+"""
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from pytest_bdd import given, then, when, parsers

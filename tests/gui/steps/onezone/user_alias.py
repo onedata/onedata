@@ -2,10 +2,10 @@
 user alias management in onezone web GUI.
 """
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from pytest_bdd import when, then, parsers
@@ -54,5 +54,5 @@ def assert_correct_usr_alias_in_oz(selenium, browser_id,
                                    expected_alias, oz_page):
     displayed_alias = oz_page(selenium[browser_id])['user alias'].alias
     assert displayed_alias == expected_alias, \
-        ('expected "{}" as user alias, but instead display is "{}" '
+        ('expected "{}" as user alias, but instead displayed is "{}" '
          'in USER ALIAS oz panel'.format(expected_alias, displayed_alias))

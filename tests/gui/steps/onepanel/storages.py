@@ -1,9 +1,11 @@
-"""Steps used in storage management in Onepanel"""
+"""This module contains gherkin steps to run acceptance tests featuring
+storages management in onepanel web GUI.
+"""
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from pytest_bdd import when, then, parsers

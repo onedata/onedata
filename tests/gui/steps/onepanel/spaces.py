@@ -1,4 +1,12 @@
-"""Steps used in space support"""
+"""This module contains gherkin steps to run acceptance tests featuring
+spaces management in onepanel web GUI.
+"""
+
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
+
 
 import yaml
 
@@ -6,12 +14,6 @@ from pytest_bdd import when, then, parsers
 
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import repeat_failed, transform
-
-
-__author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 @when(parsers.parse('user of {browser_id} selects "{storage}" from storage '

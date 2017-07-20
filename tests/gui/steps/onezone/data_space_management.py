@@ -1,10 +1,11 @@
-"""Steps for DATA SPACE MANAGEMENT panel features of Onezone page.
+"""This module contains gherkin steps to run acceptance tests featuring
+spaces management in onezone web GUI.
 """
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from pytest_bdd import parsers, when, then

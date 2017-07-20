@@ -2,16 +2,16 @@
 common operations in onezone web GUI.
 """
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from pytest_bdd import given, when, then, parsers
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed, implicit_wait
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from tests.gui.utils.generic import repeat_failed
 from tests.utils.acceptance_utils import list_parser
 
 
@@ -153,11 +153,11 @@ def assert_there_is_no_item_named_in_oz_panel_list(selenium, browser_id,
                                                    item_type, item_name,
                                                    oz_panel, oz_page):
     driver = selenium[browser_id]
-    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-        items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
-        assert item_name not in items, \
-            '{} named "{}" found in {} oz panel while it should not be ' \
-            'found'.format(item_type, item_name, oz_panel)
+    items = {item.name for item in getattr(oz_page(driver)[oz_panel],
+                                           '{}s'.format(item_type))}
+    assert item_name not in items, \
+        ('{} named "{}" found in {} oz panel while it should not be '
+         'found'.format(item_type, item_name, oz_panel))
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '
@@ -246,9 +246,7 @@ def set_given_item_as_home_by_clicking_on_home_outline(selenium, browser_id,
                                                        oz_panel, oz_page):
     driver = selenium[browser_id]
     items = getattr(oz_page(driver)[oz_panel], '{}s'.format(item_type))
-    item = items[item_name]
-    with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        item.set_as_home()
+    items[item_name].set_as_home()
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that (?P<counter_type>space)s '

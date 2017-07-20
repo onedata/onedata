@@ -1,11 +1,11 @@
 """Steps used for handling of data tab elements (e.g. toolbar)
-in various GUI testing scenarios
+in various oneprovider GUI testing scenarios
 """
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from itertools import izip
@@ -13,8 +13,8 @@ from itertools import izip
 import pytest
 from pytest_bdd import given, when, then, parsers
 
-from tests.gui.conftest import WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT, WAIT_FRONTEND
-from tests.gui.utils.generic import (repeat_failed, implicit_wait, parse_seq,
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from tests.gui.utils.generic import (repeat_failed, parse_seq,
                                      upload_file_path, transform)
 
 
@@ -47,8 +47,7 @@ def change_space_view_in_data_tab_in_op(selenium, browser_id,
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  tooltip, op_page):
     driver = selenium[browser_id]
-    btn = getattr(op_page(driver).data.toolbar, transform(tooltip))
-    btn.click()
+    getattr(op_page(driver).data.toolbar, transform(tooltip)).click()
 
 
 @when(parsers.parse('user of {browser_id} sees that {btn_list} button '
@@ -60,14 +59,14 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that {btn_list} buttons '
                     'are enabled in toolbar in data tab in Oneprovider gui'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
-                                                 btn_list, op_page):
+def assert_btn_enabled_in_toolbar_in_data_tab_in_op(selenium, browser_id,
+                                                    btn_list, op_page):
     driver = selenium[browser_id]
     toolbar = op_page(driver).data.toolbar
-    err_msg = '{} should be disabled but is not'
     for btn in parse_seq(btn_list):
         item = getattr(toolbar, transform(btn))
-        assert item.is_enabled() is True, err_msg.format(item)
+        assert item.is_enabled() is True, ('{} should be disabled but is not'
+                                           ''.format(item))
 
 
 @when(parsers.parse('user of {browser_id} sees that {btn_list} button is '
@@ -79,14 +78,15 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that {btn_list} buttons are '
                     'disabled in toolbar in data tab in Oneprovider gui'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
-                                                 btn_list, op_page):
+def assert_btn_disabled_in_toolbar_in_data_tab_in_op(selenium, browser_id,
+                                                     btn_list, op_page):
     driver = selenium[browser_id]
     toolbar = op_page(driver).data.toolbar
-    err_msg = '{} btn should be disabled but is not in toolbar in op data tab'
     for btn in parse_seq(btn_list):
         item = getattr(toolbar, transform(btn))
-        assert item.is_enabled() is False, err_msg.format(btn)
+        assert item.is_enabled() is False, ('{} btn should be disabled but is '
+                                            'not in toolbar in op data tab'
+                                            ''.format(btn))
 
 
 @when(parsers.parse('user of {browser_id} sees that current working directory '
@@ -109,8 +109,7 @@ def is_displayed_breadcrumbs_in_data_tab_in_op_correct(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def change_cwd_using_breadcrumbs_in_data_tab_in_op(selenium, browser_id,
                                                    path, op_page):
-    driver = selenium[browser_id]
-    op_page(driver).data.breadcrumbs.chdir(path)
+    op_page(selenium[browser_id]).data.breadcrumbs.chdir(path)
 
 
 @when(parsers.parse('user of {browser_id} sees that current working directory '
@@ -121,9 +120,8 @@ def change_cwd_using_breadcrumbs_in_data_tab_in_op(selenium, browser_id,
 def is_displayed_dir_tree_in_data_tab_in_op_correct(selenium, browser_id,
                                                     path, op_page):
     driver = selenium[browser_id]
-    with implicit_wait(driver, 0.05, SELENIUM_IMPLICIT_WAIT):
-        pwd = op_page(driver).data.sidebar.cwd.pwd()
-    assert path == pwd, 'expected path {}\n got: {}'.format(path, pwd)
+    cwd = op_page(driver).data.sidebar.cwd.pwd()
+    assert path == cwd, 'expected path {}\n got: {}'.format(path, cwd)
 
 
 @when(parsers.parse('user of {browser_id} changes current working directory '
@@ -151,8 +149,7 @@ def assert_absence_of_path_in_dir_tree(selenium, browser_id, path, op_page):
     curr_dir = op_page(driver).data.sidebar.root_dir
     with pytest.raises(RuntimeError):
         for directory in (dir for dir in path.split('/') if dir != ''):
-            with implicit_wait(driver, 0.05, SELENIUM_IMPLICIT_WAIT):
-                curr_dir = curr_dir[directory]
+            curr_dir = curr_dir[directory]
 
 
 @repeat_failed(timeout=WAIT_FRONTEND)
@@ -198,11 +195,8 @@ def assert_nonempty_file_browser_in_data_tab_in_op(selenium, browser_id,
                                                    op_page, tmp_memory):
     driver = selenium[browser_id]
     file_browser = op_page(driver).data.file_browser
-
-    with implicit_wait(driver, 1, SELENIUM_IMPLICIT_WAIT):
-        assert not file_browser.is_empty(), 'file browser in data tab in op' \
-                                            'should not be empty but is'
-
+    assert not file_browser.is_empty(), ('file browser in data tab in op'
+                                         'should not be empty but is')
     tmp_memory[browser_id]['file_browser'] = file_browser
 
 
@@ -215,11 +209,8 @@ def assert_empty_file_browser_in_data_tab_in_op(selenium, browser_id,
                                                 op_page, tmp_memory):
     driver = selenium[browser_id]
     file_browser = op_page(driver).data.file_browser
-
-    with implicit_wait(driver, 1, SELENIUM_IMPLICIT_WAIT):
-        assert file_browser.is_empty(), 'file browser in data tab in op' \
-                                        'should be empty but is not'
-
+    assert file_browser.is_empty(), ('file browser in data tab in op'
+                                     'should be empty but is not')
     tmp_memory[browser_id]['file_browser'] = file_browser
 
 

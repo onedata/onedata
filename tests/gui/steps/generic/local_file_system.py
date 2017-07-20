@@ -1,5 +1,12 @@
-"""Steps directly interacting with local file system.
+"""This module contains gherkin steps to run acceptance tests featuring
+interacting with local file system.
 """
+
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
+
 
 import yaml
 import stat
@@ -7,12 +14,6 @@ import stat
 from pytest_bdd import given, parsers
 
 from tests.gui.utils.generic import suppress
-
-
-__author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 PERMS_777 = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH

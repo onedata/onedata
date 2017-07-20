@@ -1,15 +1,16 @@
-"""Common steps using copy or paste text
+"""This module contains gherkin steps to run acceptance tests featuring
+copy paste operations using local system clipboard.
 """
+
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
+
 
 from pytest_bdd import when, then, parsers
 
 from tests.gui.utils.generic import parse_seq
-
-
-__author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 @when(parsers.re('user of (?P<browser_id>.*?) sends copied (?P<item_type>.*?) '

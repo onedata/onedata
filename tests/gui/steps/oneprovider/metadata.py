@@ -3,9 +3,9 @@ files metadata in oneprovider web GUI.
 """
 
 __author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from pytest_bdd import when, then, parsers
@@ -97,7 +97,7 @@ def click_on_button_in_metadata_panel(browser_id, button_name,
                                       item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     metadata_row = browser.get_metadata_for(item_name)
-    btn = getattr(metadata_row, button_name.lower().replace(' ', '_'))()
+    btn = getattr(metadata_row, button_name.lower().replace(' ', '_'))
     btn()
 
 

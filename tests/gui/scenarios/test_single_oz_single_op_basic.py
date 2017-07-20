@@ -18,8 +18,8 @@ from tests.gui.steps.rest.env_up.spaces import *
 from tests.gui.steps.generic.url import *
 from tests.gui.steps.generic.browser_creation import *
 from tests.gui.steps.generic.copy_paste import *
-from tests.gui.steps.generic.account_management import *
 
+from tests.gui.steps.onepanel.account_management import *
 from tests.gui.steps.onepanel.login import *
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *

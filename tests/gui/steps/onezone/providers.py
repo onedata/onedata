@@ -4,17 +4,14 @@ providers management in onezone web GUI.
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
-
-import itertools
 
 from pytest_bdd import parsers, given, when, then
 
-from tests.gui.conftest import (WAIT_BACKEND, SELENIUM_IMPLICIT_WAIT,
-                                WAIT_FRONTEND)
-from tests.gui.utils.generic import repeat_failed, implicit_wait
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from tests.gui.utils.generic import repeat_failed
 
 
 @when(parsers.parse('user of {browser_id} sees that provider popup for provider '
@@ -23,12 +20,12 @@ from tests.gui.utils.generic import repeat_failed, implicit_wait
                     'named "{provider}" has appeared on world map'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
-                                              provider, oz_page):
+                                              provider_name, oz_page):
     driver = selenium[browser_id]
     err_msg = 'Popup displayed for provider named "{}" ' \
               'instead of "{}"'
     prov = oz_page(driver)['world map'].get_provider_with_displayed_popup()
-    assert provider == prov.name, err_msg.format(prov.name, provider)
+    assert provider_name == prov.name, err_msg.format(prov.name, provider_name)
 
 
 @when(parsers.parse('user of {browser_id} sees that hostname in displayed '
@@ -100,13 +97,12 @@ def wt_click_on_btn_in_provider_popup(selenium, browser_id, btn,
                     r'record in expanded "GO TO YOUR FILES" Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
 def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
-                                                        provider, oz_page):
+                                                        provider_name, oz_page):
     driver = selenium[browser_id]
-    item = oz_page(driver)['go to your files'].providers[provider]
-    err_msg = 'provider named "{}" is still set as home but it should not'
-    with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        item.unset_from_home()
-        assert not item.is_home(), err_msg.format(provider)
+    provider = oz_page(driver)['go to your files'].providers[provider_name]
+    provider.unset_from_home()
+    assert not provider.is_home(), ('provider named "{}" is still set as home '
+                                    'but it should not'.format(provider))
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that there is no '
@@ -131,11 +127,10 @@ def unset_given_item_from_home_by_clicking_on_home_icon(selenium, browser_id,
 def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                      ordinal, oz_page):
     driver = selenium[browser_id]
-    item = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
-    err_msg = 'provider popup for {} circle is displayed ' \
-              'while it should not be'
-    with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        assert not item.is_displayed(), err_msg.format(ordinal)
+    prov_circle = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
+    assert not prov_circle.is_displayed(), ('provider popup for {} circle is '
+                                            'displayed while it should not be'
+                                            ''.format(ordinal))
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on '
@@ -149,8 +144,7 @@ def assert_no_provider_popup_next_to_provider_circle(selenium, browser_id,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_provider_circle(selenium, browser_id, ordinal, oz_page):
     driver = selenium[browser_id]
-    item = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
-    item.click()
+    oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1].click()
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) sees that provider popup has '
@@ -165,19 +159,17 @@ def click_on_provider_circle(selenium, browser_id, ordinal, oz_page):
 def assert_provider_popup_next_to_provider_circle(selenium, browser_id,
                                                   ordinal, oz_page):
     driver = selenium[browser_id]
-    item = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
-    err_msg = 'provider popup for {} circle is not displayed ' \
-              'while it should be'
-    with implicit_wait(driver, 0.2, SELENIUM_IMPLICIT_WAIT):
-        assert item.is_displayed(), err_msg.format(ordinal)
+    prov_circle = oz_page(driver)['world map'].providers[int(ordinal[:-2]) - 1]
+    assert prov_circle.is_displayed(), ('provider popup for {} circle is not '
+                                        'displayed while it should be'
+                                        ''.format(ordinal))
 
 
 @when(parsers.parse('user of {browser_id} clicks on Onezone world map'))
 @then(parsers.parse('user of {browser_id} clicks on Onezone world map'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_world_map(selenium, browser_id, oz_page):
-    driver = selenium[browser_id]
-    oz_page(driver)['world map'].click()
+    oz_page(selenium[browser_id])['world map'].click()
 
 
 @when(parsers.parse('user of {browser_id} sees that the list of spaces '
@@ -190,24 +182,19 @@ def click_on_world_map(selenium, browser_id, oz_page):
 def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
                                                   provider, oz_page):
     driver = selenium[browser_id]
-    prov_record = oz_page(driver)['go to your files'].providers[provider]
-    prov_popup = oz_page(driver)['world map'].get_provider_with_displayed_popup()
-    err_msg1 = 'Popup displayed for provider named "{}" ' \
-               'instead of "{}"'
-    err_msg2 = 'mismatch between provider popup ({name1}, {is_home1}) ' \
-               'and provider record ({name2}, {is_home2}) ' \
-               'in GO TO YOUR FILES panel in space list found'
-    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-        assert provider == prov_popup.name, err_msg1.format(prov_popup.name,
-                                                            provider)
-
-        for space1, space2 in itertools.izip(prov_popup.spaces,
-                                             prov_record.spaces):
-            name1, is_home1 = space1.name, space1.is_home()
-            name2, is_home2 = space2.name, space2.is_home()
-            assert (name1, is_home1) == (name2, is_home2), \
-                err_msg2.format(name1=name1, is_home1=is_home1,
-                                name2=name2, is_home2=is_home2)
+    provider_record_spaces = {(space.name, space.is_home())
+                              for space in (oz_page(driver)['go to your files']
+                                            .providers[provider]
+                                            .spaces)}
+    provider_popup_spaces = {(space.name, space.is_home())
+                             for space in (oz_page(driver)['world map']
+                                           .get_provider_with_displayed_popup()
+                                           .spaces)}
+    assert provider_record_spaces == provider_popup_spaces, \
+        ('spaces (space_name, is_home) displayed in "{}" provider record in '
+         'GO TO YOUR FILES panel: {} does not match those displayed in '
+         'provider popup: {}'.format(provider, provider_record_spaces,
+                                     provider_popup_spaces))
 
 
 @given(parsers.parse('user of {browser_id} clicked on "{provider}" provider '
@@ -215,7 +202,9 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def g_click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
                                                      provider, oz_page):
-    oz_page(selenium[browser_id])['go to your files'].providers[provider].click()
+    (oz_page(selenium[browser_id])['go to your files']
+     .providers[provider]
+     .click())
 
 
 @when(parsers.parse('user of {browser_id} clicks on "{provider}" provider '
@@ -225,7 +214,9 @@ def g_click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def wt_click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
                                                       provider, oz_page):
-    oz_page(selenium[browser_id])['go to your files'].providers[provider].click()
+    (oz_page(selenium[browser_id])['go to your files']
+     .providers[provider]
+     .click())
 
 
 @when(parsers.parse('user of {browser_id} sees that there is no provider '
@@ -247,11 +238,10 @@ def assert_list_of_providers_is_empty(selenium, browser_id, oz_page):
 def assert_provider_working_in_oz_panel(selenium, browser_id,
                                         provider, oz_page):
     driver = selenium[browser_id]
-    prov_rec = oz_page(driver)['go to your files'].providers[provider]
-
-    err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
-              '"{}" is not green'
-    assert prov_rec.is_working(), err_msg.format(provider)
+    provider_record = oz_page(driver)['go to your files'].providers[provider]
+    assert provider_record.is_working(), ('provider icon in GO TO YOUR FILES '
+                                          'oz panel for "{}" is not green'
+                                          ''.format(provider))
 
 
 @when(parsers.parse('user of {browser_id} sees that provider named "{provider}" '
@@ -262,7 +252,7 @@ def assert_provider_working_in_oz_panel(selenium, browser_id,
 def assert_provider_not_working_in_oz_panel(selenium, browser_id,
                                             provider, oz_page):
     driver = selenium[browser_id]
-    prov_rec = oz_page(driver)['go to your files'].providers[provider]
-    err_msg = 'provider icon in GO TO YOUR FILES oz panel for ' \
-              '"{}" is not gray'
-    assert prov_rec.is_not_working(), err_msg.format(provider)
+    provider_record = oz_page(driver)['go to your files'].providers[provider]
+    assert provider_record.is_not_working(), ('provider icon in GO TO YOUR FILES '
+                                              'oz panel for "{}" is not gray'
+                                              ''.format(provider))

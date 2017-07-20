@@ -1,5 +1,12 @@
-"""Steps directly interacting with docker.
+"""This module contains gherkin steps to run acceptance tests featuring
+interaction with docker in onezone web GUI.
 """
+
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
+
 
 import time
 import subprocess
@@ -8,12 +15,6 @@ import os.path
 from tests.gui.utils.generic import parse_seq, suppress
 
 from pytest_bdd import given, when, then, parsers
-
-
-__author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 PROVIDER_CONTAINER_NAME = 'oneprovider-1'

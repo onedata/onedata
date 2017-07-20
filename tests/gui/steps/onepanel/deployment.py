@@ -1,9 +1,11 @@
-"""Steps used in clusters deployment process"""
+"""This module contains gherkin steps to run acceptance tests featuring
+deployment management in onezone web GUI.
+"""
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 import re
@@ -11,9 +13,8 @@ import time
 
 from pytest_bdd import when, then, parsers
 
-from tests.gui.conftest import WAIT_FRONTEND, SELENIUM_IMPLICIT_WAIT
-from tests.gui.utils.generic import (repeat_failed, parse_seq,
-                                     implicit_wait, transform)
+from tests.gui.conftest import WAIT_FRONTEND
+from tests.gui.utils.generic import repeat_failed, parse_seq, transform
 
 
 @when(parsers.parse('user of {browser_id} enables {options} options for '
@@ -118,18 +119,17 @@ def wt_await_finish_of_cluster_deployment(selenium, browser_id,
                                           timeout, modals):
     driver = selenium[browser_id]
     limit = time.time() + timeout
-    with implicit_wait(driver, 0.1, SELENIUM_IMPLICIT_WAIT):
-        while time.time() < limit:
-            try:
-                modals(driver).cluster_deployment
-            except RuntimeError:
-                break
-            else:
-                time.sleep(1)
-                continue
+    while time.time() < limit:
+        try:
+            modals(driver).cluster_deployment
+        except RuntimeError:
+            break
         else:
-            raise RuntimeError('cluster deployment exceeded '
-                               'time limit: {}'.format(timeout))
+            time.sleep(1)
+            continue
+    else:
+        raise RuntimeError('cluster deployment exceeded '
+                           'time limit: {}'.format(timeout))
 
 
 @when(parsers.parse('user of {browser_id} selects {storage_type} from storage '

@@ -162,61 +162,61 @@ def firefox_logging(request, driver_type):
 
 @fixture(scope='session')
 def cdmi():
-    from tests.gui.utils.oneservices.cdmi import CDMIClient
+    from tests.gui.utils import CDMIClient
     return CDMIClient
 
 
 @fixture(scope='session')
 def onepage():
-    from tests.gui.utils.common.common import OnePage
+    from tests.gui.utils import OnePage
     return OnePage
 
 
 @fixture(scope='session')
 def onepanel():
-    from tests.gui.utils.onepanel import Onepanel
+    from tests.gui.utils import Onepanel
     return Onepanel
 
 
 @fixture(scope='session')
 def oz_login_page():
-    from tests.gui.utils.onezone.login_page import OnezoneLoginPage
+    from tests.gui.utils import OnezoneLoginPage
     return OnezoneLoginPage
 
 
 @fixture(scope='session')
 def panel_login_page():
-    from tests.gui.utils.onepanel.login_page import OnepanelLoginPage
+    from tests.gui.utils import OnepanelLoginPage
     return OnepanelLoginPage
 
 
 @fixture(scope='session')
 def oz_page():
-    from tests.gui.utils.onezone import OZLoggedIn
+    from tests.gui.utils import OZLoggedIn
     return OZLoggedIn
 
 
 @fixture(scope='session')
 def op_page():
-    from tests.gui.utils.oneprovider import OPLoggedIn
+    from tests.gui.utils import OPLoggedIn
     return OPLoggedIn
 
 
 @fixture(scope='session')
 def public_share():
-    from tests.gui.utils.oneprovider.shares.public_share import PublicShareView
+    from tests.gui.utils import PublicShareView
     return PublicShareView
 
 
 @fixture(scope='session')
 def modals():
-    from tests.gui.utils.common.modals import Modals
+    from tests.gui.utils import Modals
     return Modals
 
 
 @fixture(scope='session')
 def popups():
-    from tests.gui.utils.common.popups import Popups
+    from tests.gui.utils import Popups
     return Popups
 
 

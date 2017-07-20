@@ -2,10 +2,10 @@
 file browser in oneprovider web GUI.
 """
 
-__author__ = "Bartek Walkowicz"
+__author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
 
 from time import time
@@ -25,8 +25,8 @@ from tests.gui.utils.generic import parse_seq, repeat_failed
 def assert_msg_instead_of_browser(browser_id, msg, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     displayed_msg = browser.empty_dir_msg
-    assert displayed_msg == msg, 'displayed {} does not match expected ' \
-                                 '{}'.format(displayed_msg, msg)
+    assert displayed_msg == msg, ('displayed {} does not match expected '
+                                  '{}'.format(displayed_msg, msg))
 
 
 @when(parsers.parse('user of {browser_id} does not see {tool_type} '
@@ -37,8 +37,8 @@ def assert_msg_instead_of_browser(browser_id, msg, tmp_memory):
 def assert_not_tool_icon_for_file_in_file_browser(browser_id, tool_type,
                                                   item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
-    err_msg = '{} tool for {} in file browser visible, ' \
-              'while should not be'.format(tool_type, item_name)
+    err_msg = ('{} tool for {} in file browser visible, '
+               'while should not be'.format(tool_type, item_name))
     assert not browser.files[item_name].is_tool_visible(tool_type), err_msg
 
 
@@ -349,7 +349,7 @@ def assert_empty_dir_msg_in_file_browser(browser_id, tmp_memory):
                    'Drop your files here or use the button in toolbar'
     displayed_msg = browser.empty_dir_msg
 
-    assert expected_msg == displayed_msg, 'Displayed empty dir msg "{}" ' \
-                                          'does not match expected one ' \
-                                          '"{}"'.format(displayed_msg,
-                                                        expected_msg)
+    assert expected_msg == displayed_msg, ('Displayed empty dir msg "{}" '
+                                           'does not match expected one '
+                                           '"{}"'.format(displayed_msg,
+                                                         expected_msg))

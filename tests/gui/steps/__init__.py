@@ -1,7 +1,7 @@
+"""This package contains gherkin steps for GUI BDD tests.
 """
-Implementation of Gherkin (acceptance) steps for GUI BDD tests
-"""
-__author__ = "Jakub Liput"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")

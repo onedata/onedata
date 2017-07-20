@@ -1,5 +1,12 @@
-"""Steps used in creation of browsers
+"""This module contains gherkin steps to run acceptance tests featuring
+browser creation.
 """
+
+__author__ = "Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
+
 
 import os
 import re
@@ -15,12 +22,6 @@ from tests import gui
 from tests.gui.utils.generic import parse_seq
 from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT
 from tests.gui.utils.generic import redirect_display
-
-
-__author__ = "Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 Firefox.log_types = ['browser']
