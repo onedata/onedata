@@ -27,13 +27,15 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     Then user of browser sees that current permission is "664"
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     #TODO rm after integrating with swagger
-#    And user of browser selects "file1" from files list
-#    And user of browser clicks the button from top menu bar with tooltip "Remove element"
-#    And user of browser sees that "Remove files" modal has appeared
-#    And user of browser clicks "Yes" confirmation button in displayed modal
-#    And user of browser sees that the modal has disappeared
-#    And user of browser sees that item named "file1" has disappeared from files browser
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
 
 
   Scenario: User sees that new directory default permission code is 775
@@ -52,6 +54,15 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     Then user of browser sees that current permission is "775"
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
 
 
   Scenario: User changes files permission (presses ENTER after entering new permission code)
@@ -71,15 +82,60 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sets "775" permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     # Check permission code
     Then user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sees that current permission is "775"
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User changes files permission (presses ENTER after entering new permission code)
+  Scenario: User changes files permission (clicks confirmation button after entering new permission code)
+    # Create file
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Change permission code
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "775" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Check permission code
+    Then user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sees that current permission is "775"
+    And user of browser clicks "Ok" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
+
+
+  Scenario: User changes derectories permission (presses ENTER after entering new permission code)
     # Create directory
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -96,12 +152,57 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sets "664" permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     # Check permission code
     Then user of browser selects "dir" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sees that current permission is "664"
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
+
+
+  Scenario: User changes derectories permission (clicks confirmation button after entering new permission code)
+    # Create directory
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Change permission code
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "664" permission code in active modal
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    # Check permission code
+    Then user of browser selects "dir" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sees that current permission is "664"
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
 
 
   Scenario: User fails to download file because of lack in privileges
@@ -121,9 +222,19 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sets "220" permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     # Download file
     And user of browser double clicks on item named "file1" in file browser
     Then user of browser sees that "Cannot download file" modal has appeared
+    And user of browser clicks "OK" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
 
 
   Scenario: User fails to upload file because of lack in privileges
@@ -143,10 +254,26 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     # Upload file
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
     Then user of browser sees an error notify with text matching to: .*failed.*
+    #TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "775" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
     
 
   Scenario: User fails to create file because of lack in privileges
@@ -166,6 +293,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     # Create file
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
@@ -173,8 +301,23 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser clicks on input box in active modal
     And user of browser types "dir1" on keyboard
     And user of browser presses enter on keyboard
-    Then user of browser sees an error notify with text matching to: .*access denied.*
+    Then user of browser sees an error notify with text matching to: .*Access denied.*
     And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "775" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
 
 
   Scenario: User fails to remove file because of lack in privileges
@@ -189,19 +332,20 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that the modal has disappeared
     # Create file
     And user of browser double clicks on item named "dir1" in file browser
-    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "dir1" on keyboard
+    And user of browser types "file1" on keyboard
     And user of browser presses enter on keyboard
     # Change permission code
-    And user of browser uses spaces select to change data space to "space1"
+    And user of browser changes current working directory to space1 using breadcrumbs
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     # Remove file    
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser selects "file1" from files list
@@ -210,6 +354,21 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser clicks "Yes" confirmation button in displayed modal
     Then user of browser sees an error notify with text matching to: .*access denied.*
     And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "775" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
 
 
   Scenario: User fails to rename file because of lack in privileges
@@ -224,28 +383,200 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that the modal has disappeared
     # Create file
     And user of browser double clicks on item named "dir1" in file browser
-    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "dir1" on keyboard
+    And user of browser types "file1" on keyboard
     And user of browser presses enter on keyboard
     # Change permission code
-    And user of browser uses spaces select to change data space to "space1"
+    And user of browser changes current working directory to space1 using breadcrumbs
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
     # Rename file    
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Rename element"
-    And user of browser sees that "Rename files" modal has appeared
+    And user of browser sees that "Rename file or directory" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "new_dir1" on keyboard
+    And user of browser types "new_file1" on keyboard
     And user of browser presses enter on keyboard
+    Then user of browser sees an error notify with text matching to: .*Access denied.*
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "775" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
+
+
+  Scenario: User fails to remove directory because of lack in privileges
+    # Create directory dir1
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Create directory dir2
+    And user of browser double clicks on item named "dir1" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir2" on keyboard
+    And user of browser presses enter on keyboard
+    # Change permission code
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "553" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Remove directory
+    And user of browser double clicks on item named "dir1" in file browser
+    And user of browser selects "dir2" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
     Then user of browser sees an error notify with text matching to: .*access denied.*
     And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "775" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
 
 
+  Scenario: User fails to remove directory containing file because of lack in privileges
+    # Create directory
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Create file
+    And user of browser double clicks on item named "dir1" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser presses enter on keyboard
+    # Change permission code
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "553" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Remove file    
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    Then user of browser sees an error notify with text matching to: .*access denied.*
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser changes current working directory to space1 using breadcrumbs
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "775" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    And user of browser selects "dir1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "dir1" has disappeared from files browser
+
+
+  Scenario: "Ok" confirmation button is disabled after entering incorrect permission code (greater than 777)
+    # Create file       
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Change permission code
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "888" permission code in active modal
+    And user of browser sees that "Ok" confirmation button is disabled
+    And user of browser clicks "Cancel" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
+
+
+  Scenario: User fails to change permission code to incorrect one (lower than 777)
+    # Create file       
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Change permission code
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets "88" permission code in active modal
+    And user of browser presses enter on keyboard
+    And user of browser sees an error notify with text matching to: .*failed.*
+    And user of browser clicks "Cancel" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
