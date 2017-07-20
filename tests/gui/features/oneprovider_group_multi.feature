@@ -77,13 +77,3 @@ Feature: Oneprovider Group functionality using multiple browsers
     And user of browser2 sees that the modal has disappeared
     And user of browser2 sees an info notify with text matching to: .*group1.*left
     And user of browser2 sees that group1 has disappeared from groups sidebar list
-
-
-  Scenario: User fails to view group, to which he does not belong to, using its ID in URL
-    # groups 'group1' defined in env.json
-    When user of browser1 selects "group1" from groups sidebar list
-    And user of browser1 copies a first resource ID from URL
-    And user of browser1 sends copied group's ID to user of browser2
-    And user of browser2 changes webapp path to /#/onedata/groups concatenated with received group's ID
-    Then user of browser2 sees an error notify with text matching to: .*?[Cc]annot load requested resource.*?
-    And user of browser2 does not see group1 in groups sidebar list

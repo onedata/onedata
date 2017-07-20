@@ -15,7 +15,7 @@ from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 from tests.gui.utils.generic import repeat_failed
 
 
-def _check_share_presence(driver, op_page, share_name):
+def _is_share_present_in_sidebar(driver, op_page, share_name):
     shares = {share.name for share
               in op_page(driver).shares.sidebar.shares}
     return share_name in shares
@@ -33,37 +33,44 @@ def select_share_from_sidebar_list(selenium, browser_id, share_name, op_page):
                     '"{name}" has appeared in the shared list'))
 @then(parsers.parse('user of {browser_id} sees that share named '
                     '"{name}" has appeared in the shared list'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_BACKEND, interval=1.5)
 def is_present_on_share_list(selenium, browser_id, name, op_page):
-    assert _check_share_presence(selenium[browser_id], op_page, name) is True, \
-        'no share named "{}" found in shares sidebar'.format(name)
+    driver = selenium[browser_id]
+    if not _is_share_present_in_sidebar(driver, op_page, name):
+        driver.refresh()
+        raise RuntimeError('no share named "{}" found in shares '
+                           'sidebar'.format(name))
 
 
 @when(parsers.parse('user of {browser_id} sees that share named '
                     '"{name}" has disappeared from the shares list'))
 @then(parsers.parse('user of {browser_id} sees that share named '
                     '"{name}" has disappeared from the shares list'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_BACKEND, interval=1.5)
 def is_not_present_in_share_list(selenium, browser_id, name, op_page):
-    assert _check_share_presence(selenium[browser_id], op_page, name) is False, \
-        ('share named "{}" found in shares sidebar, '
-         'while it should not be'.format(name))
+    driver = selenium[browser_id]
+    if _is_share_present_in_sidebar(driver, op_page, name):
+        driver.refresh()
+        raise RuntimeError('share named "{}" found in shares sidebar, '
+                           'while it should not be'.format(name))
 
 
 @when(parsers.parse('user of {browser_id} sees that '
                     '"{prev_name}" has been renamed to "{next_name}"'))
 @then(parsers.parse('user of {browser_id} sees that '
                     '"{prev_name}" has been renamed to "{next_name}"'))
-@repeat_failed(timeout=WAIT_BACKEND)
+@repeat_failed(timeout=WAIT_BACKEND, interval=1.5)
 def has_share_been_renamed(selenium, browser_id, prev_name, next_name, op_page):
-    assert _check_share_presence(selenium[browser_id], op_page,
-                                 prev_name) is False, \
-        ('share named "{}" found in shares sidebar, '
-         'while it should not be'.format(prev_name))
+    driver = selenium[browser_id]
+    if _is_share_present_in_sidebar(driver, op_page, prev_name):
+        driver.refresh()
+        raise RuntimeError('share named "{}" found in shares sidebar, '
+                           'while it should not be'.format(prev_name))
 
-    assert _check_share_presence(selenium[browser_id], op_page,
-                                 next_name) is True, \
-        'no share named "{}" found in shares sidebar'.format(next_name)
+    if not _is_share_present_in_sidebar(driver, op_page, next_name):
+        driver.refresh()
+        raise RuntimeError('no share named "{}" found in shares '
+                           'sidebar'.format(next_name))
 
 
 @when(parsers.parse('user of {browser_id} sees that absolute share path '
@@ -169,6 +176,7 @@ def assert_file_browser_in_shared_tab_in_op(selenium, browser_id,
                     'for "{share_name}" item on the shares sidebar list'))
 @then(parsers.parse('user of {browser_id} clicks on settings icon displayed '
                     'for "{share_name}" item on the shares sidebar list'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def click_settings_icon_for_share(selenium, browser_id, share_name, op_page):
     (op_page(selenium[browser_id])
      .shares
@@ -182,6 +190,7 @@ def click_settings_icon_for_share(selenium, browser_id, share_name, op_page):
                     'in settings dropdown for share named "{share_name}"'))
 @then(parsers.parse('user of {browser_id} clicks on the "{option_name}" item '
                     'in settings dropdown for share named "{share_name}"'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_item_in_share_settings_dropdown(selenium, browser_id, option_name,
                                              share_name, op_page):
     (op_page(selenium[browser_id])

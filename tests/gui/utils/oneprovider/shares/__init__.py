@@ -17,7 +17,6 @@ from ..file_browser import FileBrowser
 
 
 class SettingDropdown(PageObject, ExpandableMixin):
-    _btn_css_sel = 'ul.dropdown-menu-list li'
     options = WebItemsSequence('ul.dropdown-menu-list li',
                                cls=ButtonWithTextPageObject)
     _toggle = WebElement('.dropdown-toggle[data-toggle="dropdown"]')

@@ -38,11 +38,10 @@ from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 from tests.gui.steps.oneprovider.shares import *
-
+from tests.gui.steps.oneprovider.spaces import *
+from tests.gui.steps.oneprovider.groups import *
 
 from tests.gui.steps.oneprovider_common import *
-from tests.gui.steps.oneprovider_spaces import *
-from tests.gui.steps.oneprovider_sidebar_list import *
 
 from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
@@ -60,7 +59,9 @@ scenarios('../features/onepanel/deployment.feature')
 
 scenarios('../features/onezone/space_join_methods.feature')
 
-scenarios('../features/oneprovider/public_shares.feature')
+scenarios('../features/oneprovider/shares/public_shares.feature')
+# scenarios('../features/oneprovider/groups/multiuser.feature')
+
 # scenarios('../features/oneprovider_group_multi.feature')
 
 # # TODO rewrite scenarios to use env up set by rest when it will be possible to have more than 1 provider

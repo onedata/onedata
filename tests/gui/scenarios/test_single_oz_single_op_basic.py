@@ -37,10 +37,10 @@ from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 from tests.gui.steps.oneprovider.shares import *
+from tests.gui.steps.oneprovider.groups import *
+from tests.gui.steps.oneprovider.spaces import *
 
 from tests.gui.steps.oneprovider_common import *
-from tests.gui.steps.oneprovider_spaces import *
-from tests.gui.steps.oneprovider_sidebar_list import *
 
 import pytest
 from pytest_bdd import scenarios, scenario
@@ -83,10 +83,13 @@ scenarios('../features/oneprovider/data/single_directory.feature')
 scenarios('../features/oneprovider/data/nested_directories.feature')
 scenarios('../features/oneprovider/data/file_metadata.feature')
 scenarios('../features/oneprovider/data/directory_metadata.feature')
-scenarios('../features/oneprovider/shares_basic.feature')
+scenarios('../features/oneprovider/shares/basic_management.feature')
+scenarios('../features/oneprovider/groups/creation.feature')
+scenarios('../features/oneprovider/groups/basic_management.feature')
+scenarios('../features/oneprovider/spaces/creation.feature')
+scenarios('../features/oneprovider/spaces/basic_management.feature')
 
 # scenarios('../features/oneprovider_data.feature')
-# scenarios('../features/oneprovider_group.feature')
 # scenarios('../features/oneprovider_space.feature')
 
 # # TODO rewrite scenarios to use env up set by rest when it will be possible to have more than 1 provider

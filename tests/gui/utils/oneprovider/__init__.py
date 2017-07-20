@@ -12,6 +12,8 @@ from tests.gui.utils.generic import find_web_elem_with_text, click_on_web_elem
 from .data_tab import DataTab
 from .user_profile import UserProfile
 from .shares import SharesContentPage
+from .groups import GroupContentPage
+from .spaces import SpacesContentPage
 
 
 class OPLoggedIn(object):
@@ -19,7 +21,9 @@ class OPLoggedIn(object):
     user_profile = WebItem('li.profile-dropdown', cls=UserProfile)
 
     tabs = {'data': DataTab,
-            'shares': SharesContentPage}
+            'shares': SharesContentPage,
+            'groups': GroupContentPage,
+            'spaces': SpacesContentPage}
 
     def __init__(self, driver):
         self.web_elem = self.driver = driver
