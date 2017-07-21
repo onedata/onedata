@@ -274,10 +274,6 @@ def check_type(user, file, file_type, client_node, context):
 @then(parsers.re('(?P<user>\w+) checks using shell stat if file type '
                  'of (?P<file>.*) is (?P<file_type>.*) on (?P<client_node>.*)'))
 def shell_check_type(user, file, file_type, client_node, context):
-    print user
-    print file
-    print file_type
-    print client_node
     user = context.get_user(user)
     client = user.get_client(client_node)
     file_path = client.absolute_path(file)
