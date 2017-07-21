@@ -4,14 +4,14 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     Given users opened [browser1, browser2] browsers' windows
     And users of [browser1, browser2] opened Onezone URL
     And users of [browser1, browser2] clicked on the "plgrid" login button 
-    And users of [browser1, browser2] clicked on the [user1, user2] links respectively
+    And users of [browser1, browser2] logged as [user1, user2]
     And users of [browser1, browser2] expanded the "go to your files" Onezone sidebar panel
     And users of [browser1, browser2] clicked on the "p1" provider in Onezone providers sidebar panel
     And users of [browser1, browser2] clicked on the "Go to your files" button in provider popup
     And users of [browser1, browser2] seen that Oneprovider session has started
 
 
-  Scenario: User1 changes files permission and user2 sees that it changed
+  Scenario: User1 changes files permission and user2 sees that it has changed
     # User1 creates file            
     When user of browser1 uses spaces select to change data space to "space1"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -48,7 +48,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 sees that item named "file1" has disappeared from files browser
         
         
-  Scenario: User1 changes directories permission and user2 sees that it changed
+  Scenario: User1 changes directory permission and user2 sees that it has changed
     # User1 creates dir      
     When user of browser1 uses spaces select to change data space to "space1"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -85,7 +85,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User2 creates dir and fails to remove it
+  Scenario: User2 creates directory and fails to remove it because of change in file permission
     # User1 creates dir            
     When user of browser1 uses spaces select to change data space to "space2"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -131,7 +131,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User2 creates dir and fails to rename it
+  Scenario: User2 creates directory and fails to rename it because of change in file permission
     # User1 creates dir            
     When user of browser1 uses spaces select to change data space to "space2"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -179,7 +179,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User2 creates dir and fails to create another dir
+  Scenario: User2 creates directory and fails to create another directory because of change in file permission
     # User1 creates dir            
     When user of browser1 uses spaces select to change data space to "space2"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -226,7 +226,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User2 creates file and fails to remove it
+  Scenario: User2 creates file and fails to remove it because of change in file permission
     # User1 creates dir            
     When user of browser1 uses spaces select to change data space to "space2"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -272,7 +272,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User2 creates file and fails to rename it
+  Scenario: User2 creates file and fails to rename it because of change in file permission
     # User1 creates dir            
     When user of browser1 uses spaces select to change data space to "space2"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -320,7 +320,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User2 creates file and fails to create another file
+  Scenario: User2 creates file and fails to create another file because of change in file permission
     # User1 creates dir            
     When user of browser1 uses spaces select to change data space to "space2"             
     And user of browser1 sees file browser in data tab in Oneprovider page
@@ -365,5 +365,3 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 clicks "Yes" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
     And user of browser1 sees that item named "dir1" has disappeared from files browser
-
-

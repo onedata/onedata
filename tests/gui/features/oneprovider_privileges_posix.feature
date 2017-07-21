@@ -65,7 +65,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User changes files permission (presses ENTER after entering new permission code)
+  Scenario: User changes file permission (presses ENTER after entering new permission code)
     # Create file
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -100,7 +100,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User changes files permission (clicks confirmation button after entering new permission code)
+  Scenario: User changes file permission (clicks confirmation button after entering new permission code)
     # Create file
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -135,7 +135,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User changes derectories permission (presses ENTER after entering new permission code)
+  Scenario: User changes derectory permission (presses ENTER after entering new permission code)
     # Create directory
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -170,7 +170,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User changes derectories permission (clicks confirmation button after entering new permission code)
+  Scenario: User changes derectory permission (clicks confirmation button after entering new permission code)
     # Create directory
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -223,7 +223,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sets "220" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    # Download file
+    # Fail to download file
     And user of browser double clicks on item named "file1" in file browser
     Then user of browser sees that "Cannot download file" modal has appeared
     And user of browser clicks "OK" confirmation button in displayed modal
@@ -255,7 +255,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    # Upload file
+    # Fail to upload file
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser uses upload button in toolbar to upload file "20B-0.txt" to current dir
     Then user of browser sees an error notify with text matching to: .*failed.*
@@ -294,14 +294,14 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    # Create file
+    # Fail to create file
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser clicks the button from top menu bar with tooltip "Create directory"
     And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
     And user of browser types "dir1" on keyboard
     And user of browser presses enter on keyboard
-    Then user of browser sees an error notify with text matching to: .*Access denied.*
+    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
     And user of browser sees that the modal has disappeared
     #TODO rm after integrating with swagger
     And user of browser changes current working directory to space1 using breadcrumbs
@@ -346,13 +346,13 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    # Remove file    
+    # Fail to remove file
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    Then user of browser sees an error notify with text matching to: .*access denied.*
+    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
     And user of browser sees that the modal has disappeared
     #TODO rm after integrating with swagger
     And user of browser changes current working directory to space1 using breadcrumbs
@@ -397,7 +397,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    # Rename file    
+    # Fail to rename file    
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Rename element"
@@ -405,7 +405,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser clicks on input box in active modal
     And user of browser types "new_file1" on keyboard
     And user of browser presses enter on keyboard
-    Then user of browser sees an error notify with text matching to: .*Access denied.*
+    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
     And user of browser sees that the modal has disappeared
     #TODO rm after integrating with swagger
     And user of browser changes current working directory to space1 using breadcrumbs
@@ -450,13 +450,13 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    # Remove directory
+    # Fail to remove directory
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser selects "dir2" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    Then user of browser sees an error notify with text matching to: .*access denied.*
+    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
     And user of browser sees that the modal has disappeared
     #TODO rm after integrating with swagger
     And user of browser changes current working directory to space1 using breadcrumbs
@@ -501,12 +501,12 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sets "553" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
-    # Remove file    
+    # Fail to remove file    
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
-    Then user of browser sees an error notify with text matching to: .*access denied.*
+    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
     And user of browser sees that the modal has disappeared
     #TODO rm after integrating with swagger
     And user of browser changes current working directory to space1 using breadcrumbs
@@ -525,7 +525,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: "Ok" confirmation button is disabled after entering incorrect permission code (greater than 777)
+  Scenario: "Ok" confirmation button is disabled after entering incorrect permission code (3 char)
     # Create file       
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -540,8 +540,8 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
-    And user of browser sets "888" permission code in active modal
-    And user of browser sees that "Ok" confirmation button is disabled
+    And user of browser sets incorrect 3 char permission code in active modal
+    And user of browser sees that "Ok" confirmation button in displayed modal is disabled
     And user of browser clicks "Cancel" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
     #TODO rm after integrating with swagger
@@ -553,7 +553,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User fails to change permission code to incorrect one (lower than 777)
+  Scenario: User fails to change permission code to incorrect one (2 char, presses enter after entering permission code)
     # Create file       
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -568,8 +568,37 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
-    And user of browser sets "88" permission code in active modal
+    And user of browser sets incorrect 2 char permission code in active modal
     And user of browser presses enter on keyboard
+    And user of browser sees an error notify with text matching to: .*failed.*
+    And user of browser clicks "Cancel" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    #TODO rm after integrating with swagger
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    And user of browser sees that item named "file1" has disappeared from files browser
+
+
+  Scenario: User fails to change permission code to incorrect one (2 char, clicks confirmation button permission code)
+    # Create file       
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser presses enter on keyboard
+    And user of browser sees that the modal has disappeared
+    # Change permission code
+    And user of browser selects "file1" from files list
+    And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
+    And user of browser sees that "Edit permissions" modal has appeared
+    And user of browser selects "POSIX" permission type in active modal
+    And user of browser sets incorrect 2 char permission code in active modal
+    And user of browser clicks "Ok" confirmation button in displayed modal
     And user of browser sees an error notify with text matching to: .*failed.*
     And user of browser clicks "Cancel" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
