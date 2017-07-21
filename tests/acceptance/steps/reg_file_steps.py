@@ -33,6 +33,7 @@ def read(user, text, file, context):
     multi_reg_file_steps.read_text(user, text, file, "client1", context)
 
 
+@when(parsers.re('(?P<user>\w+) appends "(?P<text>.*)" to (?P<file>.*)'))
 @then(parsers.re('(?P<user>\w+) appends "(?P<text>.*)" to (?P<file>.*)'))
 def append(user, text, file, context):
     multi_reg_file_steps.append(user, text, file, "client1", context)
