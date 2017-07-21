@@ -52,3 +52,16 @@ Feature: Management of multiple spaces in Onezone GUI
     # check displayed space
     And user of browser sees that Oneprovider session has started
     Then user of browser sees that displayed directory tree in sidebar panel belongs to space named "A"
+
+
+  Scenario: User changes viewed space in Oneprovider
+    When user of browser expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
+    And user of browser expands submenu of space named "space1" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser clicks on "p1" provider in submenu of space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
+    And user of browser sees that provider popup for provider named "p1" has appeared on world map
+    And user of browser clicks on the "Go to your files" button in "p1" provider's popup displayed on world map
+    And user of browser sees that Oneprovider session has started
+
+    And user of browser sees that displayed directory tree in sidebar panel belongs to space named "A"
+    And user of browser uses spaces select to change data space to "space1"
+    Then user of browser sees that displayed directory tree in sidebar panel belongs to space named "space1"

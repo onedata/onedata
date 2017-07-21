@@ -95,3 +95,21 @@ def click_on_item_in_group_settings_dropdown(selenium, browser_id, option_name,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_btn_in_groups_sidebar_header(selenium, browser_id, btn, op_page):
     getattr(op_page(selenium[browser_id]).groups.sidebar, btn.lower()).click()
+
+
+@when(parsers.re(r'user of (?P<browser_id>.*) sees that "(?P<name>.*)" item '
+                 r'has appeared on current (?P<caption>USERS|GROUPS) '
+                 r'permissions table in Groups tab'))
+@then(parsers.re(r'user of (?P<browser_id>.*) sees that "(?P<name>.*)" item '
+                 r'has appeared on current (?P<caption>USERS|GROUPS) '
+                 r'permissions table in Groups tab'))
+@repeat_failed(timeout=WAIT_BACKEND, interval=1.5)
+def assert_item_appeared_in_groups_perm_table(selenium, browser_id, name,
+                                              caption, op_page):
+    driver = selenium[browser_id]
+    items = getattr(op_page(driver).groups.permission_table, caption.lower())
+    items_names = {item.name for item in items}
+    if name not in items_names:
+        driver.refresh()
+        raise RuntimeError('no {} named "{}" found in spaces permission table'
+                           ''.format(caption, name))

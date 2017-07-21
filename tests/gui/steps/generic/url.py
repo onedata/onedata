@@ -34,7 +34,7 @@ def g_open_onedata_service_page(selenium, browser_id_list, hosts_list, hosts):
 @then(parsers.re('user of (?P<browser_id>.+) should be '
                  'redirected to (?P<page>.+) page'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def being_redirected_to_page(page, selenium, browser_id):
+def assert_being_redirected_to_page(page, selenium, browser_id):
     driver = selenium[browser_id]
     curr_page = re.match(r'https?://.*?(/#)?(/.*)',
                          driver.current_url).group(2)
@@ -134,3 +134,26 @@ def copy_site_url(selenium, browser_id, displays, clipboard):
 def open_site_url(selenium, browser_id, displays, clipboard):
     driver = selenium[browser_id]
     driver.get(clipboard.paste(display=displays[browser_id]))
+
+
+@when(parsers.parse('user of {browser_id} copies a first '
+                    'resource {item} from URL'))
+@then(parsers.parse('user of {browser_id} copies a first '
+                    'resource {item} from URL'))
+def cp_part_of_url(selenium, browser_id, item, displays, clipboard):
+    driver = selenium[browser_id]
+    clipboard.copy(parse_url(driver.current_url).group(item.lower()),
+                   display=displays[browser_id])
+
+
+@when(parsers.parse('user of {browser_id} refreshes site'))
+@then(parsers.parse('user of {browser_id} refreshes site'))
+def refresh_site(selenium, browser_id):
+    selenium[browser_id].refresh()
+
+
+@when(parsers.parse('user of {browser_id} refreshes webapp'))
+@then(parsers.parse('user of {browser_id} refreshes webapp'))
+def refresh_site(selenium, browser_id):
+    driver = selenium[browser_id]
+    driver.get(parse_url(driver.current_url).group('base_url'))

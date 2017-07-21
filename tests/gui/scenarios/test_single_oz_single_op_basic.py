@@ -89,9 +89,6 @@ scenarios('../features/oneprovider/groups/basic_management.feature')
 scenarios('../features/oneprovider/spaces/creation.feature')
 scenarios('../features/oneprovider/spaces/basic_management.feature')
 
-# scenarios('../features/oneprovider_data.feature')
-# scenarios('../features/oneprovider_space.feature')
-
 # # TODO rewrite scenarios to use env up set by rest when it will be possible to have more than 1 provider
 # scenarios('../features/oneprovider/multiprovider/cdmi.feature')
 # scenarios('../features/oneprovider/multiprovider/basic.feature')

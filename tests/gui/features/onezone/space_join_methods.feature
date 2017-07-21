@@ -46,7 +46,7 @@ Feature: Space join methods in Onezone GUI
     Then user of browser1 sees that space named "space1" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 selects "space1" from spaces sidebar list
     And user of browser2 refreshes site
-    And user of browser2 sees that "user1" item has appeared on current users permissions table
+    And user of browser2 sees that "user1" item has appeared on current USERS permissions table in Spaces tab
 
 
   Scenario: User successfully joins space from Onezone gui level (clicks JOIN confirmation button after entering token)
@@ -72,4 +72,4 @@ Feature: Space join methods in Onezone GUI
     Then user of browser1 sees that space named "space1" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 selects "space1" from spaces sidebar list
     And user of browser2 refreshes site
-    And user of browser2 sees that "user1" item has appeared on current users permissions table
+    And user of browser2 sees that "user1" item has appeared on current USERS permissions table in Spaces tab

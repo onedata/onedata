@@ -8,8 +8,6 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import re
 import time
-import random
-import stat
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.keys import Keys
@@ -17,22 +15,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import staleness_of
 
-from tests.gui.utils.generic import parse_seq, suppress, repeat_failed, transform
-from tests.gui.utils.generic import parse_url, enter_text
+from tests.gui.utils.generic import parse_seq, suppress, repeat_failed, transform, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
 
 from pytest_bdd import given, when, then, parsers
-
-
-PERMS_777 = stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
-
-
-@given(parsers.parse('user of {browser_id} generates valid name string'))
-def name_string(tmp_memory, browser_id):
-    chars = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
-    gen_str = 'g_' + ''.join(random.sample(chars, 6))
-    tmp_memory[browser_id]['gen_str'] = gen_str
-    return gen_str
 
 
 @when(parsers.parse('user of {browser_id} should see that the page title '
@@ -44,17 +30,6 @@ def title_contains(selenium, browser_id, text):
     Wait(driver, WAIT_FRONTEND).until(
         EC.title_contains(text),
         message='seeing that page title contains {:s}'.format(text)
-    )
-
-
-@when(parsers.parse('user of {browser_id} types given name on keyboard'))
-@then(parsers.parse('user of {browser_id} types given name on keyboard'))
-def type_valid_name_string_into_active_element(selenium, browser_id,
-                                               name_string):
-    driver = selenium[browser_id]
-    Wait(driver, WAIT_FRONTEND).until(
-        lambda s: enter_text(s.switch_to.active_element, name_string),
-        message='entering {:s} to input box'.format(name_string)
     )
 
 
@@ -87,13 +62,6 @@ def type_item_into_active_element(selenium, browser_id, item_type,
 def press_enter_on_active_element(selenium, browser_id):
     driver = selenium[browser_id]
     driver.switch_to.active_element.send_keys(Keys.RETURN)
-
-
-@when(parsers.parse('user of {browser_id} presses backspace on keyboard'))
-@then(parsers.parse('user of {browser_id} presses backspace on keyboard'))
-def press_enter_on_active_element(selenium, browser_id):
-    driver = selenium[browser_id]
-    driver.switch_to.active_element.send_keys(Keys.BACKSPACE)
 
 
 @then(parsers.parse('user of {browser_id} should see {links_names} links'))
@@ -190,61 +158,3 @@ def close_visible_notifies(selenium, browser_id):
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_on_btn_in_popup(selenium, browser_id, btn, popup, popups):
     getattr(popups(selenium[browser_id]), transform(popup)).buttons[btn].click()
-
-
-@when(parsers.parse('user of {browser_id} refreshes site'))
-@then(parsers.parse('user of {browser_id} refreshes site'))
-def refresh_site(selenium, browser_id):
-    driver = selenium[browser_id]
-    driver.refresh()
-
-
-@when(parsers.parse('user of {browser_id} refreshes webapp'))
-@then(parsers.parse('user of {browser_id} refreshes webapp'))
-def refresh_site(selenium, browser_id):
-    driver = selenium[browser_id]
-    driver.get(parse_url(driver.current_url).group('base_url'))
-
-
-# Below functions are currently unused and should not be used,
-# because it involves a knowledge about internals...
-
-
-def _create_dir(root, dir_path, perms=PERMS_777):
-    dir_created = root.mkdir(*dir_path)
-    dir_created.chmod(perms)
-    return dir_created
-
-
-def _create_temp_dir(root, path, recursive=True):
-    directory = path
-
-    if recursive:
-        for directory in path[:-1]:
-            next_dir = root.join(directory)
-            if next_dir.isdir():
-                root = next_dir
-            else:
-                root = _create_dir(root, [directory])
-        else:
-            directory = [path[-1]]
-
-    directory = _create_dir(root, directory)
-    return directory
-
-
-def _create_temp_file(directory, file_name, file_content='', perms=PERMS_777):
-    reg_file = directory.join(file_name)
-    reg_file.write(file_content)
-    reg_file.chmod(perms)
-    return reg_file
-
-
-@given(parsers.parse('user of {browser_id} has {num:d} files '
-                     'in directory named "{dir_path}"'))
-def create_temp_dir_with_files(browser_id, num, dir_path, tmpdir):
-    path = [browser_id]
-    path.extend(dir_path.split('/'))
-    directory = _create_temp_dir(tmpdir, path, recursive=True)
-    for i in range(10, num + 10):
-        _create_temp_file(directory, 'file_{}.txt'.format(i), '1' * 10)

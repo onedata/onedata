@@ -40,12 +40,13 @@ class SpacesSidebar(PageObject):
                               cls=SpaceSidebarRecord)
 
 
-class Users(PageObject):
-    name = id = Label('')
+class PermissionTableRow(PageObject):
+    name = id = Label('.one-first .truncated-string-content')
 
 
 class PermissionTable(PageObject):
-    users = WebItemsSequence('tbody .permissions-table-row', cls=Users)
+    users = groups = WebItemsSequence('tbody .permissions-table-row',
+                                      cls=PermissionTableRow)
     save = Button('button.btn-save')
     discard = Button('button.btn-discard')
 

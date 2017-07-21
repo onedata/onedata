@@ -8,9 +8,9 @@ __license__ = "This software is released under the MIT license cited in " \
 
 import time
 
-from tests.gui.utils.generic import parse_seq, find_web_elem
-from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND, MAX_REFRESH_COUNT
-from tests.gui.utils.generic import refresh_and_call, parse_url, redirect_display
+from tests.gui.utils.generic import parse_seq, find_web_elem, repeat_failed
+from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
+from tests.gui.utils.generic import parse_url
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.common.exceptions import NoSuchElementException
@@ -73,47 +73,13 @@ def wt_click_on_the_given_main_menu_tab(selenium, browser_id_list,
                     'Oneprovider page has value of "{val}"'))
 @then(parsers.parse('user of {browser_id} sees that provider name displayed in '
                     'Oneprovider page has value of "{val}"'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def wt_assert_provider_name_in_op(selenium, browser_id, val):
     css_sel = '.provider-name-container .provider-name'
     name = find_web_elem(selenium[browser_id], css_sel,
                          'no provider name found').text
     assert name == val, \
         'displayed {} provider name instead of expected {}'.format(name, val)
-
-
-@when(parsers.parse('user of {browser_id} refreshes Oneprovider site'))
-@then(parsers.parse('user of {browser_id} refreshes Oneprovider site'))
-def op_refresh_op_site_by_rm_hashtag(selenium, browser_id):
-    driver = selenium[browser_id]
-    op_url = parse_url(driver.current_url).group('base_url')
-    driver.get(op_url)
-
-
-def _check_for_presence_of_item_in_table(driver, name, caption):
-    table_elems = driver.find_elements_by_css_selector('table thead, '
-                                                       'table tbody')
-    for thead, tbody in zip(table_elems[::2], table_elems[1::2]):
-        th = thead.find_element_by_css_selector('th .item-label')
-        if th.text.lower() == caption.lower():
-            items = tbody.find_elements_by_css_selector('.permissions-'
-                                                        'table-row '
-                                                        '.truncate')
-            return any(item.text == name for item in items)
-
-
-@when(parsers.parse('user of {browser_id} sees that "{name}" item has appeared '
-                    'on current {caption} permissions table'))
-@then(parsers.parse('user of {browser_id} sees that "{name}" item has appeared '
-                    'on current {caption} permissions table'))
-def op_check_if_row_of_name_appeared_in_table(selenium, browser_id,
-                                              name, caption):
-    driver = selenium[browser_id]
-    Wait(driver, MAX_REFRESH_COUNT * WAIT_BACKEND).until(
-        lambda s: refresh_and_call(s, _check_for_presence_of_item_in_table,
-                                   name, caption),
-        message='searching for exactly one {:s} '
-                'on {:s} list in table'.format(name, caption)
-    )
 
 
 def _wait_for_op_session_to_start(selenium, browser_id_list):
@@ -152,16 +118,6 @@ def g_wait_for_op_session_to_start(selenium, browser_id_list):
                  'Oneprovider session has started'))
 def wt_wait_for_op_session_to_start(selenium, browser_id_list):
     _wait_for_op_session_to_start(selenium, browser_id_list)
-
-
-@when(parsers.parse('user of {browser_id} copies a first '
-                    'resource {item} from URL'))
-@then(parsers.parse('user of {browser_id} copies a first '
-                    'resource {item} from URL'))
-def cp_part_of_url(selenium, browser_id, item, displays, clipboard):
-    driver = selenium[browser_id]
-    clipboard.copy(parse_url(driver.current_url).group(item.lower()),
-                   display=displays[browser_id])
 
 
 def _wait_for_tab_main_content_to_load(driver):

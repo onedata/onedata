@@ -125,3 +125,21 @@ def assert_space_is_home_in_spaces_sidebar(selenium, browser_id,
             .spaces[space_name]
             .is_home()) is True, ('"{}" space is not home space while '
                                   'expected to be'.format(space_name))
+
+
+@when(parsers.re(r'user of (?P<browser_id>.*) sees that "(?P<name>.*)" item '
+                 r'has appeared on current (?P<caption>USERS|GROUPS) '
+                 r'permissions table in Spaces tab'))
+@then(parsers.re(r'user of (?P<browser_id>.*) sees that "(?P<name>.*)" item '
+                 r'has appeared on current (?P<caption>USERS|GROUPS) '
+                 r'permissions table in Spaces tab'))
+@repeat_failed(timeout=WAIT_BACKEND, interval=1.5)
+def assert_item_appeared_in_spaces_perm_table(selenium, browser_id, name,
+                                              caption, op_page):
+    driver = selenium[browser_id]
+    items = getattr(op_page(driver).spaces.permission_table, caption.lower())
+    items_names = {item.name for item in items}
+    if name not in items_names:
+        driver.refresh()
+        raise RuntimeError('no {} named "{}" found in spaces permission table'
+                           ''.format(caption, name))

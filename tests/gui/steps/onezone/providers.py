@@ -11,13 +11,13 @@ __license__ = ("This software is released under the MIT license cited in "
 from pytest_bdd import parsers, given, when, then
 
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
-from tests.gui.utils.generic import repeat_failed
+from tests.gui.utils.generic import repeat_failed, parse_seq
 
 
 @when(parsers.parse('user of {browser_id} sees that provider popup for provider '
-                    'named "{provider}" has appeared on world map'))
+                    'named "{provider_name}" has appeared on world map'))
 @then(parsers.parse('user of {browser_id} sees that provider popup for provider '
-                    'named "{provider}" has appeared on world map'))
+                    'named "{provider_name}" has appeared on world map'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def assert_provider_popup_has_appeared_on_map(selenium, browser_id,
                                               provider_name, oz_page):
@@ -66,15 +66,16 @@ def _click_on_btn_in_provider_popup(driver, btn, provider, oz_page):
     getattr(prov, btn.lower().replace(' ', '_')).click()
 
 
-@given(parsers.re(r'user of (?P<browser_id>.+?) clicked on the '
+@given(parsers.re(r'users? of (?P<browser_id_list>.+?) clicked on the '
                   r'"(?P<btn>Go to your files|copy hostname)" button in '
                   r'"(?P<provider>.+?)" provider\'s popup displayed '
                   r'on world map'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def g_click_on_btn_in_provider_popup(selenium, browser_id, btn,
+def g_click_on_btn_in_provider_popup(selenium, browser_id_list, btn,
                                      provider, oz_page):
-    _click_on_btn_in_provider_popup(selenium[browser_id], btn,
-                                    provider, oz_page)
+    for browser_id in parse_seq(browser_id_list):
+        _click_on_btn_in_provider_popup(selenium[browser_id], btn,
+                                        provider, oz_page)
 
 
 @when(parsers.re(r'user of (?P<browser_id>.+?) clicks on the '
@@ -197,14 +198,16 @@ def assert_consistent_list_of_spaces_for_provider(selenium, browser_id,
                                      provider_popup_spaces))
 
 
-@given(parsers.parse('user of {browser_id} clicked on "{provider}" provider '
-                     'in expanded "GO TO YOUR FILES" Onezone panel'))
+@given(parsers.re(r'users? of (?P<browser_id_list>.*?) clicked on '
+                  r'"(?P<provider_name>.*?)" provider in expanded '
+                  r'"GO TO YOUR FILES" Onezone panel'))
 @repeat_failed(timeout=WAIT_BACKEND)
-def g_click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id,
-                                                     provider, oz_page):
-    (oz_page(selenium[browser_id])['go to your files']
-     .providers[provider]
-     .click())
+def g_click_on_provider_in_go_to_your_files_oz_panel(selenium, browser_id_list,
+                                                     provider_name, oz_page):
+    for browser_id in parse_seq(browser_id_list):
+        (oz_page(selenium[browser_id])['go to your files']
+         .providers[provider_name]
+         .click())
 
 
 @when(parsers.parse('user of {browser_id} clicks on "{provider}" provider '

@@ -373,38 +373,34 @@ if not is_base_url_provided:
 
 def pytest_collection_modifyitems(items):
     first = []
+    second_to_last = []
     last = []
-    last2 = []
     rest = []
-    run_first = ('test_cluster_deployment',
-                 'test_user_can_unsupport_space',
-                 'test_user_sees_that_after_unsupporting_space'
-                 )
-    run_last = ('test_user_sees_that_when_no_provider_is_working_'
-                'appropriate_msg_is_shown',
-                'test_revoke_space_support')
 
-    run_last2 = ('test_user_deregisters_provider',)
+    run_first = ('test_cluster_deployment',
+                 )
+    run_second_to_last = ('test_user_changes_provider_name_and_redirection',
+                          )
+    run_last = ('test_user_deregisters_provider',
+                )
 
     for item in items:
-        for test in run_first:
-            if test in item.nodeid:
-                first.append(item)
+        for suite_scenarios, run_suite in ((run_first, first),
+                                           (run_second_to_last, second_to_last),
+                                           (run_last, last)):
+            found_suite = False
+            for scenario_name in suite_scenarios:
+                if scenario_name in item.nodeid:
+                    run_suite.append(item)
+                    found_suite = True
+                    break
+
+            if found_suite:
                 break
         else:
-            for test in run_last:
-                if test in item.nodeid:
-                    last.append(item)
-                    break
-            else:
-                for test in run_last2:
-                    if test in item.nodeid:
-                        last2.append(item)
-                        break
-                else:
-                    rest.append(item)
+            rest.append(item)
 
     first.extend(rest)
+    first.extend(second_to_last)
     first.extend(last)
-    first.extend(last2)
     items[:] = first

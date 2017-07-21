@@ -23,6 +23,9 @@ class GroupSidebarRecord(PageObject):
     settings = WebItem('.settings-dropdown', cls=SettingDropdown)
     members = Button('ul li.members-permissions .item-click-area')
 
+    def is_selected(self):
+        return 'active' in self.web_elem.get_attribute('class')
+
 
 class GroupsSidebar(PageObject):
     title = Label('.secondary-sidebar-header .title')
@@ -32,5 +35,20 @@ class GroupsSidebar(PageObject):
                               cls=GroupSidebarRecord)
 
 
+class PermissionTableRow(PageObject):
+    name = id = Label('.one-first .truncated-string-content')
+
+
+class PermissionTable(PageObject):
+    users = WebItemsSequence('table.permissions tbody:first-of-type',
+                             cls=PermissionTableRow)
+    groups = WebItemsSequence('table.permissions tbody:nth-of-type(2)',
+                              cls=PermissionTableRow)
+    save = Button('button.btn-save')
+    discard = Button('button.btn-discard')
+
+
 class GroupContentPage(PageObject):
     sidebar = WebItem('.secondary-sidebar', cls=GroupsSidebar)
+    permission_table = WebItem('#content-scroll .permissions-table',
+                               cls=PermissionTable)
