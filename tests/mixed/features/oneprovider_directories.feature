@@ -267,8 +267,7 @@ Feature: Various operations on directories
     And user1 sees [child1] in space1/dir1/dir2/dir3
 
 
-    # TODO: Name this tests and figure out how to make second of this pair
-  Scenario: User fails to create directory using oneclient because of existing directory with given name
+  Scenario: User fails to create directory using oneclient because of existing directory with given name and sees in browser that only one directory exists
     When user1 creates directories [space1/dir1]
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
@@ -278,29 +277,7 @@ Feature: Various operations on directories
     And user1 fails to create directories [space1/dir1]
     Then user of browser sees that there is 1 item in file browser
 
-    # TODO: look above
-  Scenario: User fails to create directory because of existing directory with given name using web gui
-    When user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that current working directory displayed in breadcrumbs is space1
-    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-    And user of browser sees that "New directory" modal has appeared
-    And user of browser clicks on input box in active modal
-    And user of browser types "dir1" on keyboard
-    And user of browser clicks "Create" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "dir1" has appeared in file browser
-    And user of browser sees that item named "dir1" is directory in file browser
-    And user1 sees [dir1] in space1
 
-    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-    And user of browser sees that "New directory" modal has appeared
-    And user of browser clicks on input box in active modal
-    And user of browser types "dir1" on keyboard
-    And user of browser clicks "Create" confirmation button in displayed modal
-    And user of browser sees that the modal has disappeared
-    Then user of browser sees that there is 1 item in file browser
-  
   Scenario: User deletes empty directory and its parents using oneclient and sees in browser that they have disappeared
     When user1 creates directory and parents [space1/dir1/dir2/dir3]
 
@@ -736,4 +713,7 @@ Feature: Various operations on directories
     When user1 creates directories [space1/dir1]
     And user1 waits 60 second
     And user1 creates directories [space1/dir1/dir2]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
     Then user of browser sees that modification date of item named "dir1" is not earlier than 60 seconds ago in file browser

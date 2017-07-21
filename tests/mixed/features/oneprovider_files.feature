@@ -162,7 +162,7 @@ Feature: Basic operations on files
     And user of browser sees file browser in data tab in Oneprovider page
     Then user of browser sees that item named "file1" is of 31 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
-    And user of browser sees that content of downloaded file "file" is equal to: "TEST TEXT ONEDATA APPENDED DATA"
+    And user of browser sees that content of downloaded file "file1" is equal to: "TEST TEXT ONEDATA APPENDED DATA"
 
 
   Scenario: User replaces word in file using oneclient and sees in browser that file's content has changed
@@ -210,12 +210,12 @@ Feature: Basic operations on files
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    Then user of browser sees that items named ["dir1", "dir3"] in file browser
+    Then user of browser sees item(s) named ["dir1", "dir3"] in file browser
     And user of browser double clicks on item named "dir3" in file browser
     And user of browser sees item(s) named "file1" in file browser
     And user of browser sees that item named "file1" is of 0 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
-    And user of browser sees that content of downloaded file "file" is equal to: ""
+    And user of browser sees that content of downloaded file "file1" is equal to: ""
     And user of browser changes current working directory to space1/dir1/dir2 using breadcrumbs
     And user of browser sees that item named "file1" has disappeared in file browser
 
@@ -240,12 +240,13 @@ Feature: Basic operations on files
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser changes current working directory to space1 using breadcrumbs
     Then user of browser sees item(s) named ["dir1", "dir3"] in file browser
     And user of browser double clicks on item named "dir3" in file browser
     And user of browser sees item(s) named "file1" in file browser
     And user of browser sees that item named "file1" is of 17 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
-    And user of browser sees that content of downloaded file "file" is equal to: "TEST TEXT ONEDATA"
+    And user of browser sees that content of downloaded file "file1" is equal to: "TEST TEXT ONEDATA"
     And user of browser changes current working directory to space1/dir1/dir2 using breadcrumbs
     And user of browser sees that item named "file1" has disappeared in file browser
 
@@ -270,17 +271,18 @@ Feature: Basic operations on files
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser changes current working directory to space1 using breadcrumbs
     Then user of browser sees item(s) named ["dir1", "dir3"] in file browser
     And user of browser double clicks on item named "dir3" in file browser
     And user of browser sees item(s) named "file1" in file browser
     And user of browser sees that item named "file1" is of 17 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
-    And user of browser sees that content of downloaded file "file" is equal to: "TEST TEXT ONEDATA"
+    And user of browser sees that content of downloaded file "file1" is equal to: "TEST TEXT ONEDATA"
     And user of browser changes current working directory to space1/dir1/dir2 using breadcrumbs
     And user of browser sees item(s) named "file1" in file browser
     And user of browser sees that item named "file1" is of 17 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
-    And user of browser sees that content of downloaded file "file" is equal to: "TEST TEXT ONEDATA"
+    And user of browser sees that content of downloaded file "file1" is equal to: "TEST TEXT ONEDATA"
 
 
   Scenario: User removes file right after read using oneclient and sees in browser that it has been removed
@@ -431,4 +433,7 @@ Feature: Basic operations on files
     When user1 creates regular files [space1/file1]
     And user1 waits 60 second
     And user1 writes "TEST TEXT ONEDATA" to space1/file1
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
     Then user of browser sees that modification date of item named "file1" is not earlier than 60 seconds ago in file browser
