@@ -1,4 +1,5 @@
-Feature: Space utilities using onepanel
+Feature: Scenarios featuring login page to Onepanel GUI
+
 
   Background:
     Given user opened browser window

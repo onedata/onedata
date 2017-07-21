@@ -1,4 +1,4 @@
-Feature: Groups creation in Oneprovider GUI
+Feature: Groups operations using multiple browsers in Oneprovider GUI
 
 
   Background:

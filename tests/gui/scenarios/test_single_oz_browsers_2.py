@@ -1,11 +1,14 @@
-"""Test suite for features of Onezone login page.
+"""This module contains suite for features of Onedata GUI
+using multiple browser instances.
 """
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
+__license__ = ("This software is released under the MIT license cited in "
+               "LICENSE.txt")
 
+
+from pytest_bdd import scenarios
 
 from tests.gui.steps.rest.cdmi import *
 from tests.gui.steps.rest.env_up.users import *
@@ -34,20 +37,17 @@ from tests.gui.steps.onezone.providers import *
 from tests.gui.steps.onezone.manage_account import *
 from tests.gui.steps.onezone.login_page import *
 
+from tests.gui.steps.oneprovider.common import *
 from tests.gui.steps.oneprovider.data_tab import *
 from tests.gui.steps.oneprovider.file_browser import *
 from tests.gui.steps.oneprovider.metadata import *
 from tests.gui.steps.oneprovider.shares import *
-from tests.gui.steps.oneprovider.spaces import *
 from tests.gui.steps.oneprovider.groups import *
-
-from tests.gui.steps.oneprovider_common import *
+from tests.gui.steps.oneprovider.spaces import *
 
 from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
-
-
-from pytest_bdd import scenarios, scenario
+from tests.gui.steps.oneprovider_common import *
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
@@ -58,10 +58,10 @@ scenarios('../features/onepanel/provider.feature')
 # scenarios('../features/onepanel/spaces.feature')
 # scenarios('../features/onepanel/storage_sync.feature')
 
-scenarios('../features/onezone/space_join_methods.feature')
+scenarios('../features/onezone/space/multi_browser.feature')
 
 scenarios('../features/oneprovider/shares/public_shares.feature')
-scenarios('../features/oneprovider/groups/multiuser.feature')
+scenarios('../features/oneprovider/groups/multi_browser.feature')
 
 # # TODO rewrite scenarios to use env up set by rest when it will be possible to have more than 1 provider
 # scenarios('../features/oneprovider/multiprovider/multi_browser.feature')

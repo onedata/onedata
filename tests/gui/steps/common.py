@@ -9,6 +9,8 @@ __license__ = "This software is released under the MIT license cited in " \
 import re
 import time
 
+from pytest_bdd import given, when, then, parsers
+
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -17,8 +19,6 @@ from selenium.webdriver.support.expected_conditions import staleness_of
 
 from tests.gui.utils.generic import parse_seq, suppress, repeat_failed, transform, enter_text
 from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-
-from pytest_bdd import given, when, then, parsers
 
 
 @when(parsers.parse('user of {browser_id} should see that the page title '

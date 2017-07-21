@@ -1,4 +1,4 @@
-Feature: Basic data tab operations on shares in file browser
+Feature: Basic share management in Oneprovider GUI
 
 
   Background:

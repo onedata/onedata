@@ -6,14 +6,11 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import time
 
-from tests.gui.utils.generic import parse_seq, find_web_elem, repeat_failed
+from tests.gui.utils.generic import parse_seq
 from tests.gui.conftest import WAIT_BACKEND, WAIT_FRONTEND
-from tests.gui.utils.generic import parse_url
 
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.common.exceptions import NoSuchElementException
 
 from pytest_bdd import given, parsers, when, then
 
@@ -69,84 +66,31 @@ def wt_click_on_the_given_main_menu_tab(selenium, browser_id_list,
         _click_on_tab_in_main_menu_sidebar(driver, main_menu_tab)
 
 
-@when(parsers.parse('user of {browser_id} sees that provider name displayed in '
-                    'Oneprovider page has value of "{val}"'))
-@then(parsers.parse('user of {browser_id} sees that provider name displayed in '
-                    'Oneprovider page has value of "{val}"'))
-@repeat_failed(timeout=WAIT_FRONTEND)
-def wt_assert_provider_name_in_op(selenium, browser_id, val):
-    css_sel = '.provider-name-container .provider-name'
-    name = find_web_elem(selenium[browser_id], css_sel,
-                         'no provider name found').text
-    assert name == val, \
-        'displayed {} provider name instead of expected {}'.format(name, val)
-
-
-def _wait_for_op_session_to_start(selenium, browser_id_list):
-    def _check_url():
-        try:
-            found = parse_url(driver.current_url).group('access')
-        except AttributeError:
-            return False
-        else:
-            return 'onedata' == found.lower()
-
-    for browser_id in parse_seq(browser_id_list):
-        driver = selenium[browser_id]
-
-        # because of current subscription it is necessary
-        # to wait under certain circumstances for things to properly work
-        time.sleep(12)
-        driver.get(parse_url(driver.current_url).group('base_url'))
-
-        # TODO rm *4 when provider session starts becomes faster
-        Wait(driver, WAIT_BACKEND*4).until(
-            lambda _: _check_url(),
-            message='waiting for session to start'
-        )
-
-
-@given(parsers.re('users? of (?P<browser_id_list>.*?) seen that '
-                  'Oneprovider session has started'))
-def g_wait_for_op_session_to_start(selenium, browser_id_list):
-    _wait_for_op_session_to_start(selenium, browser_id_list)
-
-
-@when(parsers.re('users? of (?P<browser_id_list>.*?) sees that '
-                 'Oneprovider session has started'))
-@then(parsers.re('users? of (?P<browser_id_list>.*?) sees that '
-                 'Oneprovider session has started'))
-def wt_wait_for_op_session_to_start(selenium, browser_id_list):
-    _wait_for_op_session_to_start(selenium, browser_id_list)
-
-
-def _wait_for_tab_main_content_to_load(driver):
+def _has_dir_content_been_loaded(driver):
     # find_element_* throws exception if nothing found
-    try:
-        loader = driver.find_element_by_css_selector('#main-content '
-                                                     '.loader-area-'
-                                                     'main-content'
-                                                     ':not([class~=hidden])')
-    except NoSuchElementException:
-        return
-    else:
+    loader = driver.find_elements_by_css_selector('#main-content '
+                                                  '.loader-area-'
+                                                  'content-with-'
+                                                  'secondary-top')
+    if loader:
+        loader = loader[0]
         Wait(driver, WAIT_BACKEND).until_not(
             lambda _: loader.is_displayed(),
-            message='waiting for tab main content to end loading'
+            message='waiting for dir content to end loading'
         )
 
 
-@given(parsers.parse('user of {browser_id} seen that '
-                     'tab main content has been loaded'))
-def g_has_tab_main_content_been_loaded(selenium, browser_id):
+@given(parsers.parse('user of {browser_id} sees that content of current '
+                     'directory has been loaded'))
+def g_has_dir_content_been_loaded(selenium, browser_id):
     driver = selenium[browser_id]
-    _wait_for_tab_main_content_to_load(driver)
+    _has_dir_content_been_loaded(driver)
 
 
-@when(parsers.parse('user of {browser_id} sees that '
-                    'tab main content has been loaded'))
-@then(parsers.parse('user of {browser_id} sees that '
-                    'tab main content has been loaded'))
-def wt_has_tab_main_content_been_loaded(selenium, browser_id):
+@when(parsers.parse('user of {browser_id} sees that content of current '
+                    'directory has been loaded'))
+@then(parsers.parse('user of {browser_id} sees that content of current '
+                    'directory has been loaded'))
+def wt_has_dir_content_been_loaded(selenium, browser_id):
     driver = selenium[browser_id]
-    _wait_for_tab_main_content_to_load(driver)
+    _has_dir_content_been_loaded(driver)
