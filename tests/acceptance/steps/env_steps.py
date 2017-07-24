@@ -13,7 +13,7 @@ def environment_up(onedata_environment):
     return onedata_environment
 
 
-@then(parsers.parse('{number:d} nodes are up'))
+@then(parsers.re('(?P<number>.*) nodes are up'), converters=dict(number=int))
 def check_nodes(onedata_environment, number):
     """
     Checks whether environment consists of 'number' nodes.

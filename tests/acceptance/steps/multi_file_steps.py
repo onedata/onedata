@@ -16,12 +16,14 @@ import os
 import stat as stat_lib
 
 
-@when(parsers.parse('{user} updates {files} timestamps on {client_node}'))
+@when(parsers.re('(?P<user>\w+) updates (?P<files>.*) timestamps on'
+                 ' (?P<client_node>.*)'))
 def touch_file(user, files, client_node, context):
     touch_file_base(user, files, client_node, context)
 
 
-@when(parsers.parse('{user} fails to update {files} timestamps on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to update (?P<files>.*) timestamps '
+                 'on (?P<client_node>.*)'))
 def touch_file_fail(user, files, client_node, context):
     touch_file_base(user, files, client_node, context, should_fail=True)
 
@@ -40,8 +42,10 @@ def touch_file_base(user, files, client_node, context, should_fail=False):
         assert_generic(client.perform, should_fail, condition)
 
 
-@when(parsers.parse('{user} creates regular files {files} on {client_node}'))
-@then(parsers.parse('{user} creates regular files {files} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) creates regular files (?P<files>.*) '
+                 'on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) creates regular files (?P<files>.*) '
+                 'on (?P<client_node>.*)'))
 def create_reg_file(user, files, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -56,18 +60,20 @@ def create_reg_file(user, files, client_node, context):
         assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} creates children files of {parent_dir} with names '
-                    'in range [{lower:d}, {upper:d}) on {client_node}'))
-@then(parsers.parse('{user} creates children files of {parent_dir} with names '
-                    'in range [{lower:d}, {upper:d}) on {client_node}'))
+@when(parsers.re('(?P<user>\w+) creates children files of (?P<parent_dir>.*) '
+                 'with names in range \[(?P<lower>.*), (?P<upper>.*)\) on (?P<client_node>.*)'), 
+                 converters=dict(lower=int,upper=int))
+@then(parsers.re('(?P<user>\w+) creates children files of (?P<parent_dir>.*) '
+                 'with names in range \[(?P<lower>.*), (?P<upper>.*)\) on (?P<client_node>.*)'), 
+                 converters=dict(lower=int,upper=int))
 def create_many(user, lower, upper, parent_dir, client_node, context):
     for i in range(lower, upper):
         new_file = os.path.join(parent_dir, str(i))
         create_reg_file(user, make_arg_list(new_file), client_node, context)
 
 
-@when(parsers.parse('{directory} is empty for {user} on {client_node}'))
-@then(parsers.parse('{directory} is empty for {user} on {client_node}'))
+@when(parsers.re('(?P<directory>.*) is empty for (?P<user>\w+) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<directory>.*) is empty for (?P<user>\w+) on (?P<client_node>.*)'))
 def ls_empty(directory, user, client_node, context):
     client = context.get_client(user, client_node)
     dir_path = client.absolute_path(directory)
@@ -78,8 +84,10 @@ def ls_empty(directory, user, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} sees {files} in {path} on {client_node}'))
-@then(parsers.parse('{user} sees {files} in {path} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) sees (?P<files>.*) in (?P<path>.*) '
+                 'on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) sees (?P<files>.*) in (?P<path>.*) '
+                 'on (?P<client_node>.*)'))
 def ls_present(user, files, path, client_node, context):
     client = context.get_client(user, client_node)
     path = client.absolute_path(path)
@@ -93,10 +101,12 @@ def ls_present(user, files, path, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} lists only children of {parent_dir} with names in '
-                    'range [{lower:d}, {upper:d}) on {client_node}'))
-@then(parsers.parse('{user} lists only children of {parent_dir} with names in '
-                    'range [{lower:d}, {upper:d}) on {client_node}'))
+@when(parsers.re('(?P<user>\w+) lists only children of (?P<parent_dir>.*) with names'
+                 ' in range \[(?P<lower>.*), (?P<upper>.*)\) on (?P<client_node>.*)'), 
+                 converters=dict(lower=int,upper=int))
+@then(parsers.re('(?P<user>\w+) lists only children of (?P<parent_dir>.*) with names'
+                 ' in range \[(?P<lower>.*), (?P<upper>.*)\) on (?P<client_node>.*)'), 
+                 converters=dict(lower=int,upper=int))
 def ls_children(user, parent_dir, lower, upper, client_node, context):
 
     client = context.get_client(user, client_node)
@@ -112,8 +122,10 @@ def ls_children(user, parent_dir, lower, upper, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
-@then(parsers.parse('{user} doesn\'t see {files} in {path} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) doesn\'t see (?P<files>.*) in (?P<path>.*) '
+                 'on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) doesn\'t see (?P<files>.*) in (?P<path>.*) '
+                 'on (?P<client_node>.*)'))
 def ls_absent(user, files, path, client_node, context):
     client = context.get_client(user, client_node)
     path = client.absolute_path(path)
@@ -127,14 +139,18 @@ def ls_absent(user, files, path, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} moves {file1} to {file2} using shell command on {client_node}'))
-@then(parsers.parse('{user} moves {file1} to {file2} using shell command on {client_node}'))
+@when(parsers.re('(?P<user>\w+) moves (?P<file1>.*) to (?P<file2>.*) '
+                 'using shell command on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) moves (?P<file1>.*) to (?P<file2>.*) '
+                 'using shell command on (?P<client_node>.*)'))
 def shell_move(user, file1, file2, client_node, context):
     shell_move_base(user, file1, file2, client_node, context)
 
 
-@when(parsers.parse('{user} fails to move {file1} to {file2} using shell command on {client_node}'))
-@then(parsers.parse('{user} fails to move {file1} to {file2} using shell command on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to move (?P<file1>.*) to (?P<file2>.*) '
+                 'using shell command on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to move (?P<file1>.*) to (?P<file2>.*) '
+                 'using shell command on (?P<client_node>.*)'))
 def shell_move_fail(user, file1, file2, client_node, context):
     shell_move_base(user, file1, file2, client_node, context, should_fail=True)
 
@@ -147,20 +163,24 @@ def shell_move_base(user, file1, file2, client_node, context, should_fail=False)
 
     def condition():
         mv(client, src, dest)
-        cmd = "mv {0} {1}".format(src, dest)
+        cmd = "mv (?P<0>.*) (?P<1>.*)".format(src, dest)
         run_cmd(user.name, client, cmd, output=True, error=True)
 
     assert_generic(client.perform, should_fail, condition)
 
 
-@when(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
-@then(parsers.parse('{user} renames {file1} to {file2} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) renames (?P<file1>.*) to (?P<file2>.*)'
+                 ' on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) renames (?P<file1>.*) to (?P<file2>.*)'
+                 ' on (?P<client_node>.*)'))
 def rename(user, file1, file2, client_node, context):
     rename_base(user, file1, file2, client_node, context)
 
 
-@when(parsers.parse('{user} fails to rename {file1} to {file2} on {client_node}'))
-@then(parsers.parse('{user} fails to rename {file1} to {file2} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to rename (?P<file1>.*) to '
+                 '(?P<file2>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to rename (?P<file1>.*) to '
+                 '(?P<file2>.*) on (?P<client_node>.*)'))
 def rename_fail(user, file1, file2, client_node, context):
     rename_base(user, file1, file2, client_node, context, should_fail=True)
 
@@ -177,14 +197,16 @@ def rename_base(user, file1, file2, client_node, context, should_fail=False):
     assert_generic(client.perform, should_fail, condition)
 
 
-@when(parsers.parse('{user} deletes files {files} on {client_node}'))
-@then(parsers.parse('{user} deletes files {files} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) deletes files (?P<files>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) deletes files (?P<files>.*) on (?P<client_node>.*)'))
 def delete_file(user, files, client_node, context):
     delete_file_base(user, files, client_node, context)
 
 
-@when(parsers.parse('{user} fails to delete files {files} on {client_node}'))
-@then(parsers.parse('{user} fails to delete files {files} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to delete files (?P<files>.*) '
+                 'on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to delete files (?P<files>.*) '
+                 'on (?P<client_node>.*)'))
 def delete_file_fail(user, files, client_node, context):
     delete_file_base(user, files, client_node, context, should_fail=True)
 
@@ -202,14 +224,18 @@ def delete_file_base(user, files, client_node, context, should_fail=False):
         assert_generic(client.perform, should_fail, condition)
 
 
-@when(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
-@then(parsers.parse('{user} changes {file} mode to {mode} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) changes (?P<file>.*) mode to (?P<mode>.*) on '
+                 '(?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) changes (?P<file>.*) mode to (?P<mode>.*) on '
+                 '(?P<client_node>.*)'))
 def change_mode(user, file, mode, client_node, context):
     change_mode_base(user, file, mode, client_node, context)
 
 
-@when(parsers.parse('{user} fails to change {file} mode to {mode} on {client_node}'))
-@then(parsers.parse('{user} fails to change {file} mode to {mode} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to change (?P<file>.*) mode to '
+                 '(?P<mode>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to change (?P<file>.*) mode to '
+                 '(?P<mode>.*) on (?P<client_node>.*)'))
 def change_mode_fail(user, file, mode, client_node, context):
     change_mode_base(user, file, mode, client_node, context, should_fail=True)
 
@@ -226,7 +252,8 @@ def change_mode_base(user, file, mode, client_node, context, should_fail=False):
     assert_generic(client.perform, should_fail, condition)
 
 
-@then(parsers.parse('file type of {user}\'s {file} is {file_type} on {client_node}'))
+@then(parsers.re('file type of (?P<user>\w+)\'s (?P<file>.*) is (?P<file_type>.*) '
+                 'on (?P<client_node>.*)'))
 def check_type(user, file, file_type, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -244,8 +271,8 @@ def check_type(user, file, file_type, client_node, context):
     assert_(client.perform, condition)
 
 
-@then(parsers.parse('{user} checks using shell stat if file type of {file} is '
-                    '{file_type} on {client_node}'))
+@then(parsers.re('(?P<user>\w+) checks using shell stat if file type '
+                 'of (?P<file>.*) is (?P<file_type>.*) on (?P<client_node>.*)'))
 def shell_check_type(user, file, file_type, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -259,8 +286,10 @@ def shell_check_type(user, file, file_type, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
-@then(parsers.parse('mode of {user}\'s {file} is {mode} on {client_node}'))
+@when(parsers.re('mode of (?P<user>\w+)\'s (?P<file>.*) is (?P<mode>.*) on '
+                 '(?P<client_node>.*)'))
+@then(parsers.re('mode of (?P<user>\w+)\'s (?P<file>.*) is (?P<mode>.*) on '
+                 '(?P<client_node>.*)'))
 def check_mode(user, file, mode, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -274,8 +303,10 @@ def check_mode(user, file, mode, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
-@then(parsers.parse('size of {user}\'s {file} is {size} bytes on {client_node}'))
+@when(parsers.re('size of (?P<user>\w+)\'s (?P<file>.*) is (?P<size>.*) bytes '
+                 'on (?P<client_node>.*)'))
+@then(parsers.re('size of (?P<user>\w+)\'s (?P<file>.*) is (?P<size>.*) bytes '
+                 'on (?P<client_node>.*)'))
 def check_size(user, file, size, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -289,8 +320,10 @@ def check_size(user, file, size, client_node, context):
     assert_(client.perform, condition)
 
 
-@then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} to {time2} time on {client_node}'))
-@then(parsers.parse('{time1} time of {user}\'s {file} is {comparator} than {time2} time on {client_node}'))
+@then(parsers.re('(?P<time1>.*) time of (?P<user>\w+)\'s (?P<file>.*) is '
+                 '(?P<comparator>.*) to (?P<time2>.*) time on (?P<client_node>.*)'))
+@then(parsers.re('(?P<time1>.*) time of (?P<user>\w+)\'s (?P<file>.*) is '
+                 '(?P<comparator>.*) than (?P<time2>.*) time on (?P<client_node>.*)'))
 def check_time(user, time1, time2, comparator, file, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
