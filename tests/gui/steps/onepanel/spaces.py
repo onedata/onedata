@@ -103,7 +103,9 @@ def wt_enable_option_box_in_space_support_form(selenium, browser_id,
 @repeat_failed(timeout=WAIT_BACKEND)
 def wt_assert_existence_of_space_support_record(selenium, browser_id,
                                                 space, onepanel):
-    _ = onepanel(selenium[browser_id]).content.spaces.spaces[space]
+    spaces = {space.name for space
+              in onepanel(selenium[browser_id]).content.spaces.spaces}
+    assert space in spaces, 'not found "{}" in spaces in Onepanel'.format(space)
 
 
 @when(parsers.parse('user of {browser_id} sees that list of supported spaces '
@@ -254,7 +256,7 @@ def wt_assert_proper_space_configuration_in_panel(selenium, browser_id, conf,
 
     """
     record = onepanel(selenium[browser_id]).content.spaces.spaces[space]
-    displayed_conf = getattr(record, conf.lower() + '_strategy')
+    displayed_conf = getattr(record.info, conf.lower() + '_strategy')
     for attr, val in yaml.load(values).items():
         displayed_val = displayed_conf[attr]
         assert val.lower() == displayed_val.lower(), \
@@ -269,8 +271,8 @@ def wt_assert_proper_space_configuration_in_panel(selenium, browser_id, conf,
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_copy_space_id_in_spaces_page_in_onepanel(selenium, browser_id,
                                                 space, onepanel, tmp_memory):
-    space_id = onepanel(selenium[browser_id]).content.spaces.spaces[space].Id
-    tmp_memory['spaces'][space] = space_id
+    record = onepanel(selenium[browser_id]).content.spaces.spaces[space]
+    tmp_memory['spaces'][space] = record.info.space_id
 
 
 @when(parsers.parse('user of {browser_id} expands toolbar for "{space}" '

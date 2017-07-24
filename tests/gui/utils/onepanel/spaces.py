@@ -57,26 +57,16 @@ class SpaceSupportAddForm(PageObject):
     support_space = NamedButton('button', text='Support space')
 
 
-class SpaceRecord(PageObject, ExpandableMixin):
-    name = id = Label('.item-icon-container + .one-label')
-    toolbar = Button('.collapsible-toolbar-toggle')
+class SpaceInfo(PageObject):
+    name = Label('.space-name')
+    space_id = Label('.space-id')
+    storage_name = Label('.space--provider-storage')
+    _import_strategy = WebElement('.space-import')
+    _update_strategy = WebElement('.space-update')
+    _mount_in_root = WebElement('.space-mountInRoot')
 
-    _toggle = WebElement('.one-collapsible-list-item-header')
-
-    def is_expanded(self):
-        return bool(re.match(r'.*\b(?<!-)opened\b.*',
-                             self._toggle.get_attribute('class')))
-
-    import_configuration = WebItem('.import-configuration-section',
-                                   cls=ImportConfigurationForm)
-    update_configuration = WebItem('.update-configuration-section',
-                                   cls=UpdateConfigurationForm)
-    save_configuration = NamedButton('button', text='Save configuration')
-
-    Name = Label('.item-table-cell .content-row:first-child:not(.chart-row)'
-                 ':not(.nested-row) .one-label')
-    Id = Label('.item-table-cell .content-row:nth-child(2):not(.chart-row)'
-               ':not(.nested-row) .one-label')
+    def is_mount_in_root_enabled(self):
+        return 'disabled' not in self._mount_in_root.get_attribute('class')
 
     @property
     def import_strategy(self):
@@ -90,18 +80,29 @@ class SpaceRecord(PageObject, ExpandableMixin):
         values.update(self._get_labels(self._update_strategy))
         return values
 
-    _import_strategy = WebElement('.item-table-content-cell .content-row'
-                                  ':nth-child(4):not(.chart-row)'
-                                  ':not(.nested-row)')
-    _update_strategy = WebElement('.item-table-content-cell .content-row'
-                                  ':nth-child(5):not(.chart-row)'
-                                  ':not(.nested-row)')
-
     @staticmethod
     def _get_labels(elem):
         items = elem.find_elements_by_css_selector('strong, .one-label')
         return {attr.text.strip(':'): val.text for attr, val
                 in zip(items[::2], items[1::2])}
+
+
+class SpaceRecord(PageObject, ExpandableMixin):
+    name = id = Label('.item-icon-container + .one-label')
+    toolbar = Button('.collapsible-toolbar-toggle')
+    info = WebItem('.space-info', cls=SpaceInfo)
+
+    _toggle = WebElement('.one-collapsible-list-item-header')
+
+    def is_expanded(self):
+        return bool(re.match(r'.*\b(?<!-)opened\b.*',
+                             self._toggle.get_attribute('class')))
+
+    import_configuration = WebItem('.import-configuration-section',
+                                   cls=ImportConfigurationForm)
+    update_configuration = WebItem('.update-configuration-section',
+                                   cls=UpdateConfigurationForm)
+    save_configuration = NamedButton('button', text='Save configuration')
 
 
 class SpacesContentPage(PageObject):

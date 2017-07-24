@@ -5,15 +5,13 @@ Define fixtures used in web GUI acceptance/behavioral tests.
 import os
 import re
 import sys
-from collections import namedtuple
-from itertools import chain
 import subprocess as sp
-from collections import defaultdict
+from itertools import chain
+from collections import namedtuple, defaultdict
 
-from collections import defaultdict
 from py.xml import html
-from pytest import fixture, UsageError, skip
 from selenium import webdriver
+from pytest import fixture, UsageError, skip
 
 from environment import docker
 from tests.utils.utils import set_dns
@@ -27,7 +25,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-SELENIUM_IMPLICIT_WAIT = 0
+SELENIUM_IMPLICIT_WAIT = 1
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
@@ -373,12 +371,14 @@ if not is_base_url_provided:
 
 def pytest_collection_modifyitems(items):
     first = []
+    second = []
     second_to_last = []
     last = []
     rest = []
 
     run_first = ('test_cluster_deployment',
                  )
+    run_second = ('test_support_space', 'test_revoke_space_support')
     run_second_to_last = ('test_user_changes_provider_name_and_redirection',
                           )
     run_last = ('test_user_deregisters_provider',
@@ -386,6 +386,7 @@ def pytest_collection_modifyitems(items):
 
     for item in items:
         for suite_scenarios, run_suite in ((run_first, first),
+                                           (run_second, second),
                                            (run_second_to_last, second_to_last),
                                            (run_last, last)):
             found_suite = False
@@ -400,6 +401,7 @@ def pytest_collection_modifyitems(items):
         else:
             rest.append(item)
 
+    first.extend(second)
     first.extend(rest)
     first.extend(second_to_last)
     first.extend(last)

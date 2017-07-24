@@ -28,6 +28,7 @@ in_type_to_id = {'username': 'login-form-username-input',
                     'modal "Add storage" has appeared'))
 @then(parsers.parse('user of {browser_id} sees that '
                     'modal "Add storage" has appeared'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def wait_for_add_storage_modal_to_appear(selenium, browser_id, tmp_memory,
                                          modals):
     driver = selenium[browser_id]
@@ -39,6 +40,7 @@ def wait_for_add_storage_modal_to_appear(selenium, browser_id, tmp_memory,
                     '"Add storage" modal'))
 @then(parsers.parse('user of {browser_id} copies token from '
                     '"Add storage" modal'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def cp_token_from_add_storage_modal(browser_id, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
     modal.copy()
@@ -48,6 +50,7 @@ def cp_token_from_add_storage_modal(browser_id, tmp_memory):
                     'in "Add storage" modal'))
 @then(parsers.parse('user of {browser_id} generate another token '
                     'in "Add storage" modal'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def gen_another_token_in_add_storage_modal(browser_id, tmp_memory):
     modal = tmp_memory[browser_id]['window']['modal']
     modal.generate_token()
@@ -57,6 +60,7 @@ def gen_another_token_in_add_storage_modal(browser_id, tmp_memory):
                     'in "Add storage" modal'))
 @then(parsers.parse('user of {browser_id} sees non-empty token '
                     'in "Add storage" modal'))
+@repeat_failed(timeout=WAIT_FRONTEND)
 def assert_non_empty_token_in_add_storage_modal(browser_id, tmp_memory):
     token = tmp_memory[browser_id]['window']['modal'].token
     assert len(token) > 0, 'expected token in Add storage modal, ' \

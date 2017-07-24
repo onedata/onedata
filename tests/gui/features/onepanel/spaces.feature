@@ -1,13 +1,11 @@
-Feature: Space utilities using onepanel
+Feature: Basic spaces management utilities using onepanel
 
   Background:
     Given users opened [browser1, browser2] browsers' windows
     And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
-    And user of browser1 entered credentials for admin in login form
-    And users of browser1 pressed Sign in button
+    And user of browser1 logged as admin to Onepanel service
     And user of browser2 seen Z1 zone name in oz login page
-    And user of browser2 entered credentials of admin in login form in oz login page
-    And user of browser2 clicked on the Sign in button in oz login page
+    And user of browser2 logged as admin to Onezone service
 
 
   Scenario: Support space
@@ -15,8 +13,7 @@ Feature: Space utilities using onepanel
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 sees that there is no space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "helloworld" in active edit box
+    And user of browser2 types "helloworld" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "helloworld" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -66,11 +63,3 @@ Feature: Space utilities using onepanel
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 expands submenu of space named "helloworld" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
     Then user of browser2 sees that there is/are no supporting provider(s) named "p1" for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-
-      # TODO remove after integrate with swagger
-    And user of browser2 expands settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel by clicking on settings icon
-    And user of browser2 clicks on the "LEAVE" item in settings dropdown for space named "helloworld" in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 sees that "Leave a space" modal has appeared
-    And user of browser2 clicks "Yes" confirmation button in displayed modal
-    And user of browser2 sees that the modal has disappeared
-    And user of browser2 sees that space named "helloworld" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
