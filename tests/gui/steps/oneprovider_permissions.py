@@ -25,8 +25,7 @@ def select_permission_type(selenium, browser_id, permission_type, modals):
 @then(parsers.parse('user of {browser_id} sees that current permission is '
                     '"{perm}"'))
 def check_permission(selenium, browser_id, perm, modals):
-    input_box = modals(selenium[browser_id]).edit_permissions.get_input_box()
-    assert input_box.get_attribute('value') == perm
+    assert modals(selenium[browser_id]).edit_permissions.posix.value == perm
 
 
 @when(parsers.parse('user of {browser_id} sets "{perm}" permission code in '
@@ -34,9 +33,7 @@ def check_permission(selenium, browser_id, perm, modals):
 @then(parsers.parse('user of {browser_id} sets "{perm}" permission code in '
                     'active modal'))
 def set_permission(selenium, browser_id, perm, modals):
-    input_box = modals(selenium[browser_id]).edit_permissions.get_input_box()
-    input_box.clear()
-    input_box.send_keys(perm)
+    modals(selenium[browser_id]).edit_permissions.posix.value = perm
 
 
 @when(parsers.parse('user of {browser_id} sees that "{name}" confirmation '
@@ -60,10 +57,8 @@ def button_in_modal_is_disabled(browser_id, name, tmp_memory):
 @then(parsers.parse('user of {browser_id} sets incorrect {num:d} char '
                     'permission code in active modal'))
 def set_incorect_permission(selenium, browser_id, num, modals):
-    input_box = modals(selenium[browser_id]).edit_permissions.get_input_box()
     random.seed()
     val = random.choice('89')
     for _ in range(num-1):
         val += random.choice(string.digits)
-    input_box.clear()
-    input_box.send_keys(val)
+    modals(selenium[browser_id]).edit_permissions.posix.value = val

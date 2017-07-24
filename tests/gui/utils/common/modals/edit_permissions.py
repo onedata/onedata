@@ -9,33 +9,35 @@ __license__ = "This software is released under the MIT license cited in " \
 from tests.gui.utils.core.common import PageObject
 from tests.gui.utils.common.modals.modal import Modal
 from tests.gui.utils.core.web_elements import TextLabelWebElement,\
-        WebItemsSequence, ButtonWebElement
-
+        WebItemsSequence, ButtonWebElement, InputWebElement, WebItem
 
 
 class PermissionType(PageObject):
     name = id = TextLabelWebElement('.option-label')
 
+    def set(self):
+        self.web_elem.click()
+
     def __str__(self):
         return 'permission type option {} in {}'.format(self.name, self.parent)
 
 
+class POSIX(PageObject):
+    value = InputWebElement('input')
+
+    def __str__(self):
+        return 'POSIX permission in {}'.format(self.parent)
+
+
 class EditPermissionsModal(Modal):
+    posix = WebItem('.modal-row-main.large-space', cls=POSIX)
     options = WebItemsSequence('.one-option-button-container',
                                cls=PermissionType)
-    state = "posix"
-
-    def get_input_box(self):
-        if self.state == "posix":
-            return self.web_elem.find_element_by_css_selector('.modal-row-main'
-                    '.large-space input')
-        raise RuntimeError("No input box in modal in {} state".format(self.state))
 
     def select(self, perm_type):
-        self.state = perm_type.lower()
         for option in self.options:
             if option.name.lower() == perm_type.lower():
-                option.web_elem.click()
+                option.set()
     
     def __str__(self):
         return 'Edit permission modal'
