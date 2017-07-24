@@ -25,7 +25,7 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-SELENIUM_IMPLICIT_WAIT = 1
+SELENIUM_IMPLICIT_WAIT = 0
 
 # use this const when using: WebDriverWait(selenium, WAIT_FRONTEND).until(lambda s: ...)
 # when waiting for frontend changes
@@ -235,18 +235,6 @@ def movie_dir(request):
     if not os.path.exists(movie_subdir):
         os.makedirs(movie_subdir)
     return movie_subdir
-
-
-@fixture(scope='module')
-def screens(request):
-    _, mod = os.path.split(request.node.name)
-    match = re.match(r'\w+_browsers_(?P<num>\d+).py$', mod)
-    try:
-        num = int(match.group('num'))
-    except AttributeError:
-        return [0]
-    else:
-        return [i for i in range(num)]
 
 
 @fixture

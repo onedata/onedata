@@ -97,8 +97,8 @@ def click_on_button_in_metadata_panel(browser_id, button_name,
                                       item_name, tmp_memory):
     browser = tmp_memory[browser_id]['file_browser']
     metadata_row = browser.get_metadata_for(item_name)
-    btn = getattr(metadata_row, button_name.lower().replace(' ', '_'))
-    btn()
+    btn = getattr(metadata_row, button_name.lower().replace(' ', '_'))()
+    btn.click()
 
 
 @when(parsers.parse('user of {browser_id} sees that "{button_name}" button '

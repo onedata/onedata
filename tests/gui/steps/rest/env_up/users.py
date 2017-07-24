@@ -28,6 +28,8 @@ UserCred = namedtuple('UserCredentials', ['username', 'password', 'id'])
                      'Onezone service:\n{config}'))
 def users_creation(host, config, admin_credentials, hosts, users):
     zone_hostname = hosts['onezone'][host]
+    users[admin_credentials.username] = _create_admin_in_zone(zone_hostname,
+                                                              admin_credentials)
 
     users_db = {}
     for user_config in yaml.load(config):
@@ -45,6 +47,16 @@ def users_creation(host, config, admin_credentials, hosts, users):
     yield
 
     _rm_users(zone_hostname, admin_credentials, users_db)
+
+
+@repeat_failed(attempts=5)
+def _create_admin_in_zone(zone_hostname, admin_credentials):
+    username, password = admin_credentials.username, admin_credentials.password
+    response = http_get(ip=zone_hostname, port=OZ_REST_PORT,
+                        path=get_zone_rest_path('user'),
+                        auth=(username, password)).json()
+    admin_id = response['userId']
+    return UserCred(username, password, admin_id)
 
 
 def _parse_user_info(user_config):

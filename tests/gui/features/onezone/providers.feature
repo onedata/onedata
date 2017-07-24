@@ -125,8 +125,8 @@ Feature: Basic management of providers in Onezone GUI
     And user of browser sees that spaces counter for "p1" match number of displayed supported spaces in expanded submenu of given provider in expanded "GO TO YOUR FILES" Onezone panel
 
 
-#  # TODO enable this test when reregistering provider will start to work (last test in getting started deregisters provider
-#  # so one cannot run this test instead/following up)
+#  # TODO enable this test when reregistering provider will start to work last test in getting started deregisters
+#  # provider so one cannot run this test instead/following up
 #  Scenario: User sees that when no provider is working appropriate msg is shown
 #    Given there are no working provider(s) named "p1"
 #    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel

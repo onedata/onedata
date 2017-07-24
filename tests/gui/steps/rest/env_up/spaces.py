@@ -15,7 +15,7 @@ from pytest_bdd import given, parsers
 from tests import OZ_REST_PORT, PANEL_REST_PORT
 from ..utils import (http_get, http_post, http_put,
                      get_panel_rest_path, get_zone_rest_path)
-from ..exceptions import HTTPNotFound, HTTPError
+from ..exceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 
 
 @given(parsers.parse('initial spaces configuration in "{zone_host}" '
@@ -244,6 +244,11 @@ def _init_storage(owner_credentials, space_name, hosts, storage_conf):
     if not storage_conf:
         return
 
+    # if we make call to fast after deleting users from previous test
+    # provider cache was not refreshed and call will create dir for
+    # now nonexistent user, to avoid this wait some time
+    import time; time.sleep(2)
+
     defaults = storage_conf['defaults']
     provider_hostname = hosts[defaults['provider']]
 
@@ -256,12 +261,10 @@ def _init_storage(owner_credentials, space_name, hosts, storage_conf):
                 response = http_put(ip=provider_hostname, port=8443,
                                     path='/cdmi/'+path, auth=auth,
                                     data=data)
-            except HTTPNotFound:
+            except (HTTPNotFound, HTTPBadRequest):
                 # because user may not yet exist in provider first call
                 # will fail, as such wait some time and try again
                 time.sleep(1)
-            # except HTTPError as ex:
-            #     import pdb; pdb.set_trace()
             else:
                 break
 

@@ -142,6 +142,9 @@ artifact_onepanel:
 ## Test
 ##
 
+RECORDING_OPTION   ?= failed
+BROWSER            ?= Chrome
+
 test_env_up:
 	${TEST_RUN} --test-type env_up -vvv --test-dir tests/env_up
 
@@ -172,11 +175,8 @@ test_gui_firefox:
 test_gui_chrome:
 	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
 
-test_gui_acceptance_release_chrome:
-	./test_run_gui.py --env=getting_started -t tests/gui --test-type guiv -vvv --driver=Chrome -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=failed
-
-test_gui_acceptance_release_firefox:
-	./test_run_gui.py --env=getting_started -t tests/gui --test-type gui -vvv --driver=Firefox -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=failed
+test_gui_packages:
+	./test_run_gui.py --env=getting_started -t tests/gui/scenarios/${SUITE}.py --test-type gui -vvv --driver=${BROWSER} -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=${RECORDING_OPTION}
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling

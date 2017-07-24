@@ -15,7 +15,8 @@ Feature: Basic data tab operations on directory metadata in file browser
                 defaults:
                     provider: p1
                 directory tree:
-                    - dir1
+                    - dir1:
+                        - file1: 11111
 
     And user opened browser window
     And user of browser opened z1 onezone page

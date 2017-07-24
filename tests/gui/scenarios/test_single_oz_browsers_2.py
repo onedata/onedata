@@ -51,17 +51,6 @@ from tests.gui.steps.oneprovider_common import *
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/onepanel/deployment.feature')
-scenarios('../features/onepanel/provider.feature')
-scenarios('../features/onepanel/spaces.feature')
 
 # scenarios('../features/onepanel/storages.feature')
 # scenarios('../features/onepanel/storage_sync.feature')
-
-scenarios('../features/onezone/space/multi_browser.feature')
-
-scenarios('../features/oneprovider/shares/public_shares.feature')
-scenarios('../features/oneprovider/groups/multi_browser.feature')
-
-# # TODO rewrite scenarios to use env up set by rest when it will be possible to have more than 1 provider
-# scenarios('../features/oneprovider/multiprovider/multi_browser.feature')

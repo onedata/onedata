@@ -1,5 +1,5 @@
-"""This module contains suite for features of Onedata GUI
-using single browser instance.
+"""This module contains tests suite for basic operations in
+Onepanel GUI and multiple browser instances.
 """
 
 __author__ = "Bartosz Walkowicz"
@@ -7,12 +7,10 @@ __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = ("This software is released under the MIT license cited in "
                "LICENSE.txt")
 
-import sys
 
-import pytest
-from pytest_bdd import scenarios, scenario
+from pytest import fixture
+from pytest_bdd import scenario, scenarios
 
-from tests.gui.steps.rest.cdmi import *
 from tests.gui.steps.rest.env_up.users import *
 from tests.gui.steps.rest.env_up.groups import *
 from tests.gui.steps.rest.env_up.spaces import *
@@ -24,6 +22,8 @@ from tests.gui.steps.generic.local_file_system import *
 
 from tests.gui.steps.onepanel.account_management import *
 from tests.gui.steps.onepanel.login import *
+from tests.gui.steps.onepanel.nodes import *
+from tests.gui.steps.onepanel.provider import *
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
 from tests.gui.steps.onepanel.spaces import *
@@ -49,22 +49,11 @@ from tests.gui.steps.modal import *
 from tests.gui.steps.oneprovider_common import *
 
 
-USING_BASE_URL = False
-BROWSER = ''
-for arg in sys.argv:
-    if '--driver=' in arg:
-        BROWSER = arg.split('=')[1]
-    elif '--base-url' in arg:
-        USING_BASE_URL = True
-
-SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environment)'
+@fixture(scope='module')
+def screens():
+    return [0, 1]
 
 
-# @pytest.mark.skipif(USING_BASE_URL, reason=SKIP_REASON_BASE_URL)
-# @scenario('../features/onezone/providers.feature',
-#           'User sees that when no provider is working appropriate msg is shown')
-# def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
-#     pass
-#
-#
-# --- FEATURES: all non-destructive (does not change state) ---
+scenarios('../features/onepanel/deployment.feature')
+scenarios('../features/onepanel/provider.feature')
+scenarios('../features/onepanel/spaces.feature')
