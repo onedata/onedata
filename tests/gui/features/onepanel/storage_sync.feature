@@ -1,13 +1,14 @@
 Feature: Onepanel features regarding storage sync (e.g. import/update)
 
   Background:
-    Given users opened [browser1, browser2] browsers' windows
+    Given initial users configuration in "z1" Onezone service:
+            - user1
+
+    And users opened [browser1, browser2] browsers' windows
     And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
-    And user of browser1 entered credentials for admin in login form
-    And users of browser1 pressed Sign in button
+    And user of browser1 logged as admin to Onepanel service
     And user of browser2 seen Z1 zone name in oz login page
-    And user of browser2 entered credentials of admin in login form in oz login page
-    And user of browser2 clicked on the Sign in button in oz login page
+    And user of browser2 logged as user1 to Onezone service
     And directory tree structure on local file system:
           browser2:
               - dir1: 5
@@ -25,8 +26,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 sees that there is no space named "space2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "space2" in active edit box
+    And user of browser2 types "space2" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "space2" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -150,8 +150,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 sees that there is no space named "space1" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "space1" in active edit box
+    And user of browser2 types "space1" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "space1" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -279,8 +278,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 sees that there is no space named "space3" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "space3" in active edit box
+    And user of browser2 types "space3" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "space3" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -421,8 +419,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 sees that there is no space named "space4" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "space4" in active edit box
+    And user of browser2 types "space4" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "space4" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -551,8 +548,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 sees that there is no space named "space5" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "space5" in active edit box
+    And user of browser2 types "space5" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "space5" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -694,8 +690,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 sees that there is no space named "space6" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "space6" in active edit box
+    And user of browser2 types "space6" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "space6" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 

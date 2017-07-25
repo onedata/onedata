@@ -255,8 +255,8 @@ def wt_assert_proper_space_configuration_in_panel(selenium, browser_id, conf,
         Delete enabled: false
 
     """
-    record = onepanel(selenium[browser_id]).content.spaces.spaces[space]
-    displayed_conf = getattr(record.info, conf.lower() + '_strategy')
+    info = onepanel(selenium[browser_id]).content.spaces.spaces[space].info
+    displayed_conf = getattr(info, conf.lower() + '_strategy')
     for attr, val in yaml.load(values).items():
         displayed_val = displayed_conf[attr]
         assert val.lower() == displayed_val.lower(), \
