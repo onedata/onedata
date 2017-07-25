@@ -8,8 +8,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from tests.gui.utils.core.common import PageObject
 from tests.gui.utils.common.modals.modal import Modal
-from tests.gui.utils.core.web_elements import TextLabelWebElement,\
-        WebItemsSequence, ButtonWebElement, InputWebElement, WebItem
+from tests.gui.utils.core.web_elements import (TextLabelWebElement,
+        WebItemsSequence, InputWebElement, WebItem)
 
 
 class PermissionType(PageObject):

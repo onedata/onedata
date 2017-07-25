@@ -12,9 +12,9 @@ from pytest_bdd import parsers, when, then
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
 
-@when(parsers.parse('user of {browser_id} selects {permission_type} '
+@when(parsers.parse('user of {browser_id} selects "{permission_type}" '
                     'permission type in active modal'))
-@then(parsers.parse('user of {browser_id} selects {permission_type} '
+@then(parsers.parse('user of {browser_id} selects "{permission_type}" '
                     'permission type in active modal'))
 def select_permission_type(selenium, browser_id, permission_type, modals):
     modals(selenium[browser_id]).edit_permissions.select(permission_type)
@@ -25,7 +25,9 @@ def select_permission_type(selenium, browser_id, permission_type, modals):
 @then(parsers.parse('user of {browser_id} sees that current permission is '
                     '"{perm}"'))
 def check_permission(selenium, browser_id, perm, modals):
-    assert modals(selenium[browser_id]).edit_permissions.posix.value == perm
+    perm_value = modals(selenium[browser_id]).edit_permissions.posix.value 
+    assert perm_value == perm, "POSIX permission value {} instead of'\
+                               ' expected {}".format(perm_value, perm)
 
 
 @when(parsers.parse('user of {browser_id} sets "{perm}" permission code in '
@@ -34,22 +36,6 @@ def check_permission(selenium, browser_id, perm, modals):
                     'active modal'))
 def set_permission(selenium, browser_id, perm, modals):
     modals(selenium[browser_id]).edit_permissions.posix.value = perm
-
-
-@when(parsers.parse('user of {browser_id} sees that "{name}" confirmation '
-                    'button in displayed modal is disabled'))
-@then(parsers.parse('user of {browser_id} sees that "{name}" confirmation '
-                    'button in displayed modal is disabled'))
-def button_in_modal_is_disabled(browser_id, name, tmp_memory):
-    modal = tmp_memory[browser_id]['window']['modal']
-    buttons = modal.find_elements_by_css_selector('button')
-    
-    for btn in buttons:
-        if btn.text.lower() == name.lower():
-            assert btn.get_attribute('disabled')
-            break
-    else:
-        raise RuntimeError('no button named {} found'.format(name))
 
 
 @when(parsers.parse('user of {browser_id} sets incorrect {num:d} char '
