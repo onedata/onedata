@@ -27,6 +27,7 @@ from tests.gui.steps.oneprovider.file_browser import *
 
 from tests.gui.steps.oneservices.cdmi import *
 
+from tests.gui.steps.oneprovider_permissions import *
 
 from tests.gui.steps.onezone_before_login import *
 from tests.gui.steps.onezone_provider_popup import *
@@ -44,7 +45,7 @@ from pytest_bdd import scenarios, scenario
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/oneprovider_2_providers_multi.feature')
-scenarios('../features/oneprovider_shares_multi.feature')
-scenarios('../features/oneprovider_group_multi.feature')
-scenarios('../features/onezone_gui_multi.feature')
+scenarios('../features/oneprovider_privileges_posix_multi.feature')
+#scenarios('../features/oneprovider_shares_multi.feature')
+#scenarios('../features/oneprovider_group_multi.feature')
+#scenarios('../features/onezone_gui_multi.feature')
