@@ -15,7 +15,7 @@ from tests.utils.space_utils import (create_space, support_space,
 from pytest_bdd import parsers, then, when
 
 
-@when(parsers.parse('{user} creates spaces {spaces}'))
+@when(parsers.re('(?P<user>\w+) creates spaces (?P<spaces>.*)'))
 def spaces_creation(user, spaces, onedata_environment, context):
     spaces = list_parser(spaces)
     user = context.get_user(user)
@@ -25,7 +25,7 @@ def spaces_creation(user, spaces, onedata_environment, context):
         user.created_spaces.update({space: space_id})
 
 
-@when(parsers.parse('{user} gets token to support spaces {spaces}'))
+@when(parsers.re('(?P<user>\w+) gets token to support spaces (?P<spaces>.*)'))
 def request_spaces_support(user, spaces, onedata_environment, context):
     spaces = list_parser(spaces)
     user = context.get_user(user)
@@ -34,7 +34,7 @@ def request_spaces_support(user, spaces, onedata_environment, context):
         user.tokens['support'].update({space: token})
 
 
-@when(parsers.parse('{space} is supported with {size} MB for {user} by provider {provider_id}'))
+@when(parsers.re('(?P<space>.*) is supported with (?P<size>.*) MB for (?P<user>\w+) by provider (?P<provider_id>.*)'))
 def support_spaces(space, user, provider_id, size, env_description_abs_path,
                    onedata_environment, context, providers):
     user = context.get_user(user)
@@ -44,8 +44,8 @@ def support_spaces(space, user, provider_id, size, env_description_abs_path,
     provider.spaces.update({space: space_id})
 
 
-@when(parsers.parse('{user1} invites {user2} to space {space}'))
-@then(parsers.parse('{user1} invites {user2} to space {space}'))
+@when(parsers.re('(?P<user1>.*) invites (?P<user2>.*) to space (?P<space>.*)'))
+@then(parsers.re('(?P<user1>.*) invites (?P<user2>.*) to space (?P<space>.*)'))
 def space_invitation(user1, user2, space, context, onedata_environment):
     user1 = context.get_user(user1)
     user2 = context.get_user(user2)
@@ -53,20 +53,20 @@ def space_invitation(user1, user2, space, context, onedata_environment):
     user2.tokens['space_invite'].update({space: token})
 
 
-@when(parsers.parse('{user} joins space {space}'))
+@when(parsers.re('(?P<user>\w+) joins space (?P<space>.*)'))
 def space_join(user, space, context, onedata_environment):
     user = context.get_user(user)
     join_space(user, space)
 
 
-@when(parsers.parse('{user1} removes {user2} from space {space}'))
+@when(parsers.re('(?P<user1>.*) removes (?P<user2>.*) from space (?P<space>.*)'))
 def removing_user_from_space(user1, user2, space, context, onedata_environment):
     user1 = context.get_user(user1)
     user2 = context.get_user(user2)
     remove_user(user1, user2, space)
 
 
-@when(parsers.parse('{user} deletes space {space}'))
+@when(parsers.re('(?P<user>\w+) deletes space (?P<space>.*)'))
 def deleting_space(user, space, context, onedata_environment):
     user = context.get_user(user)
     delete_space(user, space)
@@ -75,7 +75,7 @@ def deleting_space(user, space, context, onedata_environment):
         del user.created_spaces[space]
 
 
-@when(parsers.parse('{user1} assigns {user2} privileges {privileges} for space {space}'))
+@when(parsers.re('(?P<user1>.*) assigns (?P<user2>.*) privileges (?P<privileges>.*) for space (?P<space>.*)'))
 def assigning_privileges(user1, user2, privileges, space, context):
     user1 = context.get_user(user1)
     user2 = context.get_user(user2)
@@ -83,7 +83,7 @@ def assigning_privileges(user1, user2, privileges, space, context):
     assign_privileges(user1, user2, privileges, space)
 
 
-@when(parsers.parse('provider {provider_id} unsupports space {space}'))
+@when(parsers.re('provider (?P<provider_id>.*) unsupports space (?P<space>.*)'))
 def stop_supporting_space(provider_id, space, providers, context):
 
     provider = providers[provider_id]

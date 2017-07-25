@@ -14,7 +14,7 @@ from environment import docker
 from pytest_bdd import given, parsers
 
 
-@given(parsers.parse("users {users} register with passwords {passwords}"))
+@given(parsers.re("users (?P<users>.*) register with passwords (?P<passwords>.*)"))
 def register_users(users, passwords, context, onedata_environment, request):
     set_dns(onedata_environment)
     users = list_parser(users)
@@ -41,7 +41,7 @@ def register_users(users, passwords, context, onedata_environment, request):
     return users
 
 
-@given(parsers.parse('users {users} authorize with {provider_ids} certs'))
+@given(parsers.re('users (?P<users>.*) authorize with (?P<provider_ids>.*) certs'))
 def provider_certs(users, provider_ids, context, providers):
 
     users = context.get_users(list_parser(users))
@@ -52,7 +52,7 @@ def provider_certs(users, provider_ids, context, providers):
         user.get_certs_from_provider()
 
 
-@given(parsers.parse('users {users} get their ids from OZ via REST'))
+@given(parsers.re('users (?P<users>.*) get their ids from OZ via REST'))
 def user_ids(users, context):
     users = context.get_users(list_parser(users))
 

@@ -1,5 +1,5 @@
 """
-Definitions of fixtures used in web GUI acceptance tests.
+Definitions of fixtures used in acceptance mixed tests.
 """
 __author__ = "Michal Stanisz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"

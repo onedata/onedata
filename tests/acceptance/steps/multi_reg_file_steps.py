@@ -16,7 +16,7 @@ from tests.utils.client_utils import (cp, truncate, dd, md5sum, write, read,
                                       escape_path)
 
 
-@when(parsers.parse('{user_name} writes "{data}" at offset {offset} to {file} on {client_node}'))
+@when(parsers.re('(?P<user_name>.*) writes "(?P<data>.*)" at offset (?P<offset>.*) to (?P<file>.*) on (?P<client_node>.*)'))
 def write_at_offset(user_name, data, offset, file, client_node, context):
     user = context.get_user(user_name)
     client = user.get_client(client_node)
@@ -31,8 +31,8 @@ def write_at_offset(user_name, data, offset, file, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user_name} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))
-@then(parsers.parse('{user_name} writes {megabytes} MB of random characters to {file} on {client_node} and saves MD5'))
+@when(parsers.re('(?P<user_name>.*) writes (?P<megabytes>.*) MB of random characters to (?P<file>.*) on (?P<client_node>.*) and saves MD5'))
+@then(parsers.re('(?P<user_name>.*) writes (?P<megabytes>.*) MB of random characters to (?P<file>.*) on (?P<client_node>.*) and saves MD5'))
 def write_rand_text(user_name, megabytes, file, client_node, context):
     user = context.get_user(user_name)
     client = user.get_client(client_node)
@@ -59,8 +59,8 @@ def count_md5(user_name, file_path, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} writes "{text}" to previously opened {file} on {client_node}'))
-@then(parsers.parse('{user} writes "{text}" to previously opened {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) writes "(?P<text>.*)" to previously opened (?P<file>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) writes "(?P<text>.*)" to previously opened (?P<file>.*) on (?P<client_node>.*)'))
 def write_opened(user, text, file, client_node, context):
     client = context.get_client(user, client_node)
     file_path = client.absolute_path(file)
@@ -70,14 +70,14 @@ def write_opened(user, text, file, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
-@then(parsers.parse('{user} writes "{text}" to {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) writes "(?P<text>.*)" to (?P<file>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) writes "(?P<text>.*)" to (?P<file>.*) on (?P<client_node>.*)'))
 def write_text(user, text, file, client_node, context):
     write_text_base(user, text, file, client_node, context)
 
 
-@when(parsers.parse('{user} fails to write "{text}" to {file} on {client_node}'))
-@then(parsers.parse('{user} fails to write "{text}" to {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to write "(?P<text>.*)" to (?P<file>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to write "(?P<text>.*)" to (?P<file>.*) on (?P<client_node>.*)'))
 def write_text_fail(user, text, file, client_node, context):
     write_text_base(user, text, file, client_node, context, should_fail=True)
 
@@ -93,21 +93,26 @@ def write_text_base(user, text, file, client_node, context, should_fail=False):
     assert_generic(client.perform, should_fail, condition, timeout=0)
 
 
-@when(parsers.parse('{user} reads "{text}" from previously opened file {file} on {client_node}'))
-@then(parsers.parse('{user} reads "{text}" from previously opened file {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) reads "(?P<text>.*)" from previously '
+                 'opened file (?P<file>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) reads "(?P<text>.*)" from previously '
+                 'opened file (?P<file>.*) on (?P<client_node>.*)'))
 def read_opened(user, text, file, client_node, context):
     client = context.get_client(user, client_node)
     text = text.decode('string_escape')
 
     def condition():
         read_text = read_from_opened_file(client, client.absolute_path(file))
+
         assert read_text == text
 
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} sets current file position in {file} at offset {offset} on {client_node}'))
-@then(parsers.parse('{user} sets current file position in {file} at offset {offset} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) sets current file position in (?P<file>.*) at '
+                 'offset (?P<offset>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) sets current file position in (?P<file>.*) at '
+                 'offset (?P<offset>.*) on (?P<client_node>.*)'))
 def set_file_position(user, file, offset, client_node, context):
     client = context.get_client(user, client_node)
     file_path = client.absolute_path(file)
@@ -118,8 +123,10 @@ def set_file_position(user, file, offset, client_node, context):
     assert_(client.perform, condition, timeout=0)
 
 
-@when(parsers.parse('{user} reads "{text}" from file {file} on {client_node}'))
-@then(parsers.parse('{user} reads "{text}" from file {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) reads "(?P<text>.*)" from file (?P<file>.*) '
+                 'on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) reads "(?P<text>.*)" from file (?P<file>.*) '
+                 'on (?P<client_node>.*)'))
 def read_text(user, text, file, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -132,13 +139,13 @@ def read_text(user, text, file, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} reads "" from file {file} on {client_node}'))
-@then(parsers.parse('{user} reads "" from file {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) reads "" from file (?P<file>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) reads "" from file (?P<file>.*) on (?P<client_node>.*)'))
 def read_empty(user, file, client_node, context):
     read_text(user, '', file, client_node, context)
 
 
-@then(parsers.parse('{user} cannot read from {file} on {client_node}'))
+@then(parsers.re('(?P<user>\w+) cannot read from (?P<file>.*) on (?P<client_node>.*)'))
 def cannot_read(user, file, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -150,7 +157,7 @@ def cannot_read(user, file, client_node, context):
     assert_false(client.perform, condition)
 
 
-@when(parsers.parse('{user} appends "{text}" to {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) appends "(?P<text>.*)" to (?P<file>.*) on (?P<client_node>.*)'))
 def append(user, text, file, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -162,7 +169,7 @@ def append(user, text, file, client_node, context):
     assert_(client.perform, condition, timeout=0)
 
 
-@when(parsers.parse('{user} replaces "{text1}" with "{text2}" in {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) replaces "(?P<text1>.*)" with "(?P<text2>.*)" in (?P<file>.*) on (?P<client_node>.*)'))
 def replace(user, text1, text2, file, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -175,14 +182,14 @@ def replace(user, text1, text2, file, client_node, context):
     assert_(client.perform, condition, timeout=0)
 
 
-@when(parsers.parse('{user} executes {script} on {client_node}'))
-@then(parsers.parse('{user} executes {script} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) executes (?P<script>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) executes (?P<script>.*) on (?P<client_node>.*)'))
 def execute_script(user, script, client_node, context):
     execute_script_base(user, script, client_node, context)
 
 
-@when(parsers.parse('{user} fails to execute {script} on {client_node}'))
-@then(parsers.parse('{user} fails to execute {script} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to execute (?P<script>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to execute (?P<script>.*) on (?P<client_node>.*)'))
 def execute_script_fail(user, script, client_node, context):
     execute_script_base(user, script, client_node, context, should_fail=True)
 
@@ -198,8 +205,8 @@ def execute_script_base(user, script, client_node, context, should_fail=False):
     assert_generic(client.perform, should_fail, condition, timeout=0)
 
 
-@when(parsers.parse('{user} checks MD5 of {file} on {client_node}'))
-@then(parsers.parse('{user} checks MD5 of {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) checks MD5 of (?P<file>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) checks MD5 of (?P<file>.*) on (?P<client_node>.*)'))
 def check_md5(user, file, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -211,7 +218,7 @@ def check_md5(user, file, client_node, context):
     assert_(client.perform, condition)
 
 
-@when(parsers.parse('{user} copies regular file {file} to {path} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) copies regular file (?P<file>.*) to (?P<path>.*) on (?P<client_node>.*)'))
 def copy_reg_file(user, file, path, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
@@ -224,14 +231,14 @@ def copy_reg_file(user, file, path, client_node, context):
     assert_(client.perform, condition, timeout=0)
 
 
-@when(parsers.parse('{user} changes {file} size to {new_size} bytes on {client_node}'))
-@then(parsers.parse('{user} changes {file} size to {new_size} bytes on {client_node}'))
+@when(parsers.re('(?P<user>\w+) changes (?P<file>.*) size to (?P<new_size>.*) bytes on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) changes (?P<file>.*) size to (?P<new_size>.*) bytes on (?P<client_node>.*)'))
 def do_truncate(user, file, new_size, client_node, context):
     do_truncate_base(user, file, new_size, client_node, context)
 
 
-@when(parsers.parse('{user} fails to change {file} size to {new_size} bytes on {client_node}'))
-@then(parsers.parse('{user} fails to change {file} size to {new_size} bytes on {client_node}'))
+@when(parsers.re('(?P<user>\w+) fails to change (?P<file>.*) size to (?P<new_size>.*) bytes on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) fails to change (?P<file>.*) size to (?P<new_size>.*) bytes on (?P<client_node>.*)'))
 def do_truncate_fail(user, file, new_size, client_node, context):
     do_truncate_base(user, file, new_size, client_node, context, should_fail=True)
 
@@ -247,13 +254,13 @@ def do_truncate_base(user, file, new_size, client_node, context, should_fail=Fal
     assert_generic(client.perform, should_fail, condition, timeout=0)
 
 
-@when(parsers.parse('{user} performs command "{command}" in {path} directory on {client_node}'))
-@then(parsers.parse('{user} performs command "{command}" in {path} directory on {client_node}'))
+@when(parsers.re('(?P<user>\w+) performs command "(?P<command>.*)" in (?P<path>.*) directory on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) performs command "(?P<command>.*)" in (?P<path>.*) directory on (?P<client_node>.*)'))
 def run_cmd_in_directory(user, command, path, client_node, context):
     user = context.get_user(user)
     client = user.get_client(client_node)
     abs_path = client.absolute_path(path)
-    cmd = 'cd {path} && {command}'.format(path=escape_path(abs_path),
+    cmd = 'cd (?P<path>.*) && (?P<command>.*)'.format(path=escape_path(abs_path),
                                           command=command)
 
     def condition():
@@ -262,8 +269,8 @@ def run_cmd_in_directory(user, command, path, client_node, context):
     assert_(client.perform, condition, timeout=0)
 
 
-@when(parsers.parse('{user} opens {file} with mode {mode} on {client_node}'))
-@then(parsers.parse('{user} opens {file} with mode {mode} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) opens (?P<file>.*) with mode (?P<mode>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) opens (?P<file>.*) with mode (?P<mode>.*) on (?P<client_node>.*)'))
 def open(user, file, mode, client_node, context):
     client = context.get_client(user, client_node)
     file_path = client.absolute_path(file)
@@ -271,8 +278,8 @@ def open(user, file, mode, client_node, context):
     client.opened_files.update({file_path: f})
 
 
-@when(parsers.parse('{user} closes {file} on {client_node}'))
-@then(parsers.parse('{user} closes {file} on {client_node}'))
+@when(parsers.re('(?P<user>\w+) closes (?P<file>.*) on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) closes (?P<file>.*) on (?P<client_node>.*)'))
 def close(user, file, client_node, context):
     client = context.get_client(user, client_node)
     file_path = client.absolute_path(file)
