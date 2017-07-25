@@ -169,11 +169,8 @@ test_performance_files_creation:
 test_performance_concurrent_files_creation:
 	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k concurrent_files_creation
 
-test_gui_firefox:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
-
-test_gui_chrome:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
+test_gui:
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui/scenarios/${SUITE}.py -i onedata/gui_builder:latest --driver=${BROWSER} --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=${RECORDING_OPTION}
 
 test_gui_packages:
 	./test_run_gui.py --env=getting_started -t tests/gui/scenarios/${SUITE}.py --test-type gui -vvv --driver=${BROWSER} -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=${RECORDING_OPTION}

@@ -27,6 +27,7 @@ from tests.gui.steps.onepanel.provider import *
 from tests.gui.steps.onepanel.common import *
 from tests.gui.steps.onepanel.deployment import *
 from tests.gui.steps.onepanel.spaces import *
+from tests.gui.steps.onepanel.storages import *
 
 from tests.gui.steps.onezone.logged_in_common import *
 from tests.gui.steps.onezone.user_alias import *
@@ -55,5 +56,6 @@ def screens():
 
 
 scenarios('../features/onepanel/deployment.feature')
+scenarios('../features/onepanel/storages.feature')
 scenarios('../features/onepanel/provider.feature')
 scenarios('../features/onepanel/spaces.feature')

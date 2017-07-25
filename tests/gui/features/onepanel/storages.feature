@@ -1,18 +1,21 @@
-Feature: Storage utilities using onepanel
+Feature: Storage management using onepanel
+
 
   Background:
-    Given users opened [browser1, browser2] browsers' windows
+    Given initial users configuration in "z1" Onezone service:
+            - user1
+
+    And users opened [browser1, browser2] browsers' windows
     And users of [browser1, browser2] opened [p1 provider panel, z1 onezone] page
-    And user of browser1 entered credentials for admin in login form
-    And users of browser1 pressed Sign in button
+    And user of browser1 logged as admin to Onepanel service
     And user of browser2 seen Z1 zone name in oz login page
-    And user of browser2 entered credentials of admin in login form in oz login page
-    And user of browser2 clicked on the Sign in button in oz login page
+    And user of browser2 logged as user1 to Onezone service
+    And directory tree structure on local file system:
+          browser2:
+              - dir1: 70
 
 
   Scenario: User uploads files on freshly supported space on newly created storage
-    Given user of browser2 has 70 files in directory named "my_files"
-
     # create new_storage POSIX storage
     When user of browser1 clicks on Storages item in submenu of "p1" item in CLUSTERS sidebar in Onepanel
     And user of browser1 clicks on Add storage button in storages page in Onepanel
@@ -27,10 +30,8 @@ Feature: Storage utilities using onepanel
 
     # create space
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
-    And user of browser2 sees that there is no space named "hello_world2" in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 clicks on "Create new space" button in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 focuses on activated edit box for creating new space in expanded "DATA SPACE MANAGEMENT" Onezone panel
-    And user of browser2 types "hello_world2" in active edit box
+    And user of browser2 types "hello_world2" to space creation edit box in expanded "DATA SPACE MANAGEMENT" Onezone panel
     And user of browser2 presses enter on keyboard
     And user of browser2 sees that space named "hello_world2" has appeared in expanded "DATA SPACE MANAGEMENT" Onezone panel
 
@@ -55,7 +56,7 @@ Feature: Storage utilities using onepanel
     And user of browser1 sees that space support record for "hello_world2" has appeared in Spaces page in Onepanel
 
     # confirm support of space
-    And user of browser2 is idle for 10 seconds
+    And user of browser2 is idle for 2 seconds
     And user of browser2 refreshes site
     And user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
     And user of browser2 expands submenu of space named "hello_world2" by clicking on space record in expanded "DATA SPACE MANAGEMENT" Onezone panel
@@ -77,24 +78,6 @@ Feature: Storage utilities using onepanel
     And user of browser2 sees that item named "dir100" has appeared in file browser
     And user of browser2 double clicks on item named "dir100" in file browser
     And user of browser2 sees that current working directory displayed in breadcrumbs is hello_world2/dir100
-    And user of browser2 uses upload button in toolbar to upload files from local directory "my_files" to remote current dir
+    And user of browser2 uses upload button in toolbar to upload files from local directory "dir1" to remote current dir
     And user of browser2 waits for file upload to finish
     Then user of browser2 sees that there are 70 items in file browser
-
-    # TODO rm after integrating with swagger
-    # in order to change cwd to root dir change space to other than change back
-    And user of browser2 changes current working directory to / using directory tree
-    And user of browser2 sees that current working directory displayed in breadcrumbs is hello_world2
-    And user of browser2 selects "dir100" item(s) from file browser with pressed ctrl
-    And user of browser2 clicks the button from top menu bar with tooltip "Remove element"
-    And user of browser2 sees that "Remove files" modal has appeared
-    And user of browser2 clicks "Yes" confirmation button in displayed modal
-    And user of browser2 sees an info notify with text matching to: .*removed.*
-    And user of browser2 sees that the modal has disappeared
-    And user of browser2 sees that item named "dir100" has disappeared from files browser
-
-    # revoke space support
-    And user of browser1 expands toolbar for "hello_world2" space record in Spaces page in Onepanel
-    And user of browser1 clicks on Revoke space support option in space's toolbar in Onepanel
-    And user of browser1 clicks on Yes, revoke button in REVOKE SPACE SUPPORT modal in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Ss]upport.*revoked.*
