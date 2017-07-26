@@ -35,6 +35,7 @@ def performance(default_config, configs):
             error_msg = ""
 
             for config_name, config in configs.items():
+                print "Running {}".format(config['description'])
 
                 merged_config = update_dict(default_config, config)
                 config_report = ConfigReport(config_name,
@@ -52,16 +53,18 @@ def performance(default_config, configs):
                 successful_repeats = 0
                 failed_details = {}
                 while repeats < max_repeats:
+                    print "\trun {}/{}".format(repeats, max_repeats)
 
                     try:
                         test_results = test_function(self, context, clients,
                                                      merged_config
                                                      .get('parameters', {}))
                     except Exception as e:
-                        print "Testcase failed beceause of: ", str(e)
+                        print "\t\tTestcase failed beceause of: ", str(e)
                         failed_repeats += 1
                         failed_details[str(repeats)] = str(e)
                     else:
+                        print "\t\tPASSED"
                         test_results = ensure_list(test_results)
                         test_result_report.add_single_test_results(test_results,
                                                                    repeats)
@@ -253,10 +256,9 @@ def generate_configs(params, description_skeleton):
     """
     keys = params.keys()
     configs = {}
-    i = 0
     combinations = itertools.product(*params.values())
 
-    for combination in combinations:
+    for i, combination in enumerate(combinations):
         conf_name = 'config{}'.format(i)
         configs[conf_name] = dict()
         new_params = dict(zip(keys, combination))
@@ -267,7 +269,6 @@ def generate_configs(params, description_skeleton):
             'parameters': new_params,
             'description': description
         })
-        i += 1
     return configs
 
 

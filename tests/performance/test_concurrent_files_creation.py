@@ -20,6 +20,7 @@ from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 
 REPEATS = 1
 SUCCESS_RATE = 100
+LOGGING_INTERVAL = 2 * 60
 
 # value written to files at their creation
 TEXT = "asd"
@@ -114,10 +115,13 @@ def _execute_test(client, files_number, empty_files, threads_num,
         i = j
 
     start = time.time()
+    logging_time = start + LOGGING_INTERVAL
 
     for worker in workers:
         worker.start()
 
+    print ("\t\t\tStarted {} workers with avg {} file creation task each"
+           "".format(len(workers), avg_work))
     while workers:
         try:
             ex = queue.get(timeout=5)
@@ -125,6 +129,10 @@ def _execute_test(client, files_number, empty_files, threads_num,
             workers = [worker for worker in workers if worker.is_alive()]
         else:
             raise ex
+        finally:
+            if time.time() >= logging_time:
+                print "\t\t\t{}nth workers alive".format(len(workers))
+                logging_time = time.time() + LOGGING_INTERVAL
 
     if not queue.empty():
         raise queue.get()
