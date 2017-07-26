@@ -1,3 +1,10 @@
+"""Test suite for tests using oneclient and browser
+"""
+__author__ = "Michal Cwiertnia"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 from pytest_bdd import scenarios
 from tests.acceptance.steps.multi_dir_steps import *
 from tests.acceptance.steps.multi_auth_steps import *
@@ -40,4 +47,4 @@ from tests.gui.steps.oneprovider_sidebar_list import *
 
 
 scenarios('../features/oneprovider_directories_multiclient.feature')
-# scenarios('../features/oneprovider_files_multiclient.feature')
+scenarios('../features/oneprovider_files_multiclient.feature')
