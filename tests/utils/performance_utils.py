@@ -53,7 +53,7 @@ def performance(default_config, configs):
                 successful_repeats = 0
                 failed_details = {}
                 while repeats < max_repeats:
-                    print "\trun {}/{}".format(repeats, max_repeats)
+                    print "\trun {}/{}".format(repeats+1, max_repeats)
 
                     try:
                         test_results = test_function(self, context, clients,
