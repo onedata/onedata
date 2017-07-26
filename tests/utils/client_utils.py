@@ -221,6 +221,10 @@ def ls(client, path="."):
     return client.rpyc_connection.modules.os.listdir(path)
 
 
+def osrename(client, src, dest):
+    client.rpyc_connection.modules.os.rename(src, dest)
+
+
 def mv(client, src, dest):
     client.rpyc_connection.modules.shutil.move(src, dest)
 

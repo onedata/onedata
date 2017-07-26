@@ -131,7 +131,12 @@
                     "mounting_path": "/home/user1/onedata",
                     "token_for": "user1",
                     "default_timeout": 10
-                },
+                }
+            }
+        },
+        "client-host2": {
+            "os_config": "cfg1",
+            "clients": {
                 "client2": {
                     "name": "client2",
                     "op_domain": "p1",

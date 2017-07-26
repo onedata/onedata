@@ -9,7 +9,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from tests.utils.acceptance_utils import *
 from tests.utils.utils import assert_generic, assert_
-from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch, create_file
+from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch, create_file, osrename
 from tests.utils.docker_utils import run_cmd
 
 import os
@@ -174,7 +174,7 @@ def shell_move_base(user, file1, file2, client_node, context, should_fail=False)
 @then(parsers.re('(?P<user>\w+) renames (?P<file1>.*) to (?P<file2>.*)'
                  ' on (?P<client_node>.*)'))
 def rename(user, file1, file2, client_node, context):
-    rename_base(user, file1, file2, client_node, context)
+    mv_base(user, file1, file2, client_node, context)
 
 
 @when(parsers.re('(?P<user>\w+) fails to rename (?P<file1>.*) to '
@@ -186,6 +186,18 @@ def rename_fail(user, file1, file2, client_node, context):
 
 
 def rename_base(user, file1, file2, client_node, context, should_fail=False):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    src = client.absolute_path(file1)
+    dest = client.absolute_path(file2)
+
+    def condition():
+        osrename(client, src, dest)
+
+    assert_generic(client.perform, should_fail, condition)
+
+
+def mv_base(user, file1, file2, client_node, context, should_fail=False):
     user = context.get_user(user)
     client = user.get_client(client_node)
     src = client.absolute_path(file1)

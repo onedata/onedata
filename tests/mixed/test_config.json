@@ -1,3 +1,4 @@
 {
-    "test_oneprovider_directories": ["singleprovider_multiclient"]
+    "test_oneprovider_data": ["singleprovider_multiclient"],
+    "test_oneprovider_data_multiclient": ["singleprovider_multiclient"]
 }
