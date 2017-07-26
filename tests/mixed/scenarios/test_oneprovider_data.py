@@ -2,7 +2,7 @@
 """
 __author__ = "Michal Stanisz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
-__license__ = "This software is released uner the MIT license cited in " \
+__license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 from pytest_bdd import scenarios
@@ -11,7 +11,7 @@ from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.auth_steps import *
 from tests.acceptance.steps.dir_steps import *
 from tests.acceptance.steps.file_steps import *
-from tests.acceptance.steps.file_steps import *
+from tests.acceptance.steps.reg_file_steps import *
 from tests.utils.acceptance_utils import *
 
 from tests.gui.steps.common import *
@@ -45,5 +45,5 @@ from tests.gui.steps.oneprovider_metadata import *
 from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
-
 scenarios('../features/oneprovider_directories.feature')
+scenarios('../features/oneprovider_files.feature')
