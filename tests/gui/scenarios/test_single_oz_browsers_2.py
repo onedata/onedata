@@ -45,8 +45,8 @@ from pytest_bdd import scenarios, scenario
 
 
 # --- FEATURES: all non-destructive (does not change state) ---
-#scenarios('../features/oneprovider_2_providers_multi.feature')
+scenarios('../features/oneprovider_2_providers_multi.feature')
 scenarios('../features/oneprovider_privileges_posix_multi.feature')
-#scenarios('../features/oneprovider_shares_multi.feature')
-#scenarios('../features/oneprovider_group_multi.feature')
-#scenarios('../features/onezone_gui_multi.feature')
+scenarios('../features/oneprovider_shares_multi.feature')
+scenarios('../features/oneprovider_group_multi.feature')
+scenarios('../features/onezone_gui_multi.feature')
