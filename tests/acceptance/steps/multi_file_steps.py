@@ -291,7 +291,7 @@ def shell_check_type(user, file, file_type, client_node, context):
     file_path = client.absolute_path(file)
 
     def condition():
-        cmd = "stat --format=%F (?P<>.*)".format(file_path)
+        cmd = "stat --format=%F {}".format(file_path)
         stat_file_type = run_cmd(user.name, client, cmd, output=True)
         assert stat_file_type == file_type
 
