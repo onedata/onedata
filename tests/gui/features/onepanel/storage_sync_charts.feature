@@ -15,7 +15,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
               - dir2: 300
 
 
-  Scenario: User disables files update
+  Scenario: User configures storage sync and sees storage synchronization statistics
 
     # create space
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel

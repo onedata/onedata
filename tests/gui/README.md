@@ -13,13 +13,15 @@ GUI acceptance/BDD test can be run in few ways:
    installation or start new Onedata environment - mainly for Continuous Integration.
 2. Using ``py.test`` - to start non-headless tests on local machine - mainly for use Behaviour Driven Development
    or debugging. It also can be used to create screencasts.
+3. Using ``./test_run_gui.py`` (from onedata repo root dir) - to start headless tests inside Docker on existing Onedata
+   installation or start new Onedata environment using getting started - mainly for Continuous Integration.
 
 If in doubt, simply use: ``make test_gui`` :)
 
 1. Headless tests in Docker (CI)
 --------------------------------
 
-### Headless with automatic environment set up
+### Headless with automatic env_up environment set up
 
 Using this method, the Onedata environment will be set up automatically with OZ and OP (for details see ``environments``
 dir with configurations). Setting up environment can take some time.
@@ -41,6 +43,18 @@ Used parameters:
 * ``--xvfb-recording=<all|none|failed>`` - optional, record all or none or failed tests as movies and save them to <logdir>/movies
 * ``--no-mosaic-filter`` - optional, if set videos of tests using multiple browsers will be recorded as different video for each browser (mosaic video created by default) 
 
+
+### Headless with automatic getting_started environment set up
+
+```
+./test_run_gui.py --env=getting_started -t tests/gui --test-type gui -vvv --driver=Chrome -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=failed
+```
+
+Used parameters:
+
+* ``--env=getting_started`` - set up new getting started environment
+
+
 ### Headless using existing Onedata installation
 
 Using this method, the tests will be run using URL provided with ``--base-url=<url>`` parameter,
@@ -49,12 +63,17 @@ The URL should be a main application address of Onezone.
 
 Example: (invoke from onedata repo root dir)
 ```
-./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://oz.1485165366.dev --self-contained-html
+./test_run.py -t tests/gui -i onedata/gui_builder:latest --test-type gui --driver=Firefox --copy-etc-hosts --base-url=https://oz.1485165366.dev --self-contained-html --onezone-host z1 172.19.0.2 --oneprovider-host p1 172.19.0.3 --oz-panel-host z1 172.19.0.2:9443 --op-panel-host p1 172.19.0.3:9443
 ```
 
 New parameters:
 
 * ``--copy-etc-hosts`` - optional, use if want to copy local contents of ``/etc/hosts`` file to docker, because some domains are defined locally
+* ``--onezone-host z1 172.19.0.2`` - alias and ip of zone service
+* ``--oneprovider-host p1 172.19.0.3`` - alias and ip of provider service
+* ``--oz-panel-host z1 172.19.0.2:9443`` - alias and ip of zone onepanel service
+* ``--op-panel-host p1 172.19.0.3:9443`` - alias and ip of provider panel service
+
 
 2. Non-headless using local machine (BDD)
 -----------------------------------------------------
@@ -76,7 +95,7 @@ A browser selected for tests (with ``--driver``) should be also installed.
 
 Example: (invoke from onedata repo root dir)
 ```
-py.test --test-type=gui tests/gui --driver=Firefox --base-url=https://veilfsdev.com --self-contained-html
+py.test --test-type=gui tests/gui --driver=Firefox --base-url=https://veilfsdev.com --self-contained-html --onezone-host z1 172.19.0.2 --oneprovider-host p1 172.19.0.3 --oz-panel-host z1 172.19.0.2:9443 --op-panel-host p1 172.19.0.3:9443
 ```
 
 

@@ -12,8 +12,9 @@ import yaml
 
 from pytest_bdd import when, then, parsers
 
-from tests.gui.conftest import WAIT_FRONTEND, WAIT_BACKEND
-from tests.gui.utils.generic import repeat_failed, transform
+from tests.gui.conftest import (WAIT_FRONTEND, WAIT_BACKEND,
+                                SELENIUM_IMPLICIT_WAIT)
+from tests.gui.utils.generic import repeat_failed, transform, implicit_wait
 
 
 @when(parsers.parse('user of {browser_id} selects "{storage}" from storage '
@@ -37,9 +38,13 @@ def wt_select_storage_in_support_space_form(selenium, browser_id,
                     'already supported'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def wt_click_on_support_space_btn_on_condition(selenium, browser_id, onepanel):
-    spaces_page = onepanel(selenium[browser_id]).content.spaces
-    if spaces_page.spaces.count() > 0:
-        spaces_page.support_space()
+    driver = selenium[browser_id]
+    # set implicit wait in case spaces list take time to load,
+    # otherwise one can miss it and not click the button
+    with implicit_wait(driver, 1, SELENIUM_IMPLICIT_WAIT):
+        spaces_page = onepanel(driver).content.spaces
+        if spaces_page.spaces.count() > 0:
+            spaces_page.support_space()
 
 
 @when(parsers.re('user of (?P<browser_id>.+?) selects (?P<btn>MB|GB|TB) radio '

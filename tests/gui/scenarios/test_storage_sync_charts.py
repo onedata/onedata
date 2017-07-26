@@ -1,5 +1,5 @@
-"""This module contains tests suite for storage sync management in
-Onepanel GUI and multiple browser instances.
+"""This module contains tests suite for storage sync statistics
+management in Onepanel GUI and multiple browser instances.
 """
 
 __author__ = "Bartosz Walkowicz"
@@ -62,4 +62,4 @@ def test_cluster_deployment():
     pass
 
 
-scenarios('../features/onepanel/storage_sync.feature')
+scenarios('../features/onepanel/storage_sync_charts.feature')

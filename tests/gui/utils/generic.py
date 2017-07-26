@@ -1,27 +1,23 @@
 """Generic GUI testing utils - mainly helpers and extensions for Selenium.
 """
 
+__author__ = "Jakub Liput, Bartosz Walkowicz"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
 
 import re
 import os
 from time import sleep, time
 from itertools import islice, izip
 from contextlib import contextmanager
-from urllib3.util import make_headers
 
 from decorator import decorator
 
 from tests import gui
-from tests.gui.conftest import SELENIUM_IMPLICIT_WAIT, WAIT_REFRESH
-from selenium.webdriver.support.wait import WebDriverWait as Wait
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
-
-
-__author__ = "Jakub Liput, Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 # RE_URL regexp is matched as shown below:
@@ -54,21 +50,6 @@ def parse_seq(seq, pattern=None, default=str):
                 for el in seq.strip("[]").split(',') if el != ""]
 
 
-# A draft - not tested yet, but can be helpful in the future
-def change_implicit_wait(driver, fun, wait_time):
-    """This will invoke fun(driver), chaining implicitly_wait for time of execution
-    WARNING: this will change implicit_wait time on global selenium object!
-    Returns the result of fun invocation
-    """
-    try:
-        driver.implicitly_wait(wait_time)
-        result = fun(driver)
-    finally:
-        driver.implicitly_wait(SELENIUM_IMPLICIT_WAIT)
-
-    return result
-
-
 def upload_file_path(file_name):
     """Resolve an absolute path for file with name file_name stored in upload_files dir
     """
@@ -77,21 +58,6 @@ def upload_file_path(file_name):
         'upload_files',
         file_name
     )
-
-
-def refresh_and_call(browser, callback, *args, **kwargs):
-    """Refresh browser and keep calling callback with given args
-    until achieve expected result or timeout.
-    """
-    browser.refresh()
-    try:
-        result = Wait(browser, WAIT_REFRESH).until(
-            lambda s: callback(s, *args, **kwargs)
-        )
-    except TimeoutException:
-        return None
-    else:
-        return result
 
 
 def enter_text(input_box, text):
@@ -228,7 +194,3 @@ def redirect_display(new_display):
 
 def transform(val):
     return val.strip().lower().replace(' ', '_')
-
-
-def get_basic_auth_token(username, password):
-    return make_headers(basic_auth=username + ':' + password).get('authorization')
