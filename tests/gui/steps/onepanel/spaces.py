@@ -235,15 +235,14 @@ def wt_expand_space_item_in_spaces_page_op_panel(selenium, browser_id,
     onepanel(selenium[browser_id]).content.spaces.spaces[space].expand()
 
 
-@when(parsers.re('user of (?P<browser_id>.*?) sees that '
-                 '(?P<conf>Import|Update) strategy configuration '
-                 'for "(?P<space>.*?)" is as follow:\n(?P<values>.*)'))
-@then(parsers.re('user of (?P<browser_id>.*?) sees that '
-                 '(?P<conf>Import|Update) strategy configuration '
-                 'for "(?P<space>.*?)" is as follow:\n(?P<values>.*)'))
+@when(parsers.parse('user of {browser_id} sees that {sync_type} strategy '
+                    'configuration for "{space_name}" is as follow:\n{conf}'))
+@then(parsers.parse('user of {browser_id} sees that {sync_type} strategy '
+                    'configuration for "{space_name}" is as follow:\n{conf}'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def wt_assert_proper_space_configuration_in_panel(selenium, browser_id, conf,
-                                                  space, values, onepanel):
+def wt_assert_proper_space_configuration_in_panel(selenium, browser_id,
+                                                  sync_type, space_name,
+                                                  conf, onepanel):
     """Assert configuration displayed in space record in panel.
 
     conf should be in yaml format exactly as seen in panel, e.g.
@@ -255,13 +254,14 @@ def wt_assert_proper_space_configuration_in_panel(selenium, browser_id, conf,
         Delete enabled: false
 
     """
-    info = onepanel(selenium[browser_id]).content.spaces.spaces[space].info
-    displayed_conf = getattr(info, conf.lower() + '_strategy')
-    for attr, val in yaml.load(values).items():
+    info = onepanel(selenium[browser_id]).content.spaces.spaces[space_name].info
+    displayed_conf = getattr(info, sync_type.lower() + '_strategy')
+    for attr, val in yaml.load(conf).items():
         displayed_val = displayed_conf[attr]
-        assert val.lower() == displayed_val.lower(), \
-            'Displayed {} as {} instead of expected {} in {} of ' \
-            '"{}" configuration'.format(displayed_val, attr, val, conf, space)
+        assert str(val).lower() == displayed_val.lower(), \
+            ('Displayed {} as {} instead of expected {} in {} strategy of '
+             '"{}" configuration'.format(displayed_val, attr, val,
+                                         sync_type, space_name))
 
 
 @when(parsers.parse('user of {browser_id} copies Id of "{space}" space '
@@ -320,3 +320,25 @@ def wt_clicks_on_btn_in_revoke_space_support(selenium, browser_id,
         modal.yes()
     else:
         modal.no()
+
+
+@when(parsers.re(r'user of (?P<browser_id>.*?) sees that number of '
+                 r'(?P<bar_type>inserted|updated|deleted) files for '
+                 r'"(?P<space_name>.*?)" shown on Synchronization files '
+                 r'processing charts equals (?P<num>\d+) '
+                 r'in Spaces page in Onepanel'))
+@then(parsers.re(r'user of (?P<browser_id>.*?) sees that number of '
+                 r'(?P<bar_type>inserted|updated|deleted) files for '
+                 r'"(?P<space_name>.*?)" shown on Synchronization files '
+                 r'processing charts equals (?P<num>\d+) '
+                 r'in Spaces page in Onepanel'))
+@repeat_failed(timeout=WAIT_FRONTEND)
+def assert_correct_number_displayed_on_sync_charts(selenium, browser_id,
+                                                   bar_type, space_name,
+                                                   onepanel, num):
+    num = int(num)
+    record = onepanel(selenium[browser_id]).content.spaces.spaces[space_name]
+    displayed_num = getattr(record.sync_chart, bar_type)
+    assert displayed_num == num, \
+        ('displayed {} as number of {} files on sync chart instead of '
+         'expected {}'.format(displayed_num, bar_type, num))

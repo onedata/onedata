@@ -13,7 +13,8 @@ from tests.gui.utils.common.common import Toggle, DropdownSelector
 from tests.gui.utils.core.base import PageObject, ExpandableMixin
 from tests.gui.utils.core.web_elements import (Label, NamedButton, Button,
                                                Input, WebItem, WebElement,
-                                               WebItemsSequence)
+                                               WebItemsSequence,
+                                               WebElementsSequence)
 from tests.gui.utils.core.web_objects import ButtonWithTextPageObject
 
 
@@ -87,10 +88,33 @@ class SpaceInfo(PageObject):
                 in zip(items[::2], items[1::2])}
 
 
+class SyncChart(PageObject):
+    _inserted = WebElementsSequence('g.ct-series-0 line')
+    _updated = WebElementsSequence('g.ct-series-1 line')
+    _deleted = WebElementsSequence('g.ct-series-2 line')
+
+    @property
+    def inserted(self):
+        return self._get_chart_bar_values(self._inserted)
+
+    @property
+    def updated(self):
+        return self._get_chart_bar_values(self._inserted)
+
+    @property
+    def deleted(self):
+        return self._get_chart_bar_values(self._inserted)
+
+    @staticmethod
+    def _get_chart_bar_values(bars):
+        return sum(int(bar.get_attribute('ct:value')) for bar in bars)
+
+
 class SpaceRecord(PageObject, ExpandableMixin):
     name = id = Label('.item-icon-container + .one-label')
     toolbar = Button('.collapsible-toolbar-toggle')
     info = WebItem('.space-info', cls=SpaceInfo)
+    sync_chart = WebItem('.space-sync-chart-base', cls=SyncChart)
 
     _toggle = WebElement('.one-collapsible-list-item-header')
 

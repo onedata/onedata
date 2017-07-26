@@ -63,3 +63,4 @@ def test_cluster_deployment():
 
 
 scenarios('../features/onepanel/storage_sync.feature')
+scenarios('../features/onepanel/storage_sync_charts.feature')
