@@ -98,7 +98,6 @@ Feature: Provider management in Onepanel GUI
     And user of browser1 sees that "onestorage" Mount point is /volumes/storage in step 3 of deployment process in Onepanel
 
     And user of browser1 clicks on Finish button in step 3 of deployment process in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Ss]torage.*added.*
     And user of browser1 clicks on Manage the cluster button in last step of deployment process in Onepanel
     Then user of browser1 sees that [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options are enabled for .*oneprovider.* host in Nodes page in Onepanel
     And user of browser1 sees that [Database, Cluster Worker, Cluster Manager, Primary Cluster Manager] options cannot be changed for .*oneprovider.* host in Nodes page in Onepanel

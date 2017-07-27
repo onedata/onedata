@@ -106,7 +106,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 types "3" to Max depth input field in UPDATE CONFIGURATION in "space2" record in Spaces page in Onepanel
     And user of browser1 types "1" to Scan interval input field in UPDATE CONFIGURATION in "space2" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space2" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space2" record on spaces list in Spaces page in Onepanel
@@ -186,7 +186,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 selects Simple scan strategy from strategy selector in IMPORT CONFIGURATION in "space1" record in Spaces page in Onepanel
     And user of browser1 types "2" to Max depth input field in IMPORT CONFIGURATION in "space1" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space1" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct import configuration
     And user of browser1 expands "space1" record on spaces list in Spaces page in Onepanel
@@ -234,7 +234,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 types "3" to Max depth input field in UPDATE CONFIGURATION in "space1" record in Spaces page in Onepanel
     And user of browser1 types "1" to Scan interval input field in UPDATE CONFIGURATION in "space1" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space1" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space1" record on spaces list in Spaces page in Onepanel
@@ -314,7 +314,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 selects Simple scan strategy from strategy selector in IMPORT CONFIGURATION in "space3" record in Spaces page in Onepanel
     And user of browser1 types "2" to Max depth input field in IMPORT CONFIGURATION in "space3" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space3" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct import configuration
     And user of browser1 expands "space3" record on spaces list in Spaces page in Onepanel
@@ -363,7 +363,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 types "1" to Scan interval input field in UPDATE CONFIGURATION in "space3" record in Spaces page in Onepanel
     And user of browser1 enables Delete enabled option UPDATE CONFIGURATION in "space3" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space3" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space3" record on spaces list in Spaces page in Onepanel
@@ -455,7 +455,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 selects Simple scan strategy from strategy selector in IMPORT CONFIGURATION in "space4" record in Spaces page in Onepanel
     And user of browser1 types "2" to Max depth input field in IMPORT CONFIGURATION in "space4" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space4" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct import configuration
     And user of browser1 expands "space4" record on spaces list in Spaces page in Onepanel
@@ -504,7 +504,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 types "1" to Scan interval input field in UPDATE CONFIGURATION in "space4" record in Spaces page in Onepanel
     And user of browser1 enables Write once option UPDATE CONFIGURATION in "space4" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space4" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space4" record on spaces list in Spaces page in Onepanel
@@ -542,7 +542,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 sees an info notify with text matching to: .*[Ss]upport.*revoked.*
 
 
-  Scenario: User supports space with storage sync and enabled options: Deleta and Write once
+  Scenario: User supports space with storage sync and enabled options: Delete and Write once
 
     # create space
     When user of browser2 expands the "DATA SPACE MANAGEMENT" Onezone sidebar panel
@@ -584,7 +584,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 selects Simple scan strategy from strategy selector in IMPORT CONFIGURATION in "space5" record in Spaces page in Onepanel
     And user of browser1 types "2" to Max depth input field in IMPORT CONFIGURATION in "space5" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space5" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct import configuration
     And user of browser1 expands "space5" record on spaces list in Spaces page in Onepanel
@@ -634,7 +634,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 enables Write once option UPDATE CONFIGURATION in "space5" record in Spaces page in Onepanel
     And user of browser1 enables Delete enabled option UPDATE CONFIGURATION in "space5" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space5" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space5" record on spaces list in Spaces page in Onepanel
@@ -726,7 +726,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 selects Simple scan strategy from strategy selector in IMPORT CONFIGURATION in "space6" record in Spaces page in Onepanel
     And user of browser1 types "2" to Max depth input field in IMPORT CONFIGURATION in "space6" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space6" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct import configuration
     And user of browser1 expands "space6" record on spaces list in Spaces page in Onepanel
@@ -774,7 +774,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 types "3" to Max depth input field in UPDATE CONFIGURATION in "space6" record in Spaces page in Onepanel
     And user of browser1 types "1" to Scan interval input field in UPDATE CONFIGURATION in "space6" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space6" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space6" record on spaces list in Spaces page in Onepanel
@@ -810,7 +810,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 clicks on Configure data synchronization option in space's toolbar in Onepanel
     And user of browser1 selects Disabled strategy from strategy selector in UPDATE CONFIGURATION in "space6" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space6" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space6" record on spaces list in Spaces page in Onepanel

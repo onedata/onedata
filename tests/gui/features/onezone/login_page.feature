@@ -9,7 +9,7 @@ Feature: Onezone login page
 
 
   Scenario: Onezone login page renders with proper title
-    Then user of browser should see that the page title contains "Login"
+    Then user of browser should see that the page title contains "Onezone - Login"
 
 
   Scenario: User successfully logout
@@ -17,4 +17,4 @@ Feature: Onezone login page
     When user of browser expands account settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     Then user of browser sees that URL matches: https?://[^/]*/#/home/login
-    And user of browser should see that the page title contains "Login"
+    And user of browser should see that the page title contains "Onezone - Login"

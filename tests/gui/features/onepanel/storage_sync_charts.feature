@@ -57,7 +57,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 selects Simple scan strategy from strategy selector in IMPORT CONFIGURATION in "space7" record in Spaces page in Onepanel
     And user of browser1 types "3" to Max depth input field in IMPORT CONFIGURATION in "space7" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space7" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct import configuration
     And user of browser1 expands "space7" record on spaces list in Spaces page in Onepanel
@@ -77,7 +77,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
     And user of browser1 types "1" to Scan interval input field in UPDATE CONFIGURATION in "space7" record in Spaces page in Onepanel
     And user of browser1 enables Delete enabled option UPDATE CONFIGURATION in "space7" record in Spaces page in Onepanel
     And user of browser1 clicks on Save configuration button in "space7" record in Spaces page in Onepanel
-    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*support.*space.*changed.*
+    And user of browser1 sees an info notify with text matching to: .*[Cc]onfiguration.*space.*support.*changed.*
 
     # confirm correct update configuration
     And user of browser1 expands "space7" record on spaces list in Spaces page in Onepanel

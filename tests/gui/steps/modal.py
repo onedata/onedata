@@ -1,6 +1,12 @@
 """Steps used for modal handling in various GUI testing scenarios
 """
 
+__author__ = "Bartek Walkowicz"
+__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__license__ = "This software is released under the MIT license cited in " \
+              "LICENSE.txt"
+
+
 import re
 import itertools
 
@@ -13,11 +19,6 @@ from selenium.webdriver.common.keys import Keys
 from pytest_bdd import parsers, given, when, then
 
 from tests.gui.utils.generic import click_on_web_elem, repeat_failed
-
-__author__ = "Bartek Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
-__license__ = "This software is released under the MIT license cited in " \
-              "LICENSE.txt"
 
 
 in_type_to_id = {'username': 'login-form-username-input',

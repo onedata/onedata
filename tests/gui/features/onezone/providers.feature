@@ -95,7 +95,7 @@ Feature: Basic management of providers in Onezone GUI
     # logout
     And user of browser expands account settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
-    And user of browser should see that the page title contains "Login"
+    And user of browser should see that the page title contains "Onezone - Login"
 
     # login again
     And user of browser logs as user1 to Onezone service
