@@ -89,7 +89,6 @@ def rename_fail(user, file1, file2, context):
 
 
 @when(parsers.re('(?P<user>\w+) deletes files (?P<files>.*)'))
-@when(parsers.re('(?P<user>\w+) deletes files (?P<files>.*)'))
 @then(parsers.re('(?P<user>\w+) deletes files (?P<files>.*)'))
 def delete_file(user, files, context):
     multi_file_steps.delete_file(user, files, "client1", context)

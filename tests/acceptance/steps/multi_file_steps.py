@@ -9,7 +9,8 @@ __license__ = "This software is released under the MIT license cited in " \
 
 from tests.utils.acceptance_utils import *
 from tests.utils.utils import assert_generic, assert_
-from tests.utils.client_utils import ls, mv, chmod, stat, rm, touch, create_file, osrename
+from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
+                                      create_file, osrename)
 from tests.utils.docker_utils import run_cmd
 
 import os
