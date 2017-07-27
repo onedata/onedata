@@ -15,10 +15,12 @@ from tests.gui.steps.rest.env_up.users import *
 from tests.gui.steps.rest.env_up.groups import *
 from tests.gui.steps.rest.env_up.spaces import *
 
-from tests.gui.steps.generic.url import *
-from tests.gui.steps.generic.browser_creation import *
-from tests.gui.steps.generic.copy_paste import *
-from tests.gui.steps.generic.local_file_system import *
+from tests.gui.steps.common.url import *
+from tests.gui.steps.common.browser_creation import *
+from tests.gui.steps.common.copy_paste import *
+from tests.gui.steps.common.local_file_system import *
+from tests.gui.steps.common.notifies import *
+from tests.gui.steps.common.miscellaneous import *
 
 from tests.gui.steps.onepanel.account_management import *
 from tests.gui.steps.onepanel.login import *
@@ -43,7 +45,6 @@ from tests.gui.steps.oneprovider.shares import *
 from tests.gui.steps.oneprovider.groups import *
 from tests.gui.steps.oneprovider.spaces import *
 
-from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
 from tests.gui.steps.oneprovider_common import *
 

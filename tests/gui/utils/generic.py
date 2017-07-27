@@ -60,12 +60,6 @@ def upload_file_path(file_name):
     )
 
 
-def enter_text(input_box, text):
-    input_box.clear()
-    input_box.send_keys(text)
-    return True if input_box.get_attribute('value') == text else False
-
-
 @contextmanager
 def implicit_wait(driver, timeout, prev_timeout):
     driver.implicitly_wait(timeout)
