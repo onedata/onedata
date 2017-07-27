@@ -1,4 +1,4 @@
-"""Test suite for features of Onezone login page.
+"""Test suite for features of POSIX privileges multiuser tests.
 """
 __author__ = "Jakub Liput, Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
@@ -41,25 +41,11 @@ from tests.gui.steps.oneprovider_shares import *
 from tests.gui.steps.oneprovider_metadata import *
 from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
-
-from . import USING_BASE_URL
-
+from tests.gui.steps.oneprovider_permissions import *
 
 @pytest.fixture(scope='module')
 def screens():
-    return [0]
+    return [0, 1]
 
 
-SKIP_REASON_BASE_URL = 'skipping test due to --base-url usage (external environment)'
-
-
-@pytest.mark.skipif(USING_BASE_URL, reason=SKIP_REASON_BASE_URL)
-@scenario('../features/onezone_gui.feature',
-          'User sees that non working providers have gray icon in '
-          '"GO TO YOR FILES" panel and appropriate msg is shown')
-def test_user_sees_that_when_no_provider_is_working_appropriate_msg_is_shown():
-    pass
-
-
-scenarios('../features/onezone_login.feature')
-scenarios('../features/onezone_gui.feature')
+scenarios('../features/oneprovider_privileges_posix_multi.feature')
