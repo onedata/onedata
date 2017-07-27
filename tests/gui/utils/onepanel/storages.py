@@ -33,7 +33,7 @@ class StorageRecord(PageObject, ExpandableMixin):
     name = id = Label('.item-icon-container + .one-label')
     storage_type = Label('td.item-table-content-cell .content-row:first-child '
                          '.one-label')
-    mount_point = Label('td.item-table-content-cell .content-row:nth-child(2) '
+    mount_point = Label('td.item-table-content-cell .content-row:nth-child(3) '
                         '.one-label')
     _toggle = WebElement('.one-collapsible-list-item-header')
 

@@ -643,7 +643,7 @@ Feature: Onepanel features regarding storage sync (e.g. import/update)
           Max depth: 3
           Scan interval [s]: 1
           Write once: true
-          Delete enabled: false
+          Delete enabled: true
 
     # confirm update of files
     And user of browser2 is idle for 8 seconds
