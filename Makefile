@@ -143,6 +143,10 @@ artifact_onepanel:
 ## Test
 ##
 
+BROWSER             ?= Chrome
+RECORDING_OPTION    ?= failed
+
+
 test_env_up:
 	${TEST_RUN} --test-type env_up -vvv --test-dir tests/env_up
 
@@ -153,25 +157,22 @@ test:
 	${TEST_RUN} --test-type acceptance -vvv  --test-dir tests/acceptance/scenarios/${SUITE}.py
 
 test_performance:
-	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance
+	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance
 
 test_performance_rest:
-	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k "not files_creation and not sysbench"
+	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k "not files_creation and not sysbench"
 
 test_performance_sysbench:
-	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k sysbench
+	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k sysbench
 
 test_performance_files_creation:
-	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k test_files_creation
+	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k test_files_creation
 
 test_performance_concurrent_files_creation:
-	${TEST_RUN} --test-type performance -vvv --test-dir tests/performance -k concurrent_files_creation
+	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k concurrent_files_creation
 
-test_gui_firefox:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Firefox --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
-
-test_gui_chrome:
-	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui -i onedata/gui_builder:latest --driver=Chrome --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=failed
+test_gui_env_up:
+	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui/scenarios/${SUITE}.py -i onedata/gui_builder:latest --driver=${BROWSER} --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=${RECORDING_OPTION}
 
 test_acceptance_mixed:
 	${TEST_RUN} --test-type mixed -vvv --test-dir tests/mixed -i onedata/acceptance_mixed:latest --driver=Chrome --xvfb --xvfb-recording=failed

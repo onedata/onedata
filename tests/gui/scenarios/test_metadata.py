@@ -5,7 +5,9 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import sys
+
+import pytest
+from pytest_bdd import scenarios, scenario
 
 from tests.gui.steps.common import *
 from tests.gui.steps.modal import *
@@ -27,7 +29,6 @@ from tests.gui.steps.oneprovider.file_browser import *
 
 from tests.gui.steps.oneservices.cdmi import *
 
-from tests.gui.steps.oneprovider_permissions import *
 
 from tests.gui.steps.onezone_before_login import *
 from tests.gui.steps.onezone_provider_popup import *
@@ -41,12 +42,10 @@ from tests.gui.steps.oneprovider_metadata import *
 from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
-from pytest_bdd import scenarios, scenario
+
+@pytest.fixture(scope='module')
+def screens():
+    return [0]
 
 
-# --- FEATURES: all non-destructive (does not change state) ---
-scenarios('../features/oneprovider_2_providers_multi.feature')
-scenarios('../features/oneprovider_privileges_posix_multi.feature')
-scenarios('../features/oneprovider_shares_multi.feature')
-scenarios('../features/oneprovider_group_multi.feature')
-scenarios('../features/onezone_gui_multi.feature')
+scenarios('../features/oneprovider_metadata.feature')
