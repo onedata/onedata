@@ -7,6 +7,7 @@ __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import sys
 import time
 import os.path
 from functools import partial
@@ -15,7 +16,8 @@ from threading import Thread
 from Queue import Queue, Empty
 
 from tests.performance.conftest import AbstractPerformanceTest
-from tests.utils.performance_utils import (Result, generate_configs, performance)
+from tests.utils.performance_utils import (Result, generate_configs, performance,
+                                           flushed_print)
 from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 
 REPEATS = 1
@@ -120,8 +122,9 @@ def _execute_test(client, files_number, empty_files, threads_num,
     for worker in workers:
         worker.start()
 
-    print ("\t\t\tStarted {} workers with avg {} file creation task each"
-           "".format(len(workers), avg_work))
+    flushed_print("\t\tStarted {} workers with avg {} file creation task each"
+                  "".format(len(workers), avg_work))
+
     while workers:
         try:
             ex = queue.get(timeout=5)
@@ -131,7 +134,7 @@ def _execute_test(client, files_number, empty_files, threads_num,
             raise ex
         finally:
             if time.time() >= logging_time:
-                print "\t\t\t{}nth workers alive".format(len(workers))
+                flushed_print("\t\t\t{} workers alive".format(len(workers)))
                 logging_time = time.time() + LOGGING_INTERVAL
 
     if not queue.empty():

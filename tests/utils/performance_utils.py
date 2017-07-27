@@ -5,6 +5,7 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import sys
 import itertools
 import time
 import pytest
@@ -35,7 +36,7 @@ def performance(default_config, configs):
             error_msg = ""
 
             for config_name, config in configs.items():
-                print "Running {}".format(config['description'])
+                flushed_print("Running {}".format(config['description']))
 
                 merged_config = update_dict(default_config, config)
                 config_report = ConfigReport(config_name,
@@ -53,18 +54,17 @@ def performance(default_config, configs):
                 successful_repeats = 0
                 failed_details = {}
                 while repeats < max_repeats:
-                    print "\trun {}/{}".format(repeats+1, max_repeats)
+                    flushed_print("\trun {}/{}".format(repeats+1, max_repeats))
 
                     try:
                         test_results = test_function(self, context, clients,
                                                      merged_config
                                                      .get('parameters', {}))
                     except Exception as e:
-                        print "\t\tTestcase failed beceause of: ", str(e)
+                        flushed_print("\t\tTestcase failed beceause of: " + str(e))
                         failed_repeats += 1
                         failed_details[str(repeats)] = str(e)
                     else:
-                        print "\t\tPASSED"
                         test_results = ensure_list(test_results)
                         test_result_report.add_single_test_results(test_results,
                                                                    repeats)
@@ -274,3 +274,8 @@ def generate_configs(params, description_skeleton):
 
 def is_success_rate_satisfied(successful_repeats, failed_repeats, rate):
     return rate * (successful_repeats + failed_repeats) <= 100 * successful_repeats
+
+
+def flushed_print(msg):
+    print msg
+    sys.stdout.flush()
