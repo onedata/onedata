@@ -12,11 +12,13 @@ import os.path
 from functools import partial
 
 from tests.performance.conftest import AbstractPerformanceTest
-from tests.utils.performance_utils import (Result, generate_configs, performance)
+from tests.utils.performance_utils import (Result, generate_configs, performance,
+                                           flushed_print)
 from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 
 REPEATS = 1
 SUCCESS_RATE = 100
+LOGGING_INTERVAL = 2 * 60
 
 # value written to files at their creation
 TEXT = "asd"
@@ -94,11 +96,15 @@ class TestFilesCreation(AbstractPerformanceTest):
 def execute_file_creation_test(client, files_number, empty_files,
                                dir_path, description):
     start = time.time()
+    logging_time = start + LOGGING_INTERVAL
 
     fun = partial(truncate, size=0) if empty_files else partial(write,
                                                                 text=TEXT)
     for i in xrange(files_number):
         fun(client, file_path=os.path.join(dir_path, 'file{}'.format(i)))
+        if time.time() >= logging_time:
+            flushed_print("\t\t\tCreated {}nth file".format(i))
+            logging_time = time.time() + LOGGING_INTERVAL
 
     end = time.time()
 
