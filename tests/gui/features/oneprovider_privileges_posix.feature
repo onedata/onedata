@@ -154,13 +154,13 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User changes derectory permission (presses ENTER after entering new permission code)
+  Scenario: User changes directory permission (presses ENTER after entering new permission code)
     
 	# Create directory
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser clicks the button from top menu bar with tooltip "Create file"
-    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
     And user of browser types "dir1" on keyboard
     And user of browser presses enter on keyboard
@@ -195,13 +195,13 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "dir1" has disappeared from files browser
 
 
-  Scenario: User changes derectory permission (clicks confirmation button after entering new permission code)
+  Scenario: User changes directory permission (clicks confirmation button after entering new permission code)
     
 	# Create directory
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser clicks the button from top menu bar with tooltip "Create file"
-    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
     And user of browser clicks on input box in active modal
     And user of browser types "dir1" on keyboard
     And user of browser presses enter on keyboard
@@ -334,10 +334,10 @@ Feature: Oneprovider POSIX privileges GUI tests
     
 	# Fail to create file
     And user of browser double clicks on item named "dir1" in file browser
-    And user of browser clicks the button from top menu bar with tooltip "Create directory"
-    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
     And user of browser clicks on input box in active modal
-    And user of browser types "dir1" on keyboard
+    And user of browser types "file1" on keyboard
     And user of browser presses enter on keyboard
     Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
     And user of browser sees that the modal has disappeared
@@ -629,7 +629,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     
-	# Change permission code
+	# Fail to change permission code
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
@@ -650,7 +650,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User fails to change permission code to incorrect one (2 char, clicks confirmation button permission code)
+  Scenario: User fails to change permission code to incorrect one (2 char, clicks confirmation button after entering permission code)
     
 	# Create file       
     When user of browser uses spaces select to change data space to "space1"
@@ -662,7 +662,7 @@ Feature: Oneprovider POSIX privileges GUI tests
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
     
-	# Change permission code
+	# Fail to change permission code
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared

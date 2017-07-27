@@ -11,7 +11,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And users of [browser1, browser2] seen that Oneprovider session has started
 
 
-  Scenario: User1 changes files permission and user2 sees that it has changed
+  Scenario: User1 changes file permission and user2 sees that it has changed
     
 	# User1 creates file            
     When user of browser1 uses spaces select to change data space to "space1"             
@@ -343,7 +343,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
     And user of browser1 clicks "Ok" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
     
-	# User2 fails to rename dir
+	# User2 fails to rename file
     And user of browser2 selects "file1" from files list
     And user of browser2 clicks the button from top menu bar with tooltip "Rename element"
     And user of browser2 sees that "Rename file or directory" modal has appeared
