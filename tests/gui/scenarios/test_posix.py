@@ -1,7 +1,7 @@
 """Test suite for features of Oneprovider POSIX privileges tests.
 """
-__author__ = "Jakub Liput, Bartosz Walkowicz"
-__copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
+__author__ = "Michal Stanisz"
+__copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 

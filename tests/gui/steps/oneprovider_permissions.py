@@ -9,7 +9,6 @@ __license__ = "This software is released under the MIT license cited in " \
 import random
 import string
 from pytest_bdd import parsers, when, then
-from selenium.webdriver.support.ui import WebDriverWait as Wait
 
 
 @when(parsers.parse('user of {browser_id} selects "{permission_type}" '
