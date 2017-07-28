@@ -88,6 +88,8 @@ Feature: Multi_regular_file_CRUD
     And u1 changes s1/dir1/file1 mode to 620 on client1
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
     And mode of u2's s1/dir1/file1 is 620 on client2
+    #wait for permission cache removal
+    Then u2 waits 30 seconds
     And u2 cannot read from s1/dir1/file1 on client2
     And size of u1's s1/dir1/file1 is 17 bytes on client1
 
