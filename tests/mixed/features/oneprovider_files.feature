@@ -22,6 +22,7 @@ Feature: Oneprovider files
     And user of browser sees file browser in data tab in Oneprovider page
     Then user of browser sees that item named "file1" has appeared in file browser
     And user of browser sees that item named "file1" is file in file browser
+    And user of browser sees that item named "file1" is of 0 B size in file browser
 
 
   Scenario: User creates file using browser and using oneclient he sees that it has appeared
@@ -36,6 +37,7 @@ Feature: Oneprovider files
     And user of browser sees that the modal has disappeared
     Then user1 sees [file1] in space1
     And file type of user1's space1/file1 is regular
+    And size of user1's space1/file1 is 0 bytes
 
 
   Scenario: User renames file using oneclient and sees in browser that its name has changed
@@ -45,7 +47,6 @@ Feature: Oneprovider files
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
 
     # rename file1 to file2
     And user1 renames space1/file1 to space1/file2
@@ -68,8 +69,6 @@ Feature: Oneprovider files
     And user of browser types "file1" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
     And user1 sees [file1] in space1
 
     # rename file1 to file2
@@ -92,7 +91,6 @@ Feature: Oneprovider files
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
 
     # remove file1
     And user1 deletes files [space1/file1]
@@ -116,8 +114,6 @@ Feature: Oneprovider files
     And user1 sees [file1] in space1
 
     # remove file1
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
     And user of browser clicks once on item named "file1" in file browser
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
@@ -126,14 +122,8 @@ Feature: Oneprovider files
 
 
   Scenario: User writes to file using oneclient and sees in browser that file's content has changed
-    # create: spacce1/file1
+    # create: space1/file1
     When user1 creates regular files [space1/file1]
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
-    And user of browser sees that item named "file1" is of 0 B size in file browser
 
     # write text to file1
     And user1 writes "TEST TEXT ONEDATA" to space1/file1
@@ -148,19 +138,9 @@ Feature: Oneprovider files
   Scenario: User appends text to file using oneclient and sees in browser that file's content has changed
     # create: space1/file1
     When user1 creates regular files [space1/file1]
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
-    And user of browser sees that item named "file1" is of 0 B size in file browser
 
     # write text to file1
     And user1 writes "TEST TEXT ONEDATA" to space1/file1
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" is of 17 B size in file browser
 
     # append text to file1
     And user1 appends " APPENDED DATA" to space1/file1
@@ -175,19 +155,9 @@ Feature: Oneprovider files
   Scenario: User replaces word in file using oneclient and sees in browser that file's content has changed
     # create: space1/file1
     When user1 creates regular files [space1/file1]
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
-    And user of browser sees that item named "file1" is of 0 B size in file browser
 
     # write text to file1
     And user1 writes "TEST ONEDATA1 TEST ONEDATA2 TEST ONEDATA3" to space1/file1
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" is of 41 B size in file browser
 
     # replace word in file1
     And user1 replaces "TEST" with "SYSTEM" in space1/file1
@@ -203,29 +173,17 @@ Feature: Oneprovider files
     # create: space1/dir1/dir2, space1/dir3
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees that item named "dir2" has appeared in file browser
-    And user of browser double clicks on item named "dir2" in file browser
-    And user of browser sees that item named "file1" has appeared in file browser
 
     # move space1/dir1/dir2/file1 to space1/dir3/file1
     And user1 renames space1/dir1/dir2/file1 to space1/dir3/file1
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser changes current working directory to space1 using breadcrumbs
     Then user of browser sees item(s) named ["dir1", "dir3"] in file browser
-    And user of browser double clicks on item named "dir3" in file browser
-    And user of browser sees item(s) named "file1" in file browser
-    And user of browser changes current working directory to space1 using breadcrumbs
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees item(s) named "dir2" in file browser
-    And user of browser double clicks on item named "dir2" in file browser
+    And user of browser changes current working directory to /dir1/dir2 using directory tree
     And user of browser sees that item named "file1" has disappeared from files browser
+    And user of browser changes current working directory to /dir3 using directory tree
+    And user of browser sees item(s) named "file1" in file browser
 
 
   Scenario: User moves non-empty file using oneclient and sees in browser that its content has not changed
@@ -233,61 +191,34 @@ Feature: Oneprovider files
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
     And user1 writes "TEST TEXT ONEDATA" to space1/dir1/dir2/file1
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees that item named "dir2" has appeared in file browser
-    And user of browser double clicks on item named "dir2" in file browser
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is of 17 B size in file browser
 
     # move space1/dir1/dir2/file1 to space1/dir3/file1
     And user1 renames space1/dir1/dir2/file1 to space1/dir3/file1
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser changes current working directory to space1 using breadcrumbs
     Then user of browser sees item(s) named ["dir1", "dir3"] in file browser
     And user of browser double clicks on item named "dir3" in file browser
     And user of browser sees item(s) named "file1" in file browser
     And user of browser sees that item named "file1" is of 17 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
     And user of browser sees that content of downloaded file "file1" is equal to: "TEST TEXT ONEDATA"
-    And user of browser changes current working directory to space1 using breadcrumbs
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees item(s) named "dir2" in file browser
-    And user of browser double clicks on item named "dir2" in file browser
-    And user of browser sees that item named "file1" has disappeared from files browser
 
 
   Scenario: User copies file using oneclient and sees in browser that it has been copied
     # create: space1/dir1/dir2, space1/dir3 
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees that item named "dir2" has appeared in file browser
-    And user of browser double clicks on item named "dir2" in file browser
-    And user of browser sees that item named "file1" has appeared in file browser
 
     # copy space1/dir1/dir2/file1 to space1/dir3
     And user1 copies regular file space1/dir1/dir2/file1 to space1/dir3
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser changes current working directory to space1 using breadcrumbs
     Then user of browser sees item(s) named ["dir1", "dir3"] in file browser
-    And user of browser double clicks on item named "dir3" in file browser
+    And user of browser changes current working directory to /dir1/dir2 using directory tree
     And user of browser sees item(s) named "file1" in file browser
-    And user of browser changes current working directory to space1 using breadcrumbs
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees item(s) named "dir2" in file browser
-    And user of browser double clicks on item named "dir2" in file browser
+    And user of browser changes current working directory to /dir3 using directory tree
     And user of browser sees item(s) named "file1" in file browser
 
 
@@ -296,32 +227,19 @@ Feature: Oneprovider files
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
     And user1 writes "TEST TEXT ONEDATA" to space1/dir1/dir2/file1
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees that item named "dir2" has appeared in file browser
-    And user of browser double clicks on item named "dir2" in file browser
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is of 17 B size in file browser
 
     # copy: space1/dir1/dir2/file1 to space1/dir3
     And user1 copies regular file space1/dir1/dir2/file1 to space1/dir3
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser changes current working directory to space1 using breadcrumbs
     Then user of browser sees item(s) named ["dir1", "dir3"] in file browser
-    And user of browser double clicks on item named "dir3" in file browser
+    And user of browser changes current working directory to /dir1/dir2 using directory tree
     And user of browser sees item(s) named "file1" in file browser
     And user of browser sees that item named "file1" is of 17 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
     And user of browser sees that content of downloaded file "file1" is equal to: "TEST TEXT ONEDATA"
-    And user of browser changes current working directory to space1 using breadcrumbs
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees item(s) named "dir2" in file browser
-    And user of browser double clicks on item named "dir2" in file browser
+    And user of browser changes current working directory to /dir3 using directory tree
     And user of browser sees item(s) named "file1" in file browser
     And user of browser sees that item named "file1" is of 17 B size in file browser
     And user of browser double clicks on item named "file1" in file browser
@@ -335,10 +253,7 @@ Feature: Oneprovider files
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "dir1" has appeared in file browser
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees that item named "dir2" has appeared in file browser
-    And user of browser double clicks on item named "dir2" in file browser
+    And user of browser changes current working directory to /dir1/dir2 using directory tree
     And user of browser sees that item named "file1" has appeared in file browser
 
     # write text to space1/dir1/dir2/file1, read it and delete file
@@ -372,8 +287,6 @@ Feature: Oneprovider files
     And user of browser types "file1" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
     And user1 sees [file1] in space1
 
     # rename file1 to file2
@@ -394,7 +307,6 @@ Feature: Oneprovider files
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" has appeared in file browser
 
     # rename file1 to file2
     And user of browser clicks once on item named "file1" in file browser
@@ -423,8 +335,6 @@ Feature: Oneprovider files
     And user of browser types "file1" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
     And user1 sees [file1] in space1
 
     # remove file1
@@ -442,8 +352,6 @@ Feature: Oneprovider files
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
 
     # remove file1
     And user of browser clicks once on item named "file1" in file browser
@@ -466,8 +374,6 @@ Feature: Oneprovider files
     And user of browser types "file1" on keyboard
     And user of browser clicks "Create" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
-    And user of browser sees that item named "file1" has appeared in file browser
-    And user of browser sees that item named "file1" is file in file browser
     And user1 sees [file1] in space1
 
     # call sleep, to be sure that time of above and below operations is different
@@ -491,11 +397,7 @@ Feature: Oneprovider files
    Scenario: User changes file using oneclient and sees in browser that modification time has changed
     # create: space1/file1 
     When user1 creates regular files [space1/file1]
-    And user of browser refreshes site
-    And user of browser uses spaces select to change data space to "space1"
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser sees that item named "file1" has appeared in file browser
-    
+
     # call sleep, to be sure that time of above and below operations is different
     And user1 waits 60 second
     
