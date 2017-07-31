@@ -33,7 +33,8 @@ Feature: Oneprovider files multiclient
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
 
-    Then user of browser sees item(s) named "file1" in file browser
+    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
+    And user of browser sees item(s) named "file1" in file browser
     And user2 sees [file1] in space1 on client2
 
 
@@ -80,7 +81,8 @@ Feature: Oneprovider files multiclient
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
 
-    Then user of browser sees item(s) named "file1" in file browser
+    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
+    And user of browser sees item(s) named "file1" in file browser
     And user of browser does not see any item(s) named "file2" in file browser
     And user2 sees [file1] in space1 on client2
     And user2 doesn't see [file2] in space1 on client2
