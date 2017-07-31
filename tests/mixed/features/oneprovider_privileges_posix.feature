@@ -95,7 +95,7 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     And user of browser clicks on input box in active modal
-    And user of browser sets "775" permission code in active modal
+    And user of browser sets "664" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared  
 
@@ -162,6 +162,7 @@ Feature: POSIX privileges acceptance mixed tests
     When user1 creates regular files [space1/file1]
 
 	# Change permission code
+    And user of browser uses spaces select to change data space to "space1"
     And user of browser refreshes site
     And user of browser selects "file1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
@@ -171,9 +172,10 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sets "775" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared  
-        
+
     #Check permission code
-    Then mode of user1's space1/file1 is 775
+    Then user1 waits 2 seconds
+    And mode of user1's space1/file1 is 775
         
         
   Scenario: User creates directory using oneclient and changes its permission using web gui
@@ -183,16 +185,18 @@ Feature: POSIX privileges acceptance mixed tests
     
     # Change permission code
     And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
     And user of browser selects "dir1" from files list
     And user of browser clicks the button from top menu bar with tooltip "Change element permissions"
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     And user of browser clicks on input box in active modal
-    And user of browser sets "775" permission code in active modal
+    And user of browser sets "664" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared  
 
     #Check permission code
+    Then user1 waits 2 seconds
     Then mode of user1's space1/dir1 is 664
 
 
@@ -246,3 +250,4 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     Then user of browser sees that current permission is "664"
+

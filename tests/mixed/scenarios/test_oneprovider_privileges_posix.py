@@ -1,14 +1,18 @@
-"""Test suite for tests using oneclient and browser
+"""Test suite for POSIX privileges acceptance mixed tests  
 """
 __author__ = "Michal Stanisz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-from pytest_bdd import scenarios
+
+import pytest
+from functools import partial
+from pytest_bdd import scenarios, scenario
 
 from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.auth_steps import *
+from tests.acceptance.steps.multi_auth_steps import *
 from tests.acceptance.steps.dir_steps import *
 from tests.acceptance.steps.file_steps import *
 from tests.acceptance.steps.file_steps import *
@@ -47,5 +51,14 @@ from tests.gui.steps.oneprovider_sidebar_list import *
 from tests.gui.steps.oneprovider_permissions import *
 
 
-scenarios('../features/oneprovider_privileges_posix.feature')
+scenario=partial(scenario, "../features/oneprovider_privileges_posix.feature")
 
+@pytest.mark.xfail(reason="File permissions don't change in client after "
+        "change in web gui, VFS-3503")
+@scenario('User creates file using oneclient and changes its permission using'
+        ' web gui')
+def test_create_file_using_oneclient_and_change_permission_using_web_gui():
+    pass
+
+scenarios('../features/oneprovider_privileges_posix.feature')
+scenarios('../features/oneprovider_multi_privileges_posix.feature')
