@@ -51,10 +51,10 @@ from tests.gui.steps.oneprovider_sidebar_list import *
 from tests.gui.steps.oneprovider_permissions import *
 
 
-scenario=partial(scenario, "../features/oneprovider_privileges_posix.feature")
+scenario = partial(scenario, "../features/oneprovider_privileges_posix.feature")
 
 @pytest.mark.xfail(reason="File permissions don't change in client after "
-        "change in web gui, VFS-3503")
+                          "change in web gui, VFS-3503")
 @scenario('User creates file using oneclient and changes its permission using'
         ' web gui')
 def test_create_file_using_oneclient_and_change_permission_using_web_gui():

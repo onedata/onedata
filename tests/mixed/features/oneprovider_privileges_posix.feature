@@ -148,7 +148,7 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     And user of browser clicks on input box in active modal
-    And user of browser sets "775" permission code in active modal
+    And user of browser sets "664" permission code in active modal
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared  
     
@@ -195,7 +195,7 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared  
 
-    #Check permission code
+    # Check permission code
     Then user1 waits 2 seconds
     Then mode of user1's space1/dir1 is 664
 
