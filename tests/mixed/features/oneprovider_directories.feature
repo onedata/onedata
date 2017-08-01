@@ -445,6 +445,10 @@ Feature: Oneprovider directories
   Scenario: User moves non-empty directory using oneclient and sees in browser that its content has not changed
     # create: space1/dir1/dir2/dir3, space1/dir4/dir5
     When user1 creates directory and parents [space1/dir1/dir2/dir3, space1/dir4/dir5]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir4"] have appeared in file browser
 
     # move space1/dir4 to space1/dir1/dir2/dir3
     And user1 renames space1/dir4 to space1/dir1/dir2/dir3
@@ -461,6 +465,10 @@ Feature: Oneprovider directories
   Scenario: User copies directory using oneclient and sees in browser that it has been copied
     # create: space1/dir1/dir2/dir3, space1/dir4
     When user1 creates directory and parents [space1/dir1/dir2/dir3, space1/dir4]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir4"] have appeared in file browser
 
     # copy space1/dir4 to space1/dir1/dir2/dir3
     And user1 copies directory space1/dir4 to space1/dir1/dir2/dir3
@@ -475,6 +483,10 @@ Feature: Oneprovider directories
   Scenario: User copies non-empty directory using oneclient and sees in browser that it has not changed
     # create: space1/dir1/dir2/dir3, space1/dir4/dir5
     When user1 creates directory and parents [space1/dir1/dir2/dir3, space1/dir4/dir5]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir4"] have appeared in file browser
 
     # copy space1/dir4 to space1/dir1/dir2/dir3
     And user1 copies directory space1/dir4 to space1/dir1/dir2/dir3
@@ -493,6 +505,10 @@ Feature: Oneprovider directories
   Scenario: User fails to move directory to its subtree using oneclient and sees in browser that it has not been moved
     # create: space1/dir1/dir2/dir3
     When user1 creates directory and parents [space1/dir1/dir2/dir3]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "dir1" has appeared in file browser
 
     # fail to move space1/dir1 to space1/dir1/dir2/dir3
     And user1 fails to rename space1/dir1 to space1/dir1/dir2/dir3
@@ -657,6 +673,10 @@ Feature: Oneprovider directories
   Scenario: User changes directory using oneclient and sees in browser that modification time has changed
     # create: space1/dir1
     When user1 creates directories [space1/dir1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "dir1" has appeared in file browser
 
     # call sleep, to be sure that time of above and below operations is different
     And user1 waits 80 second

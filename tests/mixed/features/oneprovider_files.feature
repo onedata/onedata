@@ -124,6 +124,10 @@ Feature: Oneprovider files
   Scenario: User writes to file using oneclient and sees in browser that file's content has changed
     # create: space1/file1
     When user1 creates regular files [space1/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "file1" has appeared in file browser
 
     # write text to file1
     And user1 writes "TEST TEXT ONEDATA" to space1/file1
@@ -138,6 +142,10 @@ Feature: Oneprovider files
   Scenario: User appends text to file using oneclient and sees in browser that file's content has changed
     # create: space1/file1
     When user1 creates regular files [space1/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "file1" has appeared in file browser
 
     # write text to file1
     And user1 writes "TEST TEXT ONEDATA" to space1/file1
@@ -155,6 +163,10 @@ Feature: Oneprovider files
   Scenario: User replaces word in file using oneclient and sees in browser that file's content has changed
     # create: space1/file1
     When user1 creates regular files [space1/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "file1" has appeared in file browser
 
     # write text to file1
     And user1 writes "TEST ONEDATA1 TEST ONEDATA2 TEST ONEDATA3" to space1/file1
@@ -173,6 +185,10 @@ Feature: Oneprovider files
     # create: space1/dir1/dir2, space1/dir3
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
 
     # move space1/dir1/dir2/file1 to space1/dir3/file1
     And user1 renames space1/dir1/dir2/file1 to space1/dir3/file1
@@ -190,6 +206,11 @@ Feature: Oneprovider files
     # create: space1/dir1/dir2, space1/dir3
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
+
     And user1 writes "TEST TEXT ONEDATA" to space1/dir1/dir2/file1
 
     # move space1/dir1/dir2/file1 to space1/dir3/file1
@@ -209,6 +230,10 @@ Feature: Oneprovider files
     # create: space1/dir1/dir2, space1/dir3 
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
 
     # copy space1/dir1/dir2/file1 to space1/dir3
     And user1 copies regular file space1/dir1/dir2/file1 to space1/dir3
@@ -226,6 +251,11 @@ Feature: Oneprovider files
     # create: space1/dir1/dir2, space1/dir3
     When user1 creates directory and parents [space1/dir1/dir2, space1/dir3]
     And user1 creates regular files [space1/dir1/dir2/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir3"] have appeared in file browser
+
     And user1 writes "TEST TEXT ONEDATA" to space1/dir1/dir2/file1
 
     # copy: space1/dir1/dir2/file1 to space1/dir3
@@ -397,6 +427,10 @@ Feature: Oneprovider files
    Scenario: User changes file using oneclient and sees in browser that modification time has changed
     # create: space1/file1 
     When user1 creates regular files [space1/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "file1" has appeared in file browser
 
     # call sleep, to be sure that time of above and below operations is different
     And user1 waits 60 second
