@@ -343,6 +343,10 @@ Feature: Oneprovider directories
   Scenario: User removes non-empty directory in wrong way using oneclient and sees in browser that it has not disappeared
     # create: space1/dir1, space1/dir1/child1
     When user1 creates directories [space1/dir1, space1/dir1/child1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "dir1" has appeared in file browser
 
     # dir1 is not empty, but we use step for empty dirs
     And user1 fails to delete empty directories [space1/dir1]
@@ -422,6 +426,10 @@ Feature: Oneprovider directories
   Scenario: User moves directory using oneclient and sees in browser that it has been moved
     # create: space1/dir1/dir2/dir3, space1/dir4
     When user1 creates directory and parents [space1/dir1/dir2/dir3, space1/dir4]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that items named ["dir1", "dir4"] have appeared in file browser
 
     # move space1/dir4 to space1/dir1/dir2/dir3
     And user1 renames space1/dir4 to space1/dir1/dir2/dir3
@@ -659,3 +667,58 @@ Feature: Oneprovider directories
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
     Then user of browser sees that modification date of item named "dir1" is not earlier than 60 seconds ago in file browser
+
+
+  Scenario: User creates directory using oneclient, removes it using browser and then recreates it using oneclient
+    # create: space1/dir1
+    When user1 creates directories [space1/dir1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # remove dir1
+    And user of browser clicks once on item named "dir1" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that item named "dir1" has disappeared from files browser
+    And user1 doesn't see [dir1] in space1
+
+    # create: space1/dir1
+    And user1 creates directories [space1/dir1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    Then user of browser sees that item named "dir1" has appeared in file browser
+    And user1 sees [dir1] in space1
+
+
+  Scenario: User creates directory using browser, removes it using oneclient and then recreates it using browser
+    # create: space1/dir1
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+
+    # remove dir1
+    And user1 deletes empty directories [space1/dir1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "dir1" has disappeared from files browser
+    And user1 doesn't see [dir1] in space1
+
+    # create: space1/dir1
+    And user of browser clicks the button from top menu bar with tooltip "Create directory"
+    And user of browser sees that "New directory" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "dir1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    Then user of browser sees that item named "dir1" has appeared in file browser
+    And user1 sees [dir1] in space1

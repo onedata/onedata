@@ -407,3 +407,57 @@ Feature: Oneprovider files
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
     Then user of browser sees that modification date of item named "file1" is not earlier than 60 seconds ago in file browser
+
+
+  Scenario: User creates file using oneclient, removes it using browser and then recreates it using oneclient
+    # create: space1/file1
+    When user1 creates regular files [space1/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+
+    # remove file1
+    And user of browser clicks once on item named "file1" in file browser
+    And user of browser clicks the button from top menu bar with tooltip "Remove element"
+    And user of browser sees that "Remove files" modal has appeared
+    And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees that item named "file1" has disappeared from files browser
+    And user1 doesn't see [file1] in space1
+
+    # create: space1/file1
+    And user1 creates regular files [space1/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    Then user of browser sees that item named "file1" has appeared in file browser
+    And user1 sees [file1] in space1
+
+  Scenario: User creates file using browser, removes it using oneclient and then recreates it using browser
+    # create: space1/file1
+    When user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that current working directory displayed in breadcrumbs is space1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+
+    # remove file1
+    And user1 deletes files [space1/file1]
+    And user of browser refreshes site
+    And user of browser uses spaces select to change data space to "space1"
+    And user of browser sees file browser in data tab in Oneprovider page
+    And user of browser sees that item named "file1" has disappeared from files browser
+    And user1 doesn't see [file1] in space1
+
+    # create: space1/file1
+    And user of browser clicks the button from top menu bar with tooltip "Create file"
+    And user of browser sees that "New file" modal has appeared
+    And user of browser clicks on input box in active modal
+    And user of browser types "file1" on keyboard
+    And user of browser clicks "Create" confirmation button in displayed modal
+    And user of browser sees that the modal has disappeared
+    Then user of browser sees that item named "file1" has appeared in file browser
+    And user1 sees [file1] in space1
