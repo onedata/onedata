@@ -113,7 +113,7 @@ def shell_check_type(user, file, file_type, context):
 
 @then(parsers.re('mode of (?P<user>\w+)\'s (?P<file>.*) is (?P<mode>.*)'))
 def check_mode(user, file, mode, context):
-    multi_file_steps.change_mode(user, file, mode, "client1", context)
+    multi_file_steps.check_mode(user, file, mode, "client1", context)
 
 
 @then(parsers.re('(?P<user>\w+) changes (?P<file>.*) mode to (?P<mode>.*)'))

@@ -1,4 +1,5 @@
 {
+    "test_oneprovider_privileges_posix": ["singleprovider_multiclient"],
     "test_oneprovider_data": ["singleprovider_multiclient"],
     "test_oneprovider_data_multiclient": ["singleprovider_multiclient"]
 }
