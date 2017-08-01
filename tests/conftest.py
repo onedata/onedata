@@ -33,7 +33,7 @@ def pytest_addoption(parser):
 def pytest_generate_tests(metafunc):
     if metafunc.config.option.test_type:
         test_type = metafunc.config.option.test_type
-        if test_type == 'gui' and not metafunc.config.option.base_url:
+        if test_type == ['gui', 'mixed_swaggers'] and not metafunc.config.option.base_url:
             envs = get_json_files(map_test_type_to_env_dir(test_type),
                                   relative=True)
             metafunc.parametrize('env_description_file', envs, scope='module')
@@ -189,6 +189,7 @@ def map_test_type_to_logdir(test_type):
     return {
         'acceptance': ACCEPTANCE_LOGDIR,
         'performance': PERFORMANCE_LOGDIR,
+        'mixed_swaggers': MIXED_SWAGGERS_LOGDIR,
         'gui': GUI_LOGDIR
     }.get(test_type, ACCEPTANCE_LOGDIR)
 
@@ -258,3 +259,4 @@ class Provider:
 
 def get_test_type(request):
     return request.config.getoption("test_type")
+
