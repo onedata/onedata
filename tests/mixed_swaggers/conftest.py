@@ -1,5 +1,5 @@
 """
-Definitions of fixtures used in mixed tests using GUI and swagger.
+Definitions of fixtures used in mixed tests using GUI and swaggers.
 """
 
 __author__ = "Michal Cwiertnia"

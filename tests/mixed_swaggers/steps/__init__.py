@@ -1,4 +1,4 @@
-"""Package with acceptance tests of onedata using web GUI and REST API
+"""Package with acceptance tests of onedata using web GUI and swaggers
 """
 
 __author__ = "Michal Cwiertnia"

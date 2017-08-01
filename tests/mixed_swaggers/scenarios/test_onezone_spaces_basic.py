@@ -1,4 +1,4 @@
-"""Test suite for tests using REST API and browser
+"""Test suite for tests using swaggers and browser
 """
 __author__ = "Michal Cwiertnia"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
