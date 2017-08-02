@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 17.06.0-rc1
+
+* VFS-3407 Mixed tests (GUI and oneclient)
+
+
 ### 17.06.0-beta6
 
 * VFS-3358 fix steps managing btns in toolbar in data tab in op after changes in gui
