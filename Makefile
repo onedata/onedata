@@ -176,7 +176,7 @@ test_gui_packages:
 	./test_run_gui.py --env=getting_started -t tests/gui/scenarios/${SUITE}.py --test-type gui -vvv --driver=${BROWSER} -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=${RECORDING_OPTION}
 
 test_mixed_swaggers:
-	./test_run_gui.py --env=getting_started -t tests/mixed_swaggers/scenarios/ --test-type mixed_swaggers -vvv --driver=${BROWSER} -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=${RECORDING_OPTION}
+	./test_run_gui.py --env=getting_started -t tests/mixed_swaggers/scenarios/${SUITE}.py --test-type mixed_swaggers -vvv --driver=${BROWSER} -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=${RECORDING_OPTION}
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
