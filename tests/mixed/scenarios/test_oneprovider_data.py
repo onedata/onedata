@@ -1,6 +1,6 @@
 """Test suite for tests using oneclient and browser
 """
-__author__ = "Michal Stanisz"
+__author__ = "Michal Stanisz, Michal Cwiertnia"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
@@ -46,7 +46,8 @@ from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(reason="Cannot recreate file in oneclient after deleting it"
+                          "in browser.")
 @scenario('../features/oneprovider_files.feature',
           'User creates file using oneclient, removes it using browser and then'
           ' recreates it using oneclient')
