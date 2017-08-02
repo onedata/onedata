@@ -175,7 +175,7 @@ test_gui_env_up:
 	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui/scenarios/${SUITE}.py -i onedata/gui_builder:latest --driver=${BROWSER} --self-contained-html --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=${RECORDING_OPTION}
 
 test_acceptance_mixed:
-	${TEST_RUN} --test-type mixed -vvv --test-dir tests/mixed -i onedata/acceptance_mixed:latest --driver=Chrome --xvfb --xvfb-recording=failed --self-contained-html
+	${TEST_RUN} --test-type mixed -vvv --test-dir tests/mixed/scenarios/${SUITE}.py -i onedata/acceptance_mixed:latest --driver=Chrome --xvfb --xvfb-recording=failed --self-contained-html
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
