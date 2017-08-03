@@ -46,5 +46,13 @@ from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
 
-scenarios('../features/oneprovider_directories.feature')
+@pytest.mark.xfail(reason="Cannot recreate file in oneclient after deleting it"
+                          "in browser.")
+@scenario('../features/oneprovider_files.feature',
+          'User creates file using oneclient, removes it using browser and then'
+          ' recreates it using oneclient')
+def test_recreate_file_using_oneclient_deleted_using_browser():
+    pass
 
+
+scenarios('../features/oneprovider_files.feature')
