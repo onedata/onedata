@@ -1,5 +1,5 @@
 """This module contains gherkin steps to run acceptance tests featuring
-login page in onezone web GUI.
+basic operations on spaces in Onezone using REST API.
 """
 
 __author__ = "Michal Cwiertnia"

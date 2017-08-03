@@ -1,4 +1,5 @@
-"""Package with acceptance tests of onedata using web GUI and swaggers
+"""This package contains gherkin steps for acceptance tests of onedata using
+web GUI and swaggers
 """
 
 __author__ = "Michal Cwiertnia"
