@@ -4,6 +4,17 @@
 CHANGELOG
 ---------
 
+### 17.06.0-rc2
+
+* VFS-3434 Multiuser tests implemented
+* VFS-3465 flush stdout after prints in performance tests
+* VFS-3465 split tests/gui/scenarios into modules and add -s option to performance tests
+* VFS-3465 add additional logging to performance tests
+* VFS-3434 POSIX privileges mixed tests implemented
+* VFS-3434 Added --self-contained-html to test_acceptance_mixed
+* VFS-3434 Posix privileges gui steps added
+
+
 ### 17.06.0-rc1
 
 * VFS-3407 Mixed tests (GUI and oneclient)
