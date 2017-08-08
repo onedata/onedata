@@ -18,10 +18,12 @@ from tests.mixed_swaggers.steps.onezone_space_rest_steps import *
                     ' in "{zone_name}" Onezone service'))
 def create_space(client1, user, space_name, zone_name, hosts, users, selenium,
                  oz_page):
-    if client1.lower() == "rest":
+    client = match_client(client1)
+
+    if client == "rest":
         create_space_using_rest(user, users, hosts, zone_name, space_name)
 
-    if client1.lower() == "web gui":
+    if client == "gui":
         create_space_using_gui(selenium, user, oz_page, space_name)
 
 
@@ -30,11 +32,13 @@ def create_space(client1, user, space_name, zone_name, hosts, users, selenium,
                     'service'))
 def assert_there_is_item_in_zone(client2, user, item_type, item_name, selenium,
                                  oz_page, users, hosts, zone_name):
-    if client2.lower() == "web gui":
-        assert_item_has_appeared_in_zone_gui(selenium, user, oz_page,
-                                              item_type, item_name)
+    client = match_client(client2)
 
-    if client2.lower() == "rest":
+    if client == "gui":
+        assert_item_has_appeared_in_zone_gui(selenium, user, oz_page,
+                                             item_type, item_name)
+
+    if client == "rest":
         assert_item_has_appeared_in_zone_rest(user, users, hosts, zone_name,
                                               item_name)
 

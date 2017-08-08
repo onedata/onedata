@@ -13,6 +13,15 @@ from tests.mixed_swaggers.onezone_client.configuration import (Configuration
 from tests.mixed_swaggers.onezone_client import (ApiClient as ApiClient_OZ,
                                                  UserApi, Space)
 from tests import OZ_REST_PATH_PREFIX, OZ_REST_PORT
+import re
+
+
+class NoSuchClientException(Exception):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
 
 
 def _login_to_oz(username, password, host):
@@ -53,3 +62,12 @@ def assert_item_has_appeared_in_zone_rest(user, users, hosts, zone_name,
         if space.name == item_name:
             return True
     assert False
+
+
+def match_client(client):
+    client = client.lower()
+    if re.search(r'\brest\b', client):
+        return 'rest'
+    if re.search(r'\bgui\b', client):
+        return 'gui'
+    raise NoSuchClientException("Client: {} not found.".format(client))
