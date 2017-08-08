@@ -18,7 +18,7 @@ from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 
 REPEATS = 1
 SUCCESS_RATE = 100
-LOGGING_INTERVAL = 2 * 60
+LOGGING_INTERVAL = 60
 
 # value written to files at their creation
 TEXT = "asd"
@@ -118,5 +118,9 @@ def execute_file_creation_test(client, files_number, empty_files,
 
 
 def teardown_after_file_creation_test(client, files_number, dir_path):
+    logging_time = time.time() + LOGGING_INTERVAL
     for i in xrange(files_number):
         rm(client, os.path.join(dir_path, 'file{}'.format(i)))
+        if time.time() >= logging_time:
+            flushed_print("\t\t\tDeleted {}nth file".format(i))
+            logging_time = time.time() + LOGGING_INTERVAL
