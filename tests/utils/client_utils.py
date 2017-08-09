@@ -318,6 +318,21 @@ def read_from_opened_file(client, file):
 def seek(client, file, offset):
     client.opened_files[file].seek(offset)
 
+def setxattr(client, file, name, value):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    xattrs[name] = value
+
+def getxattr(client, file, name):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    return xattrs[name]
+
+def listxattr(client, file):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    return xattrs.list()
+
+def removexattr(client, file, name):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    del xattrs[name]
 
 def execute(client, command, output=False):
     if output:
