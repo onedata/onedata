@@ -11,6 +11,6 @@ Feature: Onezone spaces
     When using <client1>, user1 creates space "helloworld" in "z1" Onezone service
     Then using <client2>, user1 sees that space named "helloworld" has appeared in "z1" Onezone service
     Examples:
-      | client2 | client1 |
-      | web GUI | REST    |
-      | REST    | web GUI |
+      | client2         | client1         |
+      | web GUI onezone | REST            |
+      | REST            | web GUI onezone |
