@@ -10,11 +10,13 @@ __license__ = "This software is released under the MIT license cited in " \
 from tests.utils.acceptance_utils import *
 from tests.utils.utils import assert_generic, assert_
 from tests.utils.client_utils import (ls, mv, chmod, stat, rm, touch,
-                                      create_file, osrename)
+                                      create_file, osrename, setxattr,
+                                      getxattr, listxattr, removexattr)
 from tests.utils.docker_utils import run_cmd
 
 import os
 import stat as stat_lib
+import json, jsondiff
 
 
 @when(parsers.re('(?P<user>\w+) updates (?P<files>.*) timestamps on'
@@ -351,7 +353,128 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
         assert compare(t1, t2, comparator)
 
     assert_(client.perform, condition)
-    
+
+
+@then(parsers.re('(?P<user>\w+) sets extended attribute (?P<name>[.\w]+) '
+                 'with value (?P<value>.*) on (?P<file>\w+)'
+                 'on (?P<client_node>.*)'))
+@when(parsers.re('(?P<user>\w+) sets extended attribute (?P<name>[.\w]+) '
+                 'with value (?P<value>.*) on (?P<file>\w+)'
+                 'on (?P<client_node>.*)'))
+def set_xattr(user, file, name, value, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+        value_bytes = None
+        if isinstance(value, str):
+           value_bytes = value
+        elif isinstance(value, unicode):
+           value_bytes = value.encode('utf-8')
+        else:
+           value_bytes = str(value)
+        
+        setxattr(client, file_path, name, value_bytes)
+
+    assert_(client.perform, condition)
+
+
+@then(parsers.re('(?P<user>\w+) removes extended attribute (?P<name>[.\w]+) '
+                 'from (?P<file>\w+) on (?P<client_node>.*)'))
+@when(parsers.re('(?P<user>\w+) removes extended attribute (?P<name>[.\w]+) '
+                 'from (?P<file>\w+) on (?P<client_node>.*)'))
+def remove_xattr(user, file, name, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+        removexattr(client, file_path, name)
+
+    assert_(client.perform, condition)
+
+
+@then(parsers.re('(?P<user>\w+) checks if (?P<file>\w+) has extended '
+                 'attribute (?P<name>[.\w]+) on (?P<client_node>.*)'))
+def check_xattr_exists(user, file, name, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+        xattrs = listxattr(client, file_path)
+        assert name in xattrs
+
+    assert_(client.perform, condition)
+
+
+@then(parsers.re('(?P<user>\w+) checks if (?P<file>\w+) does not have extended '
+                 'attribute (?P<name>[.\w]+) on (?P<client_node>.*)'))
+def check_xattr_doesnt_exist(user, file, name, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+        xattrs = listxattr(client, file_path)
+        assert name not in xattrs
+
+    assert_(client.perform, condition)
+
+
+@then(parsers.re('(?P<user>\w+) checks if (?P<file>\w+) has extended '
+                 'attribute (?P<name>[.\w]+) with string value "(?P<value>.*)" '
+                 'on (?P<client_node>.*)'))
+def check_string_xattr(user, file, name, value, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+        xattr_value = getxattr(client, file_path, name)
+        value_utf = None
+        if isinstance(value, str):
+           value_utf = value
+        elif isinstance(value, unicode):
+           value_utf = value.encode('utf-8')
+        else:
+           value_utf = str(value)
+
+        assert xattr_value == value_utf
+
+    assert_(client.perform, condition)
+
+
+@then(parsers.re('(?P<user>\w+) checks if (?P<file>\w+) has extended '
+                 'attribute (?P<name>[.\w]+) with numeric value (?P<value>.*) '
+                 'on (?P<client_node>.*)'))
+def check_numeric_xattr(user, file, name, value, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+        xattr_value = getxattr(client, file_path, name)
+        assert float(xattr_value) == float(value)
+
+    assert_(client.perform, condition)
+
+
+@then(parsers.re('(?P<user>\w+) checks if (?P<file>\w+) has extended '
+                 'attribute (?P<name>[.\w]+) with JSON value "(?P<value>.*)" '
+                 'on (?P<client_node>.*)'))
+def check_json_xattr(user, file, name, value, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    file_path = client.absolute_path(file)
+
+    def condition():
+        xattr_value = getxattr(client, file_path, name)
+        assert jsondiff.diff(json.loads(xattr_value), json.loads(value)) == {}
+
+    assert_(client.perform, condition)
+
 
 ################################################################################
 

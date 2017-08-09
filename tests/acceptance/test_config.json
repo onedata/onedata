@@ -47,6 +47,7 @@
     "singleprovider_singleclient_directio",
     "singleprovider_singleclient_proxyio"
   ],
+  "test_extended_attributes": ["singleprovider_singleclient_proxyio"],
   "test_singleprovider_space_management": ["singleprovider_space_management"],
   "test_profiling": ["singleclient_authorization"]
 }
