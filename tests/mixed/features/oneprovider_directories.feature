@@ -686,7 +686,7 @@ Feature: Oneprovider directories
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    Then user of browser sees that modification date of item named "dir1" is not earlier than 60 seconds ago in file browser
+    Then user of browser sees that modification date of item named "dir1" is not earlier than 70 seconds ago in file browser
 
 
   Scenario: User creates directory using oneclient, removes it using browser and then recreates it using oneclient
