@@ -41,8 +41,8 @@
 [submodule "onepanel_swagger"]
 	path = onepanel_swagger
 	url = ONEDATA_GIT_URL/onepanel-swagger.git
-	branch = master
+	branch = develop
 [submodule "onezone_swagger"]
 	path = onezone_swagger
 	url = ONEDATA_GIT_URL/onezone-swagger.git
-	branch = master
+	branch = develop
