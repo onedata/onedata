@@ -27,7 +27,7 @@ def assert_item_has_appeared_in_zone_rest(user, users, hosts, zone_name,
                               hosts['onezone'][zone_name])
 
     user_api = UserApi(user_client)
-    user_spaces = user_api.get_user_spaces().spaces
+    user_spaces = user_api.list_user_spaces().spaces
 
     for sid in user_spaces:
         space = user_api.get_user_space(sid)

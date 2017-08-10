@@ -36,10 +36,10 @@ def assert_there_is_item_in_zone(client2, user, item_type, item_name, selenium,
                                  oz_page, users, hosts, zone_name):
     client2 = client2.lower()
     if re.search(r'\brest\b', client2):
-        assert_item_has_appeared_in_zone_gui(selenium, user, oz_page,
-                                             item_type, item_name)
-    elif re.search(r'\bgui onezone\b', client2):
         assert_item_has_appeared_in_zone_rest(user, users, hosts, zone_name,
                                               item_name)
+    elif re.search(r'\bgui onezone\b', client2):
+        assert_item_has_appeared_in_zone_gui(selenium, user, oz_page,
+                                             item_type, item_name)
     else:
         raise NoSuchClientException("Client: {} not found.".format(client2))
