@@ -46,6 +46,15 @@ from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
 
 
+@pytest.mark.xfail(reason="Timestamps does not change during renaming "
+                          "file using GUI, VFS-3520")
+@scenario('../features/oneprovider_files.feature',
+          'User renames file using browser and using oneclient he sees that '
+          'status-change time has changed')
+def test_rename_file_using_browser_and_check_timestamps_using_client():
+    pass
+
+
 @pytest.mark.xfail(reason="Cannot recreate file in oneclient after deleting it"
                           "in browser.")
 @scenario('../features/oneprovider_files.feature',

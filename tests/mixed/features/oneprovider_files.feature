@@ -433,14 +433,14 @@ Feature: Oneprovider files
     And user of browser sees that item named "file1" has appeared in file browser
 
     # call sleep, to be sure that time of above and below operations is different
-    And user1 waits 60 second
+    And user1 waits 80 second
     
     # write text to file1
     And user1 writes "TEST TEXT ONEDATA" to space1/file1
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
-    Then user of browser sees that modification date of item named "file1" is not earlier than 60 seconds ago in file browser
+    Then user of browser sees that modification date of item named "file1" is not earlier than 70 seconds ago in file browser
 
 
   Scenario: User creates file using oneclient, removes it using browser and then recreates it using oneclient
