@@ -25,11 +25,15 @@ from tests.gui.steps.onezone.login_page import g_login_to_zone_using_basic_auth
 def create_space_using_gui(selenium, user, oz_page, space_name):
     panel_name = "DATA SPACE MANAGEMENT"
     button_name = "Create new space"
+    item_type = "space"
     wt_expand_oz_panel(selenium, user, panel_name, oz_page)
     click_on_btn_in_oz_panel(selenium, user, button_name, panel_name, oz_page)
     type_text_into_space_creation_edit_box_in_oz(selenium, user,
                                                  space_name, oz_page)
     press_enter_on_active_element(selenium, user)
+    assert_there_is_item_named_in_oz_panel_list(selenium, user, item_type,
+                                                space_name, panel_name,
+                                                oz_page)
 
 
 def assert_item_has_appeared_in_zone_gui(selenium, user, oz_page, item_type,
