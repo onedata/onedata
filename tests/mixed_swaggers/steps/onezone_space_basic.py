@@ -13,7 +13,6 @@ from tests.gui.gui_meta_steps.onezone import *
 
 from tests.mixed_swaggers.utils.common import *
 from tests.mixed_swaggers.utils.onezone.space_management import *
-import re
 
 
 @when(parsers.parse('using <client1>, {user} creates space "{space_name}"'
@@ -21,9 +20,9 @@ import re
 def create_space(client1, user, space_name, zone_name, hosts, users, selenium,
                  oz_page):
     client1 = client1.lower()
-    if re.search(r'\brest\b', client1):
+    if client1 == 'rest':
         create_space_using_rest(user, users, hosts, zone_name, space_name)
-    elif re.search(r'\bgui onezone\b', client1):
+    elif client1 == 'onezone web gui':
         create_space_using_gui(selenium, user, oz_page, space_name)
     else:
         raise NoSuchClientException("Client: {} not found.".format(client1))
@@ -35,10 +34,10 @@ def create_space(client1, user, space_name, zone_name, hosts, users, selenium,
 def assert_there_is_item_in_zone(client2, user, item_type, item_name, selenium,
                                  oz_page, users, hosts, zone_name):
     client2 = client2.lower()
-    if re.search(r'\brest\b', client2):
+    if client2 == 'rest':
         assert_item_has_appeared_in_zone_rest(user, users, hosts, zone_name,
                                               item_name)
-    elif re.search(r'\bgui onezone\b', client2):
+    elif client2 == 'onezone web gui':
         assert_item_has_appeared_in_zone_gui(selenium, user, oz_page,
                                              item_type, item_name)
     else:

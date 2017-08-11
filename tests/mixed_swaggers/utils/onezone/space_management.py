@@ -32,6 +32,7 @@ def assert_item_has_appeared_in_zone_rest(user, users, hosts, zone_name,
     for sid in user_spaces:
         space = user_api.get_user_space(sid)
         if space.name == item_name:
-            return True
-    raise RuntimeError("No item named: {} in {} zone".format(item_name,
-                                                             zone_name))
+            break
+    else:
+        raise RuntimeError("No item named: {} in {} zone".format(item_name,
+                                                                 zone_name))

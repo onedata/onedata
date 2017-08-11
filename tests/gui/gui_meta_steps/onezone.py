@@ -42,7 +42,7 @@ def assert_item_has_appeared_in_zone_gui(selenium, user, oz_page, item_type,
                                                 oz_page)
 
 
-@given(parsers.parse('logged as {user} to {host_name} service using web GUI'))
+@given(parsers.parse('logged as {user} to "{host_name}" service using web GUI'))
 def login_to_zone(user, host_name, selenium, driver, tmpdir, tmp_memory,
                   driver_kwargs, driver_type, firefox_logging, firefox_path,
                   xvfb, screen_width, screen_height, displays, hosts, users,
