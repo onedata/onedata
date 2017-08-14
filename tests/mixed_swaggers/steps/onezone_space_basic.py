@@ -15,8 +15,9 @@ from tests.mixed_swaggers.utils.common import *
 from tests.mixed_swaggers.utils.onezone.space_management import *
 
 
-@when(parsers.parse('using <client1>, {user} creates space "{space_name}"'
-                    ' in "{zone_name}" Onezone service'))
+@when(parsers.re(r'using <(?P<client>client\d)>, (?P<user>.+?) creates space '
+                 '"(?P<space_name>.+?)" in "(?P<zone_name>.+?)" Onezone '
+                 'service'))
 def create_space_in_oz(client1, user, space_name, zone_name, hosts, users,
                        selenium, oz_page):
     client1 = client1.lower()
@@ -28,9 +29,9 @@ def create_space_in_oz(client1, user, space_name, zone_name, hosts, users,
         raise NoSuchClientException("Client: {} not found.".format(client1))
 
 
-@then(parsers.parse('using <client2>, {user} sees that {item_type} '
-                    'named "{item_name}" has appeared in "{zone_name}" Onezone '
-                    'service'))
+@then(parsers.re(r'using <(?P<client>client\d)>, (?P<user>.+?) sees that '
+                 '(?P<item_type>.+?) named "(?P<item_name>.+?)" has appeared '
+                 'in "(?P<zone_name>.+?)" Onezone service'))
 def assert_there_is_item_in_oz(client2, user, item_type, item_name, selenium,
                                oz_page, users, hosts, zone_name):
     client2 = client2.lower()
