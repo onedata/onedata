@@ -22,7 +22,7 @@ from tests.gui.steps.common.url import g_open_onedata_service_page, refresh_site
 from tests.gui.steps.onezone.login_page import g_login_to_zone_using_basic_auth
 
 
-def create_space_using_gui(selenium, user, oz_page, space_name):
+def create_space_in_oz_using_gui(selenium, user, oz_page, space_name):
     panel_name = "DATA SPACE MANAGEMENT"
     button_name = "Create new space"
     item_type = "space"
@@ -36,8 +36,8 @@ def create_space_using_gui(selenium, user, oz_page, space_name):
                                                 oz_page)
 
 
-def assert_item_has_appeared_in_zone_gui(selenium, user, oz_page, item_type,
-                                         item_name):
+def assert_item_has_appeared_in_oz_gui(selenium, user, oz_page, item_type,
+                                       item_name):
     panel_name = "DATA SPACE MANAGEMENT"
     refresh_site(selenium, user)
     wt_expand_oz_panel(selenium, user, panel_name, oz_page)
@@ -47,10 +47,10 @@ def assert_item_has_appeared_in_zone_gui(selenium, user, oz_page, item_type,
 
 
 @given(parsers.parse('logged as {user} to "{host_name}" service using web GUI'))
-def login_to_zone(user, host_name, selenium, driver, tmpdir, tmp_memory,
-                  driver_kwargs, driver_type, firefox_logging, firefox_path,
-                  xvfb, screen_width, screen_height, displays, hosts, users,
-                  oz_login_page):
+def login_to_oz_using_gui(user, host_name, selenium, driver, tmpdir, tmp_memory,
+                          driver_kwargs, driver_type, firefox_logging,
+                          firefox_path, xvfb, screen_width, screen_height,
+                          displays, hosts, users, oz_login_page):
     create_instances_of_webdriver(selenium, driver, user, tmpdir,
                                   tmp_memory, driver_kwargs, driver_type,
                                   firefox_logging, firefox_path, xvfb,

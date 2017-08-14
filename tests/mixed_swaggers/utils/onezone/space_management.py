@@ -11,7 +11,7 @@ from tests.mixed_swaggers.onezone_client import (UserApi, Space)
 from tests.mixed_swaggers.utils.common import login_to_oz
 
 
-def create_space_using_rest(user, users, hosts, zone_name, space_name):
+def create_space_in_oz_using_rest(user, users, hosts, zone_name, space_name):
     user_client = login_to_oz(user, users[user].password,
                               hosts['onezone'][zone_name])
     user_api = UserApi(user_client)
@@ -21,8 +21,8 @@ def create_space_using_rest(user, users, hosts, zone_name, space_name):
     user_api.create_user_space(new_space)
 
 
-def assert_item_has_appeared_in_zone_rest(user, users, hosts, zone_name,
-                                          item_name):
+def assert_item_has_appeared_in_oz_rest(user, users, hosts, zone_name,
+                                        item_name):
     user_client = login_to_oz(user, users[user].password,
                               hosts['onezone'][zone_name])
 
