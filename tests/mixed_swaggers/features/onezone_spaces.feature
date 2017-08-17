@@ -4,7 +4,7 @@ Feature: Onezone spaces
   Background:
     Given initial users configuration in "z1" Onezone service:
             - user1
-    And logged as user1 to "z1 onezone" service using web GUI
+    And opened browser with user1 logged to "z1 onezone" service
 
 
   Scenario Outline: User creates space using <client1> and using <client2> he sees that it has been created
@@ -12,6 +12,6 @@ Feature: Onezone spaces
     Then using <client2>, user1 sees that space named "helloworld" has appeared in "z1" Onezone service
 
     Examples:
-      | client2         | client1         |
+      | client1         | client2         |
       | Onezone web GUI | REST            |
       | REST            | Onezone web GUI |
