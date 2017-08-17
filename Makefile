@@ -175,6 +175,9 @@ test_gui:
 test_gui_packages:
 	./test_run_gui.py --env=getting_started -t tests/gui/scenarios/${SUITE}.py --test-type gui -vvv --driver=${BROWSER} -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=${RECORDING_OPTION}
 
+test_mixed_swaggers:
+	./test_run_gui.py --env=getting_started -t tests/mixed_swaggers/scenarios/${SUITE}.py --test-type mixed_swaggers -vvv --driver=${BROWSER} -i onedata/gui_builder:latest --self-contained-html --xvfb --xvfb-recording=${RECORDING_OPTION}
+
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
 
@@ -331,3 +334,12 @@ docker-dev:
                       --short-report docker-dev-build-list.json \
                       --name oneprovider-dev \
                       --publish --remove docker-dev
+
+
+##
+## Build python REST clients generated from swaggers. (used in mixed tests)
+##
+
+build_swaggers:
+	cd onezone_swagger && ./build.sh && cd generated/python && mv onezone_client ../../../tests/mixed_swaggers
+	cd onepanel_swagger && ./build.sh && cd generated/python && mv onepanel_client ../../../tests/mixed_swaggers

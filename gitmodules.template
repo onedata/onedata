@@ -38,3 +38,11 @@
 	path = getting_started
 	url = https://github.com/onedata/getting-started.git
 	branch = master
+[submodule "onepanel_swagger"]
+	path = onepanel_swagger
+	url = ONEDATA_GIT_URL/onepanel-swagger.git
+	branch = develop
+[submodule "onezone_swagger"]
+	path = onezone_swagger
+	url = ONEDATA_GIT_URL/onezone-swagger.git
+	branch = develop
