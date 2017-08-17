@@ -18,28 +18,29 @@ from tests.mixed_swaggers.utils.onezone.space_management import *
 @when(parsers.re(r'using <(?P<client>client\d)>, (?P<user>.+?) creates space '
                  '"(?P<space_name>.+?)" in "(?P<zone_name>.+?)" Onezone '
                  'service'))
-def create_space_in_oz(client1, user, space_name, zone_name, hosts, users,
-                       selenium, oz_page):
-    client1 = client1.lower()
-    if client1 == 'rest':
+def create_space_in_oz(client, client1, client2, user, space_name, zone_name,
+                       hosts, users, selenium, oz_page):
+    client = locals()[client].lower()
+    if client == 'rest':
         create_space_in_oz_using_rest(user, users, hosts, zone_name, space_name)
-    elif client1 == 'onezone web gui':
+    elif client == 'onezone web gui':
         create_space_in_oz_using_gui(selenium, user, oz_page, space_name)
     else:
-        raise NoSuchClientException("Client: {} not found.".format(client1))
+        raise NoSuchClientException("Client: {} not found.".format(client))
 
 
 @then(parsers.re(r'using <(?P<client>client\d)>, (?P<user>.+?) sees that '
                  '(?P<item_type>.+?) named "(?P<item_name>.+?)" has appeared '
                  'in "(?P<zone_name>.+?)" Onezone service'))
-def assert_there_is_item_in_oz(client2, user, item_type, item_name, selenium,
-                               oz_page, users, hosts, zone_name):
-    client2 = client2.lower()
-    if client2 == 'rest':
+def assert_there_is_item_in_oz(client, client1, client2, user, item_type,
+                               item_name, selenium, oz_page, users, hosts,
+                               zone_name):
+    client = locals()[client].lower()
+    if client == 'rest':
         assert_item_has_appeared_in_oz_rest(user, users, hosts, zone_name,
                                             item_name)
-    elif client2 == 'onezone web gui':
+    elif client == 'onezone web gui':
         assert_item_has_appeared_in_oz_gui(selenium, user, oz_page,
                                            item_type, item_name)
     else:
-        raise NoSuchClientException("Client: {} not found.".format(client2))
+        raise NoSuchClientException("Client: {} not found.".format(client))
