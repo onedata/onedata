@@ -38,7 +38,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser2 sees that "File distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
+    # TODO: uncomment when empty chunk bar will be displayed in GUI
+    # And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
     And user of browser2 clicks "Close" confirmation button in displayed modal
     And user of browser2 sees that the modal has disappeared
     And user of browser2 double clicks on item named "20B-0.txt" in file browser
@@ -102,7 +103,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser2 sees that "File distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
+    # TODO: uncomment when empty chunk bar will be displayed in GUI
+    # And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
     And user of browser2 clicks "Close" confirmation button in displayed modal
     And user of browser2 sees that the modal has disappeared
 
@@ -159,7 +161,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
     And user of browser2 sees that "File distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
-    And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
+    # TODO: uncomment when empty chunk bar will be displayed in GUI
+    # And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
     And user of browser2 clicks "Close" confirmation button in displayed modal
     And user of browser2 sees that the modal has disappeared
 
