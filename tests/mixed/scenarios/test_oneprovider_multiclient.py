@@ -48,3 +48,4 @@ from tests.gui.steps.oneprovider_sidebar_list import *
 
 scenarios('../features/oneprovider_directories_multiclient.feature')
 scenarios('../features/oneprovider_files_multiclient.feature')
+scenarios('../features/oneprovider_multi_privileges_posix.feature')

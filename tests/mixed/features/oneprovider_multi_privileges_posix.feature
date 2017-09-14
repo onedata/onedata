@@ -18,7 +18,7 @@ Feature: POSIX privileges acceptance mixed tests multi user
   Scenario: User1 creates file using oneclient and user2 fails to change its permission using web gui
 
     # Create file
-    When user1 creates regular files [space1/file1]
+    When user1 creates regular files [space1/file1] on client1
 
     # Fail to change permission code
     And user of browser refreshes site
@@ -31,12 +31,13 @@ Feature: POSIX privileges acceptance mixed tests multi user
     And user of browser sets "775" permission code in active modal
     And user of browser clicks "Ok" confirmation button in displayed modal
     Then user of browser sees an error notify with text matching to: .*failed.*
+    And user1 deletes files [space1/file1] on client1
 
 
   Scenario: User1 creates directory using oneclient and user2 fails to change its permission using web gui
-    
-    # Create directory           
-    When user1 creates directories [space1/dir1]
+
+    # Create directory
+    When user1 creates directories [space1/dir1] on client1
 
     # Fail to change permission code
     And user of browser refreshes site
@@ -49,6 +50,7 @@ Feature: POSIX privileges acceptance mixed tests multi user
     And user of browser sets "664" permission code in active modal
     And user of browser clicks "Ok" confirmation button in displayed modal
     Then user of browser sees an error notify with text matching to: .*failed.*
+    And user1 deletes empty directories [space1/dir1] on client1
 
 
   Scenario: User2 creates file using web gui and user1 fails to change its permission using oneclient
@@ -64,7 +66,8 @@ Feature: POSIX privileges acceptance mixed tests multi user
     And user of browser sees that the modal has disappeared
 
     # Fail to change permission code
-    Then user1 fails to change space1/file1 mode to 775
+    Then user1 fails to change space1/file1 mode to 775 on client1
+    And user2 deletes files [space1/file1] on client2 on client2
 
 
   Scenario: User2 creates directory using web gui and user1 fails to change its permission using oneclient
@@ -80,4 +83,5 @@ Feature: POSIX privileges acceptance mixed tests multi user
     And user of browser sees that the modal has disappeared
 
     # Fail to change permission code
-    Then user1 fails to change space1/dir1 mode to 664
+    Then user1 fails to change space1/dir1 mode to 664 on client1
+    And user2 deletes empty directories [space1/dir1] on client2
