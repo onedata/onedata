@@ -19,6 +19,7 @@ from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 REPEATS = 1
 SUCCESS_RATE = 100
 LOGGING_INTERVAL = 60
+RPYC_TIMEOUT = 120
 
 # value written to files at their creation
 TEXT = "asd"
@@ -56,6 +57,10 @@ class TestFilesCreation(AbstractPerformanceTest):
         client_proxy = context.get_client(user_proxy, 'client-proxy')
         files_number = params['files_number']['value']
         empty_files = params['empty_files']['value']
+
+        for client in (client_directio, client_proxy):
+            conn = client.rpyc_connection
+            conn._config['sync_request_timeout'] = RPYC_TIMEOUT
 
         dir_path_directio = mkdtemp(client_directio,
                                     dir=client_directio.absolute_path('s1'))
