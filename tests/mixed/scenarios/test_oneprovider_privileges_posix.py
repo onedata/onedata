@@ -12,7 +12,6 @@ from pytest_bdd import scenarios, scenario
 
 from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.auth_steps import *
-from tests.acceptance.steps.multi_auth_steps import *
 from tests.acceptance.steps.dir_steps import *
 from tests.acceptance.steps.file_steps import *
 from tests.acceptance.steps.file_steps import *
@@ -61,4 +60,3 @@ def test_create_file_using_oneclient_and_change_permission_using_web_gui():
     pass
 
 scenarios('../features/oneprovider_privileges_posix.feature')
-scenarios('../features/oneprovider_multi_privileges_posix.feature')
