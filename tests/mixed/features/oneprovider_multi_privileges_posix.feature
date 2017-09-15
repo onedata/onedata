@@ -74,7 +74,7 @@ Feature: POSIX privileges acceptance mixed tests multi user
     Then user1 fails to change space1/file1 mode to 775 on client1
 
     # Clean up
-    And user2 deletes files [space1/file1] on client2 on client2
+    And user2 deletes files [space1/file1] on client2
 
 
   Scenario: User2 creates directory using web gui and user1 fails to change its permission using oneclient

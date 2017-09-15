@@ -44,6 +44,7 @@ from tests.gui.steps.oneprovider_shares import *
 from tests.gui.steps.oneprovider_metadata import *
 from tests.gui.steps.oneprovider_file_list import *
 from tests.gui.steps.oneprovider_sidebar_list import *
+from tests.gui.steps.oneprovider_permissions import *
 
 
 scenarios('../features/oneprovider_directories_multiclient.feature')
