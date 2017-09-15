@@ -12,9 +12,6 @@ from pytest_bdd import scenarios, scenario
 
 from tests.acceptance.steps.env_steps import *
 from tests.acceptance.steps.auth_steps import *
-from tests.acceptance.steps.multi_auth_steps import *
-from tests.acceptance.steps.multi_file_steps import *
-from tests.acceptance.steps.multi_dir_steps import *
 from tests.acceptance.steps.dir_steps import *
 from tests.acceptance.steps.file_steps import *
 from tests.acceptance.steps.file_steps import *
