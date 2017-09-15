@@ -30,6 +30,8 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     Then user of browser sees that current permission is "775"
+
+    # Clean up
     And user1 deletes files [space1/file1]
 
 
@@ -50,8 +52,9 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     Then user of browser sees that current permission is "664"
-    And user1 deletes empty directories [space1/dir1]
 
+    # Clean up
+    And user1 deletes empty directories [space1/dir1]
 
 
   Scenario: User changes file permission using web gui and using oneclient he sees that it has changed
@@ -78,6 +81,8 @@ Feature: POSIX privileges acceptance mixed tests
 
     #Check permission code
     Then mode of user1's space1/file1 is 775
+
+    # Clean up
     And user1 deletes files [space1/file1]
 
 
@@ -105,6 +110,8 @@ Feature: POSIX privileges acceptance mixed tests
 
     #Check permission code
     Then mode of user1's space1/dir1 is 664
+
+    # Clean up
     And user1 deletes empty directories [space1/dir1]
 
 
@@ -133,6 +140,8 @@ Feature: POSIX privileges acceptance mixed tests
     #Check status-change time
     And user1 waits 2 seconds
     Then status-change time of user1's space1/file1 is greater than modification time
+
+    # Clean up
     And user1 deletes files [space1/file1]
     
     
@@ -161,7 +170,10 @@ Feature: POSIX privileges acceptance mixed tests
     #Check status-change time
     And user1 waits 2 seconds
     Then status-change time of user1's space1/dir1 is greater than modification time
+
+    # Clean up
     And user1 deletes empty directories [space1/dir1]
+
 
   Scenario: User creates file using oneclient and changes its permission using web gui
 
@@ -183,6 +195,8 @@ Feature: POSIX privileges acceptance mixed tests
     #Check permission code
     Then user1 waits 2 seconds
     And mode of user1's space1/file1 is 775
+
+    # Clean up
     And user1 deletes files [space1/file1]
         
         
@@ -206,6 +220,8 @@ Feature: POSIX privileges acceptance mixed tests
     # Check permission code
     Then user1 waits 2 seconds
     Then mode of user1's space1/dir1 is 664
+
+    # Clean up
     And user1 deletes empty directories [space1/dir1]
 
 
@@ -233,6 +249,8 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     Then user of browser sees that current permission is "775"
+
+    # Clean up
     And user1 deletes files [space1/file1]
 
 
@@ -260,5 +278,7 @@ Feature: POSIX privileges acceptance mixed tests
     And user of browser sees that "Edit permissions" modal has appeared
     And user of browser selects "POSIX" permission type in active modal
     Then user of browser sees that current permission is "664"
+
+    # Clean up
     And user1 deletes empty directories [space1/dir1]
 
