@@ -4,6 +4,35 @@
 CHANGELOG
 ---------
 
+### 17.06.1
+
+* VFS-3656 Removed support for Ubuntu Wily
+* VFS-3517 Added tests checking timestamps after renaming item in GUI to xfail due to VFS-3520
+* VFS-3517 Changed amount of time to wait between creating and renaming space
+* VFS-3515 add additional logs to performance tests
+* VFS-3281 Added extended attributes acceptance tests
+
+
+### 17.06.0.beta1
+
+* Deps update
+* Deps update
+* Deps update
+* Deps update
+* Deps update
+* Deps update
+* Deps update
+* Deps update
+* Deps update
+* Deps update
+* VFS-3192 Update couchbase to version 4.5.1 in packaging tests
+* VFS-3192 Specify couchbase version
+* Update refs to origin/feature/VFS-3192-integrate-new-datastore2.
+* Deps update
+* Deps update
+* Update refs to origin/feature/VFS-3192-integrate-new-datastore2.
+
+
 ### 17.06.0-rc2
 
 * VFS-3434 Multiuser tests implemented
