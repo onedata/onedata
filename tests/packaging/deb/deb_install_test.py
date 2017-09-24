@@ -78,6 +78,20 @@ def oneclient(request, setup_command):
 
 @pytest.fixture(scope='module',
                 params=['xenial'])
+def oneclient_base(request, setup_command):
+    distribution = Distribution(request, privileged=True)
+    command = setup_command.format(dist=distribution.name)
+
+    assert 0 == docker.exec_(distribution.container,
+                             interactive=True,
+                             tty=True,
+                             command=command)
+
+    return distribution
+
+
+@pytest.fixture(scope='module',
+                params=['xenial'])
 def oneprovider(request, onezone, setup_command):
     distribution = Distribution(request, link={onezone.domain: 'onedata.org'})
     command = setup_command.format(dist=distribution.name)
@@ -98,6 +112,13 @@ def test_oneclient_installation(oneclient):
                              interactive=True,
                              tty=True,
                              command='python /root/data/install_oneclient.py')
+
+
+def test_oneclient_base_installation(oneclient_base):
+    assert 0 == docker.exec_(oneclient_base.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_oneclient_base.py')
 
 
 def test_oneprovider_installation(oneprovider):
