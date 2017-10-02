@@ -154,7 +154,7 @@ test_packaging:
 	${TEST_RUN} --test-type packaging -vvv --test-dir tests/packaging -s
 
 test:
-	${TEST_RUN} --test-type acceptance -vvv  --test-dir tests/acceptance/scenarios/${SUITE}.py
+	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/scenarios/${SUITE}.py
 
 test_performance:
 	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance
