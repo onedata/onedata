@@ -10,8 +10,10 @@ from tests import *
 from tests.utils.path_utils import (make_logdir, get_file_name, get_json_files,
                                     absolute_path_to_env_file)
 from tests.utils.utils import run_env_up_script, hostname, get_domain
+from tests.utils.docker_utils import docker_ip
 
 from environment import docker
+from environment.common import ensure_provider_oz_connectivity
 
 import json
 import pytest
@@ -28,6 +30,9 @@ def pytest_addoption(parser):
                      help="Ignores xfail mark")
     parser.addoption("--env-file", action="store", default=None,
                      help="description of environment that will be tested")
+    parser.addoption('--docker-name', action="store", default='',
+                    help='Used only with test_run.py: name of docker container '
+                         'to be connected to scenario network')
 
 
 def pytest_generate_tests(metafunc):
@@ -76,6 +81,16 @@ def persistent_environment(request, env_description_abs_path):
                                feature_name))
     env_desc = run_env_up_script("env_up.py", config=env_description_abs_path,
                                  logdir=logdir, skip=False)
+
+    # Make sure OP instances are connected to their zones before the test starts.
+    print('Waiting for OZ connectivity of providers...')
+    for op_node in env_desc['op_worker_nodes']:
+        host = op_node.split("@")[1]
+        ip = docker_ip(host)
+        if not ensure_provider_oz_connectivity(ip):
+            raise Exception(
+                'Could not ensure OZ connectivity of provider {0}'.format(host))
+    print('OZ connectivity established')
 
     def fin():
         docker.remove(request.onedata_environment['docker_ids'],
