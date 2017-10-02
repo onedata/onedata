@@ -26,7 +26,7 @@ RUN curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh && \
 
 # Install oneclient package
 RUN curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneclient.sh && \
-    sh oneclient.sh oneclient=${ONECLIENT_VERSION}-1 && \
+    sh oneclient.sh oneclient-base=${ONECLIENT_VERSION}-1 && \
     rm -f oneclient.sh
 
 EXPOSE 53 53/udp 80 443 5555 5556 6665 6666 7443 8443 8876 8877 9443
