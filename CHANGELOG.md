@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 17.06.0-rc4
+
+* VFS-3682 Added self-contained Oneclient packaging
+
+
 ### 17.06.0-rc3
 
 * VFS-3656 Removed support for Ubuntu Wily
