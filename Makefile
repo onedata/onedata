@@ -31,6 +31,7 @@ OP_PANEL_VERSION        := $(shell echo ${OP_PANEL_VERSION} | tr - .)
 ONECLIENT_VERSION       := $(shell echo ${ONECLIENT_VERSION} | tr - .)
 
 ONEPROVIDER_BUILD       ?= 1
+ONECLIENT_FPMPACKAGE_TMP ?= package_fpm
 
 ifdef IGNORE_XFAIL
 TEST_RUN := ./test_run.py --ignore-xfail
@@ -60,16 +61,16 @@ NO_CACHE :=  $(shell if [ "${NO_CACHE}" != "" ]; then echo "--no-cache"; fi)
 
 make = $(1)/make.py -s $(1) -r . $(NO_CACHE)
 clean = $(call make, $(1)) clean
-make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i rpm_builder:$(DISTRIBUTION) $(2)
+make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i onedata/rpm_builder:$(DISTRIBUTION) $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
 	mv $(1)/package/packages/*.x86_64.rpm package/$(DISTRIBUTION)/x86_64
-make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i deb_builder:$(DISTRIBUTION) $(2)
-mv_deb = mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source && \
+make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder:$(DISTRIBUTION) $(2)
+mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64 && \
+	mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*.diff.gz package/$(DISTRIBUTION)/source || \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source && \
-	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source && \
-	mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64
+	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source
 unpack = tar xzf $(1).tar.gz
 
 ##
@@ -150,8 +151,14 @@ RECORDING_OPTION    ?= failed
 test_env_up:
 	${TEST_RUN} --test-type env_up -vvv --test-dir tests/env_up
 
-test_packaging:
-	${TEST_RUN} --test-type packaging -vvv --test-dir tests/packaging -s
+test_provider_packaging test_packaging:
+	${TEST_RUN} --test-type packaging -k "oneprovider" -vvv --test-dir tests/packaging -s
+
+test_oneclient_packaging:
+	${TEST_RUN} --test-type packaging -k "oneclient and not base" -vvv --test-dir tests/packaging -s
+
+test_oneclient_base_packaging:
+	${TEST_RUN} --test-type packaging -k "oneclient_base" -vvv --test-dir tests/packaging -s
 
 test:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/scenarios/${SUITE}.py
@@ -212,7 +219,7 @@ clean_cluster_worker:
 clean_packages:
 	rm -rf oneprovider_meta/oneprovider.spec \
 		oneprovider_meta/oneprovider/DEBIAN/control \
-		oneprovider_meta/package package
+		oneprovider_meta/package package oneclient_package_tmp
 
 ##
 ## RPM packaging
@@ -263,7 +270,7 @@ rpmdirs:
 ## DEB packaging
 ##
 
-deb: deb_oneprovider deb_oneclient
+deb: deb_oneprovider deb_oneclient_base
 
 deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
@@ -289,7 +296,7 @@ deb_cluster_manager: clean_cluster_manager debdirs
 	$(call make_deb, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION)
 	$(call mv_deb, cluster_manager)
 
-deb_oneclient: clean_oneclient debdirs
+deb_oneclient_base: clean_oneclient debdirs
 	$(call make_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_deb, oneclient)
 
@@ -308,7 +315,6 @@ package.tar.gz:
 ##
 
 docker: docker-dev
-	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
                       --build-arg RELEASE=$(DOCKER_RELEASE) \
@@ -333,3 +339,41 @@ docker-dev:
                       --short-report docker-dev-build-list.json \
                       --name oneprovider-dev \
                       --publish --remove docker-dev
+
+#
+# Build intermediate Oneclient Docker image with oneclient installed from
+# a normal (oneclient-base) package into /usr/ prefix.
+#
+docker_oneclient_base:
+	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION)
+
+#
+# Build final Oneclient Docker image with oneclient installed from
+# self contained package (oneclient) into /opt/oneclient prefix and
+# symlinked into /usr prefix.
+#
+docker_oneclient:
+	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
+
+#
+# Build self-contained Oneclient archive, by extracting all necessary files
+# from intermediate Oneclient Docker image (oneclient-base)
+#
+oneclient_tar oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient-bin.tar.gz:
+	$(MAKE) -C oneclient oneclient_tar
+
+#
+# Build production Oneclient RPM using FPM tool from self contained archive
+#
+oneclient_rpm: oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient-bin.tar.gz rpmdirs
+	$(MAKE) -C oneclient DISTRIBUTION=$(DISTRIBUTION) ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
+		oneclient_rpm
+	mv oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient*.rpm package/$(DISTRIBUTION)/x86_64
+
+#
+# Build production Oneclient DEB using FPM tool from self-contained archive
+#
+oneclient_deb: oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient-bin.tar.gz debdirs
+	$(MAKE) -C oneclient DISTRIBUTION=$(DISTRIBUTION) ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
+		oneclient_deb
+	mv oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient*.deb package/$(DISTRIBUTION)/binary-amd64
