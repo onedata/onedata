@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 17.06.0-rc5
+
+* Releasing new version 17.06.0-rc5
+
+
 ### 17.06.0-rc4
 
 * VFS-3682 Added self-contained Oneclient packaging
