@@ -93,9 +93,7 @@
                             ],
                             "db_nodes": [
                                 "dbnode1"
-                            ],
-                            "global_registry_domain": "gr1",
-                            "verify_gr_cert": false
+                            ]
                         }
                     }
                 },
@@ -110,9 +108,7 @@
                             ],
                             "db_nodes": [
                                 "dbnode1"
-                            ],
-                            "global_registry_domain": "gr1",
-                            "verify_gr_cert": false
+                            ]
                         }
                     }
                 }
