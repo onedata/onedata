@@ -58,8 +58,7 @@
                             ],
                             "db_nodes": [
                                 "riaknode1"
-                            ],
-                            "verify_gr_cert": false
+                            ]
                         }
                     }
                 }
