@@ -1,6 +1,8 @@
 from tests import *
 import pytest
 import tests.utils.path_utils
+import tests.utils.utils
+import tests.packaging.oneprovider_common
 
 from environment import docker, env
 
@@ -93,7 +95,16 @@ def oneclient_base(request, setup_command):
 @pytest.fixture(scope='module',
                 params=['xenial'])
 def oneprovider(request, onezone, setup_command):
-    distribution = Distribution(request, link={onezone.domain: 'onedata.org'})
+    onezone_node = onezone.domain
+    # onezone_node is in format node.oz.1234.dev, resolve domain (oz.1234.dev)
+    onezone_domain = tests.utils.utils.get_domain(onezone_node)
+    # Put the domain in config so the provider knows where to register
+    config_file = tests.utils.path_utils.config_file('config.yml')
+    tests.packaging.oneprovider_common.update_oz_domain_in_config(
+        config_file, onezone_domain)
+    # Link provider docker to the OZ node (this way we do not need DNS here).
+    # This link will cause connections to 'oz.1234.dev' reach 'node.oz.1234.dev'
+    distribution = Distribution(request, link={onezone_node: onezone_domain})
     command = setup_command.format(dist=distribution.name)
     command = '{command} && ' \
         'apt-get install -y python-setuptools && ' \
@@ -103,7 +114,6 @@ def oneprovider(request, onezone, setup_command):
                              interactive=True,
                              tty=True,
                              command=command)
-
     return distribution
 
 
@@ -122,7 +132,10 @@ def test_oneclient_base_installation(oneclient_base):
 
 
 def test_oneprovider_installation(oneprovider):
-    assert 0 == docker.exec_(oneprovider.container,
+    result = docker.exec_(oneprovider.container,
                              interactive=True,
                              tty=True,
                              command='python /root/data/install_oneprovider.py')
+    config_file = tests.utils.path_utils.config_file('config.yml')
+    tests.packaging.oneprovider_common.reset_oz_domain_in_config(config_file)
+    assert 0 == result
