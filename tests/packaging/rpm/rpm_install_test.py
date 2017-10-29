@@ -16,12 +16,10 @@ class Distribution(object):
 
         self.name = request.param
         self.image = {
-            'centos-7-x86_64': 'centos:7',
-            'fedora-23-x86_64': 'onedata/fedora-systemd:23'
+            'centos-7-x86_64': 'centos:7'
         }[self.name]
         self.repo = {
-            'centos-7-x86_64': 'centos_7x',
-            'fedora-23-x86_64': 'fedora_23'
+            'centos-7-x86_64': 'centos_7x'
         }[self.name]
         self.container = docker.run(interactive=True,
                                     tty=True,
@@ -69,7 +67,7 @@ def onezone(request):
 
 
 @pytest.fixture(scope='module',
-                params=['centos-7-x86_64', 'fedora-23-x86_64'])
+                params=['centos-7-x86_64'])
 def oneclient(request, setup_command):
     distribution = Distribution(request)
     command = setup_command.format(repo=distribution.repo)
@@ -83,7 +81,7 @@ def oneclient(request, setup_command):
 
 
 @pytest.fixture(scope='module',
-                params=['fedora-23-x86_64'])
+                params=['centos-7-x86_64'])
 def oneprovider(request, onezone, setup_command):
     distribution = Distribution(request, link={onezone.domain: 'onedata.org'})
     command = setup_command.format(repo=distribution.repo)
