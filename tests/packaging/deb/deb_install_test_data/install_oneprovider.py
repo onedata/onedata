@@ -20,24 +20,25 @@ oneprovider_package = [path for path in packages
                        if path.startswith('oneprovider')][0]
 
 # get couchbase
-check_call(['wget', 'http://packages.couchbase.com/releases/4.5.1/couchbase'
-                    '-server-community_4.5.1-ubuntu14.04_amd64.deb'])
+check_call(['wget', 'http://packages.onedata.org/apt/ubuntu/xenial/pool/main/c'
+                    '/couchbase-server-community/'
+                    'couchbase-server-community_4.5.1-ubuntu14.04_amd64.deb'])
 
 # install packages
-check_call(['sh', '-c',
-            'dpkg -i couchbase-server-community_4.5.1-ubuntu14.04_amd64.deb '
-            '; apt-get -f -y install'
+check_call(['sh', '-c', 'apt install -f -y '
+            './couchbase-server-community_4.5.1-ubuntu14.04_amd64.deb'
             ], stderr=STDOUT)
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=op_panel_package)
+check_call(['sh', '-c', 'apt install -f -y '
+            '/root/pkg/{package}'.format(package=op_panel_package)
             ], stderr=STDOUT)
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=cluster_manager_package)
+check_call(['sh', '-c', 'apt install -f -y '
+            '/root/pkg/{package}'.format(package=cluster_manager_package)
             ], stderr=STDOUT)
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=op_worker_package)
+check_call(['sh', '-c', 'apt install -f -y '
+            '/root/pkg/{package}'.format(package=op_worker_package)
             ], stderr=STDOUT)
-check_call(['dpkg', '-i', '/root/pkg/{package}'.
+check_call(['sh', '-c', 'apt install -f -y '
+            '/root/pkg/{package}'.
             format(package=oneprovider_package)], stderr=STDOUT)
 
 # validate packages installation
