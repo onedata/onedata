@@ -334,7 +334,6 @@ docker-dev:
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
                       --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
-                      --build-arg ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
                       --report docker-dev-build-report.txt \
                       --short-report docker-dev-build-list.json \
                       --name oneprovider-dev \
