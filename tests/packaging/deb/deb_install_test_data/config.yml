@@ -20,7 +20,8 @@ cluster:
 oneprovider:
   register: true
   name: "Provider"
-  redirectionPoint: "https://devel.localhost.local"
+  subdomainDelegation: false
+  domain: "devel.localhost.local"
   geoLatitude: 10.0
   geoLongitude: 20.0
 onezone:
