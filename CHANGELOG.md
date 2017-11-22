@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 17.06.0-rc8
+
+* VFS-3815 Modified packaging tests for CentOS 7
+
+
 ### 17.06.0-rc7
 
 * Releasing new version 17.06.0-rc7
