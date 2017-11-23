@@ -147,8 +147,10 @@ def configure(config):
                    verify=False)
 
     if r.status_code != 201 and r.status_code != 204:
-        raise ValueError('Failed to start configuration process (code: {0})\n'
-                         'For more information please check the logs.'.format(r.status_code))
+        raise ValueError('Failed to start configuration process, the response was:\n'
+                         '  code: {0}\n'
+                         '  body: {1}\n'
+                         'For more information please check the logs.'.format(r.status_code, r.text))
 
     loc = r.headers['location']
     status = 'running'
