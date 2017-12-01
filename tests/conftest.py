@@ -28,6 +28,9 @@ def pytest_addoption(parser):
                      help="Ignores xfail mark")
     parser.addoption("--env-file", action="store", default=None,
                      help="description of environment that will be tested")
+    parser.addoption('--docker-name', action='store', default='',
+                     help = 'Used only with test_run.py: name of docker container '
+                     'to be connected to scenario network')
 
 
 def pytest_generate_tests(metafunc):
