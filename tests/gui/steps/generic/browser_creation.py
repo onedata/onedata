@@ -49,7 +49,10 @@ def create_instances_of_webdriver(selenium, driver, browser_id_list, tmpdir,
                 download_dir = os.path.join(temp_dir, browser_id, 'download')
 
                 if driver_type.lower() == 'chrome':
-                    options = driver_kwargs['desired_capabilities']['chromeOptions']
+                    option_keys = driver_kwargs['desired_capabilities'].keys()
+                    option_key = [x for x in option_keys if x.endswith('chromeOptions')][-1]
+                    options = driver_kwargs['desired_capabilities'][option_key]
+
                     prefs = {"download.default_directory": download_dir}
                     options['prefs'].update(prefs)
 
