@@ -31,6 +31,7 @@ class Client:
         self.mount_path = mount_path
         self.rpyc_connection = None
         self.opened_files = {}
+        self.file_stats = {}
         self.rpyc_server_pid = None
         self.user_cert = None
         self.user_key = None

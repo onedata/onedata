@@ -335,6 +335,19 @@ def check_size(user, file, size, client_node, context):
     assert_(client.perform, condition)
 
 
+@when(parsers.re('(?P<user>\w+) records (?P<files>.*) '
+                 'stats on (?P<client_node>.*)'))
+@then(parsers.re('(?P<user>\w+) records (?P<files>.*) '
+                 'stats on (?P<client_node>.*)'))
+def record_stats(user, files, client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+
+    for file_ in list_parser(files):
+        file_path = client.absolute_path(file_)
+        client.file_stats[file_path] = stat(client, file_path)
+
+
 @then(parsers.re('(?P<time1>.*) time of (?P<user>\w+)\'s (?P<file>.*) is '
                  '(?P<comparator>.*) to (?P<time2>.*) time on (?P<client_node>.*)'))
 @then(parsers.re('(?P<time1>.*) time of (?P<user>\w+)\'s (?P<file>.*) is '
@@ -350,6 +363,27 @@ def check_time(user, time1, time2, comparator, file, client_node, context):
         stat_result = stat(client, file_path)
         t1 = getattr(stat_result, attr1)
         t2 = getattr(stat_result, attr2)
+        assert compare(t1, t2, comparator)
+
+    assert_(client.perform, condition)
+
+
+@then(parsers.re('(?P<time1>.*) time of (?P<user>\w+)\'s (?P<file1>.*) is '
+                 '(?P<comparator>.*) to recorded one of (?P<file2>.*)'))
+@then(parsers.re('(?P<time1>.*) time of (?P<user>\w+)\'s (?P<file1>.*) is '
+                 '(?P<comparator>.*) than recorded one of (?P<file2>.*)'))
+def cmp_time_to_previous(user, time1, comparator, file1, file2,
+                         client_node, context):
+    user = context.get_user(user)
+    client = user.get_client(client_node)
+    attr = time_attr(time1)
+    file_path = client.absolute_path(file1)
+    recorded_stats = client.file_stats[client.absolute_path(file2)]
+
+    def condition():
+        stat_result = stat(client, file_path)
+        t1 = getattr(stat_result, attr)
+        t2 = getattr(recorded_stats, attr)
         assert compare(t1, t2, comparator)
 
     assert_(client.perform, condition)

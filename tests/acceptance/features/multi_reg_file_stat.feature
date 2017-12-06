@@ -119,13 +119,28 @@ Feature: Multi_regular_file_stat
     And status-change time of u2's s1/file1 is greater than modification time on client2
     And status-change time of u2's s1/file1 is greater than access time on client2
 
-  Scenario: Status-change time when renaming
+  Scenario: Status-change time when renaming on posix storage
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
+    And u2 records [s1/file1] stats on client2
     And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 renames s1/file1 to s1/file2 on client1
     Then u2 sees [file2] in s1 on client2
-    And status-change time of u2's s1/file2 is equal to modification time on client2
-    And status-change time of u2's s1/file2 is equal to access time on client2
+    And access time of u2's s1/file2 is equal to recorded one of s1/file1
+    And modification time of u2's s1/file2 is equal to access time on client2
+    And status-change time of u2's s1/file2 is not less than access time on client2
+
+  Scenario: Status-change time when renaming on nonposix storage
+    When u1 creates regular files [s1/file1] on client1
+    And u1 sees [file1] in s1 on client1
+    And u2 sees [file1] in s1 on client2
+    And u2 records [s1/file1] stats on client2
+    And u1 waits 2 second
+    # call sleep, to be sure that time of above and below operations is different
+    And u1 renames s1/file1 to s1/file2 on client1
+    Then u2 sees [file2] in s1 on client2
+    And access time of u2's s1/file2 is greater than recorded one of s1/file1
+    And modification time of u2's s1/file2 is equal to access time on client2
+    And status-change time of u2's s1/file2 is not less than access time on client2
