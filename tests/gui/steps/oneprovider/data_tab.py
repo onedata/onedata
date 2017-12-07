@@ -36,13 +36,13 @@ def change_space_view_in_data_tab_in_op(selenium, browser_id,
                  r'"(?P<tooltip>Create directory|Create file|Share element|'
                  r'Edit metadata|Rename element|Change element permissions|'
                  r'Copy element|Cut element|Remove element|'
-                 r'Show file distribution)"'))
+                 r'Show data distribution)"'))
 @then(parsers.re(r'user of (?P<browser_id>.*?) clicks the button '
                  r'from top menu bar with tooltip '
                  r'"(?P<tooltip>Create directory|Create file|Share element|'
                  r'Edit metadata|Rename element|Change element permissions|'
                  r'Copy element|Cut element|Remove element|'
-                 r'Show file distribution)"'))
+                 r'Show data distribution)"'))
 @repeat_failed(timeout=WAIT_FRONTEND)
 def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
                                                  tooltip, op_page):
@@ -60,8 +60,8 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that {btn_list} buttons '
                     'are enabled in toolbar in data tab in Oneprovider gui'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
-                                                 btn_list, op_page):
+def assert_btn_enabled_in_toolbar_in_data_tab_in_op(selenium, browser_id,
+                                                    btn_list, op_page):
     driver = selenium[browser_id]
     toolbar = op_page(driver).data.toolbar
     err_msg = '{} should be disabled but is not'
@@ -79,8 +79,8 @@ def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that {btn_list} buttons are '
                     'disabled in toolbar in data tab in Oneprovider gui'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def click_tooltip_from_toolbar_in_data_tab_in_op(selenium, browser_id,
-                                                 btn_list, op_page):
+def assert_btn_disabled_in_toolbar_in_data_tab_in_op(selenium, browser_id,
+                                                     btn_list, op_page):
     driver = selenium[browser_id]
     toolbar = op_page(driver).data.toolbar
     err_msg = '{} btn should be disabled but is not in toolbar in op data tab'
@@ -324,10 +324,10 @@ def upload_files_to_cwd_in_data_tab(selenium, browser_id, dir_path,
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is of {size} size'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def assert_provider_chunk_in_file_distribution_size(selenium, browser_id,
+def assert_provider_chunk_in_data_distribution_size(selenium, browser_id,
                                                     size, provider, modals):
     driver = selenium[browser_id]
-    prov_rec = modals(driver).file_distribution.providers[provider]
+    prov_rec = modals(driver).data_distribution.providers[provider]
     distribution = prov_rec.distribution
     displayed_size = distribution.end
     assert displayed_size == size, 'displayed chunk size {} in file ' \
@@ -340,10 +340,10 @@ def assert_provider_chunk_in_file_distribution_size(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is entirely filled'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
+def assert_provider_chunk_in_data_distribution_filled(selenium, browser_id,
                                                       provider, modals):
     driver = selenium[browser_id]
-    prov_rec = modals(driver).file_distribution.providers[provider]
+    prov_rec = modals(driver).data_distribution.providers[provider]
     distribution = prov_rec.distribution
     size, _ = distribution.size
     chunks = distribution.chunks
@@ -360,10 +360,10 @@ def assert_provider_chunk_in_file_distribution_filled(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees that chunk bar for provider '
                     'named "{provider}" is entirely empty'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
+def assert_provider_chunk_in_data_distribution_empty(selenium, browser_id,
                                                      provider, modals):
     driver = selenium[browser_id]
-    prov_rec = modals(driver).file_distribution.providers[provider]
+    prov_rec = modals(driver).data_distribution.providers[provider]
     distribution = prov_rec.distribution
     size, _ = distribution.size
     chunks = distribution.chunks
@@ -376,10 +376,10 @@ def assert_provider_chunk_in_file_distribution_empty(selenium, browser_id,
 @then(parsers.parse('user of {browser_id} sees {chunks} chunk(s) for provider '
                     'named "{provider}" in chunk bar'))
 @repeat_failed(timeout=WAIT_FRONTEND)
-def assert_provider_chunks_in_file_distribution(selenium, browser_id, chunks,
+def assert_provider_chunks_in_data_distribution(selenium, browser_id, chunks,
                                                 provider, modals):
     driver = selenium[browser_id]
-    prov_rec = modals(driver).file_distribution.providers[provider]
+    prov_rec = modals(driver).data_distribution.providers[provider]
     distribution = prov_rec.distribution
     size, _ = distribution.size
     displayed_chunks = distribution.chunks
