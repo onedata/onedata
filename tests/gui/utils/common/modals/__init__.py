@@ -1,7 +1,7 @@
 """Utils for operations on modals in GUI tests
 """
 
-from .file_distribution import FileDistributionModal
+from .data_distribution import DataDistributionModal
 from .add_storage import AddStorage
 from .edit_permissions import EditPermissionsModal
 from tests.gui.utils.core.web_elements import WebItem
@@ -14,7 +14,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class Modals(object):
     add_storage = WebItem('.panel-onezone-modal.in', cls=AddStorage)
-    file_distribution = WebItem('#file-chunks-modal', cls=FileDistributionModal)
+    data_distribution = WebItem('#file-chunks-modal', cls=DataDistributionModal)
     edit_permissions = WebItem('#edit-permissions-modal', cls=EditPermissionsModal)
 
     def __init__(self, driver):

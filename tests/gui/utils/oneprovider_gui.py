@@ -4,6 +4,7 @@
 from tests.gui.utils.core.web_elements import WebElement
 from tests.gui.utils.generic import find_web_elem_with_text, click_on_web_elem
 from tests.gui.utils.oneprovider.data_tab import DataTab
+from tests.gui.utils.oneprovider.transfers import TransfersTab
 from tests.gui.utils.oneprovider.user_profile import UserProfile
 
 __author__ = "Jakub Liput, Bartosz Walkowicz"
@@ -44,7 +45,8 @@ def chdir_using_breadcrumbs(path, breadcrumbs):
 class OPLoggedIn(object):
     _user_profile = WebElement('li.profile-dropdown')
 
-    tabs = {'data': DataTab}
+    tabs = {'data': DataTab,
+            'transfers': TransfersTab}
 
     def __init__(self, driver):
         self.web_elem = driver

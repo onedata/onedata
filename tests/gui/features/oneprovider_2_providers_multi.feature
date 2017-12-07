@@ -23,8 +23,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
 
     # check file distribution
     And user of browser1 clicks once on file named "20B-0.txt" of files list
-    And user of browser1 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser1 sees that "File distribution" modal has appeared
+    And user of browser1 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser1 sees that "Data distribution" modal has appeared
     Then user of browser1 sees that chunk bar for provider named "p1" is entirely filled
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
@@ -35,8 +35,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 sees file browser in data tab in Oneprovider page
     And user of browser2 sees that current working directory displayed in breadcrumbs is space4
     And user of browser2 clicks once on file named "20B-0.txt" of files list
-    And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser2 sees that "File distribution" modal has appeared
+    And user of browser2 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser2 sees that "Data distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
     # TODO: uncomment when empty chunk bar will be displayed in GUI
     # And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
@@ -46,8 +46,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 sees that content of downloaded file "20B-0.txt" is equal to: "00000000000000000000"
 
     And user of browser2 clicks once on file named "20B-0.txt" of files list
-    And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser2 sees that "File distribution" modal has appeared
+    And user of browser2 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser2 sees that "Data distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
     And user of browser2 sees that chunk bar for provider named "p2" is entirely filled
     And user of browser2 clicks "Close" confirmation button in displayed modal
@@ -57,8 +57,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser1 refreshes site
     And user of browser1 sees file browser in data tab in Oneprovider page
     And user of browser1 clicks once on file named "20B-0.txt" of files list
-    And user of browser1 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser1 sees that "File distribution" modal has appeared
+    And user of browser1 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser1 sees that "Data distribution" modal has appeared
     And user of browser1 sees that chunk bar for provider named "p1" is entirely filled
     And user of browser1 sees that chunk bar for provider named "p2" is entirely filled
     And user of browser1 clicks "Close" confirmation button in displayed modal
@@ -87,8 +87,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
 
     # check file distribution on p1
     And user of browser1 clicks once on file named "20B-0.txt" of files list
-    And user of browser1 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser1 sees that "File distribution" modal has appeared
+    And user of browser1 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser1 sees that "Data distribution" modal has appeared
     Then user of browser1 sees that chunk bar for provider named "p1" is entirely filled
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
@@ -100,8 +100,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 sees file browser in data tab in Oneprovider page
     And user of browser2 sees that current working directory displayed in breadcrumbs is space4
     And user of browser2 clicks once on file named "20B-0.txt" of files list
-    And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser2 sees that "File distribution" modal has appeared
+    And user of browser2 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser2 sees that "Data distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
     # TODO: uncomment when empty chunk bar will be displayed in GUI
     # And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
@@ -114,8 +114,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 sees file browser in data tab in Oneprovider page
 
     And user of browser2 clicks once on file named "20B-0.txt" of files list
-    And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser2 sees that "File distribution" modal has appeared
+    And user of browser2 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser2 sees that "Data distribution" modal has appeared
     Then user of browser2 sees (0, 20) chunk(s) for provider named "p1" in chunk bar
     And user of browser2 sees (20, 24) chunk(s) for provider named "p2" in chunk bar
 
@@ -145,8 +145,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
 
     # check file distribution on p1
     And user of browser1 clicks once on file named "20B-0.txt" of files list
-    And user of browser1 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser1 sees that "File distribution" modal has appeared
+    And user of browser1 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser1 sees that "Data distribution" modal has appeared
     Then user of browser1 sees that chunk bar for provider named "p1" is entirely filled
     And user of browser1 clicks "Close" confirmation button in displayed modal
     And user of browser1 sees that the modal has disappeared
@@ -158,8 +158,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 sees file browser in data tab in Oneprovider page
     And user of browser2 sees that current working directory displayed in breadcrumbs is space4
     And user of browser2 clicks once on file named "20B-0.txt" of files list
-    And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser2 sees that "File distribution" modal has appeared
+    And user of browser2 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser2 sees that "Data distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
     # TODO: uncomment when empty chunk bar will be displayed in GUI
     # And user of browser2 sees that chunk bar for provider named "p2" is entirely empty
@@ -172,8 +172,8 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
     And user of browser2 sees file browser in data tab in Oneprovider page
 
     And user of browser2 clicks once on file named "20B-0.txt" of files list
-    And user of browser2 clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser2 sees that "File distribution" modal has appeared
+    And user of browser2 clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser2 sees that "Data distribution" modal has appeared
     And user of browser2 sees that chunk bar for provider named "p1" is entirely filled
     Then user of browser2 sees (10, 20) chunk(s) for provider named "p2" in chunk bar
 

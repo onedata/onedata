@@ -23,8 +23,8 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
 
     And user of browser sees that item named "20B-0.txt" is of 20 B size in file browser
     And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser sees that "Data distribution" modal has appeared
     And user of browser sees that chunk bar for provider named "p1" is of 20 B size
     And user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser clicks "Close" confirmation button in displayed modal
@@ -37,8 +37,8 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
 
     And user of browser sees that item named "20B-0.txt" is of 24 B size in file browser
     And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser sees that "Data distribution" modal has appeared
     Then user of browser sees that chunk bar for provider named "p1" is of 24 B size
     And user of browser sees that chunk bar for provider named "p1" is entirely filled
 
@@ -66,8 +66,8 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees that item named "20B-0.txt" has appeared in file browser
 
     And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser sees that "Data distribution" modal has appeared
     And user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
@@ -78,8 +78,8 @@ Feature: Oneprovider functionality using multiple providers and cdmi service
     And user of browser sees file browser in data tab in Oneprovider page
 
     And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser sees that "Data distribution" modal has appeared
     Then user of browser sees [(0, 20), (40, 44)] chunk(s) for provider named "p1" in chunk bar
 
     And user of browser clicks "Close" confirmation button in displayed modal

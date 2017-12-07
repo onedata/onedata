@@ -17,6 +17,9 @@ class _SpaceRecord(PageObject):
                                     parent_name='given space record')
     _icon = IconWebElement('.item-icon .one-icon')
 
+    def select(self):
+        self.web_elem.click()
+
     def __str__(self):
         return '{name} in {parent}'.format(name=self.name, parent=self.parent)
 
