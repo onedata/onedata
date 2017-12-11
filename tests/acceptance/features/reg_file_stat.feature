@@ -67,8 +67,7 @@ Feature: Regular_file_stat
     And u1 waits 2 second
     # call sleep, to be sure that time of above and below operations is different
     And u1 writes "TEST TEXT ONEDATA" to s1/file1
-    Then u1 reads "TEST TEXT ONEDATA" from file s1/file1
-    And modification time of u1's s1/file1 is greater than access time
+    Then modification time of u1's s1/file1 is greater than access time
     And modification time of u1's s1/file1 is equal to status-change time
 
   Scenario: Status-change time when changing mode
