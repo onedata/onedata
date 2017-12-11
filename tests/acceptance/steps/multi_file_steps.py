@@ -40,9 +40,14 @@ def touch_file_base(user, files, client_node, context, should_fail=False):
         file_path = client.absolute_path(file)
 
         def condition():
-            touch(client, file_path)
+            try:
+                touch(client, file_path)
+            except OSError:
+                return True if should_fail else False
+            else:
+                return False if should_fail else True
 
-        assert_generic(client.perform, should_fail, condition)
+        assert_(client.perform, condition)
 
 
 @when(parsers.re('(?P<user>\w+) creates regular files (?P<files>.*) '

@@ -36,7 +36,6 @@ Feature: Multi_directory_stat
   Scenario: Update timestamps without write permission
     # touch s1/dir1
     When u1 creates directories [s1/dir1] on client1
-    And u1 waits 2 second
     And u1 changes s1/dir1 mode to 755 on client1
     And u1 creates directories [s1/dir1/dir2] on client1
     And u2 fails to update [s1/dir1] timestamps on client2
