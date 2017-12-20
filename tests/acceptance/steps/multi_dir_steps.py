@@ -10,6 +10,7 @@ from tests.utils.utils import assert_generic, assert_
 from tests.utils.acceptance_utils import *
 from tests.utils.client_utils import ls, rm, rmdir, mkdir, cp
 import os
+import errno
 
 
 @when(parsers.re('(?P<user>\w+) creates directories (?P<dirs>.*) on (?P<client_node>.*)'))
@@ -162,7 +163,14 @@ def list_dir_base(user, dir, client_node, context, should_fail=False):
     path = client.absolute_path(dir)
 
     def condition():
-        ls(client, path=path)
+        try:
+            ls(client, path=path)
+        except OSError as ex:
+            if ex.errno == errno.EPERM:
+                return True if should_fail else False
+            raise ex
+        else:
+            return False if should_fail else True
 
     assert_generic(client.perform, should_fail, condition)
 
