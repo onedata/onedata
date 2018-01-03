@@ -157,7 +157,7 @@ def find_web_elem(web_elem_root, css_sel, err_msg):
     except NoSuchElementException:
         with suppress(TypeError):
             err_msg = err_msg()
-        raise RuntimeError(err_msg)
+        raise RuntimeError("{0} ({1})".format(err_msg, css_sel))
     else:
         return item
 

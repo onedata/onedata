@@ -15,7 +15,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class _BasicMetadataEntry(PageObject):
     attribute = id = TextLabelWebElement('th')
-    value = TextLabelWebElement('td')
+    value = InputWebElement('td textarea.basic-value')
     remove = ButtonWebItem('.oneicon-close')
 
     def __str__(self):
@@ -24,7 +24,7 @@ class _BasicMetadataEntry(PageObject):
 
 class _BasicMetadataNewEntry(PageObject):
     attribute = InputWebElement('th input[placeholder=Attribute]')
-    value = InputWebElement('td input[placeholder=Value]')
+    value = InputWebElement('td textarea[placeholder=Value]')
     add = ButtonWebItem('.oneicon-add')
 
     def __str__(self):
