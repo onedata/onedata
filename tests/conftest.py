@@ -136,14 +136,8 @@ def providers(persistent_environment, request):
         provider_id = op_domain.split('.')[0]
         if provider_id not in providers.keys():
             new_provider = Provider(provider_id, op_domain, oz_domain)
-            new_provider.copy_certs_from_docker(op_hostname)
             providers[provider_id] = new_provider
 
-    def fin():
-        for provider in providers.itervalues():
-            provider.delete_certs()
-
-    request.addfinalizer(fin)
     return providers
 
 
@@ -260,18 +254,8 @@ class Provider:
     def __init__(self, id, domain, oz_domain):
         self.id = id
         self.domain = domain
-        self.cert_dir = tempfile.mkdtemp()
-        self.key_file = os.path.join(self.cert_dir, PROVIDER_KEY_FILE)
-        self.cert_file = os.path.join(self.cert_dir, PROVIDER_CERT_FILE)
         self.spaces = {}
         self.oz_domain = oz_domain
-
-    def copy_certs_from_docker(self, op_hostname):
-        docker.cp(op_hostname, PROVIDER_KEY_PATH, self.cert_dir, False)
-        docker.cp(op_hostname, PROVIDER_CERT_PATH, self.cert_dir, False)
-
-    def delete_certs(self):
-        shutil.rmtree(self.cert_dir)
 
 
 def get_test_type(request):
