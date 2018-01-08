@@ -40,10 +40,6 @@ PERFORMANCE_ENV_DIR = os.path.join(PERFORMANCE_DIR, "environments")
 PERFORMANCE_OUTPUT = os.path.join(PERFORMANCE_LOGDIR, "performance.json")
 EXAMPLE_ENV_DIR = os.path.join(BAMBOOS_DIR, "example_env")
 PROVIDER_CERT_DIR = os.path.join("root", "bin", "node", "etc", "certs")
-PROVIDER_KEY_FILE = "ozp_key.pem"
-PROVIDER_CERT_FILE = "ozp_cert.pem"
-PROVIDER_KEY_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_KEY_FILE)
-PROVIDER_CERT_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_CERT_FILE)
 ENV_CONFIGURATOR_ESCRIPT = os.path.join(BAMBOOS_DIR, 'env_configurator',
                                         'env_configurator.escript')
 
