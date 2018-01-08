@@ -8,7 +8,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 from tests.gui.utils.core.common import PageObject
-from tests.gui.utils.oneprovider.data_tab.space_selector import _SpaceRecord
+from tests.gui.utils.oneprovider.data_tab.space_selector import SpaceRecord
 from tests.gui.utils.core.web_elements import (TextLabelWebElement, WebElement,
                                                IconWebElement, WebItemsSequence,
                                                ButtonWithTextWebElement, WebItem)
@@ -23,8 +23,8 @@ class TransferRecord(PageObject):
 
     def get_chart(self):
         if not 'expanded-row' in self.web_elem.get_attribute('class'):
-            raise (RuntimeError("Transfer record for file {} is not expanded".
-                                format(self.name)))
+            raise RuntimeError("Transfer record for file {} is not expanded".
+                                format(self.name))
         return TransferChart(self.driver, self.web_elem.find_element_by_xpath(
                              ' .//following-sibling::tr'), self.web_elem)
 
@@ -74,7 +74,7 @@ class TransferChart(PageObject):
 
 
 class TransfersTab(PageObject):
-    spaces = WebItemsSequence('ul.spaces-list li', cls=_SpaceRecord)
+    spaces = WebItemsSequence('ul.spaces-list li', cls=SpaceRecord)
     active = WebItemsSequence('.col-active-transfers tr.data-row', cls = TransferRecordActive)
     history = WebItemsSequence('.col-completed-transfers tr.data-row', cls = TransferRecordHistory)
 

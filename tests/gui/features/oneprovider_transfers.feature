@@ -11,7 +11,7 @@ Feature: Oneprovider transfers functionality
     And user of browser seen that Oneprovider session has started
 
 
-  Scenario: User migrates file
+  Scenario: User migrates file to remote provider
     When user of browser changes current space in data tab to "space4"
     And user of browser uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -53,7 +53,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "large_file.txt" in file browser
 
 
-  Scenario: User migrates directory
+  Scenario: User migrates directory to remote provider
     When user of browser changes current space in data tab to "space4"
     And user of browser creates directory "dir1"
     And user of browser double clicks on item named "dir1" in file browser
@@ -95,7 +95,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "dir1" in file browser
 
 
-  Scenario: User replicates file
+  Scenario: User replicates file to remote provider
     When user of browser changes current space in data tab to "space4"
     And user of browser uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -137,7 +137,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "large_file.txt" in file browser
 
 
-  Scenario: User replicates directory
+  Scenario: User replicates directory to remote provider
     When user of browser changes current space in data tab to "space4"
     And user of browser creates directory "dir1"
     And user of browser double clicks on item named "dir1" in file browser
@@ -183,7 +183,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "dir1" in file browser
 
 
-  Scenario: User tries to migrate file to too small space
+  Scenario: User tries to migrate file to too small space on remote provider
     When user of browser changes current space in data tab to "space2"
     And user of browser uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -217,7 +217,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "large_file.txt" in file browser
 
 
-  Scenario: User tries to migrate directory to too small space
+  Scenario: User tries to migrate directory to too small space on remote provider
     When user of browser changes current space in data tab to "space2"
     And user of browser creates directory "dir1"
     And user of browser double clicks on item named "dir1" in file browser
@@ -256,7 +256,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "dir1" in file browser
 
 
-  Scenario: User tries to replicate file to too small space
+  Scenario: User tries to replicate file to too small space on remote provider
     When user of browser changes current space in data tab to "space2"
     And user of browser uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -290,7 +290,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "large_file.txt" in file browser
   
     
-  Scenario: User tries to replicate directory to too small space
+  Scenario: User tries to replicate directory to too small space on remote provider
     When user of browser changes current space in data tab to "space2"
     And user of browser creates directory "dir1"
     And user of browser double clicks on item named "dir1" in file browser
@@ -329,7 +329,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "dir1" in file browser
     
 
-  Scenario: User migrates directory to the same provider
+  Scenario: User migrates directory with file on current provider to the same provider
     When user of browser changes current space in data tab to "space4"
     And user of browser creates directory "dir1"
     And user of browser double clicks on item named "dir1" in file browser
@@ -364,7 +364,7 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "dir1" in file browser
 
 
-  Scenario: User replicates directory to the same provider
+  Scenario: User replicates directory with file on current provider to the same provider
     When user of browser changes current space in data tab to "space4"
     And user of browser creates directory "dir1"
     And user of browser double clicks on item named "dir1" in file browser
