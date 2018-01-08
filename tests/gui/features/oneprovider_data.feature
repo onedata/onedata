@@ -746,7 +746,7 @@ Feature: Oneprovider Data view
     And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User sees that with only one directory selected only ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show data distribution"] buttons from toolbar are enabled
+  Scenario: User sees that for one directory only ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show data distribution"] buttons in toolbar are enabled
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 

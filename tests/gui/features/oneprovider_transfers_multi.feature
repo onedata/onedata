@@ -11,7 +11,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of [browser1, browser2] seen that Oneprovider session has started
 
 
-  Scenario: User migrates file that is on different provider
+  Scenario: User migrates file to current provider
     When user of browser1 changes current space in data tab to "space4"
     And user of browser1 uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -52,7 +52,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser2 removes "large_file.txt" in file browser
 
 
-  Scenario: User migrates directory with 2 files on different providers
+  Scenario: User migrates directory with 2 files on different providers to current provider
     When user of browser1 changes current space in data tab to "space4"
     And user of browser1 creates directory "dir1"
     And user of browser1 double clicks on item named "dir1" in file browser
@@ -74,18 +74,18 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             p2: entirely filled
 
     # Wait to ensure synchronization between providers
-    And user of browser1 is idle for 2 seconds
+    And user of browser2 is idle for 2 seconds
 
-    And user of browser1 changes current working directory to space4 using breadcrumbs
-    And user of browser1 migrates "dir1" from provider "p1" to provider "p2"
+    And user of browser2 changes current working directory to space4 using breadcrumbs
+    And user of browser2 migrates "dir1" from provider "p1" to provider "p2"
     
     # Check that transfer appeared in transfer tab
-    And user of browser2 clicks on the "transfers" tab in main menu sidebar
-    And user of browser2 selects "space4" space in transfers tab
+    And user of browser1 clicks on the "transfers" tab in main menu sidebar
+    And user of browser1 selects "space4" space in transfers tab
     # Wait to ensure synchronization between providers
-    And user of browser2 is idle for 10 seconds
-    And user of browser2 waits for all transfers to finish
-    Then user of browser2 sees directory in history of transfers:
+    And user of browser1 is idle for 10 seconds
+    And user of browser1 waits for all transfers to finish
+    Then user of browser1 sees directory in history of transfers:
             name: dir1
             destination: p2
             username: user1
@@ -93,8 +93,8 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             transferred: 45 MiB
 
     # Check transfer chart
-    And user of browser2 expands first transfer record
-    And user of browser2 sees that there is non-zero throughput in transfer chart
+    And user of browser1 expands first transfer record
+    And user of browser1 sees that there is non-zero throughput in transfer chart
 
     And user of browser1 clicks on the "data" tab in main menu sidebar
     And user of browser1 changes current space in data tab to "space4"
@@ -113,7 +113,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser1 removes "dir1" in file browser
 
 
-  Scenario: User replicates file that is on different provider
+  Scenario: User replicates file to current provider
     When user of browser1 changes current space in data tab to "space4"
     And user of browser1 uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -154,7 +154,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser2 removes "large_file.txt" in file browser
 
 
-  Scenario: User replicates directory with 2 files on different providers
+  Scenario: User replicates directory with 2 files on different providers to current provider
     When user of browser1 changes current space in data tab to "space4"
     And user of browser1 creates directory "dir1"
     And user of browser1 double clicks on item named "dir1" in file browser
@@ -176,17 +176,17 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             p2: entirely filled
 
     # Wait to ensure synchronization between providers
-    And user of browser1 is idle for 2 seconds
+    And user of browser2 is idle for 2 seconds
 
-    And user of browser1 changes current working directory to space4 using breadcrumbs
-    And user of browser1 replicates "dir1" to provider "p2"
+    And user of browser2 changes current working directory to space4 using breadcrumbs
+    And user of browser2 replicates "dir1" to provider "p2"
     
     # Check that transfer appeared in transfer tab
-    And user of browser2 clicks on the "transfers" tab in main menu sidebar
-    And user of browser2 selects "space4" space in transfers tab
+    And user of browser1 clicks on the "transfers" tab in main menu sidebar
+    And user of browser1 selects "space4" space in transfers tab
     # Wait to ensure synchronization between providers
-    And user of browser2 is idle for 10 seconds
-    And user of browser2 waits for all transfers to finish
+    And user of browser1 is idle for 10 seconds
+    And user of browser1 waits for all transfers to finish
     Then user of browser2 sees directory in history of transfers:
             name: dir1
             destination: p2
@@ -195,8 +195,8 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             transferred: 45 MiB
 
     # Check transfer chart
-    And user of browser2 expands first transfer record
-    And user of browser2 sees that there is non-zero throughput in transfer chart
+    And user of browser1 expands first transfer record
+    And user of browser1 sees that there is non-zero throughput in transfer chart
 
     And user of browser1 clicks on the "data" tab in main menu sidebar
     And user of browser1 changes current space in data tab to "space4"
