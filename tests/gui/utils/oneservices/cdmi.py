@@ -12,8 +12,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 
 class CDMIClient(object):
-    def __init__(self, provider_ip, auth_token, cdmi_version='1.1.1',
-                 port=8443):
+    def __init__(self, provider_ip, auth_token, cdmi_version='1.1.1', port=443):
         self.provider_ip = provider_ip
         self.auth_token = auth_token
         self.cdmi_version = cdmi_version

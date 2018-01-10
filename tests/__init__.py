@@ -47,7 +47,7 @@ ENV_CONFIGURATOR_ESCRIPT = os.path.join(BAMBOOS_DIR, 'env_configurator',
 PREPARE_ENV_LOG_FILE = "prepare_test_environment.log"
 PREPARE_ENV_ERROR_LOG_FILE = "prepare_test_environment_error.log"
 
-OZ_REST_PORT = 8443
+OZ_REST_PORT = 443
 PANEL_REST_PORT = 9443
 PANEL_REST_PATH_PREFIX = "/api/v3/onepanel"
 OZ_REST_PATH_PREFIX = "/api/v3/onezone"
