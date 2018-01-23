@@ -54,7 +54,7 @@ def assert_finished_transfer(selenium, browser_id, item_type, desc):
 
 @when(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
 @then(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
-@repeat_failed(interval=1, timeout=60, exceptions=RuntimeError)
+@repeat_failed(interval=1, timeout=90, exceptions=RuntimeError)
 def wait_for_tranfers_to_finish(selenium, browser_id):
     try:
         _ = op_page(selenium[browser_id]).transfers.active[0]
