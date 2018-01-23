@@ -22,13 +22,14 @@ MAIN_MENU_TAB_TO_URL = {'spaces': 'spaces',
                         'groups': 'groups',
                         'data': 'data',
                         'shared': 'shares',
+                        'transfers': 'transfers',
                         'providers': 'providers'}
 
 
 def _click_on_tab_in_main_menu_sidebar(driver, tab):
-    def _load_main_menu_tab_page():
+    def _load_main_menu_tab_page(tab):
         def _check_url(url):
-            return url != driver.current_url
+            return tab in driver.current_url
 
         current_url = driver.current_url
         driver.find_element_by_css_selector(css_path).click()
@@ -43,7 +44,7 @@ def _click_on_tab_in_main_menu_sidebar(driver, tab):
     css_path = '.primary-sidebar a#main-{:s}'.format(menu_tab)
 
     Wait(driver, WAIT_BACKEND).until(
-        lambda _: _load_main_menu_tab_page(),
+        lambda _: _load_main_menu_tab_page(menu_tab),
         message='waiting for {:s} main menu tab page to load'
                 ''.format(tab)
     )

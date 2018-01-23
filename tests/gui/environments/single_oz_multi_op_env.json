@@ -106,6 +106,7 @@
                     },
                     "sys.config": {
                         "op_worker": {
+                            "soft_quota_limit_size": 0,
                             "cm_nodes": [
                                 "cm1"
                             ],
@@ -224,6 +225,10 @@
                     "p1": {
                         "storage": "/mnt/st1",
                         "supported_size": 1000000000
+                    },
+                    "p2": {
+                        "storage": "/mnt/st1",
+                        "supported_size": 10
                     }
                 }
             },

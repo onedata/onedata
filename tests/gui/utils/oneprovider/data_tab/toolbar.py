@@ -22,7 +22,7 @@ class DataTopToolBar(PageObject):
     copy_element = ButtonWebItem('li a#copy-file-tool')
     cut_element = ButtonWebItem('li a#cut-file-tool')
     remove_element = ButtonWebItem('li a#remove-file-tool')
-    show_file_distribution = ButtonWebItem('li a#file-chunks-tool')
+    show_data_distribution = ButtonWebItem('li a#file-chunks-tool')
 
     _upload_input = WebElement('input#toolbar-file-browse')
 
