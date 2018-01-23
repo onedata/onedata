@@ -12,10 +12,13 @@ __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
 
-class _SpaceRecord(PageObject):
+class SpaceRecord(PageObject):
     name = id = TextLabelWebElement('.item-label',
                                     parent_name='given space record')
     _icon = IconWebElement('.item-icon .one-icon')
+
+    def select(self):
+        self.web_elem.click()
 
     def __str__(self):
         return '{name} in {parent}'.format(name=self.name, parent=self.parent)
@@ -26,7 +29,7 @@ class _SpaceRecord(PageObject):
 
 class SpaceSelector(PageObject, ExpandableMixin):
     selected_space_name = TextLabelWebElement('.item-label')
-    spaces = WebItemsSequence('ul.dropdown-menu-list li', cls=_SpaceRecord)
+    spaces = WebItemsSequence('ul.dropdown-menu-list li', cls=SpaceRecord)
     _icon = IconWebElement('.item-icon .one-icon')
     _toggle = ToggleWebElement('a.dropdown-toggle')
 
