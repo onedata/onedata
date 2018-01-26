@@ -4,6 +4,15 @@
 CHANGELOG
 ---------
 
+### 17.06.0-rc9
+
+* VFS-3977 Remove oneclient-base from docker-dev image
+* VFS-3877 Removed self-contained-html from gui acceptance tests
+* VFS-3877 Added tmp_files to gitignore
+* VFS-3877 Implemented GUI acceptance tests for transfers
+* VFS-3862 Add more verbose log when oneprovider configuration script fails
+
+
 ### 17.06.0-rc8
 
 * VFS-3815 Modified packaging tests for CentOS 7
