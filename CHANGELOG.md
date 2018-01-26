@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 17.06.0
+
+* Releasing new version 17.06.0
+
+
 ### 17.06.0-rc9
 
 * VFS-3977 Remove oneclient-base from docker-dev image
