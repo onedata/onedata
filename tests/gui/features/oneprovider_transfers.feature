@@ -37,6 +37,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 1
             transferred: 45 MiB
+            type: replication
             status: completed
 
     # Check transfer chart
@@ -81,6 +82,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 2
             transferred: 45 MiB
+            type: replication
             status: completed
 
     # Check transfer chart
@@ -121,6 +123,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 1
             transferred: 0 B
+            type: migration
             status: failed
 
     And user of browser clicks on the "data" tab in main menu sidebar
@@ -158,6 +161,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 2
             transferred: 0 B
+            type: migration
             status: failed
     
     And user of browser clicks on the "data" tab in main menu sidebar
@@ -194,6 +198,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 1
             transferred: 0 B
+            type: replication
             status: failed
 
     And user of browser clicks on the "data" tab in main menu sidebar
@@ -231,6 +236,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 2
             transferred: 0 B
+            type: replication
             status: failed
     
     And user of browser clicks on the "data" tab in main menu sidebar
@@ -266,6 +272,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 2
             transferred: 0 B
+            type: migration
             status: completed
     
     And user of browser clicks on the "data" tab in main menu sidebar
@@ -301,6 +308,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 2
             transferred: 0 B
+            type: replication
             status: completed
     
     And user of browser clicks on the "data" tab in main menu sidebar
@@ -341,6 +349,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 1
             transferred: 45 MiB
+            type: migration
             status: completed
 
     # Check transfer chart
@@ -385,6 +394,7 @@ Feature: Oneprovider transfers functionality
             username: user1
             total files: 2
             transferred: 45 MiB
+            type: migration
             status: completed
 
     And user of browser clicks on the "data" tab in main menu sidebar

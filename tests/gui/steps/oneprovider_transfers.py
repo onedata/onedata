@@ -17,14 +17,8 @@ from tests.gui.utils.generic import repeat_failed
 def _assert_transfer(transfer, item_type, desc, sufix):
     assert getattr(transfer, 'is_{}'.format(item_type))(), \
         'Transferred item is not {} in {}'.format(item_type, sufix)
-    
+
     desc = yaml.load(desc)
-    status = desc.pop('status', None)
-    if status:
-        assert transfer.get_status() == status.lower(), \
-            'Transfer status is {} instead of {} in {}'.format(transfer.
-                                                               get_status(), 
-                                                               status, sufix)
     for key, val in desc.items():
         transfer_val = getattr(transfer, key.replace(' ', '_'))
         assert transfer_val == str(val), \

@@ -32,6 +32,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             username: user1
             total files: 1
             transferred: 45 MiB
+            type: replication
             status: completed
 
     # Check transfer chart
@@ -86,6 +87,8 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             username: user1
             total files: 3
             transferred: 45 MiB
+            type: replication
+            status: completed
 
     # Check transfer chart
     And user of browser1 expands first transfer record
@@ -130,6 +133,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             username: user1
             total files: 1
             transferred: 45 MiB
+            type: migration
             status: completed
 
     # Check transfer chart
@@ -184,6 +188,8 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             username: user1
             total files: 3
             transferred: 45 MiB
+            type: migration
+            status: completed
 
     # Check transfer chart
     And user of browser1 expands first transfer record

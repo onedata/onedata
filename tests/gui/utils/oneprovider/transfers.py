@@ -13,13 +13,25 @@ from tests.gui.utils.core.web_elements import (TextLabelWebElement, WebElement,
                                                IconWebElement, WebItemsSequence,
                                                ButtonWithTextWebElement, WebItem)
 
+TransferStatusList = ['completed', 'skipped', 'cancelled', 'failed', 'active', 
+                      'invalidating', 'scheduled']
+TransferTypeList = ['migration', 'replication', 'invalidation']
+
 
 class TransferRecord(PageObject):
     name = TextLabelWebElement('td:first-of-type')
     username = TextLabelWebElement('td:nth-of-type(2)')
     destination = TextLabelWebElement('td:nth-of-type(3)')
-    status = IconWebElement('.cell-status')
+    status_icon = IconWebElement('.cell-status')
+    type_icon = IconWebElement('.cell-type')
     icon = IconWebElement('.transfer-file-icon')
+
+    def __init__(self, driver, web_elem, parent, **kwargs):
+        super(TransferRecord, self).__init__(driver, web_elem, parent, **kwargs)
+        status_class = self.status_icon.get_attribute('class').split()
+        type_class = self.type_icon.get_attribute('class').split()
+        self.status = [x for x in status_class if x in TransferStatusList][0]
+        self.type = [x for x in type_class if x in TransferTypeList][0]
 
     def get_chart(self):
         if not 'expanded-row' in self.web_elem.get_attribute('class'):
@@ -47,9 +59,6 @@ class TransferRecord(PageObject):
 
     def __str__(self):
         return 'Transfer row {} in {}'.format(self.name, self.parent)
-
-    def get_status(self):
-        return self.status.get_attribute("class").split()[1]
 
 
 class TransferRecordHistory(TransferRecord):
