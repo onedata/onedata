@@ -1,5 +1,5 @@
 cluster:
-  domainName: "dev.local"
+  domainName: "test.local"
   nodes:
     n1:
       hostname: "onedata"
