@@ -22,7 +22,7 @@ class Distribution(object):
                                     tty=True,
                                     detach=True,
                                     image=self.image,
-                                    hostname='onedata.dev.local',
+                                    hostname='onedata.test.local',
                                     privileged=privileged,
                                     link=link,
                                     stdin=sys.stdin,
@@ -96,14 +96,14 @@ def oneclient_base(request, setup_command):
                 params=['xenial'])
 def oneprovider(request, onezone, setup_command):
     onezone_node = onezone.domain
-    # onezone_node is in format node.oz.1234.dev, resolve domain (oz.1234.dev)
+    # onezone_node is in format node.oz.1234.test, resolve domain (oz.1234.test)
     onezone_domain = tests.utils.utils.get_domain(onezone_node)
     # Put the domain in config so the provider knows where to register
     config_file = tests.utils.path_utils.config_file('config.yml')
     tests.packaging.oneprovider_common.update_oz_domain_in_config(
         config_file, onezone_domain)
     # Link provider docker to the OZ node (this way we do not need DNS here).
-    # This link will cause connections to 'oz.1234.dev' reach 'node.oz.1234.dev'
+    # This link will cause connections to 'oz.1234.test' reach 'node.oz.1234.test'
     distribution = Distribution(request, link={onezone_node: onezone_domain})
     command = setup_command.format(dist=distribution.name)
     command = '{command} && ' \
