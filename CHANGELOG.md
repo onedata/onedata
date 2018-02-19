@@ -4,6 +4,219 @@
 CHANGELOG
 ---------
 
+### New Version Tag do not change this line
+
+* Update deps
+* Update deps
+* Update deps and changelog
+* Update deps
+* Update deps
+* Releasing new version 17.06.0
+* Update deps
+* Releasing new version 17.06.0-rc9
+* Update deps
+* VFS-3877 Fixed failing tests
+* VFS-3977 Remove oneclient-base from docker-dev image
+* VFS-3976 Updated oneclient to rc9
+* update op and oz refs
+* VFS-3877 PR tasks resolved
+* VFS-3877 Removed self-contained-html from gui acceptance tests
+* VFS-3877 Added tmp_files to gitignore
+* VFS-3877 Implemented GUI acceptance tests for transfers
+* Update cluster_manager reference
+* Update op-worker ref
+* Update deps
+* Update deps
+* VFS-3874 Update to run env-up tests
+* Update deps
+* VFS-3862 Add more verbose log when oneprovider configuration script fails
+* Releasing new version 17.06.0-rc8
+* Update deps
+* Update deps
+* Update deps
+* Update deps
+* Updated cluster_manager ref
+* VFS-3815 Modified packaging tests for CentOS 7
+* Releasing new version 17.06.0-rc7
+* Update deps
+* Update deps
+* Update deps
+* Update refs to origin/release/17.06.0-rc6.
+* Update refs to origin/release/17.06.0-rc6.
+* Update deps
+* Update deps
+* Update deps
+* Releasing new version 17.06.0-rc6
+* Update deps
+* Update bamboos
+* Update refs to origin/release/17.06.0-rc5.
+* Releasing new version 17.06.0-rc5
+* Update deps
+* Releasing new version 17.06.0-rc4
+* Update deps
+* Update refs to origin/release/17.06.0-rc4.
+* Reverted bamboos to 17.06.0-rc3 commit
+* Update refs to release/17.06.0-rc4.
+* VFS-3682 Added self-contained Oneclient packaging
+* Update refs to origin/release/17.06.0-rc3.
+* Update deps
+* Update deps
+* Change version tag
+* Releasing new version 17.06.1
+* Update deps
+* Update refs to origin/release/17.06.1.
+
+
+### 18.02.0-beta1
+
+* Update deps
+* Update deps
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop
+* VFS-3978 Update submodules to feature/VFS-3978-test-ca-should-not-be-included-in
+* VFS-3978 Adjust oneprovider entry point to new onepanel config concerning test certs
+* VFS-3978 Change docker domains to test instead of dev
+* Update refs to origin/develop.
+* Update refs to origin/develop
+* Update refs to origin/develop.
+* Update deps
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update deps
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-4044 Fixed transfer status and added transfer type
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3877 Fixed failing tests
+* VFS-3877 PR tasks resolved
+* VFS-3877 Removed self-contained-html from gui acceptance tests
+* VFS-3877 Added tmp_files to gitignore
+* VFS-3877 Implemented GUI acceptance tests for transfers
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3751 Set OZ and OP REST ports to 443
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3751 Remove provider certs copying on environment setup
+* VFS-3751 Update submodules to VFS-3751
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3210 Updating GUI metadata tests to use new basic metadata elements
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3843 fix list_dir_without_permission test
+* Update refs to origin/develop.
+* VFS-3843 fix update_timestampts_without_permission test
+* VFS-3843 add test_stat_change_time nonposix variant
+* VFS-3719 Fix rnv-up tests
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to feature/VFS-3614-integration-of-dns-server-and-subdomain
+* VFS-3614 Change redirectionPoint to domain in tests config
+* VFS-3862 Add more verbose log when oneprovider configuration script fails
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to develop.
+* Update refs to develop.
+* Update refs to feature/VFS-3815-switch-fedora23-to-centos7.
+* Update refs to origin/develop.
+* VFS-3821 Removed oneclient from oneprovider-dev docker image
+* VFS-3790 Fix a typo in oneprovider.py script
+* VFS-3819 Fixed Xenial packaging tests
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3790 Add option to auto-generate web certificates in onepanel   * The option is toggled using ENV variable   * Can be used in getting started config
+* Update refs to origin/develop.
+* VFS-3815 Modified packaging tests for CentOS 7
+* Update refs to feature/VFS-3815-switch-fedora23-to-centos7.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3638 Use actual OZ domain in OP packaging tests rather that onedata.org
+* Update refs to origin/develop.
+* VFS-3638 Update bamboos reference
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3768 Update bamboos ref
+* VFS-3768 Update bamboos ref, fix outdated env.json files causing tests to fail
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3725 Updated bamboos ref
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3682 Added self-contained Oneclient packaging
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* VFS-3279 Update submodules refs, add OZ connectivity check to acceptance tests
+* Update refs to origin/develop.
+* Update refs to origin/feature/VFS-3707-remote-datastore-document-fetching.
+* VFS-3690 update submodules
+* Update refs to origin/develop.
+* Update refs to origin/bugfix/VFS-3690-remove-locks-from-artifacts-scripts.
+* VFS-3690 update bamboos ref
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Update refs to origin/develop.
+* Revert deps
+* Update refs to origin/develop.
+* VFS-3573 Increase timeout in files creation test
+* Update refs to origin/feature/VFS-3573-integrate-refactored-datastore-and.
+
+
 ### 17.06.1
 
 * Releasing new version 17.06.1
