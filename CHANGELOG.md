@@ -4,6 +4,59 @@
 CHANGELOG
 ---------
 
+### 17.06.2
+
+* Releasing new version 17.06.2
+
+
+### 17.06.1
+
+* Releasing new version 17.06.1
+
+
+### 17.06.0-rc9
+
+* VFS-3977 Remove oneclient-base from docker-dev image
+* VFS-3877 Removed self-contained-html from gui acceptance tests
+* VFS-3877 Added tmp_files to gitignore
+* VFS-3877 Implemented GUI acceptance tests for transfers
+* VFS-3862 Add more verbose log when oneprovider configuration script fails
+
+
+### 17.06.0-rc8
+
+* VFS-3815 Modified packaging tests for CentOS 7
+
+
+### 17.06.0-rc7
+
+* Releasing new version 17.06.0-rc7
+
+
+### 17.06.0-rc6
+
+* Releasing new version 17.06.0-rc6
+
+
+### 17.06.0-rc5
+
+* Releasing new version 17.06.0-rc5
+
+
+### 17.06.0-rc4
+
+* VFS-3682 Added self-contained Oneclient packaging
+
+
+### 17.06.0-rc3
+
+* VFS-3656 Removed support for Ubuntu Wily
+* VFS-3517 Added tests checking timestamps after renaming item in GUI to xfail due to VFS-3520
+* VFS-3517 Changed amount of time to wait between creating and renaming space
+* VFS-3515 add additional logs to performance tests
+* VFS-3281 Added extended attributes acceptance tests
+
+
 ### 17.06.0-rc2
 
 * VFS-3434 Multiuser tests implemented
