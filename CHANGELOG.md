@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 18.02.0-beta1
+
+* Releasing new version 18.02.0-beta1
+
+
 ### 17.06.2
 
 * Releasing new version 17.06.2
