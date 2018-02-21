@@ -100,7 +100,9 @@ def change_app_path_with_copied_item(selenium, browser_id, path,
     item = clipboard.paste(display=displays[browser_id])
     url = '{base_url}{path}/{item}'.format(base_url=base_url,
                                            path=path, item=item)
-    driver.get(url)
+    # We use javascript instead of driver.get becouse of chromedriver being 
+    # unable to determine whether page has been loaded
+    driver.execute_script('window.location = \'{}\''.format(url))
 
 
 @when(parsers.re(r'user of (?P<browser_id>.*?) changes webapp path to '
@@ -115,8 +117,9 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
     url = '{base_url}{path}/{item}'.format(base_url=base_url,
                                            path=path,
                                            item=item)
-
-    driver.get(url)
+    # We use javascript instead of driver.get becouse of chromedriver being 
+    # unable to determine whether page has been loaded
+    driver.execute_script('window.location = \'{}\''.format(url))
 
 
 @when(parsers.parse('user of {browser_id} copies url '
@@ -134,4 +137,7 @@ def copy_site_url(selenium, browser_id, displays, clipboard):
                     'in browser\'s location bar'))
 def open_site_url(selenium, browser_id, displays, clipboard):
     driver = selenium[browser_id]
-    driver.get(clipboard.paste(display=displays[browser_id]))
+    url = clipboard.paste(display=displays[browser_id])
+    # We use javascript instead of driver.get becouse of chromedriver being 
+    # unable to determine whether page has been loaded
+    driver.execute_script('window.location = \'{}\''.format(url))
