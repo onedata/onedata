@@ -23,4 +23,4 @@ RUN curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh && \
     sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1 && \
     rm -f oneprovider.sh
 
-EXPOSE 53 53/udp 80 443 5555 5556 6665 6666 7443 8443 8876 8877 9443
+EXPOSE 80 443 6665 9443
