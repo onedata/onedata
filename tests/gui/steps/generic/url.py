@@ -100,7 +100,7 @@ def change_app_path_with_copied_item(selenium, browser_id, path,
     item = clipboard.paste(display=displays[browser_id])
     url = '{base_url}{path}/{item}'.format(base_url=base_url,
                                            path=path, item=item)
-    # We use javascript instead of driver.get becouse of chromedriver being 
+    # We use javascript instead of driver.get because of chromedriver being 
     # unable to determine whether page has been loaded
     driver.execute_script('window.location = \'{}\''.format(url))
 
@@ -117,7 +117,7 @@ def change_app_path_with_recv_item(selenium, browser_id, path,
     url = '{base_url}{path}/{item}'.format(base_url=base_url,
                                            path=path,
                                            item=item)
-    # We use javascript instead of driver.get becouse of chromedriver being 
+    # We use javascript instead of driver.get because of chromedriver being 
     # unable to determine whether page has been loaded
     driver.execute_script('window.location = \'{}\''.format(url))
 
@@ -138,6 +138,6 @@ def copy_site_url(selenium, browser_id, displays, clipboard):
 def open_site_url(selenium, browser_id, displays, clipboard):
     driver = selenium[browser_id]
     url = clipboard.paste(display=displays[browser_id])
-    # We use javascript instead of driver.get becouse of chromedriver being 
+    # We use javascript instead of driver.get because of chromedriver being 
     # unable to determine whether page has been loaded
     driver.execute_script('window.location = \'{}\''.format(url))
