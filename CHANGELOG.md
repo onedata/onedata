@@ -4,6 +4,12 @@
 CHANGELOG
 ---------
 
+### 18.02.0-beta2
+
+* VFS-4126 Remove obsolete port exposes from Dockerfiles
+* VFS-4099 Changed selenium get url to javascript
+
+
 ### 18.02.0-beta1
 
 * Releasing new version 18.02.0-beta1
