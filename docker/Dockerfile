@@ -43,13 +43,18 @@ RUN case ${RELEASE} in \
     sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1 && \
     rm -f oneprovider.sh
 
+# Backup files from persistence, as the persistent volume will be overwritten
+# by mounting it from host. The missing files will be copied back in entrypoint.
+ADD persistence-dir.py /root/persistence-dir.py
+RUN python /root/persistence-dir.py --backup-persistent-files
+
+# Create symlinks to persistence
+RUN python /root/persistence-dir.py --create-symlinks
+
 EXPOSE 80 443 6665 9443
 
 # Add entrypoint scripts
 ADD oneprovider.sh /root/oneprovider.sh
 ADD oneprovider.py /root/oneprovider.py
-
-RUN mkdir -p /volumes/persistence /volumes/storage
-VOLUME ["/volumes/persistence", "/volumes/storage"]
 
 CMD ["/root/oneprovider.sh"]

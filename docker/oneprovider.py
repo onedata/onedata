@@ -15,10 +15,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-ROOT = '/volumes/persistence'
-DIRS = ['/etc/init.d', '/etc/op_worker/certs', '/var/lib/op_panel/mnesia',
-        '/opt/couchbase/var/lib/couchbase', '/var/log/op_panel',
-        '/var/log/op_worker', '/var/log/cluster_manager']
+
 LOGS = [('[op_panel]', '/var/log/op_panel'),
         ('[cluster_manager]', '/var/log/cluster_manager'),
         ('[op_worker]', '/var/log/op_worker')]
@@ -37,41 +34,6 @@ def replace(file_path, pattern, value):
         f.seek(0)
         f.truncate()
         f.write(content)
-
-
-def copy_missing_files():
-    for rootdir in DIRS:
-        if not os.path.exists(rootdir):
-            os.makedirs(rootdir)
-
-        for subdir, _, files in os.walk(rootdir):
-            subdir_path = os.path.join(ROOT, subdir[1:])
-
-            if not os.path.exists(subdir_path):
-                stat = os.stat(subdir)
-                os.makedirs(subdir_path)
-                os.chown(subdir_path, stat.st_uid, stat.st_gid)
-
-            for f in files:
-                source_path = os.path.join(subdir, f)
-                dest_path = os.path.join(subdir_path, f)
-                if not os.path.exists(dest_path):
-                    stat = os.stat(source_path)
-                    shutil.copy(source_path, dest_path)
-                    os.chown(dest_path, stat.st_uid, stat.st_gid)
-
-
-def remove_dirs():
-    for rootdir in DIRS:
-        if not os.path.islink(rootdir):
-            shutil.rmtree(rootdir)
-
-
-def link_dirs():
-    for dest_path in DIRS:
-        if not os.path.islink(dest_path):
-            source_path = os.path.join(ROOT, dest_path[1:])
-            os.symlink(source_path, dest_path)
 
 
 def set_node_name(file_path):
@@ -295,9 +257,7 @@ def print_logs(logs):
 
 if __name__ == '__main__':
     try:
-        copy_missing_files()
-        remove_dirs()
-        link_dirs()
+        sp.call(['/root/persistence-dir.py', '--copy-missing-files'])
 
         set_node_name('/etc/op_panel/vm.args')
 
