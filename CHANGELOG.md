@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 18.02.0-beta3
+
+* VFS-4213 Change the way persistent volume is created to allow for mounting single files inside it
+
+
 ### 18.02.0-beta2
 
 * VFS-4126 Remove obsolete port exposes from Dockerfiles
