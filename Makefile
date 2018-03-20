@@ -81,7 +81,8 @@ branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
 	./onedata_submodules.sh init ${submodule}
 	./onedata_submodules.sh update ${submodule}
-	./subtree_check.sh
+	# TODO VFS-4261
+	#./subtree_check.sh
 
 ##
 ## Build
