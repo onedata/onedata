@@ -4,6 +4,16 @@
 CHANGELOG
 ---------
 
+### 18.02.0-beta5
+
+* Releasing new version 18.02.0-beta5
+
+
+### 18.02.0-beta4
+
+* Releasing new version 18.02.0-beta4
+
+
 ### 18.02.0-beta3
 
 * VFS-4213 Change the way persistent volume is created to allow for mounting single files inside it
