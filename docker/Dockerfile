@@ -16,6 +16,11 @@ RUN groupadd -g 110 onedata && \
     useradd -u 108 -g 110 -d /var/lib/cluster_manager cluster_manager && \
     useradd -u 109 -g 110 -d /var/lib/op_worker op_worker
 
+# onedata deps ppa
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C211375C && \
+    echo "deb http://ppa.launchpad.net/onedata/ceph/ubuntu xenial main" > /etc/apt/sources.list.d/onedata-ppa.list && \
+    echo "deb http://ppa.launchpad.net/onedata/build-deps-openssl11/ubuntu xenial main" >> /etc/apt/sources.list.d/onedata-ppa.list
+
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
     apt-get -y upgrade && \
