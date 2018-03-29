@@ -1,4 +1,4 @@
-FROM onedata/worker:v54
+FROM docker.onedata.org/worker:VFS-4267
 MAINTAINER Krzysztof Trzepla <krzysztof.trzepla@gmail.com>
 
 # Build arguments
@@ -13,6 +13,11 @@ ARG ONEPANEL_AUTOSTART=false
 RUN apt-get -y update && \
     apt-get -y upgrade && \
     apt-get clean
+
+# onedata deps ppa
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C211375C && \
+    echo "deb http://ppa.launchpad.net/onedata/ceph/ubuntu xenial main" > /etc/apt/sources.list.d/onedata-ppa.list && \
+    echo "deb http://ppa.launchpad.net/onedata/build-deps-openssl11/ubuntu xenial main" >> /etc/apt/sources.list.d/onedata-ppa.list
 
 # Install oneprovider package
 RUN curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh && \
