@@ -20,6 +20,13 @@ LOGS = [('[op_panel]', '/var/log/op_panel'),
         ('[cluster_manager]', '/var/log/cluster_manager'),
         ('[op_worker]', '/var/log/op_worker')]
 LOG_LEVELS = ['debug', 'info', 'error']
+ONEPANEL_OVERRIDE = 'ONEPANEL_OVERRIDE'
+
+APP_CONFIG_SOURCES_PATH = '_build/default/rel/op_panel/etc/app.config'
+VM_ARGS_SOURCES_PATH = '_build/default/rel/op_panel/etc/vm.args'
+
+APP_CONFIG_PACKAGES_PATH = '/etc/op_panel/app.config'
+VM_ARGS_PACKAGES_PATH = '/etc/op_panel/vm.args'
 
 
 def log(message, end='\n'):
@@ -63,8 +70,14 @@ def set_trust_test_ca(file_path, trust_test_ca):
 def start_onepanel():
     log('Starting op_panel', '\t')
     with open(os.devnull, 'w') as null:
-        sp.check_call(['service', 'op_panel', 'start'],
-                      stdout=null, stderr=null)
+        if os.environ.get(ONEPANEL_OVERRIDE):
+            sp.check_call([os.path.join(os.environ.get(ONEPANEL_OVERRIDE),
+                           "_build/default/rel/op_panel/bin/op_panel"),
+                           'start'])
+        else:
+            sp.check_call(['service', 'op_panel', 'start'], stdout=null,
+                          stderr=null)
+
     log('[  OK  ]')
 
 
@@ -259,26 +272,30 @@ if __name__ == '__main__':
     try:
         sp.call(['/root/persistence-dir.py', '--copy-missing-files'])
 
-        set_node_name('/etc/op_panel/vm.args')
+        if os.environ.get(ONEPANEL_OVERRIDE):
+            app_config_path = os.path.join(os.environ.get(ONEPANEL_OVERRIDE),
+                                           APP_CONFIG_SOURCES_PATH)
+            vm_args_path = os.path.join(os.environ.get(ONEPANEL_OVERRIDE),
+                                        VM_ARGS_SOURCES_PATH)
+        else:
+            app_config_path = APP_CONFIG_PACKAGES_PATH
+            vm_args_path = VM_ARGS_PACKAGES_PATH
+
+        set_node_name(vm_args_path)
 
         advertise_address = os.environ.get('ONEPANEL_ADVERTISE_ADDRESS')
         if advertise_address:
-            set_advertise_address(
-                '/etc/op_panel/app.config', advertise_address)
+            set_advertise_address(app_config_path, advertise_address)
 
-        generate_test_web_cert = os.environ.get(
-            'ONEPANEL_GENERATE_TEST_WEB_CERT'
-        )
+        generate_test_web_cert = os.environ.get('ONEPANEL_GENERATE_TEST_WEB_CERT')
         if generate_test_web_cert:
             domain = os.environ.get('ONEPANEL_GENERATED_CERT_DOMAIN')
-            set_generate_test_web_cert(
-                '/etc/op_panel/app.config', generate_test_web_cert, domain)
+            set_generate_test_web_cert(app_config_path, generate_test_web_cert,
+                                       domain)
 
-        trust_test_ca = os.environ.get(
-            'ONEPANEL_TRUST_TEST_CA'
-        )
+        trust_test_ca = os.environ.get('ONEPANEL_TRUST_TEST_CA')
         if trust_test_ca:
-            set_trust_test_ca('/etc/op_panel/app.config', trust_test_ca)
+            set_trust_test_ca(app_config_path, trust_test_ca)
 
         batch_config = get_batch_config()
         onezone_domain = get_onezone_domain(batch_config)
