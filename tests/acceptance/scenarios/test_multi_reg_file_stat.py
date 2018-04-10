@@ -108,16 +108,17 @@ def test_stat_change_time_mv_on_posix(env_description_file):
     pass
 
 
-@pytest.mark.skip_env(
-    envs=[
-        "multiprovider_directio",
-        "multiprovider_proxyio",
-        "multiprovider_proxy",
-        "singleprovider_multiclient_proxyio",
-        "singleprovider_multiclient_directio"
-    ],
-    reason="valid only on nonposix storage"
-)
+# @pytest.mark.skip_env(
+#     envs=[
+#         "multiprovider_directio",
+#         "multiprovider_proxyio",
+#         "multiprovider_proxy",
+#         "singleprovider_multiclient_proxyio",
+#         "singleprovider_multiclient_directio"
+#     ],
+#     reason="valid only on nonposix storage"
+# )
+@pytest.mark.skip
 @scenario('Status-change time when renaming on nonposix storage')
 def test_stat_change_time_mv_on_nonposix(env_description_file):
     pass

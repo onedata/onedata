@@ -1,9 +1,11 @@
 # distro for package building (oneof: trusty, xenial, centos-7-x86_64, fedora-23-x86_64)
-DISTRIBUTION        ?= none
-DOCKER_RELEASE      ?= development
-DOCKER_REG_NAME     ?= "docker.onedata.org"
-DOCKER_REG_USER     ?= ""
-DOCKER_REG_PASSWORD ?= ""
+DISTRIBUTION            ?= none
+DOCKER_RELEASE          ?= development
+DOCKER_REG_NAME         ?= "docker.onedata.org"
+DOCKER_REG_USER         ?= ""
+DOCKER_REG_PASSWORD     ?= ""
+DOCKER_BASE_IMAGE       ?= "ubuntu:16.04"
+DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:v57"
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
@@ -318,6 +320,7 @@ package.tar.gz:
 docker: docker-dev
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
                       --build-arg RELEASE=$(DOCKER_RELEASE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
                       --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
@@ -330,6 +333,7 @@ docker: docker-dev
 docker-dev:
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg BASE_IMAGE=$(DOCKER_DEV_BASE_IMAGE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
                       --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
@@ -338,7 +342,7 @@ docker-dev:
                       --report docker-dev-build-report.txt \
                       --short-report docker-dev-build-list.json \
                       --name oneprovider-dev \
-                      --publish --remove docker-dev
+                      --publish --remove docker
 
 #
 # Build intermediate Oneclient Docker image with oneclient installed from

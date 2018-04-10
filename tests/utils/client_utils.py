@@ -204,16 +204,27 @@ def mount_users(request, environment, context, client_dockers,
 
 
 def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
-              client, token_path, token):
+              client, token_path, token, gdb=False):
 
-    cmd = ('mkdir -p {mount_path}'
-           ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
-           ' && echo {token} > {token_path}'
-           ' && gdb oneclient -batch -return-child-result -ex \'run --log-dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
-           ).format(mount_path=mount_path,
-                    op_domain=op_domain,
-                    token=token,
-                    token_path=token_path)
+    cmd = None
+    if gdb:
+        cmd = ('mkdir -p {mount_path}'
+            ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
+            ' && echo {token} > {token_path}'
+            ' && gdb oneclient -batch -return-child-result -ex \'run --log-dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+            ).format(mount_path=mount_path,
+                        op_domain=op_domain,
+                        token=token,
+                        token_path=token_path)
+    else:
+        cmd = ('mkdir -p {mount_path}'
+            ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
+            ' && echo {token} > {token_path}'
+            ' && ./oneclient --log-dir /tmp --insecure {mount_path} < {token_path} 2>&1'
+            ).format(mount_path=mount_path,
+                        op_domain=op_domain,
+                        token=token,
+                        token_path=token_path)
 
     return run_cmd(user_name, client, cmd)
 

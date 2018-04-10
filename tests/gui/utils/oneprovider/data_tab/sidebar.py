@@ -17,7 +17,7 @@ __license__ = "This software is released under the MIT license cited in " \
 
 class DataTabSidebar(PageObject):
     _space_selector = WebElement('.data-spaces-select')
-    _root_dir = ItemListWebElement('.data-files-tree ul li')
+    _root_dir = ItemListWebElement('.data-files-tree ul:not(.dropdown-menu) li:not(.clickable)')
 
     def __init__(self, *args, **kwargs):
         self._resize_handler = kwargs.pop('resize_handler')
@@ -81,7 +81,7 @@ class DirectoryTree(PageObject, ExpandableMixin):
                                                           parent=self.parent)
 
     def __iter__(self):
-        css_sel = 'ul.data-files-tree-list li'
+        css_sel = 'ul.data-files-tree-list li:not(.clickable)'
         return (DirectoryTree(self.driver, dir_tree, self, children=dir_tree)
                 for dir_tree in
                 self._children.find_elements_by_css_selector(css_sel))
