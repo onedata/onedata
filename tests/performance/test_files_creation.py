@@ -18,7 +18,7 @@ from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 
 REPEATS = 1
 SUCCESS_RATE = 100
-LOGGING_INTERVAL = 60
+LOGGING_INTERVAL = 30
 RPYC_TIMEOUT = 120
 
 # value written to files at their creation
