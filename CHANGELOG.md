@@ -6,7 +6,9 @@ CHANGELOG
 
 ### 18.02.0-beta5
 
-* Releasing new version 18.02.0-beta5
+* VFS-4333 Decresed test logging delay in file creation tests
+* VFS-4333 Disabled gdb by default
+* VFS-3622 Merged docker-dev with docker. Added possibility to run services from sources.
 
 
 ### 18.02.0-beta4
