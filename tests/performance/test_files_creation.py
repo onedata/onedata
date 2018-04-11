@@ -45,7 +45,7 @@ class TestFilesCreation(AbstractPerformanceTest):
             'description': 'Testing file creation'
         },
         configs=generate_configs({
-            'files_number': [10000],
+            'files_number': [5000],
             'empty_files': [True, False]
         }, 'FILE CREATION TEST -- '
            'Files number: {files_number} '
