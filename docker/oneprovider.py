@@ -97,17 +97,6 @@ def get_users(config):
     return users
 
 
-def get_onezone_domain(config):
-    return config.get('onezone', {}).get('domainName', 'onedata.org')
-
-
-def set_onezone_domain(domain):
-    replace('/etc/op_panel/app.config', r'{onezone_domain, .*}',
-            '{{onezone_domain, "{0}"}}'.format(domain))
-    replace('/etc/op_worker/app.config', r'{oz_domain, .*}',
-            '{{oz_domain, "{0}"}}'.format(domain))
-
-
 def do_request(users, request, *args, **kwargs):
     for (username, password) in users:
         r = request(*args, auth=(username, password), **kwargs)
@@ -294,21 +283,21 @@ def format_error(action, response):
 
 def restart_oneprovider(config):
     users = get_users(config) + [('admin', 'password')]
-    print('Stopping services to be sure')
-    stop_request = do_request(users, requests.patch,
-                              'https://127.0.0.1:9443/api/v3/onepanel/provider/services?started=false',
-                              headers={'content-type': 'application/json'},
-                              verify=False)
-    if stop_request.status_code != 204:
-        errdata = json.loads(stop_request.text)
-        raise ValueError(format_error('stopping oneprovider', errdata))
+    # print('Stopping services to be sure')
+    # stop_request = do_request(users, requests.patch,
+    #                           'https://127.0.0.1:9443/api/v3/onepanel/provider/services?started=false',
+    #                           headers={'content-type': 'application/json'},
+    #                           verify=False)
+    # if stop_request.status_code != 204:
+    #     errdata = json.loads(stop_request.text)
+    #     raise ValueError(format_error('stopping oneprovider', errdata))
     print('Starting services')
     start_request = do_request(users, requests.patch,
                                'https://127.0.0.1:9443/api/v3/onepanel/provider/services?started=true',
                                headers={'content-type': 'application/json'},
                                verify=False)
     if start_request.status_code != 204:
-        errdata = json.loads(stop_request.text)
+        errdata = json.loads(start_request.text)
         raise ValueError(format_error('starting oneprovider', errdata))
 
 
@@ -342,8 +331,6 @@ if __name__ == '__main__':
             set_trust_test_ca(app_config_path, trust_test_ca)
 
         batch_config = get_batch_config()
-        onezone_domain = get_onezone_domain(batch_config)
-        set_onezone_domain(onezone_domain)
 
         start_onepanel()
 
