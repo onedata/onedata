@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 18.02.0-beta6
+
+* Releasing new version 18.02.0-beta6
+
+
 ### 18.02.0-beta5
 
 * VFS-4333 Decresed test logging delay in file creation tests
