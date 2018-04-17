@@ -42,23 +42,11 @@ def test_change_access(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="stat returns size 0")
 @scenario('Increase regular file size')
 def test_increase_size(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="stat returns size 0")
 @scenario('Decrease regular file size')
 def test_decrease_size(env_description_file):
     pass

@@ -25,16 +25,20 @@ Feature: Multi_regular_file_CRUD
     And u1 writes "DIFFERENT TEST TEXT ONEDATA" to s1/file1 on client1
     And u2 reads "DIFFERENT TEST TEXT ONEDATA" from file s1/file1 on client2
 
-  Scenario: Rename regular file without permission
-    When u1 creates regular files [s1/file1] on client1
-    And u1 sees [file1] in s1 on client1
-    And u2 sees [file1] in s1 on client2
-    And u2 fails to rename s1/file1 to s1/file2 on client2
-
-  Scenario: Rename regular file with permission
+  Scenario: Rename regular file without write permission on parent
     When u1 creates directories [s1/dir1] on client1
     And u1 creates regular files [s1/dir1/file1] on client1
-    And u1 changes s1/dir1 mode to 775 on client1
+    And u1 changes s1/dir1 mode to 755 on client1
+    And mode of u2's s1/dir1 is 755 on client2
+    And u2 fails to rename s1/dir1/file1 to s1/dir1/file2 on client2
+    Then u1 sees [file1] in s1/dir1 on client1
+    And u1 doesn't see [file2] in s1/dir1 on client1
+    And u2 sees [file1] in s1/dir1 on client2
+    And u2 doesn't see [file2] in s1/dir1 on client2
+
+  Scenario: Rename regular file with write permission on parent
+    When u1 creates directories [s1/dir1] on client1
+    And u1 creates regular files [s1/dir1/file1] on client1
     And u1 sees [file1] in s1/dir1 on client1
     And u2 sees [file1] in s1/dir1 on client2
     And u2 renames s1/dir1/file1 to s1/dir1/file2 on client2
@@ -52,20 +56,31 @@ Feature: Multi_regular_file_CRUD
     Then u1 doesn't see [file1] in s1 on client1
     And u2 doesn't see [file1] in s1 on client2
 
-  Scenario: Delete regular file by other user
+  Scenario: Delete regular file by other user with write permission on parent
     When u1 creates regular files [s1/file1] on client1
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
-    And u2 fails to delete files [s1/file1] on client2
-    Then u1 sees [file1] in s1 on client1
-    And u2 sees [file1] in s1 on client2
+    And u2 deletes files [s1/file1] on client2
+    Then u1 doesn't see [file1] in s1 on client1
+    And u2 doesn't see [file1] in s1 on client2
+
+  Scenario: Fail to delete regular file by other user without write permission on parent
+    When u1 creates directories [s1/dir1] on client1
+    And u1 creates regular files [s1/dir1/file1] on client1
+    And u1 sees [file1] in s1/dir1 on client1
+    And u2 sees [file1] in s1/dir1 on client2
+    And u1 changes s1/dir1 mode to 755 on client1
+    And mode of u2's s1/dir1 is 755 on client2
+    And u2 fails to delete files [s1/dir1/file1] on client2
+    Then u1 sees [file1] in s1/dir1 on client1
+    And u2 sees [file1] in s1/dir1 on client2
 
   Scenario: Read and write to regular file
     When u1 creates regular files [s1/file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
-    # TODO delete below sleep after resolving 2816
-    And u2 waits 5 seconds
+#     TODO delete below sleep after resolving 2816
+#    And u2 waits 5 seconds
     And u2 reads "TEST TEXT ONEDATA" from file s1/file1 on client2
     And size of u1's s1/file1 is 17 bytes on client1
     And size of u2's s1/file1 is 17 bytes on client2
@@ -82,8 +97,8 @@ Feature: Multi_regular_file_CRUD
     When u1 creates directories [s1/dir1] on client1
     And u1 creates regular files [s1/dir1/file1] on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client1
-    # TODO delete below sleep after resolving 2816
-    Then u2 waits 5 seconds
+#    # TODO delete below sleep after resolving 2816
+#    Then u2 waits 5 seconds
     Then u2 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client2
     And u1 changes s1/dir1/file1 mode to 620 on client1
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
@@ -100,8 +115,8 @@ Feature: Multi_regular_file_CRUD
     And mode of u2's s1/dir1/file1 is 660 on client2
     And u2 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client2
     Then u2 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client2
-    # TODO delete below sleep after resolving 2816
-    And u1 waits 5 seconds
+#    # TODO delete below sleep after resolving 2816
+#    And u1 waits 5 seconds
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
     And size of u1's s1/dir1/file1 is 17 bytes on client1
     And size of u2's s1/dir1/file1 is 17 bytes on client2
@@ -122,7 +137,7 @@ Feature: Multi_regular_file_CRUD
     And mode of u2's s1/dir1/script.sh is 654 on client2
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
     # TODO delete below sleep after resolving 2816
-    And u2 waits 5 seconds
+#    And u2 waits 5 seconds
     And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
     And u2 executes s1/dir1/script.sh on client2
 
@@ -131,7 +146,7 @@ Feature: Multi_regular_file_CRUD
     And u1 creates regular files [s1/dir1/script.sh] on client1
     And u1 writes "#!/usr/bin/env bash\n\necho TEST" to s1/dir1/script.sh on client1
     # TODO delete below sleep after resolving 2816
-    And u2 waits 5 seconds
+#    And u2 waits 5 seconds
     And u2 reads "#!/usr/bin/env bash\n\necho TEST" from file s1/dir1/script.sh on client2
     And u2 fails to execute s1/dir1/script.sh on client2
 
@@ -214,8 +229,7 @@ Feature: Multi_regular_file_CRUD
     And u1 creates regular files [s1/dir1/file1] on client1
     And u1 sees [file1] in s1/dir1 on client1
     And u2 sees [file1] in s1/dir1 on client2
-    And u1 changes s1/dir1 mode to 777 on client1
-    Then mode of u2's s1/dir1 is 777 on client2
+    Then mode of u2's s1/dir1 is 775 on client2
     And u1 opens s1/dir1/file1 with mode r+ on client1
     And u2 deletes files [s1/dir1/file1] on client2
     And u1 writes "TEST TEXT ONEDATA" to previously opened s1/dir1/file1 on client1
@@ -224,19 +238,25 @@ Feature: Multi_regular_file_CRUD
     And u1 closes s1/dir1/file1 on client1
     And u1 doesn't see [file1] in s1/dir1 on client1
 
-  Scenario: Deleting file without permission, file is opened by other user
-    When u1 creates regular files [s1/file1] on client1
-    And u1 sees [file1] in s1 on client1
-    And u2 sees [file1] in s1 on client2
-    And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
-    And u1 opens s1/file1 with mode r+ on client1
-    And u2 fails to delete files [s1/file1] on client2
-    # because u2 has no write permission to file1
-    And u1 closes s1/file1 on client1
+  Scenario: Deleting file without permission should fail, file is opened by other user
+    When u1 creates directories [s1/dir1] on client1
+    And u1 creates regular files [s1/dir1/file1] on client1
+    And u1 sees [file1] in s1/dir1 on client1
+    And u2 sees [dir1] in s1 on client2
+    And u2 sees [file1] in s1/dir1 on client2
+    And u1 changes s1/dir1 mode to 755 on client1
+    Then mode of u2's s1/dir1 is 755 on client2
+    And u1 writes "TEST TEXT ONEDATA" to s1/dir1/file1 on client1
+    And u1 opens s1/dir1/file1 with mode r+ on client1
+    And u2 fails to delete files [s1/dir1/file1] on client2
+    # because u2 has no write permission on s1/dir1
+    And u1 closes s1/dir1/file1 on client1
     # TODO below sleep should be deleted after resolving VFS-2828
-    And u1 waits 10 seconds
-    And u1 sees [file1] in s1 on client1
-    And u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
+    #    And u1 waits 10 seconds
+    And u1 sees [file1] in s1/dir1 on client1
+    And u2 sees [file1] in s1/dir1 on client2
+    And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1
+    And u2 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client2
 
   Scenario: Deleting file right after closing it
     When u1 creates regular files [s1/file1] on client1
@@ -244,8 +264,6 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1 on client2
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     And u1 opens s1/file1 with mode r+ on client1
-#    And u2 fails to delete files [s1/file1] on client2
-    # because u2 has no write permission to file1
     And u1 closes s1/file1 on client1
     And u1 deletes files [s1/file1] on client1
     And s1 is empty for u1 on client1
