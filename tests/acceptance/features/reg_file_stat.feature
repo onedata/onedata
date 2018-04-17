@@ -18,7 +18,7 @@ Feature: Regular_file_stat
   Scenario: Check default access permissions
     When u1 creates regular files [s1/file1]
     And u1 sees file1 in s1
-    Then mode of u1's s1/file1 is 644
+    Then mode of u1's s1/file1 is 664
 
   Scenario: Change access permissions
     When u1 creates regular files [s1/file1]

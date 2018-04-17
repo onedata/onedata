@@ -10,7 +10,7 @@ Feature: Directory_stat
 
   Scenario: Check default access permissions
     When u1 creates directories [s1/dir1]
-    Then mode of u1's s1/dir1 is 755
+    Then mode of u1's s1/dir1 is 775
 
   Scenario: Change access permissions
     When u1 creates directories [s1/dir1]

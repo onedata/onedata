@@ -27,23 +27,18 @@ def test_create(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="client2 during read uses old, cached file uuid which results in "
-           "error enoent")
 @scenario('Create a file, read it on the second client, delete it, and repeat '
           'the whole process')
 def test_recreate_and_read(env_description_file):
     pass
 
 
-@scenario('Rename regular file without permission')
-def test_rename_without_permission(env_description_file):
+@scenario('Rename regular file without write permission on parent')
+def test_rename_without_write_permission_on_parent(env_description_file):
     pass
 
 
-@scenario('Rename regular file with permission')
+@scenario('Rename regular file with write permission on parent')
 def test_rename_with_permission(env_description_file):
     pass
 
@@ -53,8 +48,13 @@ def test_delete_by_owner(env_description_file):
     pass
 
 
-@scenario('Delete regular file by other user')
+@scenario('Delete regular file by other user with write permission on parent')
 def test_delete_by_other_user(env_description_file):
+    pass
+
+
+@scenario('Fail to delete regular file by other user without write permission on parent')
+def test_fail_to_delete_by_other_user_without_write_permission(env_description_file):
     pass
 
 
@@ -113,25 +113,17 @@ def test_copy_big(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="cannot read although file was opened before deletion")
 @scenario('Deleting file opened by other user for reading')
 def test_delete_file_opened_for_reading(env_description_file):
     pass
 
 
-@pytest.mark.xfail_env(
-    envs=["multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="cannot read although file was opened before deletion")
 @scenario('Deleting file opened by other user for reading and writing')
 def test_delete_file_opened_for_rdwr(env_description_file):
     pass
 
 
-@scenario('Deleting file without permission, file is opened by other user')
+@scenario('Deleting file without permission should fail, file is opened by other user')
 def test_delete_opened_file_without_permission(env_description_file):
     pass
 

@@ -24,8 +24,8 @@ def test_create(env_description_file):
     pass
 
 
-@scenario('Rename someone\'s directory without permission')
-def test_rename_someone_without_permission(env_description_file):
+@scenario('Fail to rename someone\'s directory without write permission on parent')
+def test_rename_someone_without_write_permission_on_parent(env_description_file):
     pass
 
 
@@ -41,6 +41,11 @@ def test_rename_own(env_description_file):
 
 @scenario('Delete someone\'s empty directory')
 def test_delete_someone(env_description_file):
+    pass
+
+
+@scenario('Fail to delete someone\'s empty directory without write permission on parent')
+def test_fail_to_delete_someones_empty_directory(env_description_file):
     pass
 
 
@@ -89,14 +94,6 @@ def test_rename_subfile_with_permission(env_description_file):
     pass
 
 
-# # TODO VFS-1824
-@pytest.mark.xfail_env(
-    envs=["singleprovider_multiclient_directio",
-          "singleprovider_multiclient_proxy",
-          "multiprovider_proxy",
-          "multiprovider_directio"],
-    reason="u2 is unable to create direcory with the same name "
-           "although first one was deleted")
 @scenario('Recreate directory deleted by other user')
 def test_recreate(env_description_file):
     pass
