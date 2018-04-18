@@ -37,6 +37,18 @@ def create_many(user, lower, upper, parent_dir, context):
                                  context)
 
 
+@when(parsers.re('(?P<user>\w+) can stat (?P<files>.*) in (?P<path>.*)'))
+@then(parsers.re('(?P<user>\w+) can stat (?P<files>.*) in (?P<path>.*)'))
+def stat_present(user, path, files, context):
+    multi_file_steps.stat_present(user, path, files, "client1", context)
+
+
+@when(parsers.re('(?P<user>\w+) can\'t stat (?P<files>.*) in (?P<path>.*)'))
+@then(parsers.re('(?P<user>\w+) can\'t stat (?P<files>.*) in (?P<path>.*)'))
+def stat_absent(user, path, files, context):
+    multi_file_steps.stat_absent(user, path, files, "client1", context)
+
+
 @when(parsers.re('(?P<user>\w+) sees (?P<files>.*) in (?P<path>.*)'))
 @then(parsers.re('(?P<user>\w+) sees (?P<files>.*) in (?P<path>.*)'))
 def ls_present(user, files, path, context):
