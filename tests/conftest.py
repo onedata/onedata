@@ -60,6 +60,17 @@ def pytest_generate_tests(metafunc):
                         scope='module'
                     )
 
+def remove_symlinks(dirpath):
+    """
+    Due to problems with reading symlinks in directories mounted from docker,
+    we need to remove invalid symlinks from log directory.
+    """
+    for root, _, filenames in os.walk(dirpath):
+        for filename in filenames:
+            path = os.path.join(root, filename)
+            if os.path.islink(path):
+                print 'removing symlink from report: {}'.format(path)
+                os.remove(path)
 
 @pytest.fixture(scope="module")
 def env_description_abs_path(request, env_description_file):
@@ -96,6 +107,7 @@ def persistent_environment(request, env_description_abs_path):
         docker.remove(request.onedata_environment['docker_ids'],
                       force=True,
                       volumes=True)
+        remove_symlinks(logdir)
 
     request.addfinalizer(fin)
     request.onedata_environment = env_desc
