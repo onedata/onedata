@@ -82,9 +82,42 @@ class TransferChart(PageObject):
         return self._speed.get_attribute('ct:value').split(',')[1]
 
 
+class TabHeader(PageObject):
+    name = TextLabelWebElement('.nav-link')
+
+    def click(self):
+        self.web_elem.click()
+
+
 class TransfersTab(PageObject):
     spaces = WebItemsSequence('ul.spaces-list li', cls=SpaceRecord)
-    active = WebItemsSequence('.col-active-transfers tr.data-row', cls = TransferRecordActive)
-    history = WebItemsSequence('.col-completed-transfers tr.data-row', cls = TransferRecordHistory)
+    tabs = WebItemsSequence('.row-transfers-tables .nav-tabs li', 
+                            cls = TabHeader)
+    _history_list = WebItemsSequence('.col-completed-transfers tr.data-row', 
+                                     cls = TransferRecordHistory)
+    _active_list = WebItemsSequence('.col-active-transfers tr.data-row', 
+                                    cls = TransferRecordActive)
+    _scheduled_list = WebItemsSequence('.col-scheduled-transfers tr.data-row', 
+                                       cls = TransferRecordHistory)
 
+    @property
+    def active(self):
+        self['active'].click()
+        return self._active_list
 
+    @property
+    def history(self):
+        self['history'].click()
+        return self._history_list
+    
+    @property
+    def scheduled(self):
+        self['scheduled'].click()
+        return self._scheduled_list
+
+    def __getitem__(self, name):
+        for tab in self.tabs:
+            if name in tab.name.lower():
+                return tab
+        else:
+            raise RuntimeError('no tab named {} in transfer tab'.format(name))
