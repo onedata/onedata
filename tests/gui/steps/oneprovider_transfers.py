@@ -12,6 +12,7 @@ from pytest_bdd import when, then, parsers
 from tests.gui.utils.oneprovider_gui import OPLoggedIn as op_page
 from tests.gui.utils.common.modals import Modals as modals
 from tests.gui.utils.generic import repeat_failed
+from selenium.common.exceptions import StaleElementReferenceException
 
 
 def _assert_transfer(transfer, item_type, desc, sufix):
@@ -48,7 +49,8 @@ def assert_finished_transfer(selenium, browser_id, item_type, desc):
 
 @when(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
 @then(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
-@repeat_failed(interval=1, timeout=90, exceptions=RuntimeError)
+@repeat_failed(interval = 1, timeout = 90, 
+               exceptions = (RuntimeError, StaleElementReferenceException))
 def wait_for_tranfers_to_finish(selenium, browser_id):
     try:
         _ = op_page(selenium[browser_id]).transfers.active[0]

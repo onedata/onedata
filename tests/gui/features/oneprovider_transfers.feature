@@ -80,7 +80,7 @@ Feature: Oneprovider transfers functionality
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 45 MiB
             type: replication
             status: completed
@@ -159,7 +159,7 @@ Feature: Oneprovider transfers functionality
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 0 B
             type: migration
             status: failed
@@ -234,7 +234,7 @@ Feature: Oneprovider transfers functionality
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 0 B
             type: replication
             status: failed
@@ -270,7 +270,7 @@ Feature: Oneprovider transfers functionality
             name: dir1
             destination: p1
             username: user1
-            total files: 2
+            total files: 0
             transferred: 0 B
             type: migration
             status: completed
@@ -306,7 +306,7 @@ Feature: Oneprovider transfers functionality
             name: dir1
             destination: p1
             username: user1
-            total files: 2
+            total files: 0
             transferred: 0 B
             type: replication
             status: completed
@@ -392,7 +392,7 @@ Feature: Oneprovider transfers functionality
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 45 MiB
             type: migration
             status: completed
