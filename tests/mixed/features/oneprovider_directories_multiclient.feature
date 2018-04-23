@@ -18,11 +18,11 @@ Feature: Oneprovider directories multiclient
     And user of browser seen that Oneprovider session has started
 
 
-  Scenario: User2 creates directory using oneclient and user1 fails to remove it using browser
+  Scenario: User2 creates directory using oneclient and user1 removes it using browser
     # create: space1/dir1
     When user2 creates directories [space1/dir1] on client2
 
-    # user1 tries to remove dir1
+    # user1 removes dir1
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -32,13 +32,13 @@ Feature: Oneprovider directories multiclient
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
 
-    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
-    And user of browser sees item(s) named "dir1" in file browser
-    And user2 sees [dir1] in space1 on client2
+    Then user of browser sees that item named "dir1" has disappeared from files browser
+    And user2 doesn't see [dir1] in space1 on client2
 
 
-  Scenario: User1 creates directory using browser and user2 fails to remove it using oneclient
+  Scenario: User1 creates directory using browser and user2 removes it using oneclient
     # create: space1/dir1
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -52,22 +52,22 @@ Feature: Oneprovider directories multiclient
     And user of browser sees that item named "dir1" has appeared in file browser
     And user of browser sees that item named "dir1" is directory in file browser
 
-    # user2 tries to remove dir1
+    # user2 removes dir1
     And user2 sees [dir1] in space1 on client2
-    And user2 fails to delete empty directories [space1/dir1] on client2
+    And user2 deletes empty directories [space1/dir1] on client2
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 
-    Then user2 sees [dir1] in space1 on client2
-    And user of browser sees item(s) named "dir1" in file browser
+    Then user of browser sees that item named "dir1" has disappeared from files browser
+    And user2 doesn't see [dir1] in space1 on client2
 
 
-  Scenario: User2 creates directory using oneclient and user1 fails to rename it using browser
+  Scenario: User2 creates directory using oneclient and user1 renames it using browser
     # create: space1/dir1
     When user2 creates directories [space1/dir1] on client2
 
-    # user1 tries to rename dir1 to dir2
+    # user1 renames dir1 to dir2
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -80,14 +80,14 @@ Feature: Oneprovider directories multiclient
     And user of browser types "dir2" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
+    Then user of browser sees an info notify with text matching to: .*renamed.*
 
-    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
-    And user of browser sees item(s) named "dir1" in file browser
-    And user of browser does not see any item(s) named "dir2" in file browser
-    And user2 sees [dir1] in space1 on client2
-    And user2 doesn't see [dir2] in space1 on client2
+    And user of browser sees item(s) named "dir2" in file browser
+    And user of browser does not see any item(s) named "dir1" in file browser
+    And user2 sees [dir2] in space1 on client2
+    And user2 doesn't see [dir1] in space1 on client2
 
-  Scenario: User1 creates directory using browser and user2 fails to rename it using oneclient
+  Scenario: User1 creates directory using browser and user2 renames it using oneclient
     # create: space1/dir1
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -101,15 +101,15 @@ Feature: Oneprovider directories multiclient
     And user of browser sees that item named "dir1" has appeared in file browser
     And user of browser sees that item named "dir1" is directory in file browser
 
-    # user2 tries to rename dir1 to dir2
+    # user2 renames dir1 to dir2
     And user2 sees [dir1] in space1 on client2
-    And user2 fails to rename space1/dir1 to space1/dir2 on client2
+    And user2 renames space1/dir1 to space1/dir2 on client2
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 
-    Then user2 sees [dir1] in space1 on client2
-    And user2 doesn't see [dir2] in space1 on client2
-    And user of browser sees item(s) named "dir1" in file browser
-    And user of browser does not see any item(s) named "dir2" in file browser
+    Then user2 sees [dir2] in space1 on client2
+    And user2 doesn't see [dir1] in space1 on client2
+    And user of browser sees item(s) named "dir2" in file browser
+    And user of browser does not see any item(s) named "dir1" in file browser
 

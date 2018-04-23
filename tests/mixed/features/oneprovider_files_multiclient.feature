@@ -18,11 +18,11 @@ Feature: Oneprovider files multiclient
     And user of browser seen that Oneprovider session has started
 
 
-  Scenario: User2 creates file using oneclient and user1 fails to remove it using browser
+  Scenario: User2 creates file using oneclient and user1 removes it using browser
     # create: space1/file1
     When user2 creates regular files [space1/file1] on client2
 
-    # user1 tries to remove file1
+    # user1 removes file1
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -32,13 +32,13 @@ Feature: Oneprovider files multiclient
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
     And user of browser sees that "Remove files" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
+    And user of browser sees an info notify with text matching to: .*removed.*
 
-    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
-    And user of browser sees item(s) named "file1" in file browser
-    And user2 sees [file1] in space1 on client2
+    Then user of browser does not see any item(s) named "file1" in file browser
+    And user2 doesn't see [file1] in space1 on client2
 
 
-  Scenario: User1 creates file using browser and user2 fails to remove it using oneclient
+  Scenario: User1 creates file using browser and user2 removes it using oneclient
     # create: space1/file1
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -52,22 +52,22 @@ Feature: Oneprovider files multiclient
     And user of browser sees that item named "file1" has appeared in file browser
     And user of browser sees that item named "file1" is file in file browser
 
-    # user2 tries to remove file1
+    # user2 removes file1
     And user2 sees [file1] in space1 on client2
-    And user2 fails to delete files [space1/file1] on client2
+    And user2 deletes files [space1/file1] on client2
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 
-    Then user of browser sees item(s) named "file1" in file browser
-    And user2 sees [file1] in space1 on client2
+    Then user of browser does not see any item(s) named "file1" in file browser
+    And user2 doesn't see [file1] in space1 on client2
 
 
-  Scenario: User2 creates file using oneclient and user1 fails to rename it using browser
+  Scenario: User2 creates file using oneclient and user1 renames it using browser
     # create: space1/file1
     When user2 creates regular files [space1/file1] on client2
 
-    # user1 tries to rename file1 to file2
+    # user1 renames file1 to file2
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -80,15 +80,15 @@ Feature: Oneprovider files multiclient
     And user of browser types "file2" on keyboard
     And user of browser presses enter on keyboard
     And user of browser sees that the modal has disappeared
+    Then user of browser sees an info notify with text matching to: .*renamed.*
 
-    Then user of browser sees an error notify with text matching to: .*[Aa]ccess denied.*
-    And user of browser sees item(s) named "file1" in file browser
-    And user of browser does not see any item(s) named "file2" in file browser
-    And user2 sees [file1] in space1 on client2
-    And user2 doesn't see [file2] in space1 on client2
+    And user of browser sees item(s) named "file2" in file browser
+    And user of browser does not see any item(s) named "file1" in file browser
+    And user2 sees [file2] in space1 on client2
+    And user2 doesn't see [file1] in space1 on client2
 
 
-  Scenario: User1 creates file using browser and user2 fails to rename it using oneclient
+  Scenario: User1 creates file using browser and user2 renames it using oneclient
     # create: space1/file1
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
@@ -102,14 +102,14 @@ Feature: Oneprovider files multiclient
     And user of browser sees that item named "file1" has appeared in file browser
     And user of browser sees that item named "file1" is file in file browser
 
-    # user2 tries to rename file1 to file2
+    # user2 renames file1 to file2
     And user2 sees [file1] in space1 on client2
-    And user2 fails to rename space1/file1 to space1/file2 on client2
+    And user2 renames space1/file1 to space1/file2 on client2
     And user of browser refreshes site
     And user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 
-    Then user of browser sees item(s) named "file1" in file browser
-    And user of browser does not see any item(s) named "file2" in file browser
-    And user2 sees [file1] in space1 on client2
-    And user2 doesn't see [file2] in space1 on client2
+    Then user of browser sees item(s) named "file2" in file browser
+    And user of browser does not see any item(s) named "file1" in file browser
+    And user2 sees [file2] in space1 on client2
+    And user2 doesn't see [file1] in space1 on client2
