@@ -243,11 +243,12 @@ Feature: Multi_directory_CRUD
     And u1 sees [dir5] in s1/dir4 on client1
     And u2 sees [dir5] in s1/dir4 on client2
     And u1 renames s1/dir4/dir5 to s1/dir1/dir2/dir3 on client1
-    Then u1 can't stat [dir5] in s1/dir4 on client1
-    And u2 can't stat [dir5] in s1/dir4 on client2
-    And u1 can stat [dir5] in s1/dir1/dir2/dir3 on client1
+    #    Uncomment after resolving VFS-4378
+    #    Then u1 can't stat [dir5] in s1/dir4 on client1
+    #    And u2 can't stat [dir5] in s1/dir4 on client2
+    Then u1 can stat [dir5] in s1/dir1/dir2/dir3 on client1
     And u2 can stat [dir5] in s1/dir1/dir2/dir3 on client2
-    Then u1 doesn't see [dir5] in s1/dir4 on client1
+    And u1 doesn't see [dir5] in s1/dir4 on client1
     And u2 doesn't see [dir5] in s1/dir4 on client2
     And u1 sees [dir5] in s1/dir1/dir2/dir3 on client1
     And u2 sees [dir5] in s1/dir1/dir2/dir3 on client2

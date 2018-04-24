@@ -172,11 +172,12 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1 on client1
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1 on client1
-    Then u1 can't stat [file1] in s1/dir1/dir2 on client1
-    And u2 can't stat [file1] in s1/dir1/dir2 on client2
-    And u1 can stat [file1] in s1/dir3 on client1
+    #    Uncomment after resolving VFS-4378
+    #    Then u1 can't stat [file1] in s1/dir1/dir2 on client1
+    #    And u2 can't stat [file1] in s1/dir1/dir2 on client2
+    Then u1 can stat [file1] in s1/dir3 on client1
     And u2 can stat [file1] in s1/dir3 on client2
-    Then u1 doesn't see [file1] in s1/dir1/dir2 on client1
+    And u1 doesn't see [file1] in s1/dir1/dir2 on client1
     And u2 doesn't see [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
     And u2 sees [file1] in s1/dir3 on client2
@@ -190,11 +191,12 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 writes 32 MB of random characters to s1/dir1/dir2/file1 on client1 and saves MD5
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1 on client1
-    Then u1 can't stat [file1] in s1/dir1/dir2 on client1
-    And u2 can't stat [file1] in s1/dir1/dir2 on client2
-    And u1 can stat [file1] in s1/dir3 on client1
+    #    Uncomment after resolving VFS-4378
+    #    Then u1 can't stat [file1] in s1/dir1/dir2 on client1
+    #    And u2 can't stat [file1] in s1/dir1/dir2 on client2
+    Then u1 can stat [file1] in s1/dir3 on client1
     And u2 can stat [file1] in s1/dir3 on client2
-    Then u1 doesn't see [file1] in s1/dir1/dir2 on client1
+    And u1 doesn't see [file1] in s1/dir1/dir2 on client1
     And u2 doesn't see [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
     And u2 sees [file1] in s1/dir3 on client2
