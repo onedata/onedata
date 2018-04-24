@@ -4,9 +4,9 @@
 CHANGELOG
 ---------
 
-### New Version Tag do not change this line
+### 18.02.0-rc1
 
-* VFS-2021 Added dockers.config
+* VFS-2021 Added dockers.config 
 * VFS-4376 Tests updated after removing sticky_bit
 * VFS-4362 Removing symlinks from logs after env_up teardown
 * VFS-4369 fix acceptance tests after removing sticky bit
