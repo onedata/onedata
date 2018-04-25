@@ -402,6 +402,8 @@ Feature: Onezone GUI elements
     And user of browser sees that "Leave a space" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
+    And user of browser is idle for 8 seconds
+    And user of browser refreshes webapp
     And user of browser sees that space named "spaceB" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
 
     # TODO uncomment below step after integration with swagger and remove dependencies between tests
