@@ -1,11 +1,13 @@
 """Utils and fixtures to facilitate operation on metadata row in file browser in oneprovider web GUI.
 """
 
+from selenium.common.exceptions import NoSuchElementException
 from tests.gui.utils.core.common import PageObject
 from tests.gui.utils.core.web_elements import InputWebElement, TextLabelWebElement, WebItem, WebItemsSequence, \
     ButtonWebItem, WebElementsSequence, WebElementsSequenceItemWithText
 from tests.gui.utils.core.web_objects import ButtonWebObject
-from tests.gui.utils.generic import click_on_web_elem, find_web_elem_with_text
+from tests.gui.utils.generic import click_on_web_elem, find_web_elem_with_text, \
+    find_web_elem
 
 __author__ = "Bartosz Walkowicz"
 __copyright__ = "Copyright (C) 2017 ACK CYFRONET AGH"
@@ -79,6 +81,16 @@ class MetadataRow(PageObject):
 
     def remove_metadata(self):
         return self._get_btn('remove metadata')
+
+    def is_resource_load_error(self):
+        try:
+            self.web_elem.find_element_by_css_selector('.metadata-panel')
+        except NoSuchElementException:
+            find_web_elem(self.web_elem, '.resource-load-error', 
+                'not found either metadata panel or resource load error')
+            return True
+        else:
+            return False
 
     def _get_btn(self, name):
         css_sel = '.save-metadata-row button'
