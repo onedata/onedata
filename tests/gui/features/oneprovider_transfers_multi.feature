@@ -25,6 +25,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     # Check that transfer appeared in transfer tab
     And user of browser1 clicks on the "transfers" tab in main menu sidebar
     And user of browser1 selects "space4" space in transfers tab
+    And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
     Then user of browser1 sees file in history of transfers:
             name: large_file.txt
@@ -80,12 +81,13 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     # Check that transfer appeared in transfer tab
     And user of browser1 clicks on the "transfers" tab in main menu sidebar
     And user of browser1 selects "space4" space in transfers tab
+    And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
     Then user of browser1 sees directory in history of transfers:
             name: dir1
             destination: p2
             username: user1
-            total files: 3
+            total files: 1
             transferred: 45 MiB
             type: replication
             status: completed
@@ -126,6 +128,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     # Check that transfer appeared in transfer tab
     And user of browser1 clicks on the "transfers" tab in main menu sidebar
     And user of browser1 selects "space4" space in transfers tab
+    And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
     Then user of browser1 sees file in history of transfers:
             name: large_file.txt
@@ -181,12 +184,13 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     # Check that transfer appeared in transfer tab
     And user of browser1 clicks on the "transfers" tab in main menu sidebar
     And user of browser1 selects "space4" space in transfers tab
+    And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
     Then user of browser1 sees directory in history of transfers:
             name: dir1
             destination: p2
             username: user1
-            total files: 3
+            total files: 1
             transferred: 45 MiB
             type: migration
             status: completed

@@ -25,11 +25,8 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space4" space in transfers tab
-    Then user of browser sees file in active transfers:
-            name: large_file.txt
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees file in history of transfers:
             name: large_file.txt
@@ -70,17 +67,14 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space4" space in transfers tab
-    Then user of browser sees directory in active transfers:
-            name: dir1
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees directory in history of transfers:
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 45 MiB
             type: replication
             status: completed
@@ -111,11 +105,8 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space2" space in transfers tab
-    Then user of browser sees file in active transfers:
-            name: large_file.txt
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees file in history of transfers:
             name: large_file.txt
@@ -149,17 +140,14 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space2" space in transfers tab
-    Then user of browser sees directory in active transfers:
-            name: dir1
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees directory in history of transfers:
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 0 B
             type: migration
             status: failed
@@ -186,11 +174,8 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space2" space in transfers tab
-    Then user of browser sees file in active transfers:
-            name: large_file.txt
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees file in history of transfers:
             name: large_file.txt
@@ -224,17 +209,14 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space2" space in transfers tab
-    Then user of browser sees directory in active transfers:
-            name: dir1
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees directory in history of transfers:
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 0 B
             type: replication
             status: failed
@@ -265,12 +247,14 @@ Feature: Oneprovider transfers functionality
 
     # Check that transfer appeared in transfer tab
     And user of browser selects "space4" space in transfers tab
+
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    Then user of browser sees directory in history of transfers:
+    And user of browser sees directory in history of transfers:
             name: dir1
             destination: p1
             username: user1
-            total files: 2
+            total files: 0
             transferred: 0 B
             type: migration
             status: completed
@@ -301,12 +285,13 @@ Feature: Oneprovider transfers functionality
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space4" space in transfers tab
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    Then user of browser sees directory in history of transfers:
+    And user of browser sees directory in history of transfers:
             name: dir1
             destination: p1
             username: user1
-            total files: 2
+            total files: 0
             transferred: 0 B
             type: replication
             status: completed
@@ -337,11 +322,8 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space4" space in transfers tab
-    Then user of browser sees file in active transfers:
-            name: large_file.txt
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees file in history of transfers:
             name: large_file.txt
@@ -382,17 +364,14 @@ Feature: Oneprovider transfers functionality
     # Check that transfer appeared in transfer tab
     And user of browser clicks on the "transfers" tab in main menu sidebar
     And user of browser selects "space4" space in transfers tab
-    Then user of browser sees directory in active transfers:
-            name: dir1
-            destination: p2
-            username: user1
 
+    Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
     And user of browser sees directory in history of transfers:
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 1
             transferred: 45 MiB
             type: migration
             status: completed

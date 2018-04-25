@@ -12,6 +12,8 @@ from pytest_bdd import when, then, parsers
 from tests.gui.utils.oneprovider_gui import OPLoggedIn as op_page
 from tests.gui.utils.common.modals import Modals as modals
 from tests.gui.utils.generic import repeat_failed
+from selenium.common.exceptions import StaleElementReferenceException
+from functools import partial
 
 
 def _assert_transfer(transfer, item_type, desc, sufix):
@@ -26,68 +28,74 @@ def _assert_transfer(transfer, item_type, desc, sufix):
                                                            val, sufix)
 
 
-@when(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
-                 ' in active transfers:\n(?P<desc>(.|\s)*)'))
-@then(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
-                 ' in active transfers:\n(?P<desc>(.|\s)*)'))
+def wt(name, func=None, converters=None):
+    if not func:
+        return partial(wt, name, converters=converters)
+    return then(name, converters)(when(name, converters)(func))
+
+
+@wt(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
+               ' in active transfers:\n(?P<desc>(.|\s)*)'))
 @repeat_failed(interval=0.5)
 def assert_active_transfer(selenium, browser_id, item_type, desc):
     transfer = op_page(selenium[browser_id]).transfers.active[0]
     _assert_transfer(transfer, item_type, desc, 'active transfers')
 
 
-@when(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
-                 ' in history of transfers:\n(?P<desc>(.|\s)*)'))
-@then(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
-                 ' in history of transfers:\n(?P<desc>(.|\s)*)'))
+@wt(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
+               ' in history of transfers:\n(?P<desc>(.|\s)*)'))
 @repeat_failed(interval=0.5, timeout = 40)
 def assert_finished_transfer(selenium, browser_id, item_type, desc):
     transfer = op_page(selenium[browser_id]).transfers.history[0]
     _assert_transfer(transfer, item_type, desc, 'history of transfers')
 
 
-@when(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
-@then(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
-@repeat_failed(interval=1, timeout=90, exceptions=RuntimeError)
-def wait_for_tranfers_to_finish(selenium, browser_id):
-    try:
-        _ = op_page(selenium[browser_id]).transfers.active[0]
-    except RuntimeError as e:
-        if not "Index out of bound" in e.args[0]:
-            raise
-    else:
-        raise RuntimeError("Active transfer did not finish")
+@wt(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
+               ' in scheduled transfers:\n(?P<desc>(.|\s)*)'))
+@repeat_failed(interval=0.5, timeout = 40)
+def assert_scheduled_transfer(selenium, browser_id, item_type, desc):
+    transfer = op_page(selenium[browser_id]).transfers.scheduled[0]
+    _assert_transfer(transfer, item_type, desc, 'scheduled transfers')
 
 
-@when(parsers.re('user of (?P<browser_id>.*) expands first transfer record'))
-@then(parsers.re('user of (?P<browser_id>.*) expands first transfer record'))
+@wt(parsers.re('user of (?P<browser_id>.*) waits for all transfers to start'))
+@repeat_failed(interval = 1, timeout = 90, 
+               exceptions = (AssertionError, StaleElementReferenceException))
+def wait_for_scheduled_tranfers_to_start(selenium, browser_id):
+    assert len(op_page(selenium[browser_id]).transfers.scheduled) == 0, \
+            'Scheduled transfers did not start'
+
+
+@wt(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
+@repeat_failed(interval = 1, timeout = 90, 
+               exceptions = (AssertionError, StaleElementReferenceException))
+def wait_for_active_tranfers_to_finish(selenium, browser_id):
+    assert len(op_page(selenium[browser_id]).transfers.active) == 0, \
+            'Active transfers did not finish'
+
+
+@wt(parsers.re('user of (?P<browser_id>.*) expands first transfer record'))
 def expand_transfer_record(selenium, browser_id):
     op_page(selenium[browser_id]).transfers.history[0].expand()
 
     
-@when(parsers.re('user of (?P<browser_id>.*) sees that there is non-zero '
-                 'throughput in transfer chart'))
-@then(parsers.re('user of (?P<browser_id>.*) sees that there is non-zero '
-                 'throughput in transfer chart'))
+@wt(parsers.re('user of (?P<browser_id>.*) sees that there is non-zero '
+               'throughput in transfer chart'))
 def assert_non_zero_transfer_speed(selenium, browser_id):
     chart = op_page(selenium[browser_id]).transfers.history[0].get_chart()
     assert chart.get_speed() != '0', 'Transfer throughput is 0'
 
 
-@when(parsers.re('user of (?P<browser_id>.*) migrates selected item from '
-                 'provider "(?P<source>.*)" to provider "(?P<target>.*)"')) 
-@then(parsers.re('user of (?P<browser_id>.*) migrates selected item from '
-                 'provider "(?P<source>.*)" to provider "(?P<target>.*)"')) 
+@wt(parsers.re('user of (?P<browser_id>.*) migrates selected item from '
+               'provider "(?P<source>.*)" to provider "(?P<target>.*)"')) 
 def migrate_item(selenium, browser_id, source, target):
     modal = modals(selenium[browser_id])
     modal.data_distribution.providers[source].migrate()
     modal.data_distribution.migrate[target].select()
 
 
-@when(parsers.re('user of (?P<browser_id>.*) replicates selected item'
-                 ' to provider "(?P<provider>.*)"'))    
-@then(parsers.re('user of (?P<browser_id>.*) replicates selected item'
-                 ' to provider "(?P<provider>.*)"'))    
+@wt(parsers.re('user of (?P<browser_id>.*) replicates selected item'
+               ' to provider "(?P<provider>.*)"'))    
 def replicate_item(selenium, browser_id, provider):
     (modals(selenium[browser_id]).
             data_distribution.
@@ -95,10 +103,8 @@ def replicate_item(selenium, browser_id, provider):
             replicate())
 
 
-@when(parsers.re('user of (?P<browser_id>.*) sees that item is never '
-                 'synchronized in provider "(?P<provider>.*)"'))
-@then(parsers.re('user of (?P<browser_id>.*) sees that item is never '
-                 'synchronized in provider "(?P<provider>.*)"'))
+@wt(parsers.re('user of (?P<browser_id>.*) sees that item is never '
+               'synchronized in provider "(?P<provider>.*)"'))
 def assert_item_never_synchronized(selenium, browser_id, provider):
     assert (modals(selenium[browser_id]).
                    data_distribution.
@@ -108,9 +114,7 @@ def assert_item_never_synchronized(selenium, browser_id, provider):
         "Item is synchronized in provider {}".format(provider)
 
 
-@when(parsers.re('user of (?P<browser_id>.*) selects "(?P<space>.*)" space '
-                 'in transfers tab'))
-@then(parsers.re('user of (?P<browser_id>.*) selects "(?P<space>.*)" space '
-                 'in transfers tab'))
+@wt(parsers.re('user of (?P<browser_id>.*) selects "(?P<space>.*)" space '
+               'in transfers tab'))
 def change_transfer_space(selenium, browser_id, space):
     op_page(selenium[browser_id]).transfers.spaces[space].select()
