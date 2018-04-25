@@ -153,19 +153,26 @@ def displays():
 
 
 @fixture(scope='session')
-def clipboard():
+def clipboard():    
     """utility simulating os clipboard"""
+    from platform import system as get_system
     from collections import namedtuple
     cls = namedtuple('Clipboard', ['copy', 'paste'])
 
     def copy(text, display):
-        p = sp.Popen(['xclip', '-d', display, '-selection', 'c'],
-                     stdin=sp.PIPE, close_fds=True)
+        if get_system() == 'Darwin':
+            cmd = ['pbcopy']
+        else:
+            cmd = ['xclip', '-d', display, '-selection', 'c']
+        p = sp.Popen(cmd, stdin=sp.PIPE, close_fds=True)
         p.communicate(input=text.encode('utf-8'))
 
     def paste(display):
-        p = sp.Popen(['xclip', '-d', display, '-selection', 'c', '-o'],
-                     stdout=sp.PIPE, close_fds=True)
+        if get_system() == 'Darwin':
+            cmd = ['pbpaste']
+        else:
+            cmd = ['xclip', '-d', display, '-selection', 'c', '-o']
+        p = sp.Popen(cmd, stdout=sp.PIPE, close_fds=True)
         stdout, _ = p.communicate()
         return stdout.decode('utf-8')
 
