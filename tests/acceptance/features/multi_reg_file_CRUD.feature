@@ -9,6 +9,8 @@ Feature: Multi_regular_file_CRUD
 
   Scenario: Create regular file
     When u1 creates regular files [s1/file1, s1/file2, s1/file3] on client1
+    Then u1 can stat [file1, file2, file3] in s1 on client1
+    And u2 can stat [file1, file2, file3] in s1 on client2
     Then u1 sees [file1, file2, file3] in s1 on client1
     And u2 sees [file1, file2, file3] in s1 on client2
 
@@ -42,6 +44,11 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in s1/dir1 on client1
     And u2 sees [file1] in s1/dir1 on client2
     And u2 renames s1/dir1/file1 to s1/dir1/file2 on client2
+    Then u1 can stat [file2] in s1/dir1 on client1
+    And u1 can stat [file2] in s1/dir1 on client1
+    And u2 can stat [file2] in s1/dir1 on client2
+    And u1 can't stat [file1] in s1/dir1 on client1
+    And u2 can't stat [file1] in s1/dir1 on client2
     Then u1 sees [file2] in s1/dir1 on client1
     And u1 sees [file2] in s1/dir1 on client1
     And u2 sees [file2] in s1/dir1 on client2
@@ -53,6 +60,8 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
     And u1 deletes files [s1/file1] on client1
+    Then u1 can't stat [file1] in s1 on client1
+    And u2 can't stat [file1] in s1 on client2
     Then u1 doesn't see [file1] in s1 on client1
     And u2 doesn't see [file1] in s1 on client2
 
@@ -61,6 +70,8 @@ Feature: Multi_regular_file_CRUD
     And u1 sees [file1] in s1 on client1
     And u2 sees [file1] in s1 on client2
     And u2 deletes files [s1/file1] on client2
+    Then u1 can't stat [file1] in s1 on client1
+    And u2 can't stat [file1] in s1 on client2
     Then u1 doesn't see [file1] in s1 on client1
     And u2 doesn't see [file1] in s1 on client2
 
@@ -72,6 +83,8 @@ Feature: Multi_regular_file_CRUD
     And u1 changes s1/dir1 mode to 755 on client1
     And mode of u2's s1/dir1 is 755 on client2
     And u2 fails to delete files [s1/dir1/file1] on client2
+    Then u1 can stat [file1] in s1/dir1 on client1
+    And u2 can stat [file1] in s1/dir1 on client2
     Then u1 sees [file1] in s1/dir1 on client1
     And u2 sees [file1] in s1/dir1 on client2
 
@@ -159,7 +172,12 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1 on client1
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1 on client1
-    Then u1 doesn't see [file1] in s1/dir1/dir2 on client1
+    #    Uncomment after resolving VFS-4378
+    #    Then u1 can't stat [file1] in s1/dir1/dir2 on client1
+    #    And u2 can't stat [file1] in s1/dir1/dir2 on client2
+    Then u1 can stat [file1] in s1/dir3 on client1
+    And u2 can stat [file1] in s1/dir3 on client2
+    And u1 doesn't see [file1] in s1/dir1/dir2 on client1
     And u2 doesn't see [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
     And u2 sees [file1] in s1/dir3 on client2
@@ -173,7 +191,12 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 writes 32 MB of random characters to s1/dir1/dir2/file1 on client1 and saves MD5
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1 on client1
-    Then u1 doesn't see [file1] in s1/dir1/dir2 on client1
+    #    Uncomment after resolving VFS-4378
+    #    Then u1 can't stat [file1] in s1/dir1/dir2 on client1
+    #    And u2 can't stat [file1] in s1/dir1/dir2 on client2
+    Then u1 can stat [file1] in s1/dir3 on client1
+    And u2 can stat [file1] in s1/dir3 on client2
+    And u1 doesn't see [file1] in s1/dir1/dir2 on client1
     And u2 doesn't see [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
     And u2 sees [file1] in s1/dir3 on client2
@@ -187,6 +210,10 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1 on client1
     When u1 copies regular file s1/dir1/dir2/file1 to s1/dir3/file1 on client1
+    Then u1 can stat [file1] in s1/dir1/dir2 on client1
+    And u2 can stat [file1] in s1/dir1/dir2 on client2
+    And u1 can stat [file1] in s1/dir3 on client1
+    And u2 can stat [file1] in s1/dir3 on client2
     Then u1 sees [file1] in s1/dir1/dir2 on client1
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
@@ -201,6 +228,10 @@ Feature: Multi_regular_file_CRUD
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 writes 32 MB of random characters to s1/dir1/dir2/file1 on client1 and saves MD5
     And u1 copies regular file s1/dir1/dir2/file1 to s1/dir3/file1 on client1
+    Then u1 can stat [file1] in s1/dir1/dir2 on client1
+    And u2 can stat [file1] in s1/dir1/dir2 on client2
+    And u1 can stat [file1] in s1/dir3 on client1
+    And u2 can stat [file1] in s1/dir3 on client2
     Then u1 sees [file1] in s1/dir1/dir2 on client1
     And u2 sees [file1] in s1/dir1/dir2 on client2
     And u1 sees [file1] in s1/dir3 on client1
@@ -219,6 +250,8 @@ Feature: Multi_regular_file_CRUD
     Then mode of u2's s1/dir1 is 777 on client2
     And u1 opens s1/dir1/file1 with mode r on client1
     And u2 deletes files [s1/dir1/file1] on client2
+    And u2 can't stat [file1] in s1/dir1 on client2
+    And u1 can't stat [file1] in s1/dir1 on client1
     And u2 doesn't see [file1] in s1/dir1 on client2
     And u1 doesn't see [file1] in s1/dir1 on client1
     And u1 reads "TEST TEXT ONEDATA" from previously opened file s1/dir1/file1 on client1
@@ -236,6 +269,7 @@ Feature: Multi_regular_file_CRUD
     And u1 sets current file position in s1/dir1/file1 at offset 0 on client1
     And u1 reads "TEST TEXT ONEDATA" from previously opened file s1/dir1/file1 on client1
     And u1 closes s1/dir1/file1 on client1
+    And u1 can't stat [file1] in s1/dir1 on client1
     And u1 doesn't see [file1] in s1/dir1 on client1
 
   Scenario: Deleting file without permission should fail, file is opened by other user
@@ -253,6 +287,8 @@ Feature: Multi_regular_file_CRUD
     And u1 closes s1/dir1/file1 on client1
     # TODO below sleep should be deleted after resolving VFS-2828
     #    And u1 waits 10 seconds
+    And u1 can stat [file1] in s1/dir1 on client1
+    And u2 can stat [file1] in s1/dir1 on client2
     And u1 sees [file1] in s1/dir1 on client1
     And u2 sees [file1] in s1/dir1 on client2
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/file1 on client1

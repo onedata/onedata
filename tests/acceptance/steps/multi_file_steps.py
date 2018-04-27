@@ -17,6 +17,7 @@ from tests.utils.docker_utils import run_cmd
 import os
 import stat as stat_lib
 import json, jsondiff
+import pytest
 
 
 @when(parsers.re('(?P<user>\w+) updates (?P<files>.*) timestamps on'
@@ -69,15 +70,45 @@ def create_reg_file(user, files, client_node, context):
 
 
 @when(parsers.re('(?P<user>\w+) creates children files of (?P<parent_dir>.*) '
-                 'with names in range \[(?P<lower>.*), (?P<upper>.*)\) on (?P<client_node>.*)'), 
-                 converters=dict(lower=int,upper=int))
+                 'with names in range \[(?P<lower>.*), (?P<upper>.*)\) on '
+                 '(?P<client_node>.*)'), converters=dict(lower=int, upper=int))
 @then(parsers.re('(?P<user>\w+) creates children files of (?P<parent_dir>.*) '
-                 'with names in range \[(?P<lower>.*), (?P<upper>.*)\) on (?P<client_node>.*)'), 
-                 converters=dict(lower=int,upper=int))
+                 'with names in range \[(?P<lower>.*), (?P<upper>.*)\) on '
+                 '(?P<client_node>.*)'), converters=dict(lower=int, upper=int))
 def create_many(user, lower, upper, parent_dir, client_node, context):
     for i in range(lower, upper):
         new_file = os.path.join(parent_dir, str(i))
         create_reg_file(user, make_arg_list(new_file), client_node, context)
+
+
+@wt(parsers.re('(?P<user>\w+) can stat (?P<files>.*) in (?P<path>.*)'
+               ' on (?P<client_node>.*)'))
+def stat_present(user, path, files, client_node, context):
+    client = context.get_client(user, client_node)
+    path = client.absolute_path(path)
+    files = list_parser(files)
+
+    def condition():
+        for f in files:
+            stat(client, os.path.join(path, f))
+
+    assert_(client.perform, condition)
+
+
+@wt(parsers.re('(?P<user>\w+) can\'t stat (?P<files>.*) in (?P<path>.*) on '
+               '(?P<client_node>.*)'))
+def stat_absent(user, path, files, client_node, context):
+    client = context.get_client(user, client_node)
+    path = client.absolute_path(path)
+    files = list_parser(files)
+
+    def condition():
+        for f in files:
+            with pytest.raises(OSError, 
+                               message = 'File {} exists in {}'.format(f, path)):
+                stat(client, os.path.join(path, f))
+
+    assert_(client.perform, condition)
 
 
 @when(parsers.re('(?P<directory>.*) is empty for (?P<user>\w+) on (?P<client_node>.*)'))
