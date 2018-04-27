@@ -81,10 +81,8 @@ def create_many(user, lower, upper, parent_dir, client_node, context):
         create_reg_file(user, make_arg_list(new_file), client_node, context)
 
 
-@when(parsers.re('(?P<user>\w+) can stat (?P<files>.*) in (?P<path>.*)'
-                 ' on (?P<client_node>.*)'))
-@then(parsers.re('(?P<user>\w+) can stat (?P<files>.*) in (?P<path>.*)'
-                 ' on (?P<client_node>.*)'))
+@wt(parsers.re('(?P<user>\w+) can stat (?P<files>.*) in (?P<path>.*)'
+               ' on (?P<client_node>.*)'))
 def stat_present(user, path, files, client_node, context):
     client = context.get_client(user, client_node)
     path = client.absolute_path(path)
@@ -92,15 +90,13 @@ def stat_present(user, path, files, client_node, context):
 
     def condition():
         for f in files:
-            stat(client, path + '/' + f)
+            stat(client, os.path.join(path, f))
 
     assert_(client.perform, condition)
 
 
-@when(parsers.re('(?P<user>\w+) can\'t stat (?P<files>.*) in (?P<path>.*) on '
-                 '(?P<client_node>.*)'))
-@then(parsers.re('(?P<user>\w+) can\'t stat (?P<files>.*) in (?P<path>.*) on '
-                 '(?P<client_node>.*)'))
+@wt(parsers.re('(?P<user>\w+) can\'t stat (?P<files>.*) in (?P<path>.*) on '
+               '(?P<client_node>.*)'))
 def stat_absent(user, path, files, client_node, context):
     client = context.get_client(user, client_node)
     path = client.absolute_path(path)
@@ -108,12 +104,11 @@ def stat_absent(user, path, files, client_node, context):
 
     def condition():
         for f in files:
-            with pytest.raises(Exception, 
+            with pytest.raises(OSError, 
                                message = 'File {} exists in {}'.format(f, path)):
-                stat(client, path + '/' + f)
+                stat(client, os.path.join(path, f))
 
     assert_(client.perform, condition)
-
 
 
 @when(parsers.re('(?P<directory>.*) is empty for (?P<user>\w+) on (?P<client_node>.*)'))
