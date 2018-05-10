@@ -81,10 +81,8 @@ unpack = tar xzf $(1).tar.gz
 
 branch = $(shell git rev-parse --abbrev-ref HEAD)
 submodules:
-	./onedata_submodules.sh init ${submodule}
-	./onedata_submodules.sh update ${submodule}
-	# TODO VFS-4261
-	#./subtree_check.sh
+	git submodule sync --recursive ${submodule}
+	git submodule update --init --recursive ${submodule}
 
 ##
 ## Build

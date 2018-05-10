@@ -1,36 +1,36 @@
 [submodule "appmock"]
 	path = appmock
-	url = ONEDATA_GIT_URL/appmock.git
+	url = ../appmock.git
 	branch = develop
 [submodule "oz_worker"]
 	path = oz_worker
-	url = ONEDATA_GIT_URL/oz-worker.git
+	url = ../oz-worker.git
 	branch = develop
 [submodule "oneclient"]
 	path = oneclient
-	url = ONEDATA_GIT_URL/oneclient.git
+	url = ../oneclient.git
 	branch = develop
 [submodule "bamboos"]
 	path = bamboos
-	url = ONEDATA_GIT_URL/bamboos.git
+	url = ../bamboos.git
 	branch = develop
 [submodule "onepanel"]
 	path = onepanel
-	url = ONEDATA_GIT_URL/onepanel.git
+	url = ../onepanel.git
 	branch = develop
 [submodule "op_worker"]
 	path = op_worker
-	url = ONEDATA_GIT_URL/op-worker.git
+	url = ../op-worker.git
 	branch = develop
 [submodule "cluster_manager"]
 	path = cluster_manager
-	url = ONEDATA_GIT_URL/cluster-manager.git
+	url = ../cluster-manager.git
 	branch = develop
 [submodule "cluster_worker"]
 	path = cluster_worker
-	url = ONEDATA_GIT_URL/cluster-worker.git
+	url = ../cluster-worker.git
 	branch = develop
 [submodule "luma"]
 	path = luma
-	url = ONEDATA_GIT_URL/luma.git
+	url = ../luma.git
 	branch = develop
