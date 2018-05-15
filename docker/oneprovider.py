@@ -78,7 +78,22 @@ def start_onepanel():
             sp.check_call(['service', 'op_panel', 'start'], stdout=null,
                           stderr=null)
 
+    log('Waiting for onepanel REST to be available (may require other nodes to start)')
+
+    wait_for_rest_listener()
+
     log('[  OK  ]')
+
+
+def wait_for_rest_listener():
+    connected = False
+    while not connected:
+        try:
+            requests.get('https://127.0.0.1:9443/api/v3/onepanel/', verify=False)
+        except requests.ConnectionError:
+            time.sleep(1)
+        else:
+            connected = True
 
 
 def format_step(step):
@@ -123,6 +138,10 @@ def configure(config):
                    headers={'content-type': 'application/x-yaml'},
                    data=yaml.dump(config),
                    verify=False)
+
+    if r.status_code == 400:
+        log("Oneprovider configured, resuming work...")
+        return
 
     if r.status_code != 201 and r.status_code != 204:
         raise ValueError(
@@ -256,50 +275,6 @@ def print_logs(logs):
 
     return new_logs
 
-def is_configured(config):
-    users = get_users(config) + [('admin', 'password')]
-    r = do_request(users, requests.get,
-                   'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
-                   verify=False)
-    if r.status_code == 200:
-        return True
-    elif r.status_code == 404:
-        return False
-    else:
-        raise ValueError('Error checking deployment status')
-
-
-def format_error(action, response):
-    return 'Error {action}: {error}\nDescription: {description}\n'
-    'Module: {module}\nFunction: {function}\nHosts: {hosts}\n'
-    'For more information please check the logs.'.format(
-        action=action,
-        error=response.get('error', 'unknown'),
-        description=response.get('description', '-'),
-        module=response.get('module', '-'),
-        function=response.get('function', '-'),
-        hosts=', '.join(response.get('hosts', [])))
-
-
-def restart_oneprovider(config):
-    users = get_users(config) + [('admin', 'password')]
-    # print('Stopping services to be sure')
-    # stop_request = do_request(users, requests.patch,
-    #                           'https://127.0.0.1:9443/api/v3/onepanel/provider/services?started=false',
-    #                           headers={'content-type': 'application/json'},
-    #                           verify=False)
-    # if stop_request.status_code != 204:
-    #     errdata = json.loads(stop_request.text)
-    #     raise ValueError(format_error('stopping oneprovider', errdata))
-    print('Starting services')
-    start_request = do_request(users, requests.patch,
-                               'https://127.0.0.1:9443/api/v3/onepanel/provider/services?started=true',
-                               headers={'content-type': 'application/json'},
-                               verify=False)
-    if start_request.status_code != 204:
-        errdata = json.loads(start_request.text)
-        raise ValueError(format_error('starting oneprovider', errdata))
-
 
 if __name__ == '__main__':
     try:
@@ -334,16 +309,10 @@ if __name__ == '__main__':
 
         start_onepanel()
 
-        configured = is_configured(batch_config)
+        configured = False
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
 
-        print('configured: {}'.format(configured))
-
-        if configured:
-            print('Starting existing oneprovider')
-            restart_oneprovider(batch_config)
-            configured = True
-        elif batch_mode.lower() == 'true':
+        if batch_mode.lower() == 'true':
             print('Configuring oneprovider')
             configure(batch_config)
             configured = True
