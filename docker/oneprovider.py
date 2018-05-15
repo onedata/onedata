@@ -140,7 +140,7 @@ def configure(config):
                    verify=False)
 
     if r.status_code == 400:
-        log("Oneprovider configured, resuming work...")
+        log("Oneprovider configured, resuming...")
         return
 
     if r.status_code != 201 and r.status_code != 204:
@@ -305,8 +305,6 @@ if __name__ == '__main__':
         if trust_test_ca:
             set_trust_test_ca(app_config_path, trust_test_ca)
 
-        batch_config = get_batch_config()
-
         start_onepanel()
 
         configured = False
@@ -314,6 +312,7 @@ if __name__ == '__main__':
 
         if batch_mode.lower() == 'true':
             print('Configuring oneprovider')
+            batch_config = get_batch_config()
             configure(batch_config)
             configured = True
 
