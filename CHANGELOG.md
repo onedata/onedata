@@ -4,6 +4,15 @@
 CHANGELOG
 ---------
 
+### 18.02.0-rc2
+
+* VFS-4327 Added wt decorator
+* VFS-4343 Added tabs in transfer tests
+* VFS-4343 Updated transfers tests
+* VFS-4365 Backporting scroll improvement and OSX support for GUI tests
+* VFS-4327 Added check with stat if file exists
+
+
 ### 18.02.0-rc1
 
 * VFS-2021 Added dockers.config 
