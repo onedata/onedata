@@ -13,6 +13,11 @@ import requests
 import yaml
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+try:
+    import xml.etree.cElementTree as eTree
+except ImportError:
+    import xml.etree.ElementTree as eTree
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
@@ -78,19 +83,20 @@ def start_onepanel():
             sp.check_call(['service', 'op_panel', 'start'], stdout=null,
                           stderr=null)
 
-    log('Waiting for onepanel REST to be available (may require other nodes to start)')
-
     wait_for_rest_listener()
-
     log('[  OK  ]')
 
 
 def wait_for_rest_listener():
+    first = True
     connected = False
     while not connected:
         try:
             requests.get('https://127.0.0.1:9443/api/v3/onepanel/', verify=False)
         except requests.ConnectionError:
+            if first:
+                log('Waiting for onepanel REST to be available (may require other nodes to start)')
+                first = False
             time.sleep(1)
         else:
             connected = True
@@ -131,6 +137,7 @@ def get_batch_config():
     return batch_config
 
 
+# returns False if configuration was skipped because of existing deployment
 def configure(config):
     users = get_users(config)
     r = do_request(users, requests.post,
@@ -140,8 +147,7 @@ def configure(config):
                    verify=False)
 
     if r.status_code == 400:
-        log("Oneprovider configured, resuming...")
-        return
+        return False
 
     if r.status_code != 201 and r.status_code != 204:
         raise ValueError(
@@ -150,7 +156,6 @@ def configure(config):
             '  body: {1}\n'
             'For more information please check the logs.'.format(r.status_code,
                                                                  r.text))
-
     loc = r.headers['location']
     status = 'running'
     steps = []
@@ -185,6 +190,32 @@ def configure(config):
             module=resp.get('module', '-'),
             function=resp.get('function', '-'),
             hosts=', '.join(resp.get('hosts', []))))
+    return True
+
+
+# Throws on connection nerror
+def wait_for_workers(config):
+    log("Waiting for existing cluster to start")
+
+    url = 'https://127.0.0.1:9443/api/v3/onepanel/provider/nagios'
+    while not nagios_up(url, config):
+        time.sleep(1)
+
+
+def nagios_up(url, config):
+    users = get_users(config)
+
+    try:
+        r = do_request(users, requests.get, url, verify=False)
+        if r.status_code != requests.codes.ok:
+            return False
+
+        healthdata = eTree.fromstring(r.text)
+        return healthdata.attrib['status'] == 'ok'
+    except ValueError:
+        log("Cannot track cluster start progress since there are no valid "
+            "credentials in batch configuration")
+
 
 
 def get_container_id():
@@ -307,19 +338,17 @@ if __name__ == '__main__':
 
         start_onepanel()
 
-        configured = False
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
-
         if batch_mode.lower() == 'true':
-            print('Configuring oneprovider')
             batch_config = get_batch_config()
-            configure(batch_config)
-            configured = True
+            if configure(batch_config):
+                log('\nCongratulations! New oneprovider deployment finished')
+            else:
+                wait_for_workers(batch_config)
+                log('\nExisting oneprovider deployment resumed work')
 
         show_details()
 
-        if configured:
-            log('\nCongratulations! oneprovider has been successfully started.')
     except Exception as e:
         log('\n{0}'.format(e))
         if os.environ.get('ONEPANEL_DEBUG_MODE'):
