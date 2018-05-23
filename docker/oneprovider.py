@@ -95,7 +95,7 @@ def wait_for_rest_listener():
             requests.get('https://127.0.0.1:9443/api/v3/onepanel/', verify=False)
         except requests.ConnectionError:
             if first:
-                log('Waiting for onepanel REST to be available (may require other nodes to start)')
+                log('Waiting for onepanel server to be available (may require starting other cluster nodes)')
                 first = False
             time.sleep(1)
         else:
