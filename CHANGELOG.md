@@ -4,6 +4,15 @@
 CHANGELOG
 ---------
 
+### 18.02.0-rc4
+
+* VFS-4278 Use nagios to wait for cluster to resume work
+* VFS-4278 Fetch batch config only when needed
+* VFS-4278 Allow failed configuration for existing provider
+* VFS-4278 Remove setting onezone domain from entrypoint
+* VFS-4278 Start services on restart
+
+
 ### 18.02.0-rc3
 
 * Releasing new version 18.02.0-rc3
