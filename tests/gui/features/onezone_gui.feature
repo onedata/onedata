@@ -419,23 +419,6 @@ Feature: Onezone GUI elements
     And user of browser should see that the page title contains "Login"
 
 
-  Scenario: User can set Provider as Home provider (icon changes), and when he relogins, he will be redirected to Home provider automatically
-    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
-    And user of browser sees that there is provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser sets provider named "p1" as home by clicking on home outline in that provider record in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser sees that provider named "p1" is set as home provider in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser expands account settings dropdown in "ACCOUNT MANAGE" Onezone top bar
-    And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
-    And user of browser clicks on the "plgrid" login button
-    And user of browser clicks on the "user1" link
-    Then user of browser sees that Oneprovider session has started
-
-    # TODO remove after integration with swagger
-    And user of browser clicks on the "providers" tab in main menu sidebar
-    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
-    And user of browser unsets provider named "p1" from home by clicking on home icon in that provider record in expanded "GO TO YOUR FILES" Onezone panel
-
-
   Scenario: User sees that after clicking on provider's circle on world map, provider's popup appears
     When user of browser sees that there is no displayed provider popup next to 2nd provider circle on Onezone world map
     And user of browser clicks on 2nd provider circle on Onezone world map
