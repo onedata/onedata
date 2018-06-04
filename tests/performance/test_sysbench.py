@@ -5,20 +5,14 @@ __copyright__ = "Copyright (C) 2015 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
-import re
 
 from tests.utils.docker_utils import run_cmd
 from tests.performance.conftest import AbstractPerformanceTest
-from tests.utils.performance_utils import (Result, generate_configs, performance)
-from tests.utils.client_utils import user_home_dir, rm, mkdtemp
+from tests.utils.performance_utils import generate_configs, performance
+from tests.utils.client_utils import rm, mkdtemp
 
 REPEATS = 3
-SUCCESS_RATE = 95
-DD_OUTPUT_REGEX = r'.*\s+s, (\d+\.?\d+?) (\w+/s)'
-DD_OUTPUT_PATTERN = re.compile(DD_OUTPUT_REGEX)
-SYSBENCH_OUTPUT_REGEX = r'Total transferred (\d+(\.\d+))?\w+\s+\((\d+(\.\d+)?)(\w+/\w+)\)\s+(\d+(\.\d+)?)\s+(\w+/\w+)'
-SYSBENCH_OUTPUT_PATTERN = re.compile(SYSBENCH_OUTPUT_REGEX, re.MULTILINE)
-
+SUCCESS_RATE = 100
 
 class TestSysbench(AbstractPerformanceTest):
 
@@ -42,15 +36,42 @@ class TestSysbench(AbstractPerformanceTest):
                 'total_size': {
                     'description': "Total size",
                     'unit': "MB"
+                },
+                'validate': {
+                    'description': "Perform validation of test results where possible",
+                    'unit': ""
+                },
+                'max_requests': {
+                    'description': "Limit for total number of requests. 0 means unlimited",
+                    'unit': ""
+                },
+                'report_interval': {
+                    'description': "Periodically report intermediate statistics with a specified interval in seconds. "
+                                   "Note that statistics produced by this option is per-interval rather than cumulative. "
+                                   "0 disables intermediate reports",
+                    'unit': "s"
+                },
+                'max_time': {
+                    'description': "Limit for total execution time in seconds. 0 (default) means unlimited",
+                    'unit': "s"
+                },
+                'file_block_size': {
+                    'description': "Block size to use in all I/O operations",
+                    'unit': "KB"
                 }
             },
             'description': 'Testing file system using sysbench'
         },
         configs=generate_configs({
-            'files_number': [10, 100],# 1000],
-            'threads_number': [1, 16],
-            'total_size': [100],# 1000],
-            'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"]
+            'files_number': [16, 128],
+            'threads_number': [1, 8],
+            'total_size': [128],
+            'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"],
+            'validate': ["on"],
+            'max_requests': [10000],
+            'report_interval': [60],
+            'max_time': [0],
+            'file_block_size': [16]
         }, 'SYSBENCH TEST -- '
            'Files number: {files_number} '
            'Threads number: {threads_number} '
@@ -65,107 +86,120 @@ class TestSysbench(AbstractPerformanceTest):
         files_number = params['files_number']['value']
         total_size = params['total_size']['value']
         mode = params['mode']['value']
+        validate = params['validate']['value']
+        max_requests = params['max_requests']['value']
+        report_interval = params['report_interval']['value']
+        max_time = params['max_time']['value']
+        file_block_size = params['file_block_size']['value']
 
         dir_path_directio = mkdtemp(client_directio,
                                     dir=client_directio.absolute_path("s1"))
 
         dir_path_proxy = mkdtemp(client_proxy,
                                  dir=client_proxy.absolute_path("s1"))
-        dir_path_host = mkdtemp(client_proxy, dir=user_home_dir(user_proxy))
 
-        test_result1 = execute_sysbench_test(client_directio, user_directio,
-                                             threads_number, total_size,
-                                             files_number, mode,
-                                             dir_path_directio, "direct IO")
+        print("################################## DIRECT-IO client ##################################")
 
-        test_result2 = execute_sysbench_test(client_proxy, user_proxy,
-                                             threads_number, total_size,
-                                             files_number, mode,
-                                             dir_path_proxy, "cluster-proxy")
+        execute_sysbench_test(client_directio, user_directio, threads_number,
+                              total_size, files_number, mode, validate,
+                              max_requests, report_interval, max_time,
+                              file_block_size, dir_path_directio)
 
-        test_result3 = execute_sysbench_test(client_proxy, user_proxy,
-                                             threads_number, total_size,
-                                             files_number, mode,
-                                             dir_path_host, "host system")
+        print("################################## PROXY-IO client ##################################")
+
+        execute_sysbench_test(client_proxy, user_proxy, threads_number,
+                              total_size, files_number, mode, validate,
+                              max_requests, report_interval, max_time,
+                              file_block_size, dir_path_proxy)
+
 
         rm(client_directio, dir_path_directio, recursive=True, force=True)
         rm(client_proxy, dir_path_proxy, recursive=True, force=True)
-        rm(client_proxy, dir_path_host, recursive=True, force=True)
 
-        return test_result1 + test_result2 + test_result3
 
 ################################################################################
 
 
 def execute_sysbench_test(client, user, threads_number, total_size, files_number,
-                          mode, dir_path, description):
-    out = parse_sysbench_output(sysbench_tests(threads_number, total_size,
-                                               files_number, mode, client,
-                                               user, dir_path))
-    return [
-        Result("transfer_{}".format(description),
-               out['transfer'],
-               "Transfer velocity in case of {}".format(description),
-               out['transfer_unit']),
-        Result("requests_{}".format(description),
-               out['requests_velocity'],
-               "Requests per second in onedata {}".format(description),
-               out['requests_velocity_unit']),
-    ]
+                          mode, validate, max_requests, report_interval,
+                          max_time, file_block_size, dir_path):
+    sysbench_tests(threads_number, total_size, files_number, mode, validate,
+                   max_requests, report_interval, max_time, file_block_size,
+                   client, user, dir_path)
 
 
-def sysbench_tests(threads_number, total_size, file_number, mode, client, user, dir):
-    run_sysbench_prepare(threads_number, total_size, file_number, mode, client, user, dir)
-    output = run_sysbench(threads_number, total_size, file_number, mode, client, user, dir)
-    run_sysbench_cleanup(threads_number, total_size, file_number, mode, client, user, dir)
-    return output
+def sysbench_tests(threads_number, total_size, file_number, mode, validate,
+                   max_requests, report_interval, max_time, file_block_size, client, user, dir):
+    run_sysbench_prepare(threads_number, total_size, file_number, mode, validate,
+                         max_requests, report_interval, max_time, file_block_size, client, user, dir)
+    code = run_sysbench(threads_number, total_size, file_number, mode, validate,
+                          max_requests, report_interval, max_time, file_block_size, client, user, dir)
+    assert(code == 0)
+    run_sysbench_cleanup(threads_number, total_size, file_number, mode, validate,
+                         max_requests, report_interval, max_time, file_block_size, client, user, dir)
 
 
-def run_sysbench_prepare(threads_number, total_size, file_number, mode, client, user, dir):
-    sysbench(threads_number, total_size, file_number, mode, "prepare", client,
-             user, dir)
+def run_sysbench_prepare(threads_number, total_size, file_number, mode, validate,
+                         max_requests, report_interval, max_time, file_block_size,
+                         client, user, dir):
+    return sysbench(threads_number, total_size, file_number, mode, validate,
+             max_requests, report_interval, max_time, file_block_size,
+             "prepare", client, user, dir, output=True)
 
 
-def run_sysbench_cleanup(threads_number, total_size, file_number, mode, client, user, dir):
-    sysbench(threads_number, total_size, file_number, mode, "cleanup", client,
-             user, dir)
+def run_sysbench_cleanup(threads_number, total_size, file_number, mode,
+                         validate, max_requests, report_interval, max_time,
+                         file_block_size, client, user, dir):
+    return sysbench(threads_number, total_size, file_number, mode, validate,
+             max_requests, report_interval, max_time, file_block_size,
+             "cleanup", client, user, dir, output=True)
 
 
-def run_sysbench(threads_number, total_size, file_number, mode, client, user, dir):
-    return sysbench(threads_number, total_size, file_number, mode, "run",
-                    client, user, dir)
+def run_sysbench(threads_number, total_size, file_number, mode, validate,
+                 max_requests, report_interval, max_time, file_block_size,
+                 client, user, dir):
+    return sysbench(threads_number, total_size, file_number, mode, validate,
+                    max_requests, report_interval, max_time, file_block_size,
+                    "run", client, user, dir)
 
 
-def sysbench(threads_number, total_size, file_number, mode, type, client, user,
-             dir):
-    cmd = sysbench_command(threads_number, total_size, file_number, mode, type, dir)
-    return run_cmd(user, client, [cmd], output=True)
+def sysbench(threads_number, total_size, file_number, mode, validate,
+             max_requests, report_interval, max_time, file_block_size, type,
+             client, user, dir, output=False):
+    cmd = sysbench_command(threads_number, total_size, file_number, mode,
+                           validate, max_requests, report_interval, max_time,
+                           file_block_size, type, dir)
+    return run_cmd(user, client, [cmd], output=output)
 
 
-def sysbench_command(threads_number, total_size, file_number, mode, type, dir):
+def sysbench_command(threads_number, total_size, file_number, mode, validate,
+                     max_requests, report_interval, max_time, file_block_size,
+                     type, dir):
 
     cmd = ('cd {dir} && '
-           'sysbench --num-threads={threads_number} --test=fileio '
-           '--file-total-size={total_size}M --file-num={file_number} '
-           '--file-test-mode={mode} {type}').format(
+           'sysbench '
+           '--num-threads={threads_number} '
+           '--test=fileio '
+           '--file-total-size={total_size}M '
+           '--file-num={file_number} '
+           '--file-test-mode={mode} '
+           '--validate={validate} '
+           '--max-requests={max_requests} '
+           '--report-interval={report_interval} '
+           '--max-time={max_time} '
+           '--file-block-size={file_block_size}K '
+           '{type}').format(
             dir=dir,
             threads_number=threads_number,
             total_size=total_size,
             file_number=file_number,
             mode=mode,
+            validate=validate,
+            max_requests=max_requests,
+            report_interval=report_interval,
+            max_time=max_time,
+            file_block_size=file_block_size,
             type=type)
 
     return cmd
 
-
-def parse_sysbench_output(output):
-    m = re.search(SYSBENCH_OUTPUT_PATTERN, output)
-    transfer = float(m.group(3))
-    transfer_unit = m.group(5)
-    requests_velocity = float(m.group(6))
-    requests_velocity_unit = m.group(8)
-
-    return {'transfer': transfer,
-            'transfer_unit': transfer_unit,
-            'requests_velocity': requests_velocity,
-            'requests_velocity_unit': requests_velocity_unit}

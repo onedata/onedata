@@ -241,6 +241,8 @@ def dict_to_list(dict):
 
 
 def ensure_list(elem):
+    if not elem:
+        return []
     if not isinstance(elem, list):
         elem = [elem]
     return elem
