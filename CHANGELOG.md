@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 18.02.0-rc6
+
+* Releasing new version 18.02.0-rc6
+
+
 ### 18.02.0-rc5
 
 * VFS-4480 Remove home provider test as it this feature was removed
