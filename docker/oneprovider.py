@@ -121,7 +121,7 @@ def get_users(config):
 def do_request(users, request, *args, **kwargs):
     for (username, password) in users:
         r = request(*args, auth=(username, password), **kwargs)
-        if r.status_code != 403:
+        if r.status_code != 401 and r.status_code != 403:
             return r
 
     raise ValueError('Authorization error.\n'
