@@ -233,44 +233,6 @@ Feature: Oneprovider transfers functionality
     And user of browser removes "dir1" in file browser
     
 
-  Scenario: User migrates directory with file on current provider to the same provider
-    When user of browser changes current space in data tab to "space4"
-    And user of browser creates directory "dir1"
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser uploads file "large_file.txt"
-    And user of browser changes current working directory to space4 using breadcrumbs
-    # Wait to ensure synchronization between providers
-    And user of browser is idle for 2 seconds
-
-    And user of browser migrates "dir1" from provider "p2" to provider "p1"
-    And user of browser clicks on the "transfers" tab in main menu sidebar
-
-    # Check that transfer appeared in transfer tab
-    And user of browser selects "space4" space in transfers tab
-
-    Then user of browser waits for all transfers to start
-    And user of browser waits for all transfers to finish
-    And user of browser sees directory in history of transfers:
-            name: dir1
-            destination: p1
-            username: user1
-            total files: 0
-            transferred: 0 B
-            type: migration
-            status: completed
-    
-    And user of browser clicks on the "data" tab in main menu sidebar
-    And user of browser sees file browser in data tab in Oneprovider page
-    And user of browser double clicks on item named "dir1" in file browser
-    And user of browser sees file chunks for file "large_file.txt" as follows:
-            p1: entirely filled
-            p2: never synchronized
-
-    # TODO remove after integrating with swagger
-    And user of browser changes current working directory to space4 using breadcrumbs
-    And user of browser removes "dir1" in file browser
-
-
   Scenario: User replicates directory with file on current provider to the same provider
     When user of browser changes current space in data tab to "space4"
     And user of browser creates directory "dir1"
@@ -329,7 +291,7 @@ Feature: Oneprovider transfers functionality
             name: large_file.txt
             destination: p2
             username: user1
-            total files: 1
+            total files: 2
             transferred: 45 MiB
             type: migration
             status: completed
@@ -341,7 +303,7 @@ Feature: Oneprovider transfers functionality
     And user of browser clicks on the "data" tab in main menu sidebar
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees file chunks for file "large_file.txt" as follows:
-            p1: never synchronized
+            p1: entirely empty
             p2: entirely filled
 
     # TODO remove after integrating with swagger
@@ -371,7 +333,7 @@ Feature: Oneprovider transfers functionality
             name: dir1
             destination: p2
             username: user1
-            total files: 1
+            total files: 2
             transferred: 45 MiB
             type: migration
             status: completed
@@ -380,7 +342,7 @@ Feature: Oneprovider transfers functionality
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser double clicks on item named "dir1" in file browser
     And user of browser sees file chunks for file "large_file.txt" as follows:
-            p1: never synchronized
+            p1: entirely empty
             p2: entirely filled
 
     # TODO remove after integrating with swagger
