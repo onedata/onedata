@@ -10,7 +10,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of [browser1, browser2] clicked on the "Go to your files" button in provider popup
     And user of [browser1, browser2] seen that Oneprovider session has started
 
-  Scenario: User replicates file to current provider
+  Scenario: User replicates file from remote provider to current provider
     When user of browser1 changes current space in data tab to "space4"
     And user of browser1 uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -113,7 +113,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser1 removes "dir1" in file browser
 
 
-  Scenario: User migrates file to current provider
+  Scenario: User migrates file from remote provider to current provider
     When user of browser1 changes current space in data tab to "space4"
     And user of browser1 uploads file "large_file.txt"
     # Wait to ensure synchronization between providers
@@ -134,7 +134,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             name: large_file.txt
             destination: p2
             username: user1
-            total files: 1
+            total files: 2
             transferred: 45 MiB
             type: migration
             status: completed
@@ -147,7 +147,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser2 changes current space in data tab to "space4"
     And user of browser2 sees file browser in data tab in Oneprovider page
     And user of browser2 sees file chunks for file "large_file.txt" as follows:
-            p1: never synchronized
+            p1: entirely empty
             p2: entirely filled
 
     # TODO remove after integrating with swagger
@@ -190,7 +190,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             name: dir1
             destination: p2
             username: user1
-            total files: 1
+            total files: 2
             transferred: 45 MiB
             type: migration
             status: completed
@@ -208,7 +208,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             p1: never synchronized
             p2: entirely filled
     And user of browser1 sees file chunks for file "large_file(1).txt" as follows:
-            p1: never synchronized
+            p1: entirely empty
             p2: entirely filled
 
     # TODO remove after integrating with swagger
