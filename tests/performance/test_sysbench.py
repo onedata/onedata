@@ -25,8 +25,8 @@ class TestSysbench(AbstractPerformanceTest):
                     'description': "Number of files",
                     'unit': ""
                 },
-                'threads_number': {
-                    'description': "Number of threads",
+                'threads': {
+                    'description': "Number of threads to use",
                     'unit': ""
                 },
                 'mode': {
@@ -41,8 +41,8 @@ class TestSysbench(AbstractPerformanceTest):
                     'description': "Perform validation of test results where possible",
                     'unit': ""
                 },
-                'max_requests': {
-                    'description': "Limit for total number of requests. 0 means unlimited",
+                'events': {
+                    'description': "Limit for total number of events.",
                     'unit': ""
                 },
                 'report_interval': {
@@ -51,8 +51,8 @@ class TestSysbench(AbstractPerformanceTest):
                                    "0 disables intermediate reports",
                     'unit': "s"
                 },
-                'max_time': {
-                    'description': "Limit for total execution time in seconds. 0 (default) means unlimited",
+                'time': {
+                    'description': "Limit for total execution time in seconds.",
                     'unit': "s"
                 },
                 'file_block_size': {
@@ -64,17 +64,17 @@ class TestSysbench(AbstractPerformanceTest):
         },
         configs=generate_configs({
             'files_number': [16, 128],
-            'threads_number': [1, 8],
+            'threads': [1, 8],
             'total_size': [128],
             'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"],
             'validate': ["on"],
-            'max_requests': [10000],
+            'events': [10000],
             'report_interval': [60],
-            'max_time': [0],
+            'time': [0],
             'file_block_size': [16]
         }, 'SYSBENCH TEST -- '
            'Files number: {files_number} '
-           'Threads number: {threads_number} '
+           'Threads number: {threads} '
            'Total Size: {total_size} '
            'Mode: {mode}'))
     def test_sysbench(self, context, clients, params):
@@ -82,14 +82,14 @@ class TestSysbench(AbstractPerformanceTest):
         user_proxy = "u2"
         client_directio = context.get_client(user_directio, "client-directio")
         client_proxy = context.get_client(user_proxy, "client-proxy")
-        threads_number = params['threads_number']['value']
+        threads = params['threads']['value']
         files_number = params['files_number']['value']
         total_size = params['total_size']['value']
         mode = params['mode']['value']
         validate = params['validate']['value']
-        max_requests = params['max_requests']['value']
+        events = params['events']['value']
         report_interval = params['report_interval']['value']
-        max_time = params['max_time']['value']
+        time = params['time']['value']
         file_block_size = params['file_block_size']['value']
 
         dir_path_directio = mkdtemp(client_directio,
@@ -98,19 +98,21 @@ class TestSysbench(AbstractPerformanceTest):
         dir_path_proxy = mkdtemp(client_proxy,
                                  dir=client_proxy.absolute_path("s1"))
 
+
         print("################################## DIRECT-IO client ##################################")
 
-        execute_sysbench_test(client_directio, user_directio, threads_number,
+        execute_sysbench_test(client_directio, user_directio, threads,
                               total_size, files_number, mode, validate,
-                              max_requests, report_interval, max_time,
+                              events, report_interval, time,
                               file_block_size, dir_path_directio)
 
         print("################################## PROXY-IO client ##################################")
 
-        execute_sysbench_test(client_proxy, user_proxy, threads_number,
+        execute_sysbench_test(client_proxy, user_proxy, threads,
                               total_size, files_number, mode, validate,
-                              max_requests, report_interval, max_time,
+                              events, report_interval, time,
                               file_block_size, dir_path_proxy)
+
 
 
         rm(client_directio, dir_path_directio, recursive=True, force=True)
@@ -120,84 +122,84 @@ class TestSysbench(AbstractPerformanceTest):
 ################################################################################
 
 
-def execute_sysbench_test(client, user, threads_number, total_size, files_number,
-                          mode, validate, max_requests, report_interval,
-                          max_time, file_block_size, dir_path):
-    sysbench_tests(threads_number, total_size, files_number, mode, validate,
-                   max_requests, report_interval, max_time, file_block_size,
+def execute_sysbench_test(client, user, threads, total_size, files_number,
+                          mode, validate, events, report_interval,
+                          time, file_block_size, dir_path):
+    sysbench_tests(threads, total_size, files_number, mode, validate,
+                   events, report_interval, time, file_block_size,
                    client, user, dir_path)
 
 
-def sysbench_tests(threads_number, total_size, file_number, mode, validate,
-                   max_requests, report_interval, max_time, file_block_size, client, user, dir):
-    run_sysbench_prepare(threads_number, total_size, file_number, mode, validate,
-                         max_requests, report_interval, max_time, file_block_size, client, user, dir)
-    code = run_sysbench(threads_number, total_size, file_number, mode, validate,
-                          max_requests, report_interval, max_time, file_block_size, client, user, dir)
+def sysbench_tests(threads, total_size, file_number, mode, validate,
+                   events, report_interval, time, file_block_size, client, user, dir):
+    run_sysbench_prepare(threads, total_size, file_number, mode, validate,
+                         events, report_interval, time, file_block_size, client, user, dir)
+    code = run_sysbench(threads, total_size, file_number, mode, validate,
+                          events, report_interval, time, file_block_size, client, user, dir)
     assert(code == 0)
-    run_sysbench_cleanup(threads_number, total_size, file_number, mode, validate,
-                         max_requests, report_interval, max_time, file_block_size, client, user, dir)
+    run_sysbench_cleanup(threads, total_size, file_number, mode, validate,
+                         events, report_interval, time, file_block_size, client, user, dir)
 
 
-def run_sysbench_prepare(threads_number, total_size, file_number, mode, validate,
-                         max_requests, report_interval, max_time, file_block_size,
+def run_sysbench_prepare(threads, total_size, file_number, mode, validate,
+                         events, report_interval, time, file_block_size,
                          client, user, dir):
-    return sysbench(threads_number, total_size, file_number, mode, validate,
-             max_requests, report_interval, max_time, file_block_size,
+    return sysbench(threads, total_size, file_number, mode, validate,
+             events, report_interval, time, file_block_size,
              "prepare", client, user, dir, output=True)
 
 
-def run_sysbench_cleanup(threads_number, total_size, file_number, mode,
-                         validate, max_requests, report_interval, max_time,
+def run_sysbench_cleanup(threads, total_size, file_number, mode,
+                         validate, events, report_interval, time,
                          file_block_size, client, user, dir):
-    return sysbench(threads_number, total_size, file_number, mode, validate,
-             max_requests, report_interval, max_time, file_block_size,
+    return sysbench(threads, total_size, file_number, mode, validate,
+             events, report_interval, time, file_block_size,
              "cleanup", client, user, dir, output=True)
 
 
-def run_sysbench(threads_number, total_size, file_number, mode, validate,
-                 max_requests, report_interval, max_time, file_block_size,
+def run_sysbench(threads, total_size, file_number, mode, validate,
+                 events, report_interval, time, file_block_size,
                  client, user, dir):
-    return sysbench(threads_number, total_size, file_number, mode, validate,
-                    max_requests, report_interval, max_time, file_block_size,
+    return sysbench(threads, total_size, file_number, mode, validate,
+                    events, report_interval, time, file_block_size,
                     "run", client, user, dir)
 
 
-def sysbench(threads_number, total_size, file_number, mode, validate,
-             max_requests, report_interval, max_time, file_block_size, type,
+def sysbench(threads, total_size, file_number, mode, validate,
+             events, report_interval, time, file_block_size, type,
              client, user, dir, output=False):
-    cmd = sysbench_command(threads_number, total_size, file_number, mode,
-                           validate, max_requests, report_interval, max_time,
+    cmd = sysbench_command(threads, total_size, file_number, mode,
+                           validate, events, report_interval, time,
                            file_block_size, type, dir)
     return run_cmd(user, client, [cmd], output=output)
 
 
-def sysbench_command(threads_number, total_size, file_number, mode, validate,
-                     max_requests, report_interval, max_time, file_block_size,
+def sysbench_command(threads, total_size, file_number, mode, validate,
+                     events, report_interval, time, file_block_size,
                      type, dir):
 
     cmd = ('cd {dir} && '
            'sysbench '
-           '--num-threads={threads_number} '
-           '--test=fileio '
+           '--threads={threads} '
            '--file-total-size={total_size}M '
            '--file-num={file_number} '
            '--file-test-mode={mode} '
            '--validate={validate} '
-           '--max-requests={max_requests} '
+           '--events={events} '
            '--report-interval={report_interval} '
-           '--max-time={max_time} '
+           '--time={time} '
            '--file-block-size={file_block_size}K '
+           'fileio '
            '{type}').format(
             dir=dir,
-            threads_number=threads_number,
+            threads=threads,
             total_size=total_size,
             file_number=file_number,
             mode=mode,
             validate=validate,
-            max_requests=max_requests,
+            events=events,
             report_interval=report_interval,
-            max_time=max_time,
+            time=time,
             file_block_size=file_block_size,
             type=type)
 
