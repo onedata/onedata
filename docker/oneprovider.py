@@ -9,6 +9,7 @@ import subprocess as sp
 import sys
 import time
 
+import textwrap
 import requests
 import yaml
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -183,14 +184,24 @@ def configure(config):
 
     if status != 'ok':
         raise ValueError('Error: {error}\nDescription: {description}\n'
-                         'Module: {module}\nFunction: {function}\nHosts: {hosts}\n'
+                         'Module: {module}\nFunction: {function}\nDetails by host: {hosts}\n'
                          'For more information please check the logs.'.format(
             error=resp.get('error', 'unknown'),
             description=resp.get('description', '-'),
             module=resp.get('module', '-'),
             function=resp.get('function', '-'),
-            hosts=', '.join(resp.get('hosts', []))))
+            hosts=format_error_hosts(resp.get('hosts', {}))))
     return True
+
+
+def format_error_hosts(hosts):
+    s = '\n'
+    for host, details in hosts.iteritems():
+        description = textwrap.fill(details.get('description', ''),
+                                    initial_indent='\t', subsequent_indent='\t')
+        s = s + '* {host}\n\t{error}:\n{description}\n'.format(
+            host=host, error=details.get('error', ''), description=description)
+    return s
 
 
 # Throws on connection nerror
