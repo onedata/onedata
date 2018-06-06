@@ -11,7 +11,7 @@ from tests.performance.conftest import AbstractPerformanceTest
 from tests.utils.performance_utils import generate_configs, performance
 from tests.utils.client_utils import rm, mkdtemp
 
-REPEATS = 3
+REPEATS = 1
 SUCCESS_RATE = 100
 
 class TestSysbench(AbstractPerformanceTest):
@@ -63,15 +63,15 @@ class TestSysbench(AbstractPerformanceTest):
             'description': 'Testing file system using sysbench'
         },
         configs=generate_configs({
-            'files_number': [16, 128],
-            'threads': [1, 8],
-            'total_size': [128],
-            'mode': ["rndrw", "rndrd", "rndwr", "seqwr", "seqrd"],
+            'files_number': [4],
+            'threads': [8],
+            'total_size': [2048],
+            'mode': ["rndrd", "rndrw", "rndwr", "seqrd", "seqwr"],
             'validate': ["on"],
-            'events': [10000],
-            'report_interval': [60],
+            'events': [2000000],
+            'report_interval': [15],
             'time': [0],
-            'file_block_size': [16]
+            'file_block_size': [4]
         }, 'SYSBENCH TEST -- '
            'Files number: {files_number} '
            'Threads number: {threads} '
@@ -99,14 +99,14 @@ class TestSysbench(AbstractPerformanceTest):
                                  dir=client_proxy.absolute_path("s1"))
 
 
-        print("################################## DIRECT-IO client ##################################")
+        print("\n################################## DIRECT-IO client (%s) ##################################\n"%(mode))
 
         execute_sysbench_test(client_directio, user_directio, threads,
                               total_size, files_number, mode, validate,
                               events, report_interval, time,
                               file_block_size, dir_path_directio)
 
-        print("################################## PROXY-IO client ##################################")
+        print("\n################################## PROXY-IO client (%s) ##################################\n"%(mode))
 
         execute_sysbench_test(client_proxy, user_proxy, threads,
                               total_size, files_number, mode, validate,
@@ -144,6 +144,7 @@ def sysbench_tests(threads, total_size, file_number, mode, validate,
 def run_sysbench_prepare(threads, total_size, file_number, mode, validate,
                          events, report_interval, time, file_block_size,
                          client, user, dir):
+    print("=== Preparing sysbench test files...")
     return sysbench(threads, total_size, file_number, mode, validate,
              events, report_interval, time, file_block_size,
              "prepare", client, user, dir, output=True)
@@ -152,6 +153,7 @@ def run_sysbench_prepare(threads, total_size, file_number, mode, validate,
 def run_sysbench_cleanup(threads, total_size, file_number, mode,
                          validate, events, report_interval, time,
                          file_block_size, client, user, dir):
+    print("=== Removing sysbench test files...")
     return sysbench(threads, total_size, file_number, mode, validate,
              events, report_interval, time, file_block_size,
              "cleanup", client, user, dir, output=True)
