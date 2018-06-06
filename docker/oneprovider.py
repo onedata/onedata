@@ -34,6 +34,9 @@ VM_ARGS_SOURCES_PATH = '_build/default/rel/op_panel/etc/vm.args'
 APP_CONFIG_PACKAGES_PATH = '/etc/op_panel/app.config'
 VM_ARGS_PACKAGES_PATH = '/etc/op_panel/vm.args'
 
+class AuthenticationException(ValueError):
+    pass
+
 
 def log(message, end='\n'):
     sys.stdout.write(message + end)
@@ -125,7 +128,7 @@ def do_request(users, request, *args, **kwargs):
         if r.status_code != 401 and r.status_code != 403:
             return r
 
-    raise ValueError('Authorization error.\n'
+    raise AuthenticationException('Authorization error.\n'
                      'Please ensure that valid admin credentials are present\n'
                      'in the onepanel.users section of the configuration.')
 
@@ -352,11 +355,17 @@ if __name__ == '__main__':
         batch_mode = os.environ.get('ONEPANEL_BATCH_MODE', 'false')
         if batch_mode.lower() == 'true':
             batch_config = get_batch_config()
-            if configure(batch_config):
-                log('\nCongratulations! New oneprovider deployment successfully started.')
-            else:
-                wait_for_workers(batch_config)
-                log('\nExisting oneprovider deployment resumed work')
+            try:
+                if configure(batch_config):
+                    log('\nCongratulations! New oneprovider deployment successfully started.')
+                else:
+                    wait_for_workers(batch_config)
+                    log('\nExisting oneprovider deployment resumed work')
+            except AuthenticationException as e:
+                log('The launch script cannot access onepanel to manage the deployment process.\n'
+                    'Please ensure that valid admin credentials are present\n'
+                    'in the onepanel.users section of the configuration\n'
+                    'or oversee the cluster status manually.')
 
         show_details()
 
