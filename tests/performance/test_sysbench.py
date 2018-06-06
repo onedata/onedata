@@ -63,12 +63,12 @@ class TestSysbench(AbstractPerformanceTest):
             'description': 'Testing file system using sysbench'
         },
         configs=generate_configs({
-            'files_number': [4],
-            'threads': [8],
+            'files_number': [1],
+            'threads': [1],
             'total_size': [2048],
             'mode': ["rndrd", "rndrw", "rndwr", "seqrd", "seqwr"],
             'validate': ["on"],
-            'events': [2000000],
+            'events': [1000000],
             'report_interval': [15],
             'time': [0],
             'file_block_size': [4]
