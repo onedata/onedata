@@ -34,6 +34,7 @@ VM_ARGS_SOURCES_PATH = '_build/default/rel/op_panel/etc/vm.args'
 APP_CONFIG_PACKAGES_PATH = '/etc/op_panel/app.config'
 VM_ARGS_PACKAGES_PATH = '/etc/op_panel/vm.args'
 
+
 class AuthenticationException(ValueError):
     pass
 
@@ -77,7 +78,7 @@ def set_trust_test_ca(file_path, trust_test_ca):
 
 
 def start_onepanel():
-    log('Starting op_panel', '\t')
+    log('Starting op_panel...')
     with open(os.devnull, 'w') as null:
         if os.environ.get(ONEPANEL_OVERRIDE):
             sp.check_call([os.path.join(os.environ.get(ONEPANEL_OVERRIDE),
@@ -88,7 +89,7 @@ def start_onepanel():
                           stderr=null)
 
     wait_for_rest_listener()
-    log('[  OK  ]')
+    log('[  OK  ] op_panel started')
 
 
 def wait_for_rest_listener():
@@ -99,7 +100,8 @@ def wait_for_rest_listener():
             requests.get('https://127.0.0.1:9443/api/v3/onepanel/', verify=False)
         except requests.ConnectionError:
             if first:
-                log('Waiting for onepanel server to be available (may require starting other cluster nodes)')
+                log('Waiting for op_panel server to be available\n'
+                    '(may require starting other cluster nodes)\n')
                 first = False
             time.sleep(1)
         else:
@@ -172,8 +174,7 @@ def configure(config):
                        verify=False)
         if r.status_code != 200:
             raise ValueError('Unexpected configuration error\n{0}'
-                             'For more information please check the logs.'.format(
-                r.text))
+                             'For more information please check the logs.'.format(r.text))
         else:
             resp = json.loads(r.text)
             status = resp.get('status', 'error')
@@ -209,7 +210,6 @@ def format_error_hosts(hosts):
 
 # Throws on connection nerror
 def wait_for_workers(config):
-
     url = 'https://127.0.0.1:9443/api/v3/onepanel/provider/nagios'
     while not nagios_up(url, config):
         time.sleep(1)
