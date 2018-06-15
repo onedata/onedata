@@ -14,7 +14,7 @@ from tests.gui.utils.core.web_elements import (TextLabelWebElement, WebElement,
                                                ButtonWithTextWebElement, WebItem)
 
 TransferStatusList = ['completed', 'skipped', 'cancelled', 'failed', 'active', 
-                      'invalidating', 'scheduled']
+                      'invalidating', 'scheduled', 'enqueued']
 TransferTypeList = ['migration', 'replication', 'invalidation']
 
 
@@ -93,27 +93,27 @@ class TransfersTab(PageObject):
     spaces = WebItemsSequence('ul.spaces-list li', cls=SpaceRecord)
     tabs = WebItemsSequence('.row-transfers-tables .nav-tabs li', 
                             cls = TabHeader)
-    _history_list = WebItemsSequence('.col-completed-transfers tr.data-row', 
+    _ended_list = WebItemsSequence('.col-completed-transfers tr.data-row', 
                                      cls = TransferRecordHistory)
-    _active_list = WebItemsSequence('.col-active-transfers tr.data-row', 
+    _ongoing_list = WebItemsSequence('.col-active-transfers tr.data-row', 
                                     cls = TransferRecordActive)
-    _scheduled_list = WebItemsSequence('.col-scheduled-transfers tr.data-row', 
+    _waiting_list = WebItemsSequence('.col-scheduled-transfers tr.data-row', 
                                        cls = TransferRecordHistory)
 
     @property
-    def active(self):
-        self['active'].click()
-        return self._active_list
+    def ongoing(self):
+        self['ongoing'].click()
+        return self._ongoing_list
 
     @property
-    def history(self):
-        self['history'].click()
-        return self._history_list
+    def ended(self):
+        self['ended'].click()
+        return self._ended_list
     
     @property
-    def scheduled(self):
-        self['scheduled'].click()
-        return self._scheduled_list
+    def waiting(self):
+        self['waiting'].click()
+        return self._waiting_list
 
     def __getitem__(self, name):
         for tab in self.tabs:

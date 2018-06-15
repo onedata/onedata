@@ -35,54 +35,54 @@ def wt(name, func=None, converters=None):
 
 
 @wt(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
-               ' in active transfers:\n(?P<desc>(.|\s)*)'))
+               ' in ongoing transfers:\n(?P<desc>(.|\s)*)'))
 @repeat_failed(interval=0.5)
-def assert_active_transfer(selenium, browser_id, item_type, desc):
-    transfer = op_page(selenium[browser_id]).transfers.active[0]
-    _assert_transfer(transfer, item_type, desc, 'active transfers')
+def assert_ongoing_transfer(selenium, browser_id, item_type, desc):
+    transfer = op_page(selenium[browser_id]).transfers.ongoing[0]
+    _assert_transfer(transfer, item_type, desc, 'ongoing')
 
 
 @wt(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
-               ' in history of transfers:\n(?P<desc>(.|\s)*)'))
+               ' in ended transfers:\n(?P<desc>(.|\s)*)'))
 @repeat_failed(interval=0.5, timeout = 40)
 def assert_finished_transfer(selenium, browser_id, item_type, desc):
-    transfer = op_page(selenium[browser_id]).transfers.history[0]
-    _assert_transfer(transfer, item_type, desc, 'history of transfers')
+    transfer = op_page(selenium[browser_id]).transfers.ended[0]
+    _assert_transfer(transfer, item_type, desc, 'ended')
 
 
 @wt(parsers.re('user of (?P<browser_id>.*) sees (?P<item_type>file|directory)'
-               ' in scheduled transfers:\n(?P<desc>(.|\s)*)'))
+               ' in waiting transfers:\n(?P<desc>(.|\s)*)'))
 @repeat_failed(interval=0.5, timeout = 40)
-def assert_scheduled_transfer(selenium, browser_id, item_type, desc):
-    transfer = op_page(selenium[browser_id]).transfers.scheduled[0]
-    _assert_transfer(transfer, item_type, desc, 'scheduled transfers')
+def assert_waiting_transfer(selenium, browser_id, item_type, desc):
+    transfer = op_page(selenium[browser_id]).transfers.waiting[0]
+    _assert_transfer(transfer, item_type, desc, 'waiting')
 
 
 @wt(parsers.re('user of (?P<browser_id>.*) waits for all transfers to start'))
 @repeat_failed(interval = 1, timeout = 90, 
                exceptions = (AssertionError, StaleElementReferenceException))
-def wait_for_scheduled_tranfers_to_start(selenium, browser_id):
-    assert len(op_page(selenium[browser_id]).transfers.scheduled) == 0, \
-            'Scheduled transfers did not start'
+def wait_for_waiting_tranfers_to_start(selenium, browser_id):
+    assert len(op_page(selenium[browser_id]).transfers.waiting) == 0, \
+            'Waiting transfers did not start'
 
 
 @wt(parsers.re('user of (?P<browser_id>.*) waits for all transfers to finish'))
 @repeat_failed(interval = 1, timeout = 90, 
                exceptions = (AssertionError, StaleElementReferenceException))
-def wait_for_active_tranfers_to_finish(selenium, browser_id):
-    assert len(op_page(selenium[browser_id]).transfers.active) == 0, \
+def wait_for_ongoing_tranfers_to_finish(selenium, browser_id):
+    assert len(op_page(selenium[browser_id]).transfers.ongoing) == 0, \
             'Active transfers did not finish'
 
 
 @wt(parsers.re('user of (?P<browser_id>.*) expands first transfer record'))
 def expand_transfer_record(selenium, browser_id):
-    op_page(selenium[browser_id]).transfers.history[0].expand()
+    op_page(selenium[browser_id]).transfers.ended[0].expand()
 
     
 @wt(parsers.re('user of (?P<browser_id>.*) sees that there is non-zero '
                'throughput in transfer chart'))
 def assert_non_zero_transfer_speed(selenium, browser_id):
-    chart = op_page(selenium[browser_id]).transfers.history[0].get_chart()
+    chart = op_page(selenium[browser_id]).transfers.ended[0].get_chart()
     assert chart.get_speed() != '0', 'Transfer throughput is 0'
 
 
