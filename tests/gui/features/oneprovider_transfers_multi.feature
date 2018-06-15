@@ -27,7 +27,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser1 selects "space4" space in transfers tab
     And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
-    Then user of browser1 sees file in history of transfers:
+    Then user of browser1 sees file in ended transfers:
             name: large_file.txt
             destination: p2
             username: user1
@@ -83,7 +83,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser1 selects "space4" space in transfers tab
     And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
-    Then user of browser1 sees directory in history of transfers:
+    Then user of browser1 sees directory in ended transfers:
             name: dir1
             destination: p2
             username: user1
@@ -130,7 +130,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser1 selects "space4" space in transfers tab
     And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
-    Then user of browser1 sees file in history of transfers:
+    Then user of browser1 sees file in ended transfers:
             name: large_file.txt
             destination: p2
             username: user1
@@ -186,7 +186,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser1 selects "space4" space in transfers tab
     And user of browser1 waits for all transfers to start
     And user of browser1 waits for all transfers to finish
-    Then user of browser1 sees directory in history of transfers:
+    Then user of browser1 sees directory in ended transfers:
             name: dir1
             destination: p2
             username: user1
