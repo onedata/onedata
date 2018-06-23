@@ -69,10 +69,6 @@ def generate_config_file(file_path):
                '% Use overlay.config for custom configuration.\n\n'
                '[{onepanel, [{config_initialized, true}')
 
-    advertise_address = os.environ.get('ONEPANEL_ADVERTISE_ADDRESS')
-    if advertise_address:
-        content += ',\n{{advertise_address, "{0}"}}'.format(advertise_address)
-
     generate_test_web_cert = os.environ.get('ONEPANEL_GENERATE_TEST_WEB_CERT')
     if generate_test_web_cert:
         domain = os.environ.get('ONEPANEL_GENERATED_CERT_DOMAIN')
