@@ -28,7 +28,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees file in history of transfers:
+    And user of browser sees file in ended transfers:
             name: large_file.txt
             destination: p2
             username: user1
@@ -70,7 +70,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees directory in history of transfers:
+    And user of browser sees directory in ended transfers:
             name: dir1
             destination: p2
             username: user1
@@ -108,7 +108,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees file in history of transfers:
+    And user of browser sees file in ended transfers:
             name: large_file.txt
             destination: p2
             username: user1
@@ -143,7 +143,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees directory in history of transfers:
+    And user of browser sees directory in ended transfers:
             name: dir1
             destination: p2
             username: user1
@@ -177,7 +177,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees file in history of transfers:
+    And user of browser sees file in ended transfers:
             name: large_file.txt
             destination: p2
             username: user1
@@ -212,7 +212,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees directory in history of transfers:
+    And user of browser sees directory in ended transfers:
             name: dir1
             destination: p2
             username: user1
@@ -249,7 +249,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees directory in history of transfers:
+    And user of browser sees directory in ended transfers:
             name: dir1
             destination: p1
             username: user1
@@ -287,7 +287,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees file in history of transfers:
+    And user of browser sees file in ended transfers:
             name: large_file.txt
             destination: p2
             username: user1
@@ -329,7 +329,7 @@ Feature: Oneprovider transfers functionality
 
     Then user of browser waits for all transfers to start
     And user of browser waits for all transfers to finish
-    And user of browser sees directory in history of transfers:
+    And user of browser sees directory in ended transfers:
             name: dir1
             destination: p2
             username: user1
