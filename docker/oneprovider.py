@@ -59,9 +59,12 @@ def set_node_name(file_path):
 
 
 def config_file_initialized(file_path):
-    with open(file_path, 'r') as f:
-        content = f.read()
-        return bool(re.search(r'{config_initialized,\s*true}', content))
+    try:
+        with open(file_path, 'r') as f:
+            content = f.read()
+            return bool(re.search(r'{config_initialized,\s*true}', content))
+    except:
+        return False
 
 
 def generate_config_file(file_path):
