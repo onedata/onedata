@@ -54,7 +54,7 @@ def performance(default_config, configs):
                 successful_repeats = 0
                 failed_details = {}
                 while repeats < max_repeats:
-                    flushed_print("\trun {}/{}".format(repeats+1, max_repeats))
+                    flushed_print("RUN {}/{}".format(repeats+1, max_repeats))
 
                     try:
                         test_results = test_function(self, context, clients,
@@ -241,6 +241,8 @@ def dict_to_list(dict):
 
 
 def ensure_list(elem):
+    if not elem:
+        return []
     if not isinstance(elem, list):
         elem = [elem]
     return elem
