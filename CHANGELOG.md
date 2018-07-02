@@ -4,6 +4,23 @@
 CHANGELOG
 ---------
 
+### 18.02.0-rc9
+
+* VFS-4532 Create new config file instead of using regexps
+* VFS-4482 Changed transfer tabs names
+* VFS-4367 Make docker entrpoint consistent with onezone.py
+* VFS-4367 Expect 409 when configuring existing cluster
+* VFS-4367 Do not fail cluster restart when admin credentials are missing
+* VFS-4521 Adjusted sysbench performance test parameters
+* VFS-4521 change deprecated sysbench options
+* VFS-4521 upgrade sysbench performance test
+
+
+### 18.02.0-rc8
+
+* Releasing new version 18.02.0-rc8
+
+
 ### 18.02.0-rc7
 
 * VFS-4474 Display error details on configuration error
