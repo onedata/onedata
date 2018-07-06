@@ -179,6 +179,9 @@ test_performance_files_creation:
 test_performance_concurrent_files_creation:
 	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k concurrent_files_creation
 
+test_performance_transfer_onf:
+	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k transfer_onf
+
 test_gui_env_up:
 	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui/scenarios/${SUITE}.py -i onedata/acceptance_gui:latest --driver=${BROWSER} --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=${RECORDING_OPTION}
 
