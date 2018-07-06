@@ -1,5 +1,5 @@
 """This module contains performance tests of on the fly transfer,
-testing concurrent copy of 10000 files.
+testing concurrent copy of 10000 files created on remote provider.
 """
 
 __author__ = "Bartek Walkowicz"
@@ -47,7 +47,7 @@ class TestTransferOnf(AbstractPerformanceTest):
                            'concurrent copying of files'
         },
         configs=generate_configs({
-            'files_number': [100],
+            'files_number': [10000],
             'files_size': [20480],
             'threads_num': [10]
         }, 'TRANSFER ON THE FLY TEST -- '
@@ -67,7 +67,7 @@ class TestTransferOnf(AbstractPerformanceTest):
         dir_path_2 = client2.absolute_path('s1')
 
         _create_files(client1, files_number, file_size, dir_path_1)
-        # wait for synchronization between providers before copying
+        # TODO wait for synchronization between providers before copying
         time.sleep(10)
 
         test_result = _execute_test(client2, files_number, file_size / 1024,
@@ -76,7 +76,7 @@ class TestTransferOnf(AbstractPerformanceTest):
         # removal of entire directory tree can take several minutes so as to
         # evade connection timeout while removing everything at once,
         # rm files one at time instead
-        _teardown_after_test(client1, files_number, dir_path_1)
+        _teardown_after_test(client2, files_number, dir_path_2)
 
         return test_result
 
@@ -84,7 +84,10 @@ class TestTransferOnf(AbstractPerformanceTest):
 
 
 def _create_files(client, files_num, file_size, dir_path):
+    flushed_print("\t\tStarted creation of {} files".format(files_num))
     for i in xrange(files_num):
+        if i % 100 == 0:
+            flushed_print("\t\t\tCreated {}nth file".format(i))
         truncate(client, os.path.join(dir_path, 'file{}'.format(i)), file_size)
 
 

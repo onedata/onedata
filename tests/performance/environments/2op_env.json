@@ -25,8 +25,14 @@
         "cfg1": {
             "storages": [
                 {
-                    "type": "posix",
-                    "name": "/mnt/st1"
+                    "type": "nulldevice",
+                    "name": "nulldevice1",
+                    "latencyMin": "0",
+                    "latencyMax": "0",
+                    "timeoutProbability": "0.0",
+                    "filter": "*",
+                    "simulatedFilesystemParameters": "",
+                    "simulatedFilesystemGrowSpeed": "0.0"
                 }
             ],
             "users": [
@@ -47,8 +53,14 @@
         "cfg2": {
             "storages": [
                 {
-                    "type": "posix",
-                    "name": "/mnt/st2"
+                    "type": "nulldevice",
+                    "name": "nulldevice2",
+                    "latencyMin": "0",
+                    "latencyMax": "0",
+                    "timeoutProbability": "0.0",
+                    "filter": "*",
+                    "simulatedFilesystemParameters": "",
+                    "simulatedFilesystemGrowSpeed": "0.0"
                 }
             ],
             "users": [
@@ -102,12 +114,6 @@
                             "oz_domain": "oz1",
                             "verify_oz_cert": false
                         }
-                    },
-                    "storage": {
-                        "storage1": {
-                            "volume_path": "/media/storage",
-                            "host_path": "/tmp/blah"
-                        }
                     }
                 }
             }
@@ -145,12 +151,6 @@
                             ],
                             "oz_domain": "oz1",
                             "verify_oz_cert": false
-                        }
-                    },
-                    "storage": {
-                        "storage1": {
-                            "volume_path": "/media/storage",
-                            "host_path": "/tmp/blah"
                         }
                     }
                 }
@@ -259,11 +259,11 @@
                 ],
                 "providers": {
                     "p1": {
-                        "storage": "/mnt/st1",
+                        "storage": "nulldevice1",
                         "supported_size": 1000000000
                     },
                     "p2":{
-                        "storage": "/mnt/st2",
+                        "storage": "nulldevice2",
                         "supported_size": 1000000000
                     }
                 }
