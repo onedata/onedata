@@ -190,7 +190,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
             name: dir1
             destination: p2
             username: user1
-            total files: 2
+            total files: 3
             transferred: 45 MiB
             type: migration
             status: completed
