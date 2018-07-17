@@ -205,7 +205,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
     And user of browser1 double clicks on item named "dir1" in file browser
     And user of browser1 refreshes site
     And user of browser1 sees file chunks for file "large_file.txt" as follows:
-            p1: never synchronized
+            p1: entirely empty
             p2: entirely filled
     And user of browser1 sees file chunks for file "large_file(1).txt" as follows:
             p1: entirely empty
