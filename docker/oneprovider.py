@@ -154,6 +154,13 @@ def get_batch_config():
     batch_config = yaml.load(batch_config)
     if not batch_config:
         return {}
+
+    # insert batchMode mark if not present
+    onepanel_config = batch_config.get('onepanel', {})
+    if 'batchMode' not in onepanel_config:
+        onepanel_config['batchMode'] = True
+        batch_config['onepanel'] = onepanel_config
+
     return batch_config
 
 
