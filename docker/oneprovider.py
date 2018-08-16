@@ -155,10 +155,10 @@ def get_batch_config():
     if not batch_config:
         return {}
 
-    # insert batchMode mark if not present
+    # insert interactiveDeployment mark if not present
     onepanel_config = batch_config.get('onepanel', {})
-    if 'batchMode' not in onepanel_config:
-        onepanel_config['batchMode'] = True
+    if 'interactiveDeployment' not in onepanel_config:
+        onepanel_config['interactiveDeployment'] = False
         batch_config['onepanel'] = onepanel_config
 
     return batch_config
