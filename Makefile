@@ -167,8 +167,8 @@ test:
 test_performance:
 	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance
 
-test_performance_rest:
-	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k "not files_creation and not sysbench"
+test_performance_dd:
+	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k test_dd
 
 test_performance_sysbench:
 	${TEST_RUN} -s --test-type performance -vvv --test-dir tests/performance -k sysbench
