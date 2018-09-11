@@ -104,3 +104,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+## Acknowledgements
+This work was supported in part by 2017's research funds in the scope of the co-financed international projects framework (project no. 3711/H2020/2017/2).
