@@ -154,6 +154,13 @@ def get_batch_config():
     batch_config = yaml.load(batch_config)
     if not batch_config:
         return {}
+
+    # insert interactiveDeployment mark if not present
+    onepanel_config = batch_config.get('onepanel', {})
+    if 'interactiveDeployment' not in onepanel_config:
+        onepanel_config['interactiveDeployment'] = False
+        batch_config['onepanel'] = onepanel_config
+
     return batch_config
 
 
@@ -375,7 +382,7 @@ if __name__ == '__main__':
 
     except Exception as e:
         log('\n{0}'.format(e))
-        if os.environ.get('ONEPANEL_DEBUG_MODE'):
+        if os.environ.get('ONEPANEL_DEBUG_MODE', 'false').lower() == 'true':
             pass
         else:
             sys.exit(1)
