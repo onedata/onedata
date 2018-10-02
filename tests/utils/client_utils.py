@@ -69,7 +69,7 @@ class Client:
                 time.sleep(1)
                 timeout -= 1
         if not started:
-            pytest.skip("rpc connection couldn't be established")
+            pytest.fail("rpc connection couldn't be established")
 
     def stop_rpyc_server(self):
         if self.rpyc_server_pid:
@@ -82,7 +82,7 @@ class Client:
         return self._repeat_until(condition, timeout)
 
     def _start_rpyc_server(self, user_name):    #start rpc server on client docker
-        cmd = "/usr/local/bin/rpyc_classic.py"
+        cmd = "/usr/local/bin/rpyc_classic.py --host=0.0.0.0 --port=18812"
         run_cmd(user_name, self, cmd, detach=True)
         pid = run_cmd(user_name,
                       self,
