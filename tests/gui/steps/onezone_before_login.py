@@ -14,13 +14,13 @@ from tests.gui.utils.generic import parse_seq
 def login_provider_buttons(selenium, browser_id, provider_name):
     driver = selenium[browser_id]
     assert driver.find_element_by_css_selector(
-            '.login-box a.login-icon-box.{name}'.format(name=provider_name)
+            '.login-box a.login-icon-box.idp-{name}'.format(name=provider_name)
         ), 'login for provider {} not found'.format(provider_name)
 
 
 def _click_login_provider_button(driver, provider_name):
     driver.find_element_by_css_selector(
-        '.login-box a.login-icon-box.{:s}'.format(provider_name)
+        '.login-box a.login-icon-box.idp-{:s}'.format(provider_name)
     ).click()
 
 
