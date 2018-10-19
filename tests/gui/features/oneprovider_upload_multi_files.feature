@@ -7,7 +7,7 @@ Feature: Oneprovider Data upload more than 1 file
     And user of browser opened Onezone URL
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
-    And user of browser clicked on the "plgrid" login button
+    And user of browser clicked on the "devLogin" login button
     And user of browser clicked on the "user1" link
     And user of browser expanded the "go to your files" Onezone sidebar panel
     And user of browser clicked on the "p1" provider in Onezone providers sidebar panel

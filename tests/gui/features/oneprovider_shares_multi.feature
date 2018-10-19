@@ -4,7 +4,7 @@ Feature: Oneprovider Share view
   Background:
     Given users opened [browser1, browser2] browsers' windows
     And user of browser1 opened Onezone URL
-    And user of browser1 clicked on the "plgrid" login button
+    And user of browser1 clicked on the "devLogin" login button
     And user of browser1 clicked on the "user1" link
     And user of browser1 expanded the "go to your files" Onezone sidebar panel
     And user of browser1 clicked on the "p1" provider in Onezone providers sidebar panel

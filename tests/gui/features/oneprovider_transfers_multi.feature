@@ -3,7 +3,7 @@ Feature: Oneprovider transfers functionality using multiple browser instances
   Background:
     Given user opened [browser1, browser2] window
     And user of [browser1, browser2] opened Onezone URL 
-    And user of [browser1, browser2] clicked on the "plgrid" login button
+    And user of [browser1, browser2] clicked on the "devLogin" login button
     And user of [browser1, browser2] logged as [user1, user1]
     And user of [browser1, browser2] expanded the "go to your files" Onezone sidebar panel
     And user of [browser1, browser2] clicked on the [p1, p2] provider in Onezone providers sidebar panel
