@@ -420,7 +420,7 @@ def clean_spaces(client):
 
         def condition():
             try:
-                rm(client, path=space_path, recursive=True)
+                rm(client, path=space_path, recursive=True, force=True)
             except Exception as e:
                 if isinstance(e, OSError):
                     if e.errno == errno.EACCES:

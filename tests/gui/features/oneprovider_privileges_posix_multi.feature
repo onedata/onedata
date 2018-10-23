@@ -3,7 +3,7 @@ Feature: Oneprovider POSIX privileges GUI tests using multiple browsers
   Background: 
     Given users opened [browser1, browser2] browsers' windows
     And users of [browser1, browser2] opened Onezone URL
-    And users of [browser1, browser2] clicked on the "plgrid" login button 
+    And users of [browser1, browser2] clicked on the "devLogin" login button 
     And users of [browser1, browser2] logged as [user1, user2]
     And users of [browser1, browser2] expanded the "go to your files" Onezone sidebar panel
     And users of [browser1, browser2] clicked on the "p1" provider in Onezone providers sidebar panel
