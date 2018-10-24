@@ -8,7 +8,7 @@ Feature: Onezone GUI elements
     Given user opened browser window
     And user of browser opened Onezone URL
     # not used in non-homepage tests
-    And user of browser clicked on the "plgrid" login button
+    And user of browser clicked on the "devLogin" login button
     And user of browser clicked on the "user1" link
 
 

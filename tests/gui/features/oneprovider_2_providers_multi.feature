@@ -3,7 +3,7 @@ Feature: Oneprovider functionality using multiple providers and multiple browser
   Background:
     Given users opened [browser1, browser2] browsers' windows
     And users of [browser1, browser2] opened Onezone URL
-    And users of [browser1, browser2] clicked on the "plgrid" login button
+    And users of [browser1, browser2] clicked on the "devLogin" login button
     And users of [browser1, browser2] logged as [user1, user3]
     And user of browser2 created and recorded access token for later use with CDMI API
     And user of browser2 records providers hostname using copy hostname button in every provider popup
