@@ -56,7 +56,8 @@ def onezone(request):
             (_, _, domain) = nodes[0].partition('@')
             self.domain = domain
 
-    result = env.up(tests.utils.path_utils.config_file('env.json'))
+    result = env.up(tests.utils.path_utils.config_file('env.json'),
+                    image='onedata/worker:v61')
 
     request.addfinalizer(lambda: docker.remove(
         result['docker_ids'], force=True, volumes=True))
