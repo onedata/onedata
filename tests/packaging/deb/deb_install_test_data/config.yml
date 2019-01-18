@@ -1,8 +1,7 @@
 cluster:
-  domainName: "test.local"
   nodes:
     n1:
-      hostname: "onedata"
+      hostname: "onedata.test.local"
   managers:
     mainNode: "n1"
     nodes:
@@ -21,7 +20,8 @@ oneprovider:
   register: true
   name: "Provider"
   subdomainDelegation: false
-  domain: "devel.localhost.local"
+  domain: "onedata.test.local"
+  adminEmail: "getting-started@onedata.org"
   geoLatitude: 10.0
   geoLongitude: 20.0
 onezone:
