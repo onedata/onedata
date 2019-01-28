@@ -4,6 +4,13 @@
 CHANGELOG
 ---------
 
+### 18.02.0-rc13
+
+* VFS-5001 Changed auth provider selector
+* Fix locale settings in Oneprovider docker
+* fix fetching token from oz
+
+
 ### 18.02.0-rc12
 
 * Releasing new version 18.02.0-rc12
