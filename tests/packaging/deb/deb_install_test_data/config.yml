@@ -28,8 +28,8 @@ onezone:
   domainName: "onedata.org"
 onepanel:
   users:
-    "admin1":
-      password: "Password1"
+    "admin":
+      password: "password"
       userRole: "admin"
     "user1":
       password: "Password2"
