@@ -67,6 +67,7 @@ make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --gro
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
 	mv $(1)/package/packages/*.x86_64.rpm package/$(DISTRIBUTION)/x86_64
 make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder:$(DISTRIBUTION)-VFS-4267 $(2)
+make_client_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged -i onedata/builder:v66 $(2)
 mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64 && \
 	mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source && \
@@ -301,7 +302,7 @@ deb_cluster_manager: clean_cluster_manager debdirs
 	$(call mv_deb, cluster_manager)
 
 deb_oneclient_base: clean_oneclient debdirs
-	$(call make_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
+	$(call make_client_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_deb, oneclient)
 
 debdirs:
