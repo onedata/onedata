@@ -4,6 +4,11 @@
 CHANGELOG
 ---------
 
+### 18.02.1
+
+* VFS-5154 Fixed Oneprovider packaging tests
+
+
 ### 18.02.0-rc13
 
 * VFS-5001 Changed auth provider selector
