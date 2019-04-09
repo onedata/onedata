@@ -9,17 +9,19 @@ import tests.utils.path_utils
 from shutil import copyfile
 from shutil import move
 
+
 ###################### FUNCTIONS ######################
 
-def update_oz_domain_in_config(config_file, onezone_domain):
+def update_token_in_config(config_file, token):
     backup_config_file = config_file + '.bak'
     copyfile(config_file, backup_config_file)
     with open(config_file, 'r') as f:
         contents = f.read()
-    contents = contents.replace('onedata.org', onezone_domain)
+    contents = contents.replace('{{registration_token}}', token)
     with open(config_file, 'w') as f:
         f.write(contents)
 
-def reset_oz_domain_in_config(config_file):
+
+def reset_token_in_config(config_file):
     backup_config_file = config_file + '.bak'
     move(backup_config_file, config_file)
