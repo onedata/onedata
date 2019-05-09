@@ -140,7 +140,7 @@ def get_registration_token(onezone):
     docker.cp(container, host_path, docker_path, True)
 
     cmd = ['/usr/bin/escript', docker_path,
-           onezone.node, onezone.cookie, "provider_admin"]
+           onezone.node, onezone.cookie, "provideradmin"]
     return docker.exec_(container, interactive=True, tty=True,
                         output=True, command=cmd)
 
