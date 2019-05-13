@@ -139,7 +139,7 @@ def get_emergency_passphrase():
 
 def set_emergency_passphrase(passphrase):
     if passphrase is None:
-        return False
+        raise AuthenticationException("Missing " + EMERGENCY_PASSPHRASE_VARIABLE + " env variable")
 
     r = requests.put('https://127.0.0.1:9443/api/v3/onepanel/emergency_passphrase',
                      headers={'content-type': 'application/json'},
@@ -186,9 +186,7 @@ def configure(config):
     passphrase = get_emergency_passphrase()
 
     try:
-        if not set_emergency_passphrase(passphrase):
-            raise ValueError("Missing " + EMERGENCY_PASSPHRASE_VARIABLE + " env variable " +
-                             "to set the Onepanel passphrase and begin deployment")
+        set_emergency_passphrase(passphrase)
     except AuthenticationException:
         # emergency passphrase setup failure indicates existing deployment
         return False
