@@ -4,6 +4,7 @@ MAINTAINER Krzysztof Trzepla <krzysztof.trzepla@gmail.com>
 
 # Build arguments
 ARG RELEASE
+ARG RELEASE_TYPE
 ARG OP_PANEL_VERSION
 ARG COUCHBASE_VERSION
 ARG CLUSTER_MANAGER_VERSION
@@ -16,11 +17,6 @@ RUN groupadd -g 150 onedata && \
     useradd -u 151 -g 150 -d /var/lib/op_panel op_panel && \
     useradd -u 152 -g 150 -d /var/lib/cluster_manager cluster_manager && \
     useradd -u 153 -g 150 -d /var/lib/op_worker op_worker
-
-# onedata deps ppa
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C211375C && \
-    echo "deb http://ppa.launchpad.net/onedata/ceph/ubuntu xenial main" > /etc/apt/sources.list.d/onedata-ppa.list && \
-    echo "deb http://ppa.launchpad.net/onedata/build-deps-openssl11/ubuntu xenial main" >> /etc/apt/sources.list.d/onedata-ppa.list
 
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
@@ -37,20 +33,20 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Install oneprovider package
-RUN case ${RELEASE} in \
+RUN case ${RELEASE_TYPE} in \
         production) \
-            curl -O http://get.onedata.org/oneprovider.sh; \
+            curl -O http://get.onedata.org/oneprovider-${RELEASE}.sh; \
             ;; \
         *) \
-            curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider.sh; \
+            curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider-${RELEASE}.sh; \
             ;; \
     esac && \
-    sh oneprovider.sh op-panel=${OP_PANEL_VERSION}-1 && \
-    sh oneprovider.sh couchbase-server-community=${COUCHBASE_VERSION}-1 && \
-    sh oneprovider.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1 && \
-    sh oneprovider.sh op-worker=${OP_WORKER_VERSION}-1 && \
-    sh oneprovider.sh oneprovider=${ONEPROVIDER_VERSION}-1 && \
-    rm -f oneprovider.sh
+    sh oneprovider-${RELEASE}.sh op-panel=${OP_PANEL_VERSION}-1 && \
+    sh oneprovider-${RELEASE}.sh couchbase-server-community=${COUCHBASE_VERSION}-1 && \
+    sh oneprovider-${RELEASE}.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1 && \
+    sh oneprovider-${RELEASE}.sh op-worker=${OP_WORKER_VERSION}-1 && \
+    sh oneprovider-${RELEASE}.sh oneprovider=${ONEPROVIDER_VERSION}-1 && \
+    rm -f oneprovider-${RELEASE}.sh
 
 # Backup files from persistence, as the persistent volume will be overwritten
 # by mounting it from host. The missing files will be copied back in entrypoint.
