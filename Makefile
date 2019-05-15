@@ -6,7 +6,7 @@ DOCKER_REG_NAME         ?= "docker.onedata.org"
 DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
 DOCKER_BASE_IMAGE       ?= "ubuntu:16.04"
-DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:v57"
+DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1802-1"
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
@@ -358,7 +358,7 @@ docker-dev:
 # a normal (oneclient-base) package into /usr/ prefix.
 #
 docker_oneclient_base:
-	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
+	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
 
 #
 # Build final Oneclient Docker image with oneclient installed from
@@ -366,7 +366,7 @@ docker_oneclient_base:
 # symlinked into /usr prefix.
 #
 docker_oneclient:
-	$(MAKE) -C oneclient docker-any PKG_VERSION=$(ONECLIENT_VERSION)
+	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
 
 #
 # Build self-contained Oneclient archive, by extracting all necessary files
