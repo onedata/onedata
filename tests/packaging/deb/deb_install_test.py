@@ -1,5 +1,6 @@
 from tests import *
 import pytest
+import json
 import tests.utils.path_utils
 import tests.utils.utils
 import tests.packaging.oneprovider_common
@@ -40,7 +41,7 @@ class Distribution(object):
 @pytest.fixture(scope='module')
 def setup_command():
     return 'apt-get update && ' \
-        'apt-get install -y ca-certificates locales python wget && ' \
+        'apt-get install -y ca-certificates locales python wget curl && ' \
         'wget -qO- {url}/onedata.gpg.key | apt-key add - && ' \
         'echo "deb {url}/apt/ubuntu/{{dist}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
         'echo "deb-src {url}/apt/ubuntu/{{dist}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
@@ -112,11 +113,6 @@ def oneprovider(request, onezone, setup_command):
     # This link will cause connections to 'oz.1234.test' reach 'node.oz.1234.test'
     distribution = Distribution(request, link={onezone_node: onezone_domain})
 
-    registration_token = get_registration_token(onezone)
-    print("provider token: " + registration_token)
-    tests.packaging.oneprovider_common.update_token_in_config(
-        config_file, registration_token)
-
     command = setup_command.format(dist=distribution.name)
     command = '{command} && ' \
         'apt-get install -y python-setuptools && ' \
@@ -126,23 +122,21 @@ def oneprovider(request, onezone, setup_command):
                              interactive=True,
                              tty=True,
                              command=command)
+
+    registration_token = get_registration_token(distribution, onezone_domain)
+    tests.packaging.oneprovider_common.update_token_in_config(
+        config_file, registration_token)
+
     return distribution
 
 
-def get_registration_token(onezone):
-    """Generates provider registration token by executing escript
-    in one of Onezone dockers."""
-
-    container = onezone.dockers[-1]
-    escript_name = 'get_registration_token.escript'
-    host_path = tests.utils.path_utils.config_file(escript_name)
-    docker_path = os.path.join("/", escript_name)
-    docker.cp(container, host_path, docker_path, True)
-
-    cmd = ['/usr/bin/escript', docker_path,
-           onezone.node, onezone.cookie, "provideradmin"]
-    return docker.exec_(container, interactive=True, tty=True,
-                        output=True, command=cmd)
+def get_registration_token(distribution, onezone_domain):
+    uri = '/api/v3/onezone/user/clusters/provider_registration_token/'
+    cmd = 'curl -Ss -k -X POST -u provideradmin:password https://{}{}'.format(
+        onezone_domain, uri)
+    output = docker.exec_(distribution.container, interactive=True,
+                        tty=True, output=True, command=cmd).strip()
+    return json.loads(output)['token']
 
 
 def test_oneclient_installation(oneclient):
