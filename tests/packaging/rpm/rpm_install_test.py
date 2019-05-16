@@ -116,6 +116,7 @@ def test_oneclient_installation(oneclient):
                              tty=True,
                              command='python /root/data/install_oneclient.py')
 
+
 @pytest.mark.skip(reason="Fix SCL configuration")
 def test_oneprovider_installation(oneprovider):
     result = docker.exec_(oneprovider.container,

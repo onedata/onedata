@@ -122,18 +122,18 @@ def oneprovider(request, onezone, setup_command):
     return distribution
 
 
-def test_oneclient_installation(oneclient):
+def test_oneclient_base_installation(oneclient):
     assert 0 == docker.exec_(oneclient.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient.py')
+                             command='python /root/data/install_oneclient_base.py')
 
 
-def test_oneclient_any_installation(oneclient_any):
+def test_oneclient_installation(oneclient_any):
     assert 0 == docker.exec_(oneclient_any.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient_any.py')
+                             command='python /root/data/install_oneclient.py')
 
 
 def test_oneprovider_installation(oneprovider):
