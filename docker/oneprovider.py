@@ -422,7 +422,7 @@ if __name__ == '__main__':
                 else:
                     log('Environment variable {} is missing.\n'
                         'When deploying a new cluster this variable is required.\n'
-                        'Please set it to your desired Onepanel emergency passphrase\n'
+                        'Please set it to your desired Onepanel emergency passphrase.\n'
                         .format(EMERGENCY_PASSPHRASE_VARIABLE))
 
         show_details()
