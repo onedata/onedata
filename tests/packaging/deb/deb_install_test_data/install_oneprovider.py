@@ -7,6 +7,7 @@ from subprocess import STDOUT, check_call, check_output
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+EMERGENCY_USERNAME = 'onepanel'
 EMERGENCY_PASSPHRASE = 'passphrase'
 
 # get packages
@@ -62,7 +63,7 @@ with open('/root/data/config.yml', 'r') as f:
 
     r = requests.post(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
-        auth=('admin', EMERGENCY_PASSPHRASE),
+        auth=(EMERGENCY_USERNAME, EMERGENCY_PASSPHRASE),
         headers={'content-type': 'application/x-yaml'},
         data=f.read(),
         verify=False)
@@ -71,7 +72,7 @@ with open('/root/data/config.yml', 'r') as f:
     status = 'running'
     while status == 'running':
         r = requests.get('https://127.0.0.1:9443' + loc,
-                         auth=('admin', EMERGENCY_PASSPHRASE),
+                         auth=(EMERGENCY_USERNAME, EMERGENCY_PASSPHRASE),
                          verify=False)
         print(r.text)
         assert r.status_code == 200
@@ -89,7 +90,7 @@ for service in ['workers', 'managers', 'databases']:
     r = requests.patch(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/{0}?started=false'.format(
             service),
-        auth=('admin', EMERGENCY_PASSPHRASE),
+        auth=(EMERGENCY_USERNAME, EMERGENCY_PASSPHRASE),
         headers={'content-type': 'application/json'},
         verify=False)
     assert r.status_code == 204
