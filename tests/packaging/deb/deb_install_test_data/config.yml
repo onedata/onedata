@@ -25,7 +25,3 @@ oneprovider:
   geoLatitude: 10.0
   geoLongitude: 20.0
   token: "{{registration_token}}"
-onepanel:
-  admin:
-    username: admin
-    password: password
