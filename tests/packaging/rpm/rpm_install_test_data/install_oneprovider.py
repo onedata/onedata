@@ -24,8 +24,8 @@ oneprovider_package = \
      path.endswith('.rpm')][0]
 
 # get couchbase
-check_call(['wget', 'http://packages.couchbase.com/releases/4.5.1/couchbase'
-                    '-server-community-4.5.1-centos7.x86_64.rpm'])
+check_call(['wget', 'http://packages.onedata.org/yum/centos/7x/x86_64/'
+                    'couchbase-server-community-4.5.1-centos7.x86_64.rpm'])
 
 # Inject Overlay config to accept test CA certificate
 check_call(['mkdir', '/etc/op_panel'])
@@ -33,7 +33,7 @@ check_call(['cp', '/root/data/overlay.config', '/etc/op_panel/overlay.config'])
 
 # install packages
 check_call(['yum', '-y', 'install',
-            'couchbase-server-community-4.5.1-centos7.x86_64.rpm'],
+            './couchbase-server-community-4.5.1-centos7.x86_64.rpm'],
            stderr=STDOUT)
 check_call(['yum', '-y', '--enablerepo=onedata', 'install',
             '/root/pkg/' + op_panel_package], stderr=STDOUT)
