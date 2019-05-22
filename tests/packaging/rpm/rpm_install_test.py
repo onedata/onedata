@@ -46,9 +46,9 @@ class Distribution(object):
 @pytest.fixture(scope='module')
 def setup_command():
     return 'yum -y update ; yum clean all && yum -y update && ' \
-        'yum -y install ca-certificates python wget && ' \
+        'yum -y install ca-certificates python wget curl && ' \
         'yum -y install epel-release || true && ' \
-        'wget -qO- "{url}/yum/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
+        'curl -sSL "{url}/yum/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
         .format(url='http://packages.onedata.org')
 
 
@@ -98,8 +98,9 @@ def oneprovider(request, onezone, setup_command):
     distribution = Distribution(request, link={onezone_node: onezone_domain})
     command = setup_command.format(repo=distribution.repo)
     command = '{command} && ' \
-        'yum -y install python-setuptools && ' \
-        'easy_install requests'.format(command=command)
+        'yum -y install python-setuptools python-pip && ' \
+        'pip install --upgrade pip && ' \
+        'pip install requests'.format(command=command)
 
     assert 0 == docker.exec_(distribution.container,
                              interactive=True,
