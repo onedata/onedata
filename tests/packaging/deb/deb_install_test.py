@@ -17,6 +17,7 @@ class Distribution(object):
         config_dir = os.path.join(file_dir, 'deb_install_test_data')
 
         self.name = request.param
+        self.release = '1802'
         self.image = 'ubuntu:{0}'.format(self.name)
         self.container = docker.run(interactive=True,
                                     tty=True,
@@ -42,10 +43,10 @@ def setup_command():
     return 'apt-get update && ' \
         'apt-get install -y ca-certificates locales python wget && ' \
         'wget -qO- {url}/onedata.gpg.key | apt-key add - && ' \
-        'echo "deb {url}/apt/ubuntu/{{dist}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
-        'echo "deb-src {url}/apt/ubuntu/{{dist}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
+        'echo "deb {url}/apt/ubuntu/{{release}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
+        'echo "deb-src {url}/apt/ubuntu/{{release}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
         'apt-get update && ' \
-        'locale-gen en_US.UTF-8'.format(url='http://packages.onedata.org')
+        'locale-gen en_US.UTF-8'.format(url='http://onedata-dev-packages.cloud.plgrid.pl')
 
 
 @pytest.fixture(scope='module')
@@ -66,10 +67,11 @@ def onezone(request):
 
 
 @pytest.fixture(scope='module',
-                params=['trusty', 'xenial'])
+                params=['xenial'])
 def oneclient(request, setup_command):
     distribution = Distribution(request, privileged=True)
-    command = setup_command.format(dist=distribution.name)
+    command = setup_command.format(dist=distribution.name,
+                                   release=distribution.release)
 
     assert 0 == docker.exec_(distribution.container,
                              interactive=True,
@@ -81,9 +83,10 @@ def oneclient(request, setup_command):
 
 @pytest.fixture(scope='module',
                 params=['xenial'])
-def oneclient_base(request, setup_command):
+def oneclient_any(request, setup_command):
     distribution = Distribution(request, privileged=True)
-    command = setup_command.format(dist=distribution.name)
+    command = setup_command.format(dist=distribution.name,
+                                   release=distribution.release)
 
     assert 0 == docker.exec_(distribution.container,
                              interactive=True,
@@ -106,7 +109,8 @@ def oneprovider(request, onezone, setup_command):
     # Link provider docker to the OZ node (this way we do not need DNS here).
     # This link will cause connections to 'oz.1234.test' reach 'node.oz.1234.test'
     distribution = Distribution(request, link={onezone_node: onezone_domain})
-    command = setup_command.format(dist=distribution.name)
+    command = setup_command.format(dist=distribution.name,
+                                   release=distribution.release)
     command = '{command} && ' \
         'apt-get install -y python-setuptools && ' \
         'easy_install requests'.format(command=command)
@@ -118,18 +122,18 @@ def oneprovider(request, onezone, setup_command):
     return distribution
 
 
-def test_oneclient_installation(oneclient):
+def test_oneclient_base_installation(oneclient):
     assert 0 == docker.exec_(oneclient.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient.py')
+                             command='python /root/data/install_oneclient_base.py')
 
 
-def test_oneclient_base_installation(oneclient_base):
-    assert 0 == docker.exec_(oneclient_base.container,
+def test_oneclient_installation(oneclient_any):
+    assert 0 == docker.exec_(oneclient_any.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient_base.py')
+                             command='python /root/data/install_oneclient.py')
 
 
 def test_oneprovider_installation(oneprovider):
