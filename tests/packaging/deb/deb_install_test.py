@@ -138,7 +138,6 @@ def test_oneclient_installation(oneclient_any):
                              command='python /root/data/install_oneclient.py')
 
 
-@pytest.mark.skip
 def test_oneprovider_installation(oneprovider):
     result = docker.exec_(oneprovider.container,
                              interactive=True,

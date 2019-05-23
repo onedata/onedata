@@ -120,12 +120,11 @@ def test_oneclient_installation(oneclient):
                              command='python /root/data/install_oneclient.py')
 
 
-@pytest.mark.skip
 def test_oneclient_base_installation(oneclient):
     assert 0 == docker.exec_(oneclient.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient.py {}'.format(release,))
+                             command='python /root/data/install_oneclient_base.py {}'.format(release,))
 
 
 def test_oneprovider_installation(oneprovider):
