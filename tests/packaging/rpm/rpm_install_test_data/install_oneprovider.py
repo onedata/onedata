@@ -7,8 +7,9 @@ from subprocess import STDOUT, check_call, check_output
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+release = sys.argv[1]
+
 # get packages
-release = '1802'
 packages = check_output(['ls', '/root/pkg']).split()
 packages = sorted(packages, reverse=True)
 op_panel_package = \

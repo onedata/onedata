@@ -8,6 +8,8 @@ from environment import docker, env
 
 file_dir = os.path.dirname(os.path.realpath(__file__))
 
+with open('./RELEASE', 'r') as f:
+    release = f.read().replace('\n', '')
 
 class Distribution(object):
 
@@ -17,7 +19,7 @@ class Distribution(object):
         config_dir = os.path.join(file_dir, 'deb_install_test_data')
 
         self.name = request.param
-        self.release = '1802'
+        self.release = release
         self.image = 'ubuntu:{0}'.format(self.name)
         self.container = docker.run(interactive=True,
                                     tty=True,
@@ -58,7 +60,7 @@ def onezone(request):
             self.domain = domain
 
     result = env.up(tests.utils.path_utils.config_file('env.json'),
-                    image='onedata/worker:v61')
+                    image='onedata/worker:1802-1')
 
     request.addfinalizer(lambda: docker.remove(
         result['docker_ids'], force=True, volumes=True))
@@ -136,6 +138,7 @@ def test_oneclient_installation(oneclient_any):
                              command='python /root/data/install_oneclient.py')
 
 
+@pytest.mark.skip
 def test_oneprovider_installation(oneprovider):
     result = docker.exec_(oneprovider.container,
                              interactive=True,

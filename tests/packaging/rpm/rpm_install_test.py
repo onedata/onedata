@@ -8,6 +8,8 @@ from environment import docker, env
 
 file_dir = os.path.dirname(os.path.realpath(__file__))
 
+with open('./RELEASE', 'r') as f:
+    release = f.read().replace('\n', '')
 
 class Distribution(object):
 
@@ -17,7 +19,7 @@ class Distribution(object):
         config_dir = os.path.join(file_dir, 'rpm_install_test_data')
 
         self.name = request.param
-        self.release = '1802'
+        self.release = release
         self.image = {
             'centos-7-x86_64': 'centos:7'
         }[self.name]
@@ -49,8 +51,8 @@ def setup_command():
     return 'yum -y update ; yum clean all && yum -y update && ' \
         'yum -y install ca-certificates python wget curl && ' \
         'yum -y install epel-release || true && ' \
-        'curl -sSL "{url}/yum/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
-        .format(url='http://packages.onedata.org')
+        'curl -sSL "{url}/yum/{release}/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
+        .format(url='http://packages.onedata.org', release=release)
 
 
 @pytest.fixture(scope='module')
@@ -62,7 +64,7 @@ def onezone(request):
             self.domain = domain
 
     result = env.up(tests.utils.path_utils.config_file('env.json'),
-                    image='onedata/worker:v61')
+                    image='onedata/worker:1802-1')
 
     request.addfinalizer(lambda: docker.remove(
         result['docker_ids'], force=True, volumes=True))
@@ -118,12 +120,19 @@ def test_oneclient_installation(oneclient):
                              command='python /root/data/install_oneclient.py')
 
 
-@pytest.mark.skip(reason="Fix SCL configuration")
+@pytest.mark.skip
+def test_oneclient_base_installation(oneclient):
+    assert 0 == docker.exec_(oneclient.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_oneclient.py {}'.format(release,))
+
+
 def test_oneprovider_installation(oneprovider):
     result = docker.exec_(oneprovider.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneprovider.py')
+                             command='python /root/data/install_oneprovider.py {}'.format(release,))
     config_file = tests.utils.path_utils.config_file('config.yml')
     tests.packaging.oneprovider_common.reset_oz_domain_in_config(config_file)
     assert 0 == result
