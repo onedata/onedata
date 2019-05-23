@@ -72,7 +72,7 @@ mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
-	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/sourcea | true
+	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source | true
 unpack = tar xzf $(1).tar.gz
 
 get_release:
