@@ -1,11 +1,12 @@
-# distro for package building (oneof: trusty, xenial, centos-7-x86_64, fedora-23-x86_64)
+# distro for package building (oneof: xenial, centos-7-x86_64)
 DISTRIBUTION            ?= none
+RELEASE                 ?= $(shell cat ./RELEASE)
 DOCKER_RELEASE          ?= development
 DOCKER_REG_NAME         ?= "docker.onedata.org"
 DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
 DOCKER_BASE_IMAGE       ?= "ubuntu:16.04"
-DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:v57"
+DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1802-1"
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
@@ -63,18 +64,19 @@ NO_CACHE :=  $(shell if [ "${NO_CACHE}" != "" ]; then echo "--no-cache"; fi)
 
 make = $(1)/make.py -s $(1) -r . $(NO_CACHE)
 clean = $(call make, $(1)) clean
-make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group mock -i onedata/rpm_builder:$(DISTRIBUTION) $(2)
+make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE) $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
 	mv $(1)/package/packages/*.x86_64.rpm package/$(DISTRIBUTION)/x86_64
-make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder:$(DISTRIBUTION)-VFS-4267 $(2)
-make_client_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged -i onedata/builder:v66 $(2)
+make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder:$(DISTRIBUTION)-$(RELEASE) $(2)
 mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64 && \
-	mv $(1)/package/packages/*.orig.tar.gz package/$(DISTRIBUTION)/source && \
-	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source && \
-	mv $(1)/package/packages/*.diff.gz package/$(DISTRIBUTION)/source || \
-	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source && \
-	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source
+	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/sourcea | true
 unpack = tar xzf $(1).tar.gz
+
+get_release:
+	@echo $(RELEASE)
 
 ##
 ## Submodules
@@ -156,11 +158,11 @@ test_env_up:
 test_provider_packaging test_packaging:
 	${TEST_RUN} --test-type packaging -k "oneprovider" -vvv --test-dir tests/packaging -s
 
-test_oneclient_packaging:
-	${TEST_RUN} --test-type packaging -k "oneclient and not base" -vvv --test-dir tests/packaging -s
-
 test_oneclient_base_packaging:
 	${TEST_RUN} --test-type packaging -k "oneclient_base" -vvv --test-dir tests/packaging -s
+
+test_oneclient_packaging:
+	${TEST_RUN} --test-type packaging -k "oneclient and not oneclient_base" -vvv --test-dir tests/packaging -s
 
 test:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/scenarios/${SUITE}.py
@@ -187,7 +189,7 @@ test_gui_env_up:
 	${TEST_RUN} --test-type gui -vvv --test-dir tests/gui/scenarios/${SUITE}.py -i onedata/acceptance_gui:v3 --driver=${BROWSER} --basetemp=./tests/gui/tmp_files --showlocals --xvfb --xvfb-recording=${RECORDING_OPTION}
 
 test_acceptance_mixed:
-	${TEST_RUN} --test-type mixed -vvv --test-dir tests/mixed/scenarios/${SUITE}.py -i onedata/acceptance_mixed:v3 --driver=Chrome --xvfb --xvfb-recording=failed 
+	${TEST_RUN} --test-type mixed -vvv --test-dir tests/mixed/scenarios/${SUITE}.py -i onedata/acceptance_mixed:v3 --driver=Chrome --xvfb --xvfb-recording=failed
 
 test_profiling:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/profiling
@@ -234,6 +236,7 @@ rpm: rpm_oneprovider rpm_oneclient
 
 rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	cp -f oneprovider_meta/oneprovider.spec.template oneprovider_meta/oneprovider.spec
+	sed -i 's/{{scl}}/onedata$(RELEASE)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_version}}/$(ONEPROVIDER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{oneprovider_build}}/$(ONEPROVIDER_BUILD)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{couchbase_version}}/$(COUCHBASE_VERSION)/g' oneprovider_meta/oneprovider.spec
@@ -241,12 +244,14 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider.spec
 
-	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
+	bamboos/docker/make.py -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE) \
+		    -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -c \
 	        mock --buildsrpm --spec oneprovider_meta/oneprovider.spec \
 	        --sources oneprovider_meta --root $(DISTRIBUTION) \
 	        --resultdir oneprovider_meta/package/packages
 
-	bamboos/docker/make.py -i onedata/rpm_builder --privileged --group mock -c \
+	bamboos/docker/make.py -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE) \
+		    -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -c \
 	        mock --rebuild oneprovider_meta/package/packages/*.src.rpm \
 	        --root $(DISTRIBUTION) --resultdir oneprovider_meta/package/packages
 
@@ -264,7 +269,7 @@ rpm_cluster_manager: clean_cluster_manager rpmdirs
 	$(call make_rpm, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION)
 	$(call mv_rpm, cluster_manager)
 
-rpm_oneclient: clean_oneclient rpmdirs
+rpm_oneclient_base: clean_oneclient rpmdirs
 	$(call make_rpm, oneclient, rpm) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_rpm, oneclient)
 
@@ -275,7 +280,7 @@ rpmdirs:
 ## DEB packaging
 ##
 
-deb: deb_oneprovider deb_oneclient_base
+deb: deb_oneprovider deb_oneclient
 
 deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	cp -f oneprovider_meta/oneprovider/DEBIAN/control.template oneprovider_meta/oneprovider/DEBIAN/control
@@ -302,7 +307,7 @@ deb_cluster_manager: clean_cluster_manager debdirs
 	$(call mv_deb, cluster_manager)
 
 deb_oneclient_base: clean_oneclient debdirs
-	$(call make_client_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
+	$(call make_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_deb, oneclient)
 
 debdirs:
@@ -323,7 +328,8 @@ docker: docker-dev
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
                       --build-arg BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
-                      --build-arg RELEASE=$(DOCKER_RELEASE) \
+                      --build-arg RELEASE=$(RELEASE) \
+                      --build-arg RELEASE_TYPE=$(DOCKER_RELEASE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
                       --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
@@ -336,6 +342,7 @@ docker-dev:
 	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
                       --password $(DOCKER_REG_PASSWORD) \
                       --build-arg BASE_IMAGE=$(DOCKER_DEV_BASE_IMAGE) \
+                      --build-arg RELEASE=$(RELEASE) \
                       --build-arg OP_PANEL_VERSION=$(OP_PANEL_VERSION) \
                       --build-arg COUCHBASE_VERSION=$(COUCHBASE_VERSION) \
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
@@ -351,7 +358,7 @@ docker-dev:
 # a normal (oneclient-base) package into /usr/ prefix.
 #
 docker_oneclient_base:
-	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION)
+	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
 
 #
 # Build final Oneclient Docker image with oneclient installed from
@@ -359,7 +366,7 @@ docker_oneclient_base:
 # symlinked into /usr prefix.
 #
 docker_oneclient:
-	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION)
+	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
 
 #
 # Build self-contained Oneclient archive, by extracting all necessary files
