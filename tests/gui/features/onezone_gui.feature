@@ -8,7 +8,7 @@ Feature: Onezone GUI elements
     Given user opened browser window
     And user of browser opened Onezone URL
     # not used in non-homepage tests
-    And user of browser clicked on the "plgrid" login button
+    And user of browser clicked on the "devLogin" login button
     And user of browser clicked on the "user1" link
 
 
@@ -402,6 +402,8 @@ Feature: Onezone GUI elements
     And user of browser sees that "Leave a space" modal has appeared
     And user of browser clicks "Yes" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
+    And user of browser is idle for 8 seconds
+    And user of browser refreshes webapp
     And user of browser sees that space named "spaceB" has disappeared from expanded "DATA SPACE MANAGEMENT" Onezone panel
 
     # TODO uncomment below step after integration with swagger and remove dependencies between tests
@@ -415,23 +417,6 @@ Feature: Onezone GUI elements
     And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
     Then user of browser sees that URL matches: https?://[^/]*/#/home/login
     And user of browser should see that the page title contains "Login"
-
-
-  Scenario: User can set Provider as Home provider (icon changes), and when he relogins, he will be redirected to Home provider automatically
-    When user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
-    And user of browser sees that there is provider named "p1" in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser sets provider named "p1" as home by clicking on home outline in that provider record in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser sees that provider named "p1" is set as home provider in expanded "GO TO YOUR FILES" Onezone panel
-    And user of browser expands account settings dropdown in "ACCOUNT MANAGE" Onezone top bar
-    And user of browser clicks on LOGOUT item in expanded settings dropdown in "ACCOUNT MANAGE" Onezone top bar
-    And user of browser clicks on the "plgrid" login button
-    And user of browser clicks on the "user1" link
-    Then user of browser sees that Oneprovider session has started
-
-    # TODO remove after integration with swagger
-    And user of browser clicks on the "providers" tab in main menu sidebar
-    And user of browser expands the "GO TO YOUR FILES" Onezone sidebar panel
-    And user of browser unsets provider named "p1" from home by clicking on home icon in that provider record in expanded "GO TO YOUR FILES" Onezone panel
 
 
   Scenario: User sees that after clicking on provider's circle on world map, provider's popup appears

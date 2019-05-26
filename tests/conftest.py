@@ -10,8 +10,10 @@ from tests import *
 from tests.utils.path_utils import (make_logdir, get_file_name, get_json_files,
                                     absolute_path_to_env_file)
 from tests.utils.utils import run_env_up_script, hostname, get_domain
+from tests.utils.docker_utils import docker_ip
 
 from environment import docker
+from environment.common import ensure_provider_oz_connectivity
 
 import json
 import pytest
@@ -28,6 +30,9 @@ def pytest_addoption(parser):
                      help="Ignores xfail mark")
     parser.addoption("--env-file", action="store", default=None,
                      help="description of environment that will be tested")
+    parser.addoption('--docker-name', action="store", default='',
+                    help='Used only with test_run.py: name of docker container '
+                         'to be connected to scenario network')
 
 
 def pytest_generate_tests(metafunc):
@@ -38,7 +43,7 @@ def pytest_generate_tests(metafunc):
                                   relative=True)
             metafunc.parametrize('env_description_file', envs, scope='module')
 
-        elif test_type in ['acceptance', 'performance']:
+        elif test_type in ['acceptance', 'performance', 'mixed']:
             env_file = metafunc.config.getoption("env_file")
             if env_file:
                 metafunc.parametrize('env_description_file', [env_file],
@@ -55,6 +60,17 @@ def pytest_generate_tests(metafunc):
                         scope='module'
                     )
 
+def remove_symlinks(dirpath):
+    """
+    Due to problems with reading symlinks in directories mounted from docker,
+    we need to remove invalid symlinks from log directory.
+    """
+    for root, _, filenames in os.walk(dirpath):
+        for filename in filenames:
+            path = os.path.join(root, filename)
+            if os.path.islink(path):
+                print 'removing symlink from report: {}'.format(path)
+                os.remove(path)
 
 @pytest.fixture(scope="module")
 def env_description_abs_path(request, env_description_file):
@@ -77,10 +93,21 @@ def persistent_environment(request, env_description_abs_path):
     env_desc = run_env_up_script("env_up.py", config=env_description_abs_path,
                                  logdir=logdir, skip=False)
 
+    # Make sure OP instances are connected to their zones before the test starts.
+    print('Waiting for OZ connectivity of providers...')
+    for op_node in env_desc['op_worker_nodes']:
+        host = op_node.split("@")[1]
+        ip = docker_ip(host)
+        if not ensure_provider_oz_connectivity(ip):
+            raise Exception(
+                'Could not ensure OZ connectivity of provider {0}'.format(host))
+    print('OZ connectivity established')
+
     def fin():
         docker.remove(request.onedata_environment['docker_ids'],
                       force=True,
                       volumes=True)
+        remove_symlinks(logdir)
 
     request.addfinalizer(fin)
     request.onedata_environment = env_desc
@@ -121,14 +148,8 @@ def providers(persistent_environment, request):
         provider_id = op_domain.split('.')[0]
         if provider_id not in providers.keys():
             new_provider = Provider(provider_id, op_domain, oz_domain)
-            new_provider.copy_certs_from_docker(op_hostname)
             providers[provider_id] = new_provider
 
-    def fin():
-        for provider in providers.itervalues():
-            provider.delete_certs()
-
-    request.addfinalizer(fin)
     return providers
 
 
@@ -181,6 +202,7 @@ def map_test_type_to_env_dir(test_type):
     return {
         'acceptance': ACCEPTANCE_ENV_DIR,
         'performance': PERFORMANCE_ENV_DIR,
+        'mixed': MIXED_ENV_DIR,
         'gui': GUI_ENV_DIR
     }[test_type]
 
@@ -189,6 +211,7 @@ def map_test_type_to_logdir(test_type):
     return {
         'acceptance': ACCEPTANCE_LOGDIR,
         'performance': PERFORMANCE_LOGDIR,
+        'mixed': MIXED_LOGDIR,
         'gui': GUI_LOGDIR
     }.get(test_type, ACCEPTANCE_LOGDIR)
 
@@ -196,7 +219,8 @@ def map_test_type_to_logdir(test_type):
 def map_test_type_to_test_config_file(test_type):
     return {
         'acceptance': ACCEPTANCE_TEST_CONFIG,
-        'performance': PERFORMANCE_TEST_CONFIG
+        'performance': PERFORMANCE_TEST_CONFIG,
+        'mixed': MIXED_TEST_CONFIG
     }.get(test_type, ACCEPTANCE_LOGDIR)
 
 
@@ -242,18 +266,8 @@ class Provider:
     def __init__(self, id, domain, oz_domain):
         self.id = id
         self.domain = domain
-        self.cert_dir = tempfile.mkdtemp()
-        self.key_file = os.path.join(self.cert_dir, PROVIDER_KEY_FILE)
-        self.cert_file = os.path.join(self.cert_dir, PROVIDER_CERT_FILE)
         self.spaces = {}
         self.oz_domain = oz_domain
-
-    def copy_certs_from_docker(self, op_hostname):
-        docker.cp(op_hostname, PROVIDER_KEY_PATH, self.cert_dir, False)
-        docker.cp(op_hostname, PROVIDER_CERT_PATH, self.cert_dir, False)
-
-    def delete_certs(self):
-        shutil.rmtree(self.cert_dir)
 
 
 def get_test_type(request):

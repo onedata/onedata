@@ -31,6 +31,7 @@ class Client:
         self.mount_path = mount_path
         self.rpyc_connection = None
         self.opened_files = {}
+        self.file_stats = {}
         self.rpyc_server_pid = None
         self.user_cert = None
         self.user_key = None
@@ -68,7 +69,7 @@ class Client:
                 time.sleep(1)
                 timeout -= 1
         if not started:
-            pytest.skip("rpc connection couldn't be established")
+            pytest.fail("rpc connection couldn't be established")
 
     def stop_rpyc_server(self):
         if self.rpyc_server_pid:
@@ -81,7 +82,7 @@ class Client:
         return self._repeat_until(condition, timeout)
 
     def _start_rpyc_server(self, user_name):    #start rpc server on client docker
-        cmd = "/usr/local/bin/rpyc_classic.py"
+        cmd = "/usr/local/bin/rpyc_classic.py --host=0.0.0.0 --port=18812"
         run_cmd(user_name, self, cmd, detach=True)
         pid = run_cmd(user_name,
                       self,
@@ -203,22 +204,37 @@ def mount_users(request, environment, context, client_dockers,
 
 
 def oneclient(user_name, mount_path, oz_domain, op_domain, user_cert, user_key,
-              client, token_path, token):
+              client, token_path, token, gdb=False):
 
-    cmd = ('mkdir -p {mount_path}'
-           ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
-           ' && echo {token} > {token_path}'
-           ' && gdb oneclient -batch -return-child-result -ex \'run --log-dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
-           ).format(mount_path=mount_path,
-                    op_domain=op_domain,
-                    token=token,
-                    token_path=token_path)
+    cmd = None
+    if gdb:
+        cmd = ('mkdir -p {mount_path}'
+            ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
+            ' && echo {token} > {token_path}'
+            ' && gdb oneclient -batch -return-child-result -ex \'run --log-dir /tmp --insecure {mount_path} < {token_path}\' -ex \'bt\' 2>&1'
+            ).format(mount_path=mount_path,
+                        op_domain=op_domain,
+                        token=token,
+                        token_path=token_path)
+    else:
+        cmd = ('mkdir -p {mount_path}'
+            ' && export ONECLIENT_PROVIDER_HOST={op_domain}'
+            ' && echo {token} > {token_path}'
+            ' && ./oneclient --log-dir /tmp --insecure {mount_path} < {token_path} 2>&1'
+            ).format(mount_path=mount_path,
+                        op_domain=op_domain,
+                        token=token,
+                        token_path=token_path)
 
     return run_cmd(user_name, client, cmd)
 
 
 def ls(client, path="."):
     return client.rpyc_connection.modules.os.listdir(path)
+
+
+def osrename(client, src, dest):
+    client.rpyc_connection.modules.os.rename(src, dest)
 
 
 def mv(client, src, dest):
@@ -314,6 +330,21 @@ def read_from_opened_file(client, file):
 def seek(client, file, offset):
     client.opened_files[file].seek(offset)
 
+def setxattr(client, file, name, value):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    xattrs[name] = value
+
+def getxattr(client, file, name):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    return xattrs[name]
+
+def listxattr(client, file):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    return xattrs.list()
+
+def removexattr(client, file, name):
+    xattrs = client.rpyc_connection.modules.xattr.xattr(file)
+    del xattrs[name]
 
 def execute(client, command, output=False):
     if output:
@@ -389,7 +420,7 @@ def clean_spaces(client):
 
         def condition():
             try:
-                rm(client, path=space_path, recursive=True)
+                rm(client, path=space_path, recursive=True, force=True)
             except Exception as e:
                 if isinstance(e, OSError):
                     if e.errno == errno.EACCES:

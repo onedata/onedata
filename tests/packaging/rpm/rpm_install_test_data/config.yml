@@ -1,8 +1,7 @@
 cluster:
-  domainName: "dev.local"
   nodes:
     n1:
-      hostname: "onedata"
+      hostname: "onedata.test.local"
   managers:
     mainNode: "n1"
     nodes:
@@ -20,7 +19,9 @@ cluster:
 oneprovider:
   register: true
   name: "Provider"
-  redirectionPoint: "https://devel.localhost.local"
+  subdomainDelegation: false
+  domain: "onedata.test.local"
+  adminEmail: "getting-started@onedata.org"
   geoLatitude: 10.0
   geoLongitude: 20.0
 onezone:

@@ -9,6 +9,7 @@ Feature: Multiprovider_replication
 
   Scenario: Create files and see them on external provider
     When u1 creates regular files [s1/file1, s1/file2, s1/file3] on client1
+    Then u2 can stat [file1, file2, file3] in s1 on client2
     Then u2 sees [file1, file2, file3] in s1 on client2
 
   Scenario: Create empty file and read it on external provider
@@ -47,6 +48,8 @@ Feature: Multiprovider_replication
     And u2 sees [file1] in s1 on client2
     And u1 writes "123456789" to s1/file1 on client1
     And u1 deletes files [s1/file1] on client1
+    Then u1 can't stat [file1] in s1 on client1
+    And u2 can't stat [file1] in s1 on client2
     Then u1 doesn't see [file1] in s1 on client1
     And u2 doesn't see [file1] in s1 on client2
 

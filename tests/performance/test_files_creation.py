@@ -12,11 +12,14 @@ import os.path
 from functools import partial
 
 from tests.performance.conftest import AbstractPerformanceTest
-from tests.utils.performance_utils import (Result, generate_configs, performance)
+from tests.utils.performance_utils import (Result, generate_configs, performance,
+                                           flushed_print)
 from tests.utils.client_utils import user_home_dir, rm, mkdtemp, truncate, write
 
 REPEATS = 1
 SUCCESS_RATE = 100
+LOGGING_INTERVAL = 30
+RPYC_TIMEOUT = 120
 
 # value written to files at their creation
 TEXT = "asd"
@@ -42,7 +45,7 @@ class TestFilesCreation(AbstractPerformanceTest):
             'description': 'Testing file creation'
         },
         configs=generate_configs({
-            'files_number': [10000],
+            'files_number': [5000],
             'empty_files': [True, False]
         }, 'FILE CREATION TEST -- '
            'Files number: {files_number} '
@@ -54,6 +57,10 @@ class TestFilesCreation(AbstractPerformanceTest):
         client_proxy = context.get_client(user_proxy, 'client-proxy')
         files_number = params['files_number']['value']
         empty_files = params['empty_files']['value']
+
+        for client in (client_directio, client_proxy):
+            conn = client.rpyc_connection
+            conn._config['sync_request_timeout'] = RPYC_TIMEOUT
 
         dir_path_directio = mkdtemp(client_directio,
                                     dir=client_directio.absolute_path('s1'))
@@ -94,11 +101,15 @@ class TestFilesCreation(AbstractPerformanceTest):
 def execute_file_creation_test(client, files_number, empty_files,
                                dir_path, description):
     start = time.time()
+    logging_time = start + LOGGING_INTERVAL
 
     fun = partial(truncate, size=0) if empty_files else partial(write,
                                                                 text=TEXT)
     for i in xrange(files_number):
         fun(client, file_path=os.path.join(dir_path, 'file{}'.format(i)))
+        if time.time() >= logging_time:
+            flushed_print("\t\t\tCreated {}nth file".format(i))
+            logging_time = time.time() + LOGGING_INTERVAL
 
     end = time.time()
 
@@ -112,5 +123,9 @@ def execute_file_creation_test(client, files_number, empty_files,
 
 
 def teardown_after_file_creation_test(client, files_number, dir_path):
+    logging_time = time.time() + LOGGING_INTERVAL
     for i in xrange(files_number):
         rm(client, os.path.join(dir_path, 'file{}'.format(i)))
+        if time.time() >= logging_time:
+            flushed_print("\t\t\tDeleted {}nth file".format(i))
+            logging_time = time.time() + LOGGING_INTERVAL

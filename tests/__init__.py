@@ -25,10 +25,14 @@ ENV_UP_DIR = os.path.join(TEST_DIR, "env_up")
 PERFORMANCE_DIR = os.path.join(TEST_DIR, "performance")
 PERFORMANCE_TEST_CONFIG = os.path.join(PERFORMANCE_DIR, "test_config.json")
 GUI_DIR = os.path.join(TEST_DIR, "gui")
+MIXED_DIR = os.path.join(TEST_DIR, "mixed")
 ACCEPTANCE_ENV_DIR = os.path.join(ACCEPTANCE_DIR, "environments")
 GUI_ENV_DIR = os.path.join(GUI_DIR, "environments")
+MIXED_ENV_DIR = os.path.join(MIXED_DIR, "environments")
 ACCEPTANCE_LOGDIR = os.path.join(ACCEPTANCE_DIR, "logs")
 ENV_UP_LOGDIR = os.path.join(ENV_UP_DIR, "logs")
+MIXED_LOGDIR = os.path.join(MIXED_DIR, "logs")
+MIXED_TEST_CONFIG = os.path.join(MIXED_DIR, "test_config.json")
 PERFORMANCE_LOGDIR = os.path.join(PERFORMANCE_DIR, "logs")
 PROFILING_LOGDIR = os.path.join(ACCEPTANCE_DIR, "profiling_data")
 GUI_LOGDIR = os.path.join(GUI_DIR, "logs")
@@ -36,10 +40,6 @@ PERFORMANCE_ENV_DIR = os.path.join(PERFORMANCE_DIR, "environments")
 PERFORMANCE_OUTPUT = os.path.join(PERFORMANCE_LOGDIR, "performance.json")
 EXAMPLE_ENV_DIR = os.path.join(BAMBOOS_DIR, "example_env")
 PROVIDER_CERT_DIR = os.path.join("root", "bin", "node", "etc", "certs")
-PROVIDER_KEY_FILE = "ozp_key.pem"
-PROVIDER_CERT_FILE = "ozp_cert.pem"
-PROVIDER_KEY_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_KEY_FILE)
-PROVIDER_CERT_PATH = os.path.join(PROVIDER_CERT_DIR, PROVIDER_CERT_FILE)
 ENV_CONFIGURATOR_ESCRIPT = os.path.join(BAMBOOS_DIR, 'env_configurator',
                                         'env_configurator.escript')
 
@@ -47,7 +47,7 @@ ENV_CONFIGURATOR_ESCRIPT = os.path.join(BAMBOOS_DIR, 'env_configurator',
 PREPARE_ENV_LOG_FILE = "prepare_test_environment.log"
 PREPARE_ENV_ERROR_LOG_FILE = "prepare_test_environment_error.log"
 
-OZ_REST_PORT = 8443
+OZ_REST_PORT = 443
 PANEL_REST_PORT = 9443
 PANEL_REST_PATH_PREFIX = "/api/v3/onepanel"
 OZ_REST_PATH_PREFIX = "/api/v3/onezone"

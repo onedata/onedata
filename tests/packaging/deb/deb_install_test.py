@@ -1,6 +1,8 @@
 from tests import *
 import pytest
 import tests.utils.path_utils
+import tests.utils.utils
+import tests.packaging.oneprovider_common
 
 from environment import docker, env
 
@@ -15,12 +17,13 @@ class Distribution(object):
         config_dir = os.path.join(file_dir, 'deb_install_test_data')
 
         self.name = request.param
+        self.release = '1802'
         self.image = 'ubuntu:{0}'.format(self.name)
         self.container = docker.run(interactive=True,
                                     tty=True,
                                     detach=True,
                                     image=self.image,
-                                    hostname='onedata.dev.local',
+                                    hostname='onedata.test.local',
                                     privileged=privileged,
                                     link=link,
                                     stdin=sys.stdin,
@@ -40,10 +43,10 @@ def setup_command():
     return 'apt-get update && ' \
         'apt-get install -y ca-certificates locales python wget && ' \
         'wget -qO- {url}/onedata.gpg.key | apt-key add - && ' \
-        'echo "deb {url}/apt/ubuntu/{{dist}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
-        'echo "deb-src {url}/apt/ubuntu/{{dist}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
+        'echo "deb {url}/apt/ubuntu/{{release}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
+        'echo "deb-src {url}/apt/ubuntu/{{release}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
         'apt-get update && ' \
-        'locale-gen en_US.UTF-8'.format(url='http://packages.onedata.org')
+        'locale-gen en_US.UTF-8'.format(url='http://onedata-dev-packages.cloud.plgrid.pl')
 
 
 @pytest.fixture(scope='module')
@@ -54,7 +57,8 @@ def onezone(request):
             (_, _, domain) = nodes[0].partition('@')
             self.domain = domain
 
-    result = env.up(tests.utils.path_utils.config_file('env.json'))
+    result = env.up(tests.utils.path_utils.config_file('env.json'),
+                    image='onedata/worker:v61')
 
     request.addfinalizer(lambda: docker.remove(
         result['docker_ids'], force=True, volumes=True))
@@ -63,10 +67,26 @@ def onezone(request):
 
 
 @pytest.fixture(scope='module',
-                params=['trusty', 'wily', 'xenial'])
+                params=['xenial'])
 def oneclient(request, setup_command):
     distribution = Distribution(request, privileged=True)
-    command = setup_command.format(dist=distribution.name)
+    command = setup_command.format(dist=distribution.name,
+                                   release=distribution.release)
+
+    assert 0 == docker.exec_(distribution.container,
+                             interactive=True,
+                             tty=True,
+                             command=command)
+
+    return distribution
+
+
+@pytest.fixture(scope='module',
+                params=['xenial'])
+def oneclient_any(request, setup_command):
+    distribution = Distribution(request, privileged=True)
+    command = setup_command.format(dist=distribution.name,
+                                   release=distribution.release)
 
     assert 0 == docker.exec_(distribution.container,
                              interactive=True,
@@ -79,8 +99,18 @@ def oneclient(request, setup_command):
 @pytest.fixture(scope='module',
                 params=['xenial'])
 def oneprovider(request, onezone, setup_command):
-    distribution = Distribution(request, link={onezone.domain: 'onedata.org'})
-    command = setup_command.format(dist=distribution.name)
+    onezone_node = onezone.domain
+    # onezone_node is in format node.oz.1234.test, resolve domain (oz.1234.test)
+    onezone_domain = tests.utils.utils.get_domain(onezone_node)
+    # Put the domain in config so the provider knows where to register
+    config_file = tests.utils.path_utils.config_file('config.yml')
+    tests.packaging.oneprovider_common.update_oz_domain_in_config(
+        config_file, onezone_domain)
+    # Link provider docker to the OZ node (this way we do not need DNS here).
+    # This link will cause connections to 'oz.1234.test' reach 'node.oz.1234.test'
+    distribution = Distribution(request, link={onezone_node: onezone_domain})
+    command = setup_command.format(dist=distribution.name,
+                                   release=distribution.release)
     command = '{command} && ' \
         'apt-get install -y python-setuptools && ' \
         'easy_install requests'.format(command=command)
@@ -89,19 +119,28 @@ def oneprovider(request, onezone, setup_command):
                              interactive=True,
                              tty=True,
                              command=command)
-
     return distribution
 
 
-def test_oneclient_installation(oneclient):
+def test_oneclient_base_installation(oneclient):
     assert 0 == docker.exec_(oneclient.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_oneclient_base.py')
+
+
+def test_oneclient_installation(oneclient_any):
+    assert 0 == docker.exec_(oneclient_any.container,
                              interactive=True,
                              tty=True,
                              command='python /root/data/install_oneclient.py')
 
 
 def test_oneprovider_installation(oneprovider):
-    assert 0 == docker.exec_(oneprovider.container,
+    result = docker.exec_(oneprovider.container,
                              interactive=True,
                              tty=True,
                              command='python /root/data/install_oneprovider.py')
+    config_file = tests.utils.path_utils.config_file('config.yml')
+    tests.packaging.oneprovider_common.reset_oz_domain_in_config(config_file)
+    assert 0 == result

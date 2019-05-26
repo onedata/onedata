@@ -17,7 +17,7 @@ def check_appmock_up(env, dockers_num):
     # Will throw if the dns address is not legal
     socket.inet_aton(dns)
     # Check connectivity to nodes using the DNS
-    # node is in form name@name.timestamp.dev.docker
+    # node is in form name@name.timestamp.test
     for node in env[key]:
         (name, sep, hostname) = node.partition('@')
         ip = net_utils.dns_lookup(hostname, dns)
@@ -33,7 +33,7 @@ def check_client_up(env, dockers_num):
     # Will throw if the dns address is not legal
     socket.inet_aton(dns)
     # Check client nodes
-    # oc_node is in form name.timestamp.dev.docker
+    # oc_node is in form name.timestamp.test
     for oc_node in env[key]:
         oc_ip = net_utils.dns_lookup(oc_node, dns)
         assert net_utils.ping(oc_ip)
@@ -47,7 +47,7 @@ def check_cluster_manager_up(env, dockers_num):
     socket.inet_aton(dns)
     # Check connectivity to nodes using the DNS
     # Check OP CM nodes
-    # cm_node is in form name@name.timestamp.dev.docker
+    # cm_node is in form name@name.timestamp.test
     for cm_node in env[key]:
         (cm_name, sep, cm_hostname) = cm_node.partition('@')
         cm_ip = net_utils.dns_lookup(cm_hostname, dns)
@@ -82,7 +82,7 @@ def check_zone_up(env, dockers_num):
     socket.inet_aton(dns)
     # Check connectivity to nodes using the DNS
     # Check OZ nodes
-    # oz_node is in form name@name.timestamp.dev.docker
+    # oz_node is in form name@name.timestamp.test
     for oz_node in env[key]:
         (oz_name, sep, oz_hostname) = oz_node.partition('@')
         oz_ip = net_utils.dns_lookup(oz_hostname, dns)
@@ -91,7 +91,7 @@ def check_zone_up(env, dockers_num):
                                                  number_of_retries=50)
 
     # Check OZ DB nodes
-    # oz_db_node is in form name@name.timestamp.dev.docker
+    # oz_db_node is in form name@name.timestamp.test
     for oz_db_node in env['oz_db_nodes']:
         (oz_db_name, sep, oz_db_hostname) = oz_db_node.partition('@')
         oz_db_ip = net_utils.dns_lookup(oz_db_hostname, dns)

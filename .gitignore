@@ -9,9 +9,11 @@ tests/env_up/logs
 tests/acceptance/logs
 tests/performance/logs
 tests/gui/logs
+tests/mixed/logs
 .cache
 tests/**/.cache
 tests/acceptance/profiling_data/
+tests/gui/tmp_files
 
 package
 pkg-list.json
@@ -20,8 +22,6 @@ docker-build-report.txt
 oneprovider_meta/package
 oneprovider_meta/oneprovider.spec
 oneprovider_meta/oneprovider/DEBIAN/control
-
-.gitmodules
 
 # OSX
 .DS_Store

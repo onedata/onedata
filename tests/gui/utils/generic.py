@@ -153,17 +153,19 @@ def iter_ahead(iterable):
 
 def find_web_elem(web_elem_root, css_sel, err_msg):
     try:
+        _scroll_to_css_sel(web_elem_root, css_sel)
         item = web_elem_root.find_element_by_css_selector(css_sel)
     except NoSuchElementException:
         with suppress(TypeError):
             err_msg = err_msg()
-        raise RuntimeError(err_msg)
+        raise RuntimeError("{0} ({1})".format(err_msg, css_sel))
     else:
         return item
 
 
 def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
     items = web_elem_root.find_elements_by_css_selector(css_sel)
+    _scroll_to_css_sel(web_elem_root, css_sel)
     for item in items:
         if item.text.lower() == text.lower():
             return item
@@ -175,6 +177,9 @@ def find_web_elem_with_text(web_elem_root, css_sel, text, err_msg):
 
 def click_on_web_elem(driver, web_elem, err_msg, delay=True):
     disabled = 'disabled' in web_elem.get_attribute('class')
+    # scroll to make the element visible
+    if not web_elem.is_displayed():
+        web_elem.location_once_scrolled_into_view
     if web_elem.is_enabled() and web_elem.is_displayed() and not disabled:
         # TODO make optional sleep and localize only those tests that need it or find better alternative
         # currently checking if elem is enabled not always work (probably after striping disabled from web elem
@@ -188,6 +193,12 @@ def click_on_web_elem(driver, web_elem, err_msg, delay=True):
         with suppress(TypeError):
             err_msg = err_msg()
         raise RuntimeError(err_msg)
+
+
+def _scroll_to_css_sel(web_elem_root, css_sel):
+    driver = getattr(web_elem_root, 'parent', web_elem_root)
+    driver.execute_script(
+        'var el = $(\'{}\')[0]; el && el.scrollIntoView(true);'.format(css_sel))
 
 
 @contextmanager
@@ -225,5 +236,5 @@ def redirect_display(new_display):
             del os.environ['DISPLAY']
 
 
-def transform(val):
-    return val.strip().lower().replace(' ', '_')
+def transform(val, strip_char=None):
+    return val.strip(strip_char).lower().replace(' ', '_')

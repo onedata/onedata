@@ -6,6 +6,7 @@ Feature: Regular_file_CRUD
 
   Scenario: Create regular file
     When u1 creates regular files [s1/file1, s1/file2, s1/file3]
+    Then u1 can stat [file1, file2, file3] in s1
     Then u1 sees [file1, file2, file3] in s1
 
   Scenario: Create many children
@@ -16,6 +17,8 @@ Feature: Regular_file_CRUD
     When u1 creates regular files [s1/file1]
     And u1 sees [file1] in s1
     And u1 renames s1/file1 to s1/file2
+    Then u1 can stat [file2] in s1
+    And u1 can't stat [file1] in s1
     Then u1 sees [file2] in s1
     And u1 doesn't see [file1] in s1
 
@@ -23,6 +26,7 @@ Feature: Regular_file_CRUD
     When u1 creates regular files [s1/file1]
     And u1 sees [file1] in s1
     And u1 deletes files [s1/file1]
+    Then u1 can't stat [file1] in s1
     Then u1 doesn't see [file1] in s1
 
   Scenario: Read and write to regular file
@@ -53,6 +57,8 @@ Feature: Regular_file_CRUD
     And u1 writes "TEST TEXT ONEDATA" to s1/dir1/dir2/file1
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir1/dir2/file1
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1
+    Then u1 can't stat [file1] in s1/dir1/dir2
+    And u1 can stat [file1] in s1/dir3
     Then u1 doesn't see [file1] in s1/dir1/dir2
     And u1 sees [file1] in s1/dir3
     And u1 reads "TEST TEXT ONEDATA" from file s1/dir3/file1
@@ -64,6 +70,8 @@ Feature: Regular_file_CRUD
     And u1 sees [file1] in s1/dir1/dir2
     And u1 writes 32 MB of random characters to s1/dir1/dir2/file1 and saves MD5
     And u1 renames s1/dir1/dir2/file1 to s1/dir3/file1
+    Then u1 can't stat [file1] in s1/dir1/dir2
+    And u1 can stat [file1] in s1/dir3
     Then u1 doesn't see [file1] in s1/dir1/dir2
     And u1 sees [file1] in s1/dir3
     Then u1 checks MD5 of s1/dir3/file1
@@ -77,6 +85,9 @@ Feature: Regular_file_CRUD
     # TODO delete below sleep after resolving VFS-2779
     And u1 waits 2 seconds
     And u1 copies regular file s1/dir1/dir2/file1 to s1/dir3
+    Then u1 can stat [dir1, dir3] in s1
+    And u1 can stat [file1] in s1/dir1/dir2
+    And u1 can stat [file1] in s1/dir3
     Then u1 sees [dir1, dir3] in s1
     And u1 sees [file1] in s1/dir1/dir2
     And u1 sees [file1] in s1/dir3

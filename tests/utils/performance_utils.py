@@ -5,6 +5,7 @@ __copyright__ = "Copyright (C) 2016 ACK CYFRONET AGH"
 __license__ = "This software is released under the MIT license cited in " \
               "LICENSE.txt"
 
+import sys
 import itertools
 import time
 import pytest
@@ -35,6 +36,7 @@ def performance(default_config, configs):
             error_msg = ""
 
             for config_name, config in configs.items():
+                flushed_print("Running {}".format(config['description']))
 
                 merged_config = update_dict(default_config, config)
                 config_report = ConfigReport(config_name,
@@ -52,13 +54,14 @@ def performance(default_config, configs):
                 successful_repeats = 0
                 failed_details = {}
                 while repeats < max_repeats:
+                    flushed_print("RUN {}/{}".format(repeats+1, max_repeats))
 
                     try:
                         test_results = test_function(self, context, clients,
                                                      merged_config
                                                      .get('parameters', {}))
                     except Exception as e:
-                        print "Testcase failed beceause of: ", str(e)
+                        flushed_print("\t\tTestcase failed beceause of: " + str(e))
                         failed_repeats += 1
                         failed_details[str(repeats)] = str(e)
                     else:
@@ -238,6 +241,8 @@ def dict_to_list(dict):
 
 
 def ensure_list(elem):
+    if not elem:
+        return []
     if not isinstance(elem, list):
         elem = [elem]
     return elem
@@ -253,10 +258,9 @@ def generate_configs(params, description_skeleton):
     """
     keys = params.keys()
     configs = {}
-    i = 0
     combinations = itertools.product(*params.values())
 
-    for combination in combinations:
+    for i, combination in enumerate(combinations):
         conf_name = 'config{}'.format(i)
         configs[conf_name] = dict()
         new_params = dict(zip(keys, combination))
@@ -267,9 +271,13 @@ def generate_configs(params, description_skeleton):
             'parameters': new_params,
             'description': description
         })
-        i += 1
     return configs
 
 
 def is_success_rate_satisfied(successful_repeats, failed_repeats, rate):
     return rate * (successful_repeats + failed_repeats) <= 100 * successful_repeats
+
+
+def flushed_print(msg):
+    print msg
+    sys.stdout.flush()

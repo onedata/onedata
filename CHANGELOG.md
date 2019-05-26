@@ -4,6 +4,200 @@
 CHANGELOG
 ---------
 
+### 18.02.1
+
+* VFS-5154 Fixed Oneprovider packaging tests
+
+
+### 18.02.0-rc13
+
+* VFS-5001 Changed auth provider selector
+* Fix locale settings in Oneprovider docker
+* fix fetching token from oz
+
+
+### 18.02.0-rc12
+
+* Releasing new version 18.02.0-rc12
+
+
+### 18.02.0-rc11
+
+* Releasing new version 18.02.0-rc11
+
+
+### 18.02.0-rc10
+
+* Releasing new version 18.02.0-rc10
+
+
+### 18.02.0-rc9
+
+* VFS-4532 Create new config file instead of using regexps
+* VFS-4482 Changed transfer tabs names
+* VFS-4367 Make docker entrpoint consistent with onezone.py
+* VFS-4367 Expect 409 when configuring existing cluster
+* VFS-4367 Do not fail cluster restart when admin credentials are missing
+* VFS-4521 Adjusted sysbench performance test parameters
+* VFS-4521 change deprecated sysbench options
+* VFS-4521 upgrade sysbench performance test
+
+
+### 18.02.0-rc8
+
+* Releasing new version 18.02.0-rc8
+
+
+### 18.02.0-rc7
+
+* VFS-4474 Display error details on configuration error
+* VFS-4278 Better detection of bad credentials error in entrypoint
+* VFS-4470 Changed asserted transferred files
+
+
+### 18.02.0-rc6
+
+* Releasing new version 18.02.0-rc6
+
+
+### 18.02.0-rc5
+
+* VFS-4480 Remove home provider test as it this feature was removed
+
+
+### 18.02.0-rc4
+
+* VFS-4278 Use nagios to wait for cluster to resume work
+* VFS-4278 Fetch batch config only when needed
+* VFS-4278 Allow failed configuration for existing provider
+* VFS-4278 Remove setting onezone domain from entrypoint
+* VFS-4278 Start services on restart
+
+
+### 18.02.0-rc3
+
+* Releasing new version 18.02.0-rc3
+
+
+### 18.02.0-rc2
+
+* VFS-4327 Added wt decorator
+* VFS-4343 Added tabs in transfer tests
+* VFS-4343 Updated transfers tests
+* VFS-4365 Backporting scroll improvement and OSX support for GUI tests
+* VFS-4327 Added check with stat if file exists
+
+
+### 18.02.0-rc1
+
+* VFS-2021 Added dockers.config 
+* VFS-4376 Tests updated after removing sticky_bit
+* VFS-4362 Removing symlinks from logs after env_up teardown
+* VFS-4369 fix acceptance tests after removing sticky bit
+
+
+### 18.02.0-beta6
+
+* Releasing new version 18.02.0-beta6
+
+
+### 18.02.0-beta5
+
+* VFS-4333 Decresed test logging delay in file creation tests
+* VFS-4333 Disabled gdb by default
+* VFS-3622 Merged docker-dev with docker. Added possibility to run services from sources.
+
+
+### 18.02.0-beta4
+
+* Releasing new version 18.02.0-beta4
+
+
+### 18.02.0-beta3
+
+* VFS-4213 Change the way persistent volume is created to allow for mounting single files inside it
+
+
+### 18.02.0-beta2
+
+* VFS-4126 Remove obsolete port exposes from Dockerfiles
+* VFS-4099 Changed selenium get url to javascript
+
+
+### 18.02.0-beta1
+
+* Releasing new version 18.02.0-beta1
+
+
+### 17.06.2
+
+* Releasing new version 17.06.2
+
+
+### 17.06.1
+
+* Releasing new version 17.06.1
+
+
+### 17.06.0-rc9
+
+* VFS-3977 Remove oneclient-base from docker-dev image
+* VFS-3877 Removed self-contained-html from gui acceptance tests
+* VFS-3877 Added tmp_files to gitignore
+* VFS-3877 Implemented GUI acceptance tests for transfers
+* VFS-3862 Add more verbose log when oneprovider configuration script fails
+
+
+### 17.06.0-rc8
+
+* VFS-3815 Modified packaging tests for CentOS 7
+
+
+### 17.06.0-rc7
+
+* Releasing new version 17.06.0-rc7
+
+
+### 17.06.0-rc6
+
+* Releasing new version 17.06.0-rc6
+
+
+### 17.06.0-rc5
+
+* Releasing new version 17.06.0-rc5
+
+
+### 17.06.0-rc4
+
+* VFS-3682 Added self-contained Oneclient packaging
+
+
+### 17.06.0-rc3
+
+* VFS-3656 Removed support for Ubuntu Wily
+* VFS-3517 Added tests checking timestamps after renaming item in GUI to xfail due to VFS-3520
+* VFS-3517 Changed amount of time to wait between creating and renaming space
+* VFS-3515 add additional logs to performance tests
+* VFS-3281 Added extended attributes acceptance tests
+
+
+### 17.06.0-rc2
+
+* VFS-3434 Multiuser tests implemented
+* VFS-3465 flush stdout after prints in performance tests
+* VFS-3465 split tests/gui/scenarios into modules and add -s option to performance tests
+* VFS-3465 add additional logging to performance tests
+* VFS-3434 POSIX privileges mixed tests implemented
+* VFS-3434 Added --self-contained-html to test_acceptance_mixed
+* VFS-3434 Posix privileges gui steps added
+
+
+### 17.06.0-rc1
+
+* VFS-3407 Mixed tests (GUI and oneclient)
+
+
 ### 17.06.0-beta6
 
 * VFS-3358 fix steps managing btns in toolbar in data tab in op after changes in gui

@@ -29,6 +29,7 @@ Feature: Space management with single provider
     And s1 is supported with 1 MB for u1 by provider p1
     And u1 can list s1 on client1
     When u1 creates regular files [s1/file1] on client1
+    Then u1 can stat [file1] in s1 on client1
     Then u1 sees [file1] in s1 on client1
     And u1 writes "TEST TEXT ONEDATA" to s1/file1 on client1
     Then u1 reads "TEST TEXT ONEDATA" from file s1/file1 on client1
@@ -48,6 +49,7 @@ Feature: Space management with single provider
     And s1 is supported with 1 MB for u1 by provider p1
     And u2 can list s1 on client2
     And u2 creates regular files [s1/file1] on client2
+    Then u2 can stat [file1] in s1 on client2
     Then u2 sees [file1] in s1 on client2
     And u2 writes "TEST TEXT ONEDATA" to s1/file1 on client2
     Then u2 reads "TEST TEXT ONEDATA" from file s1/file1 on client2
@@ -69,6 +71,7 @@ Feature: Space management with single provider
     And s1 is supported with 1 MB for u1 by provider p1
     And u2 can list s1 on client2
     And u1 removes u2 from space s1
+    Then u2 can't stat [s1] in . on client2
     Then u2 doesn't see [s1] in . on client2
 
   Scenario: Delete supported space
@@ -81,6 +84,7 @@ Feature: Space management with single provider
     And s1 is supported with 1 MB for u1 by provider p1
     And u1 can list s1 on client1
     And u1 deletes space s1
+    Then u1 can't stat [s1] in . on client1
     Then u1 doesn't see [s1] in . on client1
 
   Scenario: Exceed quota

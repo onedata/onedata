@@ -8,7 +8,7 @@ Feature: Oneprovider Data view
     And user of browser opened Onezone URL
     # not used in non-homepage tests
     # And user clicks on the "login" link in Homepage main menu
-    And user of browser clicked on the "plgrid" login button
+    And user of browser clicked on the "devLogin" login button
     And user of browser clicked on the "user1" link
     And user of browser expanded the "go to your files" Onezone sidebar panel
     And user of browser clicked on the "p1" provider in Onezone providers sidebar panel
@@ -397,7 +397,7 @@ Feature: Oneprovider Data view
 
 
   # 'space1' supported by 'p1' defined in env.json
-  Scenario: User creates file and checks if provider name is displayed in the file distribution panel
+  Scenario: User creates file and checks if provider name is displayed in the data distribution panel
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
     And user of browser sees that current working directory displayed in breadcrumbs is space1
@@ -406,8 +406,8 @@ Feature: Oneprovider Data view
     And user of browser sees that item named "20B-0.txt" has appeared in file browser
 
     And user of browser clicks once on file named "20B-0.txt" of files list
-    And user of browser clicks the button from top menu bar with tooltip "Show file distribution"
-    And user of browser sees that "File distribution" modal has appeared
+    And user of browser clicks the button from top menu bar with tooltip "Show data distribution"
+    And user of browser sees that "Data distribution" modal has appeared
     Then user of browser sees that chunk bar for provider named "p1" is entirely filled
     And user of browser clicks "Close" confirmation button in displayed modal
     And user of browser sees that the modal has disappeared
@@ -720,7 +720,7 @@ Feature: Oneprovider Data view
     And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Change element permissions", "Copy element", "Cut element", "Remove element"] buttons are disabled in toolbar in data tab in Oneprovider gui
 
 
-  Scenario: User sees that with one file selected only ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show file distribution"] buttons from toolbar are enabled
+  Scenario: User sees that with one file selected only ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show data distribution"] buttons from toolbar are enabled
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 
@@ -734,7 +734,7 @@ Feature: Oneprovider Data view
     And user of browser sees that item named "file1" has appeared in file browser
 
     And user of browser selects "file1" item(s) from file browser with pressed ctrl
-    Then user of browser sees that ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show file distribution"] buttons are enabled in toolbar in data tab in Oneprovider gui
+    Then user of browser sees that ["Create directory", "Create file", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show data distribution"] buttons are enabled in toolbar in data tab in Oneprovider gui
     And user of browser sees that ["Share element", "Copy element", "Cut element"] buttons are disabled in toolbar in data tab in Oneprovider gui
 
     # TODO rm after integrating with swagger
@@ -746,7 +746,7 @@ Feature: Oneprovider Data view
     And user of browser sees that item named "file1" has disappeared from files browser
 
 
-  Scenario: User sees that with only one directory selected only ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element"] buttons from toolbar are enabled
+  Scenario: User sees that for one directory only ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show data distribution"] buttons in toolbar are enabled
     When user of browser uses spaces select to change data space to "space1"
     And user of browser sees file browser in data tab in Oneprovider page
 
@@ -760,8 +760,8 @@ Feature: Oneprovider Data view
     And user of browser sees that item named "dir1" has appeared in file browser
 
     And user of browser selects "dir1" item(s) from file browser with pressed ctrl
-    Then user of browser sees that ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element"] buttons are enabled in toolbar in data tab in Oneprovider gui
-    And user of browser sees that ["Copy element", "Cut element", "Show file distribution"] buttons are disabled in toolbar in data tab in Oneprovider gui
+    Then user of browser sees that ["Create directory", "Create file", "Share element", "Edit metadata", "Upload file", "Rename element", "Change element permissions", "Remove element", "Show data distribution"] buttons are enabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Copy element", "Cut element"] buttons are disabled in toolbar in data tab in Oneprovider gui
 
     # TODO rm after integrating with swagger
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -796,7 +796,7 @@ Feature: Oneprovider Data view
 
     And user of browser selects ["file1", "file2"] item(s) from file browser with pressed ctrl
     Then user of browser sees that ["Create directory", "Create file", "Upload file", "Change element permissions", "Remove element"] buttons are enabled in toolbar in data tab in Oneprovider gui
-    And user of browser sees that ["Edit metadata", "Share element", "Rename element", "Copy element", "Cut element", "Show file distribution"] buttons are disabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Edit metadata", "Share element", "Rename element", "Copy element", "Cut element", "Show data distribution"] buttons are disabled in toolbar in data tab in Oneprovider gui
 
     # TODO rm after integrating with swagger
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -831,7 +831,7 @@ Feature: Oneprovider Data view
 
     And user of browser selects ["dir1", "dir2"] item(s) from file browser with pressed ctrl
     Then user of browser sees that ["Create directory", "Create file", "Upload file", "Change element permissions", "Remove element"] buttons are enabled in toolbar in data tab in Oneprovider gui
-    And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Copy element", "Cut element", "Show file distribution"] buttons are disabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Copy element", "Cut element", "Show data distribution"] buttons are disabled in toolbar in data tab in Oneprovider gui
 
     # TODO rm after integrating with swagger
     And user of browser clicks the button from top menu bar with tooltip "Remove element"
@@ -866,7 +866,7 @@ Feature: Oneprovider Data view
 
     And user of browser selects ["dir1", "file1"] item(s) from file browser with pressed ctrl
     Then user of browser sees that ["Create directory", "Create file", "Upload file", "Remove element"] buttons are enabled in toolbar in data tab in Oneprovider gui
-    And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Change element permissions", "Copy element", "Cut element", "Show file distribution"] buttons are disabled in toolbar in data tab in Oneprovider gui
+    And user of browser sees that ["Share element", "Edit metadata", "Rename element", "Change element permissions", "Copy element", "Cut element", "Show data distribution"] buttons are disabled in toolbar in data tab in Oneprovider gui
 
     # TODO rm after integrating with swagger
     And user of browser clicks the button from top menu bar with tooltip "Remove element"

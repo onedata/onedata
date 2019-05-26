@@ -1,6 +1,8 @@
 from tests import *
 import pytest
 import tests.utils.path_utils
+import tests.utils.utils
+import tests.packaging.oneprovider_common
 
 from environment import docker, env
 
@@ -15,19 +17,18 @@ class Distribution(object):
         config_dir = os.path.join(file_dir, 'rpm_install_test_data')
 
         self.name = request.param
+        self.release = '1802'
         self.image = {
-            'centos-7-x86_64': 'centos:7',
-            'fedora-23-x86_64': 'onedata/fedora-systemd:23'
+            'centos-7-x86_64': 'centos:7'
         }[self.name]
         self.repo = {
-            'centos-7-x86_64': 'centos_7x',
-            'fedora-23-x86_64': 'fedora_23'
+            'centos-7-x86_64': 'centos_7x'
         }[self.name]
         self.container = docker.run(interactive=True,
                                     tty=True,
                                     detach=True,
                                     image=self.image,
-                                    hostname='onedata.dev.local',
+                                    hostname='onedata.test.local',
                                     privileged=True,
                                     link=link,
                                     stdin=sys.stdin,
@@ -46,10 +47,10 @@ class Distribution(object):
 @pytest.fixture(scope='module')
 def setup_command():
     return 'yum -y update ; yum clean all && yum -y update && ' \
-        'yum -y install ca-certificates python wget && ' \
-        'yum -y install epel-release || true && ' \
-        'wget -qO- "{url}/yum/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
-        .format(url='http://packages.onedata.org')
+        'yum -y install ca-certificates python wget scl-utils && ' \
+        'yum -y install epel-release && ' \
+        'wget -qO- "{url}/yum/{{release}}/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
+        .format(url='http://onedata-dev-packages.cloud.plgrid.pl')
 
 
 @pytest.fixture(scope='module')
@@ -60,7 +61,8 @@ def onezone(request):
             (_, _, domain) = nodes[0].partition('@')
             self.domain = domain
 
-    result = env.up(tests.utils.path_utils.config_file('env.json'))
+    result = env.up(tests.utils.path_utils.config_file('env.json'),
+                    image='onedata/worker:v61')
 
     request.addfinalizer(lambda: docker.remove(
         result['docker_ids'], force=True, volumes=True))
@@ -69,10 +71,10 @@ def onezone(request):
 
 
 @pytest.fixture(scope='module',
-                params=['centos-7-x86_64', 'fedora-23-x86_64'])
+                params=['centos-7-x86_64'])
 def oneclient(request, setup_command):
     distribution = Distribution(request)
-    command = setup_command.format(repo=distribution.repo)
+    command = setup_command.format(repo=distribution.repo, release=distribution.release)
 
     assert 0 == docker.exec_(distribution.container,
                              interactive=True,
@@ -83,19 +85,28 @@ def oneclient(request, setup_command):
 
 
 @pytest.fixture(scope='module',
-                params=['fedora-23-x86_64'])
+                params=['centos-7-x86_64'])
 def oneprovider(request, onezone, setup_command):
-    distribution = Distribution(request, link={onezone.domain: 'onedata.org'})
-    command = setup_command.format(repo=distribution.repo)
+    onezone_node = onezone.domain
+    # onezone_node is in format node.oz.1234.test, resolve domain (oz.1234.test)
+    onezone_domain = tests.utils.utils.get_domain(onezone_node)
+    # Put the domain in config so the provider knows where to register
+    config_file = tests.utils.path_utils.config_file('config.yml')
+    tests.packaging.oneprovider_common.update_oz_domain_in_config(
+        config_file, onezone_domain)
+    # Link provider docker to the OZ node (this way we do not need DNS here).
+    # This link will cause connections to 'oz.1234.test' reach 'node.oz.1234.test'
+    distribution = Distribution(request, link={onezone_node: onezone_domain})
+    command = setup_command.format(repo=distribution.repo,
+                                   release=distribution.release)
     command = '{command} && ' \
-        'yum -y install python-setuptools && ' \
+        'yum -y install python-setuptools scl-utils && ' \
         'easy_install requests'.format(command=command)
 
     assert 0 == docker.exec_(distribution.container,
                              interactive=True,
                              tty=True,
                              command=command)
-
     return distribution
 
 
@@ -106,8 +117,12 @@ def test_oneclient_installation(oneclient):
                              command='python /root/data/install_oneclient.py')
 
 
+@pytest.mark.skip(reason="Fix SCL configuration")
 def test_oneprovider_installation(oneprovider):
-    assert 0 == docker.exec_(oneprovider.container,
+    result = docker.exec_(oneprovider.container,
                              interactive=True,
                              tty=True,
                              command='python /root/data/install_oneprovider.py')
+    config_file = tests.utils.path_utils.config_file('config.yml')
+    tests.packaging.oneprovider_common.reset_oz_domain_in_config(config_file)
+    assert 0 == result
