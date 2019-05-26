@@ -4,6 +4,15 @@
 CHANGELOG
 ---------
 
+### 18.02.2
+
+* Update submodules
+* VFS-5436 Fixed oneclient packaging tests
+* VFS-5436 Fixed Oneprovider packaging tests
+* VFS-5434 Fixed CentOS package tests
+* VFS-5053 Updated worker and builder versions
+
+
 ### 18.02.1
 
 * VFS-5154 Fixed Oneprovider packaging tests
