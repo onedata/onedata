@@ -26,12 +26,18 @@ endif
 ifeq ($(strip $(ONECLIENT_VERSION)),)
 ONECLIENT_VERSION       := $(shell git -C oneclient describe --tags --always)
 endif
+ifeq ($(strip $(FSONEDATAFS_VERSION)),)
+FSONEDATAFS_VERSION       := $(shell git -C fs-onedatafs describe --tags --always)
+endif
+
+
 
 ONEPROVIDER_VERSION     := $(shell echo ${ONEPROVIDER_VERSION} | tr - .)
 CLUSTER_MANAGER_VERSION := $(shell echo ${CLUSTER_MANAGER_VERSION} | tr - .)
 OP_WORKER_VERSION       := $(shell echo ${OP_WORKER_VERSION} | tr - .)
 OP_PANEL_VERSION        := $(shell echo ${OP_PANEL_VERSION} | tr - .)
 ONECLIENT_VERSION       := $(shell echo ${ONECLIENT_VERSION} | tr - .)
+FSONEDATAFS_VERSION       := $(shell echo ${FSONEDATAFS_VERSION} | tr - .)
 
 ONEPROVIDER_BUILD       ?= 1
 ONECLIENT_FPMPACKAGE_TMP ?= package_fpm
@@ -217,6 +223,9 @@ clean_op_worker:
 clean_oneclient:
 	$(call clean, oneclient)
 
+clean_fsonedatafs:
+	$(call clean, fs-onedatafs)
+
 clean_cluster_manager:
 	$(call clean, cluster_manager)
 
@@ -272,6 +281,10 @@ rpm_cluster_manager: clean_cluster_manager rpmdirs
 rpm_oneclient_base: clean_oneclient rpmdirs
 	$(call make_rpm, oneclient, rpm) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_rpm, oneclient)
+
+rpm_fsonedatafs: clean_fsonedatafs rpmdirs
+	$(call make_rpm, fs-onedatafs, rpm) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+	$(call mv_rpm, fs-onedatafs)
 
 rpmdirs:
 	mkdir -p package/$(DISTRIBUTION)/SRPMS package/$(DISTRIBUTION)/x86_64

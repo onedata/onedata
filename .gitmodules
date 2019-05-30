@@ -34,3 +34,6 @@
 	path = luma
 	url = ../luma.git
 	branch = develop
+[submodule "fs-onedatafs"]
+	path = fs-onedatafs
+	url = ssh://git@git.plgrid.pl:7999/vfs/fs-onedatafs
