@@ -81,6 +81,11 @@ mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source | true
+mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binary-amd64 && \
+	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*_all.changes package/$(DISTRIBUTION)/source | true
 unpack = tar xzf $(1).tar.gz
 
 get_release:
@@ -324,6 +329,10 @@ deb_cluster_manager: clean_cluster_manager debdirs
 deb_oneclient_base: clean_oneclient debdirs
 	$(call make_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_deb, oneclient)
+
+deb_fsonedatafs: clean_fsonedatafs debdirs
+	$(call make_deb, fs-onedatafs, deb) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+	$(call mv_noarch_deb, fs-onedatafs)
 
 debdirs:
 	mkdir -p package/$(DISTRIBUTION)/source package/$(DISTRIBUTION)/binary-amd64
