@@ -385,7 +385,8 @@ docker-dev:
 # a normal (oneclient-base) package into /usr/ prefix.
 #
 docker_oneclient_base:
-	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
+	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE) \
+		                             FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
 
 #
 # Build final Oneclient Docker image with oneclient installed from
@@ -393,7 +394,9 @@ docker_oneclient_base:
 # symlinked into /usr prefix.
 #
 docker_oneclient:
-	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
+	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE) \
+                                FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
+
 
 #
 # Build self-contained Oneclient archive, by extracting all necessary files
