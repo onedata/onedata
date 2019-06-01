@@ -130,6 +130,11 @@ def test_oneclient_base_installation(oneclient):
                              tty=True,
                              command='python /root/data/install_oneclient_base.py')
 
+def test_fsonedatafs_installation(oneclient):
+    assert 0 == docker.exec_(oneclient.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_fsonedatafs.py')
 
 def test_oneclient_installation(oneclient_any):
     assert 0 == docker.exec_(oneclient_any.container,
