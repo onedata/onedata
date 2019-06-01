@@ -37,7 +37,7 @@ CLUSTER_MANAGER_VERSION := $(shell echo ${CLUSTER_MANAGER_VERSION} | tr - .)
 OP_WORKER_VERSION       := $(shell echo ${OP_WORKER_VERSION} | tr - .)
 OP_PANEL_VERSION        := $(shell echo ${OP_PANEL_VERSION} | tr - .)
 ONECLIENT_VERSION       := $(shell echo ${ONECLIENT_VERSION} | tr - .)
-FSONEDATAFS_VERSION       := $(shell echo ${FSONEDATAFS_VERSION} | tr - .)
+FSONEDATAFS_VERSION     := $(shell echo ${FSONEDATAFS_VERSION} | tr - .)
 
 ONEPROVIDER_BUILD       ?= 1
 ONECLIENT_FPMPACKAGE_TMP ?= package_fpm
