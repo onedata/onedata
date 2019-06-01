@@ -127,6 +127,13 @@ def test_oneclient_base_installation(oneclient):
                              command='python /root/data/install_oneclient_base.py {}'.format(release,))
 
 
+def test_fsonedatafs_installation(oneclient):
+    assert 0 == docker.exec_(oneclient.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_fsonedatafs.py')
+
+
 def test_oneprovider_installation(oneprovider):
     result = docker.exec_(oneprovider.container,
                              interactive=True,
