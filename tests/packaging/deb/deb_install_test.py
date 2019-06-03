@@ -9,6 +9,8 @@ from environment import docker, env
 
 file_dir = os.path.dirname(os.path.realpath(__file__))
 
+with open('./RELEASE', 'r') as f:
+    release = f.read().replace('\n', '')
 
 class Distribution(object):
 
@@ -18,7 +20,7 @@ class Distribution(object):
         config_dir = os.path.join(file_dir, 'deb_install_test_data')
 
         self.name = request.param
-        self.release = '1802'
+        self.release = release
         self.image = 'ubuntu:{0}'.format(self.name)
         self.container = docker.run(interactive=True,
                                     tty=True,
@@ -64,7 +66,8 @@ def onezone(request):
                 config_path, self.node)
             self.dockers = dockers
 
-    result = env.up(config_path, image='onedata/worker:v61')
+    result = env.up(tests.utils.path_utils.config_file('env.json'),
+                    image='onedata/worker:1802-1')
     dockers = result['docker_ids']
 
     request.addfinalizer(lambda: docker.remove(
@@ -148,6 +151,11 @@ def test_oneclient_base_installation(oneclient):
                              tty=True,
                              command='python /root/data/install_oneclient_base.py')
 
+def test_fsonedatafs_installation(oneclient):
+    assert 0 == docker.exec_(oneclient.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_fsonedatafs.py')
 
 def test_oneclient_installation(oneclient_any):
     assert 0 == docker.exec_(oneclient_any.container,
