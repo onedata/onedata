@@ -26,12 +26,18 @@ endif
 ifeq ($(strip $(ONECLIENT_VERSION)),)
 ONECLIENT_VERSION       := $(shell git -C oneclient describe --tags --always)
 endif
+ifeq ($(strip $(FSONEDATAFS_VERSION)),)
+FSONEDATAFS_VERSION       := $(shell git -C fs-onedatafs describe --tags --always)
+endif
+
+
 
 ONEPROVIDER_VERSION     := $(shell echo ${ONEPROVIDER_VERSION} | tr - .)
 CLUSTER_MANAGER_VERSION := $(shell echo ${CLUSTER_MANAGER_VERSION} | tr - .)
 OP_WORKER_VERSION       := $(shell echo ${OP_WORKER_VERSION} | tr - .)
 OP_PANEL_VERSION        := $(shell echo ${OP_PANEL_VERSION} | tr - .)
 ONECLIENT_VERSION       := $(shell echo ${ONECLIENT_VERSION} | tr - .)
+FSONEDATAFS_VERSION     := $(shell echo ${FSONEDATAFS_VERSION} | tr - .)
 
 ONEPROVIDER_BUILD       ?= 1
 ONECLIENT_FPMPACKAGE_TMP ?= package_fpm
@@ -67,12 +73,19 @@ clean = $(call make, $(1)) clean
 make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE) $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
 	mv $(1)/package/packages/*.x86_64.rpm package/$(DISTRIBUTION)/x86_64
+mv_noarch_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
+	mv $(1)/package/packages/*.noarch.rpm package/$(DISTRIBUTION)/x86_64
 make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder:$(DISTRIBUTION)-$(RELEASE) $(2)
 mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64 && \
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
-	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/sourcea | true
+	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source | true
+mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binary-amd64 && \
+	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*_all.changes package/$(DISTRIBUTION)/source | true
 unpack = tar xzf $(1).tar.gz
 
 get_release:
@@ -164,6 +177,9 @@ test_oneclient_base_packaging:
 test_oneclient_packaging:
 	${TEST_RUN} --test-type packaging -k "oneclient and not oneclient_base" -vvv --test-dir tests/packaging -s
 
+test_fsonedatafs_packaging:
+	${TEST_RUN} --test-type packaging -k "fsonedatafs" -vvv --test-dir tests/packaging -s
+
 test:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/scenarios/${SUITE}.py
 
@@ -216,6 +232,9 @@ clean_op_worker:
 
 clean_oneclient:
 	$(call clean, oneclient)
+
+clean_fsonedatafs:
+	$(call clean, fs-onedatafs)
 
 clean_cluster_manager:
 	$(call clean, cluster_manager)
@@ -273,6 +292,10 @@ rpm_oneclient_base: clean_oneclient rpmdirs
 	$(call make_rpm, oneclient, rpm) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_rpm, oneclient)
 
+rpm_fsonedatafs: clean_fsonedatafs rpmdirs
+	$(call make_rpm, fs-onedatafs, rpm) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+	$(call mv_noarch_rpm, fs-onedatafs)
+
 rpmdirs:
 	mkdir -p package/$(DISTRIBUTION)/SRPMS package/$(DISTRIBUTION)/x86_64
 
@@ -309,6 +332,10 @@ deb_cluster_manager: clean_cluster_manager debdirs
 deb_oneclient_base: clean_oneclient debdirs
 	$(call make_deb, oneclient, deb) -e PKG_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_deb, oneclient)
+
+deb_fsonedatafs: clean_fsonedatafs debdirs
+	$(call make_deb, fs-onedatafs, deb) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+	$(call mv_noarch_deb, fs-onedatafs)
 
 debdirs:
 	mkdir -p package/$(DISTRIBUTION)/source package/$(DISTRIBUTION)/binary-amd64
@@ -358,7 +385,8 @@ docker-dev:
 # a normal (oneclient-base) package into /usr/ prefix.
 #
 docker_oneclient_base:
-	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
+	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE) \
+		                             FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
 
 #
 # Build final Oneclient Docker image with oneclient installed from
@@ -366,7 +394,9 @@ docker_oneclient_base:
 # symlinked into /usr prefix.
 #
 docker_oneclient:
-	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE)
+	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE) \
+                                FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
+
 
 #
 # Build self-contained Oneclient archive, by extracting all necessary files
