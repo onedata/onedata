@@ -43,7 +43,7 @@ class Distribution(object):
 @pytest.fixture(scope='module')
 def setup_command():
     return 'apt-get update && ' \
-        'apt-get install -y ca-certificates locales python wget && ' \
+        'apt-get install -y ca-certificates locales python wget gnupg && ' \
         'wget -qO- {url}/onedata.gpg.key | apt-key add - && ' \
         'echo "deb {url}/apt/ubuntu/{{release}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
         'echo "deb-src {url}/apt/ubuntu/{{release}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
@@ -69,7 +69,7 @@ def onezone(request):
 
 
 @pytest.fixture(scope='module',
-                params=['xenial'])
+                params=['xenial', 'bionic'])
 def oneclient(request, setup_command):
     distribution = Distribution(request, privileged=True)
     command = setup_command.format(dist=distribution.name,
