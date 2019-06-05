@@ -43,7 +43,7 @@ class Distribution(object):
 @pytest.fixture(scope='module')
 def setup_command():
     return 'apt-get update && ' \
-        'apt-get install -y ca-certificates locales python wget && ' \
+        'apt-get install -y ca-certificates locales python wget gnupg && ' \
         'wget -qO- {url}/onedata.gpg.key | apt-key add - && ' \
         'echo "deb {url}/apt/ubuntu/{{release}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
         'echo "deb-src {url}/apt/ubuntu/{{release}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
@@ -69,7 +69,7 @@ def onezone(request):
 
 
 @pytest.fixture(scope='module',
-                params=['xenial'])
+                params=['xenial', 'bionic'])
 def oneclient(request, setup_command):
     distribution = Distribution(request, privileged=True)
     command = setup_command.format(dist=distribution.name,
@@ -84,8 +84,8 @@ def oneclient(request, setup_command):
 
 
 @pytest.fixture(scope='module',
-                params=['xenial'])
-def oneclient_any(request, setup_command):
+                params=['xenial', 'bionic'])
+def oneclient_base(request, setup_command):
     distribution = Distribution(request, privileged=True)
     command = setup_command.format(dist=distribution.name,
                                    release=distribution.release)
@@ -124,23 +124,26 @@ def oneprovider(request, onezone, setup_command):
     return distribution
 
 
-def test_oneclient_base_installation(oneclient):
+def test_oneclient_base_installation(oneclient_base):
+    assert 0 == docker.exec_(oneclient_base.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_oneclient_base.py {}'
+                                     .format(oneclient_base.name))
+
+def test_fsonedatafs_installation(oneclient_base):
+    assert 0 == docker.exec_(oneclient_base.container,
+                             interactive=True,
+                             tty=True,
+                             command='python /root/data/install_fsonedatafs.py {}'
+                                     .format(oneclient_base.name))
+
+def test_oneclient_installation(oneclient):
     assert 0 == docker.exec_(oneclient.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient_base.py')
-
-def test_fsonedatafs_installation(oneclient):
-    assert 0 == docker.exec_(oneclient.container,
-                             interactive=True,
-                             tty=True,
-                             command='python /root/data/install_fsonedatafs.py')
-
-def test_oneclient_installation(oneclient_any):
-    assert 0 == docker.exec_(oneclient_any.container,
-                             interactive=True,
-                             tty=True,
-                             command='python /root/data/install_oneclient.py')
+                             command='python /root/data/install_oneclient.py {}'
+                                      .format(oneclient.name))
 
 
 def test_oneprovider_installation(oneprovider):

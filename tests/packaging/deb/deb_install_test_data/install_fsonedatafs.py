@@ -1,21 +1,27 @@
 import sys
 from subprocess import STDOUT, check_call, check_output
 
+dist = sys.argv[1]
+
 # get package
 packages = check_output(['ls', '/root/pkg']).split()
 packages = sorted(packages, reverse=True)
 
 onedatafs_py2_package = [path for path in packages
-                         if path.startswith('python-onedatafs')][0]
+                         if path.startswith('python-onedatafs')
+                         and (dist in path)][0]
 
 onedatafs_py3_package = [path for path in packages
-                         if path.startswith('python3-onedatafs')][0]
+                         if path.startswith('python3-onedatafs')
+                         and (dist in path)][0]
 
 fsonedatafs_py2_package = [path for path in packages
-                         if path.startswith('python-fs-plugin-onedatafs')][0]
+                         if path.startswith('python-fs-plugin-onedatafs')
+                         and (dist in path)][0]
 
 fsonedatafs_py3_package = [path for path in packages
-                         if path.startswith('python3-fs-plugin-onedatafs')][0]
+                         if path.startswith('python3-fs-plugin-onedatafs')
+                         and (dist in path)][0]
 
 # install Python prerequisites
 check_call(['apt-get', '-y', 'install', 'python-pip', 'python3-pip'])
