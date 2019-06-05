@@ -85,7 +85,7 @@ def oneclient(request, setup_command):
 
 @pytest.fixture(scope='module',
                 params=['xenial', 'bionic'])
-def oneclient_any(request, setup_command):
+def oneclient_base(request, setup_command):
     distribution = Distribution(request, privileged=True)
     command = setup_command.format(dist=distribution.name,
                                    release=distribution.release)
@@ -128,19 +128,22 @@ def test_oneclient_base_installation(oneclient):
     assert 0 == docker.exec_(oneclient.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient_base.py')
+                             command='python /root/data/install_oneclient_base.py {}'
+                                     .format(oneclient.name))
 
-def test_fsonedatafs_installation(oneclient):
+def test_fsonedatafs_installation(oneclient_base):
     assert 0 == docker.exec_(oneclient.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_fsonedatafs.py')
+                             command='python /root/data/install_fsonedatafs.py {}'
+                                     .format(oneclient_base.name))
 
-def test_oneclient_installation(oneclient_any):
-    assert 0 == docker.exec_(oneclient_any.container,
+def test_oneclient_installation(oneclient):
+    assert 0 == docker.exec_(oneclient.container,
                              interactive=True,
                              tty=True,
-                             command='python /root/data/install_oneclient.py')
+                             command='python /root/data/install_oneclient.py {}'
+                                      .format(oneclient.name))
 
 
 def test_oneprovider_installation(oneprovider):
