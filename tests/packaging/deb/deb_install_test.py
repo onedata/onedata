@@ -124,15 +124,15 @@ def oneprovider(request, onezone, setup_command):
     return distribution
 
 
-def test_oneclient_base_installation(oneclient):
-    assert 0 == docker.exec_(oneclient.container,
+def test_oneclient_base_installation(oneclient_base):
+    assert 0 == docker.exec_(oneclient_base.container,
                              interactive=True,
                              tty=True,
                              command='python /root/data/install_oneclient_base.py {}'
-                                     .format(oneclient.name))
+                                     .format(oneclient_base.name))
 
 def test_fsonedatafs_installation(oneclient_base):
-    assert 0 == docker.exec_(oneclient.container,
+    assert 0 == docker.exec_(oneclient_base.container,
                              interactive=True,
                              tty=True,
                              command='python /root/data/install_fsonedatafs.py {}'
