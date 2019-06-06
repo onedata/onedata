@@ -85,7 +85,7 @@ mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binar
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
-	mv $(1)/package/packages/*_all.changes package/$(DISTRIBUTION)/source | true
+	mv $(1)/package/packages/*.changes package/$(DISTRIBUTION)/source | true
 unpack = tar xzf $(1).tar.gz
 
 get_release:
