@@ -53,7 +53,7 @@ def setup_command():
         'yum -y install ca-certificates python wget curl && ' \
         'yum -y install epel-release || true && ' \
         'curl -sSL "{url}/yum/{release}/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
-        .format(url='http://onedata-dev-packages.cloud.plgrid.pl', release=release)
+        .format(url='http://packages.onedata.org', release=release)
 
 
 @pytest.fixture(scope='module')

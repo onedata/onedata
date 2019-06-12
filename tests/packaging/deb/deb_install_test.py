@@ -49,7 +49,7 @@ def setup_command():
         'echo "deb {url}/apt/ubuntu/{{release}} {{dist}} main" > /etc/apt/sources.list.d/onedata.list && ' \
         'echo "deb-src {url}/apt/ubuntu/{{release}} {{dist}} main" >> /etc/apt/sources.list.d/onedata.list && ' \
         'apt-get update && ' \
-        'locale-gen en_US.UTF-8'.format(url='http://onedata-dev-packages.cloud.plgrid.pl')
+        'locale-gen en_US.UTF-8'.format(url='http://packages.onedata.org')
 
 
 @pytest.fixture(scope='module')
