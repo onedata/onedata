@@ -144,7 +144,6 @@ def get_registration_token(distribution, onezone_domain):
                           tty=True, output=True, command=cmd).strip()
     return json.loads(output)['token']
 
-
 def test_oneclient_base_installation(oneclient_base):
     assert 0 == docker.exec_(oneclient_base.container,
                              interactive=True,
