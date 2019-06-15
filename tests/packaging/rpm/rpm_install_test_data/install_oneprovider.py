@@ -7,6 +7,8 @@ from subprocess import STDOUT, check_call, check_output
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+EMERGENCY_USERNAME = 'onepanel'
+EMERGENCY_PASSPHRASE = 'passphrase'
 release = sys.argv[1]
 
 # get packages
@@ -52,9 +54,15 @@ check_call(['service', 'op_panel'.format(release=release), 'status'])
 
 # configure oneprovider
 with open('/root/data/config.yml', 'r') as f:
+    r = requests.put('https://127.0.0.1:9443/api/v3/onepanel/emergency_passphrase',
+                     headers={'content-type': 'application/json'},
+                     data=json.dumps({'newPassphrase': EMERGENCY_PASSPHRASE}),
+                     verify=False)
+    assert r.status_code == 204
+
     r = requests.post(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/configuration',
-        auth=('admin', 'password'),
+        auth=(EMERGENCY_USERNAME, EMERGENCY_PASSPHRASE),
         headers={'content-type': 'application/x-yaml'},
         data=f.read(),
         verify=False)
@@ -63,7 +71,7 @@ with open('/root/data/config.yml', 'r') as f:
     status = 'running'
     while status == 'running':
         r = requests.get('https://127.0.0.1:9443' + loc,
-                         auth=('admin', 'password'),
+                         auth=(EMERGENCY_USERNAME, EMERGENCY_PASSPHRASE),
                          verify=False)
         print(r.text)
         assert r.status_code == 200
@@ -81,7 +89,7 @@ for service in ['workers', 'managers', 'databases']:
     r = requests.patch(
         'https://127.0.0.1:9443/api/v3/onepanel/provider/{0}?started=false'.format(
             service),
-        auth=('admin', 'password'),
+        auth=(EMERGENCY_USERNAME, EMERGENCY_PASSPHRASE),
         headers={'content-type': 'application/json'},
         verify=False)
     assert r.status_code == 204

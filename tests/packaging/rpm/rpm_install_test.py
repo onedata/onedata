@@ -1,5 +1,6 @@
 from tests import *
 import pytest
+import json
 import tests.utils.path_utils
 import tests.utils.utils
 import tests.packaging.oneprovider_common
@@ -57,19 +58,26 @@ def setup_command():
 
 @pytest.fixture(scope='module')
 def onezone(request):
+    config_path = tests.utils.path_utils.config_file('env.json')
+
     class Onezone(object):
 
-        def __init__(self, nodes):
+        def __init__(self, nodes, dockers):
             (_, _, domain) = nodes[0].partition('@')
             self.domain = domain
+            self.node = "worker@" + domain
+            self.cookie = tests.utils.utils.get_oz_cookie(
+                config_path, self.node)
+            self.dockers = dockers
 
     result = env.up(tests.utils.path_utils.config_file('env.json'),
                     image='onedata/worker:1802-1')
+    dockers = result['docker_ids']
 
     request.addfinalizer(lambda: docker.remove(
-        result['docker_ids'], force=True, volumes=True))
+        dockers, force=True, volumes=True))
 
-    return Onezone(result['oz_worker_nodes'])
+    return Onezone(result['oz_worker_nodes'], dockers)
 
 
 @pytest.fixture(scope='module',
@@ -94,8 +102,7 @@ def oneprovider(request, onezone, setup_command):
     onezone_domain = tests.utils.utils.get_domain(onezone_node)
     # Put the domain in config so the provider knows where to register
     config_file = tests.utils.path_utils.config_file('config.yml')
-    tests.packaging.oneprovider_common.update_oz_domain_in_config(
-        config_file, onezone_domain)
+
     # Link provider docker to the OZ node (this way we do not need DNS here).
     # This link will cause connections to 'oz.1234.test' reach 'node.oz.1234.test'
     distribution = Distribution(request, link={onezone_node: onezone_domain})
@@ -110,7 +117,22 @@ def oneprovider(request, onezone, setup_command):
                              interactive=True,
                              tty=True,
                              command=command)
+
+    registration_token = get_registration_token(distribution, onezone_domain)
+    tests.packaging.oneprovider_common.update_token_in_config(
+        config_file, registration_token)
+
+
     return distribution
+
+
+def get_registration_token(distribution, onezone_domain):
+    uri = '/api/v3/onezone/user/clusters/provider_registration_token/'
+    cmd = 'curl -Ss -k -X POST -u provideradmin:password https://{}{}'.format(
+        onezone_domain, uri)
+    output = docker.exec_(distribution.container, interactive=True,
+                          tty=True, output=True, command=cmd).strip()
+    return json.loads(output)['token']
 
 
 def test_oneclient_installation(oneclient):
@@ -140,5 +162,5 @@ def test_oneprovider_installation(oneprovider):
                              tty=True,
                              command='python /root/data/install_oneprovider.py {}'.format(release,))
     config_file = tests.utils.path_utils.config_file('config.yml')
-    tests.packaging.oneprovider_common.reset_oz_domain_in_config(config_file)
+    tests.packaging.oneprovider_common.reset_token_in_config(config_file)
     assert 0 == result

@@ -24,13 +24,4 @@ oneprovider:
   adminEmail: "getting-started@onedata.org"
   geoLatitude: 10.0
   geoLongitude: 20.0
-onezone:
-  domainName: "onedata.org"
-onepanel:
-  users:
-    "admin1":
-      password: "Password1"
-      userRole: "admin"
-    "user1":
-      password: "Password2"
-      userRole: "regular"
+  token: "{{registration_token}}"
