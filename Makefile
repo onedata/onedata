@@ -304,7 +304,7 @@ rpm_fsonedatafs: clean_fsonedatafs rpmdirs
 	$(call mv_noarch_rpm, fs-onedatafs)
 
 rpm_onedatafs_jupyter: clean_onedatafs_jupyter rpmdirs
-	$(call make_rpm, onedatafs-jupyter, rpm) -e PKG_VERSION=$(ONEDATAFS_JUPYER_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+	$(call make_rpm, onedatafs-jupyter, rpm) -e PKG_VERSION=$(ONEDATAFS_JUPYTER_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_noarch_rpm, onedatafs-jupyter)
 
 rpmdirs:
