@@ -36,4 +36,7 @@
 	branch = develop
 [submodule "fs-onedatafs"]
 	path = fs-onedatafs
-	url = ssh://git@git.onedata.org:7999/vfs/fs-onedatafs
+	url = ../fs-onedatafs.git
+[submodule "onedatafs-jupyter"]
+	path = onedatafs-jupyter
+	url = ../onedatafs-jupyter.git
