@@ -1,8 +1,8 @@
 Package: oneprovider
-Version: {{oneprovider_version}}-{{oneprovider_build}}
+Version: {{oneprovider_version}}-{{oneprovider_build}}~{{distribution}}
 Section: net
 Priority: extra
-Architecture: all
+Architecture: amd64
 Depends: cluster-manager (= {{cluster_manager_version}}-1~{{distribution}}),
     op-worker (= {{op_worker_version}}-1~{{distribution}}),
     op-panel (= {{op_panel_version}}-1~{{distribution}}),
