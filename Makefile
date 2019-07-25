@@ -84,7 +84,7 @@ mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
-	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source | true
+	mv $(1)/package/packages/*.changes package/$(DISTRIBUTION)/source | true
 mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binary-amd64 && \
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
@@ -326,20 +326,25 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
+	sed -i 's/{{distribution}}/$(DISTRIBUTION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 
 	bamboos/docker/make.py -s oneprovider_meta -r . -c 'dpkg-deb -b oneprovider'
-	mv oneprovider_meta/oneprovider.deb package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
+	mv oneprovider_meta/oneprovider.deb \
+		package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)~$(DISTRIBUTION)_amd64.deb
 
 deb_op_panel: clean_onepanel debdirs
-	$(call make_deb, onepanel, package) -e PKG_VERSION=$(OP_PANEL_VERSION) -e REL_TYPE=oneprovider
+	$(call make_deb, onepanel, package) -e PKG_VERSION=$(OP_PANEL_VERSION) \
+		-e REL_TYPE=oneprovider -e DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_deb, onepanel)
 
 deb_op_worker: clean_op_worker debdirs
-	$(call make_deb, op_worker, package) -e PKG_VERSION=$(OP_WORKER_VERSION)
+	$(call make_deb, op_worker, package) -e PKG_VERSION=$(OP_WORKER_VERSION) \
+		-e DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_deb, op_worker)
 
 deb_cluster_manager: clean_cluster_manager debdirs
-	$(call make_deb, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION)
+	$(call make_deb, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION) \
+		-e DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_deb, cluster_manager)
 
 deb_oneclient_base: clean_oneclient debdirs
