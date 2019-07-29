@@ -5,7 +5,7 @@ MAINTAINER Krzysztof Trzepla <krzysztof.trzepla@gmail.com>
 # Build arguments
 ARG RELEASE
 ARG RELEASE_TYPE
-ARG DISTRIBUTION=xenial
+ARG DISTRIBUTION=bionic
 ARG OP_PANEL_VERSION
 ARG COUCHBASE_VERSION
 ARG CLUSTER_MANAGER_VERSION
@@ -23,8 +23,8 @@ RUN groupadd -g 150 onedata && \
 RUN apt-get -y update && \
     apt-get -y upgrade && \
     apt-get -y install ca-certificates curl locales net-tools \
-                       python python-setuptools python-yaml traceroute vim && \
-    easy_install requests && \
+                       python python-pip python-yaml traceroute vim && \
+    pip install requests && \
     apt-get clean
 
 # Generate locale

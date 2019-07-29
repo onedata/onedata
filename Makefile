@@ -5,8 +5,8 @@ DOCKER_RELEASE          ?= development
 DOCKER_REG_NAME         ?= "docker.onedata.org"
 DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
-DOCKER_BASE_IMAGE       ?= "ubuntu:16.04"
-DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1802-1"
+DOCKER_BASE_IMAGE       ?= "ubuntu:18.04"
+DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1902-1"
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
