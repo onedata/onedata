@@ -5,6 +5,7 @@ MAINTAINER Krzysztof Trzepla <krzysztof.trzepla@gmail.com>
 # Build arguments
 ARG RELEASE
 ARG RELEASE_TYPE
+ARG DISTRIBUTION=xenial
 ARG OP_PANEL_VERSION
 ARG COUCHBASE_VERSION
 ARG CLUSTER_MANAGER_VERSION
@@ -41,11 +42,11 @@ RUN case ${RELEASE_TYPE} in \
             curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider-${RELEASE}.sh; \
             ;; \
     esac && \
-    sh oneprovider-${RELEASE}.sh op-panel=${OP_PANEL_VERSION}-1 && \
+    sh oneprovider-${RELEASE}.sh op-panel=${OP_PANEL_VERSION}-1~${DISTRIBUTION} && \
     sh oneprovider-${RELEASE}.sh couchbase-server-community=${COUCHBASE_VERSION}-1 && \
-    sh oneprovider-${RELEASE}.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1 && \
-    sh oneprovider-${RELEASE}.sh op-worker=${OP_WORKER_VERSION}-1 && \
-    sh oneprovider-${RELEASE}.sh oneprovider=${ONEPROVIDER_VERSION}-1 && \
+    sh oneprovider-${RELEASE}.sh cluster-manager=${CLUSTER_MANAGER_VERSION}-1~${DISTRIBUTION} && \
+    sh oneprovider-${RELEASE}.sh op-worker=${OP_WORKER_VERSION}-1~${DISTRIBUTION} && \
+    sh oneprovider-${RELEASE}.sh oneprovider=${ONEPROVIDER_VERSION}-1~${DISTRIBUTION} && \
     rm -f oneprovider-${RELEASE}.sh
 
 # Backup files from persistence, as the persistent volume will be overwritten

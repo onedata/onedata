@@ -10,17 +10,23 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 EMERGENCY_USERNAME = 'onepanel'
 EMERGENCY_PASSPHRASE = 'passphrase'
 
+dist = sys.argv[1]
+
 # get packages
 packages = check_output(['ls', '/root/pkg']).split()
 packages = sorted(packages, reverse=True)
 op_panel_package = \
-    [path for path in packages if path.startswith('op-panel')][0]
+    [path for path in packages if path.startswith('op-panel')
+                                  and (dist in path)][0]
 cluster_manager_package = \
-    [path for path in packages if path.startswith('cluster-manager')][0]
+    [path for path in packages if path.startswith('cluster-manager')
+                                  and (dist in path)][0]
 op_worker_package = \
-    [path for path in packages if path.startswith('op-worker')][0]
+    [path for path in packages if path.startswith('op-worker')
+                                  and (dist in path)][0]
 oneprovider_package = [path for path in packages
-                       if path.startswith('oneprovider')][0]
+                       if path.startswith('oneprovider')
+                          and (dist in path)][0]
 
 # get couchbase
 check_call(['wget', 'http://packages.onedata.org/apt/ubuntu/xenial/pool/main/c'

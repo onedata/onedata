@@ -29,15 +29,19 @@ endif
 ifeq ($(strip $(FSONEDATAFS_VERSION)),)
 FSONEDATAFS_VERSION       := $(shell git -C fs-onedatafs describe --tags --always)
 endif
+ifeq ($(strip $(ONEDATAFS_JUPYTER_VERSION)),)
+ONEDATAFS_JUPYTER_VERSION       := $(shell git -C onedatafs-jupyter describe --tags --always)
+endif
 
 
 
-ONEPROVIDER_VERSION     := $(shell echo ${ONEPROVIDER_VERSION} | tr - .)
-CLUSTER_MANAGER_VERSION := $(shell echo ${CLUSTER_MANAGER_VERSION} | tr - .)
-OP_WORKER_VERSION       := $(shell echo ${OP_WORKER_VERSION} | tr - .)
-OP_PANEL_VERSION        := $(shell echo ${OP_PANEL_VERSION} | tr - .)
-ONECLIENT_VERSION       := $(shell echo ${ONECLIENT_VERSION} | tr - .)
-FSONEDATAFS_VERSION     := $(shell echo ${FSONEDATAFS_VERSION} | tr - .)
+ONEPROVIDER_VERSION           := $(shell echo ${ONEPROVIDER_VERSION} | tr - .)
+CLUSTER_MANAGER_VERSION       := $(shell echo ${CLUSTER_MANAGER_VERSION} | tr - .)
+OP_WORKER_VERSION             := $(shell echo ${OP_WORKER_VERSION} | tr - .)
+OP_PANEL_VERSION              := $(shell echo ${OP_PANEL_VERSION} | tr - .)
+ONECLIENT_VERSION             := $(shell echo ${ONECLIENT_VERSION} | tr - .)
+FSONEDATAFS_VERSION           := $(shell echo ${FSONEDATAFS_VERSION} | tr - .)
+ONEDATAFS_JUPYTER_VERSION     := $(shell echo ${ONEDATAFS_JUPYTER_VERSION} | tr - .)
 
 ONEPROVIDER_BUILD       ?= 1
 ONECLIENT_FPMPACKAGE_TMP ?= package_fpm
@@ -54,7 +58,7 @@ endif
 
 
 GIT_URL := $(shell git config --get remote.origin.url | sed -e 's/\(\/[^/]*\)$$//g')
-GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.plgrid.pl:7999/vfs'; else echo ${GIT_URL}; fi)
+GIT_URL := $(shell if [ "${GIT_URL}" = "file:/" ]; then echo 'ssh://git@git.onedata.org:7999/vfs'; else echo ${GIT_URL}; fi)
 ONEDATA_GIT_URL := $(shell if [ "${ONEDATA_GIT_URL}" = "" ]; then echo ${GIT_URL}; else echo ${ONEDATA_GIT_URL}; fi)
 export ONEDATA_GIT_URL
 
@@ -80,7 +84,7 @@ mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
-	mv $(1)/package/packages/*_amd64.changes package/$(DISTRIBUTION)/source | true
+	mv $(1)/package/packages/*.changes package/$(DISTRIBUTION)/source | true
 mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binary-amd64 && \
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
@@ -236,6 +240,9 @@ clean_oneclient:
 clean_fsonedatafs:
 	$(call clean, fs-onedatafs)
 
+clean_onedatafs_jupyter:
+	$(call clean, onedatafs-jupyter)
+
 clean_cluster_manager:
 	$(call clean, cluster_manager)
 
@@ -296,6 +303,12 @@ rpm_fsonedatafs: clean_fsonedatafs rpmdirs
 	$(call make_rpm, fs-onedatafs, rpm) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_noarch_rpm, fs-onedatafs)
 
+rpm_onedatafs_jupyter: clean_onedatafs_jupyter rpmdirs
+	$(call make_rpm, onedatafs-jupyter, rpm) -e PKG_VERSION=$(ONEDATAFS_JUPYTER_VERSION) \
+		                                     -e FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION) \
+		                                     -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+	$(call mv_noarch_rpm, onedatafs-jupyter)
+
 rpmdirs:
 	mkdir -p package/$(DISTRIBUTION)/SRPMS package/$(DISTRIBUTION)/x86_64
 
@@ -313,20 +326,25 @@ deb_oneprovider: deb_op_panel deb_op_worker deb_cluster_manager
 	sed -i 's/{{cluster_manager_version}}/$(CLUSTER_MANAGER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider/DEBIAN/control
+	sed -i 's/{{distribution}}/$(DISTRIBUTION)/g' oneprovider_meta/oneprovider/DEBIAN/control
 
 	bamboos/docker/make.py -s oneprovider_meta -r . -c 'dpkg-deb -b oneprovider'
-	mv oneprovider_meta/oneprovider.deb package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)_amd64.deb
+	mv oneprovider_meta/oneprovider.deb \
+		package/$(DISTRIBUTION)/binary-amd64/oneprovider_$(ONEPROVIDER_VERSION)-$(ONEPROVIDER_BUILD)~$(DISTRIBUTION)_amd64.deb
 
 deb_op_panel: clean_onepanel debdirs
-	$(call make_deb, onepanel, package) -e PKG_VERSION=$(OP_PANEL_VERSION) -e REL_TYPE=oneprovider
+	$(call make_deb, onepanel, package) -e PKG_VERSION=$(OP_PANEL_VERSION) \
+		-e REL_TYPE=oneprovider -e DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_deb, onepanel)
 
 deb_op_worker: clean_op_worker debdirs
-	$(call make_deb, op_worker, package) -e PKG_VERSION=$(OP_WORKER_VERSION)
+	$(call make_deb, op_worker, package) -e PKG_VERSION=$(OP_WORKER_VERSION) \
+		-e DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_deb, op_worker)
 
 deb_cluster_manager: clean_cluster_manager debdirs
-	$(call make_deb, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION)
+	$(call make_deb, cluster_manager, package) -e PKG_VERSION=$(CLUSTER_MANAGER_VERSION) \
+		-e DISTRIBUTION=$(DISTRIBUTION)
 	$(call mv_deb, cluster_manager)
 
 deb_oneclient_base: clean_oneclient debdirs
@@ -336,6 +354,12 @@ deb_oneclient_base: clean_oneclient debdirs
 deb_fsonedatafs: clean_fsonedatafs debdirs
 	$(call make_deb, fs-onedatafs, deb) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
 	$(call mv_noarch_deb, fs-onedatafs)
+
+deb_onedatafs_jupyter: clean_onedatafs_jupyter debdirs
+	$(call make_deb, onedatafs-jupyter, deb) -e PKG_VERSION=$(ONEDATAFS_JUPYTER_VERSION) \
+		                                     -e FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION) \
+		                                     -e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+	$(call mv_noarch_deb, onedatafs-jupyter)
 
 debdirs:
 	mkdir -p package/$(DISTRIBUTION)/source package/$(DISTRIBUTION)/binary-amd64
@@ -380,6 +404,14 @@ docker-dev:
                       --name oneprovider-dev \
                       --publish --remove docker
 
+jupyter-docker:
+	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
+                      --password $(DOCKER_REG_PASSWORD) \
+                      --build-arg RELEASE=$(RELEASE) \
+                      --build-arg RELEASE_TYPE=$(DOCKER_RELEASE) \
+                      --name oneprovider \
+                      --publish --remove docker
+
 #
 # Build intermediate Oneclient Docker image with oneclient installed from
 # a normal (oneclient-base) package into /usr/ prefix.
@@ -397,6 +429,14 @@ docker_oneclient:
 	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE) \
                                 FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
 
+#
+# Build Jupyter Docker with OnedataFS content manager plugin
+#
+docker_onedatafs_jupyter:
+	$(MAKE) -C onedatafs-jupyter docker ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
+		                         ONEDATAFS_JUPYTER_VERSION=$(ONEDATAFS_JUPYTER_VERSION) \
+		                         FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION) \
+		                         RELEASE=$(RELEASE)
 
 #
 # Build self-contained Oneclient archive, by extracting all necessary files
