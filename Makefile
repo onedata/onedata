@@ -9,28 +9,28 @@ DOCKER_BASE_IMAGE       ?= "ubuntu:18.04"
 DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1902-1"
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
-ONEPROVIDER_VERSION     := $(shell git describe --tags --always --abrev=7)
+ONEPROVIDER_VERSION     := $(shell git describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(COUCHBASE_VERSION)),)
 COUCHBASE_VERSION       := 4.5.1-2844
 endif
 ifeq ($(strip $(CLUSTER_MANAGER_VERSION)),)
-CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always --abrev=7)
+CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(OP_WORKER_VERSION)),)
-OP_WORKER_VERSION       := $(shell git -C op_worker describe --tags --always --abrev=7)
+OP_WORKER_VERSION       := $(shell git -C op_worker describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(OP_PANEL_VERSION)),)
-OP_PANEL_VERSION        := $(shell git -C onepanel describe --tags --always --abrev=7)
+OP_PANEL_VERSION        := $(shell git -C onepanel describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(ONECLIENT_VERSION)),)
-ONECLIENT_VERSION       := $(shell git -C oneclient describe --tags --always --abrev=7)
+ONECLIENT_VERSION       := $(shell git -C oneclient describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(FSONEDATAFS_VERSION)),)
-FSONEDATAFS_VERSION       := $(shell git -C fs-onedatafs describe --tags --always --abrev=7)
+FSONEDATAFS_VERSION       := $(shell git -C fs-onedatafs describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(ONEDATAFS_JUPYTER_VERSION)),)
-ONEDATAFS_JUPYTER_VERSION       := $(shell git -C onedatafs-jupyter describe --tags --always --abrev=7)
+ONEDATAFS_JUPYTER_VERSION       := $(shell git -C onedatafs-jupyter describe --tags --always --abbrev=7)
 endif
 
 
