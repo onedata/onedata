@@ -22,7 +22,7 @@ RUN groupadd -g 150 onedata && \
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get -y install ca-certificates curl locales net-tools \
+    apt-get -y install ca-certificates curl locales net-tools libssl1.0.0 \
                        python python-pip python-yaml traceroute vim && \
     pip install requests && \
     apt-get clean
