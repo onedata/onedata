@@ -1,4 +1,4 @@
-# distro for package building (oneof: xenial, centos-7-x86_64)
+# distro for package building (oneof: xenial, bionic, centos-7-x86_64)
 DISTRIBUTION            ?= none
 RELEASE                 ?= $(shell cat ./RELEASE)
 DOCKER_RELEASE          ?= development
