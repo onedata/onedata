@@ -63,6 +63,9 @@ EXPOSE 80 443 6665 9443
 ADD oneprovider.sh /root/oneprovider.sh
 ADD oneprovider.py /root/oneprovider.py
 
+# Disable RANDFILE in OpenSSL
+RUN sed -i 's/^RANDFILE.*\.rnd/#&/' /etc/ssl/openssl.cnf
+
 RUN mkdir -p /volumes/storage
 VOLUME ["/volumes/storage"]
 
