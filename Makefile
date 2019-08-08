@@ -1,36 +1,36 @@
-# distro for package building (oneof: xenial, centos-7-x86_64)
+# distro for package building (oneof: xenial, bionic, centos-7-x86_64)
 DISTRIBUTION            ?= none
 RELEASE                 ?= $(shell cat ./RELEASE)
 DOCKER_RELEASE          ?= development
 DOCKER_REG_NAME         ?= "docker.onedata.org"
 DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
-DOCKER_BASE_IMAGE       ?= "ubuntu:16.04"
-DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1802-1"
+DOCKER_BASE_IMAGE       ?= "ubuntu:18.04"
+DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1902-1"
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
-ONEPROVIDER_VERSION     := $(shell git describe --tags --always)
+ONEPROVIDER_VERSION     := $(shell git describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(COUCHBASE_VERSION)),)
 COUCHBASE_VERSION       := 4.5.1-2844
 endif
 ifeq ($(strip $(CLUSTER_MANAGER_VERSION)),)
-CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always)
+CLUSTER_MANAGER_VERSION := $(shell git -C cluster_manager describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(OP_WORKER_VERSION)),)
-OP_WORKER_VERSION       := $(shell git -C op_worker describe --tags --always)
+OP_WORKER_VERSION       := $(shell git -C op_worker describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(OP_PANEL_VERSION)),)
-OP_PANEL_VERSION        := $(shell git -C onepanel describe --tags --always)
+OP_PANEL_VERSION        := $(shell git -C onepanel describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(ONECLIENT_VERSION)),)
-ONECLIENT_VERSION       := $(shell git -C oneclient describe --tags --always)
+ONECLIENT_VERSION       := $(shell git -C oneclient describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(FSONEDATAFS_VERSION)),)
-FSONEDATAFS_VERSION       := $(shell git -C fs-onedatafs describe --tags --always)
+FSONEDATAFS_VERSION       := $(shell git -C fs-onedatafs describe --tags --always --abbrev=7)
 endif
 ifeq ($(strip $(ONEDATAFS_JUPYTER_VERSION)),)
-ONEDATAFS_JUPYTER_VERSION       := $(shell git -C onedatafs-jupyter describe --tags --always)
+ONEDATAFS_JUPYTER_VERSION       := $(shell git -C onedatafs-jupyter describe --tags --always --abbrev=7)
 endif
 
 

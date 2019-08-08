@@ -5,7 +5,7 @@ MAINTAINER Krzysztof Trzepla <krzysztof.trzepla@gmail.com>
 # Build arguments
 ARG RELEASE
 ARG RELEASE_TYPE
-ARG DISTRIBUTION=xenial
+ARG DISTRIBUTION=bionic
 ARG OP_PANEL_VERSION
 ARG COUCHBASE_VERSION
 ARG CLUSTER_MANAGER_VERSION
@@ -22,9 +22,9 @@ RUN groupadd -g 150 onedata && \
 # Get the image up to date and install utility tools
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get -y install ca-certificates curl locales net-tools \
-                       python python-setuptools python-yaml traceroute vim && \
-    easy_install requests && \
+    apt-get -y install ca-certificates curl locales net-tools libssl1.0.0 \
+                       python python-pip python-yaml traceroute vim && \
+    pip install requests && \
     apt-get clean
 
 # Generate locale
@@ -62,6 +62,9 @@ EXPOSE 80 443 6665 9443
 # Add entrypoint scripts
 ADD oneprovider.sh /root/oneprovider.sh
 ADD oneprovider.py /root/oneprovider.py
+
+# Disable RANDFILE in OpenSSL
+RUN sed -i 's/^RANDFILE.*\.rnd/#&/' /etc/ssl/openssl.cnf
 
 RUN mkdir -p /volumes/storage
 VOLUME ["/volumes/storage"]
