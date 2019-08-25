@@ -8,6 +8,7 @@ DOCKER_REG_PASSWORD     ?= ""
 DOCKER_BASE_IMAGE       ?= "ubuntu:18.04"
 DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1902-1"
 CONDA_TOKEN             ?= ""
+CONDA_BUILD_OPTIONS     ?= ""
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always --abbrev=7)
@@ -467,13 +468,17 @@ oneclient_deb: oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient-bin.tar.gz debdir
 # Build and upload oneclient conda packages
 #
 oneclient_conda:
-	$(call make_conda, oneclient, conda/oneclient) -e PKG_VERSION=$(ONECLIENT_VERSION)
+	$(call make_conda, oneclient, conda/oneclient) \
+		-e CONDA_BUILD_OPTIONS="$(CONDA_BUILD_OPTIONS)" \
+		-e PKG_VERSION=$(ONECLIENT_VERSION)
 
 #
 # Build and upload onedatafs conda packages
 #
 onedatafs_conda:
-	$(call make_conda, oneclient, conda/onedatafs) -e PKG_VERSION=$(ONECLIENT_VERSION)
+	$(call make_conda, oneclient, conda/onedatafs) \
+		-e CONDA_BUILD_OPTIONS="$(CONDA_BUILD_OPTIONS)" \
+		-e PKG_VERSION=$(ONECLIENT_VERSION)
 
 #
 # Build and upload fs.onedatafs conda packages
@@ -481,6 +486,7 @@ onedatafs_conda:
 fsonedatafs_conda:
 	$(call make_conda, fs-onedatafs, conda) \
 		-e PKG_VERSION=$(FSONEDATAFS_VERSION) \
+		-e CONDA_BUILD_OPTIONS="$(CONDA_BUILD_OPTIONS)" \
 		-e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
 
 #
@@ -489,4 +495,5 @@ fsonedatafs_conda:
 onedatafs_jupyter_conda:
 	$(call make_conda, onedatafs-jupyter, conda) \
 		-e PKG_VERSION=$(ONEDATAFS_JUPYTER_VERSION) \
+		-e CONDA_BUILD_OPTIONS="$(CONDA_BUILD_OPTIONS)" \
 		-e FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
