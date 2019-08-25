@@ -474,3 +474,11 @@ oneclient_conda:
 #
 onedatafs_conda:
 	$(call make_conda, oneclient, conda/onedatafs) -e PKG_VERSION=$(ONECLIENT_VERSION)
+
+#
+# Build and upload onedatafs conda packages
+#
+fsonedatafs_conda:
+	$(call make_conda, fs-onedatafs, conda) \
+		-e PKG_VERSION=$(FSONEDATAFS_VERSION) \
+		-e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
