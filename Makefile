@@ -476,9 +476,17 @@ onedatafs_conda:
 	$(call make_conda, oneclient, conda/onedatafs) -e PKG_VERSION=$(ONECLIENT_VERSION)
 
 #
-# Build and upload onedatafs conda packages
+# Build and upload fs.onedatafs conda packages
 #
 fsonedatafs_conda:
 	$(call make_conda, fs-onedatafs, conda) \
 		-e PKG_VERSION=$(FSONEDATAFS_VERSION) \
 		-e ONECLIENT_VERSION=$(ONECLIENT_VERSION)
+
+#
+# Build and upload onedatafs-jupyter conda packages
+#
+onedatafs_jupyter_conda:
+	$(call make_conda, onedatafs-jupyter, conda) \
+		-e PKG_VERSION=$(ONEDATAFS_JUPYTER_VERSION) \
+		-e FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
