@@ -7,6 +7,7 @@ DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
 DOCKER_BASE_IMAGE       ?= "ubuntu:18.04"
 DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1902-1"
+CONDA_TOKEN             ?= ""
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always --abbrev=7)
@@ -91,6 +92,7 @@ mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binar
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.changes package/$(DISTRIBUTION)/source | true
 unpack = tar xzf $(1).tar.gz
+make_conda = $(call make, $(1)) -e CONDA_TOKEN=$(CONDA_TOKEN) -i onedata/conda:v1 $(2)
 
 get_release:
 	@echo $(RELEASE)
@@ -460,3 +462,15 @@ oneclient_deb: oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient-bin.tar.gz debdir
 	$(MAKE) -C oneclient DISTRIBUTION=$(DISTRIBUTION) ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
 		oneclient_deb
 	mv oneclient/$(ONECLIENT_FPMPACKAGE_TMP)/oneclient*.deb package/$(DISTRIBUTION)/binary-amd64
+
+#
+# Build and upload oneclient conda packages
+#
+oneclient_conda:
+	$(call make_conda, oneclient, conda/oneclient) -e PKG_VERSION=$(ONECLIENT_VERSION)
+
+#
+# Build and upload onedatafs conda packages
+#
+onedatafs_conda:
+	$(call make_conda, oneclient, conda/onedatafs) -e PKG_VERSION=$(ONECLIENT_VERSION)
