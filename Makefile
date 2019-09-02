@@ -34,6 +34,9 @@ endif
 ifeq ($(strip $(ONEDATAFS_JUPYTER_VERSION)),)
 ONEDATAFS_JUPYTER_VERSION       := $(shell git -C onedatafs-jupyter describe --tags --always --abbrev=7)
 endif
+ifeq ($(strip $(ONEDATAFS_JUPYTER_VERSION)),)
+ONEDATAFS_JUPYTER_VERSION       := $(shell git -C onedatafs-jupyter describe --tags --always)
+endif
 
 
 

@@ -4,6 +4,22 @@
 CHANGELOG
 ---------
 
+### 19.02.0-rc1
+
+* VFS-5660 Disabled RANDFILE to enable certificate creation in Docker
+* VFS-5660 Added libssl1.0.0 dependency to Docker
+* VFS-5657 Fixed Dockerfile for tagged ubuntu packages
+* VFS-5657 Enabled bionic packaging tests
+* VFS-5535 Added onedatafs-jupyter docker make rule
+* VFS-5563 Added onedatafs-jupyter submodule
+* VFS-5535 Fixed CentOS onedatafs-jupyter package builds
+
+
+### 18.02.3
+
+* Releasing new version 18.02.3
+
+
 ### 18.02.2
 
 * Update submodules
