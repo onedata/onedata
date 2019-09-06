@@ -49,7 +49,8 @@ class Distribution(object):
 
 @pytest.fixture(scope='module')
 def setup_command():
-    return 'yum -y update ; yum clean all && yum -y update && ' \
+    return 'echo "proxy=http://proxy.devel.onedata.org:3128" >> /etc/yum.conf && ' \
+        'yum -y update ; yum clean all && yum -y update && ' \
         'yum -y install ca-certificates python wget curl && ' \
         'yum -y install epel-release || true && ' \
         'curl -sSL "{url}/yum/{release}/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
