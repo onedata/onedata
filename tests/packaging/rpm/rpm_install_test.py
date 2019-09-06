@@ -51,6 +51,8 @@ class Distribution(object):
 def setup_command():
     return 'echo "proxy=http://proxy.devel.onedata.org:3128" >> /etc/yum.conf && ' \
         'sed -i "s/enabled=1/enabled=0/" /etc/yum/pluginconf.d/fastestmirror.conf && ' \
+        'sed -i "s/mirrorlist/#mirrorlist/" /etc/yum.repos.d/CentOS-Base.repo && ' \
+        'sed -i "s/#baseurl/baseurl/" /etc/yum.repos.d/CentOS-Base.repo && ' \
         'yum -y update ; yum clean all && yum -y update && ' \
         'yum -y install ca-certificates python wget curl && ' \
         'yum -y install epel-release || true && ' \
