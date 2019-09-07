@@ -49,7 +49,11 @@ class Distribution(object):
 
 @pytest.fixture(scope='module')
 def setup_command():
-    return 'yum -y update ; yum clean all && yum -y update && ' \
+    return 'echo "proxy=http://proxy.devel.onedata.org:3128" >> /etc/yum.conf && ' \
+        'sed -i "s/enabled=1/enabled=0/" /etc/yum/pluginconf.d/fastestmirror.conf && ' \
+        'sed -i "s/mirrorlist/#mirrorlist/" /etc/yum.repos.d/CentOS-Base.repo && ' \
+        'sed -i "s/#baseurl/baseurl/" /etc/yum.repos.d/CentOS-Base.repo && ' \
+        'yum -y update ; yum clean all && yum -y update && ' \
         'yum -y install ca-certificates python wget curl && ' \
         'yum -y install epel-release || true && ' \
         'curl -sSL "{url}/yum/{release}/onedata_{{repo}}.repo" > /etc/yum.repos.d/onedata.repo' \
@@ -71,7 +75,7 @@ def onezone(request):
             self.dockers = dockers
 
     result = env.up(tests.utils.path_utils.config_file('env.json'),
-                    image='onedata/worker:1802-1')
+                    image='onedata/worker:1902-1')
     dockers = result['docker_ids']
 
     request.addfinalizer(lambda: docker.remove(

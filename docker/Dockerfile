@@ -12,6 +12,10 @@ ARG CLUSTER_MANAGER_VERSION
 ARG OP_WORKER_VERSION
 ARG ONEPROVIDER_VERSION
 ARG ONEPANEL_AUTOSTART=false
+ARG HTTP_PROXY
+
+# Enable Onedata devel package proxy cache
+ENV http_proxy ${HTTP_PROXY}
 
 # Add users and groups
 RUN groupadd -g 150 onedata && \
@@ -36,10 +40,10 @@ ENV LC_ALL en_US.UTF-8
 # Install oneprovider package
 RUN case ${RELEASE_TYPE} in \
         production) \
-            curl -O http://get.onedata.org/oneprovider-${RELEASE}.sh; \
+            curl -O http://packages.onedata.org/oneprovider-${RELEASE}.sh; \
             ;; \
         *) \
-            curl -O http://onedata-dev-packages.cloud.plgrid.pl/oneprovider-${RELEASE}.sh; \
+            curl -O http://packages.devel.onedata.org/oneprovider-${RELEASE}.sh; \
             ;; \
     esac && \
     sh oneprovider-${RELEASE}.sh op-panel=${OP_PANEL_VERSION}-1~${DISTRIBUTION} && \

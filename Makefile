@@ -9,6 +9,7 @@ DOCKER_BASE_IMAGE       ?= "ubuntu:18.04"
 DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1902-1"
 CONDA_TOKEN             ?= ""
 CONDA_BUILD_OPTIONS     ?= ""
+HTTP_PROXY              ?= "http://proxy.devel.onedata.org:3128"
 
 ifeq ($(strip $(ONEPROVIDER_VERSION)),)
 ONEPROVIDER_VERSION     := $(shell git describe --tags --always --abbrev=7)
@@ -392,6 +393,7 @@ docker: docker-dev
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
                       --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
+                      --build-arg HTTP_PROXY=$(HTTP_PROXY) \
                       --name oneprovider \
                       --publish --remove docker
 
@@ -405,17 +407,10 @@ docker-dev:
                       --build-arg CLUSTER_MANAGER_VERSION=$(CLUSTER_MANAGER_VERSION) \
                       --build-arg OP_WORKER_VERSION=$(OP_WORKER_VERSION) \
                       --build-arg ONEPROVIDER_VERSION=$(ONEPROVIDER_VERSION) \
+                      --build-arg HTTP_PROXY=$(HTTP_PROXY) \
                       --report docker-dev-build-report.txt \
                       --short-report docker-dev-build-list.json \
                       --name oneprovider-dev \
-                      --publish --remove docker
-
-jupyter-docker:
-	./docker_build.py --repository $(DOCKER_REG_NAME) --user $(DOCKER_REG_USER) \
-                      --password $(DOCKER_REG_PASSWORD) \
-                      --build-arg RELEASE=$(RELEASE) \
-                      --build-arg RELEASE_TYPE=$(DOCKER_RELEASE) \
-                      --name oneprovider \
                       --publish --remove docker
 
 #
@@ -424,7 +419,8 @@ jupyter-docker:
 #
 docker_oneclient_base:
 	$(MAKE) -C oneclient docker-base PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE) \
-		                             FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
+		                             FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION) \
+		                             HTTP_PROXY=$(HTTP_PROXY)
 
 #
 # Build final Oneclient Docker image with oneclient installed from
@@ -433,7 +429,8 @@ docker_oneclient_base:
 #
 docker_oneclient:
 	$(MAKE) -C oneclient docker PKG_VERSION=$(ONECLIENT_VERSION) RELEASE=$(RELEASE) \
-                                FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
+                                FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION) \
+                                HTTP_PROXY=$(HTTP_PROXY)
 
 #
 # Build Jupyter Docker with OnedataFS content manager plugin
@@ -442,6 +439,7 @@ docker_onedatafs_jupyter:
 	$(MAKE) -C onedatafs-jupyter docker ONECLIENT_VERSION=$(ONECLIENT_VERSION) \
 		                         ONEDATAFS_JUPYTER_VERSION=$(ONEDATAFS_JUPYTER_VERSION) \
 		                         FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION) \
+		                         HTTP_PROXY=$(HTTP_PROXY) \
 		                         RELEASE=$(RELEASE)
 
 #
