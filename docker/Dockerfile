@@ -73,4 +73,7 @@ RUN sed -i 's/^RANDFILE.*\.rnd/#&/' /etc/ssl/openssl.cnf
 RUN mkdir -p /volumes/storage
 VOLUME ["/volumes/storage"]
 
+# Disable http_proxy for normal operation
+ENV http_proxy ""
+
 CMD ["/root/oneprovider.sh"]
