@@ -4,6 +4,15 @@
 CHANGELOG
 ---------
 
+### 19.02.0-rc2
+
+* VFS-5742 Disabled http_proxy for normal operation
+* VFS-5742 Disabled yum mirrors for package tests
+* VFS-5742 Disabled yum proxy for package tests
+* VFS-5742 Enabled proxy cache for package tests
+* VFS-5742 Enabled proxy cache for docker builds
+
+
 ### 19.02.0-rc1
 
 * VFS-5660 Disabled RANDFILE to enable certificate creation in Docker
