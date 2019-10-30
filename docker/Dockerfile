@@ -53,6 +53,11 @@ RUN case ${RELEASE_TYPE} in \
     sh oneprovider-${RELEASE}.sh oneprovider=${ONEPROVIDER_VERSION}-1~${DISTRIBUTION} && \
     rm -f oneprovider-${RELEASE}.sh
 
+# Install Ceph from onedata repo
+RUN apt-get -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install udev ceph && \
+    apt-get clean
+
 # Backup files from persistence, as the persistent volume will be overwritten
 # by mounting it from host. The missing files will be copied back in entrypoint.
 ADD persistence-dir.py /root/persistence-dir.py
@@ -69,6 +74,11 @@ ADD oneprovider.py /root/oneprovider.py
 
 # Disable RANDFILE in OpenSSL
 RUN sed -i 's/^RANDFILE.*\.rnd/#&/' /etc/ssl/openssl.cnf
+
+# Disable udev_rules in lvm, which broke `ceph-volume lvm create`
+# Disable lmvetad, as it is not available in the container
+RUN sed -Ei 's/^(\s*udev_rules\s*=).*$/\1 0/' /etc/lvm/lvm.conf && \
+    sed -Ei 's/^(\s*use_lvmetad\s*=).*$/\1 0/' /etc/lvm/lvm.conf
 
 RUN mkdir -p /volumes/storage
 VOLUME ["/volumes/storage"]
