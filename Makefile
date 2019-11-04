@@ -109,7 +109,7 @@ print_package_versions:
 	@echo "op-panel:\t\t" $(OP_PANEL_VERSION)
 	@echo "oneclient:\t\t" $(ONECLIENT_VERSION)
 	@echo "fs-onedatafs:\t\t" $(FSONEDATAFS_VERSION)
-	@echo "onedatafs:\t\t" $(ONEDATAFS_JUPYTER_VERSION)
+	@echo "onedatafs-jupyter:\t" $(ONEDATAFS_JUPYTER_VERSION)
 
 ##
 ## Submodules
