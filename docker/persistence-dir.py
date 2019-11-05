@@ -12,11 +12,14 @@ DIRS = [
     '/etc/op_panel',
     '/etc/op_worker',
     '/etc/cluster_manager',
+    '/etc/ceph',
     '/var/lib/op_panel/mnesia',
     '/var/log/op_panel',
     '/var/log/op_worker',
     '/var/log/cluster_manager',
-    '/opt/couchbase/var/lib/couchbase'
+    '/opt/couchbase/var/lib/couchbase',
+    '/var/lib/ceph',
+    '/var/log/ceph'
 ]
 
 
