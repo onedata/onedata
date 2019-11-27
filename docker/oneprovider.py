@@ -181,7 +181,7 @@ def do_auth_request(request, *args, **kwargs):
 
 def get_batch_config():
     batch_config = os.environ.get('ONEPROVIDER_CONFIG', '')
-    batch_config = yaml.load(batch_config)
+    batch_config = yaml.safe_load(batch_config)
     if not batch_config:
         return {}
 
