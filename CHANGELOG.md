@@ -4,6 +4,39 @@
 CHANGELOG
 ---------
 
+### 19.02.1
+
+* VFS-5884 Added print_package_versions makefile rule
+
+##### op-worker
+
+* Bump version to 19.02.1
+* VFS-5826 Ensure db start at cluster init
+* VFS-5900 GUI update * Added showing special subjects in ACL editor
+* VFS-5826 Add missing event during dir creation
+* VFS-5891 Clean authorization nonce after its TTL
+* VFS-5826 Add events during file creation
+* VFS-5826 Change max_read_dir_plus_procs value
+* VFS-5826 Emmit attr_changed events on chmod and acl change
+* VFS-5826 Change events processing - allow subscriptions per dir
+
+##### onepanel
+
+* VFS-5994 Make 'production' Let's Encrypt mode the default
+* VFS-5940 Rename oz-worker's GUI package verification envs to more intuitive
+
+##### oneclient
+
+* VFS-5826 Increased events test connections
+* VFS-5826 Added opendir and releasedir to OnedataFS
+* VFS-5826 Increased default metadata cache size
+* VFS-5826 Added support for opendir and releasedir
+* VFS-5826 Added persistent directory cache
+* VFS-5826 Added directory subscription cancelling
+* VFS-5844 Refactored metadatacache to limit file subscriptions
+* VFS-5965 Added option to emulate large available space
+
+
 ### 19.02.0-rc2
 
 * VFS-5742 Disabled http_proxy for normal operation
