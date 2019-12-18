@@ -102,6 +102,15 @@ make_conda = $(call make, $(1)) -e CONDA_TOKEN=$(CONDA_TOKEN) -i onedata/conda:v
 get_release:
 	@echo $(RELEASE)
 
+print_package_versions:
+	@echo "oneprovider:\t\t" $(ONEPROVIDER_VERSION)
+	@echo "cluster-manager:\t" $(CLUSTER_MANAGER_VERSION)
+	@echo "op-worker:\t\t" $(OP_WORKER_VERSION)
+	@echo "op-panel:\t\t" $(OP_PANEL_VERSION)
+	@echo "oneclient:\t\t" $(ONECLIENT_VERSION)
+	@echo "fs-onedatafs:\t\t" $(FSONEDATAFS_VERSION)
+	@echo "onedatafs-jupyter:\t" $(ONEDATAFS_JUPYTER_VERSION)
+
 ##
 ## Submodules
 ##
