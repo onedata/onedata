@@ -163,7 +163,7 @@ def set_emergency_passphrase(passphrase):
         raise AuthenticationError('Could not set Onepanel emergency passphrase due to '
                                   'authentication error: {} {}'
                                   .format(r.status_code, r.text))
-    if r.status_code != codes.no_content:
+    if not r.ok:
         raise RuntimeError('Could not set Onepanel emergency passphrase: {} {}'
                            .format(r.status_code, r.text))
 
@@ -217,7 +217,7 @@ def configure(config):
     if r.status_code == codes.conflict:
         return False
 
-    if r.status_code not in (codes.created, codes.no_content):
+    if not r.ok:
         raise RuntimeError(
             'Failed to start configuration process, the response was:\n'
             '  code: {0}\n'
@@ -235,7 +235,7 @@ def configure(config):
         r = do_auth_request(requests.get,
                             'https://127.0.0.1:9443' + loc,
                             verify=False)
-        if r.status_code != codes.ok:
+        if not r.ok:
             raise RuntimeError('Unexpected configuration error\n{0}'
                                'For more information please check the logs.'
                                .format(r.text))
@@ -313,7 +313,7 @@ def wait_for_workers():
 
 def nagios_up(url):
     r = do_auth_request(requests.get, url, verify=False)
-    if r.status_code != codes.ok:
+    if not r.ok:
         return False
 
     healthdata = eTree.fromstring(r.text)
