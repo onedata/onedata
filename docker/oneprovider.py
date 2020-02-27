@@ -159,7 +159,7 @@ def set_emergency_passphrase(passphrase):
                      headers={'content-type': 'application/json'},
                      data=json.dumps({'newPassphrase': passphrase}),
                      verify=False)
-    if r.status_code == codes.forbidden:
+    if r.status_code in (codes.unauthorized, codes.forbidden):
         raise AuthenticationError('Could not set Onepanel emergency passphrase due to '
                                   'authentication error: {} {}'
                                   .format(r.status_code, r.text))
