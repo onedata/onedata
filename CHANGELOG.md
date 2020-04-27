@@ -4,6 +4,57 @@
 CHANGELOG
 ---------
 
+### 19.02.2
+
+* Bugfixes and stability improvements
+
+
+### 19.02.1
+
+* Update submodules
+* Updated opworker ref
+* Updated oneclient ref
+* Updated oneclient ref
+* Update submodules
+* Update submodules
+* Update submodules
+* Update refs to origin/release/19.02.1
+* Updated oneclient ref
+* update op_worker ref
+* Update submodules
+* Update refs to origin/release/19.02.1
+* Update refs to origin/release/19.02.1
+* Update refs to origin/release/19.02.1
+* Updated oneclient ref
+* Update refs to origin/develop
+* Update refs to origin/develop
+* Update submodules
+* Update submodules
+* Update submodules
+* Update refs to origin/release/19.02.1
+* Update refs to origin/release/19.02.1
+* Update submodules
+* Update submodules
+* Update refs to origin/release/19.02.1
+* Update refs to origin/release/19.02.1
+* Updated fs-onedatafs ref
+* Updated oneclient ref
+* Update submodules
+* Update submodules
+* Update submodules
+* Update submodules
+* Releasing new version 19.02.1
+* Update submodules refs
+* Update submodules
+* Update refs to origin/release/19.02.1
+* updated bamboos refs s3
+* updated bamboos refs s3
+* updated bamboos refs s3
+* VFS-5884 Fixed onedatafs-jupyter name
+* VFS-5884 Added print_package_versions makefile rule
+* Update refs to release/19.02.1
+
+
 ### 19.02.1
 
 * VFS-5884 Added print_package_versions makefile rule
