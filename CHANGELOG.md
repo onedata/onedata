@@ -4,6 +4,10 @@
 CHANGELOG
 ---------
 
+### 19.02.3
+
+* Minor bugfixes
+
 ### 19.02.2
 
 * Bugfixes and stability improvements
