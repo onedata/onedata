@@ -4,6 +4,94 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.1
+
+-   **VFS-6225** Added new \`triggers\` field to changes stream
+    specification allowing to send events only on specified docs types
+    changes.
+-   **VFS-6320** Old \`/spaces/{sid}/indexes\`,
+    \`/spaces/{sid}/indexes/{index\_name}\`,
+    \`/spaces/{sid}/indexes/{index\_name}/reduce\` and
+    \`/spaces/{sid}/indexes/{index\_name}/query\` endpoints were
+    deprecated and will be removed in next major release.
+-   **VFS-6288** Basic HA functionality (experimental) - protect
+    Oneprovider from single node failure
+-   **VFS-6346** GUI improvements: added Oneprovider GUI notifications,
+    better file selection, additional error handling, better file
+    manager refresh UX, fixed overflow of context menu in file browser,
+    fixes in responsive layout.
+-   **VFS-6316** Added \`statfs\` support enabling preview of available
+    storage in each space through oneclient, for instance using \`df\`
+    or \`stat\` utilities.
+-   **VFS-6344** GUI: showing information if QoS requirement is
+    impossible to be fulfilled
+-   **VFS-6160** Reorganized Local User Mapping (LUMA) management.
+    Introduced feeds for populating LUMA DB.
+-   **VFS-6453** New Open Data and share description views with visual
+    Dublin Core editor and Markdown editor.
+-   **VFS-4760** Added implicit API caveats that limit access tokens
+    used by Onedata GUIs behind the scenes for authentication and
+    authorization. Different services in the system are presented with
+    user\'s access token with power limited to bare minimum required for
+    the service to handle user requests. For example, Oneproviders do
+    not have access to APIs that could alter or delete user data and
+    memberships.
+-   **VFS-6263** New experimental Quality of Service functionality. It
+    is used to manage file replica distribution and redundancy between
+    supporting Oneproviders. Users can define any number of QoS
+    requirements for a file or directory. Each requirement consists of
+    target replicas number and an expression that is used to select
+    storages where the replicas should be placed ‐ it is matched against
+    parameters that were assigned to storages by Oneprovider admins.
+-   **VFS-6401** All authentication errors are now wrapped in
+    UNAUTHORIZED error and map to 401 HTTP code to avoid ambiguity when
+    reporting token related errors - tokens can be used for
+    authentication as well as input data for some operations (e.g.
+    invite tokens).
+-   **VFS-6378** Onepanel GUI and REST API now explicitly block
+    supporting a space with more than one imported storage (globally) -
+    such operation was possible in the past but was never supported by
+    the internal storage import logic and led to incoherent view on
+    space data.
+-   **VFS-6450** Added file name and space id to harvested file
+    metadata.
+-   **VFS-6342** Added build and test plan for Travis to enable
+    automatic builds from develop and release branches of oneclient on
+    GitHub.
+-   **VFS-6431** Added performance logs for object storages, which can
+    generate CSV file containing all storage requests including their
+    duration.
+-   **VFS-6390** Because of asynchronous processing, it was possible
+    that GraphSync session cleanup intertwined with deleted record
+    cleanup (that removes corresponding subscriptions from sessions,
+    possibly including the session being cleaned up) and caused an error
+    that interrupted change propagation. Now, if the session is no
+    longer existent, subscription removal errors are ignored and the
+    propagation completes.
+-   **VFS-6140** Added new REST api for file operations, in both normal
+    mode and share mode, accessible under \`/data/{fileId}\` path. Also
+    added \`/lookup-file-id/{filePath}\` endpoint allowing to resolve
+    file path into file Id. Old file related REST api operations become
+    deprecated and will be removed in next major release.
+-   **VFS-6361** Added new REST api for creating transfers and viewing
+    file distribution, accessible respectively under \`/transfers\` and
+    \`/data/{fileId}/distribution\` paths. Old \`/replicas\`,
+    \`/replicas-id\` and \`/replicas-view\` endpoints were deprecated
+    and will be removed in next major release.
+-   **VFS-6457** Added new publicly visible field to shares -
+    description (supports the markdown format)
+-   **VFS-6504** Added HTTP storage helper allowing registration of HTTP
+    and HTTPS servers as storage sources for Onedata Spaces.
+-   **VFS-6438** Decrease overhead of transfers of already replicated
+    files. Optimization of on demand synchronization streams usage.
+-   **VFS-6494** Introduced REST API for registering files.
+-   **VFS-6474** Added initial support for XRootD storage, including
+    direct access to XRootD storages and importing of legacy data sets
+    stored on XRootD or EOS servers.
+-   **VFS-6358** Optimization of files upload through GUI
+-   **VFS-6369** Fix datastore internal call, batch management during
+    links listing and infinite loop during storage directories creation.
+
 ### 20.02.0-beta4
 
 -   **VFS-6359** Fixed an issue with accessing files in spaces which are
@@ -17,7 +105,8 @@ CHANGELOG
 
 -   VFS-6131 Account for changes in emergency passphrase api changes
 -   VFS-5838 entrypoint: Accept any 2xx and 3xx HTTP codes as success
--   VFS-5841 entrypoint: Use PyYAML\'s safe loader to silence a warning
+-   VFS-5841 entrypoint: Use PyYAML\\\'s safe loader to silence a
+    warning
 -   VFS-5841 Parse deployment error using new onepanel errors format
 -   VFS-5698 Add Ceph directories to persistence
 -   VFS-5698 Add Ceph shutdown to entrypoint script
@@ -50,8 +139,8 @@ CHANGELOG
 
 ##### onepanel
 
--   VFS-5994 Make \'production\' Let\'s Encrypt mode the default
--   VFS-5940 Rename oz-worker\'s GUI package verification envs to more
+-   VFS-5994 Make \\\'production\\\' Let\\\'s Encrypt mode the default
+-   VFS-5940 Rename oz-worker\\\'s GUI package verification envs to more
     intuitive
 
 ##### oneclient
@@ -358,8 +447,8 @@ CHANGELOG
 -   VFS-2549 add quotation marks to names of groups/spaces/shares/\...
 -   VFS-2549 fix closing notifies
 -   VFS-2549 fix scenario names in group and share tests
--   VFS-2564 add test checking that user can\'t view left group
--   VFS-2616 add test checking if user can view group having it\'s id
+-   VFS-2564 add test checking that user can\\\'t view left group
+-   VFS-2616 add test checking if user can view group having it\\\'s id
 -   VFS-2549 fix waiting for notifies to disappear and switching spaces
 -   VFS-2549 remove import of non existing module file\_system
 -   VFS-2634 refactor share tests
@@ -398,7 +487,7 @@ CHANGELOG
 
 -   VFS-2180 Improve links conflict resolution
 -   VFS-2180 Improve dbsync implementation
--   VFS-2180 Use gen\_server2 instead of erlang\'s gen\_server module
+-   VFS-2180 Use gen\_server2 instead of erlang\\\'s gen\_server module
 -   VFS-2390 Fix handlers specification in REST API
 -   VFS-2390 Update rebar to version 3
 -   Update memory management
@@ -434,7 +523,7 @@ CHANGELOG
 
 -   VFS-2156 Update release docker
 -   VFS-2156 Update packages tests
--   VFS-2395 Fix given step for checking provider\'s name in file
+-   VFS-2395 Fix given step for checking provider\\\'s name in file
     distribution
 -   VFS-2395 Fix given for data spaces and renamed some steps for spaces
     tests
@@ -461,7 +550,7 @@ CHANGELOG
 -   VFS-2316 Update etls.
 -   Improve client stability
 -   VFS-1963 Improve automatic storage discovery
--   VFS-2270 Print out the hostname of client\'s provider.
+-   VFS-2270 Print out the hostname of client\\\'s provider.
 
 ### 3.0.0-beta8
 
