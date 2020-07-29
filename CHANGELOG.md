@@ -105,7 +105,7 @@ CHANGELOG
 
 -   VFS-6131 Account for changes in emergency passphrase api changes
 -   VFS-5838 entrypoint: Accept any 2xx and 3xx HTTP codes as success
--   VFS-5841 entrypoint: Use PyYAML\\\'s safe loader to silence a
+-   VFS-5841 entrypoint: Use PyYAML\'s safe loader to silence a
     warning
 -   VFS-5841 Parse deployment error using new onepanel errors format
 -   VFS-5698 Add Ceph directories to persistence
@@ -139,8 +139,8 @@ CHANGELOG
 
 ##### onepanel
 
--   VFS-5994 Make \\\'production\\\' Let\\\'s Encrypt mode the default
--   VFS-5940 Rename oz-worker\\\'s GUI package verification envs to more
+-   VFS-5994 Make \'production\' Let\'s Encrypt mode the default
+-   VFS-5940 Rename oz-worker\'s GUI package verification envs to more
     intuitive
 
 ##### oneclient
@@ -447,8 +447,8 @@ CHANGELOG
 -   VFS-2549 add quotation marks to names of groups/spaces/shares/\...
 -   VFS-2549 fix closing notifies
 -   VFS-2549 fix scenario names in group and share tests
--   VFS-2564 add test checking that user can\\\'t view left group
--   VFS-2616 add test checking if user can view group having it\\\'s id
+-   VFS-2564 add test checking that user can\'t view left group
+-   VFS-2616 add test checking if user can view group having it\'s id
 -   VFS-2549 fix waiting for notifies to disappear and switching spaces
 -   VFS-2549 remove import of non existing module file\_system
 -   VFS-2634 refactor share tests
@@ -487,7 +487,7 @@ CHANGELOG
 
 -   VFS-2180 Improve links conflict resolution
 -   VFS-2180 Improve dbsync implementation
--   VFS-2180 Use gen\_server2 instead of erlang\\\'s gen\_server module
+-   VFS-2180 Use gen\_server2 instead of erlang\'s gen\_server module
 -   VFS-2390 Fix handlers specification in REST API
 -   VFS-2390 Update rebar to version 3
 -   Update memory management
@@ -523,7 +523,7 @@ CHANGELOG
 
 -   VFS-2156 Update release docker
 -   VFS-2156 Update packages tests
--   VFS-2395 Fix given step for checking provider\\\'s name in file
+-   VFS-2395 Fix given step for checking provider\'s name in file
     distribution
 -   VFS-2395 Fix given for data spaces and renamed some steps for spaces
     tests
@@ -550,7 +550,7 @@ CHANGELOG
 -   VFS-2316 Update etls.
 -   Improve client stability
 -   VFS-1963 Improve automatic storage discovery
--   VFS-2270 Print out the hostname of client\\\'s provider.
+-   VFS-2270 Print out the hostname of client\'s provider.
 
 ### 3.0.0-beta8
 
