@@ -6,61 +6,62 @@ CHANGELOG
 
 ### 20.02.1
 
--   **VFS-6225** Added new \`triggers\` field to changes stream
-    specification allowing to send events only on specified docs types
-    changes.
--   **VFS-6320** Old \`/spaces/{sid}/indexes\`,
-    \`/spaces/{sid}/indexes/{index\_name}\`,
-    \`/spaces/{sid}/indexes/{index\_name}/reduce\` and
-    \`/spaces/{sid}/indexes/{index\_name}/query\` endpoints were
-    deprecated and will be removed in next major release.
--   **VFS-6288** Basic HA functionality (experimental) - protect
-    Oneprovider from single node failure
--   **VFS-6346** GUI improvements: added Oneprovider GUI notifications,
-    better file selection, additional error handling, better file
-    manager refresh UX, fixed overflow of context menu in file browser,
-    fixes in responsive layout.
--   **VFS-6316** Added \`statfs\` support enabling preview of available
-    storage in each space through oneclient, for instance using \`df\`
-    or \`stat\` utilities.
--   **VFS-6344** GUI: showing information if QoS requirement is
-    impossible to be fulfilled
--   **VFS-6160** Reorganized Local User Mapping (LUMA) management.
-    Introduced feeds for populating LUMA DB.
+-   **VFS-6668** Fix bug resulting in timeouts of workers after 30s.
+-   **VFS-6645** Optimize changes querrying.
+-   **VFS-6631** Rtransfer takes into account storage block size
+    choosing blocks to synchronize.
+-   **VFS-6628** Extended harvesting configuration - it is now possible
+    to select harvesting options, like metadata types to harvest or
+    additional file details (fileName, spaceId), upon index creation.
+    New metadata types are now harvestable - xattrs and rdf. Default
+    values of HarvestingBackendType and HarvestingBackendEndpoint can
+    now be set by Onezone admin - if set, these values can be omitted
+    when creating a new harvester. New option (retry\_on\_rejection)
+    allowing for all payloads rejected by the harvesting backend to be
+    automatically analysed for offending data (e.g. fields that do not
+    match the schema), pruned and submitted again.
+-   **VFS-6607** Fix node restart with HA disabled.
+-   **VFS-6587** Replica synchronizer takes into account storage blocks
+    size during choice of blocks to be replicated.
+-   **VFS-6577** Improve data transfer performance to object storages
+    (e.g. S3) by aligning transferred block size to the object size on
+    target storage, thus minimizing the overhead necessary when updating
+    a file object with partial content.
+-   **VFS-6568** Introduced concept of readonly storage. If enabled,
+    Oneprovider will block any operation that writes, modifies or
+    deletes data on the storage. Such storage can only be used to import
+    data into the space. Mandatory to ensure proper behaviour if the
+    backend storage is actually configured as readonly.
+-   **VFS-6547** Fixed switching between spaces in file browser GUI
+    during upload.
+-   **VFS-6540** Files upload GUI optimization using optimal (per space)
+    upload file chunk size.
+-   **VFS-6535** Updated S3 SDK library to 1.8.7.
+-   **VFS-6504** Added HTTP storage helper allowing registration of HTTP
+    and HTTPS servers as storage sources for Onedata Spaces.
+-   **VFS-6494** Introduced REST API for registering files.
+-   **VFS-6474** Added initial support for XRootD storage, including
+    direct access to XRootD storages and importing of legacy data sets
+    stored on XRootD or EOS servers.
+-   **VFS-6457** Added new publicly visible field to shares -
+    description (supports the markdown format).
+-   **VFS-6455** Support for jumping to selected files in GUI, even if
+    they are not visible on infinite-scroll list.
 -   **VFS-6453** New Open Data and share description views with visual
     Dublin Core editor and Markdown editor.
--   **VFS-4760** Added implicit API caveats that limit access tokens
-    used by Onedata GUIs behind the scenes for authentication and
-    authorization. Different services in the system are presented with
-    user\'s access token with power limited to bare minimum required for
-    the service to handle user requests. For example, Oneproviders do
-    not have access to APIs that could alter or delete user data and
-    memberships.
--   **VFS-6263** New experimental Quality of Service functionality. It
-    is used to manage file replica distribution and redundancy between
-    supporting Oneproviders. Users can define any number of QoS
-    requirements for a file or directory. Each requirement consists of
-    target replicas number and an expression that is used to select
-    storages where the replicas should be placed ‐ it is matched against
-    parameters that were assigned to storages by Oneprovider admins.
+-   **VFS-6450** Added file name and space id to harvested file
+    metadata.
+-   **VFS-6438** Decrease overhead of transfers of already replicated
+    files. Optimization of on demand synchronization streams usage.
+-   **VFS-6431** Added performance logs for object storages, which can
+    generate CSV file containing all storage requests including their
+    duration.
+-   **VFS-6421** New generic GUI plugin for harvesters.
 -   **VFS-6401** All authentication errors are now wrapped in
     UNAUTHORIZED error and map to 401 HTTP code to avoid ambiguity when
     reporting token related errors - tokens can be used for
     authentication as well as input data for some operations (e.g.
     invite tokens).
--   **VFS-6378** Onepanel GUI and REST API now explicitly block
-    supporting a space with more than one imported storage (globally) -
-    such operation was possible in the past but was never supported by
-    the internal storage import logic and led to incoherent view on
-    space data.
--   **VFS-6450** Added file name and space id to harvested file
-    metadata.
--   **VFS-6342** Added build and test plan for Travis to enable
-    automatic builds from develop and release branches of oneclient on
-    GitHub.
--   **VFS-6431** Added performance logs for object storages, which can
-    generate CSV file containing all storage requests including their
-    duration.
 -   **VFS-6390** Because of asynchronous processing, it was possible
     that GraphSync session cleanup intertwined with deleted record
     cleanup (that removes corresponding subscriptions from sessions,
@@ -68,29 +69,68 @@ CHANGELOG
     that interrupted change propagation. Now, if the session is no
     longer existent, subscription removal errors are ignored and the
     propagation completes.
--   **VFS-6140** Added new REST api for file operations, in both normal
-    mode and share mode, accessible under \`/data/{fileId}\` path. Also
-    added \`/lookup-file-id/{filePath}\` endpoint allowing to resolve
-    file path into file Id. Old file related REST api operations become
-    deprecated and will be removed in next major release.
+-   **VFS-6378** Onepanel GUI and REST API now explicitly block
+    supporting a space with more than one imported storage (globally) -
+    such operation was possible in the past but was never supported by
+    the internal storage import logic and led to incoherent view on
+    space data.
+-   **VFS-6370** Create secure fold mechanism on model documents.
+-   **VFS-6369** Fix datastore internal call, batch management during
+    links listing and infinite loop during storage directories creation.
 -   **VFS-6361** Added new REST api for creating transfers and viewing
     file distribution, accessible respectively under \`/transfers\` and
     \`/data/{fileId}/distribution\` paths. Old \`/replicas\`,
     \`/replicas-id\` and \`/replicas-view\` endpoints were deprecated
     and will be removed in next major release.
--   **VFS-6457** Added new publicly visible field to shares -
-    description (supports the markdown format)
--   **VFS-6504** Added HTTP storage helper allowing registration of HTTP
-    and HTTPS servers as storage sources for Onedata Spaces.
--   **VFS-6438** Decrease overhead of transfers of already replicated
-    files. Optimization of on demand synchronization streams usage.
--   **VFS-6494** Introduced REST API for registering files.
--   **VFS-6474** Added initial support for XRootD storage, including
-    direct access to XRootD storages and importing of legacy data sets
-    stored on XRootD or EOS servers.
--   **VFS-6358** Optimization of files upload through GUI
--   **VFS-6369** Fix datastore internal call, batch management during
-    links listing and infinite loop during storage directories creation.
+-   **VFS-6358** Optimization of files upload through GUI.
+-   **VFS-6346** GUI improvements: added Oneprovider GUI notifications,
+    better file selection, additional error handling, better file
+    manager refresh UX, fixed overflow of context menu in file browser,
+    fixes in responsive layout.
+-   **VFS-6344** GUI: showing information if QoS requirement is
+    impossible to be fulfilled.
+-   **VFS-6343** Added delete account feature in GUI.
+-   **VFS-6320** Old \`/spaces/{sid}/indexes\`,
+    \`/spaces/{sid}/indexes/{index\_name}\`,
+    \`/spaces/{sid}/indexes/{index\_name}/reduce\` and
+    \`/spaces/{sid}/indexes/{index\_name}/query\` endpoints were
+    deprecated and will be removed in next major release.
+-   **VFS-6316** Added \`statfs\` support enabling preview of available
+    storage in each space through oneclient, for instance using \`df\`
+    or \`stat\` utilities.
+-   **VFS-6288** Basic HA functionality (experimental) - protect
+    Oneprovider from single node failure.
+-   **VFS-6287** Integrate traverse pools with HA sub-system.
+-   **VFS-6263** New experimental Quality of Service functionality. It
+    is used to manage file replica distribution and redundancy between
+    supporting Oneproviders. Users can define any number of QoS
+    requirements for a file or directory. Each requirement consists of
+    target replicas number and an expression that is used to select
+    storages where the replicas should be placed ‐ it is matched against
+    parameters that were assigned to storages by Oneprovider admins.
+-   **VFS-6261** Integrate high-level services with HA sub-system.
+-   **VFS-6225** Added new \`triggers\` field to changes stream
+    specification allowing to send events only on specified docs types
+    changes.
+-   **VFS-6184** Added the space owner concept. Space owner works like
+    \"root\" within the space - such user is allowed to perform all
+    file/API operations, regardless of the assigned privileges and file
+    permissions / ACLs. Ownership can be assigned to any number of
+    users, and it is forbidden to leave a space without an owner -
+    ownership must be transferred first.
+-   **VFS-6167** Allow nodes adding and deleting in-fly basing on HA
+    sub-system.
+-   **VFS-6160** Reorganized Local User Mapping (LUMA) management.
+    Introduced feeds for populating LUMA DB.
+-   **VFS-6095** Mask private file attributes, such as uid or gid, when
+    showing file attrs in share mode.
+-   **VFS-4760** Added implicit API caveats that limit access tokens
+    used by Onedata GUIs behind the scenes for authentication and
+    authorization. Different services in the system are presented with
+    user\'s access token with power limited to bare minimum required for
+    the service to handle user requests. For example, Oneproviders do
+    not have access to APIs that could alter or delete user data and
+    memberships.
 
 ### 20.02.0-beta4
 
