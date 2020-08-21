@@ -23,7 +23,8 @@ CHANGELOG
 -   **VFS-6607** Fix node restart with HA disabled.
 -   **VFS-6587** Replica synchronizer takes into account storage blocks
     size during choice of blocks to be replicated.
--   **VFS-6580** Fix changes streams management.
+-   **VFS-6580** Fixed bug that could block dbsync on-demand streams on
+    multi-node deployments.
 -   **VFS-6577** Improve data transfer performance to object storages
     (e.g. S3) by aligning transferred block size to the object size on
     target storage, thus minimizing the overhead necessary when updating
@@ -125,6 +126,11 @@ CHANGELOG
     Introduced feeds for populating LUMA DB.
 -   **VFS-6095** Mask private file attributes, such as uid or gid, when
     showing file attrs in share mode.
+-   **VFS-5648** Extended QoS expression to allow comparators (\<, \>,
+    \<=, \>=) and numeric values. Changed \"-\" operator to \"\\\".
+    Space characters (\" \"), dashes (\"-\") and underscores (\"\_\")
+    are now allowed in QoS parameters. Added more details to invalid QoS
+    expression errors.
 -   **VFS-4760** Added implicit API caveats that limit access tokens
     used by Onedata GUIs behind the scenes for authentication and
     authorization. Different services in the system are presented with
