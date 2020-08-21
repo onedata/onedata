@@ -23,6 +23,7 @@ CHANGELOG
 -   **VFS-6607** Fix node restart with HA disabled.
 -   **VFS-6587** Replica synchronizer takes into account storage blocks
     size during choice of blocks to be replicated.
+-   **VFS-6580** Fix changes streams management.
 -   **VFS-6577** Improve data transfer performance to object storages
     (e.g. S3) by aligning transferred block size to the object size on
     target storage, thus minimizing the overhead necessary when updating
