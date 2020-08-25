@@ -47,6 +47,8 @@ CHANGELOG
     stored on XRootD or EOS servers.
 -   **VFS-6457** Added new publicly visible field to shares -
     description (supports the markdown format).
+-   **VFS-6456** Do not allow the user to perform actions in the GUI
+    related to transfers without the appropriate permissions.
 -   **VFS-6455** Support for jumping to selected files in GUI, even if
     they are not visible on infinite-scroll list.
 -   **VFS-6453** New Open Data and share description views with visual
