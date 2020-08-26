@@ -1,8 +1,39 @@
-# Release notes for project onedata
-
+Release notes for project onedata
+=================================
 
 CHANGELOG
 ---------
+
+### 19.02.4
+
+-   **VFS-6635** Improve synchronization retries politics to prevent
+    synchronizer blocking by dead providers.
+-   **VFS-6631** Rtransfer takes into account storage block size
+    choosing blocks to synchronize.
+-   **VFS-6607** Fix node restart with HA disabled.
+-   **VFS-6587** Replica synchronizer takes into account storage blocks
+    size during choice of blocks to be replicated.
+-   **VFS-6578** Fix events manager initialization to prevent races
+    between events.
+-   **VFS-6540** Files upload GUI optimization using optimal (per space)
+    upload file chunk size.
+-   **VFS-6438** Decrease overhead of transfers of already replicated
+    files. Optimization of on demand synchronization streams usage.
+-   **VFS-6401** All authentication errors are now wrapped in
+    UNAUTHORIZED error and map to 401 HTTP code to avoid ambiguity when
+    reporting token related errors - tokens can be used for
+    authentication as well as input data for some operations (e.g.
+    invite tokens).
+-   **VFS-6390** Because of asynchronous processing, it was possible
+    that GraphSync session cleanup intertwined with deleted record
+    cleanup (that removes corresponding subscriptions from sessions,
+    possibly including the session being cleaned up) and caused an error
+    that interrupted change propagation. Now, if the session is no
+    longer existent, subscription removal errors are ignored and the
+    propagation completes.
+-   **VFS-6369** Fix datastore internal call, batch management during
+    links listing and infinite loop during storage directories creation.
+
 
 ### 19.02.3
 
