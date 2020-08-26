@@ -8,6 +8,8 @@ CHANGELOG
 
 -   **VFS-6668** Fix bug resulting in timeouts of workers after 30s.
 -   **VFS-6645** Optimize changes querrying.
+-   **VFS-6635** Improve synchronization retries politics to prevent
+    synchronizer blocking by dead providers.
 -   **VFS-6631** Rtransfer takes into account storage block size
     choosing blocks to synchronize.
 -   **VFS-6628** Extended harvesting configuration - it is now possible
@@ -25,6 +27,8 @@ CHANGELOG
     size during choice of blocks to be replicated.
 -   **VFS-6580** Fixed bug that could block dbsync on-demand streams on
     multi-node deployments.
+-   **VFS-6578** Fix events manager initialization to prevent races
+    between events.
 -   **VFS-6577** Improve data transfer performance to object storages
     (e.g. S3) by aligning transferred block size to the object size on
     target storage, thus minimizing the overhead necessary when updating
