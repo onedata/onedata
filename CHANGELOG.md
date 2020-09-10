@@ -34,7 +34,6 @@ CHANGELOG
 -   **VFS-6369** Fix datastore internal call, batch management during
     links listing and infinite loop during storage directories creation.
 
-
 ### 19.02.3
 
 * Minor bugfixes
