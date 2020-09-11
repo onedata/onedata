@@ -8,10 +8,6 @@ CHANGELOG
 
 -   **VFS-6668** Fix bug resulting in timeouts of workers after 30s.
 -   **VFS-6645** Optimize changes querrying.
--   **VFS-6635** Improve synchronization retries politics to prevent
-    synchronizer blocking by dead providers.
--   **VFS-6631** Rtransfer takes into account storage block size
-    choosing blocks to synchronize.
 -   **VFS-6628** Extended harvesting configuration - it is now possible
     to select harvesting options, like metadata types to harvest or
     additional file details (fileName, spaceId), upon index creation.
@@ -22,13 +18,8 @@ CHANGELOG
     allowing for all payloads rejected by the harvesting backend to be
     automatically analysed for offending data (e.g. fields that do not
     match the schema), pruned and submitted again.
--   **VFS-6607** Fix node restart with HA disabled.
--   **VFS-6587** Replica synchronizer takes into account storage blocks
-    size during choice of blocks to be replicated.
 -   **VFS-6580** Fixed bug that could block dbsync on-demand streams on
     multi-node deployments.
--   **VFS-6578** Fix events manager initialization to prevent races
-    between events.
 -   **VFS-6577** Improve data transfer performance to object storages
     (e.g. S3) by aligning transferred block size to the object size on
     target storage, thus minimizing the overhead necessary when updating
@@ -40,8 +31,6 @@ CHANGELOG
     backend storage is actually configured as readonly.
 -   **VFS-6547** Fixed switching between spaces in file browser GUI
     during upload.
--   **VFS-6540** Files upload GUI optimization using optimal (per space)
-    upload file chunk size.
 -   **VFS-6535** Updated S3 SDK library to 1.8.7.
 -   **VFS-6504** Added HTTP storage helper allowing registration of HTTP
     and HTTPS servers as storage sources for Onedata Spaces.
@@ -59,32 +48,16 @@ CHANGELOG
     Dublin Core editor and Markdown editor.
 -   **VFS-6450** Added file name and space id to harvested file
     metadata.
--   **VFS-6438** Decrease overhead of transfers of already replicated
-    files. Optimization of on demand synchronization streams usage.
 -   **VFS-6431** Added performance logs for object storages, which can
     generate CSV file containing all storage requests including their
     duration.
 -   **VFS-6421** New generic GUI plugin for harvesters.
--   **VFS-6401** All authentication errors are now wrapped in
-    UNAUTHORIZED error and map to 401 HTTP code to avoid ambiguity when
-    reporting token related errors - tokens can be used for
-    authentication as well as input data for some operations (e.g.
-    invite tokens).
--   **VFS-6390** Because of asynchronous processing, it was possible
-    that GraphSync session cleanup intertwined with deleted record
-    cleanup (that removes corresponding subscriptions from sessions,
-    possibly including the session being cleaned up) and caused an error
-    that interrupted change propagation. Now, if the session is no
-    longer existent, subscription removal errors are ignored and the
-    propagation completes.
 -   **VFS-6378** Onepanel GUI and REST API now explicitly block
     supporting a space with more than one imported storage (globally) -
     such operation was possible in the past but was never supported by
     the internal storage import logic and led to incoherent view on
     space data.
 -   **VFS-6370** Create secure fold mechanism on model documents.
--   **VFS-6369** Fix datastore internal call, batch management during
-    links listing and infinite loop during storage directories creation.
 -   **VFS-6361** Added new REST api for creating transfers and viewing
     file distribution, accessible respectively under \`/transfers\` and
     \`/data/{fileId}/distribution\` paths. Old \`/replicas\`,
@@ -173,6 +146,44 @@ CHANGELOG
 -   VFS-5714 Added onedatafs\_jupyter\_conda rule
 -   VFS-5714 Added fs.onedatafs conda rule
 -   VFS-5714 Added oneclient conda rules
+
+### 19.02.4
+
+-   **VFS-6635** Improve synchronization retries politics to prevent
+    synchronizer blocking by dead providers.
+-   **VFS-6631** Rtransfer takes into account storage block size
+    choosing blocks to synchronize.
+-   **VFS-6607** Fix node restart with HA disabled.
+-   **VFS-6587** Replica synchronizer takes into account storage blocks
+    size during choice of blocks to be replicated.
+-   **VFS-6578** Fix events manager initialization to prevent races
+    between events.
+-   **VFS-6540** Files upload GUI optimization using optimal (per space)
+    upload file chunk size.
+-   **VFS-6438** Decrease overhead of transfers of already replicated
+    files. Optimization of on demand synchronization streams usage.
+-   **VFS-6401** All authentication errors are now wrapped in
+    UNAUTHORIZED error and map to 401 HTTP code to avoid ambiguity when
+    reporting token related errors - tokens can be used for
+    authentication as well as input data for some operations (e.g.
+    invite tokens).
+-   **VFS-6390** Because of asynchronous processing, it was possible
+    that GraphSync session cleanup intertwined with deleted record
+    cleanup (that removes corresponding subscriptions from sessions,
+    possibly including the session being cleaned up) and caused an error
+    that interrupted change propagation. Now, if the session is no
+    longer existent, subscription removal errors are ignored and the
+    propagation completes.
+-   **VFS-6369** Fix datastore internal call, batch management during
+    links listing and infinite loop during storage directories creation.
+
+### 19.02.3
+
+- Minor bugfixes
+
+### 19.02.2
+
+- Bugfixes and stability improvements
 
 ### 19.02.1
 
