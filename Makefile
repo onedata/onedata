@@ -6,7 +6,7 @@ DOCKER_REG_NAME         ?= "docker.onedata.org"
 DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
 DOCKER_BASE_IMAGE       ?= "ubuntu:18.04"
-DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:1902-1"
+DOCKER_DEV_BASE_IMAGE   ?= "onedata/worker:2002-2"
 CONDA_TOKEN             ?= ""
 CONDA_BUILD_OPTIONS     ?= ""
 HTTP_PROXY              ?= "http://proxy.devel.onedata.org:3128"
@@ -89,11 +89,13 @@ make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --gro
 mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64 && \
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.diff.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.changes package/$(DISTRIBUTION)/source | true
 mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binary-amd64 && \
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
+	mv $(1)/package/packages/*.diff.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.changes package/$(DISTRIBUTION)/source | true
 unpack = tar xzf $(1).tar.gz
