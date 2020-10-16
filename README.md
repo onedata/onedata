@@ -44,7 +44,6 @@ This repository combines these components into one source package, which can be 
 |-----------|----------|--------------|
 | **Onepanel** | https://github.com/onedata/onepanel | Onepanel administration service implementation. |
 
-
 ## LUMA
 
 | Submodule | URL      | Description |
@@ -67,7 +66,7 @@ instead of directly invoking Git `submodule` commands.
 
 ## Getting Started
 
-The easiest way to get started with using or deploying Onedata is to start with our official [documentation](https://onedata.org/docs/index.html).
+The easiest way to get started with using or deploying Onedata is to start with our official [documentation](https://onedata.org/#/home/documentation/stable/index.html).
 
 In order to try deploying Onedata, or specific components we have prepared a set of [example configurations and scenarios](https://github.com/onedata/getting-started).
 
@@ -87,10 +86,6 @@ The build process itself is fully based on Docker containers, so no other prereq
 
 Please use [GitHub issues](https://github.com/onedata/onedata/issues) mechanism as the main channel for reporting bugs and requesting support or new features.
 
-For more detailed support and discussions online please contact as at our public [HipChat channel](https://www.hipchat.com/g3ST0Aaci), however our availability at this channel is a on a *best effort* basis.
-
-More information about support can be found [here](https://onedata.org/support).
-
 ## Copyright and license
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -107,3 +102,5 @@ limitations under the License.
 
 ## Acknowledgements
 This work was supported in part by 2017's research funds in the scope of the co-financed international projects framework (project no. 3711/H2020/2017/2).
+
+This work is co-funded by the EOSC-hub project (Horizon 2020) under Grant number 777536.
