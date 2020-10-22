@@ -6,6 +6,8 @@ CHANGELOG
 
 ### 20.02.2
 
+-   **VFS-6925** Fixed inability to scroll down files list in Firefox on
+    macOS using HiDPI display.
 -   **VFS-6853** Matching session cookie is now required to verify a GUI
     access tokens (they are used behind the scenes by the Onedata web
     applications), which increases security.
