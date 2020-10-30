@@ -4,6 +4,49 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.2
+
+-   **VFS-6925** Fixed inability to scroll down files list in Firefox on
+    macOS using HiDPI display.
+-   **VFS-6853** Matching session cookie is now required to verify a GUI
+    access tokens (they are used behind the scenes by the Onedata web
+    applications), which increases security.
+-   **VFS-6851** Fixed a security issue in Oneprovider share GUI.
+-   **VFS-6845** Prevent application from stopping until all documents
+    are correctly persisted in order to improve resistance to temporary
+    database errors.
+-   **VFS-6746** Added available QoS parameters suggestion box in QoS
+    expression editor.
+-   **VFS-6732** New JSON and RDF metadata editor based on Ace Editor.
+-   **VFS-6685** Added new REST API for removing custom file metadata
+    (xattrs, json and rdf).
+-   **VFS-6673** Added support for Archivematica, allowing to use
+    Onedata spaces as Archivematica transfer sources. Oneclient now has
+    a special command line flag --enable-archivematica, which toggles
+    automatic generation of Archivematica configuration and metadata
+    virtual files in the Fuse file system.
+-   **VFS-6623** S3 storage helper now supports public buckets, which do
+    not require any credentials. The access and secret keys can be left
+    empty when adding storage.
+-   **VFS-6577** Improve data transfer performance to object storages
+    (e.g. S3) by aligning transferred block size to the object size on
+    target storage, thus minimizing the overhead necessary when updating
+    a file object with partial content.
+-   **VFS-6570** Showing loading indicator in file browser until file is
+    available for download.
+-   **VFS-6535** Updated S3 SDK library to 1.8.7.
+-   **VFS-6456** Show more details about lack of privileges when trying
+    to perform various actions in GUI.
+-   **VFS-6338** Enhanced API of the mechanism for importing existing
+    data into Onedata spaces without need for copying the data. The
+    mechanism is now called "storage import". Introduced modes of
+    storage import: "manual" which allows for manual registration of
+    files and "auto" which enables automatic detection and import of
+    files from the storage. Introduced possibility to forcefully
+    start/stop scans of auto storage import. Redesigned GUI related to
+    storage import, adjusted to the new features.
+
+
 ### 20.02.1
 
 -   **VFS-6668** Fix bug resulting in timeouts of workers after 30s.
