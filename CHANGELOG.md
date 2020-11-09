@@ -4,6 +4,14 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.3
+
+-   **VFS-6967** Fixed not visible JSON and RDF metadata editors in GUI
+    in Safari.
+-   **VFS-6927** Optimize file blocks management to decrease memory
+    usage.
+
+
 ### 20.02.2
 
 -   **VFS-6925** Fixed inability to scroll down files list in Firefox on
