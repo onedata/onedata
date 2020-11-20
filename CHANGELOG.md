@@ -198,6 +198,11 @@ CHANGELOG
 -   VFS-5714 Added fs.onedatafs conda rule
 -   VFS-5714 Added oneclient conda rules
 
+### 19.02.5
+
+-   **VFS-6857** Add support for resuming partial file downloads via
+    CDMI.
+
 ### 19.02.4
 
 -   **VFS-6635** Improve synchronization retries politics to prevent
