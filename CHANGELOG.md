@@ -4,6 +4,30 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.4
+
+-   **VFS-7015** Added I/O proxy fallback in direct access mode in
+    Oneclient, allowing to access files for which permissions on a
+    specific storage are not properly configured, even when global
+    permissions allow access.
+-   **VFS-7003** Added new counters presenting progress of current/last
+    finished scan of the storage import mechanism - number of all
+    processed files (\`Processed files\`) and the total number of files
+    residing on the storage during the scan (\`Total storage files\`).
+-   **VFS-6958** Added new endpoint that checks correctness of a QoS
+    expression and returns the list of storages that match the
+    expression.
+-   **VFS-6940** Fix truncating of sparse files.
+-   **VFS-6891** Added new REST api for file deletion, uploading and
+    downloading in both normal mode and share mode, accessible under
+    \`/data/{fileId}\` path.
+-   **VFS-6841** Introduce unified time management in all Onedata
+    components - all clusters now regularly synchronize their clocks
+    with the Onezone service, the process is managed by Onepanel's
+    master node.
+-   **VFS-6687** Blocked file path resolutions for unsupported spaces.
+
+
 ### 20.02.3
 
 -   **VFS-6967** Fixed not visible JSON and RDF metadata editors in GUI
