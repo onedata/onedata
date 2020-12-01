@@ -112,14 +112,22 @@ def generate_config_file(file_path):
 
 def start_onepanel():
     log('Starting op_panel...')
-    with open(os.devnull, 'w') as null:
-        if os.environ.get(ONEPANEL_OVERRIDE):
-            sp.check_call([os.path.join(os.environ.get(ONEPANEL_OVERRIDE),
-                           "_build/default/rel/op_panel/bin/op_panel"),
-                           'start'])
-        else:
-            sp.check_call(['service', 'op_panel', 'start'], stdout=null,
-                          stderr=null)
+
+    cmd = ['service', 'op_panel', 'start']
+    if os.environ.get(ONEPANEL_OVERRIDE):
+        op_panel_script = os.path.join(
+            os.environ.get(ONEPANEL_OVERRIDE),
+            "_build/default/rel/op_panel/bin/op_panel"
+        )
+        cmd = [op_panel_script, 'start']
+
+    try:
+        sp.check_output(cmd)
+    except sp.CalledProcessError as err:
+        log('ERROR: ' + str(err))
+        log('Output was:\n')
+        log(str(err.output))
+        sys.exit(err.returncode)
 
     wait_for_rest_listener()
     log('[  OK  ] op_panel started')
