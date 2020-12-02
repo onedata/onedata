@@ -112,14 +112,22 @@ def generate_config_file(file_path):
 
 def start_onepanel():
     log('Starting op_panel...')
-    with open(os.devnull, 'w') as null:
-        if os.environ.get(ONEPANEL_OVERRIDE):
-            sp.check_call([os.path.join(os.environ.get(ONEPANEL_OVERRIDE),
-                           "_build/default/rel/op_panel/bin/op_panel"),
-                           'start'])
-        else:
-            sp.check_call(['service', 'op_panel', 'start'], stdout=null,
-                          stderr=null)
+
+    cmd = ['service', 'op_panel', 'start']
+    if os.environ.get(ONEPANEL_OVERRIDE):
+        op_panel_script = os.path.join(
+            os.environ.get(ONEPANEL_OVERRIDE),
+            "_build/default/rel/op_panel/bin/op_panel"
+        )
+        cmd = [op_panel_script, 'start']
+
+    try:
+        sp.check_output(cmd)
+    except sp.CalledProcessError as err:
+        log('ERROR: ' + str(err))
+        log('Output was:\n')
+        log(str(err.output))
+        sys.exit(err.returncode)
 
     wait_for_rest_listener()
     log('[  OK  ] op_panel started')
@@ -304,7 +312,7 @@ def unwrap_error_with_hosts(error_obj):
     return error_id, description, details, nodes
 
 
-# Throws on connection nerror
+# Throws on connection error
 def wait_for_workers():
     url = 'https://127.0.0.1:9443/api/v3/onepanel/provider/nagios'
     while not nagios_up(url):
@@ -373,7 +381,7 @@ def show_details():
     show_ports(json)
 
 
-def infinite_loop(log_level):
+def print_logs(log_level, infinitely=True):
     logs = []
     if log_level in LOG_LEVELS:
         log('\nLogging on \'{0}\' level:'.format(log_level))
@@ -381,12 +389,13 @@ def infinite_loop(log_level):
             log_file = os.path.join(log_dir, log_level + '.log')
             logs.append((log_prefix, log_file, None, None))
 
-    while True:
-        logs = print_logs(logs)
+    logs = print_new_logs(logs)
+    while infinitely:
+        logs = print_new_logs(logs)
         time.sleep(1)
 
 
-def print_logs(logs):
+def print_new_logs(logs):
     new_logs = []
 
     for log_prefix, log_file, log_fd, log_ino in logs:
@@ -410,6 +419,7 @@ def print_logs(logs):
 
 
 if __name__ == '__main__':
+    current_log_level = os.environ.get('ONEPANEL_LOG_LEVEL', 'info').lower()
     try:
         sp.call(['/root/persistence-dir.py', '--copy-missing-files'])
 
@@ -464,12 +474,16 @@ if __name__ == '__main__':
 
         show_details()
     except Exception as e:
-        log('\n{0}'.format(e))
+        log('\nERROR: {0}'.format(e))
         if os.environ.get('ONEPANEL_DEBUG_MODE', 'false').lower() == 'true':
             pass
         else:
+            log(' ')
+            log('Below is a dump of all application logs at the moment of failure:')
+            log('-------------------------------------------------------------')
+            print_logs(current_log_level, infinitely=False)
+            log('-------------------------------------------------------------')
+            log('ERROR: Starting the container failed - see above.')
             sys.exit(1)
 
-    log_level = os.environ.get('ONEPANEL_LOG_LEVEL', 'info').lower()
-
-    infinite_loop(log_level)
+    print_logs(current_log_level, infinitely=True)
