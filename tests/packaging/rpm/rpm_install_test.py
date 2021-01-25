@@ -114,7 +114,7 @@ def oneprovider(request, onezone, setup_command):
                                    release=distribution.release)
     command = '{command} && ' \
         'yum -y install python-setuptools python-pip && ' \
-        'pip install --upgrade pip && ' \
+        'pip install --upgrade pip==20.3.4 && ' \
         'pip install requests'.format(command=command)
 
     assert 0 == docker.exec_(distribution.container,
