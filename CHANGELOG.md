@@ -4,6 +4,29 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.5
+
+-   **VFS-7129** Improved connection pool management for HTTP storages,
+    including minimized reconnections and DNS caching.
+-   **VFS-7124** Fixed adding user mapping to LUMA local feed on POSIX
+    incompatible storages.
+-   **VFS-7113** Fixed original timestamp preservation during \`cp
+    \--preserve=times\` or \`rsync \--times\` commands.
+-   **VFS-7079** Updated the list of system extended attributes in
+    oneclient, org.onedata.uuid was renamed to org.onedata.guid and
+    org.onedata.file\_id now contains CDMI object id.
+-   **VFS-7058** Handling detached shares after files or directories
+    removal in GUI.
+-   **VFS-7047** Fixed possible race when using buffered helper to write
+    to storage which fails after the file size has been updated.
+-   **VFS-6999** Improve error reporting in entrypoints of
+    oneprovider/onezone dockers, always dump application logs to stdout
+    in case of failures during batch deployment.
+-   **VFS-6858** Added support for cancelling storage auto-cleaning run
+    using GUI.
+-   **VFS-6745** Added new view with token templates in tokens creator
+    GUI.
+
 ### 20.02.4
 
 -   **VFS-7015** Added I/O proxy fallback in direct access mode in
