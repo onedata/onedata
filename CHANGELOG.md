@@ -1,8 +1,19 @@
-Release notes for project onedata
-=================================
+# Release notes for project onedata
 
-CHANGELOG
----------
+## CHANGELOG
+
+### 20.02.6
+
+-   **VFS-7182** Storage name no longer needs to be unique.
+-   **VFS-7154** Improved support for preservation of attributes during
+    rsync or cp commands, chown does not raise errors anymore.
+-   **VFS-7119** Dropped support for OnedataFS Anaconda packages for
+    Python 2, due to Python 2 EOL.
+-   **VFS-6928** Fixed possible deadlock in massive parallel truncate
+    operations on Ceph pools, which could\'ve affected replica eviction
+    and delete operations.
+-   **VFS-6802** Added visual QoS expression editor with live matching
+    storages evaluation.
 
 ### 20.02.5
 
