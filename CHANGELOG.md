@@ -1,6 +1,28 @@
-# Release notes for project onedata
+Release notes for project onedata
+=================================
 
-## CHANGELOG
+CHANGELOG
+---------
+
+### 21.02.0-alpha2
+
+-   **VFS-7280** Fixed page reload after Let\'s Encrypt certificate
+    generation via Onepanel GUI.
+-   **VFS-7276** Improved handling of startup errors in Oneclient,
+    including more graceful handling of various exceptions and more
+    informative error messages including Oneclient and Oneprovider
+    compatibility and invalid token issues.
+-   **VFS-7274** Added SIGTERM and SIGINT handlers to Oneclient,
+    ensuring that after the oneclient process is stopped by some other
+    process, the mountpoint is properly released.
+-   **VFS-7256** Fixed OnedataFS token refresh, which caused
+    disconnection from Oneprovider after the token expired.
+-   **VFS-7165** Add a workaround for Erlang\'s SSL implementation that
+    would not reload server certificate chain when it is changed (e.g.
+    after Let\'s Encrypt certificate regeneration).
+-   **VFS-6566** Improved UX and fixed minor issues in share views.
+    Fixed inability to open share hosted by Oneprovider 19.02.x using
+    Onezone 20.02.x.
 
 ### 20.02.6
 
