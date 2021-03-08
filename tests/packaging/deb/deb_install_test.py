@@ -78,7 +78,7 @@ def onezone(request):
 
 
 @pytest.fixture(scope='module',
-                params=['xenial', 'bionic'])
+                params=['xenial', 'bionic', 'focal'])
 def oneclient(request, setup_command):
     distribution = Distribution(request, privileged=True)
     command = setup_command.format(dist=distribution.name,
