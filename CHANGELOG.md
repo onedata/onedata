@@ -4,6 +4,16 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha4
+
+-   **VFS-7397** Added new option to oneclient \`\--show-space-ids\`
+    which allows to list spaces using their space Id\'s instead of names
+    in the top level oneclient mount directory.
+-   **VFS-7378** Removed deprecated Oneprovider REST API. The modern
+    API, available since versions 20.02.\*, operates on file IDs rather
+    than paths. A special endpoint for resolving file IDs based on paths
+    is available.
+
 ### 21.02.0-alpha3
 
 -   **VFS-7275** Improved Oneclient exception handling, including
