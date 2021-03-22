@@ -6,6 +6,9 @@ CHANGELOG
 
 ### 20.02.7
 
+-   **VFS-7466** Fixed PyFilesystem opener entrypoint allowing to create
+    OnedataFS instances in Python using urls of the form
+    'onedatafs://HOST:PORT?token=...'.
 -   **VFS-7294** Added publicly available REST endpoints for fetching
     information and data of shared files/directories. The data-related
     endpoints are offered by Onezone, which redirects to a suitable
