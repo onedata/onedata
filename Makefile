@@ -509,3 +509,7 @@ onedatafs_jupyter_conda:
 		-e PKG_VERSION=$(ONEDATAFS_JUPYTER_VERSION) \
 		-e CONDA_BUILD_OPTIONS="$(CONDA_BUILD_OPTIONS)" \
 		-e FSONEDATAFS_VERSION=$(FSONEDATAFS_VERSION)
+
+
+codetag-tracker:
+	./bamboos/scripts/codetag-tracker.sh --branch=${BRANCH} --excluded-dirs=node_package,oneclient,fs-onedatafs

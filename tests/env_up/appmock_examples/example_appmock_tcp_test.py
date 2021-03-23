@@ -65,9 +65,7 @@ def send_some_and_receive(appmock_ip):
             ssl_sock.send(type1_message)
         for i in range(type2_message_count):
             ssl_sock.send(type2_message)
-        # TODO jesli nie ma tego sleepa to jest jakies zakleszczenie
-        # nie rozumiem dlaczego. Pewnie dlatego ze z tego samego procesu
-        # wysylam blokujace zadanie, zeby mi cos server przyslal.
+        # NOTE: without the sleep, a deadlock can occur, but it's unclear why
         time.sleep(1)
         # We are running the test and tested code in the same process, so lets
         # send data from here. Normally, it would be sent from test code.

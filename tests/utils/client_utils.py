@@ -172,7 +172,7 @@ def mount_users(request, environment, context, client_dockers,
             clean_mount_path(user_name, client)
             pytest.fail("Error mounting oneclient")
 
-        # todo without this sleep protocol error occurs more often during cleaning spaces
+        # NOTE without this sleep protocol error occurs more often during cleaning spaces
         time.sleep(3)
 
         if token != 'bad_token':
