@@ -11,9 +11,6 @@ CHANGELOG
 
 ### 21.02.0-alpha5
 
--   **VFS-7466** Fixed PyFilesystem opener entrypoint allowing to create
-    OnedataFS instances in Python using urls of the form
-    \'onedatafs://HOST:PORT?token=\...\'.
 -   **VFS-7358** Added support for accessing open data shares in
     oneclient with \--open-shares-mode option.
 -   **VFS-7351** It is now possible to download directories and multiple
@@ -61,6 +58,42 @@ CHANGELOG
 -   **VFS-6566** Improved UX and fixed minor issues in share views.
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
+
+### 20.02.7
+
+-   **VFS-7466** Fixed PyFilesystem opener entrypoint allowing to create
+    OnedataFS instances in Python using urls of the form
+    \'onedatafs://HOST:PORT?token=\...\'.
+-   **VFS-7294** Added publicly available REST endpoints for fetching
+    information and data of shared files/directories. The data-related
+    endpoints are offered by Onezone, which redirects to a suitable
+    Oneprovider so that a guest user does not need any knowledge of the
+    environment to access the data. Improved the Web GUI's shares view
+    to present the public endpoints in an easy-to-use manner.
+-   **VFS-7280** Fixed page reload after Let's Encrypt certificate
+    generation via Onepanel GUI.
+-   **VFS-7276** Improved handling of startup errors in Oneclient,
+    including more graceful handling of various exceptions and more
+    informative error messages including Oneclient and Oneprovider
+    compatibility and invalid token issues.
+-   **VFS-7275** Improved Oneclient exception handling, including
+    connection errors and invalid tokens.
+-   **VFS-7274** Added SIGTERM and SIGINT handlers to Oneclient,
+    ensuring that after the oneclient process is stopped by some other
+    process, the mountpoint is properly released.
+-   **VFS-7271** Fixed displaying shared space root directory name in
+    GUI.
+-   **VFS-7256** Fixed OnedataFS token refresh, which caused
+    disconnection from Oneprovider after the token expired.
+-   **VFS-7165** Add a workaround for Erlang's SSL implementation that
+    would not reload server certificate chain when it is changed (e.g.
+    after Let's Encrypt certificate regeneration).
+-   **VFS-6638** Fixed handling duplicate clusters states on clusters
+    list in GUI.
+-   **VFS-6566** Improved UX and fixed minor issues in share views.
+    Fixed inability to open share hosted by Oneprovider 19.02.x using
+    Onezone 20.02.x.
+-   **VFS-6289** Add support for ANONYMOUS@ principal to ACL.
 
 ### 20.02.6
 
