@@ -67,7 +67,7 @@ class TestTransferOnf(AbstractPerformanceTest):
         dir_path_2 = client2.absolute_path('s1')
 
         _create_files(client1, files_number, file_size, dir_path_1)
-        # TODO wait for synchronization between providers before copying
+        # NOTE wait for synchronization between providers before copying
         time.sleep(10)
 
         test_result = _execute_test(client2, files_number, file_size / 1024,
