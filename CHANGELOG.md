@@ -4,6 +4,11 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha6
+
+-   **VFS-7486** Added option to nulldevice helper allowing control of
+    file size returned by getattr in simulated file systems.
+
 ### 21.02.0-alpha5
 
 -   **VFS-7466** Fixed PyFilesystem opener entrypoint allowing to create
