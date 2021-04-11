@@ -4,6 +4,35 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha7
+
+-   **VFS-7517** Several bug fixes related to edge-cases when moving or
+    deleting files.
+-   **VFS-7509** Added support for absolute symlinks relative to
+    Oneclient mountpoint, i.e. always pointing to the same file in a
+    space, regardless of actual Oneclient mountpoint path.
+-   **VFS-7429** Implemented the concept of datasets. Datasets allow the
+    space users to organize their data into collections with desired
+    granularity. A file or directory marked as a dataset offers
+    additional features, such as optional data and metadata protection
+    or the ability to create persistent snapshots of the physical
+    dataset contents. In case of a directory, a dataset covers all its
+    subdirectories and files. Datasets can be nested, allowing users to
+    compose arbitrary hierarchical structures. Added corresponding views
+    for managing datasets and write protection flags in file browser Web
+    GUI and a REST API, accessible under \`/datasets\`,
+    \`/datasets/{DatasetId}\` and \`/data/{FileId}/dataset/summary\`
+    paths.
+-   **VFS-7428** Added support for hard links and symlinks. Added
+    corresponding REST api specific for hard and symbolic links,
+    accessible under /data/{FileId}/hardlinks and
+    /data/{FileId}/symlink\_value paths.
+-   **VFS-7360** Added support for hardlinks and symlinks through
+    Oneclient POSIX interface.
+-   **VFS-7305** Basic support for hard links and symbolic links on the
+    filesystem level, interaction with high-level mechanisms such as
+    data transfers, storage import or QoS is still to be refined.
+
 ### 21.02.0-alpha6
 
 -   **VFS-7486** Added option to nulldevice helper allowing control of
