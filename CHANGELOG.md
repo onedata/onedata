@@ -88,6 +88,11 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 
+### 20.02.8
+
+-   **VFS-7517** Several bug fixes related to edge-cases when moving or
+    deleting files.
+
 ### 20.02.7
 
 -   **VFS-7466** Fixed PyFilesystem opener entrypoint allowing to create
