@@ -4,6 +4,11 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.9
+
+-   **VFS-7579** Implement simple, automatically rotated file access
+    audit log, which can be optionally enabled in Oneprovider config.
+
 ### 20.02.8
 
 -   **VFS-7517** Several bug fixes related to edge-cases when moving or
