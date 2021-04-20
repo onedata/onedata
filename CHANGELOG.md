@@ -88,6 +88,11 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 
+### 20.02.9
+
+-   **VFS-7579** Implement simple, automatically rotated file access
+    audit log, which can be optionally enabled in Oneprovider config.
+
 ### 20.02.8
 
 -   **VFS-7517** Several bug fixes related to edge-cases when moving or
