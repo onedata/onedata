@@ -13,8 +13,7 @@ oneclient_package = [path for path in packages
                           or path.startswith('oneclient-debuginfo')))][0]
 
 # install package
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=oneclient_package)
+check_call(['sh', '-c', 'apt -y install /root/pkg/{package}'.format(package=oneclient_package)
             ], stderr=STDOUT)
 
 # validate package installation
