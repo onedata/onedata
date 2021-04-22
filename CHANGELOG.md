@@ -4,6 +4,8 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha8
+
 ### 21.02.0-alpha7
 
 -   **VFS-7517** Several bug fixes related to edge-cases when moving or
