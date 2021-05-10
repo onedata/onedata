@@ -4,6 +4,13 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha9
+
+-   **VFS-7592** Added support for the Range header during directory or
+    multi file (bulk) downloads, making it possible to resume them in
+    case of interruption or network failure.
+
+
 ### 21.02.0-alpha8
 
 -   **VFS-7575** Add the possibility to incorporate an XRootD server
