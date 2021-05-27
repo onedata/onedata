@@ -1,6 +1,19 @@
-# Release notes for project onedata
+Release notes for project onedata
+=================================
 
-## CHANGELOG
+CHANGELOG
+---------
+
+### 21.02.0-alpha11
+
+-   **VFS-7663** Changed background image of sign-in page in Onezone and
+    Onepanel.
+-   **VFS-7648** Added Web GUI views for browsing and creating datasets
+    and archives.
+-   **VFS-7589** Added StorageRouter and BufferedStorage helpers to
+    handling of aggregate storages such as archive storage.
+-   **VFS-7304** Add preliminary REST API for dataset archivization - to
+    be extended in near future.
 
 ### 21.02.0-alpha10
 
