@@ -4,6 +4,12 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha12
+
+-   **VFS-7705** Added more file actions to archive file browser GUI:
+    share, metadata, permissions read, data distribution and quality of
+    service.
+
 ### 21.02.0-alpha11
 
 -   **VFS-7663** Changed background image of sign-in page in Onezone and
