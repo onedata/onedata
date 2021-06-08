@@ -4,6 +4,11 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.10
+
+-   **VFS-7739** Improved CPU affinity of storage driver threads in
+    Oneprovider.
+
 ### 20.02.9
 
 -   **VFS-7579** Implement simple, automatically rotated file access
