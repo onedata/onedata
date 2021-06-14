@@ -131,6 +131,11 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 
+### 20.02.10
+
+-   **VFS-7739** Improved CPU affinity of storage driver threads in
+    Oneprovider.
+
 ### 20.02.9
 
 -   **VFS-7579** Implement simple, automatically rotated file access
