@@ -4,6 +4,133 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha13
+
+-   **VFS-7733** Added block\_aligned flag to onebench storage
+    benchmarking tool, enforcing read and writes aligned to block\_size
+    boundary only.
+-   **VFS-7649** Added support for purging archives in GUI.
+
+### 21.02.0-alpha12
+
+-   **VFS-7705** Added more file actions to archive file browser GUI:
+    share, metadata, permissions read, data distribution and quality of
+    service.
+
+### 21.02.0-alpha11
+
+-   **VFS-7663** Changed background image of sign-in page in Onezone and
+    Onepanel.
+-   **VFS-7648** Added Web GUI views for browsing and creating datasets
+    and archives.
+-   **VFS-7589** Added StorageRouter and BufferedStorage helpers to
+    handling of aggregate storages such as archive storage.
+-   **VFS-7304** Add preliminary REST API for dataset archivization - to
+    be extended in near future.
+
+### 21.02.0-alpha10
+
+### 21.02.0-alpha9
+
+-   **VFS-7592** Added support for the Range header during directory or
+    multi file (bulk) downloads, making it possible to resume them in
+    case of interruption or network failure.
+
+
+### 21.02.0-alpha8
+
+-   **VFS-7575** Add the possibility to incorporate an XRootD server
+    within the Onedata environment for exposing Open Data collections
+    for public access using the XRootD protocol.
+-   **VFS-7510** Add API for browsing dataset structures, separately for
+    datasets in attached and detached state. The datasets can be listed
+    using batches of requested size, with desired starting point and
+    offset.
+
+### 21.02.0-alpha7
+
+-   **VFS-7517** Several bug fixes related to edge-cases when moving or
+    deleting files.
+-   **VFS-7509** Added support for absolute symlinks relative to
+    Oneclient mountpoint, i.e. always pointing to the same file in a
+    space, regardless of actual Oneclient mountpoint path.
+-   **VFS-7429** Implemented the concept of datasets. Datasets allow the
+    space users to organize their data into collections with desired
+    granularity. A file or directory marked as a dataset offers
+    additional features, such as optional data and metadata protection
+    or the ability to create persistent snapshots of the physical
+    dataset contents. In case of a directory, a dataset covers all its
+    subdirectories and files. Datasets can be nested, allowing users to
+    compose arbitrary hierarchical structures. Added corresponding views
+    for managing datasets and write protection flags in file browser Web
+    GUI and a REST API, accessible under \`/datasets\`,
+    \`/datasets/{DatasetId}\` and \`/data/{FileId}/dataset/summary\`
+    paths.
+-   **VFS-7428** Added support for hard links and symlinks. Added
+    corresponding REST api specific for hard and symbolic links,
+    accessible under /data/{FileId}/hardlinks and
+    /data/{FileId}/symlink\_value paths.
+-   **VFS-7360** Added support for hardlinks and symlinks through
+    Oneclient POSIX interface.
+-   **VFS-7305** Basic support for hard links and symbolic links on the
+    filesystem level, interaction with high-level mechanisms such as
+    data transfers, storage import or QoS is still to be refined.
+
+### 21.02.0-alpha6
+
+-   **VFS-7486** Added option to nulldevice helper allowing control of
+    file size returned by getattr in simulated file systems.
+
+### 21.02.0-alpha5
+
+-   **VFS-7358** Added support for accessing open data shares in
+    oneclient with \--open-shares-mode option.
+-   **VFS-7351** It is now possible to download directories and multiple
+    files via gui as a compressed TAR archive.
+-   **VFS-7294** Added publicly available REST endpoints for fetching
+    information and data of shared files/directories. The data-related
+    endpoints are offered by Onezone, which redirects to a suitable
+    Oneprovider so that a guest user does not need any knowledge of the
+    environment to access the data. Improved the Web GUI\'s shares view
+    to present the public endpoints in an easy-to-use manner.
+
+### 21.02.0-alpha4
+
+-   **VFS-7397** Added new option to oneclient \`\--show-space-ids\`
+    which allows to list spaces using their space Id\'s instead of names
+    in the top level oneclient mount directory.
+-   **VFS-7378** Removed deprecated Oneprovider REST API. The modern
+    API, available since versions 20.02.\*, operates on file IDs rather
+    than paths. A special endpoint for resolving file IDs based on paths
+    is available.
+
+### 21.02.0-alpha3
+
+-   **VFS-7275** Improved Oneclient exception handling, including
+    connection errors and invalid tokens.
+-   **VFS-6638** Fixed handling duplicate clusters states on clusters
+    list in GUI.
+
+### 21.02.0-alpha2
+
+-   **VFS-7280** Fixed page reload after Let\'s Encrypt certificate
+    generation via Onepanel GUI.
+-   **VFS-7276** Improved handling of startup errors in Oneclient,
+    including more graceful handling of various exceptions and more
+    informative error messages including Oneclient and Oneprovider
+    compatibility and invalid token issues.
+-   **VFS-7274** Added SIGTERM and SIGINT handlers to Oneclient,
+    ensuring that after the oneclient process is stopped by some other
+    process, the mountpoint is properly released.
+-   **VFS-7256** Fixed OnedataFS token refresh, which caused
+    disconnection from Oneprovider after the token expired.
+-   **VFS-7165** Add a workaround for Erlang\'s SSL implementation that
+    would not reload server certificate chain when it is changed (e.g.
+    after Let\'s Encrypt certificate regeneration).
+-   **VFS-6566** Improved UX and fixed minor issues in share views.
+    Fixed inability to open share hosted by Oneprovider 19.02.x using
+    Onezone 20.02.x.
+
 ### 20.02.10
 
 -   **VFS-7739** Improved CPU affinity of storage driver threads in
@@ -23,7 +150,7 @@ CHANGELOG
 
 -   **VFS-7466** Fixed PyFilesystem opener entrypoint allowing to create
     OnedataFS instances in Python using urls of the form
-    'onedatafs://HOST:PORT?token=...'.
+    \'onedatafs://HOST:PORT?token=\...\'.
 -   **VFS-7294** Added publicly available REST endpoints for fetching
     information and data of shared files/directories. The data-related
     endpoints are offered by Onezone, which redirects to a suitable
@@ -54,7 +181,6 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 -   **VFS-6289** Add support for ANONYMOUS@ principal to ACL.
-
 
 ### 20.02.6
 
