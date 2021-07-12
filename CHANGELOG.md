@@ -4,6 +4,35 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha14
+
+-   **VFS-7880** Introduce the concept of automation; tools for defining
+    and executing automated workflows, made up of lambdas that are
+    submitted to a local OpenFaaS platform. These functionalities
+    currently have experimental status.
+-   **VFS-7817** GUI improvements in automation GUI: added navigation
+    via URL to specific execution, creating stores during task and lane
+    creation, showing inventory name for each execution entry.
+-   **VFS-7813** Enable access to files directly via their Onedata file
+    id, by opening or performing any other POSIX operation on a file
+    with a name \`.\_\_onedata\_\_file\_id\_\_\<FILEID\>\`.
+-   **VFS-7808** Added support for symbolic links resolution during TAR
+    download. By default all symbolic links are resolved.
+-   **VFS-7796** Added support for navigating through symlinked
+    directories without changing active directory path.
+-   **VFS-7780** Added support for creating incremental archives, which
+    results in storing only files that have changed in comparison to the
+    base archive while unchanged files are preserved as hard links to
+    the corresponding files in the base archive.
+-   **VFS-7738** Fixed issues with navigation between datasets, archives
+    and archive files browsers.
+-   **VFS-7653** Added support for creating Dissemination Information
+    Package (DIP) alongside with Archival Information Package (AIP).
+-   **VFS-7651** Implement dataset archivization with BagIt layout.
+-   **VFS-7329** Added automation GUI - inventories, lambdas and
+    workflows views in Onezone and workflows execution overview in
+    Oneprovider.
+
 ### 21.02.0-alpha13
 
 -   **VFS-7733** Added block\_aligned flag to onebench storage
