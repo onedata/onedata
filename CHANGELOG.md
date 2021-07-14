@@ -4,6 +4,23 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha16
+
+-   **VFS-7982** Fixed handling of HTTP servers, which do not
+    automatically close the HTTP session connection after reaching max
+    requests per session.
+-   **VFS-7976** Ported oneclient communicator async event stream
+    implementation from asio to folly IOThreadPoolExecutor.
+-   **VFS-7975** Added possibility to cancel running automation
+    workflow.
+-   **VFS-7892** Improved write performance on object storages by
+    minimizing the number of memory copying from Erlang to C++.
+-   **VFS-7846** Added action \"Upload BagIt\" to file browser, which is
+    available when OpenFaaS and special \"BagIt uploader\" workflow are
+    available.
+-   **VFS-7702** Add basic REST API for scheduling and retrieving
+    workflow executions.
+
 ### 21.02.0-alpha14
 
 -   **VFS-7880** Introduce the concept of automation; tools for defining
