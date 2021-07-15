@@ -15,6 +15,8 @@ CHANGELOG
     workflow.
 -   **VFS-7892** Improved write performance on object storages by
     minimizing the number of memory copying from Erlang to C++.
+-   **VFS-7856** Web GUI: added support for uploading, creating
+    directories and renaming files in files selector.
 -   **VFS-7846** Added action \"Upload BagIt\" to file browser, which is
     available when OpenFaaS and special \"BagIt uploader\" workflow are
     available.
