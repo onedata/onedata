@@ -93,7 +93,7 @@ def oneclient(request, setup_command):
 
 
 @pytest.fixture(scope='module',
-                params=['xenial', 'bionic'])
+                params=['bionic'])
 def oneclient_base(request, setup_command):
     distribution = Distribution(request, privileged=True)
     command = setup_command.format(dist=distribution.name,
