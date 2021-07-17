@@ -108,7 +108,7 @@ def oneclient_base(request, setup_command):
 
 
 @pytest.fixture(scope='module',
-                params=['xenial', 'bionic'])
+                params=['bionic'])
 def oneprovider(request, onezone, setup_command):
     onezone_node = onezone.domain
     # onezone_node is in format node.oz.1234.test, resolve domain (oz.1234.test)
