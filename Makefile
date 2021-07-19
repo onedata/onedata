@@ -5,8 +5,8 @@ DOCKER_RELEASE          ?= development
 DOCKER_REG_NAME         ?= "docker.onedata.org"
 DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
-PROD_RELEASE_BASE_IMAGE ?= "onedata/oneprovider-common:2102-2"
-DEV_RELEASE_BASE_IMAGE  ?= "onedata/oneprovider-dev-common:2102-2"
+PROD_RELEASE_BASE_IMAGE ?= "onedata/oneprovider-common:2102-3"
+DEV_RELEASE_BASE_IMAGE  ?= "onedata/oneprovider-dev-common:2102-3"
 HTTP_PROXY              ?= "http://proxy.devel.onedata.org:3128"
 CONDA_TOKEN             ?= ""
 CONDA_BUILD_OPTIONS     ?= ""
@@ -50,6 +50,7 @@ FSONEDATAFS_VERSION           := $(shell echo ${FSONEDATAFS_VERSION} | tr - .)
 ONEDATAFS_JUPYTER_VERSION     := $(shell echo ${ONEDATAFS_JUPYTER_VERSION} | tr - .)
 
 ONEPROVIDER_BUILD       ?= 1
+PKG_BUILDER_VERSION     ?= -2
 ONECLIENT_FPMPACKAGE_TMP ?= package_fpm
 
 ifdef IGNORE_XFAIL
@@ -80,12 +81,12 @@ NO_CACHE :=  $(shell if [ "${NO_CACHE}" != "" ]; then echo "--no-cache"; fi)
 
 make = $(1)/make.py -s $(1) -r . $(NO_CACHE)
 clean = $(call make, $(1)) clean
-make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE) $(2)
+make_rpm = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE)$(PKG_BUILDER_VERSION) $(2)
 mv_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
 	mv $(1)/package/packages/*.x86_64.rpm package/$(DISTRIBUTION)/x86_64
 mv_noarch_rpm = mv $(1)/package/packages/*.src.rpm package/$(DISTRIBUTION)/SRPMS && \
 	mv $(1)/package/packages/*.noarch.rpm package/$(DISTRIBUTION)/x86_64
-make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder:$(DISTRIBUTION)-$(RELEASE) $(2)
+make_deb = $(call make, $(1)) -e DISTRIBUTION=$(DISTRIBUTION) --privileged --group sbuild -i onedata/deb_builder:$(DISTRIBUTION)-$(RELEASE)$(PKG_BUILDER_VERSION) $(2)
 mv_deb = mv $(1)/package/packages/*_amd64.deb package/$(DISTRIBUTION)/binary-amd64 && \
 	mv $(1)/package/packages/*.tar.gz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.dsc package/$(DISTRIBUTION)/source | true && \
@@ -288,13 +289,13 @@ rpm_oneprovider: rpm_op_panel rpm_op_worker rpm_cluster_manager
 	sed -i 's/{{op_worker_version}}/$(OP_WORKER_VERSION)/g' oneprovider_meta/oneprovider.spec
 	sed -i 's/{{op_panel_version}}/$(OP_PANEL_VERSION)/g' oneprovider_meta/oneprovider.spec
 
-	bamboos/docker/make.py -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE) \
+	bamboos/docker/make.py -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE)$(PKG_BUILDER_VERSION) \
 		    -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -c \
 	        mock --buildsrpm --spec oneprovider_meta/oneprovider.spec \
 	        --sources oneprovider_meta --root $(DISTRIBUTION) \
 	        --resultdir oneprovider_meta/package/packages
 
-	bamboos/docker/make.py -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE) \
+	bamboos/docker/make.py -i onedata/rpm_builder:$(DISTRIBUTION)-$(RELEASE)$(PKG_BUILDER_VERSION) \
 		    -e DISTRIBUTION=$(DISTRIBUTION) -e RELEASE=$(RELEASE) --privileged --group mock -c \
 	        mock --rebuild oneprovider_meta/package/packages/*.src.rpm \
 	        --root $(DISTRIBUTION) --resultdir oneprovider_meta/package/packages
@@ -512,4 +513,4 @@ onedatafs_jupyter_conda:
 
 
 codetag-tracker:
-	@echo "Skipping codetag-tracker for release version 20.02.*"
+	./bamboos/scripts/codetag-tracker.sh --branch=${BRANCH} --excluded-dirs=node_package,oneclient,fs-onedatafs
