@@ -21,18 +21,15 @@ onedatafs_py3_package = [path for path in packages
 
 
 # install oneclient package
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=oneclient_package)
+check_call(['sh', '-c', 'apt -y install /root/pkg/{package}'.format(package=oneclient_package)
             ], stderr=STDOUT)
 
 # install onedatafs Python2 package
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=onedatafs_py2_package)
+check_call(['sh', '-c', 'apt -y install /root/pkg/{package}'.format(package=onedatafs_py2_package)
             ], stderr=STDOUT)
 
 # install onedatafs Python3 package
-check_call(['sh', '-c', 'dpkg -i /root/pkg/{package} ; apt-get -f -y '
-                        'install'.format(package=onedatafs_py3_package)
+check_call(['sh', '-c', 'apt -y install /root/pkg/{package}'.format(package=onedatafs_py3_package)
             ], stderr=STDOUT)
 
 # validate oneclient package installation
