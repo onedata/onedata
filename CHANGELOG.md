@@ -9,6 +9,8 @@ CHANGELOG
 -   **VFS-8065** Fixed null device helper setup in GUI, where the
     simulated filesystem parameters can include as a last component a
     file size for the simulated files.
+-   **VFS-7947** Added possibility to run workflows directly from file
+    browser.
 -   **VFS-7736** Fixed latency and timeout simulation in nulldevice
     storage helper.
 
