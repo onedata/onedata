@@ -4,6 +4,8 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha19
+
 ### 21.02.0-alpha18
 
 -   **VFS-8065** Fixed null device helper setup in GUI, where the
