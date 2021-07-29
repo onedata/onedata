@@ -4,6 +4,12 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha20
+
+-   **VFS-7904** Add system audit log for each workflow execution and
+    each task in the execution, with the possibility to append custom
+    logs during lambda execution (using the result mappers).
+
 ### 21.02.0-alpha19
 
 ### 21.02.0-alpha18
