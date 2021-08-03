@@ -4,6 +4,8 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha21
+
 ### 21.02.0-alpha20
 
 -   **VFS-7904** Add system audit log for each workflow execution and
