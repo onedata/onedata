@@ -6,6 +6,9 @@ CHANGELOG
 
 ### 21.02.0-alpha21
 
+-   **VFS-8192** Fixed block synchronization from remote Oneproviders
+    for open share data sets.
+
 ### 21.02.0-alpha20
 
 -   **VFS-7904** Add system audit log for each workflow execution and
