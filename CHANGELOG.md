@@ -4,6 +4,8 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.12
+
 ### 20.02.11
 
 -   **VFS-8017** Added support for allowing setting of UID and GID in
