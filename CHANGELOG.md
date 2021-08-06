@@ -209,6 +209,8 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 
+### 20.02.12
+
 ### 20.02.11
 
 -   **VFS-8017** Added support for allowing setting of UID and GID in
