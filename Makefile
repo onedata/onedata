@@ -198,10 +198,10 @@ test_oneclient_base_packaging:
 	${TEST_RUN} --error-for-skips --test-type packaging -k "oneclient_base" -vvv --test-dir tests/packaging -s
 
 test_oneclient_packaging:
-	${TEST_RUN} --error-for-skips -test-type packaging -k "oneclient and not oneclient_base" -vvv --test-dir tests/packaging -s
+	${TEST_RUN} -test-type packaging -k "oneclient and not oneclient_base" -vvv --test-dir tests/packaging -s
 
 test_fsonedatafs_packaging:
-	${TEST_RUN} --error-for-skips --test-type packaging -k "fsonedatafs" -vvv --test-dir tests/packaging -s
+	${TEST_RUN} --test-type packaging -k "fsonedatafs" -vvv --test-dir tests/packaging -s
 
 test:
 	${TEST_RUN} --test-type acceptance -vvv --test-dir tests/acceptance/scenarios/${SUITE}.py
