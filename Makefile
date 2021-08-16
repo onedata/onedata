@@ -6,7 +6,7 @@ DOCKER_REG_NAME         ?= "docker.onedata.org"
 DOCKER_REG_USER         ?= ""
 DOCKER_REG_PASSWORD     ?= ""
 PROD_RELEASE_BASE_IMAGE ?= "onedata/oneprovider-common:2102-3"
-DEV_RELEASE_BASE_IMAGE  ?= "onedata/oneprovider-dev-common:2102-4"
+DEV_RELEASE_BASE_IMAGE  ?= "onedata/oneprovider-dev-common:2102-5"
 HTTP_PROXY              ?= "http://proxy.devel.onedata.org:3128"
 CONDA_TOKEN             ?= ""
 CONDA_BUILD_OPTIONS     ?= ""
@@ -192,10 +192,10 @@ test_env_up:
 	${TEST_RUN} --test-type env_up -vvv --test-dir tests/env_up
 
 test_provider_packaging test_packaging:
-	${TEST_RUN} --test-type packaging -k "oneprovider" -vvv --test-dir tests/packaging -s
+	${TEST_RUN} --error-for-skips --test-type packaging -k "oneprovider" -vvv --test-dir tests/packaging -s
 
 test_oneclient_base_packaging:
-	${TEST_RUN} --test-type packaging -k "oneclient_base" -vvv --test-dir tests/packaging -s
+	${TEST_RUN} --error-for-skips --test-type packaging -k "oneclient_base" -vvv --test-dir tests/packaging -s
 
 test_oneclient_packaging:
 	${TEST_RUN} --test-type packaging -k "oneclient and not oneclient_base" -vvv --test-dir tests/packaging -s
