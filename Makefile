@@ -100,7 +100,7 @@ mv_noarch_deb = mv $(1)/package/packages/*_all.deb package/$(DISTRIBUTION)/binar
 	mv $(1)/package/packages/*.debian.tar.xz package/$(DISTRIBUTION)/source | true && \
 	mv $(1)/package/packages/*.changes package/$(DISTRIBUTION)/source | true
 unpack = tar xzf $(1).tar.gz
-make_conda = $(call make, $(1)) -e CONDA_TOKEN=$(CONDA_TOKEN) -i onedata/conda:v1 $(2)
+make_conda = $(call make, $(1)) -e CONDA_TOKEN=$(CONDA_TOKEN) -i onedata/conda:v2 $(2)
 
 get_release:
 	@echo $(RELEASE)
