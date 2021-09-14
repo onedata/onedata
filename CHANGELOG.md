@@ -4,6 +4,14 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.13
+
+-   **VFS-8335** Fix a regression in proxied access to spaces (ones not
+    supported by the Oneprovider serving the request) causing false
+    ENOENT errors.
+-   **VFS-8212** Web GUI: fixed not working current directory rename.
+
+
 ### 20.02.12
 
 ### 20.02.11
