@@ -172,10 +172,10 @@ artifact_op_worker:
 	$(call unpack, op_worker)
 
 artifact_oz_worker:
-	$(call unpack, oz_worker)
+	$(call retry, $(call unpack, oz_worker))
 
 artifact_cluster_manager:
-	$(call unpack, cluster_manager)
+	$(call retry, $(call unpack, cluster_manager))
 
 artifact_cluster_worker:
 	$(call unpack, cluster_worker)
