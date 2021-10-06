@@ -322,7 +322,7 @@ rpm_oneclient_base: clean_oneclient rpmdirs
 	$(call mv_rpm, oneclient)
 
 rpm_fsonedatafs: clean_fsonedatafs rpmdirs
-	$(call, retry, $(call make_rpm, fs-onedatafs, rpm) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION))
+	$(call retry, $(call make_rpm, fs-onedatafs, rpm) -e PKG_VERSION=$(FSONEDATAFS_VERSION) -e ONECLIENT_VERSION=$(ONECLIENT_VERSION))
 	$(call mv_noarch_rpm, fs-onedatafs)
 
 rpm_onedatafs_jupyter: clean_onedatafs_jupyter rpmdirs
