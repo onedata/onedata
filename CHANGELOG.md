@@ -4,6 +4,8 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha22
+
 ### 21.02.0-alpha21
 
 -   **VFS-8192** Fixed block synchronization from remote Oneproviders
