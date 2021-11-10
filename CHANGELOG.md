@@ -4,7 +4,12 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha22
+
 ### 21.02.0-alpha21
+
+-   **VFS-8192** Fixed block synchronization from remote Oneproviders
+    for open share data sets.
 
 ### 21.02.0-alpha20
 
@@ -208,6 +213,12 @@ CHANGELOG
 -   **VFS-6566** Improved UX and fixed minor issues in share views.
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
+
+### 20.02.14
+
+-   **VFS-8482** Added dedicated page for privacy policy content.
+-   **VFS-8326** Web GUI: added service name and domain information on
+    control panel login screen.
 
 ### 20.02.13
 
