@@ -301,6 +301,15 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 
+### 20.02.15
+
+-   **VFS-8630** *(Onezone)* Added support for displaying optional Terms
+    of Use document.
+-   **VFS-8482** *(Onezone)* Added dedicated page for privacy policy
+    content.
+-   **VFS-8326** *(Onezone)* Web GUI: added service name and domain
+    information on control panel login screen.
+
 ### 20.02.14
 
 -   **VFS-8482** Added dedicated page for privacy policy content.
