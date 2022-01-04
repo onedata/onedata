@@ -1,5 +1,0 @@
-{
-  "test_multiprovider_space_management": ["multiprovider_space_management"],
-  "test_singleprovider_space_management": ["singleprovider_space_management"],
-  "test_profiling": ["singleclient_authorization"]
-}
