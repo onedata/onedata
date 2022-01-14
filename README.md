@@ -22,7 +22,7 @@ Please visit the Onedata homepage (https://onedata.org) for more information, in
     command line tool which enables transparent access to user data spaces
     through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem,
 
-Each of those components has its own code repository listed in table below:
+Each of those components has its own code repository listed in the table below:
 
 
 | Component | Repository      | 
