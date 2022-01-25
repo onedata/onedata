@@ -20,7 +20,7 @@ Please visit the Onedata homepage (https://onedata.org) for more information, in
     low level storage resources of the provider,
   * [Oneclient](https://onedata.org/docs/doc/using_onedata/oneclient.html) -
     command line tool which enables transparent access to user data spaces
-    through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem,
+    through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem.
 
 Each of those components has its own code repository listed in the table below:
 

@@ -4,6 +4,15 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha24
+
+-   **VFS-8747** *(Oneclient)* Pinned boost dependency on conda to
+    1.76.0.
+-   **VFS-7724** *(Oneprovider, Onezone)* Web GUI: redesigned datasets
+    and archives browser to browse datasets tree and archives in single
+    splitted view.
+
+
 ### 21.02.0-alpha23
 
 -   **VFS-8681** *(Onezone)* Added a new data type to automation
