@@ -1,7 +1,0 @@
-{
-  "test_dd": ["env"],
-  "test_sysbench": ["env"],
-  "test_files_creation": ["env"],
-  "test_concurrent_files_creation": ["env"],
-  "test_transfer_onf": ["2op_env"]
-}
