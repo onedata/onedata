@@ -16,9 +16,9 @@ CHANGELOG
 -   **VFS-8823** *(Oneclient)* Fixed improper destruction of OnedataFS
     instances, resulting in possible deadlocks during deletion of the
     OnedataFS object.
--   **VFS-8704** *(Onezone)* Web GUI: Introduced more formatting-related
-    functions and better UX of privacy policy editor in Onezone admin
-    panel.
+-   **VFS-8704** *(Oneprovider)* Web GUI: Introduced more
+    formatting-related functions and better UX of privacy policy editor
+    in Onezone admin panel.
 
 ### 20.02.15
 
