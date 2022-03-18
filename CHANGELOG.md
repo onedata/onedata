@@ -6,6 +6,16 @@ CHANGELOG
 
 ### 20.02.16
 
+-   **VFS-9119** *(Oneprovider)* Introduced a temporary fix for uid/gid
+    encoding of values outside of signed int32 range - the values are
+    trimmed to the value of 2,147,483,646 for displaying in Oneclient.
+    Full support for unsigned int32 range (in alignment with POSIX
+    uid\_t and gid\_t types) will be introduced in the next major
+    release.
+-   **VFS-9118** *(Oneprovider)* Import ignores other file types than
+    regular and directories (i.e., fifo, symlink).
+-   **VFS-9116** *(Oneprovider)* Kill op\_worker when connection to
+    cluster\_manager is lost.
 -   **VFS-8939** *(Oneprovider)* Fixed a bug related to path caveats in
     access tokens, where a Oneclient user would see the names of newly
     created files/directories outside of the allowed paths (but was not
