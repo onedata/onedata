@@ -6,6 +6,11 @@ CHANGELOG
 
 ### 20.02.16
 
+-   **VFS-9182** *(Onezone)* Improved EGI group mapping for special COU
+    groups \"admins\" and \"members\"; their names are now concatenated
+    with parent group names for better presentation. Additionally,
+    \"admins\" groups now get admin privileges in their parent groups
+    instead of default member privileges.
 -   **VFS-9119** *(Oneprovider)* Introduced a temporary fix for uid/gid
     encoding of values outside of signed int32 range - the values are
     trimmed to the value of 2,147,483,646 for displaying in Oneclient.
@@ -20,15 +25,15 @@ CHANGELOG
     access tokens, where a Oneclient user would see the names of newly
     created files/directories outside of the allowed paths (but was not
     able to access them).
--   **VFS-8828** *(Oneclient, Oneprovider)* Fixed conda packages for the
-    stable branch 20.02.\*, starting with version 20.02.15 and Python
-    3.9.
+-   **VFS-8828** *(Oneclient, Oneprovider, S3Adapter)* Fixed conda
+    packages for the stable branch 20.02.\*, starting with version
+    20.02.15 and Python 3.9.
 -   **VFS-8823** *(Oneclient)* Fixed improper destruction of OnedataFS
     instances, resulting in possible deadlocks during deletion of the
     OnedataFS object.
--   **VFS-8704** *(Onezone)* Web GUI: Introduced more formatting-related
-    functions and better UX of privacy policy editor in Onezone admin
-    panel.
+-   **VFS-8704** *(Oneprovider)* Web GUI: Introduced more
+    formatting-related functions and better UX of privacy policy editor
+    in Onezone admin panel.
 
 ### 20.02.15
 
