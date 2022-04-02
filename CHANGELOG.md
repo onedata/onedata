@@ -4,6 +4,311 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha24
+
+-   **VFS-8747** *(Oneclient)* Pinned boost dependency on conda to
+    1.76.0.
+-   **VFS-7724** *(Oneprovider, Onezone)* Web GUI: redesigned datasets
+    and archives browser to browse datasets tree and archives in single
+    splitted view.
+
+### 21.02.0-alpha23
+
+-   **VFS-8681** *(Onezone)* Added a new data type to automation
+    machinery - the array type, with recursive specification of the data
+    type of its elements.
+-   **VFS-8653** *(Oneprovider)* Web GUI: added \"follow symbolic
+    links\" option in create archive options.
+-   **VFS-8638** *(Onezone)* All lambdas now work in batch mode - the
+    lambda creator must handle the input with batch arguments and
+    produce an output with batch results. The batch size used during
+    workflow execution is controlled by the parameters \`maxBatchSize\`
+    in lane schema definitions and \`preferredBatchSize\` in lambda
+    definitions.
+-   **VFS-8518** *(Oneprovider)* Web GUI: unlocked possibility to create
+    a hardlink for symlink.
+-   **VFS-8478** *(Oneprovider)* Preserved archives are now protected
+    from any modifications. Before archive is marked as preserved its
+    content is verified to ensure that no modifications have been made
+    during its creation.
+-   **VFS-8425** *(Oneclient, Oneprovider)* Added basic cookie support
+    to HTTP storage helper to support OAuth redirect authorization.
+-   **VFS-8405** *(Oneprovider)* Web GUI: fixed QoS modal errors when a
+    hardlink for viewed file with QoS requirements has been deleted.
+-   **VFS-8404** *(Oneprovider)* Failed lanes are now retried up to
+    specified max retries (given in schema definition).
+-   **VFS-8348** *(Oneprovider, Onezone)* Web GUI: added links to
+    transferred files on transfers view and information about their
+    membership in archive and dataset.
+-   **VFS-8318** *(Oneclient, Oneprovider)* Fixed conda packaging for
+    oneclient and onedatafs, switched dependencies to conda-forge
+    channel.
+-   **VFS-8288** *(Oneprovider, Onezone)* It is now possible to specify
+    requested resources and resource limits on the lambda and task level
+    for OpenFaaS functions.
+-   **VFS-8281** *(Oneprovider)* Improved file upload mechanisms to
+    better handle clients with very slow network connections.
+-   **VFS-8263** *(Onezone)* Added blocking modal when user tries to
+    exit editor with unsaved workflow.
+-   **VFS-8250** *(Oneprovider)* Exceptions returned from user defined
+    lambda OpenFaaS functions are now properly handled and saved to lane
+    exception store.
+-   **VFS-8247** *(Oneprovider, Onezone)* Added new option to
+    harverster\'s indices that allow for harvesting details about
+    archives (archiveId, archiveDescription and archiveCreationTime).
+-   **VFS-8242** *(Oneclient, Oneprovider)* Upgraded Oneclient to use
+    Fuse 3 by default.
+-   **VFS-8240** *(Oneclient, Oneprovider)* Applied fixes suggested by
+    new version of clang-tidy static C++ code analyzer.
+-   **VFS-8237** *(Oneclient, Oneprovider)* Updated C++ clang-format
+    version to 12.
+-   **VFS-8225** *(Oneprovider)* Lanes are now created right before
+    their execution rather than alltogether at the start of workflow
+    execution.
+-   **VFS-8172** *(Oneprovider, Onezone)* Add \`/health\` endpoints to
+    REST APIs of all services.
+-   **VFS-8073** *(Oneclient, Oneprovider, Onezone)* Upgrade folly,
+    wangle and proxygen libraries to version 2021.01.04.00.
+-   **VFS-8041** *(Oneprovider)* Added basic log entries to workflow
+    execution and task execution audit logs.
+-   **VFS-7960** *(Oneprovider)* Fixed navigating through multiple
+    spaces during files upload in GUI.
+-   **VFS-7930** *(Oneprovider)* Web GUI: improved UX of creating
+    incremental archives using archive context menu.
+-   **VFS-7900** *(Onezone)* Added the possibility to unlink unused
+    lambdas from an automation inventory. Upon unlinking from its last
+    inventory, the lambda is automatically removed.
+-   **VFS-7898** *(Oneprovider, Onezone)* Web GUI: added self-shortening
+    links to files with support for files inside archives.
+-   **VFS-7779** *(Oneprovider)* Added REST API for CRUD operations on
+    file using relative paths.
+-   **VFS-7728** *(Oneprovider, Onezone)* Introduced versioning of
+    lambdas and workflow schemas. Users may create subsequent revisions
+    of the above models and modify their statuses (draft, stable,
+    deprecated) to simplify management and retain backward compatibility
+    of definitions that are already in use.
+-   **VFS-7664** *(Oneprovider)* It is now possible to configure
+    symbolic links policy when creating an archive. By default symbolic
+    links in dataset are resolved resulting in link target being
+    archived.
+-   **VFS-7633** *(Oneprovider, Onezone)* UX improvements in web GUI
+    concerning navigation between files, datasets and archives using
+    hyperlinks.
+-   **VFS-7629** *(Oneprovider, Onezone)* Web GUI: added new datasets
+    panel with archives browser in file browser.
+-   **VFS-7512** *(Oneprovider)* Web GUI: redesigned file tags with
+    information about inherited QoS and datasets properties.
+
+### 21.02.0-alpha22
+
+### 21.02.0-alpha21
+
+-   **VFS-8192** Fixed block synchronization from remote Oneproviders
+    for open share data sets.
+
+### 21.02.0-alpha20
+
+-   **VFS-7904** Add system audit log for each workflow execution and
+    each task in the execution, with the possibility to append custom
+    logs during lambda execution (using the result mappers).
+
+### 21.02.0-alpha19
+
+### 21.02.0-alpha18
+
+-   **VFS-8065** Fixed null device helper setup in GUI, where the
+    simulated filesystem parameters can include as a last component a
+    file size for the simulated files.
+-   **VFS-7947** Added possibility to run workflows directly from file
+    browser.
+-   **VFS-7736** Fixed latency and timeout simulation in nulldevice
+    storage helper.
+
+### 21.02.0-alpha17
+
+-   **VFS-8018** Added HTTP storage driver option to limit on the client
+    side maximum number of requests per single session, after which the
+    session is closed and reconnected.
+
+### 21.02.0-alpha16
+
+-   **VFS-7982** Fixed handling of HTTP servers, which do not
+    automatically close the HTTP session connection after reaching max
+    requests per session.
+-   **VFS-7976** Ported oneclient communicator async event stream
+    implementation from asio to folly IOThreadPoolExecutor.
+-   **VFS-7975** Added possibility to cancel running automation
+    workflow.
+-   **VFS-7892** Improved write performance on object storages by
+    minimizing the number of memory copying from Erlang to C++.
+-   **VFS-7856** Web GUI: added support for uploading, creating
+    directories and renaming files in files selector.
+-   **VFS-7846** Added action \"Upload BagIt\" to file browser, which is
+    available when OpenFaaS and special \"BagIt uploader\" workflow are
+    available.
+-   **VFS-7702** Add basic REST API for scheduling and retrieving
+    workflow executions.
+
+### 21.02.0-alpha15
+
+-   **VFS-7747** Upgrade the codebase to Erlang OTP 24.
+
+### 21.02.0-alpha14
+
+-   **VFS-7880** Introduce the concept of automation; tools for defining
+    and executing automated workflows, made up of lambdas that are
+    submitted to a local OpenFaaS platform. These functionalities
+    currently have experimental status.
+-   **VFS-7817** GUI improvements in automation GUI: added navigation
+    via URL to specific execution, creating stores during task and lane
+    creation, showing inventory name for each execution entry.
+-   **VFS-7813** Enable access to files directly via their Onedata file
+    id, by opening or performing any other POSIX operation on a file
+    with a name \`.\_\_onedata\_\_file\_id\_\_\<FILEID\>\`.
+-   **VFS-7808** Added support for symbolic links resolution during TAR
+    download. By default all symbolic links are resolved.
+-   **VFS-7796** Added support for navigating through symlinked
+    directories without changing active directory path.
+-   **VFS-7780** Added support for creating incremental archives, which
+    results in storing only files that have changed in comparison to the
+    base archive while unchanged files are preserved as hard links to
+    the corresponding files in the base archive.
+-   **VFS-7738** Fixed issues with navigation between datasets, archives
+    and archive files browsers.
+-   **VFS-7653** Added support for creating Dissemination Information
+    Package (DIP) alongside with Archival Information Package (AIP).
+-   **VFS-7651** Implement dataset archivization with BagIt layout.
+-   **VFS-7329** Added automation GUI - inventories, lambdas and
+    workflows views in Onezone and workflows execution overview in
+    Oneprovider.
+
+### 21.02.0-alpha13
+
+-   **VFS-7733** Added block\_aligned flag to onebench storage
+    benchmarking tool, enforcing read and writes aligned to block\_size
+    boundary only.
+-   **VFS-7649** Added support for purging archives in GUI.
+
+### 21.02.0-alpha12
+
+-   **VFS-7705** Added more file actions to archive file browser GUI:
+    share, metadata, permissions read, data distribution and quality of
+    service.
+
+### 21.02.0-alpha11
+
+-   **VFS-7663** Changed background image of sign-in page in Onezone and
+    Onepanel.
+-   **VFS-7648** Added Web GUI views for browsing and creating datasets
+    and archives.
+-   **VFS-7589** Added StorageRouter and BufferedStorage helpers to
+    handling of aggregate storages such as archive storage.
+-   **VFS-7304** Add preliminary REST API for dataset archivization - to
+    be extended in near future.
+
+### 21.02.0-alpha10
+
+### 21.02.0-alpha9
+
+-   **VFS-7592** Added support for the Range header during directory or
+    multi file (bulk) downloads, making it possible to resume them in
+    case of interruption or network failure.
+
+
+### 21.02.0-alpha8
+
+-   **VFS-7575** Add the possibility to incorporate an XRootD server
+    within the Onedata environment for exposing Open Data collections
+    for public access using the XRootD protocol.
+-   **VFS-7510** Add API for browsing dataset structures, separately for
+    datasets in attached and detached state. The datasets can be listed
+    using batches of requested size, with desired starting point and
+    offset.
+
+### 21.02.0-alpha7
+
+-   **VFS-7517** Several bug fixes related to edge-cases when moving or
+    deleting files.
+-   **VFS-7509** Added support for absolute symlinks relative to
+    Oneclient mountpoint, i.e. always pointing to the same file in a
+    space, regardless of actual Oneclient mountpoint path.
+-   **VFS-7429** Implemented the concept of datasets. Datasets allow the
+    space users to organize their data into collections with desired
+    granularity. A file or directory marked as a dataset offers
+    additional features, such as optional data and metadata protection
+    or the ability to create persistent snapshots of the physical
+    dataset contents. In case of a directory, a dataset covers all its
+    subdirectories and files. Datasets can be nested, allowing users to
+    compose arbitrary hierarchical structures. Added corresponding views
+    for managing datasets and write protection flags in file browser Web
+    GUI and a REST API, accessible under \`/datasets\`,
+    \`/datasets/{DatasetId}\` and \`/data/{FileId}/dataset/summary\`
+    paths.
+-   **VFS-7428** Added support for hard links and symlinks. Added
+    corresponding REST api specific for hard and symbolic links,
+    accessible under /data/{FileId}/hardlinks and
+    /data/{FileId}/symlink\_value paths.
+-   **VFS-7360** Added support for hardlinks and symlinks through
+    Oneclient POSIX interface.
+-   **VFS-7305** Basic support for hard links and symbolic links on the
+    filesystem level, interaction with high-level mechanisms such as
+    data transfers, storage import or QoS is still to be refined.
+
+### 21.02.0-alpha6
+
+-   **VFS-7486** Added option to nulldevice helper allowing control of
+    file size returned by getattr in simulated file systems.
+
+### 21.02.0-alpha5
+
+-   **VFS-7358** Added support for accessing open data shares in
+    oneclient with \--open-shares-mode option.
+-   **VFS-7351** It is now possible to download directories and multiple
+    files via gui as a compressed TAR archive.
+-   **VFS-7294** Added publicly available REST endpoints for fetching
+    information and data of shared files/directories. The data-related
+    endpoints are offered by Onezone, which redirects to a suitable
+    Oneprovider so that a guest user does not need any knowledge of the
+    environment to access the data. Improved the Web GUI\'s shares view
+    to present the public endpoints in an easy-to-use manner.
+
+### 21.02.0-alpha4
+
+-   **VFS-7397** Added new option to oneclient \`\--show-space-ids\`
+    which allows to list spaces using their space Id\'s instead of names
+    in the top level oneclient mount directory.
+-   **VFS-7378** Removed deprecated Oneprovider REST API. The modern
+    API, available since versions 20.02.\*, operates on file IDs rather
+    than paths. A special endpoint for resolving file IDs based on paths
+    is available.
+
+### 21.02.0-alpha3
+
+-   **VFS-7275** Improved Oneclient exception handling, including
+    connection errors and invalid tokens.
+-   **VFS-6638** Fixed handling duplicate clusters states on clusters
+    list in GUI.
+
+### 21.02.0-alpha2
+
+-   **VFS-7280** Fixed page reload after Let\'s Encrypt certificate
+    generation via Onepanel GUI.
+-   **VFS-7276** Improved handling of startup errors in Oneclient,
+    including more graceful handling of various exceptions and more
+    informative error messages including Oneclient and Oneprovider
+    compatibility and invalid token issues.
+-   **VFS-7274** Added SIGTERM and SIGINT handlers to Oneclient,
+    ensuring that after the oneclient process is stopped by some other
+    process, the mountpoint is properly released.
+-   **VFS-7256** Fixed OnedataFS token refresh, which caused
+    disconnection from Oneprovider after the token expired.
+-   **VFS-7165** Add a workaround for Erlang\'s SSL implementation that
+    would not reload server certificate chain when it is changed (e.g.
+    after Let\'s Encrypt certificate regeneration).
+-   **VFS-6566** Improved UX and fixed minor issues in share views.
+    Fixed inability to open share hosted by Oneprovider 19.02.x using
+    Onezone 20.02.x.
+
 ### 20.02.16
 
 -   **VFS-9182** *(Onezone)* Improved EGI group mapping for special COU
@@ -57,7 +362,6 @@ CHANGELOG
     ENOENT errors.
 -   **VFS-8212** Web GUI: fixed not working current directory rename.
 
-
 ### 20.02.12
 
 ### 20.02.11
@@ -88,7 +392,7 @@ CHANGELOG
 
 -   **VFS-7466** Fixed PyFilesystem opener entrypoint allowing to create
     OnedataFS instances in Python using urls of the form
-    'onedatafs://HOST:PORT?token=...'.
+    \'onedatafs://HOST:PORT?token=\...\'.
 -   **VFS-7294** Added publicly available REST endpoints for fetching
     information and data of shared files/directories. The data-related
     endpoints are offered by Onezone, which redirects to a suitable
@@ -119,7 +423,6 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 -   **VFS-6289** Add support for ANONYMOUS@ principal to ACL.
-
 
 ### 20.02.6
 
