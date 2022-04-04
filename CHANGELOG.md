@@ -12,7 +12,6 @@ CHANGELOG
     and archives browser to browse datasets tree and archives in single
     splitted view.
 
-
 ### 21.02.0-alpha23
 
 -   **VFS-8681** *(Onezone)* Added a new data type to automation
@@ -309,6 +308,35 @@ CHANGELOG
 -   **VFS-6566** Improved UX and fixed minor issues in share views.
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
+
+### 20.02.16
+
+-   **VFS-9182** *(Onezone)* Improved EGI group mapping for special COU
+    groups \"admins\" and \"members\"; their names are now concatenated
+    with parent group names for better presentation. Additionally,
+    \"admins\" groups now get admin privileges in their parent groups
+    instead of default member privileges.
+-   **VFS-9119** *(Oneprovider)* Introduced a temporary fix for uid/gid
+    encoding of values outside of signed int32 range - the values are
+    trimmed to the value of 2,147,483,646 for displaying in Oneclient.
+    Full support for unsigned int32 range (in alignment with POSIX
+    uid\_t and gid\_t types) will be introduced in the next major
+    release.
+-   **VFS-9118** *(Oneprovider)* Import ignores other file types than
+    regular and directories (i.e., fifo, symlink).
+-   **VFS-8939** *(Oneprovider)* Fixed a bug related to path caveats in
+    access tokens, where a Oneclient user would see the names of newly
+    created files/directories outside of the allowed paths (but was not
+    able to access them).
+-   **VFS-8828** *(Oneclient, Oneprovider, S3Adapter)* Fixed conda
+    packages for the stable branch 20.02.\*, starting with version
+    20.02.15 and Python 3.9.
+-   **VFS-8823** *(Oneclient)* Fixed improper destruction of OnedataFS
+    instances, resulting in possible deadlocks during deletion of the
+    OnedataFS object.
+-   **VFS-8704** *(Oneprovider)* Web GUI: Introduced more
+    formatting-related functions and better UX of privacy policy editor
+    in Onezone admin panel.
 
 ### 20.02.15
 
