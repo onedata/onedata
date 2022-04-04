@@ -324,8 +324,6 @@ CHANGELOG
     release.
 -   **VFS-9118** *(Oneprovider)* Import ignores other file types than
     regular and directories (i.e., fifo, symlink).
--   **VFS-9116** *(Oneprovider)* Kill op\_worker when connection to
-    cluster\_manager is lost.
 -   **VFS-8939** *(Oneprovider)* Fixed a bug related to path caveats in
     access tokens, where a Oneclient user would see the names of newly
     created files/directories outside of the allowed paths (but was not
