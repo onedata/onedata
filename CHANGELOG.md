@@ -12,30 +12,28 @@ CHANGELOG
     Additionally, when there is more entries to be listed, the operation
     returns a 'nextPageToken' that can be used to list the subsequent
     page of results.
+-   **VFS-8939** *(Oneprovider)* Fixed a bug related to path caveats in
+    access tokens, where a Oneclient user would see the names of newly
+    created files/directories outside of the allowed paths (but was not
+    able to access them).
 -   **VFS-8887** *(Oneprovider)* Web GUI: fixed showing file information
     modal in shares.
--   **VFS-8872** *(Oneclient)* Dropped support for Python2 in OnedataFS.
--   **VFS-8870** *(S3Adapter)* Improved oneclient mounting and added
-    oneclient and s3proxy versions to healthcheck status message.
--   **VFS-8862** *(Oneclient)* Update conda package dependencies to
-    conda-forge and Python 3.9.
 -   **VFS-8845** *(Oneprovider)* Added QoS transfer statistics
     collection with their preview in GUI. Each QoS requirement is
     associated with several time series concerning transferred bytes and
     files in the context of different storages.
 -   **VFS-8828** *(Oneprovider)* Fixed conda packages for the stable
     branch 20.02.\*, starting with version 20.02.15 and Python 3.9.
--   **VFS-8823** *(Oneclient, Oneprovider)* Fixed improper destruction
-    of OnedataFS instances, resulting in possible deadlocks during
-    deletion of the OnedataFS object.
--   **VFS-8817** *(Oneclient, Oneprovider)* Added multisupport to NFS
-    helper allowing handling of multiple NFS volumes in parallel via a
-    single NFS helper for data import.
--   **VFS-8814** *(Oneclient, Oneprovider)* Disable NFS direct io in
-    oneclient on conda.
--   **VFS-8788** *(Oneclient, Oneprovider)* Added the possibility to
-    handle multiple mountpoints by a single POSIX helper in read only
-    mode.
+-   **VFS-8823** *(Oneprovider)* Fixed improper destruction of OnedataFS
+    instances, resulting in possible deadlocks during deletion of the
+    OnedataFS object.
+-   **VFS-8817** *(Oneprovider)* Added multisupport to NFS helper
+    allowing handling of multiple NFS volumes in parallel via a single
+    NFS helper for data import.
+-   **VFS-8814** *(Oneprovider)* Disable NFS direct io in oneclient on
+    conda.
+-   **VFS-8788** *(Oneprovider)* Added the possibility to handle
+    multiple mountpoints by a single POSIX helper in read only mode.
 -   **VFS-8783** *(Oneprovider)* Web GUI: fixed inability to list files
     of nested archive.
 -   **VFS-8739** *(Oneprovider)* Web GUI: fixed double listing of
@@ -44,8 +42,6 @@ CHANGELOG
     behaviour - now, the option to resolve symbolic links (e.g. during
     an archive creation or directory download) only applies to symbolic
     links \*\*pointing to paths outside of the dataset/directory\*\*.
--   **VFS-8658** *(Onezone)* Rename "localceph" storage to "embeded
-    ceph".
 -   **VFS-8616** *(Oneprovider)* Added monitoring of statuses of
     Kubernetes pods that are deployed during workflow execution using
     the OpenFaaS platform. Monitoring is performed by the
@@ -54,8 +50,7 @@ CHANGELOG
     workflow task.
 -   **VFS-8523** *(Oneprovider)* Information about files count and size
     in directory added.
--   **VFS-8483** *(Oneclient, Oneprovider, Onezone)* Added direct NFS v3
-    storage helper.
+-   **VFS-8483** *(Oneprovider)* Added direct NFS v3 storage helper.
 -   **VFS-7617** *(Oneprovider)* Implemented archive recall
     functionality, used to copy the archive contents to a specified
     destination within the space scope.
