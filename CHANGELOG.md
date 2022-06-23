@@ -4,6 +4,82 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha26
+
+-   **VFS-9475** *(Onezone)* Web GUI: Better handling of the restricted
+    registration policy in the tokens generator web tool.
+-   **VFS-9474** *(Onezone)* Improved behaviour of the Oneprovider
+    deployment page in Spaces GUI when the registration policy is set to
+    restricted.
+-   **VFS-9456** *(OpenFaaS pod status monitor)* Rebranded
+    \`k8s-events-monitor\` component to \`openfaas-pod-status-monitor\`.
+-   **VFS-9415** *(Oneprovider, Onezone)* Improved display of sensitive
+    storage config details in Onepanel GUI to show censored values
+    instead of hiding them completely.
+-   **VFS-9342** *(Oneprovider)* Added automation task execution Id
+    annotation to function registered in OpenFaaS service.
+-   **VFS-9337** *(Oneprovider)* Implemented first version of
+    \"filePipe\" relay method for automation lambdas, allowing streaming
+    of results via a file located inside the container where the lambda
+    is executed.
+-   **VFS-9235** *(Oneprovider)* Web GUI: added an input field in file
+    browser for scrolling the list to a file or directory using its name
+    prefix.
+-   **VFS-9207** *(Oneprovider, Onezone)* Web GUI: Enforced loading
+    fonts from server to avoid incorrect local fonts in browser.
+-   **VFS-9200** *(Oneprovider)* Changed name generation algorithm for
+    functions registered in OpenFaaS so that they are unique for each
+    task (previously if tasks used the same lambda only one function was
+    registered).
+-   **VFS-9165** *(OpenFaaS lambda result streamer)* First version of
+    the openfaas-lambda-result-streamer - a sidecar deployed along
+    automation lambda containers that collect results written to file
+    (\"filePipe\" relay method).
+-   **VFS-9122** *(Oneprovider)* It is now possible to enable directory
+    size and capacity statistics collection. Thanks to this, size of
+    directory and number of files/directories in subdirectories can be
+    viewed as well as how this values change in time.
+-   **VFS-9120** *(Oneclient, Oneprovider)* Fixed uid/gid encoding to
+    use unsigned int32 rather than signed int32, so that it now aligns
+    with POSIX uid_t and gid_t types.
+-   **VFS-9083** *(Onezone)* Fix typo in NFS storage definition in
+    onepanel REST interface definition.
+-   **VFS-9054** *(Oneclient, Oneprovider)* Improved connection closing
+    in Oneclient.
+-   **VFS-9051** *(Oneprovider)* Added new files endpoint which allow to
+    list all non-directory files (i.e regular files, symbolic links and
+    hardlinks) in given top directory recursively. Files are listed
+    lexicographically ordered by path.
+-   **VFS-9036** *(Oneprovider, Onezone)* Web GUI: Added showing time
+    series charts in executed automation workflows.
+-   **VFS-9028** *(Oneprovider)* Web GUI: added archive properties modal
+    with support for changing archive description.
+-   **VFS-9026** *(Oneclient, Oneprovider)* Added option
+    \--message-trace-log to enable logging of protobuf messages with the
+    server.
+-   **VFS-9023** *(Oneprovider)* Web GUI: added \"stop recall\" feature
+    and improved presentation of remote provider recall process.
+-   **VFS-9022** *(Oneprovider)* It is now possible to cancel ongoing
+    archive recalls.
+-   **VFS-9021** *(Oneprovider, S3Adapter)* Web GUI: added recall error
+    log view.
+-   **VFS-9019** *(Oneprovider)* Added support for automation time
+    series store.
+-   **VFS-8935** *(Oneprovider)* Allow enabling statistics collecting
+    for not empty spaces.
+-   **VFS-8914** *(Oneprovider)* Web GUI: redesigned and extended file
+    datasets panel.
+-   **VFS-8828** *(Oneclient)* Fixed conda packages for the stable
+    branch 20.02.\*, starting with version 20.02.15 and Python 3.9.
+-   **VFS-8654** *(Oneprovider)* Web GUI: added support for symbolic
+    links in an archive pointing outside it.
+-   **VFS-8598** *(Oneprovider)* Web GUI: improved presentation of state
+    of archives being built and deleted.
+-   **VFS-8043** *(Onezone)* Added support for the time series data type
+    in automation models.
+-   **VFS-7631** *(Oneprovider)* Web GUI: added presentation of source
+    file path in dataset browser.
+
 ### 21.02.0-alpha25
 
 -   **VFS-8951** *(Oneprovider)* Extended directory children listing
