@@ -41,7 +41,7 @@ CHANGELOG
     viewed as well as how this values change in time.
 -   **VFS-9120** *(Oneclient, Oneprovider)* Fixed uid/gid encoding to
     use unsigned int32 rather than signed int32, so that it now aligns
-    with POSIX uid_t and gid_t types.
+    with POSIX uid\_t and gid\_t types.
 -   **VFS-9083** *(Oneprovider)* Fix typo in NFS storage definition in
     onepanel REST interface definition.
 -   **VFS-9054** *(Oneclient, Oneprovider)* Improved connection closing
