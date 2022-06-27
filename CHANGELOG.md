@@ -6,6 +6,8 @@ CHANGELOG
 
 ### 20.02.17
 
+-   **VFS-9475** *(Onezone)* Web GUI: Better handling of the restricted
+    registration policy in the tokens generator web tool.
 -   **VFS-9474** *(Onezone)* Improved behaviour of the Oneprovider
     deployment page in Spaces GUI when the registration policy is set to
     restricted.
