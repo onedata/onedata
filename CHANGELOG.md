@@ -41,7 +41,7 @@ CHANGELOG
     viewed as well as how this values change in time.
 -   **VFS-9120** *(Oneclient, Oneprovider)* Fixed uid/gid encoding to
     use unsigned int32 rather than signed int32, so that it now aligns
-    with POSIX uid\_t and gid\_t types.
+    with POSIX uid_t and gid_t types.
 -   **VFS-9083** *(Oneprovider)* Fix typo in NFS storage definition in
     onepanel REST interface definition.
 -   **VFS-9054** *(Oneclient, Oneprovider)* Improved connection closing
@@ -75,6 +75,7 @@ CHANGELOG
     links in an archive pointing outside it.
 -   **VFS-8598** *(Oneprovider)* Web GUI: improved presentation of state
     of archives being built and deleted.
+-   **VFS-8045** *(Oneprovider)* Web GUI: added QoS audit log view.
 -   **VFS-8043** *(Onezone)* Added support for the time series data type
     in automation models.
 -   **VFS-7631** *(Oneprovider)* Web GUI: added presentation of source
