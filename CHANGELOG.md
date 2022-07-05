@@ -13,9 +13,6 @@ CHANGELOG
     restricted.
 -   **VFS-9456** *(OpenFaaS pod status monitor)* Rebranded
     \`k8s-events-monitor\` component to \`openfaas-pod-status-monitor\`.
--   **VFS-9415** *(Oneprovider)* Improved display of sensitive storage
-    config details in Onepanel GUI to show censored values instead of
-    hiding them completely.
 -   **VFS-9342** *(Oneprovider)* Added automation task execution Id
     annotation to function registered in OpenFaaS service.
 -   **VFS-9337** *(Oneprovider)* Implemented first version of
@@ -42,7 +39,7 @@ CHANGELOG
 -   **VFS-9120** *(Oneclient, Oneprovider)* Fixed uid/gid encoding to
     use unsigned int32 rather than signed int32, so that it now aligns
     with POSIX uid_t and gid_t types.
--   **VFS-9083** *(Oneprovider)* Fix typo in NFS storage definition in
+-   **VFS-9083** *(Onezone)* Fix typo in NFS storage definition in
     onepanel REST interface definition.
 -   **VFS-9054** *(Oneclient, Oneprovider)* Improved connection closing
     in Oneclient.
