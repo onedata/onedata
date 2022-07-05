@@ -6,13 +6,10 @@ CHANGELOG
 
 ### 21.02.0-alpha26
 
--   **VFS-9475** *(Onezone)* Web GUI: Better handling of the restricted
-    registration policy in the tokens generator web tool.
--   **VFS-9474** *(Onezone)* Improved behaviour of the Oneprovider
-    deployment page in Spaces GUI when the registration policy is set to
-    restricted.
 -   **VFS-9456** *(OpenFaaS pod status monitor)* Rebranded
     \`k8s-events-monitor\` component to \`openfaas-pod-status-monitor\`.
+-   **VFS-9424** *(Oneclient)* Fixed broken dependencies in Oneclient
+    Conda packages.
 -   **VFS-9342** *(Oneprovider)* Added automation task execution Id
     annotation to function registered in OpenFaaS service.
 -   **VFS-9337** *(Oneprovider)* Implemented first version of
@@ -39,7 +36,7 @@ CHANGELOG
 -   **VFS-9120** *(Oneclient, Oneprovider)* Fixed uid/gid encoding to
     use unsigned int32 rather than signed int32, so that it now aligns
     with POSIX uid_t and gid_t types.
--   **VFS-9083** *(Onezone)* Fix typo in NFS storage definition in
+-   **VFS-9083** *(Oneprovider)* Fix typo in NFS storage definition in
     onepanel REST interface definition.
 -   **VFS-9054** *(Oneclient, Oneprovider)* Improved connection closing
     in Oneclient.
