@@ -6,6 +6,8 @@ CHANGELOG
 
 ### 21.02.0-alpha27
 
+-   **VFS-9771** *(Onezone)* Web GUI: Added handling of the restricted
+    registration policy in the \"Add cluster\" page.
 -   **VFS-9655** *(Oneprovider)* Web GUI: Added presentation of
     directories data distribution.
 -   **VFS-9637** *(Oneprovider, Onezone)* Web GUI: Improved and unified
@@ -19,7 +21,7 @@ CHANGELOG
 -   **VFS-9420** *(Oneprovider)* Directory statistics and file/directory
     data distribution is now presented in GUI from the point of view of
     each supporting provider.
--   **VFS-9418** *(Oneprovider)* Added accountingEnabled and
+-   **VFS-9418** *(Oneprovider, Onezone)* Added accountingEnabled and
     dirStatsServiceEnabled settings for space support.
 -   **VFS-9164** *(Oneprovider)* Web GUI: Added support for cancelling
     archive creation.
