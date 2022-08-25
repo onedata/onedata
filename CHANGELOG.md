@@ -21,7 +21,7 @@ CHANGELOG
 -   **VFS-9420** *(Oneprovider)* Directory statistics and file/directory
     data distribution is now presented in GUI from the point of view of
     each supporting provider.
--   **VFS-9418** *(Oneprovider, Onezone)* Added accountingEnabled and
+-   **VFS-9418** *(Oneprovider)* Added accountingEnabled and
     dirStatsServiceEnabled settings for space support.
 -   **VFS-9164** *(Oneprovider)* Web GUI: Added support for cancelling
     archive creation.
