@@ -4,6 +4,39 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha27
+
+-   **VFS-9771** *(Onezone)* Web GUI: Added handling of the restricted
+    registration policy in the \"Add cluster\" page.
+-   **VFS-9655** *(Oneprovider)* Web GUI: Added presentation of
+    directories data distribution.
+-   **VFS-9637** *(Oneprovider, Onezone)* Web GUI: Improved and unified
+    look of audit log browsers.
+-   **VFS-9604** *(Oneprovider)* Web GUI: Moved file metadata settings
+    from separate modal to file info panel.
+-   **VFS-9534** *(Oneprovider)* Added Content-Disposition headers to
+    the file download REST endpoint.
+-   **VFS-9471** *(Oneprovider)* Added endpoint for retrievieng regular
+    file location on storages.
+-   **VFS-9420** *(Oneprovider)* Directory statistics and file/directory
+    data distribution is now presented in GUI from the point of view of
+    each supporting provider.
+-   **VFS-9418** *(Oneprovider)* Added accountingEnabled and
+    dirStatsServiceEnabled settings for space support.
+-   **VFS-9164** *(Oneprovider)* Web GUI: Added support for cancelling
+    archive creation.
+-   **VFS-8948** *(Oneprovider, Onezone)* Introduced the concept of time
+    series dashboard specs - structured recipes for transforming and
+    displaying measurements in charts, which can be organized into
+    sections. Each time series collection has a linked dashboard spec
+    that will be used for rendering the dashboard in GUI.
+-   **VFS-8903** *(Oneprovider, Onezone)* Web GUI: Upgraded EmberJS to
+    v3.4.
+-   **VFS-8836** *(Oneprovider)* It is now possible to cancel ongoing
+    archivisation.
+-   **VFS-8716** *(Oneprovider, Onezone)* Web GUI: Added complex data
+    types editor to the automation views.
+
 ### 21.02.0-alpha26
 
 -   **VFS-9456** *(OpenFaaS pod status monitor)* Rebranded
