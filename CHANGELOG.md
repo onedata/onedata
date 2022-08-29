@@ -4,6 +4,12 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.18
+
+-   **VFS-9771** *(Onezone)* Web GUI: Added handling of the restricted
+    registration policy in the "Add cluster" page.
+
+
 ### 20.02.17
 
 -   **VFS-9475** *(Onezone)* Web GUI: Better handling of the restricted
