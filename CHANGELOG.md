@@ -6,6 +6,8 @@ CHANGELOG
 
 ### 20.02.19
 
+-   **VFS-9926** *(Oneprovider, Onezone)* Web GUI: Opening Oneprovider
+    view in Onezone GUI when entering Oneprovider domain.
 -   **VFS-9730** *(Oneprovider, Onezone)* Improve handling of api
     caveats related to API operations concerning other components than
     Onezone - in some cases, tokens with such caveats could be treated
