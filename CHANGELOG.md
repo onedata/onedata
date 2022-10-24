@@ -12,6 +12,11 @@ CHANGELOG
     caveats related to API operations concerning other components than
     Onezone - in some cases, tokens with such caveats could be treated
     as invalid.
+-   **VFS-10012** *(Oneprovider, Onezone)* Web GUI: Fixed hanging file
+    upload bug when multiple uploads have been scheduled.
+-   **VFS-10008** *(Oneclient)* Fixed race condition which occurred when
+    a file location was retrieved through getxattr call concurrently to
+    file release.
 
 
 ### 20.02.18
