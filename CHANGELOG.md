@@ -470,6 +470,21 @@ CHANGELOG
     Fixed inability to open share hosted by Oneprovider 19.02.x using
     Onezone 20.02.x.
 
+### 20.02.19
+
+-   **VFS-9926** *(Oneprovider, Onezone)* Web GUI: Opening Oneprovider
+    view in Onezone GUI when entering Oneprovider domain.
+-   **VFS-9730** *(Oneprovider, Onezone)* Improve handling of api
+    caveats related to API operations concerning other components than
+    Onezone - in some cases, tokens with such caveats could be treated
+    as invalid.
+-   **VFS-10012** *(Oneprovider, Onezone)* Web GUI: Fixed hanging file
+    upload bug when multiple uploads have been scheduled.
+-   **VFS-10008** *(Oneclient)* Fixed race condition which occurred when
+    a file location was retrieved through getxattr call concurrently to
+    file release.
+
+
 ### 20.02.18
 
 -   **VFS-9771** *(Onezone)* Web GUI: Added handling of the restricted
