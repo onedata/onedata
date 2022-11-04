@@ -4,6 +4,50 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.0-alpha28
+
+-   **VFS-9902** *(Oneprovider)* Web GUI: Fixed GUI crash when very long
+    file path is shortened.
+-   **VFS-9801** *(Oneprovider)* Web GUI: Added more detailed file
+    counters in transfers view.
+-   **VFS-9800** *(Oneprovider)* Web GUI: Fixed missing owner name in
+    file details and added \"Owner\" column in file browser (on wide
+    screens).
+-   **VFS-9781** *(Oneprovider)* Web GUI: Storage locations are no
+    longer shown in shared file info.
+-   **VFS-9723** *(Oneprovider)* Web GUI: Fixed error message when
+    removing dataset.
+-   **VFS-9709** *(Oneprovider)* Web GUI: Added Open Data tag to items
+    on file list if file is published as Open Data.
+-   **VFS-9671** *(Oneprovider)* Improved monitoring of OpenFaaS cluster
+    health for workflow execution purposes.
+-   **VFS-9626** *(Oneprovider)* Web GUI: Improved UX of file info tabs.
+-   **VFS-9614** *(Oneprovider, Onezone)* Web GUI: Added archivisation
+    audit log view.
+-   **VFS-9611** *(Oneprovider)* Web GUI: Added showing current
+    directory statistics above historical data charts.
+-   **VFS-9606** *(Oneprovider)* Web GUI: Moved file QoS settings from
+    separate modal to file info panel.
+-   **VFS-9603** *(Oneprovider)* Web GUI: Moved file shares settings
+    from separate modal to file info panel.
+-   **VFS-9602** *(Oneprovider)* Web GUI: Moved file permissions
+    settings from separate modal to file info panel.
+-   **VFS-9531** *(Oneprovider, Onezone)* Web GUI: Improved UX of the
+    automation stores browser.
+-   **VFS-9513** *(Oneprovider)* Web GUI: Added file path tooltip to
+    file event in QoS audit log.
+-   **VFS-9473** *(Oneprovider)* Web GUI: Moved file distribution
+    settings from separate modal to file info panel.
+-   **VFS-9339** *(Oneprovider, Onezone)* Web GUI: Added a new file info
+    tab with REST API samples.
+-   **VFS-9104** *(Oneprovider)* It is now possible to list extended
+    attributes along with file attributes in REST API.
+-   **VFS-8033** *(Oneprovider)* Introduced the possibility to pause and
+    resume executions. Refined the phases of workflow execution and
+    granularity of statuses on lane/parallel box/task levels.
+-   **VFS-10037** *(Oneprovider, Onezone)* Web GUI: Added \"rate\" and
+    \"timeDerivative\" time series chart functions.
+
 ### 21.02.0-alpha27
 
 -   **VFS-9771** *(Onezone)* Web GUI: Added handling of the restricted
