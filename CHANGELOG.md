@@ -45,6 +45,8 @@ CHANGELOG
 -   **VFS-8033** *(Oneprovider)* Introduced the possibility to pause and
     resume executions. Refined the phases of workflow execution and
     granularity of statuses on lane/parallel box/task levels.
+-   **VFS-10065** *(Onezone)* Web GUI: Fixed API samples tab in file
+    details modal for archived file.
 -   **VFS-10037** *(Oneprovider, Onezone)* Web GUI: Added \"rate\" and
     \"timeDerivative\" time series chart functions.
 
