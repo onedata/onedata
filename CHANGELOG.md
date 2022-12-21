@@ -6,6 +6,8 @@ CHANGELOG
 
 ### 21.02.0-rc1
 
+-   **VFS-9985** *(Oneprovider)* Added garbage collector periodically
+    removing old automation workflow executions.
 -   **VFS-9946** *(Oneprovider)* Web GUI: Added filename hashes for
     distinguishing files in audit logs.
 -   **VFS-9905** *(Oneprovider)* Web GUI: Showing error reason when
@@ -13,24 +15,34 @@ CHANGELOG
 -   **VFS-9849** *(Oneprovider)* Changed stopped status of interrupted
     automation workflow execution with uncorrelated results to `failed`
     instead of `interrupted`.
+-   **VFS-9846** *(Oneprovider)* Added automation workflow executions
+    graceful stopping (pausing all running executions) procedure to
+    Oneprovider stopping mechanism.
 -   **VFS-9843** *(Oneprovider)* Web GUI: Improved UX of action button
     in file info views.
--   **VFS-9795** *(Onezone)* Web GUI: Fixed user logout from Onezone GUI
-    after remove from cluster members.
+-   **VFS-9795** *(Oneprovider)* Web GUI: Fixed user logout from Onezone
+    GUI after remove from cluster members.
 -   **VFS-9786** *(Oneprovider)* Web GUI: Improved UX of file info
     permissions tab by adding hints and disabling modifications when it
     is not permitted.
+-   **VFS-9589** *(Oneprovider)* Extend time series with information
+    about measurements ranges.
 -   **VFS-9162** *(Oneprovider, Onezone)* Web GUI: Added api samples
     modal for space.
 -   **VFS-7863** *(Oneprovider)* Web GUI: Fixed file download in iOS
     Safari.
--   **VFS-10235** *(Onezone)* Changed default value of
+-   **VFS-7692** *(Oneprovider)* Added stopped automation workflow
+    execution discard functionality.
+-   **VFS-10235** *(Oneprovider, Onezone)* Changed default value of
     `accountingEnabled` parameter to `true` when requesting space
     support.
--   **VFS-10234** *(Onezone)* Web GUI: Changed default space support
+-   **VFS-10234** *(Oneprovider)* Web GUI: Changed default space support
     options to have directory size statistics aggregation turned on.
 -   **VFS-10222** *(Oneprovider)* Web GUI: Fixed starting multiple files
     replication/migration/eviction.
+-   **VFS-10216** *(Oneprovider)* Refactored transfer data source
+    traversal and statistics counting so that only regular files would
+    be counted.
 -   **VFS-10174** *(Oneclient, Oneprovider)* Fixed possible crash in the
     nulldevice helper when simulating large filesystems for importing to
     data space.
