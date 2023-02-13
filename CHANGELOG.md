@@ -22,8 +22,8 @@ CHANGELOG
     Oneprovider stopping mechanism.
 -   **VFS-9843** *(Oneprovider)* Web GUI: Improved UX of action button
     in file info views.
--   **VFS-9795** *(Onezone)* Web GUI: Fixed user logout from Onezone GUI
-    after remove from cluster members.
+-   **VFS-9795** *(Oneprovider)* Web GUI: Fixed user logout from Onezone
+    GUI after remove from cluster members.
 -   **VFS-9786** *(Oneprovider)* Web GUI: Improved UX of file info
     permissions tab by adding hints and disabling modifications when it
     is not permitted.
@@ -31,7 +31,7 @@ CHANGELOG
     archive should be deleted after cancelation.
 -   **VFS-9589** *(Oneprovider)* Extend time series with information
     about measurements ranges.
--   **VFS-9162** *(Oneprovider, Onezone)* Web GUI: Added api samples
+-   **VFS-9162** *(Oneprovider, Onezone)* Web GUI: Added API samples
     modal for space.
 -   **VFS-9129** *(Oneprovider, Onezone)* Web GUI: Upgraded EmberJS to
     v3.8.
@@ -61,12 +61,12 @@ CHANGELOG
 -   **VFS-10264** *(Oneclient, Oneprovider)* Added parameter to
     oneclient handshake protocol to distinguish between different
     oneclient modes of operation.
--   **VFS-10261** *(Onezone)* Web GUI: Fixed auto-cleaning reports not
-    loading on large screens.
--   **VFS-10235** *(Onezone)* Changed default value of
+-   **VFS-10261** *(Oneprovider)* Web GUI: Fixed auto-cleaning reports
+    not loading on large screens.
+-   **VFS-10235** *(Oneprovider, Onezone)* Changed default value of
     `accountingEnabled` parameter to `true` when requesting space
     support.
--   **VFS-10234** *(Onezone)* Web GUI: Changed default space support
+-   **VFS-10234** *(Oneprovider)* Web GUI: Changed default space support
     options to have directory size statistics aggregation turned on.
 -   **VFS-10222** *(Oneprovider)* Web GUI: Fixed starting multiple files
     replication/migration/eviction.
@@ -85,6 +85,8 @@ CHANGELOG
     per-lane chart dashboards in automation workflows.
 -   **VFS-10128** *(Oneprovider, Onezone)* Web GUI: Added possibility to
     map a lambda result to many stores in an automation task definition.
+-   **VFS-10125** *(Onezone)* Added mailing capabilities to Onezone by
+    means of an integrated SMTP client.
 -   **VFS-10117** *(Onezone)* Added lambda config specification and the
     possibility to provide its values on the task level. Changed data
     types in automation; added boolean, reworked integer into number
