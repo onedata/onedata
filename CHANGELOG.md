@@ -6,39 +6,10 @@ CHANGELOG
 
 ### 21.02.0-rc2
 
--   **VFS-9999** *(Oneprovider, Onezone)* Web GUI: Added space details
-    popovers with space information in various views.
--   **VFS-9985** *(Oneprovider)* Added garbage collector periodically
-    removing old automation workflow executions.
--   **VFS-9946** *(Oneprovider)* Web GUI: Added filename hashes for
-    distinguishing files in audit logs.
--   **VFS-9905** *(Oneprovider)* Web GUI: Showing error reason when
-    transfer progress cannot be loaded.
--   **VFS-9849** *(Oneprovider)* Changed stopped status of interrupted
-    automation workflow execution with uncorrelated results to `failed`
-    instead of `interrupted`.
--   **VFS-9846** *(Oneprovider)* Added automation workflow executions
-    graceful stopping (pausing all running executions) procedure to
-    Oneprovider stopping mechanism.
--   **VFS-9843** *(Oneprovider)* Web GUI: Improved UX of action button
-    in file info views.
--   **VFS-9795** *(Oneprovider)* Web GUI: Fixed user logout from Onezone
-    GUI after remove from cluster members.
--   **VFS-9786** *(Oneprovider)* Web GUI: Improved UX of file info
-    permissions tab by adding hints and disabling modifications when it
-    is not permitted.
--   **VFS-9710** *(Oneprovider)* It is now possible to specify that
-    archive should be deleted after cancelation.
--   **VFS-9589** *(Oneprovider)* Extend time series with information
-    about measurements ranges.
--   **VFS-9162** *(Oneprovider, Onezone)* Web GUI: Added API samples
-    modal for space.
--   **VFS-9129** *(Oneprovider, Onezone)* Web GUI: Upgraded EmberJS to
-    v3.8.
--   **VFS-7863** *(Oneprovider)* Web GUI: Fixed file download in iOS
-    Safari.
--   **VFS-7692** *(Oneprovider)* Added stopped automation workflow
-    execution discard functionality.
+-   **VFS-10502** *(Oneclient, Oneprovider, Onezone)* Added option to
+    null device enabling verification of whether read data matches
+    written data based on offset and size of request, which can be used
+    to test for instance transfer data consistency.
 -   **VFS-10432** *(Onezone)* Web GUI: Fixed cookie notification
     appearing after consenting and starting new web browser session.
 -   **VFS-10414** *(Oneprovider, Onezone)* Web GUI: Fixed displaying
@@ -61,13 +32,14 @@ CHANGELOG
 -   **VFS-10264** *(Oneclient, Oneprovider)* Added parameter to
     oneclient handshake protocol to distinguish between different
     oneclient modes of operation.
--   **VFS-10261** *(Oneprovider)* Web GUI: Fixed auto-cleaning reports
-    not loading on large screens.
+-   **VFS-10261** *(Oneprovider, Onezone)* Web GUI: Fixed auto-cleaning
+    reports not loading on large screens.
 -   **VFS-10235** *(Oneprovider, Onezone)* Changed default value of
     `accountingEnabled` parameter to `true` when requesting space
     support.
--   **VFS-10234** *(Oneprovider)* Web GUI: Changed default space support
-    options to have directory size statistics aggregation turned on.
+-   **VFS-10234** *(Oneprovider, Onezone)* Web GUI: Changed default
+    space support options to have directory size statistics aggregation
+    turned on.
 -   **VFS-10222** *(Oneprovider)* Web GUI: Fixed starting multiple files
     replication/migration/eviction.
 -   **VFS-10216** *(Oneprovider)* Refactored transfer data source
@@ -93,6 +65,39 @@ CHANGELOG
     with constraints.
 -   **VFS-10046** *(Oneprovider, Onezone)* Web GUI: Added user details
     popovers with user information in various views.
+-   **VFS-9999** *(Oneprovider, Onezone)* Web GUI: Added space details
+    popovers with space information in various views.
+-   **VFS-9985** *(Oneprovider)* Added garbage collector periodically
+    removing old automation workflow executions.
+-   **VFS-9946** *(Oneprovider)* Web GUI: Added filename hashes for
+    distinguishing files in audit logs.
+-   **VFS-9905** *(Oneprovider)* Web GUI: Showing error reason when
+    transfer progress cannot be loaded.
+-   **VFS-9849** *(Oneprovider)* Changed stopped status of interrupted
+    automation workflow execution with uncorrelated results to `failed`
+    instead of `interrupted`.
+-   **VFS-9846** *(Oneprovider)* Added automation workflow executions
+    graceful stopping (pausing all running executions) procedure to
+    Oneprovider stopping mechanism.
+-   **VFS-9843** *(Oneprovider)* Web GUI: Improved UX of action button
+    in file info views.
+-   **VFS-9795** *(Oneprovider, Onezone)* Web GUI: Fixed user logout
+    from Onezone GUI after remove from cluster members.
+-   **VFS-9786** *(Oneprovider)* Web GUI: Improved UX of file info
+    permissions tab by adding hints and disabling modifications when it
+    is not permitted.
+-   **VFS-9710** *(Oneprovider)* It is now possible to specify that
+    archive should be deleted after cancelation.
+-   **VFS-9589** *(Oneprovider)* Extend time series with information
+    about measurements ranges.
+-   **VFS-9162** *(Oneprovider, Onezone)* Web GUI: Added API samples
+    modal for space.
+-   **VFS-9129** *(Oneprovider, Onezone)* Web GUI: Upgraded EmberJS to
+    v3.8.
+-   **VFS-7863** *(Oneprovider)* Web GUI: Fixed file download in iOS
+    Safari.
+-   **VFS-7692** *(Oneprovider)* Added stopped automation workflow
+    execution discard functionality.
 
 ### 21.02.0-alpha28
 
