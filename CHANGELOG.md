@@ -4,6 +4,17 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 20.02.20
+
+-   **VFS-10540** *(Oneprovider)* Ported rtransfer fixes with better
+    error recovery and handling from develop to stable branch 20.02.
+-   **VFS-10432** *(Onezone)* Web GUI: Fixed cookie notification
+    appearing after consenting and starting new web browser session.
+-   **VFS-9795** *(Oneprovider, Onezone)* Web GUI: Fixed user logout
+    from Onezone GUI after remove from cluster members.
+-   **VFS-7863** *(Oneprovider)* Web GUI: Fixed file download in iOS
+    Safari.
+
 ### 20.02.19
 
 -   **VFS-9926** *(Oneprovider, Onezone)* Web GUI: Opening Oneprovider
