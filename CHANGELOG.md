@@ -4,6 +4,105 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.1
+
+-   **VFS-10622** *(Oneclient, Oneprovider)* Added scalable S3 server
+    interface implementation based on Oneclient.
+-   **VFS-10502** *(Oneclient, Oneprovider, Onezone)* Added option to
+    null device enabling verification of whether read data matches
+    written data based on offset and size of request, which can be used
+    to test for instance transfer data consistency.
+-   **VFS-10414** *(Oneprovider, Onezone)* Web GUI: Fixed displaying
+    wrong names of spaces in shares sidebar.
+-   **VFS-10397** *(Oneprovider)* Fixed rtransfer link error propagation
+    issues, which sometimes result in hanging transfers.
+-   **VFS-10358** *(Oneprovider)* New archive privilege in space -
+    manage archives. It is required for modifying other user's archives
+    metadata (like description) as well as cancelling them. Those
+    operations can be always performed on owned archives (even without
+    this privilege). Manage dataset privilege is no longer required for
+    archive operations.
+-   **VFS-10357** *(Oneprovider, Onezone)* Web GUI: Added support for
+    "manage archives" privilege and "creator" information in archives.
+-   **VFS-10312** *(Oneprovider, Onezone)* Web GUI: Changed name
+    conflict and disambiguation separator from `#` to `@`.
+-   **VFS-10283** *(Oneprovider)* Web GUI: Added possibility to delete,
+    rename and move hardlink to file that is inside data-protected
+    directory and is not data-protected itself.
+-   **VFS-10264** *(Oneclient, Oneprovider)* Added parameter to
+    oneclient handshake protocol to distinguish between different
+    oneclient modes of operation.
+-   **VFS-10261** *(Oneprovider, Onezone)* Web GUI: Fixed auto-cleaning
+    reports not loading on large screens.
+-   **VFS-10235** *(Oneprovider, Onezone)* Changed default value of
+    `accountingEnabled` parameter to `true` when requesting space
+    support.
+-   **VFS-10234** *(Oneprovider, Onezone)* Web GUI: Changed default
+    space support options to have directory size statistics aggregation
+    turned on.
+-   **VFS-10222** *(Oneprovider)* Web GUI: Fixed starting multiple files
+    replication/migration/eviction.
+-   **VFS-10216** *(Oneprovider)* Refactored transfer data source
+    traversal and statistics counting so that only regular files would
+    be counted.
+-   **VFS-10174** *(Oneclient, Oneprovider)* Fixed possible crash in the
+    nulldevice helper when simulating large filesystems for importing to
+    data space.
+-   **VFS-10149** *(Oneprovider)* It is no longer required to have
+    SPACE\_MANAGE\_QOS space privilege in order to evaluate QoS
+    expression.
+-   **VFS-10134** *(Oneprovider)* Improved statistics initialization
+    error handling.
+-   **VFS-10129** *(Oneprovider, Onezone)* Web GUI: Added global and
+    per-lane chart dashboards in automation workflows.
+-   **VFS-10128** *(Oneprovider, Onezone)* Web GUI: Added possibility to
+    map a lambda result to many stores in an automation task definition.
+-   **VFS-10125** *(Onezone)* Added mailing capabilities to Onezone by
+    means of an integrated SMTP client.
+-   **VFS-10118** *(Oneprovider, Onezone)* Web GUI: Introduced GUI for
+    automation lambda parameters.
+-   **VFS-10117** *(Onezone)* Added lambda config specification and the
+    possibility to provide its values on the task level. Changed data
+    types in automation; added boolean, reworked integer into number
+    with constraints.
+-   **VFS-10046** *(Oneprovider, Onezone)* Web GUI: Added user details
+    popovers with user information in various views.
+-   **VFS-9999** *(Oneprovider, Onezone)* Web GUI: Added space details
+    popovers with space information in various views.
+-   **VFS-9985** *(Oneprovider)* Added garbage collector periodically
+    removing old automation workflow executions.
+-   **VFS-9946** *(Oneprovider)* Web GUI: Added filename hashes for
+    distinguishing files in audit logs.
+-   **VFS-9905** *(Oneprovider)* Web GUI: Showing error reason when
+    transfer progress cannot be loaded.
+-   **VFS-9849** *(Oneprovider)* Changed stopped status of interrupted
+    automation workflow execution with uncorrelated results to `failed`
+    instead of `interrupted`.
+-   **VFS-9846** *(Oneprovider)* Added automation workflow executions
+    graceful stopping (pausing all running executions) procedure to
+    Oneprovider stopping mechanism.
+-   **VFS-9843** *(Oneprovider)* Web GUI: Improved UX of action button
+    in file info views.
+-   **VFS-9786** *(Oneprovider)* Web GUI: Improved UX of file info
+    permissions tab by adding hints and disabling modifications when it
+    is not permitted.
+-   **VFS-9710** *(Oneprovider)* It is now possible to specify that
+    archive should be deleted after cancelation.
+-   **VFS-9622** *(Oneclient, Oneprovider, Onezone)* Upgraded the base
+    image for release dockers from Ubuntu 18.04 to Ubuntu 20.04.
+-   **VFS-9589** *(Oneprovider)* Extend time series with information
+    about measurements ranges.
+-   **VFS-9162** *(Oneprovider, Onezone)* Web GUI: Added API samples
+    modal for space.
+-   **VFS-9129** *(Oneprovider, Onezone)* Web GUI: Upgraded EmberJS to
+    v3.8.
+-   **VFS-7873** *(Onezone)* Web GUI: Added possibility to dump, upload
+    and duplicate automation lambdas.
+-   **VFS-7715** *(Onezone)* Web GUI: Added store references check to
+    automation workflow editor.
+-   **VFS-7692** *(Oneprovider)* Added stopped automation workflow
+    execution discard functionality.
+
 ### 21.02.0-alpha28
 
 -   **VFS-9902** *(Oneprovider)* Web GUI: Fixed GUI crash when very long
