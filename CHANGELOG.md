@@ -8,6 +8,9 @@ CHANGELOG
 
 -   **VFS-10622** *(Oneclient, Oneprovider)* Added scalable S3 server
     interface implementation based on Oneclient.
+-   **VFS-10531** *(Oneprovider, Onezone)* Web GUI: Added support for
+    enum-like data types in automation (list of allowed values for
+    string and number types).
 -   **VFS-10502** *(Oneclient, Oneprovider, Onezone)* Added option to
     null device enabling verification of whether read data matches
     written data based on offset and size of request, which can be used
@@ -96,6 +99,8 @@ CHANGELOG
     modal for space.
 -   **VFS-9129** *(Oneprovider, Onezone)* Web GUI: Upgraded EmberJS to
     v3.8.
+-   **VFS-8987** *(Oneprovider)* Web GUI: Fixed Safari animation
+    glitches.
 -   **VFS-7873** *(Onezone)* Web GUI: Added possibility to dump, upload
     and duplicate automation lambdas.
 -   **VFS-7715** *(Onezone)* Web GUI: Added store references check to
