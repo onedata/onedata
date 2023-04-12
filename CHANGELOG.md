@@ -6,10 +6,14 @@ CHANGELOG
 
 ### 21.02.1
 
+-   **VFS-10754** *(Oneprovider)* Web GUI: Fixed file list crash after
+    jumping to the end and deleting last file.
 -   **VFS-10735** *(Oneclient)* FIxed timeout handling in S3 storage
     driver.
 -   **VFS-10622** *(Oneclient, Oneprovider)* Added scalable S3 server
     interface implementation based on Oneclient.
+-   **VFS-10546** *(Oneprovider)* Removed transfer charts padding when
+    viewing them on remote providers.
 -   **VFS-10531** *(Oneprovider, Onezone)* Web GUI: Added support for
     enum-like data types in automation (list of allowed values for
     string and number types).
@@ -21,6 +25,10 @@ CHANGELOG
     wrong names of spaces in shares sidebar.
 -   **VFS-10397** *(Oneprovider)* Fixed rtransfer link error propagation
     issues, which sometimes result in hanging transfers.
+-   **VFS-10389** *(Oneprovider, Onezone)* Web GUI: Added showing data
+    per provider in directory statistics.
+-   **VFS-10387** *(Oneprovider)* Blocked setting metadata\_protection
+    without data\_protection.
 -   **VFS-10358** *(Oneprovider)* New archive privilege in space -
     manage archives. It is required for modifying other user's archives
     metadata (like description) as well as cancelling them. Those
@@ -62,8 +70,15 @@ CHANGELOG
     per-lane chart dashboards in automation workflows.
 -   **VFS-10128** *(Oneprovider, Onezone)* Web GUI: Added possibility to
     map a lambda result to many stores in an automation task definition.
+-   **VFS-10126** *(Oneprovider, Onezone)* Web GUI: Added Space
+    Marketplace - space configuration, spaces browser and membership
+    requests resolver views.
 -   **VFS-10125** *(Onezone)* Added mailing capabilities to Onezone by
     means of an integrated SMTP client.
+-   **VFS-10122** *(Onezone)* Introduced the Space Marketplace. Any
+    space can be publicly advertised in the Marketplace, allowing
+    Onedata users to request access to it. The access requesting process
+    is based on an email exchange with the appointed space maintainer.
 -   **VFS-10118** *(Oneprovider, Onezone)* Web GUI: Introduced GUI for
     automation lambda parameters.
 -   **VFS-10117** *(Onezone)* Added lambda config specification and the
