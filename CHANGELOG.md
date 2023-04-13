@@ -6,6 +6,8 @@ CHANGELOG
 
 ### 21.02.1
 
+-   **VFS-10756** *(Oneclient)* Switched ones3 to internal onedata
+    temporary directory for handling temporary upload files.
 -   **VFS-10754** *(Oneprovider)* Web GUI: Fixed file list crash after
     jumping to the end and deleting last file.
 -   **VFS-10735** *(Oneclient)* FIxed timeout handling in S3 storage
