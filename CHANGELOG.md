@@ -4,6 +4,26 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.2
+
+-   **VFS-10825** *(Oneprovider, Onezone)* Web GUI: Fixed unnecessary
+    scrollbars in Safari.
+-   **VFS-10819** *(Onezone)* Web GUI: Fixed atm. inventory invite
+    tokens creation in tokens page.
+-   **VFS-10803** *(Oneprovider)* Web GUI: Fixed polling for file
+    infinitely if moving or copying fails.
+-   **VFS-10781** *(Oneclient)* Added fetching of remote data blocks in
+    ones3.
+-   **VFS-10692** *(Oneprovider)* Web GUI: Redesigned actions available
+    in various context menus of file, dataset and archive browser.
+-   **VFS-10601** *(Oneprovider)* Web GUI: Added columns visibility
+    configuration in file browsers.
+-   **VFS-10461** *(Oneprovider)* Web GUI: Added auto-update of files,
+    datasets and archives lists accomplished using polling.
+-   **VFS-10411** *(Oneprovider, Onezone)* Web GUI: Added support for
+    incomplete infinite scroll listing chunks from backend. It increases
+    stability of file browser GUI.
+
 ### 21.02.1
 
 -   **VFS-10756** *(Oneclient)* Switched ones3 to internal onedata
