@@ -6,8 +6,20 @@ CHANGELOG
 
 ### 21.02.2
 
+-   **VFS-10943** *(Oneclient)* For some workloads, which do not require
+    extended attributes, they can introduce unnecessary overhead due to
+    operating system continuously querying files about various OS
+    specific extended attributes. Now they can be disabled using
+    --no-xattr Oneclient option.
+-   **VFS-10928** *(Oneclient, Oneprovider)* Fixed bug in truncate for
+    object storages with random write access, which caused not deleting
+    data above the truncate threshold within the last object boundary.
+-   **VFS-10889** *(Onezone)* Web GUI: Added information about
+    unsupported features in older Oneproviders version supporting space.
 -   **VFS-10825** *(Oneprovider, Onezone)* Web GUI: Fixed unnecessary
     scrollbars in Safari.
+-   **VFS-10824** *(Oneprovider)* Web GUI: Fixed file browser crash when
+    entering share root using breadcrumbs.
 -   **VFS-10819** *(Onezone)* Web GUI: Fixed atm. inventory invite
     tokens creation in tokens page.
 -   **VFS-10803** *(Oneprovider)* Web GUI: Fixed polling for file
@@ -16,6 +28,9 @@ CHANGELOG
     ones3.
 -   **VFS-10692** *(Oneprovider)* Web GUI: Redesigned actions available
     in various context menus of file, dataset and archive browser.
+-   **VFS-10612** *(Oneprovider, Onezone)* Add a journal that records
+    the starts and shutdowns of services and procedures that help to
+    ensure the graceful stopping of services.
 -   **VFS-10601** *(Oneprovider)* Web GUI: Added columns visibility
     configuration in file browsers.
 -   **VFS-10461** *(Oneprovider)* Web GUI: Added auto-update of files,
