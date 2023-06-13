@@ -4,6 +4,47 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.2
+
+-   **VFS-10996** *(Oneprovider)* Web GUI: Fixed effective protection
+    badges in file dataset panel to be updated after ancestor protection
+    change.
+-   **VFS-10943** *(Oneclient)* For some workloads, which do not require
+    extended attributes, they can introduce unnecessary overhead due to
+    operating system continuously querying files about various OS
+    specific extended attributes. Now they can be disabled using
+    --no-xattr Oneclient option.
+-   **VFS-10928** *(Oneclient, Oneprovider)* Fixed bug in truncate for
+    object storages with random write access, which caused not deleting
+    data above the truncate threshold within the last object boundary.
+-   **VFS-10889** *(Onezone)* Web GUI: Added information about
+    unsupported features in older Oneproviders version supporting space.
+-   **VFS-10875** *(Oneprovider, Onezone)* Web GUI: Improved handling of
+    large amount of spaces and storages in Oneprovider panel GUI. Added
+    loading progress indicators.
+-   **VFS-10825** *(Oneprovider, Onezone)* Web GUI: Fixed unnecessary
+    scrollbars in Safari.
+-   **VFS-10824** *(Oneprovider)* Web GUI: Fixed file browser crash when
+    entering share root using breadcrumbs.
+-   **VFS-10819** *(Onezone)* Web GUI: Fixed atm. inventory invite
+    tokens creation in tokens page.
+-   **VFS-10803** *(Oneprovider)* Web GUI: Fixed polling for file
+    infinitely if moving or copying fails.
+-   **VFS-10781** *(Oneclient)* Added fetching of remote data blocks in
+    ones3.
+-   **VFS-10692** *(Oneprovider)* Web GUI: Redesigned actions available
+    in various context menus of file, dataset and archive browser.
+-   **VFS-10612** *(Oneprovider, Onezone)* Add a journal that records
+    the starts and shutdowns of services and procedures that help to
+    ensure the graceful stopping of services.
+-   **VFS-10601** *(Oneprovider)* Web GUI: Added columns visibility
+    configuration in file browsers.
+-   **VFS-10461** *(Oneprovider)* Web GUI: Added auto-update of files,
+    datasets and archives lists accomplished using polling.
+-   **VFS-10411** *(Oneprovider, Onezone)* Web GUI: Added support for
+    incomplete infinite scroll listing chunks from backend. It increases
+    stability of file browser GUI.
+
 ### 21.02.1
 
 -   **VFS-10756** *(Oneclient)* Switched ones3 to internal onedata
