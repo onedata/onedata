@@ -9,6 +9,8 @@ CHANGELOG
 -   **VFS-10996** *(Oneprovider)* Web GUI: Fixed effective protection
     badges in file dataset panel to be updated after ancestor protection
     change.
+-   **VFS-10968** *(Oneclient)* Added Oneclient integration test based
+    on PyFilesystem's test suite.
 -   **VFS-10943** *(Oneclient)* For some workloads, which do not require
     extended attributes, they can introduce unnecessary overhead due to
     operating system continuously querying files about various OS
@@ -22,6 +24,8 @@ CHANGELOG
 -   **VFS-10875** *(Oneprovider, Onezone)* Web GUI: Improved handling of
     large amount of spaces and storages in Oneprovider panel GUI. Added
     loading progress indicators.
+-   **VFS-10859** *(Oneclient)* Fixed random crash in Oneclient related
+    to events streaming.
 -   **VFS-10825** *(Oneprovider, Onezone)* Web GUI: Fixed unnecessary
     scrollbars in Safari.
 -   **VFS-10824** *(Oneprovider)* Web GUI: Fixed file browser crash when
