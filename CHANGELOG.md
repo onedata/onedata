@@ -4,6 +4,44 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.3
+
+-   **VFS-11231** *(Oneclient, Oneprovider, Onezone)* Refactored
+    oneclient connection pool to improve stability.
+-   **VFS-11220** *(Oneclient, Oneprovider)* Fixed handling of handshake
+    error in oneclient.
+-   **VFS-11106** *(Oneclient, Oneprovider)* Refactored
+    Oneclient-Oneprovider connection layer for improved resilience to
+    network failures.
+-   **VFS-11100** *(Oneprovider, Onezone)* Web GUI: Added support for
+    global URLs to files for authenticated users.
+-   **VFS-10974** *(Oneprovider)* Automation: Added debug logs about
+    items processing. They include `traceId` field allowing to correlate
+    them and find corresponding items in exception store.
+-   **VFS-10962** *(Oneprovider, Onezone)* Web GUI: Improved WebSocket
+    auto-reconnect after connection lost (e.g. on system suspend).
+-   **VFS-10932** *(Oneprovider)* Added possibility to choose logging
+    level during workflow execution scheduling.
+-   **VFS-10895** *(Oneprovider, Onezone)* Added detailed specification
+    of needed file properties in "file" automation type, including
+    narrowing file properties set passed to lambda functions during
+    automation workflow exectution.
+-   **VFS-10859** *(Oneprovider)* Fixed random crash in Oneclient
+    related to events streaming.
+-   **VFS-10782** *(Onezone)* Added the possibility to state the reason
+    when rejecting a membership request posted via the Space
+    Marketplace.
+-   **VFS-10664** *(Onezone)* Web GUI: Space Marketplace Service Pack 1,
+    including: reject confirmation view, new information tiles on space
+    overview, space configuration unsaved changes guard, UX fixes.
+-   **VFS-10637** *(Oneprovider)* Web GUI: Added support for modifying
+    order of columns in file, archive and dataset browsers.
+-   **VFS-10157** *(Oneprovider)* Web GUI: Added ID sufixes to workflow
+    execution names to improve readability.
+-   **VFS-9052** *(Oneprovider)* Web GUI: Improved directory load error
+    handling in file browser (eg. no such directory).
+
+
 ### 21.02.2
 
 -   **VFS-10996** *(Oneprovider)* Web GUI: Fixed effective protection
