@@ -4,6 +4,42 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.4
+
+-   **VFS-11466** *(Oneclient)* Add test cases for various kinds of
+    possible errors in ones3 responses and check if they are compatible
+    with S3 standard errors.
+-   **VFS-11459** *(Oneclient, Oneprovider, Onezone)* Added option to
+    set custom region in S3 storage helper.
+-   **VFS-11405** *(Oneprovider)* Web GUI: Added columns drag&drop to
+    change their order in transfers table.
+-   **VFS-11402** *(Oneclient)* Refactored OneS3 packaging so that ones3
+    has a separate package from oneclient.
+-   **VFS-11366** *(Oneprovider)* Improvements to directory size
+    statistics; hard link sizes are now counted without duplicates
+    toward virtual size (as opposed to logical size), archives are
+    counted toward the space data size and presented in the UI.
+-   **VFS-11282** *(Oneprovider)* Added possibility to download
+    automation store's content as a JSON file.
+-   **VFS-11268** *(Oneprovider)* Web GUI: Fixed a rare file list crash
+    when the list is being refreshed simultaneously with deleting files.
+-   **VFS-11242** *(Oneprovider)* Web GUI: added showing separate
+    directory size statistics of archives and directories in the space
+    root.
+-   **VFS-11210** *(Oneprovider, Onezone)* Fixed a bug with S3 storage
+    backend config modification, causing wrong validation of the
+    endpoint.
+-   **VFS-11142** *(Oneclient)* Added Onepanel basic auth option to
+    OneS3 service, removing the requirement for full access token to
+    support new buckets.
+-   **VFS-11125** *(Oneprovider)* Web GUI: Added columns drag&drop to
+    change their order in file, dataset and archive browser.
+-   **VFS-10999** *(Oneprovider, Onezone)* Added the public "infer
+    access token scope" endpoint, which analyses the provided access
+    token to infer the scope of data access the token can be used for.
+-   **VFS-10649** *(Oneprovider, Onezone)* Web GUI: added complex charts
+    dashboard editor to the automation GUI.
+
 ### 21.02.3
 
 -   **VFS-11231** *(Oneclient, Oneprovider, Onezone)* Refactored
