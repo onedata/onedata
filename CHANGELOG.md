@@ -6,6 +6,10 @@ CHANGELOG
 
 ### 21.02.4
 
+-   **VFS-11601** *(Oneprovider)* Web GUI: Fixed showing ACL when a
+    subject user or group has been removed from space members list.
+-   **VFS-11513** *(Oneprovider)* Web GUI: Fixed rare issue when file
+    browser list was not refreshed after deleting files.
 -   **VFS-11466** *(Oneclient)* Add test cases for various kinds of
     possible errors in ones3 responses and check if they are compatible
     with S3 standard errors.
