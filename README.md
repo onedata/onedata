@@ -5,32 +5,32 @@ access to distributed storage resources, supporting wide range of use cases from
 personal data management to data-intensive scientific computations.
 Please visit the Onedata homepage (https://onedata.org) for more information, including the documentation and API specifications.
 
-**Changelog**: [CHANGELOG.md](./CHANGELOG.md).
+**Changelog:** [CHANGELOG.md](./CHANGELOG.md).
 
-**Contact us**: https://onedata.org/#/home/support
+**Contact us:** [https://onedata.org/#/home/contact](https://onedata.org/#/home/contact).
 
-**Bug reports and discussions**: please use [GitHub issues](https://github.com/onedata/onedata/issues).
+**Bug reports and discussions:** please use [GitHub issues](https://github.com/onedata/onedata/issues).
 
 ## Project structure
 
 This repository serves as an entrypoint to the Onedata software ecosystem,
 containing the general information, [changelog](./CHANGELOG.md) and
-[licence](#copyright-and-license).
+[license](#copyright-and-license).
 
-Onedata is composed of numerous subprojects, which you can find on our 
-organization page: [https://github.com/onedata](https://github.com/onedata).
+Onedata is composed of numerous subprojects — see the organization page: 
+[https://github.com/onedata](https://github.com/onedata).
 
 The main components are:
 
-  * [Onezone](https://onedata.org/#/home/documentation/latest/admin-guide/onezone/overview.html) -
+  * [Onezone](https://onedata.org/#/home/documentation/topic/stable/onezone) -
     allows connecting multiple storage providers (Oneprovider
     instances) into a distributed domain and offers a centralized Graphical User
     Interface for navigating the domain and performing data management tasks,
-  * [Oneprovider](https://onedata.org/#/home/documentation/latest/admin-guide/oneprovider/overview.html) -
+  * [Oneprovider](https://onedata.org/#/home/documentation/topic/stable/oneprovider) -
     component deployed at each storage
     provider site, responsible for unifying and controlling access to data over
     low level storage resources of the provider,
-  * [Oneclient](https://onedata.org/#/home/documentation/latest/user-guide/oneclient.html) -
+  * [Oneclient](https://onedata.org/#/home/documentation/topic/stable/oneclient) -
     command line tool which enables transparent access to user data spaces
     through [Fuse](https://github.com/libfuse/libfuse) virtual filesystem.
 
