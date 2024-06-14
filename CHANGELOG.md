@@ -4,6 +4,104 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.5
+
+-   **VFS-11999** *(Oneclient, Oneprovider)* Improved listing objects on
+    S3 storages during data import.
+-   **VFS-11979** *(Oneprovider)* Web GUI: Fixed ACL editor view crash
+    when user has no space view privilege in the space. It is now
+    possible to choose groups that the user belongs to in the ACL editor
+    and as input to workflow stores, regardless of the user's privileges
+    in the space.
+-   **VFS-11970** *(Oneprovider)* Web GUI: Added support for editing
+    already published Open Data metadata.
+-   **VFS-11945** *(Oneprovider)* Automation: Added support for new
+    group data type.
+-   **VFS-11938** *(Oneclient)* Added support for CORS requests in
+    OneS3.
+-   **VFS-11923** *(Oneprovider)* Web GUI: Renamed privilege group names
+    in the ACL editor: "General" to "Deletion" and "Data" to "Content".
+-   **VFS-11918** *(Oneclient)* Added test cases for presigned URL
+    support in S3.
+-   **VFS-11912** *(Oneprovider, Onezone)* Web GUI: Added visual editor
+    for Open Data metadata in Europeana Data Model format.
+-   **VFS-11904** *(Oneclient, Oneprovider)* Implemented storage
+    specific health check, to check and monitor storage availability.
+-   **VFS-11876** *(Oneprovider)* Allow rtransfer storage parameters
+    change without the need for rtransfer restart.
+-   **VFS-11875** *(Oneclient)* Improved error handling in OneS3.
+-   **VFS-11850** *(Oneclient)* Fixed handling of content-range response
+    in OneS3 for partial GET requests.
+-   **VFS-11761** *(Oneprovider, Onezone)* Web GUI: Improved user
+    experience in publishing share as Open Data.
+-   **VFS-11760** *(Onezone)* Web GUI: Fixed shares sidebar crash when
+    user does not have view privilege for some space.
+-   **VFS-11744** *(Oneprovider, Onezone)* Web GUI: Refactored UX of
+    changing provider settings in cluster.
+-   **VFS-11731** *(Oneprovider)* Web GUI: Fixed unexpected scroll down
+    of file list after closing file details panel.
+-   **VFS-11726** *(Oneprovider)* Web GUI: Fixed items selection in
+    archives browser after using breadcrumbs menu.
+-   **VFS-11712** *(Oneprovider)* Integration of Onedata and the Galaxy
+    project; added a driver to Galaxy enabling the use of Onedata as a
+    so-called "Object Store" --- this way, datasets in Galaxy can be
+    stored in a Onedata space.
+-   **VFS-11710** *(Oneprovider, Onezone)* Web GUI: added possibility to
+    embed Onedata Web application into an iframe hosted on site with
+    domain other than Onezone.
+-   **VFS-11707** *(Oneprovider, Onezone)* Web GUI: Detecting web
+    browser extensions potentially interfering with Onedata GUI.
+-   **VFS-11625** *(Oneclient, Oneprovider)* Extended functionality of
+    runtime storage parameter updates to all storage backends.
+-   **VFS-11607** *(Oneprovider)* Web GUI: Improvements of the ACL
+    editor in the file browser: detection of ACL rules forbidding
+    permissions modification, better descriptions and hints about
+    settings, and numerous minor User Experience tweaks.
+-   **VFS-11595** *(Oneprovider, Onezone)* Web GUI: Fixed missing
+    application elements when Qwant VIPrivacy add-on is installed in
+    user's browser.
+-   **VFS-11594** *(Oneprovider, Onezone)* Web GUI: Fixed QoS query
+    builder "Add" button out-of-the-screen placement.
+-   **VFS-11582** *(Onezone)* Web GUI: Fixed showing tokens list when
+    one of invite targets gets deleted.
+-   **VFS-11566** *(Oneprovider)* Web GUI: Fixed issues with
+    show/download link to space root directory.
+-   **VFS-11536** *(Oneprovider)* Web GUI: Added "Changed (metadata)"
+    (ctime) column to the file list.
+-   **VFS-11487** *(Oneprovider)* Web GUI: Added QoS and Replication
+    columns to the file list. Reworked the file attribute fetching
+    mechanisms to fetch only the required attributes.
+-   **VFS-11443** *(Oneprovider)* Automation: Added support for
+    resolving only subset of selected file attributes for lambda
+    invocation.
+-   **VFS-11365** *(Oneprovider, Onezone)* Improvements to Open Data
+    publishing and the OAI-PMH protocol implementation. Added support
+    for Europeana Data Model metadata type. Improved the metadata editor
+    in UI (both the visual and XML forms). Improved the conformity to
+    OAI-PMH protocol spec and added support for optional
+    functionalities. Added an HTTPS endpoint (next to previously
+    supported HTTP).
+-   **VFS-11317** *(Onezone)* Web GUI: Major refactor of members view to
+    show direct and effective privileges with memberships on a single
+    view.
+-   **VFS-11080** *(Oneprovider, Onezone)* Web GUI: Fixed share
+    disappearing from the list after delete failure.
+-   **VFS-10910** *(Oneprovider)* Reworked REST API endpoints used to
+    retrieve file attributes (get attributes, list, list recursively).
+    Options are now accepted as JSON body rather than in query string,
+    some attributes were renamed, and the list of available ones has
+    been extended. The old behaviour was retained as deprecated and
+    scheduled for discontinuation in the future major release.
+-   **VFS-10265** *(Oneprovider, Onezone)* Changes to user spaces
+    (changing space name, joining/leaving a space) are now reflected in
+    Oneclient in real time. Added support for spaces with the same name
+    in Oneclient - in case of an ambiguity a space name is extended with
+    its ID.
+-   **VFS-9157** *(Oneprovider, Onezone)* Web GUI: Added support for
+    advanced file info in file selector panel.
+-   **VFS-8554** *(Oneprovider)* Web GUI: Fixed uploading files to wrong
+    directory after changing directory via URL.
+
 ### 21.02.4
 
 -   **VFS-11601** *(Oneprovider)* Web GUI: Fixed showing ACL when a
