@@ -4,6 +4,36 @@ Release notes for project onedata
 CHANGELOG
 ---------
 
+### 21.02.6
+
+-   **VFS-12239** *(Oneprovider)* Web GUI: Automatically filling-in the
+    EDM file size property on metadata creation and modification.
+-   **VFS-12232** *(Oneprovider)* Web GUI: Improved UX of Europeana Data
+    Model editor.
+-   **VFS-12198** *(Oneprovider)* Web GUI: Added public download URL to
+    file details panel for shared files.
+-   **VFS-12197** *(Oneprovider, Onezone)* Web GUI: Improved share list
+    views.
+-   **VFS-12195** *(Oneprovider, Onezone)* The name of the handle
+    service where an Open Data handle has been registered is now
+    publicly visible and always displayed on the Share view.
+-   **VFS-12110** *(Oneprovider, Onezone)* Added a circuit breaker
+    mechanism that disables all Onezone services when the database is
+    close to running out of disk space.
+-   **VFS-12060** *(Oneprovider)* Storage backends are now monitored and
+    when failure is detected access to the supported spaces is blocked.
+-   **VFS-12052** *(Oneprovider, Onezone)* Web GUI: Removed
+    skipStorageDetection option.
+-   **VFS-12049** *(Oneprovider)* Web GUI: Added File ID column in file
+    browser.
+-   **VFS-12012** *(Oneprovider)* Web GUI: Added Permissions column in
+    file browser.
+-   **VFS-12001** *(Oneprovider)* Web GUI: Added available users list
+    inferring in the ACL view entity selector when user lacks some
+    privileges in the space.
+-   **VFS-11948** *(Oneprovider)* Web GUI: Added Creation time and
+    Access time columns in file browser.
+
 ### 21.02.5
 
 -   **VFS-11999** *(Oneclient, Oneprovider)* Improved listing objects on
