@@ -6,6 +6,10 @@ CHANGELOG
 
 ### 21.02.6
 
+-   **VFS-12276** *(Oneclient)* Added --ignore-env to oneclient and
+    ones3 to ignore using environment variables for options.
+-   **VFS-12273** *(Oneclient)* Adjusted scope of information presented
+    in ones3 readiness probe.
 -   **VFS-12239** *(Oneprovider)* Web GUI: Automatically filling-in the
     EDM file size property on metadata creation and modification.
 -   **VFS-12232** *(Oneprovider)* Web GUI: Improved UX of Europeana Data
