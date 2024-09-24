@@ -1,8 +1,18 @@
-Release notes for project onedata
-=================================
+# Release notes for project onedata
 
-CHANGELOG
----------
+## CHANGELOG
+
+### 21.02.7
+
+-   **VFS-12295** *(Oneprovider)* Web GUI: Fixed issues with opening
+    share views without some privileges and when filea had been deleted.
+-   **VFS-12284** *(Oneprovider)* Web GUI: Improved GUI for Europeana
+    Data Model: updated metadata specification, added more validators,
+    improved UX.
+-   **VFS-12080** *(Oneprovider, Onezone)* Web GUI: Added support for
+    creating custom login view pages.
+-   **VFS-12050** *(Oneprovider)* Web GUI: Added support for
+    customizable extended attributes (xattrs) columns in file browser.
 
 ### 21.02.6
 
