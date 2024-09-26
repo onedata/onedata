@@ -4,6 +4,7 @@
 
 ### 21.02.7
 
+-   **VFS-12332** *(Oneclient)* Added init.d scripts to ones3 service.
 -   **VFS-12295** *(Oneprovider)* Web GUI: Fixed issues with opening
     share views without some privileges and when filea had been deleted.
 -   **VFS-12284** *(Oneprovider)* Web GUI: Improved GUI for Europeana
