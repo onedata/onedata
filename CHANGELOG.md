@@ -2,6 +2,39 @@
 
 ## CHANGELOG
 
+### 21.02.8
+
+-   **VFS-12482** *(Oneprovider)* Web GUI: Improved UX of file and share
+    IDs presentation in file details panel.
+-   **VFS-12477** *(Oneprovider, Onezone)* Greatly optimized the listing
+    of Shares in GUI; both the Space's and global view of Shares are now
+    based on an infinite-scroll mechanism.
+-   **VFS-12469** *(Oneprovider, Onezone)* Web GUI: Improved UX of
+    managing share name and Open Data title; disabled some operations
+    when user has insufficient privileges for space shares.
+-   **VFS-12418** *(Oneclient, Oneprovider)* Improved error handling for
+    S3 storages.
+-   **VFS-12372** *(Oneclient)* Added command line option to ones3
+    allowing customization of bucket to space mapping invalidation time.
+-   **VFS-12370** *(Oneprovider, Onezone)* Web GUI: Changed default
+    views which are opened using tabs, remembering last used resource
+    (eg. space), improved look of main views loading indicators and
+    added "recently used" space icons.
+-   **VFS-12277** *(Oneprovider)* Web GUI: Changed "basic metadata"
+    naming to "xattrs metadata" (extended attributes) to better
+    differentiate with other custom metadata types (JSON, RDF).
+-   **VFS-12268** *(Oneclient, Oneprovider)* Enabled support for
+    read-only and interface caveat tokens in OneS3.
+-   **VFS-12137** *(Oneprovider, Onezone)* Web GUI: Numerous
+    improvements to the storage backend creation form.
+-   **VFS-12083** *(Onezone)* Web GUI: Enabled copying a token directly
+    from the temporarily opened sidebar.
+-   **VFS-10787** *(Oneprovider, Onezone)* Added a circuit breaker
+    mechanism that disables Oneprovider services when the database is
+    close to running out of disk space.
+-   **VFS-10341** *(Oneprovider, Onezone)* Web GUI: Upgraded EmberJS to
+    v3.16.
+
 ### 21.02.7
 
 -   **VFS-12332** *(Oneclient)* Added init.d scripts to ones3 service.
