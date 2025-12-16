@@ -6,8 +6,14 @@ CHANGELOG
 
 ### 25.0
 
+-   **VFS-13222** *(Oneprovider, Onezone)* Switched to the Calendar
+    Versioning model. Version 25.0 is equivalent to 21.02.9 in the
+    previous model, and it's cross-compatible with the 21.02 line.
 -   **VFS-13198** *(Oneprovider)* Web GUI: Added support for OpenAIRE
     metadata of public share.
+-   **VFS-13188** *(Onezone)* Added support for OpenAIRE metadata format
+    in public data records, including APIs and the OAI-PMH endpoint for
+    "oai\_openaire" metadata prefix.
 -   **VFS-13186** *(Oneclient, Oneprovider)* Improve handling of HEAD
     request headers and ensure that HTTP servers without range access
     are not supported.
