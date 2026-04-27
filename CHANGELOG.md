@@ -12,6 +12,10 @@
     statistics to the transfers chart.
 -   **VFS-13422** *(Oneprovider)* Web GUI: Selecting the filename
     without an extension in the rename modal.
+-   **VFS-13419** *(Onezone)* Extended the user creation endpoint with
+    the linked accounts parameter. It is now possible to pre-create IdP
+    users before their login; requires having access to their OIDC
+    userinfo attributes.
 -   **VFS-13398** *(OneS3, Oneclient)* Fixed handling of new aws-cli PUT
     requests in OneS3.
 -   **VFS-13374** *(Oneprovider)* Web GUI: Added option to ignore
