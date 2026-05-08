@@ -20,6 +20,9 @@
     requests in OneS3.
 -   **VFS-13374** *(Oneprovider)* Web GUI: Added option to ignore
     Europeana metadata validation errors before submit.
+-   **VFS-13324** *(Oneprovider, Onezone)* Web GUI: Added experimental
+    support for customizing style of the sidebar using static files
+    without rebuilding the software.
 -   **VFS-13314** *(Onezone)* Web GUI: Using the main custom frontpage
     template in login test mode if the testing template is not
     available.
