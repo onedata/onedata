@@ -1,8 +1,52 @@
-Release notes for project onedata
-=================================
+# Release notes for project onedata
 
-CHANGELOG
----------
+## CHANGELOG
+
+### 25.1
+
+-   **VFS-13466** *(Oneprovider, Onezone)* Web GUI: Fixed an error when
+    supporting spaces with HTTP storage.
+-   **VFS-13456** *(Oneprovider)* Web GUI: Changed Europeana materials
+    URLs scheme from "https" to "http" to satisfy the standard.
+-   **VFS-13424** *(Oneprovider)* Web GUI: Added Quality of Service
+    statistics to the transfers chart.
+-   **VFS-13422** *(Oneprovider)* Web GUI: Selecting the filename
+    without an extension in the rename modal.
+-   **VFS-13419** *(Onezone)* Extended the user creation endpoint with
+    the linked accounts parameter. It is now possible to pre-create IdP
+    users before their login; requires having access to their OIDC
+    userinfo attributes.
+-   **VFS-13398** *(OneS3, Oneclient)* Fixed handling of new aws-cli PUT
+    requests in OneS3.
+-   **VFS-13374** *(Oneprovider)* Web GUI: Added option to ignore
+    Europeana metadata validation errors before submit.
+-   **VFS-13324** *(Oneprovider, Onezone)* Web GUI: Added experimental
+    support for customizing style of the sidebar using static files
+    without rebuilding the software.
+-   **VFS-13314** *(Onezone)* Web GUI: Using the main custom frontpage
+    template in login test mode if the testing template is not
+    available.
+-   **VFS-13307** *(Oneprovider, Onezone)* Implemented an improved
+    process pool for handling GraphSync requests. Now, a single client
+    can't flood the Onezone server with requests, as it can occupy only
+    some of the pool.
+-   **VFS-13294** *(Oneprovider)* Web GUI: Fixed file download modal not
+    working randomly not working when using the download URL.
+-   **VFS-13176** *(Oneprovider, Onezone)* Web GUI: Added replacing file
+    data feature, which allows to upload new content to the existing
+    file (overriding the current data), keeping the File ID and its path
+    unchanged.
+-   **VFS-13155** *(Onezone)* Web GUI: Fixed display of long membership
+    paths when the display limit is reached.
+-   **VFS-13143** *(Oneprovider, Onezone)* Web GUI: Remembering the last
+    visited tab and directory in share's URL.
+-   **VFS-13042** *(Oneprovider, Onezone)* Web GUI: Added paging and
+    conflict labels in supported spaces table.
+-   **VFS-12760** *(Oneprovider, Onezone)* Optimized the performance of
+    shares and public data records in spaces with a low number of items.
+-   **VFS-12441** *(Oneprovider)* Web GUI: Added more material types and
+    collapsible categories in the selector of the EDM Open Data metadata
+    visual editor.
 
 ### 25.0
 
