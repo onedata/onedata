@@ -2,6 +2,73 @@
 
 ## CHANGELOG
 
+### 25.2
+
+-   **VFS-13877** *(OneS3, Oneclient)* Fixed handling of CRC64NVME
+    checksum in OneS3.
+-   **VFS-13822** *(Onezone)* Web GUI: Added access key ID and secret
+    access key for S3 tokens.
+-   **VFS-13773** *(Oneprovider, Onezone)* Removed newline character
+    when copying text from clipboard line in some web browsers.
+-   **VFS-13757** *(OneS3, Oneclient)* Fixed potential SSL renegotiation
+    vulnerability in OneS3 server.
+-   **VFS-13726** *(Oneprovider)* Web GUI: Fixed QoS inherited badge
+    invalid appearing and disappearing when the QoS file browser column
+    is shown.
+-   **VFS-13718** *(OneS3, Oneclient, Oneprovider)* Enabled registration
+    of Onedata shared file ids in HTTP storage.
+-   **VFS-13693** *(Oneprovider)* Optimized transfer shaping from slow
+    HTTP servers.
+-   **VFS-13637** *(Oneprovider)* Web GUI: Improved the transfers table
+    by reordering columns, making the status column always visible, and
+    merging the type and destination columns into a single column.
+-   **VFS-13628** *(Oneprovider, Onezone)* Web GUI: Added experimental
+    support for customizing button styles using static files without
+    rebuilding the software.
+-   **VFS-13599** *(OneS3, Oneclient, Oneprovider)* Added support for
+    storages based on HTTP servers with invalid content-range header in
+    responses.
+-   **VFS-13530** *(OneS3, Oneclient, Oneprovider)* OneS3 now shows
+    spaces which are not supported by the local provider, but blocks
+    access to them with InvalidRegion error.
+-   **VFS-13513** *(Oneprovider, Onezone)* Web GUI: Fixed wrong color of
+    "Files" item in space sidebar when user has no privileges.
+-   **VFS-13511** *(Oneprovider, Onezone)* Web GUI: Updated docs/API
+    links to the new paths used on onedata.org. Links are now pointing
+    to the API docs version matching version of software.
+-   **VFS-13461** *(Onezone)* Web GUI: Refreshed design of provider
+    information on providers map, added version info.
+-   **VFS-13395** *(Oneprovider, Onezone)* Web GUI: Added support for
+    searching a space by ID triggered after entering at least 2
+    characters in the sidebar.
+-   **VFS-13371** *(Oneprovider, Onezone)* Added support for HEAD
+    requests to the file content download REST endpoints (by file ID and
+    by path). They return the `Content-Length` and `Accept-Ranges`
+    headers without the file content; directories are not supported.
+    This allows publicly shared files to be registered on an HTTP
+    storage by their public URL (including the Onezone share URL), with
+    the file size detected automatically.
+-   **VFS-13350** *(Oneprovider)* Web GUI: Handling some specific
+    download initialization errors.
+-   **VFS-13348** *(Oneprovider, Onezone)* Web GUI: Improved texts and
+    credential settings in the storage backend form.
+-   **VFS-13271** *(Onezone)* Web GUI: fixed broken selection of a space
+    as an Invite Target in the tokens sidebar filter when there is a
+    token for a non-existing space.
+-   **VFS-13215** *(OneS3, Oneclient, Oneprovider)* Fixed HTTP helper
+    error for storages supporting HEAD but not accept-ranges header.
+-   **VFS-13071** *(Oneprovider, Onezone)* Web GUI: Fixed Let's Encrypt
+    toggle state after failure on web certificate page.
+-   **VFS-12973** *(Oneprovider)* Allowed creating directories in spaces
+    supported by a readonly storage. Previously, such an attempt failed
+    with EROFS error.
+-   **VFS-6934** *(Oneprovider)* Web GUI: Fixed rounding percentage
+    values in data distribution.
+-   **VFS-2073** *(Oneprovider)* Improved content-disposition headers
+    sent during file downloads to properly support filename encoding in
+    modern browsers. Implemented concrete content-type headers (MIME
+    types) rather than the generic application/octet-stream.
+
 ### 25.1
 
 -   **VFS-13466** *(Oneprovider, Onezone)* Web GUI: Fixed an error when
